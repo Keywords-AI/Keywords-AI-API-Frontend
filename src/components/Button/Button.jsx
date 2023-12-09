@@ -154,7 +154,7 @@ export const Button = forwardRef(
       case "r4-white":
         bgColor = "bg-gray-white";
         textColor = "text-gray-black";
-        textHoverColor = "group-hover:text-gray-white";
+        textHoverColor = "group-hover:text-gray-black";
         textClickedColor = "group-active:text-gray-white";
         hoverColor = "hover:bg-gray-4";
         clickedColor = "active:bg-gray-4";
