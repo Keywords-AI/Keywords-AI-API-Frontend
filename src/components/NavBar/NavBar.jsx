@@ -22,9 +22,35 @@ const Logo = ({ fill = "fill-gray-4" }) => {
     </svg>
   );
 };
+
+const concateTextName = (pageName) => {
+  return "text-sm " + (location.pathname == `/platform/${pageName}`
+    ? "text-gray-white"
+    : "text-gray-4");
+}
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const generateButton = (text, pageName, index) => {
+    return (
+      <Button
+        key={index}
+        text={text}
+        variant="header"
+        arrow={false}
+        onClick={() => navigate(`/platform/${pageName}`)}
+        textClassName={cn(
+          concateTextName(pageName)
+        )}
+      />
+    );
+  };
+  const buttons = [
+    {text:"Documentation", pageName:"doc"},
+    {text:"Examples", pageName:"examples"},
+    {text:"Playground", pageName:"playground"},
+    {text:"Chatbot", pageName:"chatbot"},
+  ];
   return (
     <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">
       <div className="w-[1440px] flex justify-between">
@@ -36,61 +62,7 @@ export const NavBar = () => {
             <Logo />
           </div>
           <div className="flex items-center gap-xs">
-            <Button
-              text="Documentation"
-              variant="header"
-              arrow={false}
-              onClick={() => navigate("/platform/doc")}
-              textClassName={cn(
-                location.pathname == "/platform/doc"
-                  ? "text-gray-white"
-                  : "text-gray-4"
-              )}
-            />
-            <Button
-              text="Examples"
-              variant="header"
-              arrow={false}
-              onClick={() => navigate("/platform/examples")}
-              textClassName={cn(
-                location.pathname == "/platform//examples"
-                  ? "text-gray-white"
-                  : "text-gray-4"
-              )}
-            />
-            <Button
-              text="Playground"
-              variant="header"
-              arrow={false}
-              onClick={() => navigate("/platform/playground")}
-              textClassName={cn(
-                location.pathname == "/platform/playground"
-                  ? "text-gray-white"
-                  : "text-gray-4"
-              )}
-            />
-            <Button
-              text="Chatbot"
-              variant="header"
-              arrow={false}
-              onClick={() => navigate("/platform/chatbot")}
-              textClassName={cn(
-                location.pathname == "/platform//chatbot"
-                  ? "text-gray-white"
-                  : "text-gray-4"
-              )}
-            />
-            <Button
-              text="API Keys"
-              variant="header"
-              arrow={false}
-              onClick={() => navigate("/platform/api-keys")}
-              textClassName={cn(
-                location.pathname == "/platform/api-keys"
-                  ? "text-gray-white"
-                  : "text-gray-4"
-              )}
-            />
+            {buttons.map((button, index) => generateButton(button.text, button.pageName, index))}
           </div>
         </div>
         <div aria-label="profile" className="flex items-center gap-xs">
@@ -99,7 +71,7 @@ export const NavBar = () => {
             variant="header"
             arrow={false}
             onClick={() => navigate("/feedback")}
-            textClassName={"text-gray-4"}
+            textClassName={"text-sm text-gray-4"}
           />
           <ProfileMenu />
         </div>

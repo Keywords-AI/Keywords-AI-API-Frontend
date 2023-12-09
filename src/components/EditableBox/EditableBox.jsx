@@ -100,6 +100,7 @@
 import React from "react";
 import cn from "src/utilities/ClassMerge";
 import { useState, useEffect, useRef } from "react";
+import { set } from "react-hook-form";
 export const EditableBox = React.forwardRef(({
   placeholder,
   value,
@@ -110,13 +111,14 @@ export const EditableBox = React.forwardRef(({
   type = "text",
   className,
   focus= false,
+  selectPrevious= false,
 }, forwardRef) => {
   const [isEditing, setIsEditing] = useState(focus);
   const [text, setText] = useState(value || "");
   const textareaRef = useRef(null);
   const divRef = useRef(null);
   const [height, setHeight] = useState("auto"); // <-- Add state for height
-  
+
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "1px";
@@ -130,13 +132,23 @@ export const EditableBox = React.forwardRef(({
       textareaRef.current.focus();
     }
   }, [isEditing]);
+
   
   useEffect(() => {
     if (focus) {
       setIsEditing(true);
     }
   }, [focus]);
-
+  
+  const handleFocus = () => {
+    const valueLength = textareaRef.current.value.length;
+    if (selectPrevious) {
+      textareaRef.current.setSelectionRange(0, valueLength);
+    } else {
+      textareaRef.current.setSelectionRange(valueLength, valueLength);
+    }
+  };
+  
   const handleDivClick = () => {
     setIsEditing(true);
   };
@@ -175,7 +187,7 @@ export const EditableBox = React.forwardRef(({
       {isEditing ? (
         <textarea
           className={cn(
-            "flex-grow resize-none outline-none whitespace-pre-wrap bg-transparent h-auto",
+            "flex-grow resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm",
             className
           )}
           placeholder={placeholder}
@@ -185,6 +197,7 @@ export const EditableBox = React.forwardRef(({
           onInput={handleInput}
           onKeyDown={handleKeyDown}
           onBlur={handleTextareaBlur}
+          onFocus={handleFocus}
           rows={1}
           onResize={(e) => {
             e.target.style.height = "1px"; // Reset height to a small value before reading scrollHeight
@@ -194,7 +207,7 @@ export const EditableBox = React.forwardRef(({
       ) : (
         <div
           className={cn(
-            "flex-grow resize-none outline-none whitespace-pre-wrap",
+            "flex-grow resize-none outline-none whitespace-pre-wrap text-sm",
             className,
             !text && "text-gray-4"
           )}

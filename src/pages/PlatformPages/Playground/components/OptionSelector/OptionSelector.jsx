@@ -158,11 +158,11 @@ export function OptionSelector({}) {
     <div className="flex items-start gap-lg">
       <div className="flex-col items-start gap-sm self-stretch justify-center">
         {options.map((item, index) => (
-          <div className="flex items-center gap-lg px-xs py-xxs" key={index}>
+          <div className="flex items-center gap-lg py-xxs" key={index}>
             <p className="text-sm-regular text-gray-4">{item.name}</p>
           </div>
         ))}
-        <div className="flex items-center gap-lg  px-xs py-xxs">
+        <div className="flex items-center gap-lg py-xxs">
           <p className="text-sm-regular text-gray-4">Max tokens</p>
         </div>
       </div>
@@ -217,6 +217,7 @@ export function OptionSelector({}) {
               value={token}
               onChange={handleChange}
               className={"text-gray-4 text-sm-md"}
+              selectPrevious={true}
               type="number"
             />
           </div>

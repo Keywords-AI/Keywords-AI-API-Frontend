@@ -75,7 +75,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   return (
     <div
-      className="flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3"
+      className={"flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3 " + (isFocused ? "border-gray-4" : "")}
       onClick={() => setIsFocused(true)}
       onFocus={() => setIsFocused(true)}
       onBlur={handleBlur}
@@ -101,10 +101,10 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         value={textContent}
         onChange={handleChange}
       />
-      {isFocused && (
+      {true && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
-            variant="standard"
+            variant="api-action"
             text="Send Message"
             icon={EnterKey}
             iconPosition="right"

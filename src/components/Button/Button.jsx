@@ -72,6 +72,20 @@ export const Button = forwardRef(
         iconFill = "fill-gray-4 group-hover:fill-gray-white";
         iconHoverFill = "fill-gray-white";
         break;
+      case "api-action":
+        bgColor = "bg-gray-2";
+        textColor = "text-gray-4";
+        textClassName = "text-sm-md";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        hoverColor = "hover:bg-gray-2 hover:border-gray-4";
+        clickedColor = "active:bg-gray-2 active:border-gray-4";
+        borderRadius = "rounded-sm";
+        className = cn(className, "border border-solid border-gray-3");
+        iconFill = "fill-gray-4 group-hover:fill-gray-white";
+        iconHoverFill = "fill-gray-white";
+        padding = "py-xxxs px-xxs";
+        break;
       case "transparent":
         bgColor = "bg-transparent";
         textColor = "text-gray-white";
@@ -86,7 +100,7 @@ export const Button = forwardRef(
         break;
       case "header":
         bgColor = "bg-transparent";
-        hoverColor = "hover:bg-gray-3";
+        hoverColor = "hover:bg-transparent";
         clickedColor = "active:bg-transparent";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";

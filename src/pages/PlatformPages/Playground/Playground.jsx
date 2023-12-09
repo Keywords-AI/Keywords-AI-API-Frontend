@@ -95,7 +95,7 @@ const NotConnectedMap = ({
             />
           }        
           <Button
-            variant="standard"
+            variant="api-action"
             text="Add Message"
             icon={AddMessage}
             onClick={handleAddMessage}
@@ -109,6 +109,7 @@ const NotConnectedMap = ({
 const Main = connect(mapStateToProps, mapDispatchToProps)(NotConnectedMap);
 
 const SidePannel = () => {
+  const messages = useSelector((state) => state.playground.messages);
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
@@ -121,7 +122,7 @@ const SidePannel = () => {
 
 export function Playground() {
   return (
-    <div className="flex items-start justify-center self-stretch h-[calc(100vh-56.8px)] ">
+    <div className="flex items-start justify-center self-stretch h-[calc(100vh-52.8px)] ">
       <Main />
       <SidePannel />
     </div>
