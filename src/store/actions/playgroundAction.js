@@ -9,7 +9,6 @@ export const UPDATE_STREAMING_TEXT = "UPDATE_STREAMING_TEXT";
 export const SET_STREAMING_TEXT = "SET_STREAMING_TEXT";
 import { parseChunk } from "src/utilities/streaming";
 
-
 // Action Creator
 export const setMessages = (messages) => ({
   type: SET_MESSAGES,
@@ -48,11 +47,16 @@ export const setOutputs = (outputs) => ({
   payload: outputs,
 });
 
-export const stopStreaming = () => (dispatch, getState) => {
-  const state = getState();
-  const messages = state.playground.messages;
-  const streamingText = state.playground.streamingText;
-  dispatch(setStreaming(false));
-  dispatch(setMessages([...messages, { role: "assistant", content: streamingText }]));
-  dispatch(setStreamingText(""));
+export const stopStreaming = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const messages = state.playground.messages;
+    const streamingText = state.playground.streamingText;
+    dispatch(setStreaming(false));
+    dispatch(
+      setMessages([...messages, { role: "assistant", content: streamingText }])
+    );
+    dispatch(setStreamingText(""));
+    console.log("Stop streaming");
+  };
 };

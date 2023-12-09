@@ -5,9 +5,25 @@ import {
   ModelOutput,
   PlaygroundMessage,
 } from "./components";
-import React from "react";
-import { setMessages, setPrompt } from "src/store/actions/playgroundAction"; 
+import React, { useEffect } from "react";
+import { setMessages, setPrompt } from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
+import useAutoScroll from "src/hooks/useAutoScroll";
+
+const mapStateToProps = (state) => {
+  return {
+    messages: state.playground.messages,
+    prompt: state.playground.prompt,
+    streaming: state.playground.streaming,
+    streamingText: state.playground.streamingText
+  }
+};
+
+const mapDispatchToProps = {
+  setMessages,
+  setPrompt
+};
 
 const Prompt = () => {
   const dispatch = useDispatch();
@@ -26,42 +42,23 @@ const Prompt = () => {
   );
 };
 
-const Main = () => {
-  const dispatch = useDispatch();
-  const messages = useSelector((state) => state.playground.messages);
-  const systemPrompt = useSelector((state) => state.playground.prompt);
-  const streaming = useSelector((state) => state.playground.streaming);
-  const streamingText = useSelector((state) => state.playground.streamingText);
 
+const NotConnectedMap = ({
+  messages,
+  streaming,
+  streamingText,
+  setMessages
+}) => {
+  const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
   const handleAddMessage = () => {
-    console.log("handle add message:");
-    dispatch(setMessages([...messages, { sender: "user", message: "" }]));
+    setMessages([...messages, { role: "user", content: "" }]);
   };
-  const handleSend = (value) => {
-    console.log("handle send");
-    // Collect messages and format them for the API
-    let formattedMessages = messages.map((message) => ({
-      role: message.sender === "user" ? "user" : "assistant",
-      content: message.message,
-    }));
-
-    // Include system prompt if available
-    if (systemPrompt) {
-      formattedMessages = [
-        { role: "system", content: systemPrompt },
-        ...formattedMessages,
-      ];
+  useEffect(() => {
+    if (streamingText) {
+      setGeneratingText(streamingText);
     }
-
-    // Send the messages to the endpoint
-    try {
-      console.log("messsage", formattedMessages);
-      // postData({ messages: formattedMessages, stream: true });
-      // Handle response here
-    } catch (error) {
-      // Handle error here
-    }
-  };
+  }, [streamingText]);
+  
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">
@@ -79,22 +76,24 @@ const Main = () => {
       </div>
       <div className="flex items-start gap-lg flex-1 self-stretch h-[calc(100vh-190.5px)]">
         <Prompt />
-        <div className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]">
+        <div className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]"
+          ref={conversationBoxRef}
+        >
           {messages.map((message, index) => (
             <PlaygroundMessage
               key={index}
+              messageIndex={index} // An index to locate which one is being edited
               {...message}
-              handleSend={handleSend}
             />
           ))}
           {streaming &&
             <PlaygroundMessage
               key={99999}
-              sender={"assistant"}
-              message={streamingText}
-              handleSend={handleSend}
+              messageIndex={99999}
+              role={"assistant"}
+              content={streamingText}
             />
-          }
+          }        
           <Button
             variant="standard"
             text="Add Message"
@@ -106,6 +105,8 @@ const Main = () => {
     </div>
   );
 };
+
+const Main = connect(mapStateToProps, mapDispatchToProps)(NotConnectedMap);
 
 const SidePannel = () => {
   return (
