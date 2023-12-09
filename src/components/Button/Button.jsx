@@ -160,6 +160,8 @@ export const Button = forwardRef(
         clickedColor = "active:bg-gray-4";
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
+        iconFill = "fill-gray-black";
+        iconHoverFill = "fill-gray-black";
         //className = cn(className, ); //placeholder for potential additional parameters
         break;
     }
