@@ -1,17 +1,28 @@
 import { Button, EditableBox, EnterKey, ModelIcon, User } from "src/components";
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useStream } from "src/hooks/useStream";
+import useStream from "src/hooks/useStream";
 import React from "react";
+import readStream from "src/services/readStream";
+import { updateStreamText, setStreaming, stopStreaming } from "src/store/actions/playgroundAction";
 
 
-export function PlaygroundMessage({ sender, message }) {
+export function PlaygroundMessage({ role, content }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
-  const { loading, error, response, postData } = useStream();
-  const [content, setContent] = React.useState(message);
+  const { loading, error, response, postData } = useStream({ path: "api/playground/ask/", host: "https://platform.keywordsai.co/" });
+  const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
+  // We probably need a abort controller state here
+  React.useEffect(() => {
+    if (!response) return;
+    const streamingCallback = (chunk) => {
+      dispatch(updateStreamText(chunk));
+    }
+    dispatch(setStreaming(true));
+    const abortFunction = readStream(response, streamingCallback, stopStreaming);
+  }, [response]);
 
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
@@ -21,29 +32,16 @@ export function PlaygroundMessage({ sender, message }) {
   };
 
   const handleChange = (value) => {
-    setContent(value);
+    setTextContent(value);
   };
 
   const handleSend = () => {
-    // Collect messages and format them for the API
-    let formattedMessages = messages.map((message) => ({
-      role: message.sender === "user" ? "user" : "assistant",
-      content: message.message,
-    }));
-
-    // Include system prompt if available
-    if (systemPrompt) {
-      formattedMessages = [
-        { role: "system", content: systemPrompt },
-        ...formattedMessages,
-      ];
-    }
-
-    // Send the messages to the endpoint
+    // Squash the messages with system prompt
+    const messagesWithPrompt = [{ role: "user", content: "Hi!" }]; // test
+    // const messagesWithPrompt = [...messages, { role: "system", content: systemPrompt }];
     try {
-      console.log("messsage", formattedMessages);
-      // postData({ messages: formattedMessages, stream: true });
-      // Handle response here
+      console.log("messsage", messagesWithPrompt);
+      postData({ messages: messagesWithPrompt, stream: true });
     } catch (error) {
       console.log(error);
     }
@@ -56,21 +54,21 @@ export function PlaygroundMessage({ sender, message }) {
       onBlur={handleBlur}
     >
       <div className="flex items-center gap-xxs px-xxs py-xxxs rounded-sm bg-gray-2">
-        {sender === "user" ? (
+        {role === "user" ? (
           <>
             <User />
             <p className="text-sm-md text-gray-white">User</p>
           </>
         ) : (
           <>
-            {React.createElement(ModelIcon(sender.name))}
-            <p className="text-sm-md text-gray-white">{sender.model}</p>
+            {React.createElement(ModelIcon("openai"))}
+            <p className="text-sm-md text-gray-white">{"gpt-3.5-turbo"}</p>
           </>
         )}
       </div>
       <EditableBox
         placeholder={"Enter a message..."}
-        value={content}
+        value={textContent}
         onChange={handleChange}
       />
       {isFocused && (
@@ -81,7 +79,7 @@ export function PlaygroundMessage({ sender, message }) {
             icon={EnterKey}
             iconPosition="right"
             iconHoverFill="fill-gray-white"
-            onClick={handleSendClick}
+            onClick={handleSend}
           />
         </div>
       )}

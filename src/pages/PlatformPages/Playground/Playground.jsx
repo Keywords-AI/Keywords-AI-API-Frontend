@@ -1,5 +1,4 @@
 import { AddMessage, Button, Divider } from "src/components";
-import useStream from "src/hooks/useStream";
 import {
   CurrentModel,
   OptionSelector,
@@ -32,6 +31,7 @@ const Main = () => {
   const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
   const streaming = useSelector((state) => state.playground.streaming);
+  const streamingText = useSelector((state) => state.playground.streamingText);
 
   const handleAddMessage = () => {
     console.log("handle add message:");
@@ -89,7 +89,7 @@ const Main = () => {
           ))}
           {streaming &&
             <PlaygroundMessage
-              key={index}
+              key={99999}
               sender={"assistant"}
               message={streamingText}
               handleSend={handleSend}
