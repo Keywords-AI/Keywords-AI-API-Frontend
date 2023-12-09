@@ -7,8 +7,7 @@ import {
   PlaygroundMessage,
 } from "./components";
 import React from "react";
-import { useState } from "react";
-import { setMessages, setPrompt } from "src/store/actions/playgroundAction";
+import { setMessages, setPrompt } from "src/store/actions/playgroundAction"; 
 import { useDispatch, useSelector } from "react-redux";
 
 const Prompt = () => {
@@ -29,9 +28,11 @@ const Prompt = () => {
 };
 
 const Main = () => {
-  const messages = useSelector((state) => state.playground.messages);
   const dispatch = useDispatch();
+  const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
+  const streaming = useSelector((state) => state.playground.streaming);
+
   const handleAddMessage = () => {
     console.log("handle add message:");
     dispatch(setMessages([...messages, { sender: "user", message: "" }]));
@@ -76,7 +77,7 @@ const Main = () => {
           />
         </div>
       </div>
-      <div className="flex items-start gap-lg flex-1 self-stretch h-full ">
+      <div className="flex items-start gap-lg flex-1 self-stretch h-[calc(100vh-190.5px)]">
         <Prompt />
         <div className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]">
           {messages.map((message, index) => (
@@ -86,6 +87,14 @@ const Main = () => {
               handleSend={handleSend}
             />
           ))}
+          {streaming &&
+            <PlaygroundMessage
+              key={index}
+              sender={"assistant"}
+              message={streamingText}
+              handleSend={handleSend}
+            />
+          }
           <Button
             variant="standard"
             text="Add Message"
@@ -100,7 +109,7 @@ const Main = () => {
 
 const SidePannel = () => {
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 ">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
       <Divider />
       <CurrentModel />
@@ -111,7 +120,7 @@ const SidePannel = () => {
 
 export function Playground() {
   return (
-    <div className="flex items-start justify-center self-stretch h-full ">
+    <div className="flex items-start justify-center self-stretch h-[calc(100vh-56.8px)] ">
       <Main />
       <SidePannel />
     </div>

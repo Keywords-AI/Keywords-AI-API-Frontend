@@ -1,5 +1,4 @@
 import cn from "src/utilities/ClassMerge";
-import styles from "./EditableBox.css";
 import { useState, useEffect, useRef } from "react";
 export const EditableBox = ({
   placeholder,

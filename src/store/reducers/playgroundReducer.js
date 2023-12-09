@@ -5,15 +5,18 @@ import {
   SET_CURRENT_MODEL,
   SET_MODEL_OPTIONS,
   SET_OUTPUTS,
+  UPDATE_STREAMING_TEXT,
+  SET_STREAMING_TEXT
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
     {
-      sender: "user",
-      message: "",
+      role: "user",
+      content: "",
     },
   ],
   streaming: false,
+  streamingText: "",
   prompt: "",
   currentModel: "",
   modelOptions: {
@@ -38,6 +41,10 @@ const playgroundReducer = (state = initialState, action) => {
       return { ...state, streaming: action.payload };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };
+    case UPDATE_STREAMING_TEXT:
+      return { ...state, streamingText: state.streamingText + action.payload };
+    case SET_STREAMING_TEXT:
+      return { ...state, streamingText: action.payload };
     case SET_CURRENT_MODEL:
       return { ...state, currentModel: action.payload };
     case SET_MODEL_OPTIONS:

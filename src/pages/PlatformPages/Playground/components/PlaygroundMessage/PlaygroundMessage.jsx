@@ -1,9 +1,18 @@
 import { Button, EditableBox, EnterKey, ModelIcon, User } from "src/components";
 import "./PlaygroundMessage.css";
+import { useDispatch, useSelector } from "react-redux";
+import { useStream } from "src/hooks/useStream";
 import React from "react";
-export function PlaygroundMessage({ sender, message, handleSend }) {
+
+
+export function PlaygroundMessage({ sender, message }) {
+  const dispatch = useDispatch();
+  const messages = useSelector((state) => state.playground.messages);
+  const systemPrompt = useSelector((state) => state.playground.prompt);
+  const { loading, error, response, postData } = useStream();
   const [content, setContent] = React.useState(message);
   const [isFocused, setIsFocused] = React.useState(false);
+
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
     if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -14,9 +23,32 @@ export function PlaygroundMessage({ sender, message, handleSend }) {
   const handleChange = (value) => {
     setContent(value);
   };
-  const handleSendClick = () => {
-    handleSend(content); // Pass the current content as an argument
-  };
+
+  const handleSend = () => {
+    // Collect messages and format them for the API
+    let formattedMessages = messages.map((message) => ({
+      role: message.sender === "user" ? "user" : "assistant",
+      content: message.message,
+    }));
+
+    // Include system prompt if available
+    if (systemPrompt) {
+      formattedMessages = [
+        { role: "system", content: systemPrompt },
+        ...formattedMessages,
+      ];
+    }
+
+    // Send the messages to the endpoint
+    try {
+      console.log("messsage", formattedMessages);
+      // postData({ messages: formattedMessages, stream: true });
+      // Handle response here
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div
       className="flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3"
