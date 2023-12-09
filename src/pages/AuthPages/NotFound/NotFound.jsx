@@ -21,8 +21,7 @@ export function NotFound() {
         <div className="flex justify-center items-start gap-md self-stretch">
           <Button
             text="Back to home"
-            variant={"secondary"}
-            borderRadius="rounded-sm"
+            variant={"r4-white"}
             icon={ArrowRight}
             iconPosition="right"
             onClick={() => {
