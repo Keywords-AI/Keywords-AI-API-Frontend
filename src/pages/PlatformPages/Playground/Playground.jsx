@@ -69,8 +69,6 @@ const NotConnectedMap = ({
           <Button
             variant="r4-gray2"
             text="View code"
-            padding="px-xs py-xxs"
-            textClassName="text-sm-md"
           />
         </div>
       </div>
@@ -95,7 +93,7 @@ const NotConnectedMap = ({
             />
           }        
           <Button
-            variant="api-action"
+            variant="small"
             text="Add Message"
             icon={AddMessage}
             onClick={handleAddMessage}

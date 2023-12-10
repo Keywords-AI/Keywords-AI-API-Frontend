@@ -111,7 +111,7 @@ export function OptionSelector({}) {
           },
         },
         {
-          name: "Meidum",
+          name: "Medium",
           value: "medium",
           icon: <Medium />,
           action: function () {

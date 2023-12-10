@@ -29,13 +29,13 @@ export const CurrentModel = () => {
   const [open, setOpen] = React.useState(false);
   return (
     <div className="flex-col items-start gap-xxs self-stretch">
-      <p className="text-sm-regular text-center text-gray-4">Current Model</p>
+      <p className="text-sm-regular text-center text-gray-4">Current model</p>
       <DropDownMenu
         open={open}
         setOpen={setOpen}
         trigger={
           <Button
-            variant="transparent"
+            variant="r4-black"
             text={current.name}
             icon={current.icon}
             padding="py-xxxs px-xxs"

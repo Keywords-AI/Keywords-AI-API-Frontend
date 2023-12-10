@@ -30,9 +30,7 @@ export function NotFound() {
           />
           <Button
             text="Bug report"
-            variant={"secondary-gray"}
-            borderRadius="rounded-sm"
-            className="border border-solid border-gray-3"
+            variant="r4-black"
           />
         </div>
       </div>

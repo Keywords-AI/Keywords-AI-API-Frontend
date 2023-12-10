@@ -104,11 +104,10 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       {true && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
-            variant="api-action"
-            text="Send Message"
+            variant="small"
+            text="Send message"
             icon={EnterKey}
             iconPosition="right"
-            iconHoverFill="fill-gray-white"
             onClick={handleSend}
           />
         </div>

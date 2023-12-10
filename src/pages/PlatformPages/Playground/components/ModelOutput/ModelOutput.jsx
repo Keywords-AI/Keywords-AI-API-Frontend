@@ -35,7 +35,7 @@ export function ModelOutput({}) {
   ];
   return (
     <div className="flex-col items-start gap-xxs self-stretch">
-      <p className="text-center text-gray-4 text-sm-md">Output</p>
+      <p className="text-center text-gray-4 text-sm-regular">Output</p>
       <div className="flex-col items-start gap-xxs self-stretch">
         {outputs.map((item, index) => (
           <div
@@ -55,10 +55,9 @@ export function ModelOutput({}) {
         ))}
       </div>
       <Button
-        variant={"api-action"}
+        variant={"small"}
         text={"Compare different models"}
         icon={Compare}
-        padding="py-xxxs px-xxs"
       />
     </div>
   );
