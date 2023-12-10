@@ -45,7 +45,7 @@ export function OptionSelector({}) {
         {
           name: "Speed",
           value: "speed",
-          icon: <Speed />,
+          icon: Speed,
           action: function () {
             setCurrent((prev) => [
               { name: this.name, value: this.value, icon: this.icon },
@@ -57,7 +57,7 @@ export function OptionSelector({}) {
         {
           name: "Quality",
           value: "quality",
-          icon: <Quality />,
+          icon: Quality,
           action: function () {
             setCurrent((prev) => [
               { name: this.name, value: this.value, icon: this.icon },
@@ -69,7 +69,7 @@ export function OptionSelector({}) {
         {
           name: "Cost",
           value: "cost",
-          icon: <Cost />,
+          icon: Cost,
           action: function () {
             setCurrent((prev) => [
               { name: this.name, value: this.value, icon: this.icon },
@@ -81,7 +81,7 @@ export function OptionSelector({}) {
         {
           name: "Custom",
           value: "custom",
-          icon: <Custom />,
+          icon: Custom,
           action: function () {
             setCurrent((prev) => [
               { name: this.name, value: this.value, icon: this.icon },
@@ -101,7 +101,7 @@ export function OptionSelector({}) {
         {
           name: "High",
           value: "high",
-          icon: <High />,
+          icon: High,
           action: function () {
             setCurrent((prev) => [
               prev[0],
@@ -113,7 +113,7 @@ export function OptionSelector({}) {
         {
           name: "Meidum",
           value: "medium",
-          icon: <Medium />,
+          icon: Medium,
           action: function () {
             setCurrent((prev) => [
               prev[0],
@@ -125,7 +125,7 @@ export function OptionSelector({}) {
         {
           name: "Low",
           value: "low",
-          icon: <Low />,
+          icon: Low,
           action: function () {
             setCurrent((prev) => [
               prev[0],
@@ -137,7 +137,7 @@ export function OptionSelector({}) {
         {
           name: "Custom",
           value: "custom",
-          icon: <Custom />,
+          icon: Custom,
           action: function () {
             setCurrent((prev) => [
               prev[0],
@@ -174,7 +174,7 @@ export function OptionSelector({}) {
             sideOffset={0}
             align="start"
             trigger={
-              <button className="flex items-center gap-xxs py-xxs px-xs rounded-sm outline-none self-stretch ">
+              <button className="flex items-center gap-xxs py-xxs px-xs rounded-sm outline-none self-stretch border border-solid border-transparent hover:border-gray-3 hover:bg-gray-2 ">
                 <div className="flex w-[16px] justify-center items-center gap-[10px]">
                   {current[index].icon}
                 </div>
@@ -193,14 +193,18 @@ export function OptionSelector({}) {
                 {item.options.map((option, index) => (
                   <DropdownMenuPrimitive.Item key={index} asChild>
                     <div
-                      className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch"
+                      className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer  outline-none self-stretch group"
                       onClick={() => option.action()}
                     >
                       <div className="flex w-[16px] justify-center items-center gap-[10px]">
-                        {option.icon}
+                        {React.createElement(option.icon, {
+                          fill: "fill-gray-4  group-data-[highlighted]:fill-gray-white",
+                        })}
                       </div>
 
-                      <p className="text-sm-md text-gray-4">{option.name}</p>
+                      <p className="text-sm-regular text-gray-4 group-hover:text-gray-white">
+                        {option.name}
+                      </p>
                     </div>
                   </DropdownMenuPrimitive.Item>
                 ))}
@@ -208,11 +212,11 @@ export function OptionSelector({}) {
             }
           />
         ))}
-        <div className="flex py-xxs px-xs items-center gap-xxs">
+        <div className="flex self-stretch py-xxs px-xs items-center gap-xxs ">
           <div className="flex w-[16px] justify-center items-center gap-[10px]">
             <Tokens />
           </div>
-          <div className="w-[36px] h-[20px]">
+          <div className="flex self-stretch flex-1  h-[20px]">
             <EditableBox
               value={token}
               onChange={handleChange}

@@ -4,16 +4,25 @@ import { useDispatch, useSelector } from "react-redux";
 import useStream from "src/hooks/useStream";
 import React from "react";
 import readStream from "src/services/readStream";
-import { updateStreamText, setStreaming, stopStreaming, setMessages } from "src/store/actions/playgroundAction";
+import {
+  updateStreamText,
+  setStreaming,
+  stopStreaming,
+  setMessages,
+} from "src/store/actions/playgroundAction";
 import { set } from "react-hook-form";
-
+import cn from "src/utilities/ClassMerge";
 
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
+  const streaming = useSelector((state) => state.playground.streaming);
   const textAreaRef = React.useRef(null);
-  const { loading, error, response, postData } = useStream({ path: "api/playground/ask/", host: "https://platform.keywordsai.co/" });
+  const { loading, error, response, postData } = useStream({
+    path: "api/playground/ask/",
+    host: "https://platform.keywordsai.co/",
+  });
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
 
@@ -27,14 +36,17 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     if (!response) return;
     const streamingCallback = (chunk) => {
       dispatch(updateStreamText(chunk));
-    }
+    };
     dispatch(setStreaming(true));
     const stopStreamingFunc = () => {
       dispatch(stopStreaming());
-    }
-    const abortFunction = readStream(response, streamingCallback, stopStreamingFunc);
+    };
+    const abortFunction = readStream(
+      response,
+      streamingCallback,
+      stopStreamingFunc
+    );
   }, [response]);
-
 
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
@@ -45,26 +57,34 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   const handleChange = (value) => {
     setTextContent(value); // This sets what is displayed in the input box
-    dispatch(setMessages(messages.map((message, index) => {
-      if (index === messageIndex) {
-        return { ...message, content: value };
-      }
-      return message;
-    })));
+    dispatch(
+      setMessages(
+        messages.map((message, index) => {
+          if (index === messageIndex) {
+            return { ...message, content: value };
+          }
+          return message;
+        })
+      )
+    );
   };
 
   const handleSend = (event) => {
     // Squash the messages with system prompt
     // const messagesWithPrompt = [{ role: "user", content: "Hi!" }]; // test
     event.stopPropagation();
-    const messagesWithPrompt = [{ role: "system", content: systemPrompt },...messages];
+    setIsFocused(false);
+    const messagesWithPrompt = [
+      { role: "system", content: systemPrompt },
+      ...messages,
+    ];
     try {
       postData({ messages: messagesWithPrompt, stream: true });
     } catch (error) {
       console.log(error);
     }
     setIsFocused(false);
-  }
+  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
@@ -75,7 +95,10 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   return (
     <div
-      className={"flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3 " + (isFocused ? "border-gray-4" : "")}
+      className={cn(
+        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3 hover:cursor-pointer",
+        isFocused ? "border-gray-4" : ""
+      )}
       onClick={() => setIsFocused(true)}
       onFocus={() => setIsFocused(true)}
       onBlur={handleBlur}
@@ -97,11 +120,12 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       <EditableBox
         ref={textAreaRef}
         focus={isFocused}
-        placeholder={"Enter a message..."}
+        placeholder={role === "user" ? "Enter a message..." : "Generating..."}
         value={textContent}
         onChange={handleChange}
+        streaming={streaming}
       />
-      {true && (
+      {isFocused && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
             variant="api-action"

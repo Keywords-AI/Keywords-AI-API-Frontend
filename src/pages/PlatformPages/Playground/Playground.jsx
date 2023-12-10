@@ -16,13 +16,13 @@ const mapStateToProps = (state) => {
     messages: state.playground.messages,
     prompt: state.playground.prompt,
     streaming: state.playground.streaming,
-    streamingText: state.playground.streamingText
-  }
+    streamingText: state.playground.streamingText,
+  };
 };
 
 const mapDispatchToProps = {
   setMessages,
-  setPrompt
+  setPrompt,
 };
 
 const Prompt = () => {
@@ -32,7 +32,7 @@ const Prompt = () => {
   };
   return (
     <div className="flex-col w-[320px] self-stretch justify-center items-start gap-xxs">
-      <p className="text-sm-regular self-stretch text-gray-4">Prompt</p>
+      <p className="text-sm-regular self-stretch text-gray-4">System Prompt</p>
       <textarea
         onChange={handleOnChange}
         className="flex self-stretch px-xs py-xxs items-end flex-1 rounded-sm border bordersolid border-gray-3 resize-none text-sm-regular text-gray-white placeholder-gray-3 bg-transparent"
@@ -42,14 +42,14 @@ const Prompt = () => {
   );
 };
 
-
 const NotConnectedMap = ({
   messages,
   streaming,
   streamingText,
-  setMessages
+  setMessages,
 }) => {
-  const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
+  const { conversationBoxRef, generatingText, setGeneratingText } =
+    useAutoScroll();
   const handleAddMessage = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
@@ -58,7 +58,7 @@ const NotConnectedMap = ({
       setGeneratingText(streamingText);
     }
   }, [streamingText]);
-  
+
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">
@@ -76,7 +76,8 @@ const NotConnectedMap = ({
       </div>
       <div className="flex items-start gap-lg flex-1 self-stretch h-[calc(100vh-190.5px)]">
         <Prompt />
-        <div className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]"
+        <div
+          className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]"
           ref={conversationBoxRef}
         >
           {messages.map((message, index) => (
@@ -86,14 +87,14 @@ const NotConnectedMap = ({
               {...message}
             />
           ))}
-          {streaming &&
+          {streaming && (
             <PlaygroundMessage
               key={99999}
               messageIndex={99999}
               role={"assistant"}
               content={streamingText}
             />
-          }        
+          )}
           <Button
             variant="api-action"
             text="Add Message"
@@ -109,7 +110,6 @@ const NotConnectedMap = ({
 const Main = connect(mapStateToProps, mapDispatchToProps)(NotConnectedMap);
 
 const SidePannel = () => {
-  const messages = useSelector((state) => state.playground.messages);
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />

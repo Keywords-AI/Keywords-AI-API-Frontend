@@ -24,10 +24,13 @@ const Logo = ({ fill = "fill-gray-4" }) => {
 };
 
 const concateTextName = (pageName) => {
-  return "text-sm " + (location.pathname == `/platform/${pageName}`
-    ? "text-gray-white"
-    : "text-gray-4");
-}
+  return (
+    "text-sm " +
+    (location.pathname == `/platform/${pageName}`
+      ? "text-gray-white"
+      : "text-gray-4")
+  );
+};
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,21 +42,19 @@ export const NavBar = () => {
         variant="header"
         arrow={false}
         onClick={() => navigate(`/platform/${pageName}`)}
-        textClassName={cn(
-          concateTextName(pageName)
-        )}
+        textClassName={cn(concateTextName(pageName))}
       />
     );
   };
   const buttons = [
-    {text:"Documentation", pageName:"doc"},
-    {text:"Examples", pageName:"examples"},
-    {text:"Playground", pageName:"playground"},
-    {text:"Chatbot", pageName:"chatbot"},
+    { text: "Documentation", pageName: "doc" },
+    { text: "Examples", pageName: "examples" },
+    { text: "Playground", pageName: "playground" },
+    { text: "Chatbot", pageName: "chatbot" },
   ];
   return (
     <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">
-      <div className="w-[1440px] flex justify-between">
+      <div className="w-full flex justify-between">
         <div
           aria-label="logo and navigation"
           className="flex items-center gap-md self-stretch"
@@ -62,7 +63,9 @@ export const NavBar = () => {
             <Logo />
           </div>
           <div className="flex items-center gap-xs">
-            {buttons.map((button, index) => generateButton(button.text, button.pageName, index))}
+            {buttons.map((button, index) =>
+              generateButton(button.text, button.pageName, index)
+            )}
           </div>
         </div>
         <div aria-label="profile" className="flex items-center gap-xs">
