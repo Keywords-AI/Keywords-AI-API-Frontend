@@ -34,6 +34,8 @@ import React from "react";
  * @param {string} [props.iconHoverFill="fill-gray-white"] - The hover fill color of the icon in the button.
  * @param {string} [props.iconPosition="right"] - The direction of the icon in the button. Options are "right" or "left".
  * @param {string} [props.padding="py-xxs px-xs"] - The padding of the button.
+ * @param {string} [props.borderColor="border-transparent"] - The border color of the button.
+ * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
  */
 
 export const Button = forwardRef(
@@ -56,6 +58,8 @@ export const Button = forwardRef(
       iconHoverFill = "fill-gray-white",
       iconPosition = "left",
       padding = "py-xxs px-xs",
+      borderColor = "border-transparent",
+      borderHoverColor = "hover: border-transparent"
     },
     ref
   ) => {
@@ -100,7 +104,7 @@ export const Button = forwardRef(
         iconHoverFill = "fill-gray-white";
         break;
       case "header":
-        bgColor = "bg-transparent";
+        
         hoverColor = "hover:bg-transparent";
         clickedColor = "active:bg-transparent";
         textColor = "text-gray-4";
@@ -154,15 +158,29 @@ export const Button = forwardRef(
         );
       case "r4-white":
         bgColor = "bg-gray-white";
+        hoverColor = "hover:bg-gray-4";
+        clickedColor = "active:bg-gray-4";
         textColor = "text-gray-black";
         textHoverColor = "group-hover:text-gray-black";
         textClickedColor = "group-active:text-gray-white";
-        hoverColor = "hover:bg-gray-4";
-        clickedColor = "active:bg-gray-4";
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
         iconFill = "fill-gray-black";
         iconHoverFill = "fill-gray-black";
+        //className = cn(className, ); //placeholder for potential additional parameters
+      case "r4-gray2":
+        bgColor = "bg-gray-2";
+        hoverColor = "hover:bg-gray-2";
+        clickedColor = "active:bg-gray-2";
+        textColor = "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
+        padding = "py-xxs px-xs";
+        iconFill = "fill-gray-white";
+        iconHoverFill = "fill-gray-white";
+        borderColor = "border-gray-3"
+        borderHoverColor = "hover:border-gray-4"
         //className = cn(className, ); //placeholder for potential additional parameters
         break;
     }
@@ -172,7 +190,7 @@ export const Button = forwardRef(
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={cn(
-          "group inline-flex min-w-[60px] justify-center items-center gap-xxs  ",
+          "group inline-flex min-w-[60px] justify-center items-center gap-xxs border border-solid ",
           borderRadius,
           bgColor,
           hoverColor,

@@ -67,7 +67,7 @@ const NotConnectedMap = ({
         </div>
         <div className="flex items-start gap-xs">
           <Button
-            variant="standard"
+            variant="r4-gray2"
             text="View code"
             padding="px-xs py-xxs"
             textClassName="text-sm-md"
