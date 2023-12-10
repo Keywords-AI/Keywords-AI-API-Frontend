@@ -46,15 +46,15 @@ export default {
       },
 
       colors: {
-        primary: "#A8CBFF ",
+        primary: "#6188ED",
         complementary: "#123456",
         success: "#73CB98",
-        error: "#D43A28",
-        avatar: "#008080",
+        error: "#F55656",
+        avatar: "#008080", //to be updated, ping @andy
         gray: {
           white: "#F9FAFC",
-          black: "#000000",
-          2: "#181820",
+          black: "#05050A",
+          2: "#151518",
           3: "#3E424A",
           4: "#B1B3BC",
         },

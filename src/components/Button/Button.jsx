@@ -151,6 +151,19 @@ export const Button = forwardRef(
           className,
           "hover:cursor-default gradient-in max-h-[36px] tracking-[0.56px]"
         );
+      case "r4-white":
+        bgColor = "bg-gray-white";
+        textColor = "text-gray-black";
+        textHoverColor = "group-hover:text-gray-black";
+        textClickedColor = "group-active:text-gray-white";
+        hoverColor = "hover:bg-gray-4";
+        clickedColor = "active:bg-gray-4";
+        borderRadius = "rounded-sm";
+        padding = "py-xxs px-xs";
+        iconFill = "fill-gray-black";
+        iconHoverFill = "fill-gray-black";
+        //className = cn(className, ); //placeholder for potential additional parameters
+        break;
     }
     return (
       <button
