@@ -47,7 +47,7 @@ export const CurrentModel = () => {
             {models.map((model, index) => (
               <DropdownMenuPrimitive.Item key={index} asChild>
                 <div
-                  className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch"
+                  className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch group"
                   onClick={() => {
                     setCurrent({
                       name: model.name,
@@ -61,7 +61,9 @@ export const CurrentModel = () => {
                     {React.createElement(model.icon)}
                   </div>
 
-                  <p className="text-sm-md text-gray-4">{model.name}</p>
+                  <p className="text-sm-regular text-gray-4 group-hover:text-gray-white">
+                    {model.name}
+                  </p>
                 </div>
               </DropdownMenuPrimitive.Item>
             ))}

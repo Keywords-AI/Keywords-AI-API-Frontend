@@ -16,7 +16,7 @@ import React from "react";
  *   onClick={() => console.log('Clicked!')}
  * />
  * na
- * 
+ *
  * @param {string} props.variant - The variant of the button. Options include "primary", "header", "secondary", "secondary-gray", "secondary-black", "beta".
  * @param {string} props.text - The text displayed on the button.
  * @param {React.Element} [props.icon=null] - Icon component to be displayed on the button.
@@ -224,6 +224,7 @@ export const Button = forwardRef(
     }
     return (
       <button
+        aria-label="Button"
         ref={ref}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
