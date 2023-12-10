@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { BackButton } from "src/components/BackButton";
-import { Button } from "src/components/Button";
+import { BackButton } from "src/components/Buttons/BackButton";
+import { Button } from "src/components/Buttons/Button";
 
 import React from "react";
 

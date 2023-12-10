@@ -1,7 +1,7 @@
 import React from "react";
 import { Stop, Send } from "./icons";
 import { EditableBox } from "src/components/EditableBox/EditableBox";
-import IconButton from "src/components/IconButton/IconButton";
+import IconButton from "src/components/Buttons/IconButton/IconButton";
 
 export default function KeywordsInput({
   placeholder,

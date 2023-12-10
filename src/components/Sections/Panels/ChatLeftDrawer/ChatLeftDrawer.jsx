@@ -2,7 +2,7 @@ import React from "react";
 import { Rocket, Edit } from "./icons";
 import { Button } from "src/components";
 import ConversationItem from "./components/ConversationItem";
-export default function LeftDrawer({
+export default function ChatLeftDrawer({
   handleStop,
   createConversation,
   getConversations,
@@ -22,7 +22,7 @@ export default function LeftDrawer({
         className="flex-col justify-center items-center gap-sm self-stretch"
       >
         <Button
-          variant="r4-gray2"
+          variant="chat"
           icon={Rocket}
           className="self-stretch"
           text="New Chat"

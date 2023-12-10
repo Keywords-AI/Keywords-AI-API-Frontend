@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "src/components";
-import { BackButton } from "src/components/BackButton";
-import { Button } from "src/components/Button";
+import { BackButton } from "src/components/Buttons/BackButton";
+import { Button } from "src/components/Buttons/Button";
 import React from "react";
 export function NotFound() {
   const navigate = useNavigate();

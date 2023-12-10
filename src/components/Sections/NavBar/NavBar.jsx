@@ -1,8 +1,8 @@
 import * as Toolbar from "@radix-ui/react-toolbar";
-import { Button } from "../Button";
+import { Button } from "src/components/Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import cn from "src/utilities/ClassMerge";
-import ProfileMenu from "../ProfileMenu/ProfileMenu";
+import ProfileMenu from "src/components/Dialogs/ProfileMenu/ProfileMenu";
 import React from "react";
 const Logo = ({ fill = "fill-gray-4" }) => {
   return (

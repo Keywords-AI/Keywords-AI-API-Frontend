@@ -1,6 +1,6 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { Button } from "src/components/Button/Button";
+import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
 
 export default function ChatMessage({ message }) {

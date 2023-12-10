@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import { ArrowDown } from "../icons";
+import { ArrowDown } from "src/components/icons/icons";
 import React, { useState } from "react";
 import cn from "src/utilities/ClassMerge";
-import { DropDownMenu } from "../DropDownMenu/DropDownMenu";
+import { DropDownMenu } from "src/components/Dialogs/DropDownMenu/DropDownMenu";
 import { logout } from "src/store/actions";
 
 const mapStateToProps = (state) => {

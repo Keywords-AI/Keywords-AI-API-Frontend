@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { BackButton } from "src/components/BackButton";
+import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { AuthenticationTitle } from "src/components/AuthenticationTitle/AuthenticationTitle";
 import cn from "src/utilities/ClassMerge";
-import { Button } from "src/components/Button";
+import { Button } from "src/components/Buttons/Button";
 import { platformURL } from "src/utilities/platformURL";
 import { login, getUser } from "src/store/actions";
 import { connect } from "react-redux";

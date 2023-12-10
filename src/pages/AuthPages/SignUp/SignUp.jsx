@@ -1,11 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { BackButton } from "src/components/BackButton";
+import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { AuthenticationTitle } from "src/components/AuthenticationTitle/AuthenticationTitle";
 import cn from "src/utilities/ClassMerge";
 import { signup } from "src/authentication/Authentication";
-import { Button } from "src/components/Button";
+import { Button } from "src/components/Buttons/Button";
 export function SignUp() {
   const navigate = useNavigate();
   const {

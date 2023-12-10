@@ -36,6 +36,7 @@ import React from "react";
  * @param {string} [props.padding="py-xxs px-xs"] - The padding of the button.
  * @param {string} [props.borderColor="border-transparent"] - The border color of the button.
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
+ * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  */
 
 export const Button = forwardRef(
@@ -60,6 +61,7 @@ export const Button = forwardRef(
       padding = "py-xxs px-xs",
       borderColor = "border-transparent",
       borderHoverColor = "hover:border-transparent",
+      justification = "justify-center",
     },
     ref
   ) => {
@@ -177,14 +179,41 @@ export const Button = forwardRef(
         iconHoverFill = "group-hover:fill-gray-white";
         break;
       case "header":
-        textClassName = "text-sm-regular",
         bgColor = "bg-gray-black";
+        textClassName = "text-sm-regular";
         hoverColor = "hover:bg-gray-black";
         clickedColor = "active:bg-gray-black";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         padding = "py-xxs px-xs";
+        break;
+      case "panel":
+        bgColor = "bg-gray-black";
+        textClassName = "text-sm-regular";
+        hoverColor = "hover:bg-gray-black";
+        clickedColor = "active:bg-gray-black";
+        textColor = "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        padding = "py-xxs px-xs";
+        justification = "justify-start";
+        className = "w-[280px]";
+        break;
+      case "chat":
+        bgColor = "bg-gray-2";
+        textClassName = "text-sm-regular";
+        hoverColor = "hover:bg-gray-2";
+        clickedColor = "active:bg-gray-black";
+        textColor = "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderColor="border border-gray-3";
+        borderHoverColor="hover:border-gray-4";
+        borderRadius = "rounded-sm";
+        padding = "py-xxs px-xs";
+        justification = "justify-center";
+        className = "w-[256px]";
         break;
     }
     return (
@@ -193,7 +222,8 @@ export const Button = forwardRef(
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={cn(
-          "group inline-flex min-w-[60px] justify-center items-center gap-xxs",
+          "group inline-flex min-w-[60px] items-center gap-xxs",
+          justification,
           borderRadius,
           bgColor,
           hoverColor,

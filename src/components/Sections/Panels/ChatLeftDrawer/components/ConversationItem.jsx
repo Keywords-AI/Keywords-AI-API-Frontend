@@ -1,6 +1,6 @@
 import React from 'react'
 import { Delete, Tick, Cross } from '../icons'
-import IconButton from 'src/components/IconButton/IconButton'
+import IconButton from 'src/components/Buttons/IconButton/IconButton'
 import { deleteConversation } from 'src/store/actions/conversationAction';
 import { connect } from 'react-redux';
 
