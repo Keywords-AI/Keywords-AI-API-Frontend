@@ -1,5 +1,5 @@
 import React from "react";
-import EditableBox from "src/components/EditableBox/EditableBox";
+import EditableBox from "src/components/Inputs/EditableBox/EditableBox";
 import { DeleteMessage, ErrorWarning } from "src/assets/svgs";
 
 export default function PlaygroundMessage({

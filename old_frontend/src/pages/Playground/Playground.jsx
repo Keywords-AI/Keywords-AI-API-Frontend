@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import KeywordsSelection from "src/components/KeywordsSelection/KeywordsSelection";
 import useStream from "src/hooks/useStream";
-import EditableBox from "src/components/EditableBox/EditableBox";
+import EditableBox from "src/components/Inputs/EditableBox/EditableBox";
 import { connect } from "react-redux";
 import readStream from "src/services/readStream";
 import "./static/css/style.css";
