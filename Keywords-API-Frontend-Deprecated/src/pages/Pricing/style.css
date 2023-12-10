@@ -1,0 +1,44 @@
+.pricing table {
+    border: none;
+    width: 100%;
+    max-width: 1200px;
+    align-self: center;
+    border-collapse: collapse;
+}
+
+.pricing thead {
+    border-collapse: collapse;
+}
+
+.pricing tbody {
+    border-collapse: collapse;
+}
+
+.pricing tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--gray3);
+}
+
+.pricing .data,
+.pricing th {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
+    height: 60px;
+    box-sizing: border-box;
+    border: none;
+}
+
+.pricing .feature-col-td {
+    display: flex;
+    align-items: center;
+    border: none;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.pricing td:first-child {
+    border-right: 1px solid var(--gray3);
+}

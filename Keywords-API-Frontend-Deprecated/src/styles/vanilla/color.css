@@ -1,0 +1,118 @@
+:root {
+    --primary: #003366;
+    --primary100: #D1DDFC;
+    --primary500: #33557D;
+    --white: #F9FAFC;
+    --gray2: #F2F4F7;
+    --gray3: #9FA2AB;
+    --gray4: #3E424A;
+    --black: #181820;
+    --error: #D43A28;
+    --red-light: #F7CAC9;
+    --red-dark: #D43A28;
+    --success: #1E8449;
+    --orange-light: #FFF2E1;
+    --orange-dark: #F57C00;
+    --purple-dark: #8E24AA;
+    --purple-light: #F3E5F5;
+    --teal-light: #D0F0E4;
+    --teal-dark: #008080;
+    --green-light: #E8F5E9;
+    --green-dark: #1E8449;
+}
+
+.bg-primary {
+    background: var(--primary, #036) !important;
+}
+
+.bg-primary-500 {
+    background: var(--primary500, #33557D) !important;
+}
+
+.bg-white {
+    background: var(--white, #F9FAFC) !important;
+}
+
+.bg-gray2 {
+    background: var(--gray2, #F2F4F7) !important;
+}
+
+.bg-gray4 {
+    background: var(--gray-gray-4, #3E424A) !important;
+}
+
+.bg-black {
+    background: var(--black, #181820) !important;
+}
+
+.bg-error {
+    background: var(--error, #D43A28) !important;
+}
+
+.bg-success {
+    background: var(--success, #1E8449) !important;
+}
+
+.bg-red-light {
+    background: var(--red-light, #F7CAC9) !important;
+}
+
+.bg-trans {
+    background: transparent !important;
+}
+
+.bg-purple-dark {
+    background: var(--purple-dark, #8E24AA) !important;
+}
+
+.bg-teal-dark {
+    background: var(--teal-dark, #D0F0E4) !important;
+}
+
+.text-primary {
+    color: var(--primary, #036) !important;
+}
+
+.text-white {
+    color: var(--white, #F9FAFC) !important;
+}
+
+.t-error {
+    color: var(--error, #D43A28) !important;
+}
+
+.t-success {
+    color: var(--success, #1E8449) !important;
+}
+
+.text-gray4 {
+    color: var(--gray4, #3E424A) !important;
+}
+
+.text-gray2 {
+    color: var(--gray2, #F2F4F7) !important;
+}
+
+.text-gray3 {
+    color: var(--gray3, #9FA2AB) !important;
+}
+
+.text-black {
+    color: var(--black, #181820) !important;
+}
+
+.t-red-light {
+    color: var(--red-light, #F7CAC9) !important;
+}
+
+.t-green-light {
+    color: var(--other-colors-green-light, #E8F5E9) !important;
+}
+
+.t-purple-dark {
+    color: var(--purple-dark, #8E24AA) !important;
+}
+
+.t-teal-dark {
+    color: var(--teal-dark, #D0F0E4) !important;
+}

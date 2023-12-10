@@ -1,0 +1,54 @@
+.code-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    background: var(--black, var(--black));
+}
+
+.code-box .header {
+    display: flex;
+    padding: 12px 20px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    align-self: stretch;
+    background-color: var(--gray4)
+}
+
+.code-box .language-choices {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.code-box code, pre {
+    display: flex;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    text-align: left;
+    white-space: pre-wrap;
+    color: var(--white);
+}
+
+.code-box .copy-code {
+    box-shadow: inset 0 0 0 1px var(--white);
+    background: var(--black);
+}
+
+.code-box .language-choice {
+    color: var(--black, var(--white));
+    text-align: center;
+    background-color: var(--black);
+}
+
+.code-box .code-display {
+    padding: 0;
+    display: flex;
+    text-align: left;
+}

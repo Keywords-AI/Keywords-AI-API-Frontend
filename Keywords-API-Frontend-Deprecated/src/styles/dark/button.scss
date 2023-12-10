@@ -1,0 +1,153 @@
+// SCSS Variables
+@import "color";
+
+
+button {
+    white-space: nowrap;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    display: inline-flex;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    min-width: 60px;
+    flex-shrink: 0;
+
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+// Base Button Styles
+.button {
+    white-space: nowrap;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    display: inline-flex;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    min-width: 60px;
+    flex-shrink: 0;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+
+
+// Variants using extends and modifiers
+.button-fill {
+    width: 100%;
+}
+
+.button-tertiary {
+    &-white {
+        background-color: $white !important;
+        box-shadow: inset 0 0 0 1px $gray4 !important;
+        color: $black !important;
+
+        &:hover {
+            color: $white !important;
+            background-color: $black !important;
+        }
+    }
+
+    &-black {
+        background-color: $black !important;
+        box-shadow: inset 0 0 0 1px $white !important;
+        color: $white !important;
+
+        &:hover {
+            color: $black !important;
+            background-color: $white !important;
+        }
+    }
+
+    &-primary {
+        box-shadow: inset 0 0 0 1px $primary !important;
+        background-color: $white !important;
+        color: $primary !important;
+
+        &:hover {
+            color: $white !important;
+            background-color: $primary !important;
+        }
+    }
+}
+
+.button-primary {
+    background-color: $primary !important;
+    color: #FBFBFD;
+
+    &:hover {
+        background-color: $primary500 !important;
+    }
+}
+
+.button-secondary {
+    &-white {
+        background-color: $white !important;
+        color: $black !important;
+
+        &:hover {
+            background-color: $gray2 !important;
+        }
+    }
+
+    &-black {
+        background-color: $black !important;
+        color: $white !important;
+
+        &:hover {
+            background-color: $gray4 !important;
+        }
+    }
+
+    &-gray {
+        background-color: $gray2 !important;
+        color: $black !important;
+
+        &:hover {
+            background-color: $gray3 !important;
+        }
+    }
+
+    &-primary {
+        &.active {
+            background-color: $gray4 !important;
+        }
+    }
+}
+
+.button-header {
+    background-color: transparent;
+    color: $gray4 !important;
+
+    &:hover {
+        color: $primary !important;
+    }
+}
+
+.button-context-menu {
+    display: flex;
+    padding: 8px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: self-stretch;
+    background-color: $white !important;
+    color: $black !important;
+    text-align: center;
+
+    &:hover, &.active {
+        background-color: $gray2 !important;
+        color: $primary !important;
+    }
+}

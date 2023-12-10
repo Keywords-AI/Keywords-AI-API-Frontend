@@ -1,0 +1,6 @@
+.grid-input {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 12px;
+    align-self: stretch;
+}

@@ -2,10 +2,10 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
 
 export const DropDownMenu = ({
-  trigger,
-  items,
-  open,
-  setOpen,
+  trigger, // The trigger elements, the buttons
+  items, // The items to be displayed in the dropdown
+  open, // The state of the dropdown
+  setOpen, // The function to change the state of the dropdown
   side = "bottom",
   sideOffset = 10,
   align = "center",
