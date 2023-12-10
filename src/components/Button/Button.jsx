@@ -179,8 +179,8 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         iconFill = "fill-gray-white";
         iconHoverFill = "fill-gray-white";
-        borderColor = "border-gray-3"
-        borderHoverColor = "hover:border-gray-4"
+        borderColor = "border-gray-3";
+        borderHoverColor = "hover:border-gray-4";
         //className = cn(className, ); //placeholder for potential additional parameters
         break;
     }
