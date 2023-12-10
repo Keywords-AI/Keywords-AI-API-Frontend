@@ -1,5 +1,5 @@
 import React from "react";
-import { Rocket, ChatBox, Delete } from "src/assets/svgs.jsx";
+import { Rocket, Edit } from "./icons";
 export default function LeftDrawer({
   handleStop,
   createConversation,
@@ -11,7 +11,7 @@ export default function LeftDrawer({
   handleDelete,
 }) {
   return (
-    <div className="chat-left bg-black">
+    <div className="bg-gray-2 w-[280px]">
       <div
         className="flex-col justify-center items-center gap-md self-stretch"
         style={{ height: "calc(100% - 64px)" }}

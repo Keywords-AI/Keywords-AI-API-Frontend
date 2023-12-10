@@ -1,15 +1,6 @@
 import React from "react";
 import "./static/css/style.css";
-import {
-  ChatBox,
-  Delete,
-  ChatAvatar,
-  ChatLogo,
-  Rocket,
-  SmallerEdit,
-} from "src/assets/svgs";
 import { connect } from "react-redux";
-import ReactMarkdown from "react-markdown";
 import { createMessage } from "src/store/actions/messageAction";
 import {
   createConversation,
@@ -24,11 +15,7 @@ import {
   setStreaming,
   setNotStreaming,
 } from "src/store/actions/streamingAction";
-import KeywordsLogo from "src/components/KeywordsLogo/KeywordsLogo";
-import KeywordsInput from "src/components/Inputs/KeywordsInput/KeywordsInput";
-import ChatMessage from "./components/ChatMessage/ChatMessage";
 import LeftDrawer from "./components/LeftDrawer/LeftDrawer";
-import Popup from "./components/Popup/Popup";
 import Sample from "./components/Sample/Sample";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import { useParams } from "react-router-dom";
@@ -102,7 +89,7 @@ function Chatbot({
 
 
   const handleError = (error) => {
-    console.log("error", error);
+    console.log("error", error); 
     setChatError(error);
   };
   const { loading, error, response, postData } = useStream(
@@ -170,10 +157,6 @@ function Chatbot({
   };
 
   React.useEffect(() => {
-    getConversations();
-  }, []);
-
-  React.useEffect(() => {
     if (error) {
       setNotStreaming();
       errorMessage(error);
@@ -231,15 +214,15 @@ function Chatbot({
   };
 
   return (
-    <div className="chatbot flex-row">
-      {promptPopup && (
+    <div className="flex-row h-[calc(100vh-52.8px)] self-stretch">
+      {/* {promptPopup && (
         <Popup
           setPromptPopup={setPromptPopup}
           closePopup={() => {
             setPromptPopup(false);
           }}
         />
-      )}
+      )} */}
       <LeftDrawer
         handleStop={handleStop}
         createConversation={createConversation}
@@ -250,23 +233,15 @@ function Chatbot({
         setActiveConversation={setActiveConversation}
         handleDelete={handleDelete}
       />
-      <div className="flex-col flex-1  ">
+      <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
           <div className="flex-row justify-center items-center gap-xxs self-stretch">
-            <span className="text-sm">
-              {"Model: keywords-ai-8k  |  " +
-                (uploading
-                  ? "Uploading & Processing Your File..."
-                  : "Custom Prompt: " +
-                  (user?.system_prompt_active ? "on" : "off"))}
-            </span>
             <div
               className="hover-cp"
               onClick={() => {
                 setPromptPopup(true);
               }}
             >
-              <SmallerEdit />
             </div>
           </div>
         </div>
@@ -308,7 +283,6 @@ function Chatbot({
             {generatingText && (
               <div className="chat-message bg-gray2">
                 <div className="flex-row justify-center items-start gap-sm self-stretch">
-                  <ChatLogo />
                   <div className="text-md">{generatingText}</div>
                 </div>
               </div>
@@ -326,17 +300,17 @@ function Chatbot({
               alignItems: "center",
             }}
           >
-            {(!conversation?.messages ||
+            {/* {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
                 <Sample sendText={sendText} />
-              )}
+              )} */}
             <div
               style={{
                 position: "relative",
               }}
               className="flex-row self-stretch"
             >
-              <KeywordsInput
+              {/* <KeywordsInput
                 placeholder={"Send a message..."}
                 streaming={streaming}
                 handleInput={handleInput}
@@ -344,7 +318,7 @@ function Chatbot({
                 handleSend={handleSend}
                 handleStop={handleStop}
                 abortController={abortController}
-              />
+              /> */}
             </div>
             <div className="caption text-gray4">
               Powered by{" "}
