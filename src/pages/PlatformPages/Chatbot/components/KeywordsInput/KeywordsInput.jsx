@@ -1,6 +1,7 @@
 import React from "react";
-import { Stop, Send } from "src/assets/svgs";
-import EditableBox from "src/components/EditableBox/EditableBox";
+import { Stop, Send } from "./icons";
+import { EditableBox } from "src/components/EditableBox/EditableBox";
+import IconButton from "src/components/IconButton/IconButton";
 
 export default function KeywordsInput({
   placeholder,
@@ -13,77 +14,35 @@ export default function KeywordsInput({
   value,
 }) {
   const spanRef = React.useRef(null);
-  const [focus, setFocus] = React.useState(false);
   React.useEffect(() => {
     if (spanRef.current && value) {
       spanRef.current.innerText = value;
     } else if (spanRef.current) {
     }
   }, [value]);
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData("text/plain");
-    document.execCommand("insertText", false, text);
-  };
   return (
-    <div
-      style={{
-        position: "relative",
-        display: "flex",
-        width: "100%",
-      }}
-    >
-      <span
-        className={"text-input bg-white t-pre-wrap text-sm text-black"}
-        role="textbox"
-        contentEditable={!streaming}
-        suppressContentEditableWarning={true} // could be dangerous, should keep an eye on this
-        onInput={handleInput}
-        onKeyDown={handleKeyDown}
-        onPaste={handlePaste}
-        data-placeholder={placeholder}
-        onFocus={() => {
-          setFocus(true);
-        }}
-        onBlur={() => {
-          setFocus(false);
-        }}
-        ref={spanRef}
-        style={{
-          textAlign: "left",
-          wordBreak: "break-word",
-        }}
-      >
-        {streaming ? <span className="text-gray3">Generating...</span> : ""}
-      </span>
+    <div className="relative flex w-full">
+      <EditableBox 
+        className={"border border-solid border-white rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
+        placeholder={placeholder}
+        text={streaming? "Generating":value}
+      />
       {streaming ? (
-        <div
-          style={{
-            position: "absolute",
-            right: "12px",
-            bottom: "7px",
-          }}
+        <IconButton
+          icon={<Stop />}
           onClick={() => {
             handleStop();
           }}
-          className="hover-cp"
-        >
-          <Stop />
-        </div>
+          className="absolute right-xs bottom-[11px] cursor-pointer"
+        />
       ) : (
-        <div
-          style={{
-            position: "absolute",
-            right: "12px",
-            bottom: "7px",
-          }}
-          className="hover-cp"
+        <IconButton
+          icon={<Send />}
           onClick={() => {
             handleSend(spanRef.current);
           }}
-        >
-          <Send />
-        </div>
+          className="absolute right-xs bottom-[11px] cursor-pointer"
+        />
       )}
     </div>
   );

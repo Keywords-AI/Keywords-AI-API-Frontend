@@ -1,7 +1,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import { UtilityButton } from "../UtilityButton/UtilityButton";
-import { SmallCopy, CopyConfirm, ChatAvatar, ChatLogo } from "src/assets/svgs";
+import { Button } from "src/components/Button/Button";
+import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {
@@ -18,10 +18,11 @@ export default function ChatMessage({ message }) {
     <div
       className={
         `chat-message ` +
-        (message && message.role === "user" ? "bg-white" : "bg-gray2") +
+        (message && message.role === "user" ? "bg-black" : "bg-gray-2") +
         (message && message.content && checkError(message.content)
-          ? " bg-red-light"
-          : "")
+          ? " bg-error"
+          : "") +
+        " flex px-xxxl py-[24px] justify-between align-start"
       }
     >
       <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
@@ -69,12 +70,11 @@ export default function ChatMessage({ message }) {
               className="flex-row items-center gap-xxs self-stretch"
               style={{ height: "28px", marginTop: "8px" }}
             >
-              <UtilityButton
-                icon={<SmallCopy />}
-                text={"Copy"}
-                clickedIcon={<CopyConfirm />}
-                clickedText={"Copied"}
-                handleClick={() => handleToClipboard(message?.content)}
+              <Button
+                variant="small"
+                text="Regenerate"
+                icon={Regenerate}
+                onClick={() => handleToClipboard(message?.content)}
               />
             </div>
           ) : null}

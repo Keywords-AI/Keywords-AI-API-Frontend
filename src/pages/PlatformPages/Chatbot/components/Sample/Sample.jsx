@@ -206,7 +206,7 @@ const description = [
   "for small living spaces",
 ];
 
-export default function Sample({ sendText }) {
+export default function Sample({ sendText=()=>{} }) {
   const [n, setN] = React.useState([]);
 
   React.useEffect(() => {
@@ -222,13 +222,13 @@ export default function Sample({ sendText }) {
       {n.map((card, index) => (
         <div
           key={index}
-          className="sample-text-container"
+          className="rounded-sm border border-solid border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start gap-xxs hover:cursor-pointer"
           onClick={() =>
             sendText(topic[n[index]] + " " + description[n[index]])
           }
         >
-          <div className="self-stretch text-sm text-black">{topic[n[index]]}</div>
-          <div className="text-sm text-gray4 t-pre-wrap">
+          <div className="self-stretch text-sm text-white">{topic[n[index]]}</div>
+          <div className="text-sm text-gray-4 t-pre-wrap">
             {description[n[index]]}
           </div>
         </div>

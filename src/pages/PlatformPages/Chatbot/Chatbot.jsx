@@ -1,5 +1,4 @@
 import React from "react";
-import "./static/css/style.css";
 import { connect } from "react-redux";
 import { createMessage } from "src/store/actions/messageAction";
 import {
@@ -7,7 +6,6 @@ import {
   getConversations,
   deleteConversation,
 } from "src/store/actions/conversationAction";
-import { useNavigate } from "react-router-dom";
 import readStream from "src/services/readStream";
 import useStream from "src/hooks/useStream";
 import { retrieveConversation } from "src/store/actions/conversationAction";
@@ -16,9 +14,12 @@ import {
   setNotStreaming,
 } from "src/store/actions/streamingAction";
 import LeftDrawer from "./components/LeftDrawer/LeftDrawer";
+import ChatMessage from "./components/ChatMessage/ChatMessage";
+import Popup from "./components/Popup/Popup";
 import Sample from "./components/Sample/Sample";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import { useParams } from "react-router-dom";
+import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
+import { KeywordsLogo, BigLogo } from "./icons";
 
 const mapStateToProps = (state) => {
   return {
@@ -66,7 +67,7 @@ function Chatbot({
   setStreaming,
   setNotStreaming,
   conversations,
-  conversation,
+  // conversation,
   createMessage,
   errorMessage,
   createConversation,
@@ -75,21 +76,25 @@ function Chatbot({
   deleteConversation,
   uploading,
 }) {
-  const navigate = useNavigate();
-  const { mode } = useParams();
   const [inputText, setInputText] = React.useState("");
   const [abortController, setAbortController] = React.useState(null);
   const generateRef = React.useRef(null);
   const [activeConversation, setActiveConversation] = React.useState(null);
-  const conversationRef = React.useRef(conversation);
   const [promptPopup, setPromptPopup] = React.useState(false);
   const fileUploadRef = React.useRef(null);
   const [chatError, setChatError] = React.useState(null);
   const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
+  const conversation = {
+    // messages: [
+    //   { role: "user", content: "Hello" },
+    //   { role: "assistant", content: "Hello" },
+    // ]
+  }
+  const conversationRef = React.useRef(conversation);
 
 
   const handleError = (error) => {
-    console.log("error", error); 
+    console.log("error", error);
     setChatError(error);
   };
   const { loading, error, response, postData } = useStream(
@@ -107,7 +112,7 @@ function Chatbot({
     }
   };
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     generateRef.current = generatingText;
   }, [generatingText])
 
@@ -214,15 +219,15 @@ function Chatbot({
   };
 
   return (
-    <div className="flex-row h-[calc(100vh-52.8px)] self-stretch">
-      {/* {promptPopup && (
+    <div className="flex-row h-[calc(100vh-56px)] self-stretch">
+      {promptPopup && (
         <Popup
           setPromptPopup={setPromptPopup}
           closePopup={() => {
             setPromptPopup(false);
           }}
         />
-      )} */}
+      )}
       <LeftDrawer
         handleStop={handleStop}
         createConversation={createConversation}
@@ -245,8 +250,8 @@ function Chatbot({
             </div>
           </div>
         </div>
-        <div className="chat-right bg-white">
-          <div className="chat-messages-window" ref={conversationBoxRef}>
+        <div className="chat-right flex flex-1 bg-black relative pt-sm pb-lg">
+          <div className="flex-col flex-1 h-[calc(100vh-184px)]" ref={conversationBoxRef}>
             {conversation?.messages?.length > 0 ? (
               <>
                 {conversation?.messages?.map((message, index) => (
@@ -265,16 +270,16 @@ function Chatbot({
             ) : (
               <>
                 {streaming && (
-                  <div
-                    className="flex-col justify-center items-center gap-xs self-stretch"
-                    style={{
-                      marginTop: "120px",
-                      gap: "4px",
-                    }}
-                  >
-                    <KeywordsLogo />
-                    <div className="text-md t-medium text-gray3">
-                      GPT-4 quality LLM at a fraction of the cost
+                  <div className="flex-col justify-center items-center gap-md self-stretch mt-[160px]">
+                    <BigLogo />
+                    <div className="flex-col justify-center items-center gap-xxxs self-stretch">
+                      <div className="flex-row gap-xxs items-center">
+                        <KeywordsLogo />
+                        <span className="display-sm">Keywords AI</span>
+                      </div>
+                      <div className="text-md-medium text-gray-3">
+                        Connect to the best model for your prompts.
+                      </div>
                     </div>
                   </div>
                 )}
@@ -289,41 +294,31 @@ function Chatbot({
             )}
           </div>
           <div
-            className="absolute-input-wrapper"
-            style={{
-              left: "120px",
-              right: "120px",
-              bottom: "32px",
-              display: "flex",
-              gap: "12px",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            {/* {(!conversation?.messages ||
+            className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
+            {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
                 <Sample sendText={sendText} />
-              )} */}
+              )}
             <div
               style={{
                 position: "relative",
               }}
               className="flex-row self-stretch"
             >
-              {/* <KeywordsInput
-                placeholder={"Send a message..."}
+              <KeywordsInput
+                placeholder={streaming ? "Generating..." : "Send a message..."}
                 streaming={streaming}
                 handleInput={handleInput}
                 handleKeyDown={handleKeyDown}
                 handleSend={handleSend}
                 handleStop={handleStop}
                 abortController={abortController}
-              /> */}
+              />
             </div>
-            <div className="caption text-gray4">
-              Powered by{" "}
-              <a href="/" className="text-gray4">
-                Keywords AI
+            <div className="caption text-gray-4">
+              Keywords AI connects your prompts with the best model automatically.{" "}
+              <a href="/" className="text-gray-4 underline">
+                Learn more
               </a>
             </div>
             <input type="file" hidden ref={fileUploadRef} />

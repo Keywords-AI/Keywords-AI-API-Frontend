@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import "./style.css";
-import { CheckBox, FileUpload } from "src/assets/svgs";
+import { CheckBox, FileUpload, Close } from "./icons";
 import { updateSystemPrompt } from "src/store/actions/userAction";
 import { connect } from "react-redux";
 import FileCard from "./FileCard";
 import { loadingFileUpload } from "src/store/actions/userAction";
+import { Button } from "src/components";
+import IconButton from "src/components/IconButton/IconButton";
 
 const mapStateToProps = (state) => {
   return {
@@ -58,7 +60,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
       const { system_prompt_active, system_prompt } = user;
       setSysPromptSubmit(system_prompt);
       setChecked(system_prompt_active);
-      console.log(system_prompt.content);
+      console.log(system_prompt?.content);
       console.log("text area", textAreaRef.current);
       if (textAreaRef.current) {
         textAreaRef.current.value = system_prompt?.content;
@@ -71,16 +73,29 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
   const [file, setFile] = React.useState(null);
 
   return (
-    <div className="backdrop" onMouseUp={handelClose}>
+    <div className="backdrop fixed h-screen w-screen flex bg-black bg-opacity-50 z-[1000] justify-center items-center" onMouseUp={handelClose}>
       <form ref={formRef}>
-        <div
-        className="modal-card bg-white"
+        <div className="inline-flex flex-col items-start gap-md p-lg max-h-full w-[600px] bg-black rounded-md relative"
+          style={{
+            boxShadow: "0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
+
+          }}
           ref={cardRef}
           onMouseDown={() => {
             setLastClicked(true);
           }}
         >
-          <div className="display-xs">Custom Prompt</div>
+          <IconButton
+            className={"absolute top-[36px] right-[36px]"}
+            icon={<Close />}
+            onClick={closePopup}
+          />
+          <div className="gap-xs flex-col items-start justify-start">
+            <div className="display-xs">Custom Prompt</div>
+            <div className="text-sm text-gray-4">
+              Add a system prompt or upload files. Custom settings coming soon.
+            </div>
+          </div>
           <div className="flex-col justify-start items-start self-stretch gap-xxs">
             <input
               type="file"
@@ -94,7 +109,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
               }}
             />
             <div className="flex-col justify-start items-start self-stretch gap-xxs">
-              <div className="text-sm text-gray4">System Prompt</div>
+              <div className="text-sm-md text-gray-4">System Prompt</div>
               <textarea
                 ref={textAreaRef}
                 style={{
@@ -107,7 +122,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                   });
                 }}
                 name="system_prompt"
-                className="text-sm bg-white"
+                className="text-sm bg-black border border-solid border-gray-3 rounded-sm text-gray-white"
                 id=""
               ></textarea>
               <input
@@ -124,7 +139,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                 }}
               />
               <div className="flex-col justify-start items-start self-stretch gap-xxs">
-                <div className="text-sm text-gray4">
+                <div className="text-sm-md text-gray-4">
                   {hasValidFile(user) ? "File Upload (Beta)" : "Current File"}
                 </div>
                 <div
@@ -153,27 +168,18 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
               </>
             )}
           </div>
-          <div className="flex-row self-stretch flex-1   space-between items-center">
+          <div className="flex-row self-stretch flex-1 justify-between items-center">
             <div className="flex-row justify-center items-center gap-xs self-stretch">
               <CheckBox onChecked={setChecked} checked={checked} />
               <div className="text-sm">{"Enable for new chats"}</div>
             </div>
-            <div className="flex-row justify-center items-center gap-xs self-stretch buttons-container">
-              <button
-                className="button-tertiary-white"
-                onClick={() => {
-                  closePopup();
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                className="button-primary"
+            <div className="flex-row justify-center items-center gap-xs self-stretch">
+              <Button
+                variant="white-r18"
                 type="submit"
-                onClick={handelSubmit}
-              >
-                Save
-              </button>
+                text="Save"
+                onClick={closePopup}
+              />
             </div>
           </div>
         </div>

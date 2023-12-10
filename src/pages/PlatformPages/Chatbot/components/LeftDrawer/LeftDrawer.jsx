@@ -1,84 +1,46 @@
 import React from "react";
 import { Rocket, Edit } from "./icons";
+import { Button } from "src/components";
+import ConversationItem from "./components/ConversationItem";
 export default function LeftDrawer({
   handleStop,
   createConversation,
   getConversations,
-  conversations,
+  // conversations,
   activeConversation,
   retrieveConversation,
   setActiveConversation,
   handleDelete,
 }) {
+  const conversations = [
+    {id: 1, name: "Conversation 1 φαιξσδ΄ξφικα"},
+    {id: 1, name: "Conversation 1 φαιξσδ΄ξφικα"},
+  ];
   return (
-    <div className="bg-gray-2 w-[280px]">
+    <div className="bg-gray-2 w-[280px] p-xs relative">
       <div
-        className="flex-col justify-center items-center gap-md self-stretch"
-        style={{ height: "calc(100% - 64px)" }}
+        className="flex-col justify-center items-center gap-sm self-stretch"
       >
-        <button
-          className="button-secondary-white"
-          style={{
-            width: "100%",
-          }}
-          onClick={() => {
-            handleStop();
-            createConversation();
-            getConversations();
-          }}
-        >
-          <Rocket />
-          <span className="text-sm">New Chat</span>
-        </button>
-        <div
-          className="flex-col flex-1   w-full"
-          style={{
-            overflow: "auto",
-          }}
-        >
-          <div className="conversation-items w-full">
-            {conversations?.map((conversationItem, index) => (
-              <button
-                key={index}
-                className={
-                  "button-secondary-black self-stretch" +
-                  (conversationItem?.id === activeConversation ? " active" : "")
-                }
-                onClick={() => {
-                  if (conversationItem?.id !== activeConversation) {
-                    handleStop();
-                    retrieveConversation(conversationItem?.id);
-                    setActiveConversation(conversationItem?.id);
-                  }
-                }}
-              >
-                <div
-                  className={"flex-row self-stretch flex-1   space-between items-center"}
-                >
-                  <div className="flex-row justify-center items-center gap-xs flex">
-                    <ChatBox />
-                    <div
-                      className="text-sm text-white"
-                      style={{
-                        display: "flex",
-                        maxWidth: "165px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {conversationItem?.name}
-                    </div>
-                  </div>
-                  <Delete
-                    style={{ flex: "1" }}
-                    handleDelete={() => handleDelete(conversationItem?.id)}
-                  />
-                </div>
-              </button>
+        <Button
+          variant="r4-gray2"
+          icon={Rocket}
+          className="self-stretch"
+          text="New Chat"
+        />
+        <div className="flex-col flex-1 w-full max-h-[calc(100vh-200px)] ">
+          <div className="self-stretch flex-col overflow-auto">
+            {conversations?.map((conversation, index) => (
+              <ConversationItem key={index} conversation={conversation}/>
             ))}
           </div>
         </div>
       </div>
+      <Button
+        variant="small"
+        icon={Edit}
+        text={"Custom prompt: " + ("on")}
+        className="absolute bottom-[8px] left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+      />
     </div>
   );
 }

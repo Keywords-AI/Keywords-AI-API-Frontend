@@ -183,14 +183,14 @@ export const EditableBox = React.forwardRef(
 
     return (
       <div
-        className="w-full h-full flex-col self-stretch flex-grow overflow-hidden"
+        className={"w-full h-full flex-col self-stretch flex-grow overflow-hidden"}
         ref={divRef}
         onClick={handleDivClick}
       >
         {isEditing && !streaming ? (
           <textarea
             className={cn(
-              "flex-grow resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm",
+              "flex-1 resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm text-white placeholder-gray-4",
               className
             )}
             placeholder={placeholder}

@@ -146,7 +146,7 @@ export const Button = forwardRef(
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         borderRadius = "rounded-sm";
-        borderColor = "border-gray-3";
+        borderColor = "border border-solid border-gray-3";
         borderHoverColor = "hover:border-gray-4";
         padding = "py-xxxs px-xxs";
         iconFill = "fill-gray-4";
@@ -193,7 +193,7 @@ export const Button = forwardRef(
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={cn(
-          "group inline-flex min-w-[60px] justify-center items-center gap-xxs border border-solid ",
+          "group inline-flex min-w-[60px] justify-center items-center gap-xxs",
           borderRadius,
           bgColor,
           hoverColor,
@@ -208,7 +208,7 @@ export const Button = forwardRef(
       >
         <span
           className={cn(
-            "flex-1 text-center",
+            "text-center",
             textColor,
             textHoverColor,
             textClickedColor,
@@ -218,7 +218,7 @@ export const Button = forwardRef(
           {text}
         </span>
         {icon && (
-          <div className="flex  justify-center items-center gap-[10px]">
+          <div className="flex justify-center items-center gap-[10px]">
             {React.createElement(icon, {
               fill: hover ? iconHoverFill : iconFill,
             })}
