@@ -55,10 +55,9 @@ export function ModelOutput({}) {
         ))}
       </div>
       <Button
-        variant={"api-action"}
+        variant={"small"}
         text={"Compare different models"}
         icon={Compare}
-        padding="py-xxxs px-xxs"
       />
     </div>
   );
