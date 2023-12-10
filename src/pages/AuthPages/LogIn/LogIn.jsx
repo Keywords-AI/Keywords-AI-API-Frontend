@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
-import { AuthenticationTitle } from "src/components/AuthenticationTitle/AuthenticationTitle";
+import { TitleAuth } from "src/components/Titles";
 import cn from "src/utilities/ClassMerge";
 import { Button } from "src/components/Buttons/Button";
 import { platformURL } from "src/utilities/platformURL";
@@ -35,7 +35,7 @@ const LogIn = ({ login }) => {
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home" />
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
-        <AuthenticationTitle
+        <TitleAuth
           title={"Sign in"}
           subtitle={
             <span>

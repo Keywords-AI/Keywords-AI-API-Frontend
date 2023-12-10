@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import FileCard from "./FileCard";
 import { loadingFileUpload } from "src/store/actions/userAction";
 import { Button } from "src/components";
-import IconButton from "src/components/Buttons/IconButton/IconButton";
+import { IconButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => {
   return {

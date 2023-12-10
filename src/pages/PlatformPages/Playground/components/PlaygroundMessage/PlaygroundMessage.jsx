@@ -1,4 +1,5 @@
-import { Button, EditableBox, EnterKey, ModelIcon, User } from "src/components";
+import { Button, EditableBox, ModelIcon, User } from "src/components";
+import { EnterKey } from "src/components/Icons/iconsDS"
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
 import useStream from "src/hooks/useStream";

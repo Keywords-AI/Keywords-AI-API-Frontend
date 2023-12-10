@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Button } from "../Button";
-import { ArrowLeft } from "src/components/icons";
+import { Button } from "./Button";
+import { ArrowLeft } from "src/components/Icons";
 import React from "react";
 export function BackButton({ text, link = -1 }) {
   const navigate = useNavigate();

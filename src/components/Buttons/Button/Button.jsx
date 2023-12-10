@@ -37,7 +37,8 @@ import React from "react";
  * @param {string} [props.borderColor="border-transparent"] - The border color of the button.
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
- */
+ * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
+*/
 
 export const Button = forwardRef(
   (
@@ -48,6 +49,8 @@ export const Button = forwardRef(
       className = "",
       borderRadius = "rounded-lg",
       onClick,
+      onMouseEnter,
+      onMouseLeave,
       textClassName = "text-sm-md",
       bgColor = "bg-gray-white",
       hoverColor = "hover:bg-[#33557D]",
@@ -62,6 +65,7 @@ export const Button = forwardRef(
       borderColor = "border-transparent",
       borderHoverColor = "hover:border-transparent",
       justification = "justify-center",
+      children,
     },
     ref
   ) => {
@@ -189,13 +193,15 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         break;
       case "panel":
-        bgColor = "bg-gray-black";
+        bgColor = "bg-transparent";
         textClassName = "text-sm-regular";
-        hoverColor = "hover:bg-gray-black";
+        hoverColor = "hover:bg-gray-3";
         clickedColor = "active:bg-gray-black";
+        iconPosition = "right";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
         justification = "justify-between";
         className = "w-full";
@@ -208,8 +214,8 @@ export const Button = forwardRef(
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
-        borderColor="border border-gray-3";
-        borderHoverColor="hover:border-gray-4";
+        borderColor = "border border-gray-3";
+        borderHoverColor = "hover:border-gray-4";
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
         justification = "justify-center";
@@ -219,8 +225,8 @@ export const Button = forwardRef(
     return (
       <button
         ref={ref}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         className={cn(
           "group inline-flex min-w-[60px] items-center gap-xxs",
           justification,
@@ -233,27 +239,32 @@ export const Button = forwardRef(
           padding,
           borderColor,
           borderHoverColor,
+          "text-center",
+          textColor,
+          textHoverColor,
+          textClickedColor,
+          textClassName
         )}
         onClick={onClick}
       >
-        <span
-          className={cn(
-            "text-center",
-            textColor,
-            textHoverColor,
-            textClickedColor,
-            textClassName
-          )}
-        >
-          {text}
-        </span>
-        {icon && (
-          <div className="flex justify-center items-center gap-[10px]">
-            {React.createElement(icon, {
-              fill: hover ? iconHoverFill : iconFill,
-            })}
-          </div>
-        )}
+        {children ?
+          <>
+            {children}
+
+          </> :
+          <>
+            <span>
+              {text}
+            </span>
+            {icon && (
+              <div className="flex justify-center items-center gap-[10px]">
+                {React.createElement(icon, {
+                  fill: hover ? iconHoverFill : iconFill,
+                })}
+              </div>
+            )}
+          </>
+        }
       </button>
     );
   }

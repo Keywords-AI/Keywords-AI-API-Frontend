@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
-import { AuthenticationTitle } from "src/components/AuthenticationTitle/AuthenticationTitle";
+import { TitleAuth } from "src/components/Titles";
 import cn from "src/utilities/ClassMerge";
 import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
@@ -31,7 +31,7 @@ export function SignUp() {
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home" />
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
-        <AuthenticationTitle
+        <TitleAuth
           title={"Create an account"}
           subtitle={<span>Sign up to retrieve a free trial API key.</span>}
         />

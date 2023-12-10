@@ -13,7 +13,7 @@ import {
   setStreaming,
   setNotStreaming,
 } from "src/store/actions/streamingAction";
-import ChatLeftDrawer from "../../../components/Sections/Panels/ChatLeftDrawer/ChatLeftDrawer";
+import ChatLeftDrawer from "../../../components/Sections/ChatLeftDrawer/ChatLeftDrawer";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
 import Sample from "./components/Sample/Sample";
