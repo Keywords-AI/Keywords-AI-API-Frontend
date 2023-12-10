@@ -1,0 +1,122 @@
+[
+    {
+        "position": "Software Engineer",
+        "employment_type": "Full Time",
+        "company": "Google",
+        "location": "Mountain View, CA",
+        "f_url": "https://www.google.com/",
+        "job_benefits": [
+            "Competitive salary",
+            "Flexible work hours",
+            "Healthcare coverage",
+            "401(k) matching",
+            "Generous vacation policy"
+        ],
+        "description": "QUALIFICATIONS|Bachelor's degree in Computer Science or related field|Strong knowledge of programming languages|RESPONSIBILITIES|Develop and maintain software applications|Collaborate with cross-functional teams",
+        "logo": "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png",
+        "stale_date": "2021-10-01",
+        "statusIndex": 0
+    },
+    {
+        "position": "Product Manager",
+        "employment_type": "Contract",
+        "company": "Facebook",
+        "location": "Menlo Park, CA",
+        "f_url": "https://www.facebook.com/",
+        "job_benefits": [
+            "Competitive compensation",
+            "Flexible work arrangements",
+            "Paid time off",
+            "Healthcare benefits",
+            "Growth opportunities"
+        ],
+        "description": "QUALIFICATIONS|Bachelor's degree in Business or related field|Experience in product management|RESPONSIBILITIES|Define product vision and strategy|Collaborate with engineering and design teams",
+        "logo": "https://www.facebook.com/images/fb_icon_325x325.png",
+        "stale_date": "2021-09-25",
+        "statusIndex": 0
+    },
+    {
+        "position": "Data Scientist",
+        "employment_type": "Remote",
+        "company": "Amazon",
+        "location": "Seattle, WA",
+        "f_url": "https://www.amazon.com/",
+        "job_benefits": [
+            "Work from home",
+            "Competitive salary",
+            "Stock options",
+            "Career development programs",
+            "Comprehensive benefits package"
+        ],
+        "description": "QUALIFICATIONS|Master's degree in Data Science or related field|Proficient in statistical analysis|RESPONSIBILITIES|Analyze large datasets and provide insights|Develop machine learning models",
+        "logo": "https://logo.clearbit.com/amazon.com",
+        "stale_date": "2021-09-30",
+        "statusIndex": 0
+    },
+    {
+        "position": "Marketing Manager (Empty Test Case)",
+        "employment_type": "Full-time",
+        "company": "Apple",
+        "location": "Cupertino, CA",
+        "f_url": "https://www.apple.com/",
+        "job_benefits": [],
+        "description": "QUALIFICATIONS|Bachelor's degree in Marketing or related field|Experience in marketing and campaign management|RESPONSIBILITIES|Develop and execute marketing strategies|Manage marketing campaigns and analyze performance",
+        "logo": "https://www.apple.com/ac/structured-data/images/open_graph_logo.png",
+        "stale_date": "2021-09-30",
+        "statusIndex": 0
+    },
+    {
+        "position": "UX Designer (no quals or responsibilities)",
+        "employment_type": "Full-time",
+        "company": "Microsoft",
+        "location": "Redmond, WA",
+        "f_url": "https://www.microsoft.com/",
+        "job_benefits": [
+            "Competitive salary",
+            "Healthcare benefits",
+            "Paid time off",
+            "Opportunity to work on cutting-edge projects",
+            "Career growth and development"
+        ],
+        "description": "",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+        "stale_date": "2021-09-30",
+        "statusIndex": 0
+    },
+    {
+        "position": "Backend Developer (no quals)",
+        "employment_type": "Full-time",
+        "company": "Meta",
+        "location": "Redmond, WA",
+        "f_url": "https://about.meta.com/",
+        "job_benefits": [
+            "Competitive salary",
+            "Healthcare benefits",
+            "Paid time off",
+            "Opportunity to work on cutting-edge projects",
+            "Career growth and development"
+        ],
+        "description": "RESPONSIBILITIES|Develop and maintain backend applications|Implement server-side functionalities|Design and optimize databases|Integrate with external systems and APIs|Write efficient and scalable code|Perform unit testing and debugging|Collaborate with frontend and other teams for seamless integration|Ensure data security and compliance|Monitor performance and troubleshoot issues|Document code and system architecture|Stay updated with industry trends and best practices",
+        "logo": "https://biomimicry.org/wp-content/uploads/2023/04/meta-logo-meta-by-facebook-icon-editorial-logo-for-social-media-free-vector-300x300.webp",
+        "stale_date": "2021-09-30",
+        "statusIndex": 0
+    },
+    {
+        "position": "Software Architect (no responsibilities)",
+        "employment_type": "Full-time",
+        "company": "Amazon",
+        "location": "Seattle, WA",
+        "f_url": "https://www.amazon.com/",
+        "job_benefits": [
+            "Competitive salary",
+            "Comprehensive benefits package",
+            "Stock options",
+            "Opportunity for career advancement",
+            "Flexible work arrangements"
+        ],
+        "description": "QUALIFICATIONS|Bachelor's degree in Computer Science or related field|10+ years of software development experience|Proven track record in designing and implementing large-scale systems|Strong knowledge of software architecture principles and patterns|Proficiency in multiple programming languages|Experience with cloud platforms and distributed systems|Excellent problem-solving and analytical skills|Effective communication and leadership abilities|Ability to collaborate with cross-functional teams|In-depth understanding of software development methodologies|Continuous learning mindset and passion for technology",
+        "logo": "https://logo.clearbit.com/amazon.com",
+        "stale_date": "2021-09-30",
+        "statusIndex": 0
+    }
+]

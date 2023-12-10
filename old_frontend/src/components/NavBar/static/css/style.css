@@ -1,0 +1,82 @@
+button {
+    cursor: pointer;
+}
+
+.nav-btn {
+    color: var(--gray4) !important;
+    background: transparent;
+}
+
+.nav-btn:hover {
+    color: var(--primary) !important;
+}
+
+.nav-bar {
+    position: fixed;
+    display: flex;
+    left: 0;
+    right: 0;
+    padding: 12px 120px;
+    justify-content: center;
+    align-items: center;
+    align-self: stretch;
+    border-bottom: 1px solid var(--gray3);
+    z-index: 1000;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-bar {
+        padding: 16px 32px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .nav-bar {
+        padding-top: 76px;
+    }
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    font-size: 21px;
+    display: flex;
+    cursor: pointer;
+
+    color: var(--black, var(--black));
+    text-align: center;
+    font-family: Inter;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    white-space: nowrap;
+}
+
+.nav-middle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: inherit;
+    flex-wrap: wrap;
+    z-index: 999;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-middle {
+        flex-direction: column;
+        background: var(--white);
+        box-shadow: 0 0 0 1px var(--gray4);
+    }
+
+    .nav-right {
+        display: none;
+    }
+}
+
+
+.drawer {
+    position: absolute;
+    right: 0;
+}

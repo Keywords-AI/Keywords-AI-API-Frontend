@@ -178,7 +178,6 @@ export function OptionSelector({}) {
                 <div className="flex w-[16px] justify-center items-center gap-[10px]">
                   {current[index].icon}
                 </div>
-
                 <div className="flex justify-center items-center ">
                   <p className="text-sm-md text-gray-4">
                     {current[index].name}

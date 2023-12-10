@@ -1,0 +1,11 @@
+.parallel-field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.short-field {
+    width: 234px;
+}

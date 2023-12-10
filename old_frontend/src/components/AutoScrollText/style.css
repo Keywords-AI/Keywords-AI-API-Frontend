@@ -1,0 +1,6 @@
+.autoscrolltext textarea {
+    width: 640px;
+    height: 480px;
+    white-space: pre-wrap;
+    padding: 20px;
+}
