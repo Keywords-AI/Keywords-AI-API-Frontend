@@ -75,6 +75,10 @@ export const SettingPage = ({ user }) => {
                 </div> */}
                 <TextInput
                     name="Organization ID - identifier sometimes used in API requests."
+                    type = "text"
+                    value="blablabla"
+                    disabled = {true}
+                    width = "w-[400px]"
                 />
                 {
                 // user?.organization_role?.name === "owner" 
