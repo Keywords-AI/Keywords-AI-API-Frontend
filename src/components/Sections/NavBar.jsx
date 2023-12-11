@@ -2,7 +2,7 @@ import * as Toolbar from "@radix-ui/react-toolbar";
 import { Button } from "src/components/Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import cn from "src/utilities/ClassMerge";
-import ProfileMenu from "src/components/Dialogs/ProfileMenu/ProfileMenu";
+import { ProfileMenu } from "src/components/Dialogs";
 import React from "react";
 const Logo = ({ fill = "fill-gray-4" }) => {
   return (
@@ -35,14 +35,18 @@ export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const generateButton = (text, pageName, index) => {
+    let modifiedPageName = pageName;
+    if (!pageName) {
+      modifiedPageName = text.toLowerCase().split(" ").join("-");
+    }
     return (
       <Button
         key={index}
         text={text}
         variant="header"
         arrow={false}
-        onClick={() => navigate(`/platform/${pageName}`)}
-        textClassName={cn(concateTextName(pageName))}
+        onClick={() => navigate(`/platform/${modifiedPageName}`)}
+        textClassName={cn(concateTextName(modifiedPageName))}
       />
     );
   };
@@ -51,6 +55,7 @@ export const NavBar = () => {
     { text: "Examples", pageName: "examples" },
     { text: "Playground", pageName: "playground" },
     { text: "Chatbot", pageName: "chatbot" },
+    { text: "API Keys", pageName: "api-keys" },
   ];
   return (
     <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">

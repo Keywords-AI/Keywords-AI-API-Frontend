@@ -120,11 +120,23 @@ export const Button = forwardRef(
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
         break;
-      case "r4-gray2":
+      case "r4-gray-2":
         bgColor = "bg-gray-2";
         hoverColor = "hover:bg-gray-2";
         clickedColor = "active:bg-gray-2";
         textColor = "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
+        borderColor = "border-gray-3";
+        borderHoverColor = "hover:border-gray-4";
+        padding = "py-xxs px-xs";
+        break;
+      case "r4-primary":
+        bgColor = "bg-primary";
+        hoverColor = "hover:bg-primary";
+        clickedColor = "active:bg-primary";
+        textColor = "text-gray-white";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         borderRadius = "rounded-sm";

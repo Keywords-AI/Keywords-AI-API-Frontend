@@ -11,6 +11,8 @@ import LogIn from "src/pages/AuthPages/LogIn/LogIn";
 import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
 import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
+import ApiKeyLayout from "./layouts/ApiKeyLayout";
+import { ApiChidren } from "./pages/PlatformPages/APIKeyPages/APIKeyPages";
 
 const mapStateToProps = (state) => {
   return {
@@ -36,15 +38,22 @@ const Routes = ({ getUser, user }) => {
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [{ path: "playground", element: <Playground /> },
       { path: "chatbot", element: <Chatbot /> },
+      {
+        path: "api-keys", element: <ApiKeyLayout />,
+        children: ApiChidren
+      },
       ]
     },
     {
       path: "/",
-      element: !isUserLoggedIn ? (
+      // element: !isUserLoggedIn ? (
+      //   <FullScreenLayout />
+      // ) : (
+      //   <Navigate to="/platform/playground" />
+      // ),
+      element:
         <FullScreenLayout />
-      ) : (
-        <Navigate to="/platform/playground" />
-      ),
+      ,
       children: [
         { path: "login", element: <LogIn /> },
         {

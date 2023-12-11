@@ -13,7 +13,7 @@ import {
   setStreaming,
   setNotStreaming,
 } from "src/store/actions/streamingAction";
-import ChatLeftDrawer from "../../../components/Sections/ChatLeftDrawer/ChatLeftDrawer";
+import PanelChat from "src/components/Sections/PanelChat/PanelChat";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
 import Sample from "./components/Sample/Sample";
@@ -228,7 +228,7 @@ function Chatbot({
           }}
         />
       )}
-      <ChatLeftDrawer
+      <PanelChat
         handleStop={handleStop}
         createConversation={createConversation}
         getConversations={getConversations}
