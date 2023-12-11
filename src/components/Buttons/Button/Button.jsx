@@ -197,8 +197,8 @@ export const Button = forwardRef(
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         padding = "py-xxs px-xs";
-        justification = "justify-start";
-        className = "w-[280px]";
+        justification = "justify-between";
+        className = "w-full";
         break;
       case "chat":
         bgColor = "bg-gray-2";

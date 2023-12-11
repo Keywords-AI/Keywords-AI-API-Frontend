@@ -1,6 +1,6 @@
 import React from "react";
 import { Stop, Send } from "src/assets/svgs";
-import EditableBox from "src/components/EditableBox/EditableBox";
+import EditableBox from "src/components/Inputs/EditableBox/EditableBox";
 
 export default function KeywordsInput({
   placeholder,

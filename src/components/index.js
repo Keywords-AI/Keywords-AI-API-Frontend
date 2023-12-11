@@ -1,6 +1,6 @@
 export * from "./icons";
 export { Divider } from "./Divider";
-export { EditableBox } from "./EditableBox";
+export { EditableBox } from "./Inputs/EditableBox";
 export { NavBar } from "./Sections/NavBar";
 export { DropDownMenu } from "./Dialogs/DropDownMenu";
 export { Button } from "./Buttons/Button";
