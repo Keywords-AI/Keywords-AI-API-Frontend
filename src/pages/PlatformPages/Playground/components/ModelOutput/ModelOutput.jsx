@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Cost, Latency, Score, Tokens } from "./icons";
 import { Compare } from "src/components";
 import React from "react";
+import { TextInput } from "src/components/Inputs";
 export function ModelOutput({}) {
   const stateOutputs = useSelector((state) => state.playground.outputs);
   const outputs = [
@@ -59,6 +60,7 @@ export function ModelOutput({}) {
         text={"Compare different models"}
         icon={Compare}
       />
+      <TextInput name="Model Name" disabled value="hi" />
     </div>
   );
 }

@@ -16,7 +16,7 @@ import React from "react";
  *   onClick={() => console.log('Clicked!')}
  * />
  * na
- * 
+ *
  * @param {string} props.variant - The variant of the button. Options include "primary", "header", "secondary", "secondary-gray", "secondary-black", "beta".
  * @param {string} props.text - The text displayed on the button.
  * @param {React.Element} [props.icon=null] - Icon component to be displayed on the button.
@@ -208,8 +208,8 @@ export const Button = forwardRef(
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
-        borderColor="border border-gray-3";
-        borderHoverColor="hover:border-gray-4";
+        borderColor = "border border-gray-3";
+        borderHoverColor = "hover:border-gray-4";
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
         justification = "justify-center";
@@ -218,6 +218,7 @@ export const Button = forwardRef(
     }
     return (
       <button
+        aria-label="Button"
         ref={ref}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -232,7 +233,7 @@ export const Button = forwardRef(
           iconPosition === "left" ? "flex-row-reverse" : "flex-row",
           padding,
           borderColor,
-          borderHoverColor,
+          borderHoverColor
         )}
         onClick={onClick}
       >
