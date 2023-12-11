@@ -32,6 +32,7 @@ export function TextInput({
   value, // Add value prop
   onChange, // Add onChange prop
   disabled = false,
+  width = "w-[400px]",
 }) {
   const [isFocused, setIsFocused] = React.useState(false);
   const handleBlur = (event) => {
@@ -42,7 +43,8 @@ export function TextInput({
 
   return (
     <div
-      className="flex-col justify-center items-start gap-xxs"
+      className={cn("flex-col justify-center items-start gap-xxs",
+        width)}
       onClick={() => setIsFocused(true)}
       onFocus={() => setIsFocused(true)}
       onBlur={handleBlur}
@@ -53,7 +55,7 @@ export function TextInput({
       </label>
       <div
         className={cn(
-          "flex items-center gap-xxxs px-xs py-xxs rounded-sm border border-solid border-gray-3",
+          "flex items-center gap-xxxs px-xs py-xxs rounded-sm border border-solid border-gray-3 self-stretch",
           isFocused && !disabled ? "border-gray-white" : "",
           disabled ? "bg-gray-2" : ""
         )}
@@ -65,7 +67,7 @@ export function TextInput({
           name={name}
           type={type}
           className={cn(
-            "text-sm-regular text-gray-4 bg-transparent outline-none",
+            "text-sm-regular text-gray-4 bg-transparent outline-none self-stretch",
             isFocused && !disabled ? "text-gray-white" : ""
           )}
           {...register(name, validationSchema)}
