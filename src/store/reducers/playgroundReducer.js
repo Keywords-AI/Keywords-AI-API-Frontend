@@ -6,7 +6,8 @@ import {
   SET_MODEL_OPTIONS,
   SET_OUTPUTS,
   UPDATE_STREAMING_TEXT,
-  SET_STREAMING_TEXT
+  SET_STREAMING_TEXT,
+  SET_FIRST_TIME,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -17,6 +18,7 @@ const initialState = {
   ],
   streaming: false,
   streamingText: "",
+  firstTime: true,
   prompt: "",
   currentModel: "",
   modelOptions: {
@@ -54,6 +56,8 @@ const playgroundReducer = (state = initialState, action) => {
       };
     case SET_OUTPUTS:
       return { ...state, outputs: { ...state.outputs, ...action.payload } };
+    case SET_FIRST_TIME:
+      return { ...state, firstTime: action.payload };
     default:
       return state;
   }

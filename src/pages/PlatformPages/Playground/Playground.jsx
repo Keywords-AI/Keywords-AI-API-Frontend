@@ -1,4 +1,4 @@
-import { AddMessage, Button, Divider } from "src/components";
+import { AddMessage, ArrowRight, Button, Divider } from "src/components";
 import {
   CurrentModel,
   OptionSelector,
@@ -6,7 +6,11 @@ import {
   PlaygroundMessage,
 } from "./components";
 import React, { useEffect } from "react";
-import { setMessages, setPrompt } from "src/store/actions/playgroundAction";
+import {
+  setMessages,
+  setPrompt,
+  setFirstTime,
+} from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
@@ -23,6 +27,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   setMessages,
   setPrompt,
+  setFirstTime,
 };
 
 const Prompt = () => {
@@ -48,6 +53,7 @@ const NotConnectedMap = ({
   streamingText,
   setMessages,
 }) => {
+  const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const handleAddMessage = () => {
@@ -56,6 +62,7 @@ const NotConnectedMap = ({
   useEffect(() => {
     if (streamingText) {
       setGeneratingText(streamingText);
+      dispatch(setFirstTime(false));
     }
   }, [streamingText]);
 
@@ -66,10 +73,7 @@ const NotConnectedMap = ({
           Playground
         </div>
         <div className="flex items-start gap-xs">
-          <Button
-            variant="r4-gray-2"
-            text="View code"
-          />
+          <Button variant="r4-gray-2" text="View code" />
         </div>
       </div>
       <div className="flex items-start gap-lg flex-1 self-stretch h-[calc(100vh-190.5px)]">
@@ -111,6 +115,7 @@ const SidePannel = () => {
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
+      <Button variant="careers" text="View code" />
       <Divider />
       <CurrentModel />
       <ModelOutput />

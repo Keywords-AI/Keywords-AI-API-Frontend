@@ -1,25 +1,21 @@
 import { Button, DropDownMenu, ModelIcon } from "src/components";
 import React, { useEffect } from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCurrentModel } from "src/store/actions/playgroundAction";
 export const CurrentModel = () => {
   const dispatch = useDispatch();
+
   const models = [
     {
       name: "OpenAI - gpt-3.5-turbo",
-      value: "openai",
+      value: "gpt-3.5-turbo",
       icon: ModelIcon("openai"),
     },
     {
-      name: "Model 2",
-      value: "model2",
+      name: "Claude 2",
+      value: "claude-2",
       icon: ModelIcon("ai21"),
-    },
-    {
-      name: "Model 3",
-      value: "model3",
-      icon: ModelIcon("openai"),
     },
   ];
   useEffect(() => {
@@ -27,6 +23,10 @@ export const CurrentModel = () => {
   }, []);
   const [current, setCurrent] = React.useState(models[0]);
   const [open, setOpen] = React.useState(false);
+  const firstTime = useSelector((state) => state.playground.firstTime);
+  if (firstTime) {
+    return null;
+  }
   return (
     <div className="flex-col items-start gap-xxs self-stretch">
       <p className="text-sm-regular text-center text-gray-4">Current model</p>

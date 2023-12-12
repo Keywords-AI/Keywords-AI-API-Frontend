@@ -1,5 +1,5 @@
 import { Button, EditableBox, ModelIcon, User } from "src/components";
-import { EnterKey } from "src/components/Icons/iconsDS"
+import { EnterKey } from "src/components/Icons/iconsDS";
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
 import useStream from "src/hooks/useStream";
@@ -10,8 +10,8 @@ import {
   setStreaming,
   stopStreaming,
   setMessages,
+  setFirstTime,
 } from "src/store/actions/playgroundAction";
-import { set } from "react-hook-form";
 import cn from "src/utilities/ClassMerge";
 
 export function PlaygroundMessage({ role, content, messageIndex }) {
@@ -36,7 +36,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   React.useEffect(() => {
     if (!response) return;
     const streamingCallback = (chunk) => {
-      dispatch(updateStreamText(chunk));
+      dispatch(updateStreamText(chunk, dispatch));
     };
     dispatch(setStreaming(true));
     const stopStreamingFunc = () => {
