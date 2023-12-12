@@ -13,6 +13,9 @@ import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import ApiKeyLayout from "./layouts/ApiKeyLayout";
 import { ApiChidren } from "./pages/PlatformPages/APIKeyPages/APIKeyPages";
+import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
+import { ResetPassword } from "./pages/AuthPages/ResetPassword";
+import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 
 const mapStateToProps = (state) => {
   return {
@@ -36,24 +39,24 @@ const Routes = ({ getUser, user }) => {
     {
       path: "/platform",
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
-      children: [{ path: "playground", element: <Playground /> },
-      { path: "chatbot", element: <Chatbot /> },
-      {
-        path: "api-keys", element: <ApiKeyLayout />,
-        children: ApiChidren
-      },
-      ]
+      children: [
+        { path: "playground", element: <Playground /> },
+        { path: "chatbot", element: <Chatbot /> },
+        {
+          path: "api-keys",
+          element: <ApiKeyLayout />,
+          children: ApiChidren,
+        },
+      ],
     },
     {
       path: "/",
-      // element: !isUserLoggedIn ? (
-      //   <FullScreenLayout />
-      // ) : (
-      //   <Navigate to="/platform/playground" />
-      // ),
-      element:
+      element: !isUserLoggedIn ? (
         <FullScreenLayout />
-      ,
+      ) : (
+        <Navigate to="/platform/playground" />
+      ),
+      // element: <FullScreenLayout />,
       children: [
         { path: "login", element: <LogIn /> },
         {
@@ -63,6 +66,18 @@ const Routes = ({ getUser, user }) => {
         {
           path: "unauthenticated",
           element: <Unauthenticated />,
+        },
+        {
+          path: "forgot-password",
+          element: <ForgotPassword />,
+        },
+        {
+          path: "reset-password",
+          element: <ResetPassword />,
+        },
+        {
+          path: "unauthorized",
+          element: <Unauthorized />,
         },
         { path: "/", element: <Navigate to="/unauthenticated" /> },
       ],

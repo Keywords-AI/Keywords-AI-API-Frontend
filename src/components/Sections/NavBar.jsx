@@ -39,6 +39,10 @@ export const NavBar = () => {
     if (!pageName) {
       modifiedPageName = text.toLowerCase().split(" ").join("-");
     }
+    let apply =
+      location.pathname == `/platform/${pageName}`
+        ? "text-gray-white"
+        : "text-gray-4";
     return (
       <Button
         key={index}
@@ -46,7 +50,7 @@ export const NavBar = () => {
         variant="header"
         arrow={false}
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
-        textClassName={cn(concateTextName(modifiedPageName))}
+        textColor={apply}
       />
     );
   };

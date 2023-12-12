@@ -2,6 +2,7 @@ import cn from "src/utilities/ClassMerge";
 import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";
+import { ArrowRight } from "src/components/Icons";
 
 /**
  * `Button` Component
@@ -38,7 +39,7 @@ import React from "react";
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
-*/
+ */
 
 export const Button = forwardRef(
   (
@@ -47,14 +48,14 @@ export const Button = forwardRef(
       text,
       icon = null,
       className = "",
-      borderRadius = "rounded-lg",
+      borderRadius = "",
       onClick,
-      onMouseEnter,
-      onMouseLeave,
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
       textClassName = "text-sm-md",
-      bgColor = "bg-gray-white",
-      hoverColor = "hover:bg-[#33557D]",
-      clickedColor = "active:bg-[#33557D]",
+      bgColor = "bg-transparent",
+      hoverColor = "",
+      clickedColor = "",
       textColor = "text-gray-black",
       textHoverColor = "group-hover:text-gray-white",
       textClickedColor = "group-active:text-gray-white",
@@ -168,47 +169,60 @@ export const Button = forwardRef(
         borderHoverColor = "hover:border-gray-4";
         padding = "py-xxxs px-xxs";
         iconFill = "fill-gray-4";
-        iconHoverFill = "group-hover:fill-gray-white";
+        iconHoverFill = "fill-gray-white";
         break;
       case "r18-white":
         bgColor = "bg-gray-white";
         hoverColor = "hover:bg-gray-black";
         clickedColor = "active:bg-gray-black";
         textColor = "text-gray-black";
+        textClassName = "text-sm-regular";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
-        borderRadius = "rounded-md";
+        borderRadius = "rounded-lg";
         padding = "py-xxs px-sm";
-        iconFill = "fill-black";
-        iconHoverFill = "group-hover:fill-gray-white";
+        iconFill = "fill-gray-black";
+        iconHoverFill = "fill-gray-black";
+        borderHoverColor = "hover:border-gray-white";
         break;
       case "r18-black":
         bgColor = "bg-gray-black";
         hoverColor = "hover:bg-gray-3";
         clickedColor = "active:bg-gray-3";
+        textClassName = "text-sm-regular";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
-        borderRadius = "rounded-md";
+        borderRadius = "rounded-lg";
         padding = "py-xxs px-sm";
         iconFill = "fill-gray-4";
-        iconHoverFill = "group-hover:fill-gray-white";
+        iconHoverFill = "fill-red-500";
         break;
       case "header":
-        bgColor = "bg-gray-black";
+        bgColor = "bg-transparent";
         textClassName = "text-sm-regular";
-        hoverColor = "hover:bg-gray-black";
-        clickedColor = "active:bg-gray-black";
+        hoverColor = "";
+        clickedColor = "";
+        textColor = textColor || "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        padding = "py-xxs px-xs";
+        break;
+      case "footer":
+        bgColor = "bg-transparent";
+        textClassName = "caption";
+        hoverColor = "";
+        clickedColor = "";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         padding = "py-xxs px-xs";
         break;
       case "panel":
-        bgColor = "bg-transparent";
-        textClassName = "text-sm-regular";
+        bgColor = "bg-gray-black";
+        textClassName = "text-sm-md";
         hoverColor = "hover:bg-gray-3";
-        clickedColor = "active:bg-gray-black";
+        clickedColor = "active:bg-gray-3";
         iconPosition = "right";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
@@ -217,6 +231,20 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         justification = "justify-between";
         className = "w-full";
+        break;
+      case "careers":
+        bgColor = "bg-transparent";
+        textClassName = "text-md-md";
+        hoverColor = "";
+        clickedColor = "";
+        iconPosition = "right";
+        textColor = "text-primary";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
+        padding = "py-xxs px-xs";
+        iconFill = "fill-primary";
+        iconHoverFill = "fill-gray-white";
         break;
       case "chat":
         bgColor = "bg-gray-2";
@@ -236,12 +264,18 @@ export const Button = forwardRef(
     }
     return (
       <button
-        aria-label="Button"
+        aria-label={"button-" + variant}
         ref={ref}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+        onMouseEnter={() => {
+          onMouseEnter();
+          setHover(true);
+        }}
+        onMouseLeave={() => {
+          onMouseLeave();
+          setHover(false);
+        }}
         className={cn(
-          "group inline-flex min-w-[60px] items-center gap-xxs",
+          "group inline-flex min-w-[60px] items-center gap-xxs border border-solid ",
           justification,
           borderRadius,
           bgColor,
@@ -252,21 +286,22 @@ export const Button = forwardRef(
           padding,
           borderColor,
           borderHoverColor,
-          "text-center",
-          textColor,
-          textHoverColor,
-          textClickedColor,
-          textClassName
+          "text-center"
         )}
         onClick={onClick}
       >
-        {children ?
+        {children ? (
+          <>{children}</>
+        ) : (
           <>
-            {children}
-
-          </> :
-          <>
-            <span>
+            <span
+              className={cn(
+                textColor,
+                textHoverColor,
+                textClickedColor,
+                textClassName
+              )}
+            >
               {text}
             </span>
             {icon && (
@@ -277,7 +312,7 @@ export const Button = forwardRef(
               </div>
             )}
           </>
-        }
+        )}
       </button>
     );
   }

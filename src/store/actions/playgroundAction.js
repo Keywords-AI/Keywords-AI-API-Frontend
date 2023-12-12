@@ -7,6 +7,7 @@ export const SET_MODEL_OPTIONS = "SET_MODEL_OPTIONS";
 export const SET_OUTPUTS = "SET_OUTPUTS";
 export const UPDATE_STREAMING_TEXT = "UPDATE_STREAMING_TEXT";
 export const SET_STREAMING_TEXT = "SET_STREAMING_TEXT";
+export const SET_FIRST_TIME = "SET_FIRST_TIME";
 import { parseChunk } from "src/utilities/streaming";
 
 // Action Creator
@@ -20,10 +21,14 @@ export const setStreaming = (streaming) => ({
   payload: streaming,
 });
 
+export const setFirstTime = (firstTime) => ({
+  type: SET_FIRST_TIME,
+  payload: firstTime,
+});
 // Streaming text
-export const updateStreamText = (chunk) => ({
+export const updateStreamText = (chunk, dispatch) => ({
   type: UPDATE_STREAMING_TEXT,
-  payload: parseChunk(chunk),
+  payload: parseChunk(chunk, dispatch),
 });
 
 export const setStreamingText = (text) => ({

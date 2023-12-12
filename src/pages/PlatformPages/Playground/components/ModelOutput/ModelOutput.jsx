@@ -1,4 +1,4 @@
-import { Button } from "src/components";
+import { Button, Modal } from "src/components";
 import { useSelector } from "react-redux";
 import { Cost, Latency, Score, Tokens } from "./icons";
 import { Compare } from "src/components";
@@ -6,8 +6,13 @@ import React from "react";
 import { TextInput } from "src/components/Inputs";
 export function ModelOutput({}) {
   const stateOutputs = useSelector((state) => state.playground.outputs);
+  const currentModel = useSelector((state) => state.playground.currentModel);
   const outputs = [
-    { name: "Score", value: stateOutputs.score, icon: <Score /> },
+    {
+      name: "Score",
+      value: stateOutputs.score[currentModel],
+      icon: <Score />,
+    },
     {
       name: "Cost",
       value: (
@@ -34,6 +39,10 @@ export function ModelOutput({}) {
       icon: <Tokens />,
     },
   ];
+  const firstTime = useSelector((state) => state.playground.firstTime);
+  if (firstTime) {
+    return null;
+  }
   return (
     <div className="flex-col items-start gap-xxs self-stretch">
       <p className="text-center text-gray-4 text-sm-regular">Output</p>
@@ -55,12 +64,11 @@ export function ModelOutput({}) {
           </div>
         ))}
       </div>
-      <Button
+      {/* <Button
         variant={"small"}
         text={"Compare different models"}
         icon={Compare}
-      />
-      <TextInput name="Model Name" disabled value="hi" />
+      /> */}
     </div>
   );
 }

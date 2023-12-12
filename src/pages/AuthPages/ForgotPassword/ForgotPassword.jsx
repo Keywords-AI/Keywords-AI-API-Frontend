@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { BackButton } from "src/app/components/BackButton";
 import { useForm } from "react-hook-form";
-import { AuthenticationTitle } from "src/app/components/AuthenticationTitle/AuthenticationTitle";
-import cn from "src/app/utils/ClassMerge";
-import { Button } from "src/app/components/Button";
+import { BackButton, Button } from "src/components/Buttons";
+import { AuthenticationTitle } from "src/components/Titles";
+import cn from "src/utilities/ClassMerge";
 
 export function ForgotPassword() {
   const navigate = useNavigate();
@@ -21,6 +20,7 @@ export function ForgotPassword() {
           title={"Forgot Password"}
           subtitle={"You will receive a link to reset your password."}
         />
+
         <form
           onSubmit={handleSubmit((data) => {
             console.log(data);

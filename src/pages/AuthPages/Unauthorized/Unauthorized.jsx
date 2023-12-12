@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { BackButton } from "src/app/components/BackButton/BackButton";
-import { Button } from "src/app/components/Button";
+
 import React from "react";
+import { BackButton } from "src/components/Buttons";
+import { Button } from "@radix-ui/react-toolbar";
 
 export function Unauthorized() {
   const navigate = useNavigate();
