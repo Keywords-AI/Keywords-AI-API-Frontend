@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
 import { Plus, Edit, PureDelete } from "src/assets/svgs.jsx"
-import { CreateForm, DeleteForm, EditForm } from "./components/APIKeyForms.jsx";
+import { CreateForm, DeleteForm, EditForm } from "./APIKeyForms.jsx";
 import { connect } from 'react-redux';
 import { fetchUsageData } from 'src/store/actions/usageData';
 import ListDisplay from "src/components/ListDisplay/ListDisplay.jsx";

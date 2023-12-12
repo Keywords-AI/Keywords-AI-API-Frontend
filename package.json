@@ -28,7 +28,8 @@
     "react-router-dom": "^6.18.0",
     "redux": "^5.0.0",
     "redux-thunk": "^3.1.0",
-    "vite-plugin-svgr": "^4.2.0"
+    "vite-plugin-svgr": "^4.2.0",
+    "yarn": "^1.22.21"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

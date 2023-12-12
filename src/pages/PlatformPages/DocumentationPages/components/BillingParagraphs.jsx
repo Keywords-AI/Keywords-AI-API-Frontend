@@ -6,7 +6,7 @@ import { getDateStr } from "src/utilities/utilities";
 import { cancelSubscription } from "src/services/stripe";
 import ListDisplay from "src/components/ListDisplay/ListDisplay.jsx";
 import { useNavigate } from "react-router-dom";
-import CurrentPlanCard from "./components/CurrentPlanCard";
+import CurrentPlanCard from "./CurrentPlanCard";
 import Popup from "src/components/Popup/Popup";
 
 const mapStateToProps = (state) => {

@@ -55,7 +55,7 @@ export const NavBar = () => {
     { text: "Examples", pageName: "examples" },
     { text: "Playground", pageName: "playground" },
     { text: "Chatbot", pageName: "chatbot" },
-    { text: "API Keys", pageName: "api-keys" },
+    { text: "API Keys", pageName: "setting" },
   ];
   return (
     <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">
