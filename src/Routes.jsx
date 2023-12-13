@@ -12,8 +12,7 @@ import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
 import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
-import SettingLayout from "./layouts/SettingLayout";
-import DocumentationLayout from "./layouts/DocumentationLayout";
+
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
 import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
@@ -47,12 +46,12 @@ const Routes = ({ getUser, user }) => {
         { path: "chatbot", element: <Chatbot /> },
         {
           path: "setting",
-          element: <LeftNavigationLayout sectionName={"setting"}/>,
+          element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
         {
           path: "doc",
-          element: <LeftNavigationLayout sectionName={"documentation"}/>,
+          element: <LeftNavigationLayout sectionName={"documentation"} />,
           children: documentationChildren,
         },
       ],
