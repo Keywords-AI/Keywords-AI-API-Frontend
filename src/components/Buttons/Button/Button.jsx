@@ -17,7 +17,7 @@ import { ArrowRight } from "src/components/Icons";
  *   onClick={() => console.log('Clicked!')}
  * />
  * na
- *
+ * @param {string} props.active - The state of the button. If true, the button will be displayed as active.
  * @param {string} props.variant - The variant of the button. Options include "primary", "header", "secondary", "secondary-gray", "secondary-black", "beta".
  * @param {string} props.text - The text displayed on the button.
  * @param {React.Element} [props.icon=null] - Icon component to be displayed on the button.
@@ -44,6 +44,7 @@ import { ArrowRight } from "src/components/Icons";
 export const Button = forwardRef(
   (
     {
+      active=false,
       variant,
       text,
       icon = null,
@@ -234,9 +235,9 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         break;
       case "panel":
-        bgColor = "bg-transparent";
+        bgColor = "bg-transparent hover:bg-gray-3";
         textClassName = "text-sm-md";
-        hoverColor = "hover:bg-gray-3";
+        hoverColor = "bg-gray-3";
         clickedColor = "active:bg-gray-3";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
@@ -292,6 +293,11 @@ export const Button = forwardRef(
         iconHoverFill = "fill-gray-white";
         minWidth = "";
         break;
+    }
+    if (active) {
+      bgColor = hoverColor;
+      textColor = textClickedColor;
+      iconFill = iconHoverFill;
     }
     return (
       <button

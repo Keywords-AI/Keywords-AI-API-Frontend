@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
 import usePost from "src/hooks/usePost";
-import { Copy, Copied } from "src/assets/svgs.jsx";
-import KeywordsSelection from "src/components/KeywordsSelection/KeywordsSelection";
-import { retrieveContext, retrievePlanName } from "src/utilities/utilities.js";
-import TitledInput from "../../../components/Inputs/TitledInput";
-import { KeywordsInputWrapper } from "../../../components/KeywordsInputWrapper/KeywordsInputWrapper";
+import { SelectInput, TextInput } from "src/components/Inputs";
+import { retrieveContext, retrievePlanName } from "src/utilities/stringProcessing";
+import { CopyButton } from "src/components/Buttons";
+
+const FormFrame = React.forwardRef(({ children, setShowForm }, forwardedRef) => {
+  return (
+    <div ref={forwardedRef} className="flex-col p-lg items-start self-stretch bg-gray-black border border-gray-3">
+      {children}
+    </div>
+  )
+});
 
 export const CreateForm = React.forwardRef((props, ref) => {
   const { newKey, newKeyError, postData, setShowForm, setKeyList, user } =
@@ -108,7 +114,7 @@ export const CreateForm = React.forwardRef((props, ref) => {
   }, [user]);
 
   return (
-    <div ref={ref} className="modal-card bg-white">
+    <FormFrame ref={ref}>
       <div className="flex-col items-start gap-sm self-stretch">
         <div className="display-xs">
           {newKey ? "Save your API Key" : "Create New API Key"}
@@ -127,19 +133,28 @@ export const CreateForm = React.forwardRef((props, ref) => {
             {newKey ? newKeyNameRef.current : "Name (optional)"}
           </label>
           {!newKey ? (
-            <input
-              style={{
-                color: "var(--black)",
-              }}
-              className="text-md"
-              id="keyName"
-              name="keyName"
-              type="text"
-              placeholder="Key-1"
-              onKeyDown={handleEnter}
+            // <input
+            //   style={{
+            //     color: "var(--black)",
+            //   }}
+            //   className="text-md"
+            //   id="keyName"
+            //   name="keyName"
+            //   type="text"
+            //   placeholder="Key-1"
+            //   onKeyDown={handleEnter}
+            //   onChange={(e) => {
+            //     newKeyNameRef.current = e.target.value;
+            //   }}
+            // />
+            <TextInput
+              title={"Name (optional)"}
+              value={newKeyName}
               onChange={(e) => {
-                newKeyNameRef.current = e.target.value;
+                setNewKeyName(e.target.value);
               }}
+              onKeyDown={handleEnter}
+              placeholder={"Key-1"}
             />
           ) : (
             <div
@@ -160,24 +175,10 @@ export const CreateForm = React.forwardRef((props, ref) => {
                 type="text"
                 placeholder="Key-1"
               />
-              <div
-                className="flex-col"
-                style={{
-                  position: "absolute",
-                  right: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                }}
-                onClick={copyToClipboard}
-              >
-                {!copySuccess ? (
-                  <Copy fill={"var(--gray4)"} hoverFill={"var(--black)"} />
-                ) : (
-                  <Copied />
-                )}
-              </div>
+              <CopyButton />
             </div>
           )}
+                        <CopyButton />
         </div>
         {!newKey && (
           <div
@@ -186,7 +187,7 @@ export const CreateForm = React.forwardRef((props, ref) => {
               width: "160px",
             }}
           >
-            <KeywordsInputWrapper title={"Context Window"}>
+            {/* <KeywordsInputWrapper title={"Context Window"}>
               <KeywordsSelection
                 choices={planChoices}
                 placeholder={
@@ -194,7 +195,7 @@ export const CreateForm = React.forwardRef((props, ref) => {
                 }
                 handleSelected={handleSelection}
               />
-            </KeywordsInputWrapper>
+            </KeywordsInputWrapper> */}
           </div>
         )}
       </div>
@@ -224,164 +225,164 @@ export const CreateForm = React.forwardRef((props, ref) => {
           )}
         </div>
       </div>
-    </div>
+    </FormFrame>
   );
 });
 
-export const DeleteForm = React.forwardRef((props, ref) => {
-  const { postData, setKeyList, deleteList, keyList, setShowForm } = props;
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const form = event.target;
-    const keyName = form.keyName;
-    postData({
-      name: keyName.value || "New Key",
-    });
-  };
-  return (
-    <form
-      ref={ref}
-      method="POST"
-      onSubmit={handleSubmit}
-      className="modal-card bg-white"
-    >
-      <div className="flex-col items-start gap-sm self-stretch t-l">
-        <div className="display-xs">{"Revoke API Key"}</div>
-        <div className="text-md">
-          This API key will be immediately revoked and disabled. API requests
-          made made using this key will be rejected. Once revoked, you will no
-          longer be able to view or modify this API key.
-        </div>
-      </div>
-      <div className="flex-col start gap-xs self-stretch">
-        <div className="text-sm text-gray4">{keyList[0]?.name}</div>
-        <input
-          className="text-md"
-          style={{
-            color: "var(--black)",
-          }}
-          readOnly
-          value={keyList[0]?.prefix + "*".repeat(15)}
-          id="keyName"
-          name="keyName"
-          type="text"
-          placeholder="Key-1"
-        />
-      </div>
-      <div className="flex-row self-stretch justify-end">
-        <div className="flex-row gap-xs items-start">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowForm(false);
-              console.log("cancel");
-            }}
-            className="button-tertiary-white"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className={"button-primary bg-error"}
-            onClick={(e) => {
-              e.preventDefault();
-              setKeyList(keyList.filter((key) => !deleteList.includes(key.id)));
-              postData({
-                keys: deleteList,
-              });
-              setShowForm(false);
-            }}
-          >
-            Revoke Key
-          </button>
-        </div>
-      </div>
-    </form>
-  );
-});
+// export const DeleteForm = React.forwardRef((props, ref) => {
+//   const { postData, setKeyList, deleteList, keyList, setShowForm } = props;
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     event.stopPropagation();
+//     const form = event.target;
+//     const keyName = form.keyName;
+//     postData({
+//       name: keyName.value || "New Key",
+//     });
+//   };
+//   return (
+//     <form
+//       ref={ref}
+//       method="POST"
+//       onSubmit={handleSubmit}
+//       className="modal-card bg-white"
+//     >
+//       <div className="flex-col items-start gap-sm self-stretch t-l">
+//         <div className="display-xs">{"Revoke API Key"}</div>
+//         <div className="text-md">
+//           This API key will be immediately revoked and disabled. API requests
+//           made made using this key will be rejected. Once revoked, you will no
+//           longer be able to view or modify this API key.
+//         </div>
+//       </div>
+//       <div className="flex-col start gap-xs self-stretch">
+//         <div className="text-sm text-gray4">{keyList[0]?.name}</div>
+//         <input
+//           className="text-md"
+//           style={{
+//             color: "var(--black)",
+//           }}
+//           readOnly
+//           value={keyList[0]?.prefix + "*".repeat(15)}
+//           id="keyName"
+//           name="keyName"
+//           type="text"
+//           placeholder="Key-1"
+//         />
+//       </div>
+//       <div className="flex-row self-stretch justify-end">
+//         <div className="flex-row gap-xs items-start">
+//           <button
+//             onClick={(e) => {
+//               e.preventDefault();
+//               e.stopPropagation();
+//               setShowForm(false);
+//               console.log("cancel");
+//             }}
+//             className="button-tertiary-white"
+//           >
+//             Cancel
+//           </button>
+//           <button
+//             type="submit"
+//             className={"button-primary bg-error"}
+//             onClick={(e) => {
+//               e.preventDefault();
+//               setKeyList(keyList.filter((key) => !deleteList.includes(key.id)));
+//               postData({
+//                 keys: deleteList,
+//               });
+//               setShowForm(false);
+//             }}
+//           >
+//             Revoke Key
+//           </button>
+//         </div>
+//       </div>
+//     </form>
+//   );
+// });
 
-export const EditForm = React.forwardRef((props, ref) => {
-  // updates the name of the key
-  const { setKeyList, keyList, setShowForm, editKey: key } = props;
-  const {
-    loading: editLoading,
-    error: editKeyError,
-    data: editKey,
-    postData,
-  } = usePost(`api/update-key/${key.id}/`, "PATCH");
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const form = event.target;
-    const keyName = form.keyName.value || "New Key";
-    console.log(key);
-    postData({
-      name: keyName,
-    });
-    setShowForm(false);
-    setKeyList((prevKeyList) =>
-      prevKeyList.map((prevKey) => {
-        if (prevKey.id === key.id) {
-          return { ...prevKey, name: keyName }; // return new object with updated keyName
-        } else {
-          return prevKey; // return the original object if no modification is needed
-        }
-      })
-    );
-  };
-  return (
-    <form
-      ref={ref}
-      method="POST"
-      onSubmit={handleSubmit}
-      className="modal-card bg-white"
-    >
-      <div className="display-xs">{"Rename API Key"}</div>
-      <div className="flex-col gap-xxs self-stretch">
-        <label className="text-sm text-gray4" htmlFor="keyName">
-          {"Name (optional)"}
-        </label>
-        <input
-          className="text-md"
-          style={{
-            color: "var(--black)",
-          }}
-          id="keyName"
-          name="keyName"
-          type="text"
-          placeholder="Key-1"
-        />
-      </div>
+// export const EditForm = React.forwardRef((props, ref) => {
+//   // updates the name of the key
+//   const { setKeyList, keyList, setShowForm, editKey: key } = props;
+//   const {
+//     loading: editLoading,
+//     error: editKeyError,
+//     data: editKey,
+//     postData,
+//   } = usePost(`api/update-key/${key.id}/`, "PATCH");
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     event.stopPropagation();
+//     const form = event.target;
+//     const keyName = form.keyName.value || "New Key";
+//     console.log(key);
+//     postData({
+//       name: keyName,
+//     });
+//     setShowForm(false);
+//     setKeyList((prevKeyList) =>
+//       prevKeyList.map((prevKey) => {
+//         if (prevKey.id === key.id) {
+//           return { ...prevKey, name: keyName }; // return new object with updated keyName
+//         } else {
+//           return prevKey; // return the original object if no modification is needed
+//         }
+//       })
+//     );
+//   };
+//   return (
+//     <form
+//       ref={ref}
+//       method="POST"
+//       onSubmit={handleSubmit}
+//       className="modal-card bg-white"
+//     >
+//       <div className="display-xs">{"Rename API Key"}</div>
+//       <div className="flex-col gap-xxs self-stretch">
+//         <label className="text-sm text-gray4" htmlFor="keyName">
+//           {"Name (optional)"}
+//         </label>
+//         <input
+//           className="text-md"
+//           style={{
+//             color: "var(--black)",
+//           }}
+//           id="keyName"
+//           name="keyName"
+//           type="text"
+//           placeholder="Key-1"
+//         />
+//       </div>
 
-      <div className="flex-row justify-end self-stretch">
-        <div className="flex-row gap-xs items-center">
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowForm(false);
-            }}
-            className="button-tertiary-white"
-          >
-            Cancel
-          </button>
-          <button type="submit" className="button-primary">
-            Rename
-          </button>
-        </div>
-      </div>
-      {editKeyError && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div className="error">{editKeyError}</div>
-        </div>
-      )}
-    </form>
-  );
-});
+//       <div className="flex-row justify-end self-stretch">
+//         <div className="flex-row gap-xs items-center">
+//           <button
+//             onClick={(e) => {
+//               e.preventDefault();
+//               e.stopPropagation();
+//               setShowForm(false);
+//             }}
+//             className="button-tertiary-white"
+//           >
+//             Cancel
+//           </button>
+//           <button type="submit" className="button-primary">
+//             Rename
+//           </button>
+//         </div>
+//       </div>
+//       {editKeyError && (
+//         <div
+//           style={{
+//             display: "flex",
+//             flexDirection: "column",
+//           }}
+//         >
+//           <div className="error">{editKeyError}</div>
+//         </div>
+//       )}
+//     </form>
+//   );
+// });

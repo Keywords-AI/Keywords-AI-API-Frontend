@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { SelectInput } from 'src/components/Inputs'
+import { PageContent } from 'src/components/Sections'
 
 export const UsagePage = (props) => {
   const options =
@@ -19,9 +20,14 @@ export const UsagePage = (props) => {
       }
     ]
   return (
-    <div>
-      <SelectInput placeholder={"Hi"} />
-    </div>
+    <PageContent
+      title="Usage"
+      subtitle="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
+    >
+      <div>
+        <SelectInput placeholder={"Hi"} />
+      </div>
+    </PageContent>
   )
 }
 

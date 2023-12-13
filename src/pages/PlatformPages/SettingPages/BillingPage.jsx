@@ -4,6 +4,7 @@ import { SettingTable } from 'src/components/Tables'
 import { Button } from 'src/components/Buttons'
 import { Search } from 'src/components/Icons'
 import { getDateStr } from 'src/utilities/stringProcessing'
+import { PageContent } from 'src/components/Sections'
 
 export const BillingPage = (props) => {
   const testRows = [
@@ -27,12 +28,15 @@ export const BillingPage = (props) => {
     },
   ]
   return (
-    <div>
+    <PageContent
+      title="Billing"
+      subtitle="Manage your billing information and invoices. For questions about billing, contact team@keywordsai.co."
+    >
       <SettingTable
         variant={"billings"}
         rows={testRows}
       />
-    </div>
+    </PageContent>
   )
 }
 

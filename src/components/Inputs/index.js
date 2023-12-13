@@ -3,3 +3,4 @@ export { EditableBox } from "./EditableBox";
 export { NumberInput } from "./NumberInput";
 export { default as SelectInput } from "./SelectInput";
 export { default as FileInput } from "./FileInput";
+export { default as MemberSelectInput } from "./MemberSelectInput";

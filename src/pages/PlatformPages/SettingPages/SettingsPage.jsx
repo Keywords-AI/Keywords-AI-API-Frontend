@@ -27,11 +27,10 @@ export const SettingPage = ({ user }) => {
     };
 
     return (
-        <PageContent>
-            <TitleStaticHeading
-                title="Organization Settings"
-                subtitle="Manage your organization name and ID."
-            />
+        <PageContent
+            title="Organization Settings"
+            subtitle="Manage your organization name and ID."
+        >
             <form className="flex-col gap-lg items-start self-stretch"
                 onSubmit={(e) => {
                     e.preventDefault();

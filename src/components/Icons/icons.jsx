@@ -193,24 +193,6 @@ export const FeatureTick = ({ fill = "fill-gray-white" }) => {
   );
 };
 
-export const Check = ({ fill = "fill-gray-white" }) => {
-  return (
-    <svg
-      aria-label="Check"
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
-      fill="none"
-    >
-      <path
-        d="M15.375 5.45822L6.87502 13.9582L2.97919 10.0624L3.97794 9.06364L6.87502 11.9536L14.3763 4.45947L15.375 5.45822Z"
-        className={fill}
-      />
-    </svg>
-  );
-};
-
 export const ArrowLeft = ({ fill = "fill-gray-white" }) => {
   return (
     <svg

@@ -4,13 +4,16 @@ import { SettingTable } from 'src/components/Tables'
 import { Button } from 'src/components/Buttons'
 import { Pencil } from 'src/components/Icons'
 import { getDateStr } from 'src/utilities/stringProcessing'
+import { CreateForm } from './components/APIKeyForms'
+import { PageContent } from 'src/components/Sections'
+
 
 export const ApiKeyPage = (props) => {
   const testRows = [
     {
       name: getDateStr('2021-08-01'), key: '$10',
       created: getDateStr('2021-08-01'),
-      lastUsed: getDateStr('2021-08-01'), 
+      lastUsed: getDateStr('2021-08-01'),
       action: <Button
         variant="small"
         text="Edit"
@@ -20,12 +23,16 @@ export const ApiKeyPage = (props) => {
     },
   ]
   return (
-    <div>
+    <PageContent
+      title="API Keys"
+      subtitle="Read the documentation on using our API here."
+    >
       <SettingTable
         variant={"api-keys"}
         rows={testRows}
       />
-    </div>
+      <CreateForm />
+    </PageContent>
   )
 }
 

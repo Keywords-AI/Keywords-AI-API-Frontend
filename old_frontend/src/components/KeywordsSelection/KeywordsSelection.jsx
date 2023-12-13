@@ -23,6 +23,12 @@ const MyComponent = React.forwardRef((props, ref) => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  const handleClickOutside = (e) => {
+    if (selectRef.current && !selectRef.current.contains(e.target)) {
+      setExpanded(false);
+    }
+  };
+
 
   useEffect(() => {
     if (options?.length > 0 && setDefault) {
@@ -35,11 +41,6 @@ const MyComponent = React.forwardRef((props, ref) => {
     }
   }, [choices]);
 
-  const handleClickOutside = (e) => {
-    if (selectRef.current && !selectRef.current.contains(e.target)) {
-      setExpanded(false);
-    }
-  };
 
   const handleChange = (choice) => {
     setSelected(retrieveText(choice));

@@ -34,6 +34,7 @@ export function TextInput({
   onChange, // Add onChange prop
   disabled = false,
   width = "w-[400px]",
+  onKeyDown = () => {},
 }) {
   const [isFocused, setIsFocused] = React.useState(false);
   const handleBlur = (event) => {
@@ -74,6 +75,7 @@ export function TextInput({
           {...register(name, validationSchema)}
           value={value} // Bind the value prop to the input
           onChange={onChange} // Use the onChange handler
+          onKeyDown={onKeyDown}
           disabled={disabled}
         />
       </div>

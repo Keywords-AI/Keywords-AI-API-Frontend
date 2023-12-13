@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Button } from 'src/components/Buttons'
 import cn from 'src/utilities/ClassMerge';
-import { Select as SelectionIcon, Down } from 'src/components/Icons'
+import { Select as SelectionIcon } from 'src/components/Icons'
 
 /**
  * MyComponent - A custom React component for a select input with options.
@@ -24,27 +24,27 @@ const defaultOptions = [
     { name: "BB", value: "bb" }
 ]
 
-const MyComponent = React.forwardRef(({
-    variant,
-    title = "selection",
-    headLess = false,
-    name = "text-sm",
-    choices = defaultOptions, // Choices, list of objects or strings, as long as you define the way 
-    handleSelected = () => { }, // Function to handle the selected choice in the parent component
-    placeholder, // This is the option to display. It is an actual option
-    defaultValue = "",
-    readOnly,
-    required = false,
-    internalIcon = true,
-    width = "w-[400px]",
-    register = () => { },
-    validationSchema = null,
-    padding = "py-xxs px-xs",
-    border = "border border-gray-3 focus:border-gray-3",
-    borderRadius = "rounded-sm",
-    text = "text-sm text-gray-4 focus:text-gray-white",
-    icon = SelectionIcon,
-}, ref) => {
+const MyComponent = React.forwardRef((props, ref) => {
+    const {
+        title = "selection",
+        headLess = false,
+        name = "text-sm",
+        choices = defaultOptions, // Choices, list of objects or strings, as long as you define the way 
+        handleSelected = () => { }, // Function to handle the selected choice in the parent component
+        placeholder, // This is the option to display. It is an actual option
+        readOnly,
+        required = false,
+        width = "w-[400px]",
+        register = () => { },
+        validationSchema = null,
+        padding = "py-xxs px-xs",
+        border = "border border-gray-3 focus:border-gray-3",
+        borderRadius = "rounded-sm",
+    } = props;
+    const [focused, setIsFocused] = React.useState(false);
+    const [selected, setSelected] = React.useState(placeholder);
+    const selectRef = React.useRef(null);
+    const [optionsVisible, setOptionsVisible] = React.useState(false);
     // Click outside to close
     const handleClickOutside = (e) => {
         if (selectRef.current && !selectRef.current.contains(e.target)) {
@@ -65,26 +65,6 @@ const MyComponent = React.forwardRef(({
         setOptionsVisible(false);
     };
 
-    switch (variant) {
-        case "member":
-            padding = "p-0"
-            border = "border-none"
-            borderRadius = "rounded-none"
-            text = "text-sm text-gray-4"
-            placeholder = "Select a role"
-            defaultValue = "Member"
-            internalIcon = false
-            width = ""
-            icon = Down
-            break;
-    }
-
-    // Initialize after the switch
-    const [focused, setFocused] = React.useState(false);
-    const [selected, setSelected] = React.useState(defaultValue);
-    const selectRef = React.useRef(null);
-    const [optionsVisible, setOptionsVisible] = React.useState(false);
-
     return (
         <div className={cn("flex-col justify-center items-start gap-xxs relative",
             width)}>
@@ -99,9 +79,7 @@ const MyComponent = React.forwardRef(({
             >
                 <div
                     aria-label="input-wrapper"
-                    className="flex-row relative gap-xxs items-center self-stretch"
-                    onFocus={() => { setFocused(true) }}
-                    onBlur={() => { setFocused(false) }}
+                    className="flex-row relative gap-sm items-center"
                 >
                     <input
                         type="text" // The actual ref
@@ -113,21 +91,16 @@ const MyComponent = React.forwardRef(({
                     />
                     <div
                         // The displayed selection tab
-                        className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none bg-gray-black",
-                            padding, border, borderRadius, text
+                        className={cn("flex-row justify-between items-center self-stretch text-sm text-gray-4 focus:text-gray-white cursor-pointer outline-none bg-gray-black",
+                            padding, border, borderRadius,
                         )} aria-label="select"
                         onClick={() => {
                             setOptionsVisible(!optionsVisible);
-                            setFocused(true);
                         }}
                     >
-                        {selected || placeholder}
+                        {selected}
                     </div>
-                    {!readOnly && <div className={cn("flex-col",
-                        internalIcon ? "absolute right-xs top-1/2 -translate-y-1/2" : ""
-                    )}>
-                        {React.createElement(icon, { active: focused })}
-                    </div>}
+                    <SelectionIcon />
                 </div>
                 {optionsVisible &&
                     <div className={cn("flex-col justify-start items-start self-stretch bg-gray-2 ",

@@ -1,12 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { MemberCard } from 'src/components/Cards/MemberCard'
+import { PageContent } from 'src/components/Sections'
+import { TitleStaticHeading } from 'src/components/Titles'
 
 export const MemberPage = (props) => {
   return (
-    <div>
+    <PageContent>
+      <TitleStaticHeading
+        title={"Members"}
+        subtitle={"Manage your organization members."}
+      />
       <MemberCard first_name="John" last_name="Doe" />
-    </div>
+    </PageContent>
   )
 }
 

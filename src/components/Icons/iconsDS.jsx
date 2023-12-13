@@ -390,3 +390,20 @@ export const Link = ({
             )
     }
 }
+// className={"flex-shrink-0"}>
+// className={active ? activeFill : fill} />
+export const Down = ({
+    fill = "fill-gray-4",
+    activeFill = "fill-gray-white",
+    active = false,
+    size = "xxs"
+}) => {
+    switch (size) {
+        case "xxs":
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="4" viewBox="0 0 7 4" fill="none"className={"flex-shrink-0"}>
+                    <path d="M0.766338 0L3.23867 2.47233L5.71641 0L6.47754 0.761134L3.23867 4L-0.000193596 0.761134L0.766338 0Z" className={active ? activeFill : fill} />
+                </svg>
+            )
+    }
+}

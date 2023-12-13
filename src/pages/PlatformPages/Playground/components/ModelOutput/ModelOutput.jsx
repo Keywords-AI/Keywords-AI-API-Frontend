@@ -1,4 +1,5 @@
-import { Button, Modal } from "src/components";
+import { Button} from "src/components/Buttons";
+import { Modal } from "src/components/Dialogs";
 import { useSelector } from "react-redux";
 import { Cost, Latency, Score, Tokens } from "./icons";
 import { Compare } from "src/components";
