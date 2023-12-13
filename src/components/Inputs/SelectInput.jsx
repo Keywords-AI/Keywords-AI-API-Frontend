@@ -27,6 +27,7 @@ const defaultOptions = [
 const MyComponent = React.forwardRef((props, ref) => {
     const {
         title = "selection",
+        headLess = false,
         name = "text-sm",
         choices = defaultOptions, // Choices, list of objects or strings, as long as you define the way 
         handleSelected = () => { }, // Function to handle the selected choice in the parent component
@@ -64,10 +65,10 @@ const MyComponent = React.forwardRef((props, ref) => {
     return (
         <div className={cn("flex-col justify-center items-start gap-xxs",
             width)}>
-            <label htmlFor={name} className="text-sm-regular text-gray-4">
+            {!headLess && <label htmlFor={name} className="text-sm-regular text-gray-4">
                 {title}
                 {required && "*"}
-            </label>
+            </label>}
             <div
                 className="flex-col self-stretch"
                 ref={selectRef}

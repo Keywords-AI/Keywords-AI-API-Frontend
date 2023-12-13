@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { ArrowDown } from "src/components/Icons/icons";
 import React, { useState } from "react";
 import cn from "src/utilities/ClassMerge";
 import { DropDownMenu } from "src/components/Dialogs/DropDownMenu/DropDownMenu";
 import { logout } from "src/store/actions";
+import { AvatarButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => {
   return {
@@ -19,8 +19,7 @@ const mapDispatchToProps = {
 const ProfileMenu = ({ logout, user }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
-  const initials = user?.first_name ? user?.first_name[0] : "Err";
+  const first_name = user?.first_name;
   const trigger = (
     <button
       className={cn(
@@ -29,19 +28,9 @@ const ProfileMenu = ({ logout, user }) => {
       )}
       onClick={() => setOpen(!open)}
     >
-      <AvatarPrimitive.Root className="rounded-full inline-flex items-center justify-center align-middle w-[24px] h-[24px] ">
-        {/* <AvatarPrimitive.Image
-        className="w-full h-full object-cover rounded-full"
-        src="https://images.unsplash1.com/photo-1511485977113-f34c92461ad9?ixlib=rb-1.2.1&w=128&h=128&dpr=2&q=80"
-        alt="Pedro Duarte"
-      /> */}
-        <AvatarPrimitive.Fallback
-          className="flex w-full h-full p-[10px] items-center justify-center rounded-full bg-avatar text-clip text-gray-white caption"
-          delayMs={100}
-        >
-          {initials}
-        </AvatarPrimitive.Fallback>
-      </AvatarPrimitive.Root>
+      <AvatarButton
+        first_name={first_name}
+      />
       <ArrowDown
         className={cn(
           "fill-gray-4 transition-transform duration-[250] ease-in ",

@@ -1,9 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { MemberCard } from 'src/components/Cards/MemberCard'
 
 export const MemberPage = (props) => {
   return (
-    <div>MemberPage</div>
+    <div>
+      <MemberCard first_name="John" last_name="Doe" />
+    </div>
   )
 }
 

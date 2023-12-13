@@ -3,10 +3,11 @@ import "./style.css";
 import { CheckBox, FileUpload, Close } from "./icons";
 import { updateSystemPrompt } from "src/store/actions/userAction";
 import { connect } from "react-redux";
-import FileCard from "./FileCard";
+import { FileCard } from "src/components/Cards";
 import { loadingFileUpload } from "src/store/actions/userAction";
 import { Button } from "src/components";
 import { IconButton } from "src/components/Buttons";
+import { FileInput } from "src/components/Inputs";
 
 const mapStateToProps = (state) => {
   return {
@@ -97,17 +98,6 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
             </div>
           </div>
           <div className="flex-col justify-start items-start self-stretch gap-xxs">
-            <input
-              type="file"
-              name="uploaded_file"
-              hidden
-              accept=".pdf,.doc,.docx,.txt"
-              ref={fileUploadRef}
-              onChange={(e) => {
-                const file = e.target.files[0];
-                setFile(file);
-              }}
-            />
             <div className="flex-col justify-start items-start self-stretch gap-xxs">
               <div className="text-sm-md text-gray-4">System Prompt</div>
               <textarea
@@ -125,7 +115,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                 className="text-sm bg-black border border-solid border-gray-3 rounded-sm text-gray-white"
                 id=""
               ></textarea>
-              <input
+              {/* <input
                 type="file"
                 name="uploaded_file"
                 hidden
@@ -149,9 +139,9 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                 >
                   <FileUpload />
                 </div>
-              </div>
+              </div> */}
             </div>
-            {file && (
+            {/* {file && (
               <>
                 <FileCard
                   fileName={file.name}
@@ -166,7 +156,14 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                   fileType={user?.current_file.split(".")[1]?.toUpperCase()}
                 />
               </>
-            )}
+            )} */}
+            <FileInput
+              title="File Upload (Beta)"
+              initialFile={file}
+              onFileChange={(file) => {
+                setFile(file);
+              }}
+            />
           </div>
           <div className="flex-row self-stretch flex-1 justify-between items-center">
             <div className="flex-row justify-center items-center gap-xs self-stretch">
