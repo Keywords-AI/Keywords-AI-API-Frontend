@@ -21,6 +21,7 @@ const mapStateToProps = (state) => {
     prompt: state.playground.prompt,
     streaming: state.playground.streaming,
     streamingText: state.playground.streamingText,
+    firstTime: state.playground.firstTime,
   };
 };
 
@@ -52,11 +53,15 @@ const NotConnectedMap = ({
   streaming,
   streamingText,
   setMessages,
+  firstTime,
 }) => {
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const handleAddMessage = () => {
+    setMessages([...messages, { role: "user", content: "" }]);
+  };
+  const handleRegenerate = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
   useEffect(() => {
@@ -97,12 +102,22 @@ const NotConnectedMap = ({
               content={streamingText}
             />
           )}
-          <Button
-            variant="small"
-            text="Add Message"
-            icon={AddMessage}
-            onClick={handleAddMessage}
-          />
+          <div className="flex gap-xxs">
+            <Button
+              variant="small"
+              text="Add Message"
+              icon={AddMessage}
+              onClick={handleAddMessage}
+            />
+            {firstTime && (
+              <Button
+                variant="small"
+                text="Regenerate"
+                icon={AddMessage}
+                onClick={handleAddMessage}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -115,7 +130,6 @@ const SidePannel = () => {
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
-      <Button variant="careers" text="View code" />
       <Divider />
       <CurrentModel />
       <ModelOutput />
