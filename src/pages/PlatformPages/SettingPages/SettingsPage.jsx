@@ -41,38 +41,9 @@ export const SettingPage = ({ user }) => {
                 }}
                 ref={formRef}
             >
-                {/* <div className="flex-col gap-xxs items-start self-stretch">
-                    <div className="t-medium">
-                        Organization Name
-                    </div>
-                    <div className="text-md">
-                        Human-friendly label for your organization, shown in user interfaces.
-                    </div>
-                    <div className="form-fields">
-                        <input
-                            type="text"
-                            className={"text-md" + " " + (user?.organization_role?.name === "owner" ? "" : "bg-gray2")}
-                            onChange={handleInputChange}
-                            value={organization?.name || "default organization"}
-                            name="organization_name" placeholder="Organization Name"
-                            readOnly={!user?.organization_role?.name === "owner"}
-                        />
-                    </div>
-                </div> */}
                 <TextInput
                     name="Organization Name"
                 />
-                {/* <div className="flex-col gap-xxs items-start self-stretch">
-                    <div className="t-medium">
-                        Organization ID
-                    </div>
-                    <div className="text-md">
-                        Identifier for this organization sometimes used in API requests.
-                    </div>
-                    <div className="form-fields">
-                        <input type="text" readOnly className="text-md bg-gray text-gray3" placeholder="Oranization ID" value={organization?.unique_organization_id || "Join or create an organization to retrive this ID"} />
-                    </div>
-                </div> */}
                 <TextInput
                     name="Organization ID - identifier sometimes used in API requests."
                     type="text"
@@ -96,6 +67,16 @@ export const SettingPage = ({ user }) => {
                         </div>
                 }
             </form>
+            <Button
+                text="r4-black"
+                variant="r4-black"
+                icon={Search}
+            />
+            <Button
+                text="r4-black"
+                variant="r4-black"
+                icon={Search}
+            />
         </PageContent>
     )
 }

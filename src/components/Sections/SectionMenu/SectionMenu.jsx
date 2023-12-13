@@ -18,11 +18,6 @@ const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
         </div>
         <div className="flex-col flex-start self-stretch">
           {pages && pages.length > 0 && pages.map((page, index) => {
-            console.log(
-              window.location.pathname,
-              window.location.pathname.includes(`${basePath}/${page?.path}`),
-              `${basePath}/${page?.path}`
-            );
             if (page?.default) return;
             return (
               <Button

@@ -170,7 +170,8 @@ export const Button = forwardRef(
         borderRadius = "rounded-sm";
         borderHoverColor = "hover:border-gray-3";
         padding = "py-xxs px-xs";
-        iconFill = "fill-gray-4 group-hover:fill-gray-4";
+        iconFill = "fill-gray-4";
+        iconHoverFill = "group-hover:fill-gray-4";
         justification = "justify-start";
         break;
       case "small":
