@@ -11,11 +11,15 @@ import {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
+  updateStreamText,
+  setStreaming,
+  stopStreaming,
 } from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import useStream from "src/hooks/useStream";
+import readStream from "src/services/readStream";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -24,6 +28,7 @@ const mapStateToProps = (state) => {
     streamingText: state.playground.streamingText,
     firstTime: state.playground.firstTime,
     currentModel: state.playground.currentModel,
+    systemPrompt: state.playground.prompt,
   };
 };
 
@@ -32,6 +37,9 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
+  updateStreamText,
+  setStreaming,
+  stopStreaming,
 };
 
 const Prompt = () => {
@@ -59,8 +67,12 @@ const NotConnectedMap = ({
   firstTime,
   currentModel,
   setCacheAnswer,
+  systemPrompt,
+  updateStreamText,
+  setStreaming,
+  stopStreaming,
 }) => {
-  const { postData } = useStream({
+  const { postData, response } = useStream({
     path: "api/playground/ask/",
     host: "https://platform.keywordsai.co/",
   });
@@ -71,7 +83,7 @@ const NotConnectedMap = ({
     setMessages([...messages, { role: "user", content: "" }]);
   };
   const handleRegenerate = () => {
-    const updatedMessages = [...messages];
+    const updatedMessages = messages.slice(0, -1);
     setMessages(updatedMessages);
     // TODO: call API to regenerate
     const messagesWithPrompt = [
@@ -90,7 +102,21 @@ const NotConnectedMap = ({
       dispatch(setFirstTime(false));
     }
   }, [streamingText]);
-
+  useEffect(() => {
+    if (!response) return;
+    const streamingCallback = (chunk) => {
+      dispatch(updateStreamText(chunk, dispatch));
+    };
+    dispatch(setStreaming(true));
+    const stopStreamingFunc = () => {
+      dispatch(stopStreaming());
+    };
+    const abortFunction = readStream(
+      response,
+      streamingCallback,
+      stopStreamingFunc
+    );
+  }, [response]);
   useEffect(() => {
     if (streaming) return;
     const lastItem = messages[messages.length - 1];
