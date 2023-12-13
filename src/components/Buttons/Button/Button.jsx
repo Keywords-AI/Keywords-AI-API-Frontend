@@ -62,6 +62,7 @@ export const Button = forwardRef(
       iconFill = "fill-gray-black",
       iconHoverFill = "fill-gray-white",
       iconPosition = "left",
+      iconSize = "sm",
       padding = "py-xxs px-xs",
       borderColor = "border-transparent",
       borderHoverColor = "hover:border-transparent",
@@ -309,6 +310,7 @@ export const Button = forwardRef(
               <div className="flex justify-center items-center gap-[10px]">
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
+                  size: iconSize,
                 })}
               </div>
             )}
