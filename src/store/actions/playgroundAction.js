@@ -8,6 +8,7 @@ export const SET_OUTPUTS = "SET_OUTPUTS";
 export const UPDATE_STREAMING_TEXT = "UPDATE_STREAMING_TEXT";
 export const SET_STREAMING_TEXT = "SET_STREAMING_TEXT";
 export const SET_FIRST_TIME = "SET_FIRST_TIME";
+export const SET_CACHE_ANSWER = "SET_CACHE_ANSWERS";
 import { parseChunk } from "src/utilities/streaming";
 
 // Action Creator
@@ -50,6 +51,12 @@ export const setModelOptions = (modelOptions) => ({
 export const setOutputs = (outputs) => ({
   type: SET_OUTPUTS,
   payload: outputs,
+});
+
+export const setCacheAnswer = (key, cacheAnswers) => ({
+  type: SET_CACHE_ANSWER,
+  key: key,
+  payload: cacheAnswers,
 });
 
 export const stopStreaming = () => {

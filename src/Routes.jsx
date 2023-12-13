@@ -12,6 +12,7 @@ import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
 import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
+
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
 import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
@@ -33,24 +34,27 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = user && user.email?.length > 0;
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = user && user.email?.length > 0;
+  // const isUserLoggedIn = true;
 
   const routes = [
     {
       path: "/platform",
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
-      children: [{ path: "playground", element: <Playground /> },
-      { path: "chatbot", element: <Chatbot /> },
-      {
-        path: "setting", element: <LeftNavigationLayout sectionName={"setting"}/>,
-        children: settingChildren
-      },
-      {
-        path: "doc", element: <LeftNavigationLayout sectionName={"documentation"}/>,
-        children: documentationChildren
-      },
-      ]
+      children: [
+        { path: "playground", element: <Playground /> },
+        { path: "chatbot", element: <Chatbot /> },
+        {
+          path: "setting",
+          element: <LeftNavigationLayout sectionName={"setting"} />,
+          children: settingChildren,
+        },
+        {
+          path: "doc",
+          element: <LeftNavigationLayout sectionName={"documentation"} />,
+          children: documentationChildren,
+        },
+      ],
     },
     {
       path: "/",
@@ -59,7 +63,6 @@ const Routes = ({ getUser, user }) => {
       ) : (
         <Navigate to="/platform/playground" />
       ),
-      // element: <FullScreenLayout />,
       children: [
         { path: "login", element: <LogIn /> },
         {

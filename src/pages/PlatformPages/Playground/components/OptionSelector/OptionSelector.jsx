@@ -1,4 +1,4 @@
-import { DropDownMenu, EditableBox } from "src/components";
+import { ArrowLeft, Button, DropDownMenu, EditableBox } from "src/components";
 import "./OptionSelector.css";
 import React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
@@ -14,6 +14,7 @@ import {
 } from "./icons";
 import { useDispatch } from "react-redux";
 import { setModelOptions } from "src/store/actions/playgroundAction";
+import { NumberInput } from "src/components/Inputs";
 
 export function OptionSelector({}) {
   const dispatch = useDispatch();
@@ -24,12 +25,12 @@ export function OptionSelector({}) {
     {
       name: "Speed",
       value: "speed",
-      icon: <Speed />,
+      icon: Speed,
     },
     {
       name: "High",
       value: "high",
-      icon: <High />,
+      icon: High,
     },
   ]);
   const updateRedux = (propertyName, value) => {
@@ -150,7 +151,8 @@ export function OptionSelector({}) {
     },
   ];
 
-  const handleChange = (value) => {
+  const handleChange = (event) => {
+    const { value } = event.target;
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };
@@ -174,16 +176,13 @@ export function OptionSelector({}) {
             sideOffset={0}
             align="start"
             trigger={
-              <button className="flex items-center gap-xxs py-xxs px-xs rounded-sm outline-none self-stretch border border-solid border-transparent hover:border-gray-3 hover:bg-gray-2 ">
-                <div className="flex w-[16px] justify-center items-center gap-[10px]">
-                  {current[index].icon}
-                </div>
-                <div className="flex justify-center items-center ">
-                  <p className="text-sm-md text-gray-4">
-                    {current[index].name}
-                  </p>
-                </div>
-              </button>
+              <Button
+                variant="r4-black"
+                text={current[index].name}
+                icon={current[index].icon}
+                iconHoverFill="fill-gray-white"
+                onClick={() => item.setOpen(true)}
+              />
             }
             open={item.open}
             setOpen={item.setOpen}
@@ -191,39 +190,21 @@ export function OptionSelector({}) {
               <React.Fragment>
                 {item.options.map((option, index) => (
                   <DropdownMenuPrimitive.Item key={index} asChild>
-                    <div
-                      className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer  outline-none self-stretch group"
+                    <Button
+                      variant="panel"
+                      text={option.name}
+                      icon={option.icon}
                       onClick={() => option.action()}
-                    >
-                      <div className="flex w-[16px] justify-center items-center gap-[10px]">
-                        {React.createElement(option.icon, {
-                          fill: "fill-gray-4  group-data-[highlighted]:fill-gray-white",
-                        })}
-                      </div>
-
-                      <p className="text-sm-regular text-gray-4 group-hover:text-gray-white">
-                        {option.name}
-                      </p>
-                    </div>
+                      iconPosition="left"
+                    />
                   </DropdownMenuPrimitive.Item>
                 ))}
               </React.Fragment>
             }
           />
         ))}
-        <div className="flex self-stretch py-xxs px-xs items-center gap-xxs ">
-          <div className="flex w-[16px] justify-center items-center gap-[10px]">
-            <Tokens />
-          </div>
-          <div className="flex self-stretch flex-1  h-[20px]">
-            <EditableBox
-              value={token}
-              onChange={handleChange}
-              className={"text-gray-4 text-sm-md"}
-              selectPrevious={true}
-              type="number"
-            />
-          </div>
+        <div className="flex w-[88px] ">
+          <NumberInput icon={Tokens} value={token} onChange={handleChange} />
         </div>
       </div>
     </div>

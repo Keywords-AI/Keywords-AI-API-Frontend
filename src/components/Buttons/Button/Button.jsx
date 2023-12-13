@@ -50,17 +50,17 @@ export const Button = forwardRef(
       className = "",
       borderRadius = "",
       onClick,
-      onMouseEnter = () => { },
-      onMouseLeave = () => { },
-      textClassName = "text-sm-md",
-      bgColor = "bg-transparent",
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
+      textClassName = "",
+      bgColor = "",
       hoverColor = "",
       clickedColor = "",
-      textColor = "text-gray-black",
-      textHoverColor = "group-hover:text-gray-white",
-      textClickedColor = "group-active:text-gray-white",
-      iconFill = "fill-gray-black",
-      iconHoverFill = "fill-gray-white",
+      textColor = "",
+      textHoverColor = "",
+      textClickedColor = "",
+      iconFill = "",
+      iconHoverFill = "",
       iconPosition = "left",
       iconSize = "sm",
       padding = "py-xxs px-xs",
@@ -170,6 +170,7 @@ export const Button = forwardRef(
         borderHoverColor = "hover:border-gray-3";
         padding = "py-xxs px-xs";
         iconFill = "fill-gray-4 group-hover:fill-gray-4";
+        justification = "justify-start";
         break;
       case "small":
         bgColor = "bg-gray-2";
@@ -210,7 +211,7 @@ export const Button = forwardRef(
         borderRadius = "rounded-lg";
         padding = "py-xxs px-sm";
         iconFill = "fill-gray-4";
-        iconHoverFill = "fill-red-500";
+        iconHoverFill = "fill-gray-white";
         break;
       case "header":
         bgColor = "bg-transparent";
@@ -237,14 +238,15 @@ export const Button = forwardRef(
         textClassName = "text-sm-md";
         hoverColor = "hover:bg-gray-3";
         clickedColor = "active:bg-gray-3";
-        iconPosition = "right";
         textColor = "text-gray-4";
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         borderRadius = "rounded-sm";
         padding = "py-xxs px-xs";
-        justification = "justify-between";
+        justification = "justify-end";
         className = "w-full";
+        iconFill = "fill-gray-4";
+        iconHoverFill = "fill-gray-white";
         break;
       case "careers":
         bgColor = "bg-transparent";
@@ -288,7 +290,7 @@ export const Button = forwardRef(
         padding = "py-xxs px-xxs";
         iconFill = "fill-gray-4";
         iconHoverFill = "fill-gray-white";
-        minWidth="";
+        minWidth = "";
         break;
     }
     return (
@@ -324,18 +326,20 @@ export const Button = forwardRef(
           <>{children}</>
         ) : (
           <>
-            {text && <span
-              className={cn(
-                textColor,
-                textHoverColor,
-                textClickedColor,
-                textClassName
-              )}
-            >
-              {text}
-            </span>}
+            {text && (
+              <span
+                className={cn(
+                  textColor,
+                  textHoverColor,
+                  textClickedColor,
+                  textClassName
+                )}
+              >
+                {text}
+              </span>
+            )}
             {icon && (
-              <div className="flex justify-center items-center gap-[10px]">
+              <div className="flex justify-center items-center w-[16px] gap-[10px]">
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
                   size: iconSize,

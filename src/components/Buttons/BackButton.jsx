@@ -8,7 +8,7 @@ export function BackButton({ text, link = -1 }) {
     <div className="flex-col items-start gap-[10px] self-stretch">
       <Button
         text={text}
-        variant={"button-18-blackgit"}
+        variant={"r18-black"}
         onClick={() => navigate(link)}
         icon={ArrowLeft}
       />

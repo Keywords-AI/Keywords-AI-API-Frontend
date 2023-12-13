@@ -10,7 +10,6 @@ import {
   setStreaming,
   stopStreaming,
   setMessages,
-  setFirstTime,
 } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/ClassMerge";
 
@@ -26,7 +25,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   });
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
-
+  const currentModel = useSelector((state) => state.playground.currentModel);
   // Update when there is streaming
   React.useEffect(() => {
     setTextContent(content);
@@ -80,7 +79,11 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       ...messages,
     ];
     try {
-      postData({ messages: messagesWithPrompt, stream: true });
+      postData({
+        messages: messagesWithPrompt,
+        stream: true,
+        model: currentModel,
+      });
     } catch (error) {
       console.log(error);
     }
