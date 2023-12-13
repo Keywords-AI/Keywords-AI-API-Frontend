@@ -8,6 +8,7 @@ import {
   UPDATE_STREAMING_TEXT,
   SET_STREAMING_TEXT,
   SET_FIRST_TIME,
+  SET_CACHE_ANSWER,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -21,6 +22,7 @@ const initialState = {
   firstTime: true,
   prompt: "",
   currentModel: "",
+  cacheAnswers: {},
   modelOptions: {
     optimize: "speed",
     creativity: "high",
@@ -58,6 +60,14 @@ const playgroundReducer = (state = initialState, action) => {
       return { ...state, outputs: { ...state.outputs, ...action.payload } };
     case SET_FIRST_TIME:
       return { ...state, firstTime: action.payload };
+    case SET_CACHE_ANSWER:
+      return {
+        ...state,
+        cacheAnswers: {
+          ...state.cacheAnswers,
+          [action.key]: action.payload,
+        },
+      };
     default:
       return state;
   }

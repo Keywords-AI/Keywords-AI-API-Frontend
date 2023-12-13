@@ -10,6 +10,7 @@ import {
   setMessages,
   setPrompt,
   setFirstTime,
+  setCacheAnswer,
 } from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
@@ -22,6 +23,7 @@ const mapStateToProps = (state) => {
     streaming: state.playground.streaming,
     streamingText: state.playground.streamingText,
     firstTime: state.playground.firstTime,
+    currentModel: state.playground.currentModel,
   };
 };
 
@@ -29,6 +31,7 @@ const mapDispatchToProps = {
   setMessages,
   setPrompt,
   setFirstTime,
+  setCacheAnswer,
 };
 
 const Prompt = () => {
@@ -54,6 +57,8 @@ const NotConnectedMap = ({
   streamingText,
   setMessages,
   firstTime,
+  currentModel,
+  setCacheAnswer,
 }) => {
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
@@ -62,7 +67,9 @@ const NotConnectedMap = ({
     setMessages([...messages, { role: "user", content: "" }]);
   };
   const handleRegenerate = () => {
-    setMessages([...messages, { role: "user", content: "" }]);
+    const updatedMessages = [...messages];
+    setMessages(updatedMessages);
+    // TODO: call API to regenerate
   };
   useEffect(() => {
     if (streamingText) {
@@ -71,6 +78,18 @@ const NotConnectedMap = ({
     }
   }, [streamingText]);
 
+  useEffect(() => {
+    if (streaming) return;
+    const lastItem = messages[messages.length - 1];
+    if (lastItem.role === "user") return;
+    console.log("streamingStop", currentModel, lastItem);
+    dispatch(
+      setCacheAnswer(currentModel, {
+        content: lastItem.content,
+        index: messages.length - 1,
+      })
+    );
+  }, [streaming]);
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">
@@ -114,7 +133,7 @@ const NotConnectedMap = ({
                 variant="small"
                 text="Regenerate"
                 icon={AddMessage}
-                onClick={handleAddMessage}
+                onClick={handleRegenerate}
               />
             )}
           </div>

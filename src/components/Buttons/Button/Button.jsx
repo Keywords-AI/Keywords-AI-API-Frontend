@@ -211,7 +211,7 @@ export const Button = forwardRef(
         borderRadius = "rounded-lg";
         padding = "py-xxs px-sm";
         iconFill = "fill-gray-4";
-        iconHoverFill = "fill-red-500";
+        iconHoverFill = "fill-gray-white";
         break;
       case "header":
         bgColor = "bg-transparent";
@@ -290,7 +290,7 @@ export const Button = forwardRef(
         padding = "py-xxs px-xxs";
         iconFill = "fill-gray-4";
         iconHoverFill = "fill-gray-white";
-        minWidth="";
+        minWidth = "";
         break;
     }
     return (
@@ -326,16 +326,18 @@ export const Button = forwardRef(
           <>{children}</>
         ) : (
           <>
-            {text && <span
-              className={cn(
-                textColor,
-                textHoverColor,
-                textClickedColor,
-                textClassName
-              )}
-            >
-              {text}
-            </span>}
+            {text && (
+              <span
+                className={cn(
+                  textColor,
+                  textHoverColor,
+                  textClickedColor,
+                  textClassName
+                )}
+              >
+                {text}
+              </span>
+            )}
             {icon && (
               <div className="flex justify-center items-center w-[16px] gap-[10px]">
                 {React.createElement(icon, {

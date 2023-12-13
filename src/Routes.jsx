@@ -34,8 +34,8 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = user && user.email?.length > 0;
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = user && user.email?.length > 0;
+  // const isUserLoggedIn = true;
 
   const routes = [
     {
@@ -63,7 +63,6 @@ const Routes = ({ getUser, user }) => {
       ) : (
         <Navigate to="/platform/playground" />
       ),
-      // element: <FullScreenLayout />,
       children: [
         { path: "login", element: <LogIn /> },
         {
