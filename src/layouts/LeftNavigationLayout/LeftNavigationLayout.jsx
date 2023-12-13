@@ -1,24 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import PanelSetting from 'src/components/Sections/PanelSetting';
-import { sections } from 'src/pages/PlatformPages/SettingPages/SettingPages';
+import PanelSetting from 'src/components/Sections/PanelNavigation';
 
-const SettingLayout = () => {
+const LeftNavitationLayout = ({ sectionName }) => {
   const PlatformDrawerMemo = React.memo(PanelSetting);
   return (
     <div aria-label='setting-pages' className="flex-row self-stretch flex-1 max-h-[calc(100vh-53px)] overflow-hidden">
-      <PlatformDrawerMemo sections={sections} />
+      <PlatformDrawerMemo sectionName={sectionName} />
       <Outlet />
     </div>
   );
 }
 
-SettingLayout.propTypes = {
+LeftNavitationLayout.propTypes = {
   // bla: PropTypes.string,
 };
 
-SettingLayout.defaultProps = {
+LeftNavitationLayout.defaultProps = {
   // bla: 'test',
 };
 
@@ -33,4 +32,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SettingLayout);
+)(LeftNavitationLayout);

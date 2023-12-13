@@ -62,11 +62,14 @@ export const Button = forwardRef(
       iconFill = "",
       iconHoverFill = "",
       iconPosition = "left",
+      iconSize = "sm",
       padding = "py-xxs px-xs",
       borderColor = "border-transparent",
       borderHoverColor = "hover:border-transparent",
       justification = "justify-center",
+      minWidth = "min-w-[60px]",
       children,
+      // ...props
     },
     ref
   ) => {
@@ -141,7 +144,18 @@ export const Button = forwardRef(
         textHoverColor = "group-hover:text-gray-white";
         textClickedColor = "group-active:text-gray-white";
         borderRadius = "rounded-sm";
-        borderColor = "border-gray-3";
+        borderColor = "border-transparent";
+        borderHoverColor = "hover:border-gray-4";
+        padding = "py-xxs px-xs";
+      case "r4-red":
+        bgColor = "bg-error";
+        hoverColor = "hover:bg-error";
+        clickedColor = "active:bg-error";
+        textColor = "text-gray-white";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
+        borderColor = "border-transparent";
         borderHoverColor = "hover:border-gray-4";
         padding = "py-xxs px-xs";
         break;
@@ -220,7 +234,7 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         break;
       case "panel":
-        bgColor = "bg-gray-transparent";
+        bgColor = "bg-transparent";
         textClassName = "text-sm-md";
         hoverColor = "hover:bg-gray-3";
         clickedColor = "active:bg-gray-3";
@@ -263,6 +277,21 @@ export const Button = forwardRef(
         justification = "justify-center";
         className = "w-[256px]";
         break;
+      case "icon":
+        bgColor = "bg-gray-2";
+        hoverColor = "hover:bg-gray-2";
+        clickedColor = "active:bg-gray-2";
+        textColor = "text-gray-4";
+        textHoverColor = "group-hover:text-gray-white";
+        textClickedColor = "group-active:text-gray-white";
+        borderRadius = "rounded-sm";
+        borderColor = "border border-solid border-gray-3";
+        borderHoverColor = "hover:border-gray-4";
+        padding = "py-xxs px-xxs";
+        iconFill = "fill-gray-4";
+        iconHoverFill = "fill-gray-white";
+        minWidth="";
+        break;
     }
     return (
       <button
@@ -277,7 +306,8 @@ export const Button = forwardRef(
           setHover(false);
         }}
         className={cn(
-          "group inline-flex min-w-[60px] items-center gap-xxs border border-solid ",
+          "group inline-flex items-center gap-xxs border border-solid ",
+          minWidth,
           justification,
           borderRadius,
           bgColor,
@@ -296,7 +326,7 @@ export const Button = forwardRef(
           <>{children}</>
         ) : (
           <>
-            <span
+            {text && <span
               className={cn(
                 textColor,
                 textHoverColor,
@@ -305,11 +335,12 @@ export const Button = forwardRef(
               )}
             >
               {text}
-            </span>
+            </span>}
             {icon && (
               <div className="flex justify-center items-center w-[16px] gap-[10px]">
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
+                  size: iconSize,
                 })}
               </div>
             )}

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { textToLink } from 'src/utilities/utilities';
+import { textToLink } from 'src/utilities/stringProcessing';
 import SettingsPage from './SettingsPage';
 import ApiKeyPage from './ApiKeyPage';
 import UsagePage from './UsagePage';
