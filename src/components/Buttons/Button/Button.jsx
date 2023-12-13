@@ -335,7 +335,6 @@ export const Button = forwardRef(
               <span
                 className={cn(
                   hover ? textHoverColor : textColor,
-                  textClickedColor,
                   textClassName
                 )}
               >
