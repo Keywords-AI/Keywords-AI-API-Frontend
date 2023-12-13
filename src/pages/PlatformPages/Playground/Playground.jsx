@@ -15,7 +15,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-
+import useStream from "src/hooks/useStream";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -60,6 +60,10 @@ const NotConnectedMap = ({
   currentModel,
   setCacheAnswer,
 }) => {
+  const { postData } = useStream({
+    path: "api/playground/ask/",
+    host: "https://platform.keywordsai.co/",
+  });
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
@@ -70,6 +74,15 @@ const NotConnectedMap = ({
     const updatedMessages = [...messages];
     setMessages(updatedMessages);
     // TODO: call API to regenerate
+    const messagesWithPrompt = [
+      { role: "system", content: systemPrompt },
+      ...updatedMessages,
+    ];
+    postData({
+      messages: messagesWithPrompt,
+      stream: true,
+      model: currentModel,
+    });
   };
   useEffect(() => {
     if (streamingText) {
@@ -128,7 +141,7 @@ const NotConnectedMap = ({
               icon={AddMessage}
               onClick={handleAddMessage}
             />
-            {firstTime && (
+            {!firstTime && (
               <Button
                 variant="small"
                 text="Regenerate"

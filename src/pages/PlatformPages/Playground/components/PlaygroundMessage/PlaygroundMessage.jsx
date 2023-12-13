@@ -79,7 +79,11 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       ...messages,
     ];
     try {
-      postData({ messages: messagesWithPrompt, stream: true });
+      postData({
+        messages: messagesWithPrompt,
+        stream: true,
+        model: currentModel,
+      });
     } catch (error) {
       console.log(error);
     }
