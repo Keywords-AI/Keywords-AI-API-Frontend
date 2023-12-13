@@ -1,9 +1,27 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { SelectInput } from 'src/components/Inputs'
 
 export const UsagePage = (props) => {
+  const options =
+    [
+      {
+        name: "test",
+        value: "test value"
+      },
+      {
+        name: "test",
+        value: "test value"
+      },
+      {
+        name: "test",
+        value: "test value"
+      }
+    ]
   return (
-    <div>UsagePage</div>
+    <div>
+      <SelectInput placeholder={"Hi"} />
+    </div>
   )
 }
 

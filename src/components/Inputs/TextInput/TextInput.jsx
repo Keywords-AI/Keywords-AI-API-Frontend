@@ -22,6 +22,7 @@ import cn from "src/utilities/ClassMerge";
  * and the value and onChange do not need to be passed in.
  */
 export function TextInput({
+  title,
   name = "text-sm",
   register = () => {},
   errors = null,
@@ -50,7 +51,7 @@ export function TextInput({
       onBlur={handleBlur}
     >
       <label htmlFor={name} className="text-sm-regular text-gray-4">
-        {name}
+        {title}
         {required && "*"}
       </label>
       <div

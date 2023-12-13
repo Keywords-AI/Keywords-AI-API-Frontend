@@ -67,6 +67,7 @@ export const Button = forwardRef(
       borderHoverColor = "hover:border-transparent",
       justification = "justify-center",
       children,
+      // ...props
     },
     ref
   ) => {
@@ -219,7 +220,7 @@ export const Button = forwardRef(
         padding = "py-xxs px-xs";
         break;
       case "panel":
-        bgColor = "bg-gray-black";
+        bgColor = "bg-transparent";
         textClassName = "text-sm-md";
         hoverColor = "hover:bg-gray-3";
         clickedColor = "active:bg-gray-3";
