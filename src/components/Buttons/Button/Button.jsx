@@ -211,6 +211,8 @@ export const Button = forwardRef(
       case "r18-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-3";
+        borderColor = borderColor || "border-transparent";
+        borderHoverColor = borderHoverColor || "border-transparent";
         clickedColor = clickedColor || "bg-gray-3";
         textClassName = textClassName || "text-sm-regular";
         textColor = textColor || "text-gray-4";

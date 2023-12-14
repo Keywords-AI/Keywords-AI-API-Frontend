@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowRight } from "src/components";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
 import React from "react";
+import { ArrowRight } from "src/components/Icons/iconsDS";
 export function NotFound() {
   const navigate = useNavigate();
   return (
@@ -21,7 +21,7 @@ export function NotFound() {
         <div className="flex justify-center items-start gap-md self-stretch">
           <Button
             text="Back to home"
-            variant={"r4-white"}
+            variant={"r18-white"}
             icon={ArrowRight}
             iconPosition="right"
             onClick={() => {
@@ -30,7 +30,9 @@ export function NotFound() {
           />
           <Button
             text="Bug report"
-            variant="r4-black"
+            variant="header"
+            icon={ArrowRight}
+            iconPosition="right"
           />
         </div>
       </div>

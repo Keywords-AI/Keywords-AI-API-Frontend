@@ -3,6 +3,7 @@ import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
 
 import React from "react";
+import { ArrowRight } from "src/components";
 
 export function Unauthenticated() {
   const navigate = useNavigate();
@@ -24,18 +25,14 @@ export function Unauthenticated() {
         <div className="flex justify-center items-center gap-md self-stretch">
           <Button
             text="Login"
-            variant={"secondary"}
-            borderRadius="rounded-sm"
-            arrow={false}
+            variant={"r18-white"}
             onClick={() => {
               navigate("/login");
             }}
           />
           <Button
             text="Sign up"
-            variant={"secondary-gray"}
-            borderRadius="rounded-sm"
-            arrow={false}
+            variant={"header"}
             onClick={() => {
               navigate("/signup");
             }}

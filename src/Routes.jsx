@@ -34,8 +34,7 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = user && user.email?.length > 0;
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = user && user.email?.length > 0;
 
   const routes = [
     {

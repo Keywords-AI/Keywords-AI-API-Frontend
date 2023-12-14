@@ -58,11 +58,11 @@ export function ForgotPassword() {
           </p>
           <div className="flex-col items-start gap-xs self-stretch">
             <Button
-              variant={"secondary"}
+
               text={"Send reset link"}
-              arrow={false}
-              borderRadius="rounded-sm"
+              variant={"r4-white"}
               className="w-full"
+              justification="justify-center"
             />
           </div>
         </form>
