@@ -5,6 +5,7 @@ import React from "react";
 import { ArrowRight } from "src/components/Icons/iconsDS";
 export function NotFound() {
   const navigate = useNavigate();
+  console.log("ArrowRight", ArrowRight);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home" />
@@ -23,6 +24,9 @@ export function NotFound() {
             text="Back to home"
             variant={"r18-white"}
             icon={ArrowRight}
+            iconSize="xs"
+            iconFill="fill-gray-black"
+            iconHoverFill="fill-gray-white"
             iconPosition="right"
             onClick={() => {
               navigate("/");
@@ -31,8 +35,10 @@ export function NotFound() {
           <Button
             text="Bug report"
             variant="header"
+            iconSize="xs"
             icon={ArrowRight}
             iconPosition="right"
+            iconFill="fill-gray-white"
           />
         </div>
       </div>
