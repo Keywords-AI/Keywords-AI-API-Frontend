@@ -117,6 +117,7 @@ export const Button = forwardRef(
         break;
       case "r4-white":
         bgColor = bgColor || "bg-gray-white";
+        textClassName = textClassName || "text-sm-regular";
         hoverColor = hoverColor || "bg-gray-4";
         clickedColor = clickedColor || "bg-gray-4";
         textColor = textColor || "text-gray-black";
@@ -166,6 +167,7 @@ export const Button = forwardRef(
       case "r4-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
+        textClassName = textClassName || "text-sm-regular";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-4";
@@ -251,6 +253,8 @@ export const Button = forwardRef(
       case "panel":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-sm-md";
+        borderColor = borderColor || "border-transparent";
+        borderHoverColor = borderHoverColor || "border-transparent";
         hoverColor = hoverColor || "bg-gray-3";
         clickedColor = clickedColor || "bg-gray-3";
         textColor = textColor || "text-gray-4";
@@ -262,7 +266,6 @@ export const Button = forwardRef(
         className = className || "w-full";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-
         break;
       case "careers":
         bgColor = bgColor || "bg-transparent";
