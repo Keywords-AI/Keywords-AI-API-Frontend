@@ -109,7 +109,7 @@ const NotConnectedMap = ({
     };
     dispatch(setStreaming(true));
     const stopStreamingFunc = () => {
-      dispatch(stopStreaming());
+      stopStreaming();
     };
     const abortFunction = readStream(
       response,

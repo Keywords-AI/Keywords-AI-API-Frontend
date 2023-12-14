@@ -193,23 +193,23 @@ export const FeatureTick = ({ fill = "fill-gray-white" }) => {
   );
 };
 
-export const ArrowLeft = ({ fill = "fill-gray-white" }) => {
-  return (
-    <svg
-      aria-label="ArrowLeft"
-      xmlns="http://www.w3.org/2000/svg"
-      width="4"
-      height="8"
-      viewBox="0 0 4 8"
-      fill="none"
-    >
-      <path
-        d="M4 1.52757L1.52767 3.9999L4 6.47764L3.23887 7.23877L0 3.9999L3.23887 0.761037L4 1.52757Z"
-        className={fill}
-      />
-    </svg>
-  );
-};
+// export const ArrowLeft = ({ fill = "fill-gray-white" }) => {
+//   return (
+//     <svg
+//       aria-label="ArrowLeft"
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="4"
+//       height="8"
+//       viewBox="0 0 4 8"
+//       fill="none"
+//     >
+//       <path
+//         d="M4 1.52757L1.52767 3.9999L4 6.47764L3.23887 7.23877L0 3.9999L3.23887 0.761037L4 1.52757Z"
+//         className={fill}
+//       />
+//     </svg>
+//   );
+// };
 
 export const CircleTick = () => {
   return (
