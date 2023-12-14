@@ -314,6 +314,8 @@ export const Button = forwardRef(
         minWidth = minWidth || "";
 
         break;
+      default:
+        <div className="bg-error">Invalid Variant</div>;
     }
     if (active) {
       bgColor = clickedColor;

@@ -49,7 +49,7 @@ const Prompt = () => {
   };
   return (
     <div className="flex-col w-[320px] self-stretch justify-center items-start gap-xxs">
-      <p className="text-sm-regular self-stretch text-gray-4">System Prompt</p>
+      <p className="text-sm-regular self-stretch text-gray-4">System prompt</p>
       <textarea
         onChange={handleOnChange}
         className="flex self-stretch px-xs py-xxs items-end flex-1 rounded-sm border bordersolid border-gray-3 resize-none text-sm-regular text-gray-white placeholder-gray-3 bg-transparent"

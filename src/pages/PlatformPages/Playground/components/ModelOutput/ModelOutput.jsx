@@ -1,4 +1,4 @@
-import { Button} from "src/components/Buttons";
+import { Button } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import { useSelector } from "react-redux";
 import { Cost, Latency, Score, Tokens } from "./icons";
@@ -11,7 +11,7 @@ export function ModelOutput({}) {
   const outputs = [
     {
       name: "Score",
-      value: stateOutputs.score[currentModel],
+      value: Math.round(stateOutputs.score[currentModel] * 10) / 10 || "0",
       icon: <Score />,
     },
     {
@@ -19,7 +19,7 @@ export function ModelOutput({}) {
       value: (
         <>
           <span>$</span>
-          <span>{stateOutputs.cost}</span>
+          <span>{Math.round(stateOutputs.cost * 1000) / 1000 || "0"}</span>
         </>
       ),
       icon: <Cost />,
@@ -28,7 +28,7 @@ export function ModelOutput({}) {
       name: "Latency",
       value: (
         <>
-          <span>{stateOutputs.latency}</span>
+          <span>{Math.round(stateOutputs.latency * 100) / 100 || "0"} </span>
           <span>s</span>
         </>
       ),
@@ -36,7 +36,7 @@ export function ModelOutput({}) {
     },
     {
       name: "Tokens",
-      value: stateOutputs.tokens,
+      value: stateOutputs.tokens || "0",
       icon: <Tokens />,
     },
   ];

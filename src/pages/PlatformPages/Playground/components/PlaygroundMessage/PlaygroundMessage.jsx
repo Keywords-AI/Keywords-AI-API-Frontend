@@ -135,6 +135,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             variant="small"
             text="Send message"
             icon={EnterKey}
+            iconSize="md"
             iconPosition="right"
             onClick={handleSend}
           />

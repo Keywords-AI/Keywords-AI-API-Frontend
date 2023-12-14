@@ -493,24 +493,24 @@ export const Compare = ({ fill = "fill-gray-4" }) => {
   );
 };
 
-export const EnterKey = ({ fill = "fill-gray-4" }) => {
-  return (
-    <div className="flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm border border-solid border-gray-3 bg-gray-2 shadow-key">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="8"
-        height="8"
-        viewBox="0 0 8 8"
-        fill="none"
-      >
-        <path
-          d="M7.65706 0V2.97143C7.65706 4.61257 6.32677 5.94286 4.68563 5.94286H2.09363L3.5062 7.35543L2.85706 8L0.342773 5.48571L2.85706 2.97143L3.50163 3.616L2.09363 5.02857H4.68563C5.82849 5.02857 6.74277 4.11429 6.74277 2.97143V0H7.65706Z"
-          className={fill}
-        />
-      </svg>
-    </div>
-  );
-};
+// export const EnterKey = ({ fill = "fill-gray-4" }) => {
+//   return (
+//     <div className="flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm border border-solid border-gray-3 bg-gray-2 shadow-key">
+//       <svg
+//         xmlns="http://www.w3.org/2000/svg"
+//         width="8"
+//         height="8"
+//         viewBox="0 0 8 8"
+//         fill="none"
+//       >
+//         <path
+//           d="M7.65706 0V2.97143C7.65706 4.61257 6.32677 5.94286 4.68563 5.94286H2.09363L3.5062 7.35543L2.85706 8L0.342773 5.48571L2.85706 2.97143L3.50163 3.616L2.09363 5.02857H4.68563C5.82849 5.02857 6.74277 4.11429 6.74277 2.97143V0H7.65706Z"
+//           className={fill}
+//         />
+//       </svg>
+//     </div>
+//   );
+// };
 
 export const AddMessage = ({ fill = "fill-gray-4" }) => {
   return (
