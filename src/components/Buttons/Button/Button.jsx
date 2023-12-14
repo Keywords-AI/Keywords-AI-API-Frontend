@@ -53,7 +53,7 @@ export const Button = forwardRef(
       onClick,
       onMouseEnter = () => {},
       onMouseLeave = () => {},
-      textClassName,
+      textClassName = "text-sm",
       bgColor,
       hoverColor,
       clickedColor,
@@ -347,7 +347,7 @@ export const Button = forwardRef(
           "text-center"
         )}
         onClick={onClick}
-      >
+      > 
         {children ? (
           <>{children}</>
         ) : (

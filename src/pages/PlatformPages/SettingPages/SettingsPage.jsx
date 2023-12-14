@@ -68,13 +68,48 @@ export const SettingPage = ({ user }) => {
                 }
             </form>
             <Button
-                text="r4-black"
+                text="Button"
+                variant="r4-white"
+                icon={Search}
+            />
+            <Button
+                text="Button"
+                variant="r4-gray-2"
+                icon={Search}
+            />
+            <Button
+                text="Button"
                 variant="r4-black"
                 icon={Search}
             />
             <Button
-                text="r4-black"
-                variant="r4-black"
+                text="Button"
+                variant="r4-gray-2"
+                icon={Search}
+            />
+            <Button
+                text="Button"
+                variant="r4-primary"
+                icon={Search}
+            />
+            <Button
+                text="Button"
+                variant="r4-red"
+                icon={Search}
+            />
+            <Button
+                text="Button"
+                variant="small"
+                icon={Search}
+            />
+                        <Button
+                text="Button"
+                variant="r4-white"
+                icon={Search}
+            />
+            <Button
+                text="Button"
+                variant="r4-gray-2"
                 icon={Search}
             />
         </PageContent>

@@ -6,6 +6,7 @@ import { Pencil } from 'src/components/Icons'
 import { getDateStr } from 'src/utilities/stringProcessing'
 import { CreateForm } from './components/APIKeyForms'
 import { PageContent } from 'src/components/Sections'
+import { SelectInput } from 'src/components/Inputs'
 
 
 export const ApiKeyPage = (props) => {
@@ -32,6 +33,7 @@ export const ApiKeyPage = (props) => {
         rows={testRows}
       />
       <CreateForm />
+      <SelectInput placeholder={"Hi"} />
     </PageContent>
   )
 }
