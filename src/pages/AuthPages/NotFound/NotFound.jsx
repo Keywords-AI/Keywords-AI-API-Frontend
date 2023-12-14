@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
 import React from "react";
-import { ArrowRight } from "src/components/Icons/iconsDS";
+import { Right } from "src/components/Icons/iconsDS";
 export function NotFound() {
   const navigate = useNavigate();
-  console.log("ArrowRight", ArrowRight);
+  console.log("Right", Right);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home" />
@@ -23,7 +23,7 @@ export function NotFound() {
           <Button
             text="Back to home"
             variant={"r18-white"}
-            icon={ArrowRight}
+            icon={Right}
             iconSize="xs"
             iconFill="fill-gray-black"
             iconHoverFill="fill-gray-white"
@@ -36,7 +36,7 @@ export function NotFound() {
             text="Bug report"
             variant="header"
             iconSize="xs"
-            icon={ArrowRight}
+            icon={Right}
             iconPosition="right"
             iconFill="fill-gray-white"
           />

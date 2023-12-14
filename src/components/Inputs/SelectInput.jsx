@@ -111,17 +111,19 @@ const MyComponent = React.forwardRef(({
                         readOnly
                         {...register(name, validationSchema)}
                     />
-                    <div
-                        // The displayed selection tab
-                        className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none bg-gray-black",
-                            padding, border, borderRadius, text
-                        )} aria-label="select"
+                    <div className="flex-col self-stretch flex-1" // Wrapper for triggering extra states
                         onClick={() => {
                             setOptionsVisible(!optionsVisible);
                             setFocused(true);
                         }}
                     >
-                        {selected || placeholder}
+                        <div
+                            // The displayed selection tab
+                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none bg-gray-black",
+                                padding, border, borderRadius, text
+                            )} aria-label="select">
+                            {selected || placeholder}
+                        </div>
                     </div>
                     {!readOnly && <div className={cn("flex-col",
                         internalIcon ? "absolute right-xs top-1/2 -translate-y-1/2" : ""

@@ -1,4 +1,4 @@
-import { ArrowLeft, Button, DropDownMenu, EditableBox } from "src/components";
+import { Left, Button, DropDownMenu, EditableBox } from "src/components";
 import "./OptionSelector.css";
 import React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";

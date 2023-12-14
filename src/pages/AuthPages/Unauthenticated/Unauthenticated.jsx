@@ -3,7 +3,7 @@ import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
 
 import React from "react";
-import { ArrowRight } from "src/components";
+import { Right } from "src/components";
 
 export function Unauthenticated() {
   const navigate = useNavigate();

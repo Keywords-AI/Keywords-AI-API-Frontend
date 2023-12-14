@@ -2,7 +2,7 @@ import cn from "src/utilities/ClassMerge";
 import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";
-import { ArrowRight } from "src/components/Icons";
+import { Right } from "src/components/Icons";
 
 /**
  * `Button` Component

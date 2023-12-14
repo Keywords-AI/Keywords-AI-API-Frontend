@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import React from "react";
-import { ArrowLeft } from "../Icons";
+import { Left } from "../Icons";
 export function BackButton({ text, link = -1 }) {
   const navigate = useNavigate();
   return (
@@ -10,7 +10,7 @@ export function BackButton({ text, link = -1 }) {
         text={text}
         variant={"r18-black"}
         onClick={() => navigate(link)}
-        icon={ArrowLeft}
+        icon={Left}
         iconSize="xxs"
         iconFill="fill-gray-white"
       />

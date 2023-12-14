@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "src/utilities/ClassMerge";
 
-export const ArrowRight = ({
+export const Right = ({
   fill = "fill-gray-4",
   activeFill = "fill-gray-white",
   active = false,
@@ -43,7 +43,8 @@ export const ArrowRight = ({
   }
 };
 
-export const ArrowLeft = ({
+
+export const Up = ({
   fill = "fill-gray-4",
   activeFill = "fill-gray-white",
   active = false,
@@ -52,8 +53,32 @@ export const ArrowLeft = ({
   switch (size) {
     case "xxs":
       return (
+        <svg width="7" height="4" viewBox="0 0 7 4" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
+          <path d="M5.7112 4L3.23887 1.52767L0.761134 4L0 3.23887L3.23887 0L6.47773 3.23887L5.7112 4Z" className={active ? activeFill : fill} />
+        </svg>
+
+
+      );
+    case "xs":
+      return (
+        < svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
+          <path d="M10.58 9.70508L6 5.12508L1.41 9.70508L0 8.29508L6 2.29508L12 8.29508L10.58 9.70508Z" className={active ? activeFill : fill} />
+        </svg >
+
+      );
+  }
+};
+export const Left = ({
+  fill = "fill-gray-4",
+  activeFill = "fill-gray-white",
+  active = false,
+  size = "xxs",
+}) => {
+  switch (size) {
+    case "xxs":
+      return (
         <svg
-          aria-label="ArrowLeft"
+          aria-label="Left"
           xmlns="http://www.w3.org/2000/svg"
           width="4"
           height="8"
@@ -140,7 +165,7 @@ export const Check = ({
         >
           <path
             d="M12 3.27985L3.77143 11.5084L0 7.73699L0.966857 6.77013L3.77143 9.56785L11.0331 2.31299L12 3.27985Z"
-            fill="#B1B3BC"
+            className={active ? activeFill : fill}
           />
         </svg>
       );

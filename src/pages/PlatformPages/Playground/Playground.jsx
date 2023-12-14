@@ -1,4 +1,4 @@
-import { AddMessage, ArrowRight, Button, Divider } from "src/components";
+import { AddMessage, Right, Button, Divider } from "src/components";
 import {
   CurrentModel,
   OptionSelector,
@@ -85,7 +85,6 @@ const NotConnectedMap = ({
   const handleRegenerate = () => {
     const updatedMessages = messages.slice(0, -1);
     setMessages(updatedMessages);
-    // TODO: call API to regenerate
     const messagesWithPrompt = [
       { role: "system", content: systemPrompt },
       ...updatedMessages,

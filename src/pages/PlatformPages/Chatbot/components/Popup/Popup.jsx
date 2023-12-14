@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import "./style.css";
-import { CheckBox, FileUpload, Close } from "./icons";
+import { CheckBox, Close } from "./icons";
 import { updateSystemPrompt } from "src/store/actions/userAction";
 import { connect } from "react-redux";
-import { FileCard } from "src/components/Cards";
 import { loadingFileUpload } from "src/store/actions/userAction";
 import { Button } from "src/components";
 import { IconButton } from "src/components/Buttons";
-import { FileInput } from "src/components/Inputs";
+import { FileInput, RadioInput } from "src/components/Inputs";
 
 const mapStateToProps = (state) => {
   return {
@@ -166,10 +165,11 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
             />
           </div>
           <div className="flex-row self-stretch flex-1 justify-between items-center">
-            <div className="flex-row justify-center items-center gap-xs self-stretch">
+            {/* <div className="flex-row justify-center items-center gap-xs self-stretch">
               <CheckBox onChecked={setChecked} checked={checked} />
               <div className="text-sm">{"Enable for new chats"}</div>
-            </div>
+            </div> */}
+            <RadioInput text="Enable for new chats"/>
             <div className="flex-row justify-center items-center gap-xs self-stretch">
               <Button
                 variant="white-r18"

@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { AvatarButton } from 'src/components/Buttons'
-import { MemberSelectInput, SelectInput } from 'src/components/Inputs'
+import { SelectInput } from 'src/components/Inputs'
 
 
 export const MemberCard = ({ first_name, last_name }) => {

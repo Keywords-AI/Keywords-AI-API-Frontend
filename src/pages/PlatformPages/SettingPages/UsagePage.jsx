@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { SelectInput } from 'src/components/Inputs'
 import { PageContent } from 'src/components/Sections'
+import { ProgressBar } from 'src/components/Display'
 
 export const UsagePage = (props) => {
   const options =
@@ -27,6 +28,16 @@ export const UsagePage = (props) => {
       <div>
         <SelectInput placeholder={"Hi"} />
       </div>
+      <ProgressBar
+        name={"Free Trial"}
+        progressLegend={"Used"}
+        remainLegend={"Credis Remaining"}
+        progressColorClass={"bg-gray-white"}
+        remainColorClass={"bg-gray-black"}
+        current={30}
+        total={100}
+        unit={"$"}
+      />
     </PageContent>
   )
 }

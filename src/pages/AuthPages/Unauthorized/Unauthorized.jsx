@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import { BackButton } from "src/components/Buttons";
 import { Button } from "@radix-ui/react-toolbar";
-import { ArrowRight } from "src/components";
+import { Right } from "src/components";
 
 export function Unauthorized() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export function Unauthorized() {
             text="View pricing plans"
             variant={"r4-white"}
             className="w-full"
-            icon={ArrowRight}
+            icon={Right}
             justification="justify-center"
             onClick={() => {
               navigate("/pricing");

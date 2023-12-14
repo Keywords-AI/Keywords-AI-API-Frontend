@@ -193,10 +193,10 @@ export const FeatureTick = ({ fill = "fill-gray-white" }) => {
   );
 };
 
-// export const ArrowLeft = ({ fill = "fill-gray-white" }) => {
+// export const Left = ({ fill = "fill-gray-white" }) => {
 //   return (
 //     <svg
-//       aria-label="ArrowLeft"
+//       aria-label="Left"
 //       xmlns="http://www.w3.org/2000/svg"
 //       width="4"
 //       height="8"
