@@ -107,8 +107,6 @@ export const getUser = () => {
         if (res.ok) {
           const data = await res.json();
           dispatch({ type: "SET_USER", payload: data });
-          // dispatch(retrieveConversation(data.last_conversation));
-          console.log("user", data);
         } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           console.log(data);

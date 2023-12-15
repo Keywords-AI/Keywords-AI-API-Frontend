@@ -1,14 +1,13 @@
 import {
   SET_MESSAGES,
-  SET_STREAMING,
   SET_PROMPT,
   SET_CURRENT_MODEL,
   SET_MODEL_OPTIONS,
   SET_OUTPUTS,
-  UPDATE_STREAMING_TEXT,
-  SET_STREAMING_TEXT,
   SET_FIRST_TIME,
   SET_CACHE_ANSWER,
+  APPEND_MESSAGE,
+  REMOVE_LAST_MESSAGE,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -17,8 +16,6 @@ const initialState = {
       content: "",
     },
   ],
-  streaming: false,
-  streamingText: "",
   firstTime: true,
   prompt: "",
   currentModel: "",
@@ -41,14 +38,12 @@ const playgroundReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_MESSAGES:
       return { ...state, messages: action.payload };
-    case SET_STREAMING:
-      return { ...state, streaming: action.payload };
+    case APPEND_MESSAGE:
+      return { ...state, messages: [...state.messages, action.payload] };
+    case REMOVE_LAST_MESSAGE:
+      return { ...state, messages: state.messages.slice(0, -1) };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };
-    case UPDATE_STREAMING_TEXT:
-      return { ...state, streamingText: state.streamingText + action.payload };
-    case SET_STREAMING_TEXT:
-      return { ...state, streamingText: action.payload };
     case SET_CURRENT_MODEL:
       return { ...state, currentModel: action.payload };
     case SET_MODEL_OPTIONS:

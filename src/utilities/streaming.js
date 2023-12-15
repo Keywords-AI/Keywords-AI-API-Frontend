@@ -3,6 +3,7 @@ export const parseChunk = (chunk, dispatch) => {
   // This funciton is compatible with redux dispatch
   // Text is the JSON string that contains the chunk in the OpenAI style.
   try {
+    console.log(chunk);
     const contentChunk = JSON.parse(chunk);
     const content = contentChunk.evaluation
       ? JSON.stringify(contentChunk.evaluation)

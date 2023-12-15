@@ -47,12 +47,13 @@ export const Button = forwardRef(
       active = false,
       variant,
       text,
+      type,
       icon,
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => {},
-      onMouseLeave = () => {},
+      onMouseEnter = () => { },
+      onMouseLeave = () => { },
       textClassName = "text-sm",
       bgColor,
       hoverColor,
@@ -312,7 +313,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         minWidth = minWidth || "";
-        className= "w-[28px] h-[28px]"
+        className = "w-[28px] h-[28px]"
 
         break;
       default:
@@ -325,6 +326,7 @@ export const Button = forwardRef(
     }
     return (
       <button
+        type={type || "submit"}
         aria-label={"button-" + variant}
         ref={ref}
         onMouseEnter={() => {
@@ -348,7 +350,7 @@ export const Button = forwardRef(
           "text-center"
         )}
         onClick={onClick}
-      > 
+      >
         {children ? (
           <>{children}</>
         ) : (

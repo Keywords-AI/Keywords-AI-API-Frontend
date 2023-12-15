@@ -36,7 +36,7 @@ class KeywordsBarChart extends PureComponent {
 
   render() {
     const { data, dataKeyY, dataKeyX, xLabel, yLabel, dataMax, fill, height } =
-      this.props;
+      this.props; 
 
     return (
       <ResponsiveContainer width="100%" height={height}>

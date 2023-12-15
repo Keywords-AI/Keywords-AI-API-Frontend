@@ -6,6 +6,9 @@ import streamingReducer from "./streamingReducer";
 import fileUplaodReducer from "./fileUploadReducer";
 import exampleReducer from "./exampleReducer";
 import playgroundReducer from "./playgroundReducer";
+import streamingTextReducer from "./streamingTextReducer";
+import apiKeyReducer from "./apiKeyReducer";
+
 const rootReducer = (state = {}, action) => {
   return {
     user: userReducer(state.user, action),
@@ -16,6 +19,8 @@ const rootReducer = (state = {}, action) => {
     uploading: fileUplaodReducer(state.uploading, action),
     example: exampleReducer(state.example, action),
     playground: playgroundReducer(state.playground, action),
+    streamingText: streamingTextReducer(state.streamingText, action),
+    apiKey: apiKeyReducer(state.apiKey, action),
   };
 };
 

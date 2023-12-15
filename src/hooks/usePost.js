@@ -3,7 +3,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-const usePost = (path, method = "POST") => {
+const usePost = ({ path, method = "POST", domain = apiConfig.apiURL }) => {
   // generic hook for posting data to apis
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,7 +20,7 @@ const usePost = (path, method = "POST") => {
     if (!form) {
       headers["Content-Type"] = "application/json";
     }
-    fetch(apiConfig.apiURL + path, {
+    fetch(domain + path, {
       method: method,
       headers: headers,
       body: form ? postData : JSON.stringify(postData),

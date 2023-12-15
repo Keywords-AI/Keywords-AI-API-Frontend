@@ -114,6 +114,7 @@ export const EditableBox = React.forwardRef(
       className,
       focus = false,
       selectPrevious = false,
+      borderless = true
     },
     forwardRef
   ) => {
@@ -127,7 +128,7 @@ export const EditableBox = React.forwardRef(
       if (textareaRef.current) {
         textareaRef.current.style.height = "1px";
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-        setHeight(`${textareaRef.current.scrollHeight}px`);
+        setHeight(`${textareaRef.current.scrollHeight + 2}px`);
       }
     }, [text, isEditing]);
 
@@ -183,14 +184,18 @@ export const EditableBox = React.forwardRef(
 
     return (
       <div
-        className={"w-full h-full flex-col self-stretch flex-grow overflow-hidden"}
+        className={cn("w-full h-full flex-col self-stretch flex-grow rounded-sm border",
+          borderless ? "border-none" : (focus || isEditing ? "border-gray-white" : "border-gray-4"))
+        }
         ref={divRef}
         onClick={handleDivClick}
+        style={{ height }}
       >
-        {isEditing && !streaming ? (
+        {/* {isEditing && !streaming ? ( */}
+        {true ? (
           <textarea
             className={cn(
-              "flex-1 resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm text-white placeholder-gray-4",
+              "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm text-white placeholder-gray-4",
               className
             )}
             placeholder={placeholder}
