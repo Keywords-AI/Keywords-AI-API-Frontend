@@ -35,123 +35,123 @@ export const CreditParagraph = connect(
 )(CreditRemaining);
 
 const cards = {
-    'flex_8k': {
-        title: "Flex 8k",
-        description: "Usage-based pricing. 8k context window. Billed monthly. ",
+  'flex_8k': {
+    title: "Flex 8k",
+    description: "Usage-based pricing. 8k context window. Billed monthly. ",
 
-    },
-    'flex_32k': {
-        title: "Flex 32k",
-        description: "Usage-based pricing. 32k context window. Billed monthly. "
-    },
-    'bonus': {
-        title: "Bonus",
-        description: "Enjoy your bonus tokens!",
-        link: "/pricing",
-        linkText: "Upgrade"
-    },
-    'none': {
-        title: "No Active Plan",
-        description: "Sign up for a usage-based plan and get 40k free tokens.",
-        link: "/pricing",
-        linkText: "Start free trial"
-    },
-    'free_trial': {
-        title: "Free Trial",
-        description: "Enjoy your first 40k tokens on us!",
-        link: "/pricing",
-        linkText: "Upgrade"
-    }
+  },
+  'flex_32k': {
+    title: "Flex 32k",
+    description: "Usage-based pricing. 32k context window. Billed monthly. "
+  },
+  'bonus': {
+    title: "Bonus",
+    description: "Enjoy your bonus tokens!",
+    link: "/pricing",
+    linkText: "Upgrade"
+  },
+  'none': {
+    title: "No Active Plan",
+    description: "Sign up for a usage-based plan and get 40k free tokens.",
+    link: "/pricing",
+    linkText: "Start free trial"
+  },
+  'free_trial': {
+    title: "Free Trial",
+    description: "Enjoy your first 40k tokens on us!",
+    link: "/pricing",
+    linkText: "Upgrade"
+  }
 
 }
 
 
 const PlanStatus = ({ user }) => {
-    const navigate = useNavigate();
-    const userCustomBundle = user?.custom_bundle;
-    const userCustomSubscription = user?.custom_subscription;
-    const subscriptionItems = user?.organization?.owner?.user_subscription?.subscription_ids?.items || {};
+  const navigate = useNavigate();
+  const userCustomBundle = user?.custom_bundle;
+  const userCustomSubscription = user?.custom_subscription;
+  const subscriptionItems = user?.organization?.owner?.user_subscription?.subscription_ids?.items || {};
 
-    // Check if any subscriptions are present
-    const hasSubscriptions = Object.keys(subscriptionItems).length !== 0;
+  // Check if any subscriptions are present
+  const hasSubscriptions = Object.keys(subscriptionItems).length !== 0;
 
-    // Check if custom plans are present
-    const hasCustomBundle = userCustomBundle && Object.keys(userCustomBundle).length !== 0;
-    const hasCustomSubscription = userCustomSubscription && Object.keys(userCustomSubscription).length !== 0;
+  // Check if custom plans are present
+  const hasCustomBundle = userCustomBundle && Object.keys(userCustomBundle).length !== 0;
+  const hasCustomSubscription = userCustomSubscription && Object.keys(userCustomSubscription).length !== 0;
 
-    if (!hasSubscriptions && !hasCustomBundle && !hasCustomSubscription) {
-        return (
-            <div className="flex-col gap-md items-start self-stretch">
-                <CurrentPlanCard
-                    user={user}
-                    {...cards['none']}
-                    linkText={user?.free_trial_expired ? "Retrieve a plan" : "Start free trial"}
-                    titleColor={"var(--red-dark)"}
-                    borderColor='var(--red-light)'
-                />
-            </div>
-        );
-    }
-
+  if (!hasSubscriptions && !hasCustomBundle && !hasCustomSubscription) {
     return (
-        <div className="flex-col gap-md items-start self-stretch">
-            <div className="flex-row gap-sm self-stretch items-start justify-start flex-wrap">
-                {hasSubscriptions && Object.keys(subscriptionItems).map((key, index) => {
-                    if (cards[key]?.title && key !== "custom") {
-                        return (
-                            <CurrentPlanCard
-                                key={index}
-                                title={cards[key]?.title}
-                                description={cards[key]?.description}
-                                user={user}
-                                link={"/platform/organization/usage"}
-                            />
-                        );
-                    }
-                    return null; // Important to return null outside the condition for React mapping
-                })}
-
-                {hasCustomBundle && (
-                    <CurrentPlanCard
-                        key={99990}
-                        user={user}
-                        title={"Custom Bundle"}
-                        description={userCustomBundle.description || "Usage-based pricing. Fully customized "}
-                        link={"/platform/organization/usage"}
-                        />
-                )}
-
-                {hasCustomSubscription && (
-                    <CurrentPlanCard
-                        key={99991}
-                        user={user}
-                        title={"Custom Subscription"}
-                        description={userCustomSubscription.description || "Usage-based pricing. Fully customized "}
-                        link={"/platform/organization/usage"}
-                    />
-                )}
-
-                {user.free_trial_remaining > 0 &&
-                    <CurrentPlanCard
-                        user={user}
-                        key={99992}
-                        {...cards['free_trial']}
-                        link={"/platform/organization/usage"}
-                    />
-                }
-
-                {subscriptionItems.bonus &&
-                    <CurrentPlanCard
-                        key={99993}
-                        title={cards["bonus"].title}
-                        description={cards["bonus"].description}
-                        user={user}
-                        link={"/platform/organization/usage"}
-                    />
-                }
-            </div>
-        </div>
+      <div className="flex-col gap-md items-start self-stretch">
+        <CurrentPlanCard
+          user={user}
+          {...cards['none']}
+          linkText={user?.free_trial_expired ? "Retrieve a plan" : "Start free trial"}
+          titleColor={"var(--red-dark)"}
+          borderColor='var(--red-light)'
+        />
+      </div>
     );
+  }
+
+  return (
+    <div className="flex-col gap-md items-start self-stretch">
+      <div className="flex-row gap-sm self-stretch items-start justify-start flex-wrap">
+        {hasSubscriptions && Object.keys(subscriptionItems).map((key, index) => {
+          if (cards[key]?.title && key !== "custom") {
+            return (
+              <CurrentPlanCard
+                key={index}
+                title={cards[key]?.title}
+                description={cards[key]?.description}
+                user={user}
+                link={"/platform/organization/usage"}
+              />
+            );
+          }
+          return null; // Important to return null outside the condition for React mapping
+        })}
+
+        {hasCustomBundle && (
+          <CurrentPlanCard
+            key={99990}
+            user={user}
+            title={"Custom Bundle"}
+            description={userCustomBundle.description || "Usage-based pricing. Fully customized "}
+            link={"/platform/organization/usage"}
+          />
+        )}
+
+        {hasCustomSubscription && (
+          <CurrentPlanCard
+            key={99991}
+            user={user}
+            title={"Custom Subscription"}
+            description={userCustomSubscription.description || "Usage-based pricing. Fully customized "}
+            link={"/platform/organization/usage"}
+          />
+        )}
+
+        {user.free_trial_remaining > 0 &&
+          <CurrentPlanCard
+            user={user}
+            key={99992}
+            {...cards['free_trial']}
+            link={"/platform/organization/usage"}
+          />
+        }
+
+        {subscriptionItems.bonus &&
+          <CurrentPlanCard
+            key={99993}
+            title={cards["bonus"].title}
+            description={cards["bonus"].description}
+            user={user}
+            link={"/platform/organization/usage"}
+          />
+        }
+      </div>
+    </div>
+  );
 }
 
 export const PlanStatusParagraph = connect(
@@ -161,7 +161,7 @@ export const PlanStatusParagraph = connect(
 
 const Bills = ({ user }) => {
   const navigate = useNavigate();
-  const { data, error, loading } = useFetch("payment/paid-bills");
+  const { data, error, loading } = useFetch({ path: "payment/paid-bills" });
   const [display, setDisplay] = React.useState([]);
   const [canceling, setCanceling] = React.useState(false);
   useEffect(() => {

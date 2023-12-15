@@ -3,7 +3,7 @@ import apiConfig from "src/services/apiConfig";
 import { refreshToken, validateToken } from "src/store/actions/tokenAction";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-export const useFetch = (path, domain = apiConfig.apiURL) => {
+export const useFetch = ({ path, domain = apiConfig.apiURL }) => {
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);

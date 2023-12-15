@@ -24,8 +24,9 @@ const defaultOptions = [
     { name: "BB", value: "bb" }
 ]
 
-const MyComponent = React.forwardRef(({
+const SelectInput = React.forwardRef(({
     variant,
+    open,
     title = "selection",
     headLess = false,
     name = "text-sm",
@@ -80,10 +81,14 @@ const MyComponent = React.forwardRef(({
     }
 
     // Initialize after the switch
-    const [focused, setFocused] = React.useState(false);
+    const [focused, setFocused] = React.useState(open);
     const [selected, setSelected] = React.useState(defaultValue);
     const selectRef = React.useRef(null);
-    const [optionsVisible, setOptionsVisible] = React.useState(false);
+    const [optionsVisible, setOptionsVisible] = React.useState(open);
+    useEffect(() => {
+        setOptionsVisible(open);
+        setFocused(open);
+    }, [open])
 
     return (
         <div className={cn("flex-col justify-center items-start gap-xxs relative",
@@ -133,7 +138,7 @@ const MyComponent = React.forwardRef(({
                 </div>
                 {optionsVisible &&
                     <div className={cn("flex-col justify-start items-start self-stretch bg-gray-2 ",
-                        "absolute w-full top-full"
+                        "absolute w-full top-full z-[1000]"
                     )
                     }>
                         {choices && choices.length > 0 && choices.map((choice, index) => {
@@ -154,5 +159,4 @@ const MyComponent = React.forwardRef(({
     )
 })
 
-const SelectInput = React.memo(MyComponent);
 export default SelectInput;

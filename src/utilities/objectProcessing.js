@@ -17,7 +17,7 @@ export const dightToMonth = (digit) => {
   return monthMap[digit];
 };
 
-export const processKeyList = (keyList, actions=()=>{}) => {
+export const processKeyList = (keyList, actions = () => {}) => {
   /*
   keyList: [{
     prefix: 1,
@@ -29,6 +29,27 @@ export const processKeyList = (keyList, actions=()=>{}) => {
   */
   if (!keyList) return [];
   return keyList.map((key) => {
-    return {...key, created: getDateStr(key.created_at), last_used: getDateStr(key.last_used), actions: actions(key)};
+    return {
+      ...key,
+      created: getDateStr(key.created_at),
+      last_used: getDateStr(key.last_used),
+      actions: actions(key),
+    };
   });
+};
+
+export const processBillingList = (billingList, actions = () => {}) => {
+  if (billingList && billingList?.length > 0) {
+    return billingList.map((item) => {
+      return {
+        ...item,
+        date: getDateStr(item.created, false, true),
+        amount: `$${item.amount_paid / 100}`,
+        payment_id: item.id,
+        actions: actions(item),
+      };
+    });
+  } else {
+    return [];
+  }
 };

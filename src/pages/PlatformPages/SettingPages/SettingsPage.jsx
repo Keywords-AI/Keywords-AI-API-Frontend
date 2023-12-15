@@ -1,32 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { PageContent, PageParagraph } from 'src/components/Sections';
 import usePost from 'src/hooks/usePost';
 import { TextInput, CopyInput } from 'src/components/Inputs';
 import { Button } from 'src/components/Buttons';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+import { setOrgName } from 'src/store/actions';
 
-export const SettingPage = ({ user }) => {
+
+const mapStateToProps = (state) => ({
+    organization: state.organization,
+})
+
+const mapDispatchToProps = {
+    setOrgName,
+}
+
+export const SettingPage = ({ organization, setOrgName }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const { loading, error, data, postData } = usePost(`user/update-organization/${user?.organization?.id}/`, "PATCH");
-    const [organization, setOrganization] = React.useState({});
+    const { loading, error, data, postData } = usePost(`user/update-organization/${organization?.id}/`, "PATCH");
     const formRef = React.useRef(null);
-
-    React.useEffect(() => {
-        if (user?.organization?.id) {
-            setOrganization(user?.organization);
-        }
-    }, [user])
-
     const onSubmit = (data) => {
+        setOrgName(data.name);
         postData(data); // send request
-        
     }
-
+    const handleChange = (e) => {
+        setOrgName(e.target.value);
+    };
     return (
         <PageContent
             title="Organization Settings"
@@ -39,14 +43,16 @@ export const SettingPage = ({ user }) => {
                     ref={formRef}
                 >
                     <TextInput
-                        {...register("organization_name", { required: true })}
+                        {...register("name", { required: true })}
                         title="Organization Name"
                         placeholder="Enter your organization name..."
+                        value={organization?.name || ""}
+                        onChange={handleChange}
                     />
                     <CopyInput
-                        name="organization_id"
+                        name="unique_organization_id"
                         title="Organization ID - identifier sometimes used in API requests."
-                        value="blablabla"
+                        value={organization?.unique_organization_id || ""}
                         disabled={true}
                         width="w-[400px]"
                     />
@@ -80,8 +86,5 @@ export const SettingPage = ({ user }) => {
     )
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingPage)
