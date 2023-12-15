@@ -1,233 +1,84 @@
 import React, { useEffect } from "react";
 import usePost from "src/hooks/usePost";
-import { SelectInput, TextInput } from "src/components/Inputs";
+import { SelectInput, TextInput, CopyInput } from "src/components/Inputs";
 import { retrieveContext, retrievePlanName } from "src/utilities/stringProcessing";
-import { CopyButton } from "src/components/Buttons";
+import { Button } from "src/components/Buttons";
+import { useForm } from "react-hook-form";
+import { connect } from "react-redux";
+import {
+  setNewKeyName,
+  setKeyList,
+  addKey,
+  deleteKey
+} from "src/store/actions";
 
-const FormFrame = React.forwardRef(({ children, setShowForm }, forwardedRef) => {
-  return (
-    <div ref={forwardedRef} className="flex-col p-lg items-start self-stretch bg-gray-black border border-gray-3">
-      {children}
-    </div>
-  )
+const mapStateToProps = (state) => ({
+  user: state.user,
+  apiKey: state.apiKey,
 });
 
-export const CreateForm = React.forwardRef((props, ref) => {
-  const { newKey, newKeyError, postData, setShowForm, setKeyList, user } =
-    props;
-  const [newKeyName, setNewKeyName] = React.useState("");
-  const [newKeyContext, setNewKeyContext] = React.useState("");
-  const [copySuccess, setCopySuccess] = React.useState(false);
-  const copyToClipboard = (e) => {
-    e.preventDefault();
-    navigator.clipboard.writeText(newKey.api_key);
-    setCopySuccess(true);
-  };
-  const newKeyNameRef = React.useRef(null);
-  const keyContextRef = React.useRef(null);
-  const handleSelection = React.useCallback(
-    (selected) => {
-      keyContextRef.current = selected.text;
-    },
-    [newKeyContext]
-  );
+const mapDispatchToProps = {
+  setNewKeyName
+};
 
-  useEffect(() => {
-    console.log(newKey);
-  }, [newKey]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const plan_name = retrievePlanName(keyContextRef.current);
-    console.log(plan_name, "plan name");
-    console.log(newKeyNameRef.current, "key context");
-    postData({
-      name: newKeyNameRef.current || "New Key",
-      plan_name: plan_name,
-    });
+const CreateFormNotConnected = React.forwardRef(({
+  newKey,
+  setShowForm = () => { },
+  setNewKeyName,
+  addKey,
+  user }, ref) => {
+  const { loading, error, data, postData } = usePost(`api/create-key/`, "localhost:8000");
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = (data) => {
+    if (!data.name) {
+      data.name = "New Key";
+    }
+    setNewKeyName(data.name);
+    postData(data);
   };
   useEffect(() => {
-    if (copySuccess)
-      setTimeout(() => {
-        setCopySuccess(false);
-      }, 2000);
-  }, [copySuccess]);
-
-  const handleEnter = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      e.stopPropagation();
-      postData({
-        name: newKeyNameRef.current || "New Key",
-      });
+    if (data) {
+      addKey(data);
     }
-  };
-
-  const activePlansToChoices = (
-    activePlans,
-    customBundle,
-    customSubscription,
-    defaultPlan = "flex_8k"
-  ) => {
-    const choices = [];
-    // Extract choices from activePlans
-    for (const key in activePlans) {
-      if (key !== "custom") {
-        choices.push({ text: retrieveContext(key) });
-      }
-    }
-
-    // Helper function to add custom plan items to choices
-    const addCustomPlanToChoices = (customPlan) => {
-      if (customPlan?.items) {
-        for (const itemKey in customPlan.items) {
-          if (
-            !choices.some((choice) => choice.text === retrieveContext(itemKey))
-          ) {
-            choices.push({ text: retrieveContext(itemKey) });
-          }
-        }
-      }
-    };
-
-    // Add choices from customBundle and customSubscription
-    addCustomPlanToChoices(customBundle);
-    addCustomPlanToChoices(customSubscription);
-
-    console.log(choices, "choices");
-    return choices;
-  };
-
-  const [planChoices, setPlanChoices] = React.useState([]);
-
-  useEffect(() => {
-    if (user?.organization?.owner?.user_subscription) {
-      setPlanChoices(
-        activePlansToChoices(
-          user?.organization?.owner?.user_subscription?.subscription_ids?.items,
-          user?.custom_bundle,
-          user?.custom_subscription
-        )
-      );
-    }
-  }, [user]);
+  }, [data])
 
   return (
-    <FormFrame ref={ref}>
-      <div className="flex-col items-start gap-sm self-stretch">
-        <div className="display-xs">
-          {newKey ? "Save your API Key" : "Create New API Key"}
-        </div>
-        {newKey && (
-          <div className="text-lg">
-            {
-              "Please save this key somewhere safe and accessible. For security reasons, you won’t be able to view it again through your account. If you lose this secret key, you’ll need to generate a new one."
-            }
-          </div>
-        )}
-      </div>
-      <div className="flex-row self-stretch gap-xs items-center justify-center">
-        <div className="flex-col gap-xxs self-stretch flex-1  ">
-          <label className="text-sm text-gray4" htmlFor="keyName">
-            {newKey ? newKeyNameRef.current : "Name (optional)"}
-          </label>
-          {!newKey ? (
-            // <input
-            //   style={{
-            //     color: "var(--black)",
-            //   }}
-            //   className="text-md"
-            //   id="keyName"
-            //   name="keyName"
-            //   type="text"
-            //   placeholder="Key-1"
-            //   onKeyDown={handleEnter}
-            //   onChange={(e) => {
-            //     newKeyNameRef.current = e.target.value;
-            //   }}
-            // />
-            <TextInput
-              title={"Name (optional)"}
-              value={newKeyName}
-              onChange={(e) => {
-                setNewKeyName(e.target.value);
-              }}
-              onKeyDown={handleEnter}
-              placeholder={"Key-1"}
-            />
-          ) : (
-            <div
-              className="flex-col"
-              style={{
-                position: "relative",
-              }}
-            >
-              <input
-                className="text-md"
-                style={{
-                  color: "var(--black)",
-                }}
-                readOnly
-                value={newKey?.api_key}
-                id="keyName"
-                name="keyName"
-                type="text"
-                placeholder="Key-1"
-              />
-              <CopyButton />
-            </div>
-          )}
-                        <CopyButton />
-        </div>
-        {!newKey && (
-          <div
-            className="flex-col gap-xxs self-stretch"
-            style={{
-              width: "160px",
-            }}
-          >
-            {/* <KeywordsInputWrapper title={"Context Window"}>
-              <KeywordsSelection
-                choices={planChoices}
-                placeholder={
-                  planChoices?.length > 0 ? planChoices[0].text : "8K"
-                }
-                handleSelected={handleSelection}
-              />
-            </KeywordsInputWrapper> */}
-          </div>
-        )}
-      </div>
+    <form ref={ref}
+      className={"flex-col gap-sm self-stretch relative"}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      {!newKey ? (
+        <TextInput
+          title={"Name (optional)"}
+          width={"w-full"}
+          onChange={(e) => {
+            setNewKeyName(e.target.value);
+          }}
+          {...register("name")}
+          // onKeyDown={handleEnter}
+          placeholder={"Key-1"}
+        />
+      ) : (
+        <CopyInput title={newKeyName} value={newKey?.api_key} />
+      )}
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
-          <button
+          <Button variant="r4-gray-2" text="Cancel"
+            type="button"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setShowForm(false);
-              newKeyNameRef.current = "";
-              console.log("cancel");
-            }}
-            className={newKey ? "button-primary" : "button-tertiary-white"}
-            type="button"
-          >
-            {newKey ? "Done" : "Cancel"}
-          </button>
+            }} />
           {!newKey && (
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="button-primary"
-            >
-              Create
-            </button>
+            <Button variant="r4-primary" text="Create" />
           )}
         </div>
       </div>
-    </FormFrame>
+    </form>
   );
 });
+export const CreateForm = connect(mapStateToProps, mapDispatchToProps)(CreateFormNotConnected);
 
 // export const DeleteForm = React.forwardRef((props, ref) => {
 //   const { postData, setKeyList, deleteList, keyList, setShowForm } = props;
