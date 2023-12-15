@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { textToLink } from 'src/utilities/utilities';
+import { textToLink } from 'src/utilities/stringProcessing';
 import SettingsPage from './SettingsPage';
 import ApiKeyPage from './ApiKeyPage';
 import UsagePage from './UsagePage';
@@ -10,7 +10,6 @@ const pages = [
     {
         title: "Settings",
         // forAdmin: true,
-        path: "", // default path
         default: true,
         page: <SettingsPage />,
     },
@@ -136,12 +135,16 @@ const generateChild = (page) => {
     if (page?.path) {
         path = page.path;
     }
+    if (page?.default) {
+        path = "";
+    }
     return {
         title: page.title,
         path: path,
         element: page.page
     };
 }
+
 export const settingChildren = sections.reduce((allPages, section) => {
     const newPages = section.pages.map((page, index) => {
         return generateChild(page);

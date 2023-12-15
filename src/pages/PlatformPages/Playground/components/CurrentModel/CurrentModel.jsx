@@ -2,10 +2,17 @@ import { Button, DropDownMenu, ModelIcon } from "src/components";
 import React, { useEffect } from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentModel } from "src/store/actions/playgroundAction";
+import {
+  setCurrentModel,
+  setCacheAnswer,
+  setMessages,
+} from "src/store/actions/playgroundAction";
 export const CurrentModel = () => {
   const dispatch = useDispatch();
-
+  const messages = useSelector((state) => state.playground.messages);
+  const streaming = useSelector((state) => state.playground.streaming);
+  const currentModel = useSelector((state) => state.playground.currentModel);
+  const cacheAnswers = useSelector((state) => state.playground.cacheAnswers);
   const models = [
     {
       name: "OpenAI - gpt-3.5-turbo",
@@ -49,12 +56,36 @@ export const CurrentModel = () => {
                 <div
                   className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch group"
                   onClick={() => {
+                    if (streaming) return;
                     setCurrent({
                       name: model.name,
                       value: model.value,
                       icon: model.icon,
                     });
                     dispatch(setCurrentModel(model.value));
+                    const updatedMessages = [...messages];
+                    const lastMessageIndex = updatedMessages.length - 1;
+                    if (
+                      !cacheAnswers[model.value] ||
+                      cacheAnswers[model.value].index != lastMessageIndex
+                    ) {
+                      // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
+                    } else {
+                      // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message
+                      dispatch(
+                        setMessages(
+                          updatedMessages.map((message, index) => {
+                            if (index === lastMessageIndex) {
+                              return {
+                                ...message,
+                                content: cacheAnswers[model.value].answer,
+                              };
+                            }
+                            return message;
+                          })
+                        )
+                      );
+                    }
                   }}
                 >
                   <div className="flex w-[16px] justify-center items-center gap-[10px]">

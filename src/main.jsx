@@ -9,9 +9,9 @@ import { Provider } from "react-redux";
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <HashRouter>
+      <BrowserRouter>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
   </StrictMode>
 );

@@ -1,5 +1,5 @@
 import apiConfig from 'src/services/apiConfig';
-import { getDateStr } from '../../utilities/utilities';
+import { getDateStr } from '../../utilities/stringProcessing';
 import { retrieveAccessToken } from "src/utilities/authorization";
 
 const formatData = (datalist) => {

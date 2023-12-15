@@ -76,11 +76,10 @@ export function ResetPassword() {
           </p>
           <div className="flex-col items-start gap-xs self-stretch">
             <Button
-              variant={"secondary"}
               text={"Change password"}
-              arrow={false}
-              borderRadius="rounded-sm"
+              variant={"r4-white"}
               className="w-full"
+              justification="justify-center"
             />
           </div>
         </form>

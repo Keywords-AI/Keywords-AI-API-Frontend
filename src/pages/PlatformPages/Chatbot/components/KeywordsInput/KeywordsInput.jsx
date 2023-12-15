@@ -1,5 +1,5 @@
 import React from "react";
-import { Stop, Send } from "src/components/Icons";
+import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs/EditableBox/EditableBox";
 import {IconButton} from "src/components/Buttons";
 
@@ -29,7 +29,7 @@ export default function KeywordsInput({
       />
       {streaming ? (
         <IconButton
-          icon={<Stop />}
+          icon={<Terminate />}
           onClick={() => {
             handleStop();
           }}

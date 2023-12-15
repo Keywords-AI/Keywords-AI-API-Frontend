@@ -21,9 +21,10 @@ import cn from "src/utilities/ClassMerge";
  * if used within react-hook-form, the `register` prop should be passed in.
  * and the value and onChange do not need to be passed in.
  */
-export function TextInput({
+export const TextInput = React.forwardRef(({
+  title,
   name = "text-sm",
-  register = () => {},
+  register = () => { },
   errors = null,
   required = false,
   type = "text",
@@ -31,9 +32,11 @@ export function TextInput({
   icon = null,
   value, // Add value prop
   onChange, // Add onChange prop
+  placeholder = "This is an input",
   disabled = false,
   width = "w-[400px]",
-}) {
+  onKeyDown = () => { },
+}, forwardedRef) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const handleBlur = (event) => {
     if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -49,13 +52,13 @@ export function TextInput({
       onFocus={() => setIsFocused(true)}
       onBlur={handleBlur}
     >
-      <label htmlFor={name} className="text-sm-regular text-gray-4">
-        {name}
+      {title && <label htmlFor={name} className="text-sm-regular text-gray-4">
+        {title}
         {required && "*"}
-      </label>
+      </label>}
       <div
         className={cn(
-          "flex items-center gap-xxxs px-xs py-xxs rounded-sm border border-solid border-gray-3 self-stretch",
+          "flex items-center gap-xxxs rounded-sm border border-solid border-gray-3 self-stretch",
           isFocused && !disabled ? "border-gray-white" : "",
           disabled ? "bg-gray-2" : ""
         )}
@@ -66,13 +69,16 @@ export function TextInput({
           id={name}
           name={name}
           type={type}
+          placeholder={placeholder}
+          ref={forwardedRef}
           className={cn(
-            "text-sm-regular text-gray-4 bg-transparent outline-none self-stretch",
+            "px-xs py-xxs text-sm-regular text-gray-4 bg-transparent outline-none self-stretch w-full h-full",
             isFocused && !disabled ? "text-gray-white" : ""
           )}
           {...register(name, validationSchema)}
           value={value} // Bind the value prop to the input
           onChange={onChange} // Use the onChange handler
+          onKeyDown={onKeyDown}
           disabled={disabled}
         />
       </div>
@@ -81,4 +87,4 @@ export function TextInput({
       )}
     </div>
   );
-}
+})

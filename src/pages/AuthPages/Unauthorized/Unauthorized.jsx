@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React from "react";
 import { BackButton } from "src/components/Buttons";
 import { Button } from "@radix-ui/react-toolbar";
+import { Right } from "src/components";
 
 export function Unauthorized() {
   const navigate = useNavigate();
@@ -24,8 +25,10 @@ export function Unauthorized() {
         <div className="flex justify-center items-center gap-md self-stretch">
           <Button
             text="View pricing plans"
-            variant={"secondary"}
-            borderRadius="rounded-sm"
+            variant={"r4-white"}
+            className="w-full"
+            icon={Right}
+            justification="justify-center"
             onClick={() => {
               navigate("/pricing");
             }}

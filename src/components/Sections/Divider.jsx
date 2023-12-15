@@ -1,4 +1,5 @@
 import React from "react";
-export function Divider() {
-  return <div className="h-[1px] bg-gray-3 w-full"></div>;
+import cn from "src/utilities/ClassMerge";
+export function Divider({ color = "bg-gray-2" }) {
+  return <div className={cn("h-[1px] w-full", color)}></div>;
 }

@@ -144,10 +144,9 @@ export function SignUp() {
           <div className="flex-col items-start gap-xs self-stretch">
             <Button
               text={"Create account"}
-              variant={"secondary"}
-              borderRadius="rounded-sm"
+              variant={"r4-white"}
               className="w-full"
-              arrow={false}
+              justification="justify-center"
             />
             <p className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}

@@ -39,9 +39,6 @@ const dightToMonth = (digit) => {
 
 function Usage({ usageData, fetchUsageData, user }) {
     const [keyList, setKeyList] = React.useState([]);
-    const { data: prevKey, error: prevError, loading: prevLoading } = useFetch(`api/get-keys`);
-    const { loading: deleteLoading, error: deleteError, data: deleteStatus, postData: postDelete } = usePost(`api/delete-key/`);
-    const { loading: newLoading, error: newKeyError, data: newKey, postData } = usePost(`api/create-api-key/`);
     const [currDate, setCurrDate] = React.useState(new Date());
     const customBundle = user?.custom_bundle;
 
@@ -118,15 +115,10 @@ function Usage({ usageData, fetchUsageData, user }) {
     
         return bars;
     };
-  
-
-
     return (
 
 
-        <div
-            className="flex-col items-start self-stretch"
-        >
+        <div className="flex-col items-start self-stretch">
 
             <>
                 <div className="flex-col items-center gap-lg self-stretch">

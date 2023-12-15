@@ -9,18 +9,21 @@ const usePost = (path, method = "POST") => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  const postData = async (postData) => {
+  const postData = async (postData, form = false) => {
     setLoading(true);
     setError(null);
     setData(null);
+    let headers = {
+      "X-CSRFToken": getCookie("csrftoken"),
+      Authorization: `Bearer ${retrieveAccessToken()}`,
+    };
+    if (!form) {
+      headers["Content-Type"] = "application/json";
+    }
     fetch(apiConfig.apiURL + path, {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      body: JSON.stringify(postData),
+      headers: headers,
+      body: form ? postData : JSON.stringify(postData),
     })
       .then(async (response) => {
         if (!response.ok) {

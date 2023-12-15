@@ -5,7 +5,7 @@ import KeywordsSelection from 'src/components/KeywordsSelection/KeywordsSelectio
 import { Avatar } from 'src/assets/svgs'
 import usePost from 'src/hooks/usePost'
 import { firstNameInitial } from 'src/utilities/utilities'
-import { deleteRole } from 'src/store/actions/userAction'
+import { deleteRole } from 'src/store/actions/authAction'
 
 const mapStateToProps = (state) => {
   return {

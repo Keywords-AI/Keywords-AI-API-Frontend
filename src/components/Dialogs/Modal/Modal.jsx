@@ -1,6 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import React from "react";
-import { Close } from "../Icons";
+import { Close } from "src/components/Icons";
 
 /**
  * Renders a modal dialog using Radix UI's Dialog component.
@@ -15,7 +15,7 @@ import { Close } from "../Icons";
  *     />
  *   }
  *   title="Modal Title"
- *   subtitle="Modal Subtitle"
+*   subtitle="Modal Subtitle"
  * >
  *   <p>Model content</p>
  *   <TextInput name="field1" placeholder="Enter a message..." />

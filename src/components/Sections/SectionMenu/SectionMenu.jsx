@@ -19,12 +19,14 @@ const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
         <div className="flex-col flex-start self-stretch">
           {pages && pages.length > 0 && pages.map((page, index) => {
             if (page?.default) return;
-            return (<Button
-              text={page.title}
-              key={index}
-              variant="panel"
-              onClick={() => { navigate(`${basePath}/${page?.path}`) }}
-            />)
+            return (
+              <Button
+                active={window.location.pathname.includes(`${basePath}/${page?.path}`)}
+                text={page.title}
+                key={index}
+                variant="panel"
+                onClick={() => { navigate(`${basePath}/${page?.path}`) }}
+              />)
           }
           )}
         </div>
