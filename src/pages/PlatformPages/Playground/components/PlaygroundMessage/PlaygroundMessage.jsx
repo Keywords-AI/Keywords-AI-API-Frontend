@@ -7,7 +7,6 @@ import React from "react";
 import { setMessages, appendMessage } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/ClassMerge";
 import store from "src/store/store";
-
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
@@ -63,11 +62,10 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         "https://platform.keywordsai.co/",
         "api/playground/ask/",
         () => {
-          // this is the callback function after the streaming text is done
-          const streamingText = store.getState().streamingText.streamingText;
+
           const newMessage = {
-            role: currentModel,
-            content: streamingText,
+            role: store.getState().playground.currentModel,
+            content: store.getState().streamingText.streamingText
           };
           store.dispatch(appendMessage(newMessage));
         }
@@ -105,7 +103,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         ) : (
           <>
             {React.createElement(ModelIcon("openai"))}
-            <p className="text-sm-md text-gray-white">{"gpt-3.5-turbo"}</p>
+            <p className="text-sm-md text-gray-white">{role}</p>
           </>
         )}
       </div>

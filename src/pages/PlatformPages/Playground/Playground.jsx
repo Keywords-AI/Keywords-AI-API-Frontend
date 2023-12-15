@@ -16,7 +16,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import store from "src/store/store";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -34,8 +35,7 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
-  appendMessage,
-  };
+};
 
 const Prompt = () => {
   const dispatch = useDispatch();
@@ -63,7 +63,6 @@ const NotConnectedMap = ({
   currentModel,
   setCacheAnswer,
   systemPrompt,
-  appendMessage,
 }) => {
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
@@ -75,27 +74,26 @@ const NotConnectedMap = ({
     event.stopPropagation();
     if (streaming) return;
     console.log("regenerate");
-    const messagesWithPrompt = [
-      { role: "system", content: systemPrompt },
-      messages.slice(0, -1),
-    ];
-    // sendStreamingText(
-    //   {
-    //     messages: messagesWithPrompt,
-    //     stream: true,
-    //     model: currentModel,
-    //   },
-    //   "https://platform.keywordsai.co/",
-    //   "api/playground/ask/",
-    //   (dispatch, getState) => {
-    //     // this is the callback function after the streaming text is done
-    //     const newMessage = {
-    //       role: getState().playground.currentModel,
-    //       content: getState().streamingText.streamingText,
-    //     };
-    //     dispatch(setMessages([...getState().playground.messages, newMessage]));
-    //   }
-    // );
+    sendStreamingTextThunk(
+      {
+        messages: messages,
+        stream: true,
+        model: currentModel,
+      },
+      "https://platform.keywordsai.co/",
+      "api/playground/ask/",
+      () => {
+        // this is the callback function after the streaming text is done
+        const streamingText = store.getState().streamingText.streamingText;
+        const currentModel = store.getState().playground.currentModel;
+        const newMessage = {
+          role: currentModel,
+          content: streamingText,
+        };
+        console.log("hi");
+        store.dispatch(appendMessage(newMessage));
+      }
+    );
   };
   useEffect(() => {
     if (streamingText) {
@@ -131,7 +129,7 @@ const NotConnectedMap = ({
             <PlaygroundMessage
               key={99999}
               messageIndex={99999}
-              role={"assistant"}
+              role={currentModel}
               content={streamingText}
             />
           )}

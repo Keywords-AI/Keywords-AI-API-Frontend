@@ -13,6 +13,21 @@ export const sendStreamingTextThunk = async (
   path,
   callback
 ) => {
+  let messagesWithPrompt = streamingText.messages;
+  messagesWithPrompt = messagesWithPrompt.map((item) => {
+    if (item.role !== "user") {
+      return {
+        ...item,
+        role: "assistant",
+      };
+    } else {
+      return item;
+    }
+  });
+  messagesWithPrompt = [
+    { role: "system", content: store.getState().playground.prompt },
+    ...messagesWithPrompt,
+  ];
   const abortController = new AbortController();
   const headers = {
     "Content-Type": "application/json",
@@ -20,7 +35,11 @@ export const sendStreamingTextThunk = async (
     Authorization: `Bearer ${retrieveAccessToken()}`,
   };
   store.dispatch(sendStreamingTextRequest());
-  const body = JSON.stringify(streamingText);
+  const body = JSON.stringify({
+    stream: streamingText.stream,
+    messages: messagesWithPrompt,
+    model: streamingText.model,
+  });
   try {
     const response = await fetch(host + path, {
       method: "POST",
@@ -34,14 +53,7 @@ export const sendStreamingTextThunk = async (
 
     while (true) {
       const { done, value } = await reader.read();
-      console.log("value", value);
-      console.log("done", done);
-      if (done) {
-        console.log(reader);
-        reader.cancel();
-        store.dispatch(sendStreamingTextSuccess());
-        break;
-      }
+
       dataString += decoder.decode(value);
 
       const chunks = dataString.split("---");
@@ -80,10 +92,14 @@ export const sendStreamingTextThunk = async (
           }
         }
       }
+      if (done) {
+        reader.cancel();
+        store.dispatch(sendStreamingTextSuccess());
+        break;
+      }
     }
     reader.releaseLock();
     abortController.abort();
-    console.log(abortController);
     if (callback && typeof callback === "function") {
       callback();
     }

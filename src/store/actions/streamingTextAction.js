@@ -22,9 +22,8 @@ export const sendStreamingTextRequest = () => ({
   type: SEND_STREAMINGTEXT_REQUEST,
 });
 
-export const sendStreamingTextSuccess = (streamingText) => ({
+export const sendStreamingTextSuccess = () => ({
   type: SEND_STREAMINGTEXT_SUCCESS,
-  payload: streamingText,
 });
 
 export const sendStreamingTextPartial = (partialData) => ({
