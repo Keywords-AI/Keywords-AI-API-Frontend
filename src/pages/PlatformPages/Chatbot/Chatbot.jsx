@@ -13,7 +13,7 @@ import {
   setStreaming,
   setNotStreaming,
 } from "src/store/actions/streamingAction";
-import PanelChat from "src/components/Sections/PanelChat/PanelChat";
+import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
 import Sample from "./components/Sample/Sample";
