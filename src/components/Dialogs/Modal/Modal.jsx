@@ -34,8 +34,7 @@ import { Close } from "src/components/Icons";
  * contains the actual content of the modal, including the title, subtitle, and *children.
  *
  */
-export function Modal({ trigger, title, subtitle, children }) {
-  const [open, setOpen] = React.useState(false);
+export function Modal({ trigger, title, subtitle, children, open, setOpen }) {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>

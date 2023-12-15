@@ -2,8 +2,18 @@ import React from 'react'
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import cn from 'src/utilities/ClassMerge';
 
-export default function AvatarButton({ first_name, onClick = () => { }, size = "w-[24px] h-[24px]" }) {
+export default function AvatarButton({ first_name, textClassName, onClick = () => { }, size = "w-[24px] h-[24px]" }) {
   const initials = first_name ? first_name[0] : "Err";
+  switch (size) {
+    case "sm":
+      size = "w-[24px] h-[24px]"
+      textClassName = "caption"
+      break;
+    case "md":
+      size = "w-[36px] h-[36px]"
+      textClassName = "text-md-medium"
+      break;
+  }
   return (
     <AvatarPrimitive.Root
       onClick={onClick}
@@ -16,7 +26,9 @@ export default function AvatarButton({ first_name, onClick = () => { }, size = "
     alt="Pedro Duarte"
   /> */}
       <AvatarPrimitive.Fallback
-        className="flex w-full h-full p-[10px] items-center justify-center rounded-full bg-avatar text-clip text-gray-white caption"
+        className={cn("flex w-full h-full p-[10px] items-center justify-center rounded-full bg-primary text-clip text-gray-white",
+          textClassName
+        )}
         delayMs={100}
       >
         {initials}

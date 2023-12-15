@@ -17,6 +17,7 @@ import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
+import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 
 const mapStateToProps = (state) => {
   return {
@@ -35,7 +36,6 @@ const Routes = ({ getUser, user }) => {
 
   const isUserLoggedIn = isLoggedIn();
   // const isUserLoggedIn = true;
-  console.log(settingChildren);
   const routes = [
     {
       path: "/platform",
@@ -52,6 +52,10 @@ const Routes = ({ getUser, user }) => {
           path: "doc",
           element: <LeftNavigationLayout sectionName={"documentation"} />,
           children: documentationChildren,
+        },
+        {
+          path: "test",
+          element: <StreamingTextTest />,
         },
       ],
     },

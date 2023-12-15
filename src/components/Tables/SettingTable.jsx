@@ -16,16 +16,17 @@ export default function SettingTable({
             rowLayout = 'grid-cols-[160px,160px,1fr,auto]';
             break;
         case 'api-keys':
-            headers = ['Name', 'Key', 'Created', 'Last Used', '<#EditsLeft/>'];
+            headers = ['Name', 'Key', 'Created', 'Last Used'];
             headerLayout = 'grid-cols-4';
             headerLayout = 'grid-cols-[1fr,120px,120px,120px,62px]';
             rowLayout = 'grid-cols-[1fr,120px,120px,120px,62px]';
             break;
     }
     return (
-        <div className="flex flex-col self-stretch border border-gray-3 rounded-md w-[800px]">
+        <div className="flex flex-col self-stretch border border-gray-3 rounded-md 
+        w-[800px]">
             <div className={cn(
-                "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2",
+                "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2 rounded-t-md",
                 headerLayout || gridTemplateColumns
             )}>
                 {headers?.map((header, idx) => (

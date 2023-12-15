@@ -18,6 +18,7 @@ const useStream = ({
     setLoading(true);
     setError(null);
     setResponse(null);
+    console.log("postData", JSON.stringify(postData));
     console.log("postData to", host + path);
     try {
       const response = await fetch(host + path, {

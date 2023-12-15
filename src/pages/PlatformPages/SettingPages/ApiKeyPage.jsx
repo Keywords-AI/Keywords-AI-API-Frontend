@@ -5,8 +5,9 @@ import { Button } from 'src/components/Buttons'
 import { Pencil } from 'src/components/Icons'
 import { getDateStr } from 'src/utilities/stringProcessing'
 import { CreateForm } from './components/APIKeyForms'
-import { PageContent } from 'src/components/Sections'
+import { PageContent, PageParagraph } from 'src/components/Sections'
 import { SelectInput, CopyInput } from 'src/components/Inputs'
+
 
 
 export const ApiKeyPage = (props) => {
@@ -28,10 +29,13 @@ export const ApiKeyPage = (props) => {
       title="API Keys"
       subtitle="Read the documentation on using our API here."
     >
-      <SettingTable
-        variant={"api-keys"}
-        rows={testRows}
-      />
+      <PageParagraph>
+        <SettingTable
+          variant={"api-keys"}
+          rows={testRows}
+        />
+        <Button variant="r4-primary" text="Generate new Key" />
+      </PageParagraph>
       <CreateForm />
       <SelectInput placeholder={"Hi"} />
       <CopyInput />

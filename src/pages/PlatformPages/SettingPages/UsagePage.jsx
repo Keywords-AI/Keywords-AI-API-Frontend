@@ -1,33 +1,30 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { SelectInput } from 'src/components/Inputs'
 import { PageContent } from 'src/components/Sections'
-import { ProgressBar } from 'src/components/Display'
+import { ProgressBar, UsageChart } from 'src/components/Display'
+import { fetchUsageData } from 'src/store/actions/usageData'
 
-export const UsagePage = (props) => {
-  const options =
-    [
-      {
-        name: "test",
-        value: "test value"
-      },
-      {
-        name: "test",
-        value: "test value"
-      },
-      {
-        name: "test",
-        value: "test value"
-      }
-    ]
+export const UsagePage = ({ user, usageData, fetchUsageData }) => {
+  const [keyList, setKeyList] = React.useState([]);
+  const [currDate, setCurrDate] = React.useState(new Date());
+  const customBundle = user?.custom_bundle;
+
+
+  useEffect(() => {
+    if (currDate)
+      fetchUsageData(currDate.getMonth() + 1);
+  }, [currDate]);
+
+  useEffect(() => {
+    fetchUsageData(currDate.getMonth() + 1);
+  }, []);
+
   return (
     <PageContent
       title="Usage"
       subtitle="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
     >
-      <div>
-        <SelectInput placeholder={"Hi"} />
-      </div>
+      <UsageChart data={usageData} dataKeyX={"name"} dataKeyY="usage" />
       <ProgressBar
         name={"Free Trial"}
         progressLegend={"Used"}
@@ -42,8 +39,13 @@ export const UsagePage = (props) => {
   )
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  usageData: state.usageData,
+  user: state.user,
+})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  fetchUsageData
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsagePage)
