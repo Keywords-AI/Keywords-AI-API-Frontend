@@ -218,11 +218,11 @@ export default function Sample({ sendText=()=>{} }) {
   }, []);
 
   return (
-    <div className="sample-text-card flex-row flex-wrap gap-xs self-stretch">
+    <div className="sample-text-card flex-row flex-wrap gap-xs self-stretch max-card">
       {n.map((card, index) => (
         <div
           key={index}
-          className="rounded-sm border border-solid border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start gap-xxs hover:cursor-pointer"
+          className="rounded-sm border border-solid border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start hover:cursor-pointer"
           onClick={() =>
             sendText(topic[n[index]] + " " + description[n[index]])
           }
