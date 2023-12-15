@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
 
-import { sendStreamingText } from "src/store/thunks/streamingTextThunk";
 const StreamingTextTest = () => {
   const dispatch = useDispatch();
   const { isLoading, error, streamingText } = useSelector(
@@ -18,13 +17,13 @@ const StreamingTextTest = () => {
   };
 
   const handleSubmit = () => {
-    dispatch(
-      sendStreamingText(
-        data,
-        "https://platform.keywordsai.co/",
-        "api/playground/ask/"
-      )
-    );
+    // dispatch(
+    //   sendStreamingText(
+    //     data,
+    //     "https://platform.keywordsai.co/",
+    //     "api/playground/ask/"
+    //   )
+    // );
   };
 
   const handleAbort = () => {

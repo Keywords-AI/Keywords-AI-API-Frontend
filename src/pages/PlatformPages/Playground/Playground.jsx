@@ -16,7 +16,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import { sendStreamingText } from "src/store/thunks/streamingTextThunk";
 
 const mapStateToProps = (state) => {
   return {
@@ -36,8 +35,7 @@ const mapDispatchToProps = {
   setFirstTime,
   setCacheAnswer,
   appendMessage,
-  sendStreamingText,
-};
+  };
 
 const Prompt = () => {
   const dispatch = useDispatch();
@@ -66,7 +64,6 @@ const NotConnectedMap = ({
   setCacheAnswer,
   systemPrompt,
   appendMessage,
-  sendStreamingText,
 }) => {
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
@@ -82,23 +79,23 @@ const NotConnectedMap = ({
       { role: "system", content: systemPrompt },
       messages.slice(0, -1),
     ];
-    sendStreamingText(
-      {
-        messages: messagesWithPrompt,
-        stream: true,
-        model: currentModel,
-      },
-      "https://platform.keywordsai.co/",
-      "api/playground/ask/",
-      (dispatch, getState) => {
-        // this is the callback function after the streaming text is done
-        const newMessage = {
-          role: getState().playground.currentModel,
-          content: getState().streamingText.streamingText,
-        };
-        dispatch(setMessages([...getState().playground.messages, newMessage]));
-      }
-    );
+    // sendStreamingText(
+    //   {
+    //     messages: messagesWithPrompt,
+    //     stream: true,
+    //     model: currentModel,
+    //   },
+    //   "https://platform.keywordsai.co/",
+    //   "api/playground/ask/",
+    //   (dispatch, getState) => {
+    //     // this is the callback function after the streaming text is done
+    //     const newMessage = {
+    //       role: getState().playground.currentModel,
+    //       content: getState().streamingText.streamingText,
+    //     };
+    //     dispatch(setMessages([...getState().playground.messages, newMessage]));
+    //   }
+    // );
   };
   useEffect(() => {
     if (streamingText) {
