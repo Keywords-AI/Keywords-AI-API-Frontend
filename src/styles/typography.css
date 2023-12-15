@@ -55,6 +55,14 @@
     font-style: normal;
 }
 
+.text-md {
+    @apply text-gray-white;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    font-style: normal;
+}
+
 .text-sm-regular {
     @apply text-gray-white;
     font-size: 14px;
