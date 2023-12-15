@@ -11,18 +11,11 @@ import LogIn from "src/pages/AuthPages/LogIn/LogIn";
 import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
 import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
-<<<<<<< HEAD
-import SettingLayout from "./layouts/SettingLayout";
-import DocumentationLayout from "./layouts/DocumentationLayout";
-import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
-import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
-=======
 import ApiKeyLayout from "./layouts/ApiKeyLayout";
 import { ApiChidren } from "./pages/PlatformPages/APIKeyPages/APIKeyPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
->>>>>>> ef5e4aec19ac1381f89f8ddc542c0302c1dc10e7
 
 const mapStateToProps = (state) => {
   return {
