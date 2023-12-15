@@ -11,21 +11,19 @@ import {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
+  appendMessage,
 } from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import useStream from "src/hooks/useStream";
-import readStream from "src/services/readStream";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import store from "src/store/store";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
     prompt: state.playground.prompt,
-    streaming: state.playground.streaming,
-    streamingText: state.playground.streamingText,
+    streaming: state.streamingText.isLoading,
+    streamingText: state.streamingText.streamingText,
     firstTime: state.playground.firstTime,
     currentModel: state.playground.currentModel,
     systemPrompt: state.playground.prompt,
@@ -37,9 +35,6 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
 };
 
 const Prompt = () => {
@@ -68,14 +63,7 @@ const NotConnectedMap = ({
   currentModel,
   setCacheAnswer,
   systemPrompt,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
 }) => {
-  const { postData, response } = useStream({
-    path: "api/playground/ask/",
-    host: "https://platform.keywordsai.co/",
-  });
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
@@ -83,17 +71,29 @@ const NotConnectedMap = ({
     setMessages([...messages, { role: "user", content: "" }]);
   };
   const handleRegenerate = () => {
-    const updatedMessages = messages.slice(0, -1);
-    setMessages(updatedMessages);
-    const messagesWithPrompt = [
-      { role: "system", content: systemPrompt },
-      ...updatedMessages,
-    ];
-    postData({
-      messages: messagesWithPrompt,
-      stream: true,
-      model: currentModel,
-    });
+    event.stopPropagation();
+    if (streaming) return;
+    console.log("regenerate");
+    sendStreamingTextThunk(
+      {
+        messages: messages,
+        stream: true,
+        model: currentModel,
+      },
+      "https://platform.keywordsai.co/",
+      "api/playground/ask/",
+      () => {
+        // this is the callback function after the streaming text is done
+        const streamingText = store.getState().streamingText.streamingText;
+        const currentModel = store.getState().playground.currentModel;
+        const newMessage = {
+          role: currentModel,
+          content: streamingText,
+        };
+        console.log("hi");
+        store.dispatch(appendMessage(newMessage));
+      }
+    );
   };
   useEffect(() => {
     if (streamingText) {
@@ -101,33 +101,7 @@ const NotConnectedMap = ({
       dispatch(setFirstTime(false));
     }
   }, [streamingText]);
-  useEffect(() => {
-    if (!response) return;
-    const streamingCallback = (chunk) => {
-      dispatch(updateStreamText(chunk, dispatch));
-    };
-    dispatch(setStreaming(true));
-    const stopStreamingFunc = () => {
-      stopStreaming();
-    };
-    const abortFunction = readStream(
-      response,
-      streamingCallback,
-      stopStreamingFunc
-    );
-  }, [response]);
-  useEffect(() => {
-    if (streaming) return;
-    const lastItem = messages[messages.length - 1];
-    if (lastItem.role === "user") return;
-    console.log("streamingStop", currentModel, lastItem);
-    dispatch(
-      setCacheAnswer(currentModel, {
-        content: lastItem.content,
-        index: messages.length - 1,
-      })
-    );
-  }, [streaming]);
+
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">
@@ -155,7 +129,7 @@ const NotConnectedMap = ({
             <PlaygroundMessage
               key={99999}
               messageIndex={99999}
-              role={"assistant"}
+              role={currentModel}
               content={streamingText}
             />
           )}

@@ -218,7 +218,7 @@ export default function Sample({ sendText=()=>{} }) {
   }, []);
 
   return (
-    <div className="sample-text-card flex-row flex-wrap gap-xs self-stretch max-card">
+    <div className="sample-text-card flex-row flex-wrap gap-xs self-stretch">
       {n.map((card, index) => (
         <div
           key={index}

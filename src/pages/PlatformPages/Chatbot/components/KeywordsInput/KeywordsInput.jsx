@@ -23,7 +23,8 @@ export default function KeywordsInput({
   return (
     <div className="relative flex w-full">
       <EditableBox 
-        className={"border border-solid border-white rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
+        className={"rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
+        borderless={false}
         placeholder={placeholder}
         text={streaming? "Generating":value}
       />

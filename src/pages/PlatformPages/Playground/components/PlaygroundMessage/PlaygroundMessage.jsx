@@ -2,27 +2,18 @@ import { Button, EditableBox, ModelIcon, User } from "src/components";
 import { EnterKey } from "src/components/Icons/iconsDS";
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
-import useStream from "src/hooks/useStream";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import React from "react";
-import readStream from "src/services/readStream";
-import {
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
-  setMessages,
-} from "src/store/actions/playgroundAction";
+import { setMessages, appendMessage } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/ClassMerge";
-
+import store from "src/store/store";
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
-  const streaming = useSelector((state) => state.playground.streaming);
+  const streaming = useSelector((state) => state.streamingText.isLoading);
   const textAreaRef = React.useRef(null);
-  const { loading, error, response, postData } = useStream({
-    path: "api/playground/ask/",
-    host: "https://platform.keywordsai.co/",
-  });
+
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
   const currentModel = useSelector((state) => state.playground.currentModel);
@@ -30,23 +21,6 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   React.useEffect(() => {
     setTextContent(content);
   }, [content]);
-
-  // We probably need a abort controller state here
-  React.useEffect(() => {
-    if (!response) return;
-    const streamingCallback = (chunk) => {
-      dispatch(updateStreamText(chunk, dispatch));
-    };
-    dispatch(setStreaming(true));
-    const stopStreamingFunc = () => {
-      dispatch(stopStreaming());
-    };
-    const abortFunction = readStream(
-      response,
-      streamingCallback,
-      stopStreamingFunc
-    );
-  }, [response]);
 
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
@@ -57,6 +31,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   const handleChange = (value) => {
     setTextContent(value); // This sets what is displayed in the input box
+
     dispatch(
       setMessages(
         messages.map((message, index) => {
@@ -69,21 +44,32 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     );
   };
 
-  const handleSend = (event) => {
-    // Squash the messages with system prompt
-    // const messagesWithPrompt = [{ role: "user", content: "Hi!" }]; // test
+  const handleSend = async (event) => {
     event.stopPropagation();
+    if (streaming) return;
     setIsFocused(false);
     const messagesWithPrompt = [
       { role: "system", content: systemPrompt },
       ...messages,
     ];
     try {
-      postData({
-        messages: messagesWithPrompt,
-        stream: true,
-        model: currentModel,
-      });
+      await sendStreamingTextThunk(
+        {
+          messages: messagesWithPrompt,
+          stream: true,
+          model: currentModel,
+        },
+        "https://platform.keywordsai.co/",
+        "api/playground/ask/",
+        () => {
+
+          const newMessage = {
+            role: store.getState().playground.currentModel,
+            content: store.getState().streamingText.streamingText
+          };
+          store.dispatch(appendMessage(newMessage));
+        }
+      );
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +103,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         ) : (
           <>
             {React.createElement(ModelIcon("openai"))}
-            <p className="text-sm-md text-gray-white">{"gpt-3.5-turbo"}</p>
+            <p className="text-sm-md text-gray-white">{role}</p>
           </>
         )}
       </div>
