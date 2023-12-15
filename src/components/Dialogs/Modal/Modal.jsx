@@ -1,6 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import React from "react";
-import { Close } from "src/components/Icons";
+import { IconButton } from "src/components/Buttons";
+import { Cross } from "src/components/Icons";
 
 /**
  * Renders a modal dialog using Radix UI's Dialog component.
@@ -34,25 +35,40 @@ import { Close } from "src/components/Icons";
  * contains the actual content of the modal, including the title, subtitle, and *children.
  *
  */
+
+// <Modal
+//    trigger={
+//      <Button
+//        variant={"small"}
+//        text={"Compare different models"}
+//      icon={Compare}
+//      />
+//   }
+//    title="Modal Title"
+//    subtitle="Modal Subtitle"
+//  >
+//    <p>Model content</p>
+//    <TextInput name="field1" placeholder="Enter a message..." />
+// </Modal>
 export function Modal({ trigger, title, subtitle, children, open, setOpen }) {
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0" />
+        <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm"/>
         <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col w-[600px] p-lg justify-center items-center gap-md rounded-md border border-solid border-gray-3 bg-gray-2 shadow-window">
           <div className="flex-col items-start gap-xs self-stretch">
             <Dialog.Title className="flex self-stretch justify-between items-center">
               <p className="display-xs text-gray-white">{title}</p>
               <Dialog.Close asChild>
-                <button>
-                  <Close />
-                </button>
+                <IconButton
+                  icon={<Cross />}
+                />
               </Dialog.Close>
             </Dialog.Title>
             <Dialog.Description asChild>
-              <p className="text-sm-regular text-gray-4">{subtitle}</p>
+              {subtitle && <p className="text-sm-regular text-gray-4">{subtitle}</p>}
             </Dialog.Description>
           </div>
           {children}
