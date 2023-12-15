@@ -2,11 +2,11 @@ import { Button, EditableBox, ModelIcon, User } from "src/components";
 import { EnterKey } from "src/components/Icons/iconsDS";
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
-
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import React from "react";
 import { setMessages, appendMessage } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/ClassMerge";
-import { sendStreamingText } from "src/store/thunks/streamingTextThunk";
+import store from "src/store/store";
 
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
@@ -45,7 +45,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     );
   };
 
-  const handleSend = (event) => {
+  const handleSend = async (event) => {
     event.stopPropagation();
     if (streaming) return;
     setIsFocused(false);
@@ -54,24 +54,23 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       ...messages,
     ];
     try {
-      dispatch(
-        sendStreamingText(
-          {
-            messages: messagesWithPrompt,
-            stream: true,
-            model: currentModel,
-          },
-          "https://platform.keywordsai.co/",
-          "api/playground/ask/",
-          (dispatch, getState) => {
-            // this is the callback function after the streaming text is done
-            const newMessage = {
-              role: getState().playground.currentModel,
-              content: getState().streamingText.streamingText,
-            };
-            dispatch(appendMessage(newMessage));
-          }
-        )
+      await sendStreamingTextThunk(
+        {
+          messages: messagesWithPrompt,
+          stream: true,
+          model: currentModel,
+        },
+        "https://platform.keywordsai.co/",
+        "api/playground/ask/",
+        () => {
+          // this is the callback function after the streaming text is done
+          const streamingText = store.getState().streamingText.streamingText;
+          const newMessage = {
+            role: currentModel,
+            content: streamingText,
+          };
+          store.dispatch(appendMessage(newMessage));
+        }
       );
     } catch (error) {
       console.log(error);
