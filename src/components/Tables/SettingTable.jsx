@@ -23,9 +23,10 @@ export default function SettingTable({
             break;
     }
     return (
-        <div className="flex flex-col self-stretch border border-gray-3 rounded-md w-[800px]">
+        <div className="flex flex-col self-stretch border border-gray-3 rounded-md 
+        w-[800px]">
             <div className={cn(
-                "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2",
+                "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2 rounded-t-md",
                 headerLayout || gridTemplateColumns
             )}>
                 {headers?.map((header, idx) => (

@@ -16,10 +16,11 @@ import {
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
-import Sample from "./components/Sample/Sample";
+import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
-import { KeywordsLogo, BigLogo } from "./icons";
+import { LogoSubtract } from "src/components/Icons";
+import { HeaderLogo } from "src/components/BrandAssets";
 
 const mapStateToProps = (state) => {
   return {
@@ -271,10 +272,10 @@ function Chatbot({
               <>
                 {streaming && (
                   <div className="flex-col justify-center items-center gap-md self-stretch mt-[160px]">
-                    <BigLogo />
+                    <LogoSubtract />
                     <div className="flex-col justify-center items-center gap-xxxs self-stretch">
                       <div className="flex-row gap-xxs items-center">
-                        <KeywordsLogo />
+                        <HeaderLogo />
                         <span className="display-sm">Keywords AI</span>
                       </div>
                       <div className="text-md-medium text-gray-3">
