@@ -220,7 +220,7 @@ function Chatbot({
 
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
-      {true && (
+      {false && (
         <Popup
           setPromptPopup={setPromptPopup}
           closePopup={() => {
