@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
-import { ReactMarkdown } from "src/components/Misc/ReactMarkdown";
+import { ChatbotReactMarkdown } from "src/components/Misc/ChatbotReactMarkdown";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {
@@ -39,7 +39,7 @@ export default function ChatMessage({ message }) {
               {message?.content}
             </p>
           ) : ( 
-            <ReactMarkdown content={message?.content} /> 
+            <ChatbotReactMarkdown content={message?.content} /> 
           )}
 
           {message?.role !== "user" ? (
