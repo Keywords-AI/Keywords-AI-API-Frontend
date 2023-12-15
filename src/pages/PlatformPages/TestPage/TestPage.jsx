@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
 
 import { sendStreamingText } from "src/store/thunks/streamingTextThunk";
-
 const StreamingTextTest = () => {
   const dispatch = useDispatch();
   const { isLoading, error, streamingText } = useSelector(
@@ -16,8 +16,13 @@ const StreamingTextTest = () => {
     stream: true,
     model: "gpt-3.5-turbo",
   };
+  let abortController = new AbortController();
   const handleSubmit = () => {
     dispatch(sendStreamingText(data));
+  };
+
+  const handleAbort = () => {
+    dispatch(abortStreamingTextRequest());
   };
 
   return (
@@ -26,6 +31,7 @@ const StreamingTextTest = () => {
         <button onClick={handleSubmit} disabled={isLoading}>
           Start Streaming
         </button>
+        <button onClick={handleAbort}>Stop Streaming</button>
       </div>
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {JSON.stringify(error)}</p>}
