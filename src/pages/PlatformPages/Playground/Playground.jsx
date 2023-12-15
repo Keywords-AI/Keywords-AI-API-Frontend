@@ -11,21 +11,19 @@ import {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
+  appendMessage,
 } from "src/store/actions/playgroundAction";
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import useStream from "src/hooks/useStream";
-import readStream from "src/services/readStream";
+import { sendStreamingText } from "src/store/thunks/streamingTextThunk";
+
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
     prompt: state.playground.prompt,
-    streaming: state.playground.streaming,
-    streamingText: state.playground.streamingText,
+    streaming: state.streamingText.isLoading,
+    streamingText: state.streamingText.streamingText,
     firstTime: state.playground.firstTime,
     currentModel: state.playground.currentModel,
     systemPrompt: state.playground.prompt,
@@ -37,9 +35,8 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
+  appendMessage,
+  sendStreamingText,
 };
 
 const Prompt = () => {
@@ -68,14 +65,9 @@ const NotConnectedMap = ({
   currentModel,
   setCacheAnswer,
   systemPrompt,
-  updateStreamText,
-  setStreaming,
-  stopStreaming,
+  appendMessage,
+  sendStreamingText,
 }) => {
-  const { postData, response } = useStream({
-    path: "api/playground/ask/",
-    host: "https://platform.keywordsai.co/",
-  });
   const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
@@ -83,17 +75,30 @@ const NotConnectedMap = ({
     setMessages([...messages, { role: "user", content: "" }]);
   };
   const handleRegenerate = () => {
-    const updatedMessages = messages.slice(0, -1);
-    setMessages(updatedMessages);
+    event.stopPropagation();
+    if (streaming) return;
+    console.log("regenerate");
     const messagesWithPrompt = [
       { role: "system", content: systemPrompt },
-      ...updatedMessages,
+      messages.slice(0, -1),
     ];
-    postData({
-      messages: messagesWithPrompt,
-      stream: true,
-      model: currentModel,
-    });
+    sendStreamingText(
+      {
+        messages: messagesWithPrompt,
+        stream: true,
+        model: currentModel,
+      },
+      "https://platform.keywordsai.co/",
+      "api/playground/ask/",
+      (dispatch, getState) => {
+        // this is the callback function after the streaming text is done
+        const newMessage = {
+          role: getState().playground.currentModel,
+          content: getState().streamingText.streamingText,
+        };
+        dispatch(setMessages([...getState().playground.messages, newMessage]));
+      }
+    );
   };
   useEffect(() => {
     if (streamingText) {
@@ -101,33 +106,7 @@ const NotConnectedMap = ({
       dispatch(setFirstTime(false));
     }
   }, [streamingText]);
-  useEffect(() => {
-    if (!response) return;
-    const streamingCallback = (chunk) => {
-      dispatch(updateStreamText(chunk, dispatch));
-    };
-    dispatch(setStreaming(true));
-    const stopStreamingFunc = () => {
-      stopStreaming();
-    };
-    const abortFunction = readStream(
-      response,
-      streamingCallback,
-      stopStreamingFunc
-    );
-  }, [response]);
-  useEffect(() => {
-    if (streaming) return;
-    const lastItem = messages[messages.length - 1];
-    if (lastItem.role === "user") return;
-    console.log("streamingStop", currentModel, lastItem);
-    dispatch(
-      setCacheAnswer(currentModel, {
-        content: lastItem.content,
-        index: messages.length - 1,
-      })
-    );
-  }, [streaming]);
+
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">

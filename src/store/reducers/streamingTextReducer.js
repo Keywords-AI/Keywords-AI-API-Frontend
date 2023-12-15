@@ -22,6 +22,8 @@ const streamingTextReducer = (state = initialState, action) => {
     case SEND_STREAMINGTEXT_REQUEST:
       return {
         ...state,
+        streamingText: "",
+        abort: false,
         isLoading: true,
         error: null,
       };
@@ -49,6 +51,7 @@ const streamingTextReducer = (state = initialState, action) => {
         error: null,
         abort: true,
       };
+
     default:
       return state;
   }

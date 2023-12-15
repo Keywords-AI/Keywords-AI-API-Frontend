@@ -16,9 +16,15 @@ const StreamingTextTest = () => {
     stream: true,
     model: "gpt-3.5-turbo",
   };
-  let abortController = new AbortController();
+
   const handleSubmit = () => {
-    dispatch(sendStreamingText(data));
+    dispatch(
+      sendStreamingText(
+        data,
+        "https://platform.keywordsai.co/",
+        "api/playground/ask/"
+      )
+    );
   };
 
   const handleAbort = () => {
