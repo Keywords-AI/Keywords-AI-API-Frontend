@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser } from "src/store/actions/userAction";
+import { getUser, isLoggedIn } from "src/store/actions/authAction";
 import "src/styles/index.css";
 import { Playground } from "./pages/PlatformPages";
 import Chatbot from "/src/pages/PlatformPages/Chatbot/Chatbot";
@@ -12,7 +12,6 @@ import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
 import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
-
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
 import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
@@ -34,9 +33,9 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = user && user.email?.length > 0;
-  const isUserLoggedIn = true;
-
+  const isUserLoggedIn = isLoggedIn();
+  // const isUserLoggedIn = true;
+  console.log(settingChildren);
   const routes = [
     {
       path: "/platform",

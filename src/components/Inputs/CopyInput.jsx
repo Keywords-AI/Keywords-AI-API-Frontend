@@ -3,13 +3,13 @@ import { connect } from 'react-redux'
 import { TextInput } from 'src/components/Inputs'
 import { CopyButton } from 'src/components/Buttons'
 
-const CopyInput = ({ text }) => {
+const CopyInput = ({ value, title }) => {
     return (
         <div className="relative flex-col">
-            <TextInput value={text} disabled />
+            <TextInput value={value} title={title} disabled />
             <CopyButton
-                text={text}
-                className="absolute right-xs top-1/2 -translate-y-xxxs"
+                text={value}
+                className="absolute right-xs bottom-[10px]"
             />
         </div>
     )

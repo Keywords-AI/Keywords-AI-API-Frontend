@@ -1,7 +1,1 @@
-export { 
-    register, 
-    login, 
-    logout, 
-    googleLogin, 
-    getUser 
-} from "./userAction";
+export * from "./authAction";

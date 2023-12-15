@@ -68,7 +68,7 @@ export const Button = forwardRef(
       borderColor,
       borderHoverColor,
       justification,
-      minWidth = "min-w-[60px]",
+      minWidth = "",
       children,
       // ...props
     },

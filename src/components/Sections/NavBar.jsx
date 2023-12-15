@@ -39,7 +39,8 @@ export const NavBar = () => {
     if (!pageName) {
       modifiedPageName = text.toLowerCase().split(" ").join("-");
     }
-    let apply = location.pathname == `/platform/${pageName}`;
+    let apply = location.pathname.includes(`/platform/${pageName}`);
+
     return (
       <Button
         key={index}

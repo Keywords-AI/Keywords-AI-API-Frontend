@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import "./style.css";
 import { CheckBox, Close } from "./icons";
-import { updateSystemPrompt } from "src/store/actions/userAction";
+import { updateSystemPrompt } from "src/store/actions/authAction";
 import { connect } from "react-redux";
-import { loadingFileUpload } from "src/store/actions/userAction";
+import { loadingFileUpload } from "src/store/actions/authAction";
 import { Button } from "src/components";
 import { IconButton } from "src/components/Buttons";
 import { FileInput, RadioInput } from "src/components/Inputs";

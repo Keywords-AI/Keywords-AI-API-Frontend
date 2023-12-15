@@ -29,7 +29,7 @@ export default function SettingTable({
                 headerLayout || gridTemplateColumns
             )}>
                 {headers?.map((header, idx) => (
-                    <div className="grid-col" key={idx}>{header}</div>
+                    <div className="flex-row justify-start items-center" key={idx}>{header}</div>
                 ))}
                 <div className="grid-col"></div>
             </div>
@@ -39,7 +39,7 @@ export default function SettingTable({
                     rowLayout || gridTemplateColumns
                 )} key={idx}>
                     {Object.keys(row)?.map((header, idx) => (
-                        <div className="grid-col" key={idx}>{row[header]}</div>
+                        <div className="flex-row justify-start items-center" key={idx}>{row[header]}</div>
                     ))}
                 </div>
             ))}
