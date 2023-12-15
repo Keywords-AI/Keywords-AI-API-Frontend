@@ -36,7 +36,6 @@ const Routes = ({ getUser, user }) => {
 
   const isUserLoggedIn = isLoggedIn();
   // const isUserLoggedIn = true;
-  console.log(settingChildren);
   const routes = [
     {
       path: "/platform",

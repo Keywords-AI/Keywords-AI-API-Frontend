@@ -312,6 +312,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         minWidth = minWidth || "";
+        className= "w-[28px] h-[28px]"
 
         break;
       default:

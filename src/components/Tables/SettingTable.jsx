@@ -16,7 +16,7 @@ export default function SettingTable({
             rowLayout = 'grid-cols-[160px,160px,1fr,auto]';
             break;
         case 'api-keys':
-            headers = ['Name', 'Key', 'Created', 'Last Used', '<#EditsLeft/>'];
+            headers = ['Name', 'Key', 'Created', 'Last Used'];
             headerLayout = 'grid-cols-4';
             headerLayout = 'grid-cols-[1fr,120px,120px,120px,62px]';
             rowLayout = 'grid-cols-[1fr,120px,120px,120px,62px]';
