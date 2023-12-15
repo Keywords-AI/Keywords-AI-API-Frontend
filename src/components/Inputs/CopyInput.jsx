@@ -6,7 +6,7 @@ import { CopyButton } from 'src/components/Buttons'
 const CopyInput = ({ value, title }) => {
     return (
         <div className="relative flex-col">
-            <TextInput value={value} title={title} disabled />
+            <TextInput value={value} title={title} disabled width="w-full"/>
             <CopyButton
                 text={value}
                 className="absolute right-xs bottom-[10px]"

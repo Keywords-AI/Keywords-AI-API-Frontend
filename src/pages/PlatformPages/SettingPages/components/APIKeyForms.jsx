@@ -9,7 +9,8 @@ import {
   setNewKeyName,
   setKeyList,
   addKey,
-  deleteKey
+  deleteKey,
+  updateEditingKey,
 } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
@@ -18,16 +19,20 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setNewKeyName
+  setNewKeyName,
+  addKey,
+  setKeyList,
+  deleteKey,
+  updateEditingKey,
 };
 
 const CreateFormNotConnected = React.forwardRef(({
-  newKey,
+  apiKey,
   setShowForm = () => { },
   setNewKeyName,
   addKey,
   user }, ref) => {
-  const { loading, error, data, postData } = usePost(`api/create-key/`, "localhost:8000");
+  const { loading, error, data, postData } = usePost({ path: `api/create-api-key/` });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
     if (!data.name) {
@@ -37,42 +42,46 @@ const CreateFormNotConnected = React.forwardRef(({
     postData(data);
   };
   useEffect(() => {
-    if (data) {
+    if (data && !error) {
+      console.log(data);
       addKey(data);
     }
   }, [data])
+  const handleClose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowForm(false);
+  }
 
   return (
     <form ref={ref}
       className={"flex-col gap-sm self-stretch relative"}
       onSubmit={handleSubmit(onSubmit)}
     >
-      {!newKey ? (
+      {!apiKey.apiKey ? (
         <TextInput
           title={"Name (optional)"}
           width={"w-full"}
-          onChange={(e) => {
-            setNewKeyName(e.target.value);
-          }}
           {...register("name")}
           // onKeyDown={handleEnter}
           placeholder={"Key-1"}
         />
       ) : (
-        <CopyInput title={newKeyName} value={newKey?.api_key} />
+        <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
       )}
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
-          <Button variant="r4-gray-2" text="Cancel"
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowForm(false);
-            }} />
-          {!newKey && (
-            <Button variant="r4-primary" text="Create" />
-          )}
+          {apiKey.apiKey ?
+            <Button variant="r4-primary" type="button"
+              onClick={handleClose} text="Done" />
+            :
+            <>
+              <Button variant="r4-gray-2" text={"Cancel"}
+                type="button"
+                onClick={handleClose} />
+              <Button variant="r4-primary" text="Create" />
+            </>
+          }
         </div>
       </div>
     </form>
@@ -80,160 +89,89 @@ const CreateFormNotConnected = React.forwardRef(({
 });
 export const CreateForm = connect(mapStateToProps, mapDispatchToProps)(CreateFormNotConnected);
 
-// export const DeleteForm = React.forwardRef((props, ref) => {
-//   const { postData, setKeyList, deleteList, keyList, setShowForm } = props;
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     event.stopPropagation();
-//     const form = event.target;
-//     const keyName = form.keyName;
-//     postData({
-//       name: keyName.value || "New Key",
-//     });
-//   };
-//   return (
-//     <form
-//       ref={ref}
-//       method="POST"
-//       onSubmit={handleSubmit}
-//       className="modal-card bg-white"
-//     >
-//       <div className="flex-col items-start gap-sm self-stretch t-l">
-//         <div className="display-xs">{"Revoke API Key"}</div>
-//         <div className="text-md">
-//           This API key will be immediately revoked and disabled. API requests
-//           made made using this key will be rejected. Once revoked, you will no
-//           longer be able to view or modify this API key.
-//         </div>
-//       </div>
-//       <div className="flex-col start gap-xs self-stretch">
-//         <div className="text-sm text-gray4">{keyList[0]?.name}</div>
-//         <input
-//           className="text-md"
-//           style={{
-//             color: "var(--black)",
-//           }}
-//           readOnly
-//           value={keyList[0]?.prefix + "*".repeat(15)}
-//           id="keyName"
-//           name="keyName"
-//           type="text"
-//           placeholder="Key-1"
-//         />
-//       </div>
-//       <div className="flex-row self-stretch justify-end">
-//         <div className="flex-row gap-xs items-start">
-//           <button
-//             onClick={(e) => {
-//               e.preventDefault();
-//               e.stopPropagation();
-//               setShowForm(false);
-//               console.log("cancel");
-//             }}
-//             className="button-tertiary-white"
-//           >
-//             Cancel
-//           </button>
-//           <button
-//             type="submit"
-//             className={"button-primary bg-error"}
-//             onClick={(e) => {
-//               e.preventDefault();
-//               setKeyList(keyList.filter((key) => !deleteList.includes(key.id)));
-//               postData({
-//                 keys: deleteList,
-//               });
-//               setShowForm(false);
-//             }}
-//           >
-//             Revoke Key
-//           </button>
-//         </div>
-//       </div>
-//     </form>
-//   );
-// });
+const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, deleteKey }, ref) => {
+  const {
+    loading,
+    error,
+    data,
+    postData,
+  } = usePost({
+    path: `api/delete-key/${deletingKey?.id}/`,
+    method: "DELETE",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    postData();
+    deleteKey(deletingKey);
+    setDeletingKey(null);
+  };
+  const handleClose = () => {
+    setDeletingKey(null);
+  };
+  return (
+    <form ref={ref}
+      className={"flex-col gap-sm self-stretch relative"}
+      onSubmit={handleSubmit}
+    >
+      <div className="flex-row justify-end self-stretch">
+        <div className="flex-row gap-xs">
+          <Button variant="r4-gray-2" text={"Cancel"}
+            type="button"
+            onClick={handleClose} />
+          <Button variant="r4-red" text={"Revoke " + deletingKey?.name} />
+        </div>
+      </div>
+    </form>
+  );
+});
 
-// export const EditForm = React.forwardRef((props, ref) => {
-//   // updates the name of the key
-//   const { setKeyList, keyList, setShowForm, editKey: key } = props;
-//   const {
-//     loading: editLoading,
-//     error: editKeyError,
-//     data: editKey,
-//     postData,
-//   } = usePost(`api/update-key/${key.id}/`, "PATCH");
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     event.stopPropagation();
-//     const form = event.target;
-//     const keyName = form.keyName.value || "New Key";
-//     console.log(key);
-//     postData({
-//       name: keyName,
-//     });
-//     setShowForm(false);
-//     setKeyList((prevKeyList) =>
-//       prevKeyList.map((prevKey) => {
-//         if (prevKey.id === key.id) {
-//           return { ...prevKey, name: keyName }; // return new object with updated keyName
-//         } else {
-//           return prevKey; // return the original object if no modification is needed
-//         }
-//       })
-//     );
-//   };
-//   return (
-//     <form
-//       ref={ref}
-//       method="POST"
-//       onSubmit={handleSubmit}
-//       className="modal-card bg-white"
-//     >
-//       <div className="display-xs">{"Rename API Key"}</div>
-//       <div className="flex-col gap-xxs self-stretch">
-//         <label className="text-sm text-gray4" htmlFor="keyName">
-//           {"Name (optional)"}
-//         </label>
-//         <input
-//           className="text-md"
-//           style={{
-//             color: "var(--black)",
-//           }}
-//           id="keyName"
-//           name="keyName"
-//           type="text"
-//           placeholder="Key-1"
-//         />
-//       </div>
+export const DeleteForm = connect(mapStateToProps, mapDispatchToProps)(DeleteFormNotConnected);
 
-//       <div className="flex-row justify-end self-stretch">
-//         <div className="flex-row gap-xs items-center">
-//           <button
-//             onClick={(e) => {
-//               e.preventDefault();
-//               e.stopPropagation();
-//               setShowForm(false);
-//             }}
-//             className="button-tertiary-white"
-//           >
-//             Cancel
-//           </button>
-//           <button type="submit" className="button-primary">
-//             Rename
-//           </button>
-//         </div>
-//       </div>
-//       {editKeyError && (
-//         <div
-//           style={{
-//             display: "flex",
-//             flexDirection: "column",
-//           }}
-//         >
-//           <div className="error">{editKeyError}</div>
-//         </div>
-//       )}
-//     </form>
-//   );
-// });
+const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, updateEditingKey }, ref) => {
+  const [newName, setNewName] = React.useState(editingKey?.name);
+  const {
+    loading: editLoading,
+    error: editKeyError,
+    data: editKey,
+    postData,
+  } = usePost({
+    path: `api/update-key/${editingKey?.id}/`,
+    method: "PATCH"
+  });
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = (data) => {
+    postData(data);
+    updateEditingKey({ ...editingKey, ...data });
+    setEditingKey(null);
+  };
+  const handleClose = (e) => {
+    setEditingKey(null);
+  }
+  const handleChange = (e) => {
+    setNewName(e.target.value);
+  }
+  return (
+    <form ref={ref}
+      className={"flex-col gap-sm self-stretch relative"}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <TextInput
+        title={"New name"}
+        width={"w-full"}
+        {...register("name", { value: newName, onChange: handleChange, required: true })}
+        // onKeyDown={handleEnter}
+        placeholder={"Key-1"}
+      />
+      <div className="flex-row justify-end self-stretch">
+        <div className="flex-row gap-xs">
+          <Button variant="r4-gray-2" text={"Cancel"}
+            type="button"
+            onClick={handleClose} />
+          <Button variant="r4-primary" text="Rename" />
+        </div>
+      </div>
+    </form>
+  );
+});
+
+export const EditForm = connect(mapStateToProps, mapDispatchToProps)(EditFormNotConnected);

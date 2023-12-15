@@ -3,14 +3,14 @@ import apiConfig from "src/services/apiConfig";
 import { refreshToken, validateToken } from "src/store/actions/tokenAction";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-export const useFetch = (path) => {
+export const useFetch = (path, domain = apiConfig.apiURL) => {
   const [data, setData] = React.useState(null);
   const [error, setError] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
 
   const performFetch = async () => {
     try {
-      const response = await fetch(apiConfig.apiURL + path, {
+      const response = await fetch(domain + path, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export const useFetch = (path) => {
     } else if (response && response.status === 401) {
       // Refresh the token
       await refreshToken();
-      const didRefresh = await validateToken();  // Make sure this returns a boolean to indicate success
+      const didRefresh = await validateToken(); // Make sure this returns a boolean to indicate success
       // Retry fetching only if the token refresh was successful
       if (didRefresh) {
         const retryResponse = await performFetch();

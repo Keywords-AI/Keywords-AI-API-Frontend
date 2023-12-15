@@ -3,7 +3,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-const usePost = (path, domain=apiConfig.apiURL, method = "POST") => {
+const usePost = ({ path, method = "POST", domain = apiConfig.apiURL }) => {
   // generic hook for posting data to apis
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

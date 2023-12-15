@@ -54,7 +54,7 @@ export const TextInput = React.forwardRef(({
     >
       {title && <label htmlFor={name} className="text-sm-regular text-gray-4">
         {title}
-        {required && "*"}
+        {required && " *"}
       </label>}
       <div
         className={cn(

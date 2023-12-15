@@ -6,9 +6,11 @@ export default function SettingTable({
     headerLayout,
     rows,
     rowLayout,
-    variant
+    variant,
+    columnNames,
 }) {
     const gridTemplateColumns = headers?.length ? `grid-cols-${headers.length}` : '';
+    let rowIterator = columnNames || rows?.[0] && Object.keys(rows[0]);
     switch (variant) {
         case 'billings':
             headers = ['Date', 'Amount', 'Payment ID'];
@@ -39,7 +41,7 @@ export default function SettingTable({
                     "text-md text-gray-white self-stretch grid px-sm py-xxs border-t border-gray-3",
                     rowLayout || gridTemplateColumns
                 )} key={idx}>
-                    {Object.keys(row)?.map((header, idx) => (
+                    {rowIterator?.map((header, idx) => (
                         <div className="flex-row justify-start items-center" key={idx}>{row[header]}</div>
                     ))}
                 </div>
