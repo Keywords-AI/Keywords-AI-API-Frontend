@@ -30,6 +30,7 @@ const ProfileMenu = ({ logout, user }) => {
     >
       <AvatarButton
         first_name={first_name}
+        size="sm"
       />
       <ArrowDown
         className={cn(
