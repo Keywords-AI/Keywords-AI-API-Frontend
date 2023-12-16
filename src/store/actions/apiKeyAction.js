@@ -1,5 +1,5 @@
 import apiConfig from "src/services/apiConfig";
-import { processKeyList } from "src/utilities/objectProcessing";
+import { processKeyList, processKey } from "src/utilities/objectProcessing";
 export const SET_NEW_KEY_NAME = "SET_NEW_KEY_NAME";
 export const SET_KEY_LIST = "SET_KEY_LIST";
 export const ADD_KEY = "ADD_KEY";
@@ -22,10 +22,10 @@ export const setKeyList = (keyList, actions) => {
   };
 };
 
-export const addKey = (key) => {
+export const addKey = (key, actions) => {
   return {
     type: ADD_KEY,
-    key: key,
+    key: processKeyList([key], actions)[0],
   };
 };
 
