@@ -69,10 +69,8 @@ export const Up = ({
     case "sm":
       return (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
-          <path d="M1.42 2.29504L6 6.87504L10.59 2.29504L12 3.70504L6 9.70504L0 3.70504L1.42 2.29504Z" className={active ? activeFill : fill} />
-        </svg>
-
-
+          <path d="M10.58 9.70496L6 5.12496L1.41 9.70496L0 8.29496L6 2.29496L12 8.29496L10.58 9.70496Z" className={active ? activeFill : fill} />
+        </svg >
       );
   }
 };
@@ -775,8 +773,8 @@ export const Down = ({
     case "sm":
       return (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
-          <path d="M10.58 9.70496L6 5.12496L1.41 9.70496L0 8.29496L6 2.29496L12 8.29496L10.58 9.70496Z" className={active ? activeFill : fill} />
-        </svg >
+          <path d="M1.42 2.29504L6 6.87504L10.59 2.29504L12 3.70504L6 9.70504L0 3.70504L1.42 2.29504Z" className={active ? activeFill : fill} />
+        </svg>
 
       );
   }

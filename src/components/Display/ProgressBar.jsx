@@ -14,7 +14,7 @@ export default function ProgressBar({
     remainColorClass,
     progressLegend,
     remainLegend,
-    unit
+    display = () => { },
 }) {
     return (
         <div className="flex-col gap-xxs items-start self-stretch">
@@ -47,7 +47,7 @@ export default function ProgressBar({
                 <span className={"text-gray4"} style={{
                     color: progressColorClass
                 }}>
-                    {unit + current?.toLocaleString()} / {unit + total?.toLocaleString()}
+                    {display(current?.toLocaleString(), total?.toLocaleString())}
                 </span>
             </div>
         </div>

@@ -2,7 +2,7 @@ import React from "react";
 
 export default function IconButton({ onClick, icon, className = "", onMouseEnter, onMouseLeave }) {
   return (
-    <div
+    <button
       aria-label="IconButton"
       className={"flex flex-shrink-0 " + className}
       onMouseEnter={onMouseEnter}
@@ -10,6 +10,6 @@ export default function IconButton({ onClick, icon, className = "", onMouseEnter
       onClick={onClick}
     >
       {icon}
-    </div>
+    </button>
   );
 }
