@@ -8,6 +8,7 @@ export default function IconButton({ onClick, icon, className = "", onMouseEnter
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onClick={onClick}
+      type="button"
     >
       {icon}
     </button>
