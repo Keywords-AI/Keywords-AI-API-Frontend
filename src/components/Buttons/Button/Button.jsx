@@ -24,7 +24,7 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.className=""] - Additional CSS classes for the button.
  * @param {string} [props.borderRadius="rounded-lg"] - The border radius of the button.
  * @param {Function} [props.onClick] - Function to call on button click.
- * @param {string} [props.textClassName="text-sm-regular"] - Additional CSS classes for the text on the button.
+ * @param {string} [props.textClassName="text-sm-md"] - Additional CSS classes for the text on the button.
  * @param {string} [props.bgColor="bg-gray-white"] - The background color of the button.
  * @param {string} [props.hoverColor="hover:bg-[#33557D]"] - The hover background color of the button.
  * @param {string} [props.clickedColor="active:bg-[#33557D]"] - The background color of the button when clicked.
@@ -37,6 +37,7 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.padding="py-xxs px-xs"] - The padding of the button.
  * @param {string} [props.borderColor="border-transparent"] - The border color of the button.
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
+ * @param {string} [props.borderClickedColor="active:border-transparent"] - The border color of the button on click.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
  */
@@ -52,9 +53,9 @@ export const Button = forwardRef(
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => { },
-      onMouseLeave = () => { },
-      textClassName = "text-sm",
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
+      textClassName = "text-sm-md",
       bgColor,
       hoverColor,
       clickedColor,
@@ -68,6 +69,7 @@ export const Button = forwardRef(
       padding,
       borderColor,
       borderHoverColor,
+      borderClickedColor,
       justification,
       minWidth = "",
       children,
@@ -86,6 +88,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-black";
         iconFill = iconFill || "fill-gray-black";
         break;
+
       case "secondary-gray":
         bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-4";
@@ -95,6 +98,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-white";
         iconFill = iconFill || "fill-gray-white";
         break;
+
       case "secondary-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
@@ -105,6 +109,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-white";
         className = cn(className, "border border-solid border-gray-3");
         break;
+
       case "beta":
         bgColor = bgColor || "bg-gradient-in";
         textColor = textColor || "text-gray-white";
@@ -116,9 +121,10 @@ export const Button = forwardRef(
           "cursor-default gradient-in max-h-[36px] tracking-[0.56px]"
         );
         break;
+
       case "r4-white":
         bgColor = bgColor || "bg-gray-white";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         hoverColor = hoverColor || "bg-gray-4";
         clickedColor = clickedColor || "bg-gray-4";
         textColor = textColor || "text-gray-black";
@@ -126,8 +132,8 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-black";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
-
         break;
+
       case "r4-gray-2":
         bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-2";
@@ -139,8 +145,8 @@ export const Button = forwardRef(
         borderColor = borderColor || "border-gray-3";
         borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
-
         break;
+
       case "r4-primary":
         bgColor = bgColor || "bg-primary";
         hoverColor = hoverColor || "bg-primary";
@@ -152,6 +158,8 @@ export const Button = forwardRef(
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
+        break;
+
       case "r4-red":
         bgColor = bgColor || "bg-error";
         hoverColor = hoverColor || "bg-error";
@@ -163,24 +171,26 @@ export const Button = forwardRef(
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
-
         break;
+
       case "r4-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-4";
-        textClickedColor = textClickedColor || "text-gray-4";
+        textClickedColor = textClickedColor || "text-white";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "border-gray-3";
+        borderClickedColor = borderClickedColor || "border-gray-white";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-4";
         justification = justification || "justify-start";
         break;
+
       case "small":
         bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-2";
@@ -209,8 +219,8 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-black";
         iconHoverFill = iconHoverFill || "fill-gray-black";
         borderHoverColor = borderHoverColor || "border-gray-white";
-
         break;
+
       case "r18-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-3";
@@ -225,8 +235,8 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-sm";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-
         break;
+
       case "header":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-sm-regular";
@@ -238,8 +248,8 @@ export const Button = forwardRef(
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "border-transparent";
         padding = padding || "py-xxs px-xs";
-
         break;
+
       case "footer":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "caption";
@@ -249,8 +259,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         padding = padding || "py-xxs px-xs";
-
         break;
+
       case "panel":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-sm-md";
@@ -268,6 +278,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         break;
+
       case "careers":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-md-md";
@@ -281,11 +292,11 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-primary";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-
         break;
+
       case "chat":
         bgColor = bgColor || "bg-gray-2";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         hoverColor = hoverColor || "bg-gray-2";
         clickedColor = clickedColor || "bg-gray-black";
         textColor = textColor || "text-gray-4";
@@ -297,8 +308,8 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         justification = justification || "justify-center";
         className = className || "w-[256px]";
-
         break;
+
       case "icon":
         bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-2";
@@ -313,16 +324,31 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         minWidth = minWidth || "";
-        className = "w-[28px] h-[28px]"
-
+        className = "w-[28px] h-[28px]";
         break;
+
       default:
         <div className="bg-error">Invalid Variant</div>;
     }
+    let currentBgColor = bgColor;
     if (active) {
-      bgColor = clickedColor;
-      textColor = textClickedColor;
-      iconFill = iconHoverFill;
+      currentBgColor = clickedColor;
+    } else if (hover) {
+      currentBgColor = hoverColor;
+    }
+
+    let currentTextColor = textColor;
+    if (active) {
+      currentTextColor = textClickedColor;
+    } else if (hover) {
+      currentTextColor = textHoverColor;
+    }
+
+    let currentBorderColor = borderColor;
+    if (active) {
+      currentBorderColor = borderClickedColor;
+    } else if (hover) {
+      currentBorderColor = borderHoverColor;
     }
     return (
       <button

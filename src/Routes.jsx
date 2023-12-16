@@ -18,6 +18,7 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
+import Dashboard from "./pages/PlatformPages/Dashboard/Dashboard";
 
 const mapStateToProps = (state) => {
   return {
@@ -41,8 +42,14 @@ const Routes = ({ getUser, user }) => {
       path: "/platform",
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
-        { path: "playground", element: <Playground /> },
-        { path: "chatbot", element: <Chatbot /> },
+        {
+          path: "playground",
+          element: <Playground />,
+        },
+        {
+          path: "chatbot",
+          element: <Chatbot />,
+        },
         {
           path: "setting",
           element: <LeftNavigationLayout sectionName={"setting"} />,
@@ -57,6 +64,10 @@ const Routes = ({ getUser, user }) => {
           path: "test",
           element: <StreamingTextTest />,
         },
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
       ],
     },
     {
@@ -67,7 +78,10 @@ const Routes = ({ getUser, user }) => {
         <Navigate to="/platform/playground" />
       ),
       children: [
-        { path: "login", element: <LogIn /> },
+        {
+          path: "login",
+          element: <LogIn />,
+        },
         {
           path: "signup",
           element: <SignUp />,
@@ -88,7 +102,10 @@ const Routes = ({ getUser, user }) => {
           path: "unauthorized",
           element: <Unauthorized />,
         },
-        { path: "/", element: <Navigate to="/unauthenticated" /> },
+        {
+          path: "/",
+          element: <Navigate to="/unauthenticated" />,
+        },
       ],
     },
     {
