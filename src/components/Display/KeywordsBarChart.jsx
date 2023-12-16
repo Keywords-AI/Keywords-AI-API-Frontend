@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import theme from "src/styles/theme.js"
 import {
   BarChart,
   Bar,
@@ -18,8 +19,9 @@ class KeywordsBarChart extends PureComponent {
     xLabel: "Date of Usage",
     yLabel: "Dollars",
     dataMax: 10,
-    fill: "var(--primary)",
-    height: 280
+    fill: theme.extend.colors.avatar,
+    height: 300,
+    textColor: theme.extend.colors.gray["2"],
   };
   constructor(props) {
     super(props);
@@ -35,20 +37,20 @@ class KeywordsBarChart extends PureComponent {
   // }
 
   render() {
-    const { data, dataKeyY, dataKeyX, xLabel, yLabel, dataMax, fill, height } =
+    const { data, dataKeyY, dataKeyX, xLabel, yLabel, dataMax, fill, height, textColor } =
       this.props;
-
     return (
       <ResponsiveContainer width="100%" height={height}>
         <BarChart
           width="100%"
           height={300}
           data={data}
+          className="bg-gray-white"
           margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
+            top: 30,
+            right: 20,
+            left: 0,
+            bottom: 0,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
@@ -60,13 +62,16 @@ class KeywordsBarChart extends PureComponent {
               offset: 0,
               dy: 20,
             }}
-            tick={{ fontSize: 12, color: "var(--gray4)" }}
+            tick={{ fontSize: 12 }}
           />
           <Legend
+            aria-label="legend"
             wrapperStyle={{
               top: 0,
               right: 0,
               lineHeight: "40px",
+              fill: fill,
+              color: textColor,
             }}
           />
           <YAxis

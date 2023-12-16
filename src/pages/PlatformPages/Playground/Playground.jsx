@@ -70,7 +70,7 @@ const NotConnectedMap = ({
   const handleAddMessage = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
-  const handleRegenerate = () => {
+  const handleRegenerate = (event) => {
     event.stopPropagation();
     if (streaming) return;
     console.log("regenerate");
@@ -90,7 +90,6 @@ const NotConnectedMap = ({
           role: currentModel,
           content: streamingText,
         };
-        console.log("hi");
         store.dispatch(appendMessage(newMessage));
       }
     );

@@ -1,21 +1,39 @@
 import { getDateStr } from "./stringProcessing";
-export const dightToMonth = (digit) => {
+
+export const digitToMonth = (digit) => {
+  let month = digit;
+  if (!digit)  month = new Date().getMonth() + 1;
   const monthMap = {
-    1: "January",
-    2: "Febuary",
-    3: "March",
-    4: "April",
-    5: "May",
-    6: "June",
-    7: "July",
-    8: "August",
-    9: "September",
-    10: "October",
-    11: "November",
-    12: "December",
-  };
-  return monthMap[digit];
+    0: "January",
+    1: "Febuary",
+    2: "March",
+    3: "April",
+    4: "May",
+    5: "June",
+    6: "July",
+    7: "August",
+    8: "September",
+    9: "October",
+    10: "November",
+    11: "December",
+}
+  return monthMap[month];
 };
+
+export function timeSkip(currentTime, deltaTime) {
+  // Destructuring deltaTime object
+  const { days = 0, months = 0, years = 0 } = deltaTime;
+
+  // Creating a new date object based on the current time
+  let newTime = new Date(currentTime);
+
+  // Adding/subtracting days, months, and years
+  newTime.setDate(newTime.getDate() + days);
+  newTime.setMonth(newTime.getMonth() + months);
+  newTime.setFullYear(newTime.getFullYear() + years);
+
+  return newTime;
+}
 
 export const processKeyList = (keyList, actions = () => {}) => {
   /*

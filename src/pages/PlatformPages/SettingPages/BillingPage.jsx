@@ -12,7 +12,7 @@ import { setBillings } from 'src/store/actions/billingsAction'
 
 
 export const BillingPage = ({ billings, setBillings }) => {
-  const { data, error, loading } = useFetch({ path: "payment/paid-bills", domain: "http://localhost:8000/" });
+  const { data, error, loading } = useFetch({ path: "payment/paid-bills"});
   const [canceling, setCanceling] = React.useState(false);
   const viewBillTrigger = (item) => {
     return (

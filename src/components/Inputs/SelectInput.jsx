@@ -24,7 +24,7 @@ const defaultOptions = [
     { name: "BB", value: "bb" }
 ]
 
-const SelectInput = React.forwardRef(({
+const MyComponent = React.forwardRef(({
     variant,
     open,
     title = "selection",
@@ -99,7 +99,7 @@ const SelectInput = React.forwardRef(({
             </label>}
             <div
                 aria-label="select-wrapper"
-                className="flex-col self-stretch"
+                className="flex-col self-stretch text-sm-regular"
                 ref={selectRef}
             >
                 <div
@@ -124,7 +124,7 @@ const SelectInput = React.forwardRef(({
                     >
                         <div
                             // The displayed selection tab
-                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none bg-gray-black",
+                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none",
                                 padding, border, borderRadius, text
                             )} aria-label="select">
                             {selected || placeholder}
@@ -159,4 +159,5 @@ const SelectInput = React.forwardRef(({
     )
 })
 
+const SelectInput = React.memo(MyComponent);
 export default SelectInput;

@@ -32,10 +32,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
           icon={Pencil}
           onClick={() => setEditingKey(key)}
         />
-        <IconButton
+        {/* <IconButton
           icon={<Delete />}
           onClick={() => setDeletingKey(key)}
-        />
+        /> */}
       </>
     )
   }

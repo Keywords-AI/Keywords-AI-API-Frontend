@@ -3,8 +3,19 @@ import { connect } from 'react-redux'
 import { MemberCard } from 'src/components/Cards/MemberCard'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Button } from 'src/components/Buttons'
+import { Modal } from 'src/components/Dialogs'
+import { AddMemberForm } from './components/MemberForms'
 
-export const MemberPage = (props) => {
+const mapStateToProps = (state) => ({
+  organization: state.organization,
+})
+
+const mapDispatchToProps = {
+
+}
+
+export const MemberPage = ({ organization, addMember }) => {
+  const [open, setOpen] = React.useState(false);
   return (
     <PageContent
       title={"Members"}
@@ -15,18 +26,20 @@ export const MemberPage = (props) => {
       >
         <div className="flex-row flex-wrap gap-md">
           <MemberCard first_name="John" last_name="Doe" />
-          <MemberCard first_name="John" last_name="Doe" />
-          <MemberCard first_name="John" last_name="Doe" />
-          <MemberCard first_name="John" last_name="Doe" />
         </div>
-        <Button variant="r4-primary" text="Add member" />
+        <Modal
+          title={"Invite member"}
+          subtitle={"Add team members with email. They'll receive an invite to join. "}
+          open={open}
+          setOpen={setOpen}
+          trigger={<Button variant="r4-primary" text="Add member" />}
+        >
+          <AddMemberForm setOpen={setOpen}/>
+        </Modal>
       </PageParagraph>
     </PageContent>
   )
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MemberPage)

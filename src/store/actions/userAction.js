@@ -1,31 +1,42 @@
 import { getCSRF } from "src/authentication/Authentication";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import apiConfig from "src/services/apiConfig";
-import { setOrg } from "./organizationAction";
+import {
+  // Actions
+  setOrg,
+  setFreeCredits,
+  // Action Types
+} from "src/store/actions";
 
-export const SET_USER = 'SET_USER';
+export const SET_USER = "SET_USER";
 
 export const getUser = () => {
-    return (dispatch) => {
-      getCSRF();
-      fetch(`${apiConfig.apiURL}auth/users/me`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${retrieveAccessToken()}`,
-        },
+  return (dispatch) => {
+    getCSRF();
+    fetch(`${apiConfig.apiURL}auth/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${retrieveAccessToken()}`,
+      },
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          dispatch({ type: SET_USER, payload: data });
+          dispatch(setOrg(data.organization));
+          dispatch(
+            setFreeCredits({ 
+              creditsRemaining: data.free_trial_remaining,
+              creditsTotal: data.free_free_trial_total || 40000,
+              creditsExpired: data.free_trial_expired,
+            })
+          );
+        } else if (res.status === 401 && res.status == 403) {
+          const data = await res.text();
+          dispatch({ type: SET_USER, payload: {} });
+        }
       })
-        .then(async (res) => {
-          if (res.ok) {
-            const data = await res.json();
-            dispatch({ type: SET_USER, payload: data });
-            dispatch(setOrg(data.organization));
-          } else if (res.status === 401 && res.status == 403) {
-            const data = await res.text();
-            console.log(data);
-            dispatch({ type: SET_USER, payload: {} });
-          }
-        })
-        .catch((error) => console.log(error.message));
-    };
+      .catch((error) => console.log(error.message));
+  };
 };

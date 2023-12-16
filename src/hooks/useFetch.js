@@ -27,15 +27,14 @@ export const useFetch = ({ path, domain = apiConfig.apiURL }) => {
   const fetchData = async () => {
     setLoading(true);
     const response = await performFetch();
-
     if (response && response.ok) {
       const data = await response.json();
       setData(data);
       setLoading(false);
     } else if (response && response.status === 401) {
       // Refresh the token
-      await refreshToken();
-      const didRefresh = await validateToken(); // Make sure this returns a boolean to indicate success
+      refreshToken();
+      const didRefresh = validateToken(); // Make sure this returns a boolean to indicate success
       // Retry fetching only if the token refresh was successful
       if (didRefresh) {
         const retryResponse = await performFetch();
