@@ -1,6 +1,6 @@
 import React from "react";
 import apiConfig from "src/services/apiConfig";
-import { refreshToken, validateToken } from "src/store/actions/tokenAction";
+import { refreshToken, validateToken } from "src/store/actions";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
 export const useFetch = ({ path, domain = apiConfig.apiURL }) => {
