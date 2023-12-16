@@ -1,10 +1,10 @@
 import React from 'react';
-import originalReactMarkdown from 'react-markdown';
+import ReactMarkdown from 'react-markdown';
 import "./static/css/style.css";
 
-export default function ReactMarkdown({ content }) {
+export default function ChatbotReactMarkdown({ content }) {
   return (
-    <originalReactMarkdown
+    <ReactMarkdown
       children={content}
       components={{
         pre: ({ node, ...props }) => (
