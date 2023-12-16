@@ -11,6 +11,7 @@ export default function ChatLeftDrawer({
   retrieveConversation,
   setActiveConversation,
   handleDelete,
+  setPromptPopup,
 }) {
   const conversations = [
     {id: 1, name: "Conversation 1 φαιξσδ΄ξφικα"},
@@ -40,6 +41,7 @@ export default function ChatLeftDrawer({
         icon={Edit}
         text={"Custom prompt: " + ("on")}
         className="absolute bottom-[8px] left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+        onClick={() => setPromptPopup(true)}
       />
     </div>
   );
