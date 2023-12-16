@@ -11,7 +11,7 @@ export default function ChatbotReactMarkdown({ content }) {
           <pre {...props} className="format-pre" />
         ),
         p: ({ node, ...props }) => (
-          <p {...props} className="text-md" />
+          <p {...props} className="text-sm" />
         ),
       }}
     />
