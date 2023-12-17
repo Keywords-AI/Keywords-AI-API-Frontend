@@ -23,10 +23,13 @@ export const sendStreamingTextSuccess = () => ({
   type: SEND_STREAMINGTEXT_SUCCESS,
 });
 
-export const sendStreamingTextPartial = (partialData) => ({
-  type: SEND_STREAMINGTEXT_PARTIAL,
-  payload: partialData,
-});
+export const sendStreamingTextPartial = (partialData) => {
+  console.log("partialData", partialData);
+  return {
+    type: SEND_STREAMINGTEXT_PARTIAL,
+    payload: partialData,
+  };
+};
 
 export const sendStreamingTextFailure = (error) => ({
   type: SEND_STREAMINGTEXT_FAILURE,

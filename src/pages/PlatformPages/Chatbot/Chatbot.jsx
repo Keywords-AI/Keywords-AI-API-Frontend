@@ -2,11 +2,10 @@ import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import readStream from "src/services/readStream";
 import useStream from "src/hooks/useStream";
-import { getConversations, getConversation, createConversation, deleteConversation, createMessage, } from "src/store/actions";
 import {
-  setStreaming,
-  setNotStreaming,
-} from "src/store/actions/streamingAction";
+  getConversations, getConversation, createConversation, deleteConversation, createMessage,
+  abortStreamingTextRequest
+} from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import { Sample } from "src/components/Cards";
@@ -20,7 +19,8 @@ const mapStateToProps = (state) => {
     chatbot: state.chatbot,
     user: state.user,
     messages: state.messages,
-    streaming: state.streaming,
+    streaming: state.streamingText.isLoading,
+    streamingText: state.streamingText.streamingText,
     uploading: state.uploading,
   };
 };
@@ -31,8 +31,7 @@ const mapDispatchToProps = {
   getConversations,
   getConversation,
   deleteConversation,
-  setStreaming,
-  setNotStreaming,
+  abortStreamingTextRequest,
   errorMessage: (error) => {
     return {
       type: "CREATE_MESSAGE",
@@ -56,14 +55,10 @@ const normalizeMessages = (messages) => {
 
 function Chatbot({
   streaming,
-  setStreaming,
-  setNotStreaming,
+  streamingText,
   createMessage,
   errorMessage,
-  createConversation,
   getConversations,
-  getConversation,
-  deleteConversation,
   chatbot,
 }) {
   const conversation = chatbot?.conversation;
@@ -88,15 +83,6 @@ function Chatbot({
     handleError
   );
 
-  const handleSend = (target) => {
-    console.log("inputText", inputText);
-    if (inputText && !streaming) {
-      target.textContent = "";
-      setInputText("");
-      sendText(inputText);
-    }
-  };
-
   useEffect(() => {
     generateRef.current = generatingText;
   }, [generatingText])
@@ -104,45 +90,6 @@ function Chatbot({
   useEffect(() => {
     getConversations();
   }, [])
-
-  const sendText = (text) => {
-    const newMessage = {
-      conversation: conversation?.id,
-      role: "user",
-      content: text,
-    };
-    let allMessages;
-    setStreaming();
-    if (conversation?.id && conversation?.id !== -1) {
-      allMessages = [...conversation?.messages, newMessage];
-      createMessage(newMessage);
-      postData({
-        messages: normalizeMessages(allMessages),
-        model: "gpt-4",
-        stream: true,
-      });
-    } else {
-      allMessages = [newMessage];
-      createConversation(newMessage);
-      postData({
-        messages: normalizeMessages(allMessages),
-        model: "gpt-4",
-        stream: true,
-      });
-    }
-  };
-
-  const addText = (text) => {
-    try {
-      const contentChunk = JSON.parse(text);
-      const content = contentChunk.choices[0].delta.content;
-      if (content) {
-        setGeneratingText((prev) => prev + content);
-      }
-    } catch (error) {
-      // Handle JSON parsing error here
-    }
-  };
 
   useEffect(() => {
     if (error) {
@@ -180,26 +127,6 @@ function Chatbot({
       setAbortController(readStream(response, addText, streamComplete));
     }
   }, [response]);
-
-  const handleInput = (e) => {
-    setInputText(e.currentTarget.textContent);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend(e.target);
-    }
-  };
-
-  const handleStop = () => {
-    if (abortController && typeof abortController === "object") {
-      abortController.then((controller) => {
-        controller();
-      });
-      setNotStreaming();
-    }
-  };
 
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
@@ -251,9 +178,9 @@ function Chatbot({
                 )}
               </>
             )}
-            {generatingText && (
+            {streamingText && (
               <ChatMessage
-                message={{ content: generatingText, role: 'assistant' }}
+                message={{ content: streamingText, role: 'assistant' }}
               />
             )}
           </div>
@@ -261,7 +188,7 @@ function Chatbot({
             className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
             {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
-                <Sample sendText={sendText} />
+                <Sample />
               )}
             <div
               style={{
@@ -269,15 +196,7 @@ function Chatbot({
               }}
               className="flex-row self-stretch"
             >
-              <KeywordsInput
-                placeholder={streaming ? "Generating..." : "Send a message..."}
-                streaming={streaming}
-                handleInput={handleInput}
-                handleKeyDown={handleKeyDown}
-                handleSend={handleSend}
-                handleStop={handleStop}
-                abortController={abortController}
-              />
+              <KeywordsInput placeholder={streaming ? "Generating..." : "Send a message..."} />
             </div>
             <div className="caption text-gray-4">
               Keywords AI connects your prompts with the best model automatically.{" "}

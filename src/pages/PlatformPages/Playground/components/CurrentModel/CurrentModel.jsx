@@ -148,31 +148,31 @@ export const CurrentModel = () => {
                       store.dispatch(removeLastMessage());
                       sendStreamingTextThunk(
                         {
-                          messages: messages,
-                          stream: true,
-                          model: model.value,
-                        },
-                        "https://platform.keywordsai.co/",
-                        "api/playground/ask/",
-                        systemPrompt,
-                        () => {
-                          const currentModel =
-                            store.getState().playground.currentModel;
-                          const streamingText =
-                            store.getState().streamingText.streamingText;
-                          const newMessage = {
-                            role: currentModel,
-                            content: streamingText,
-                          };
-                          store.dispatch(appendMessage(newMessage));
-                          const cache = {
-                            answer: streamingText,
-                            index: lastUserMessageIndex,
-                          };
-                          store.dispatch(setCacheAnswer(currentModel, cache));
-                        },
-                        store.dispatch,
-                        store.getState
+                          params: {
+                            messages: messages,
+                            stream: true,
+                            model: model.value,
+                          },
+                          prompt: systemPrompt,
+                          callback: () => {
+                            const currentModel =
+                              store.getState().playground.currentModel;
+                            const streamingText =
+                              store.getState().streamingText.streamingText;
+                            const newMessage = {
+                              role: currentModel,
+                              content: streamingText,
+                            };
+                            store.dispatch(appendMessage(newMessage));
+                            const cache = {
+                              answer: streamingText,
+                              index: lastUserMessageIndex,
+                            };
+                            store.dispatch(setCacheAnswer(currentModel, cache));
+                          },
+                          dispatch: store.dispatch,
+                          getState: store.getState,
+                        }
                       );
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message

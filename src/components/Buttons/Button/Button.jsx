@@ -272,12 +272,13 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
-        className = className || "w-full";
         iconFill = iconFill || "fill-gray-4";
         iconPosition = iconPosition || "left";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
+        minWidth = minWidth || "w-full";
         break;
+        
       case "careers":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-md-md";

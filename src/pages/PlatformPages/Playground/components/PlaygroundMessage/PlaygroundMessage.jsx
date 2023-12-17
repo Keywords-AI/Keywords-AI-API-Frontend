@@ -33,14 +33,13 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     }
   };
 
-  const handleChange = (value) => {
-    setTextContent(value); // This sets what is displayed in the input box
-
+  const handleChange = (e) => {
+    setTextContent(e.target.value); // This sets what is displayed in the input box
     dispatch(
       setMessages(
         messages.map((message, index) => {
           if (index === messageIndex) {
-            return { ...message, content: value };
+            return { ...message, content: e.target.value };
           }
           return message;
         })
@@ -59,29 +58,29 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     try {
       await sendStreamingTextThunk(
         {
-          messages: messagesWithPrompt,
-          stream: true,
-          model: currentModel,
-        },
-        "https://platform.keywordsai.co/",
-        "api/playground/ask/",
-        systemPrompt,
-        () => {
-          const currentModel = store.getState().playground.currentModel;
-          const streamingText = store.getState().streamingText.streamingText;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          store.dispatch(appendMessage(newMessage));
-          const cache = {
-            answer: streamingText,
-            index: messageIndex,
-          };
-          store.dispatch(setCacheAnswer(currentModel, cache));
-        },
-        store.dispatch,
-        store.getState
+          params: {
+            messages: messagesWithPrompt,
+            stream: true,
+            model: currentModel,
+          },
+          prompt: systemPrompt,
+          callback: () => {
+            const currentModel = store.getState().playground.currentModel;
+            const streamingText = store.getState().streamingText.streamingText;
+            const newMessage = {
+              role: currentModel,
+              content: streamingText,
+            };
+            store.dispatch(appendMessage(newMessage));
+            const cache = {
+              answer: streamingText,
+              index: messageIndex,
+            };
+            store.dispatch(setCacheAnswer(currentModel, cache));
+          },
+          dispatch: store.dispatch,
+          getState: store.getState,
+        }
       );
     } catch (error) {
       console.log(error);

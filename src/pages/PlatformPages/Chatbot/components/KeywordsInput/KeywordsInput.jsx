@@ -5,11 +5,14 @@ import { IconButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import store from "src/store/store";
 
 const mapStateToProps = (state) => {
   return {
     systemPrompt: state.chatbot.customPrompt,
     streaming: state.streamingText.isLoading,
+    messages: state.chatbot.conversation.messages,
   };
 };
 
@@ -20,9 +23,11 @@ const mapDispatchToProps = {
 function KeywordsInput({
   placeholder,
   handleStop,
-  sendMessage=()=>{},
+  sendMessage = () => { },
   value,
   streaming,
+  systemPrompt,
+  messages,
 }) {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const onKeyDown = (e) => {
@@ -32,7 +37,7 @@ function KeywordsInput({
     }
   };
   const onSubmit = async (data) => {
-    sendMessage();
+    sendMessage(data.message);
   };
 
   return (

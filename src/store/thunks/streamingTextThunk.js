@@ -6,7 +6,9 @@ import {
   sendStreamingTextSuccess,
   sendStreamingTextPartial,
 } from "../actions/streamingTextAction";
+// import store from "../store";
 import { setOutputs } from "../actions/playgroundAction";
+import apiConfig from "src/services/apiConfig";
 /**
  * Sends streaming text to a specified host and path using the specified parameters.
  *
@@ -19,17 +21,17 @@ import { setOutputs } from "../actions/playgroundAction";
  * @param {number} [fetchTimeout=10000] - The timeout for the fetch request in milliseconds.
  * @returns {Promise<void>} - A promise that resolves when the streaming text is sent successfully or rejects with an error.
  */
-export const sendStreamingTextThunk = async (
-  streamingText,
-  host,
-  path,
+export const sendStreamingTextThunk = async ({
+  params,
+  host=apiConfig.apiURL,
+  path="api/playground/ask/",
   prompt,
   callback,
   dispatch,
   getState,
   readTimeout = 5000,
-  fetchTimeout = 10000, // Add fetch timeout in milliseconds
-) => {
+  fetchTimeout = 15000, // Add fetch timeout in milliseconds
+}) => {
   const abortController = new AbortController();
   const headers = {
     "Content-Type": "application/json",
@@ -38,14 +40,14 @@ export const sendStreamingTextThunk = async (
   };
   dispatch(sendStreamingTextRequest());
   const body = JSON.stringify({
-    stream: streamingText.stream,
+    stream: params.stream,
     messages: [
       { role: "system", content: prompt },
-      ...streamingText.messages.map((item) =>
+      ...params.messages.map((item) =>
         item.role !== "user" ? { ...item, role: "assistant" } : item
       ),
     ],
-    model: streamingText.model,
+    model: params.model,
     // optimize: getState().playground.modelOptions.optimize,
     // creativity: getState().playground.modelOptions.creativity,
     // maxTokens: getState().playground.modelOptions.maxTokens,
@@ -129,7 +131,6 @@ export const sendStreamingTextThunk = async (
     abortController.abort();
   } catch (error) {
     console.error(error);
-
     const errorMessage = error.response
       ? error.response.data
       : "An error occurred";

@@ -1,7 +1,7 @@
 import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
-import { sendStreamingTextThunk } from "../thunks/streamingTextThunk";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 
 export const ERROR_MESSAGE = "ERROR_MESSAGE";
 export const SET_IS_EDITING = "SET_IS_EDITING";
@@ -142,11 +142,13 @@ export const getConversation = (id) => {
           console.log("401");
         } else {
           // likely not found
-          return {};
+          return;
         }
       })
       .then((data) => {
-        dispatch({ type: SET_CONVERSATION, payload: data });
+        if (data) {
+          dispatch({ type: SET_CONVERSATION, payload: data });
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -173,7 +175,7 @@ export const createConversation = (newMessage = {}) => {
       .then((data) => {
         data.name = "New Conversation " + data.id;
         dispatch({ type: CREATE_CONVERSATION, payload: data });
-        dispatch(nameConversation(data.id, newMessage.content));
+        // dispatch(nameConversation(data.id, newMessage.content));
         if (Object.keys(newMessage).length !== 0) {
           newMessage.conversation = data.id;
           dispatch(createMessage(newMessage));
@@ -216,23 +218,28 @@ export const nameConversation = (id, content) => {
 export const createMessage = (msg) => {
   return (dispatch) => {
     dispatch({ type: CREATE_MESSAGE, payload: msg });
-    fetch(`${apiConfig.apiURL}chatbot/messages/`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      method: "POST",
-      body: JSON.stringify(msg),
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          return await res.json();
-        } else {
-          console.log(await res.text());
-        }
+    if (msg.conversation) {
+      // Given an id, or the id is not 0
+      fetch(`${apiConfig.apiURL}chatbot/messages/`, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+          Authorization: `Bearer ${retrieveAccessToken()}`,
+        },
+        method: "POST",
+        body: JSON.stringify(msg),
       })
-      .catch((err) => console.log(err));
+        .then(async (res) => {
+          if (res.ok) {
+            return await res.json();
+          } else {
+            console.log(await res.text());
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      dispatch(createConversation(msg));
+    }
   };
 };
 
@@ -258,36 +265,39 @@ export const deleteMesage = (id) => {
 };
 
 export const sendMessage = (msgText) => {
-  async (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const state = getState();
     const { isLoading: streaming } = state.streamingText;
-    const messages = state.chatbot.conversation.messages;
     const systemPrompt = state.chatbot.systemPrompt;
-    console.log(messages);
-    createMessage({ role: "user", content: msgText });
-    const newMessage = getState().chatbot.conversation.messages;
-    console.log(newMessage);
+    const conversation_id = state.chatbot.conversation.id;
+    dispatch(
+      createMessage({
+        conversation: conversation_id,
+        role: "user",
+        content: msgText,
+      })
+    );
+    const messages = getState().chatbot.conversation.messages; // get messages after creating and updating the state
     if (streaming) return;
-    //   const messagesWithPrompt = [
-    //     { role: "system", content: systemPrompt },
-    //     ...messages,
-    //   ];
-    //   try {
-    //     await sendStreamingTextThunk(
-    //       {
-    //         messages: messagesWithPrompt,
-    //         stream: true,
-    //         model: currentModel,
-    //       },
-    //       "https://platform.keywordsai.co/",
-    //       "api/chatbot/",
-    //       systemPrompt,
-    //       () => {
-    //         console.log("callback");
-    //       }
-    //     );
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
+    try {
+      await sendStreamingTextThunk({
+        params: {
+          messages: messages.map((item)=>{
+            return { role: item.role, content: item.content }
+          }),
+          stream: true,
+          model: "gpt-3.5-turbo"
+        },
+        host: "http://localhost:8000/",
+        prompt: systemPrompt,
+        callback: () => {
+          console.log("callback");
+        },
+        dispatch: dispatch,
+        getState: getState,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 };

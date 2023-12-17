@@ -17,7 +17,10 @@ const initState = {
   customPrompt: "",
   customPromptFile: "",
   conversations: [],
-  conversation: null,
+  conversation: {
+    id: 0,
+    messages: [],
+  },
 };
 
 export default function chatbotReducer(state = initState, action) {

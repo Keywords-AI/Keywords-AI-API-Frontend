@@ -1,9 +1,10 @@
 import React from "react";
 
-export default function IconButton({ onClick, icon, className = "", onMouseEnter, onMouseLeave }) {
+const IconButton = React.forwardRef(({ onClick, icon, className = "", onMouseEnter, onMouseLeave }, ref) => {
   return (
     <div
       aria-label="IconButton"
+      ref={ref}
       className={"flex flex-shrink-0 cursor-pointer " + className}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -12,4 +13,6 @@ export default function IconButton({ onClick, icon, className = "", onMouseEnter
       {icon}
     </div>
   );
-}
+})
+
+export default IconButton;
