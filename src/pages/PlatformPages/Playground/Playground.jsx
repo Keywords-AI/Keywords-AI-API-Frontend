@@ -48,6 +48,7 @@ const Prompt = () => {
 };
 
 const NotConnectedMap = ({
+  currentModel,
   messages,
   streaming,
   streamingText,
