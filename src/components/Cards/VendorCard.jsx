@@ -15,7 +15,7 @@ export const VendorCard = ({ company_name, model_count }) => {
       </div>
       <IconButton
                 icon={<Pencil />}
-        />
+            />
     </div>
   );
 };
