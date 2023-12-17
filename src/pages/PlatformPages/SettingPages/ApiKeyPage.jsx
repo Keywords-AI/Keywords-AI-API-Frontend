@@ -63,7 +63,6 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
       >
         <CreateForm
           setShowForm={setOpenCreate}
-          editingTrigger={editingTrigger}
         />
       </Modal>
       <Modal
