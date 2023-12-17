@@ -18,7 +18,7 @@ import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
 import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
+import KeywordsInput from "./components/KeywordsInput/KeywordsInput"
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { Modal } from "src/components/Dialogs";

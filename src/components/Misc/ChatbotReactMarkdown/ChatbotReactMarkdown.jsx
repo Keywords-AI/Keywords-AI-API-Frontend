@@ -13,6 +13,9 @@ export default function ChatbotReactMarkdown({ content }) {
         p: ({ node, ...props }) => (
           <p {...props} className="text-sm" />
         ),
+        ul: ({ node, ...props }) => (
+          <ul {...props} className="format-ul" />
+        ),
       }}
     />
   );
