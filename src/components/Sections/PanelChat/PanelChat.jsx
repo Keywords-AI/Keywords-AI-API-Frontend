@@ -1,11 +1,21 @@
 import React from "react";
 import { Rocket, Edit } from "./icons";
 import { Button } from "src/components";
-import ConversationItem from "./components/ConversationItem";
+import { ConversationItem, CustomPrompt } from "./components";
 import { connect } from "react-redux";
+import { Modal } from "src/components/Dialogs";
+import {
+  setIsEditing
+} from "src/store/actions/"
 
-const mapStateToProps = (state) => {};
-const mapDispatchToProps = {};
+const mapStateToProps = (state) => {
+  return {
+    chatbot: state.chatbot,
+  }
+};
+const mapDispatchToProps = {
+  setIsEditing
+};
 
 function ChatLeftDrawer({
   handleStop,
@@ -17,6 +27,8 @@ function ChatLeftDrawer({
   setActiveConversation,
   handleDelete,
   setPromptPopup,
+  setIsEditing,
+  chatbot,
 }) {
   const conversations = [
     { id: 1, name: "Conversation 1 φαιξσδ΄ξφικα" },
@@ -41,15 +53,24 @@ function ChatLeftDrawer({
           </div>
         </div>
       </div>
-      <Button
-        variant="small"
-        icon={Edit}
-        text={"Custom prompt: " + ("on")}
-        className="absolute bottom-[8px] left-1/2 transform -translate-x-1/2 whitespace-nowrap"
-        onClick={() => setPromptPopup(true)}
-      />
+      <Modal
+        title="Custom prompt"
+        subtitle="Add a system prompt or upload files. Custom settings coming soon."
+        open={true}
+        setOpen={setIsEditing}
+        trigger={<Button
+          variant="small"
+          icon={Edit}
+          text={"Custom prompt: " + ("on")}
+          className="absolute bottom-[8px] left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+          onClick={() => { setIsEditing(true) }}
+        />}
+      >
+        <CustomPrompt />
+      </Modal>
+
     </div>
   );
 }
 
-export default connect(null, null)(ChatLeftDrawer);
+export default connect(mapStateToProps, mapDispatchToProps)(ChatLeftDrawer);

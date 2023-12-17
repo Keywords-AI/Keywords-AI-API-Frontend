@@ -15,16 +15,15 @@ import {
 } from "src/store/actions/streamingAction";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
-import Popup from "./components/Popup/Popup";
 import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import KeywordsInput from "./components/KeywordsInput/KeywordsInput"
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
-import { Modal } from "src/components/Dialogs";
 
 const mapStateToProps = (state) => {
   return {
+    chatbot: state.chatbot,
     user: state.user,
     conversations: state.conversations,
     messages: state.messages,
@@ -239,15 +238,6 @@ function Chatbot({
         setActiveConversation={setActiveConversation}
         handleDelete={handleDelete}
       />
-      <Modal
-        title="Custom prompt"
-        subtitle="Add a system prompt or upload files. Custom settings coming soon."
-        open={promptPopup}
-        setOpen={setPromptPopup}>
-        <Popup closePopup={() => {
-          setPromptPopup(false);
-        }} />
-      </Modal>
       <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
           <div className="flex-row justify-center items-center gap-xxs self-stretch">
