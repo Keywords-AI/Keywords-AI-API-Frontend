@@ -960,6 +960,7 @@ export const Dots = ({
 
       );
   }
+};
 export const OpenAI = ({
   fill = "fill-gray-4",
   activeFill = "fill-gray-white",
