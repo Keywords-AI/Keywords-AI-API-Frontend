@@ -75,6 +75,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
           editingKey={apiKey.editingKey}
           setEditingKey={setEditingKey}
         />
+        {/* <DeleteForm
+          deletingKey={apiKey.editingKey}
+          setDeletingKey={setEditingKey}
+        /> */}
       </Modal>
       <Modal
         title={"Revoke API key"}

@@ -63,7 +63,7 @@ export const Button = forwardRef(
       textClickedColor,
       iconFill,
       iconHoverFill,
-      iconPosition = "left",
+      iconPosition,
       iconSize = "sm",
       padding,
       borderColor,
@@ -263,7 +263,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
-        justification = justification || "justify-end";
+        justification = justification || "justify-between";
         className = className || "w-full";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
