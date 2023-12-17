@@ -6,6 +6,7 @@ export function NumberInput({
   iconClassName = "fill-gray-white",
   value,
   onChange = () => {},
+  onClick = () => {},
   disabled = false,
   textClassName = "text-sm-md",
 }) {
@@ -15,6 +16,7 @@ export function NumberInput({
         "flex w-full px-xs py-xxs items-center gap-xxs group rounded-sm",
         "border border-solid border-transparent hover:border-gray-3 hover:bg-gray-2 "
       )}
+      onClick={onClick}
     >
       <div className="flex-shrink-0 w-[16px] justify-center items-center gap-[10px]">
         {icon && React.createElement(icon, { fill: iconClassName })}

@@ -1,49 +1,41 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
+import { Button, User } from "src/components";
 
 const StreamingTextTest = () => {
-  const dispatch = useDispatch();
-  const { isLoading, error, streamingText } = useSelector(
-    (state) => state.streamingText
-  );
-  const data = {
-    messages: [
-      { role: "system", content: "" },
-      { role: "user", content: "american history" },
-    ],
-    stream: true,
-    model: "gpt-3.5-turbo",
-  };
-
-  const handleSubmit = () => {
-    // dispatch(
-    //   sendStreamingText(
-    //     data,
-    //     "https://platform.keywordsai.co/",
-    //     "api/playground/ask/"
-    //   )
-    // );
-  };
-
-  const handleAbort = () => {
-    dispatch(abortStreamingTextRequest());
-  };
-
+  const variants = [
+    "primary",
+    "header",
+    "secondary",
+    "secondary-gray",
+    "secondary-black",
+    "beta",
+    "r4-white",
+    "r4-gray-2",
+    "r4-primary",
+    "r4-red",
+    "r4-black",
+    "small",
+    "r18-white",
+    "r18-black",
+    "panel",
+    "careers",
+    "chat",
+    "icon",
+  ];
   return (
-    <div>
-      <div>
-        <button onClick={handleSubmit} disabled={isLoading}>
-          Start Streaming
-        </button>
-        <button onClick={handleAbort}>Stop Streaming</button>
-      </div>
-      {isLoading && <p>Loading...</p>}
-      {error && <p>Error: {JSON.stringify(error)}</p>}
-      <div>
-        <h2>Streaming Text:</h2>
-        <div>{streamingText && streamingText}</div>
-      </div>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      {variants.map((variant) => (
+        <div>
+          <Button
+            key={variant}
+            variant={variant}
+            text={variant}
+            onClick={() => console.log(`${variant} clicked!`)}
+            icon={User}
+            iconSize="md"
+          />
+        </div>
+      ))}
     </div>
   );
 };

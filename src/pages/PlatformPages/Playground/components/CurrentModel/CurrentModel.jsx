@@ -6,23 +6,85 @@ import {
   setCurrentModel,
   setCacheAnswer,
   setMessages,
+  setLastMessage,
+  removeLastMessage,
+  appendMessage,
 } from "src/store/actions/playgroundAction";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import store from "src/store/store";
 export const CurrentModel = () => {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
   const streaming = useSelector((state) => state.playground.streaming);
   const currentModel = useSelector((state) => state.playground.currentModel);
   const cacheAnswers = useSelector((state) => state.playground.cacheAnswers);
+  const systemPrompt = useSelector((state) => state.playground.prompt);
   const models = [
     {
-      name: "OpenAI - gpt-3.5-turbo",
+      name: "OpenAI - GPT-3.5-turbo",
       value: "gpt-3.5-turbo",
       icon: ModelIcon("openai"),
     },
     {
-      name: "Claude 2",
-      value: "claude-2",
-      icon: ModelIcon("ai21"),
+      name: "OpenAI - GPT-4-32k",
+      value: "gpt-4-32k",
+      icon: ModelIcon("openai"),
+    },
+    {
+      name: "OpenAI - GPT-4",
+      value: "gpt-4",
+      icon: ModelIcon("openai"),
+    },
+    {
+      name: "Claude 2.1",
+      value: "claude-2.1",
+      icon: ModelIcon("claude"),
+    },
+    {
+      name: "OpenAI - GPT-4-1106-preview",
+      value: "gpt-4-1106-preview",
+      icon: ModelIcon("openai"),
+    },
+    {
+      name: "Claude Instant 1",
+      value: "claude-instant-1",
+      icon: ModelIcon("claude"),
+    },
+    {
+      name: "Claude Instant 1.2",
+      value: "claude-instant-1.2",
+      icon: ModelIcon("claude"),
+    },
+
+    {
+      name: "OpenAI - GPT-3.5-turbo-16k",
+      value: "gpt-3.5-turbo-16k",
+      icon: ModelIcon("openai"),
+    },
+    {
+      name: "Chat Bison",
+      value: "chat-bison",
+      icon: ModelIcon("bison"),
+    },
+    {
+      name: "J2 Light",
+      value: "j2-light",
+      icon: ModelIcon("j2"),
+    },
+    {
+      name: "Command Nightly",
+      value: "command-nightly",
+      icon: ModelIcon("command"),
+    },
+    {
+      name: "J2 Mid",
+      value: "j2-mid",
+      icon: ModelIcon("j2"),
+    },
+    {
+      name: "J2 Ultra",
+      value: "j2-ultra",
+      icon: ModelIcon("j2"),
     },
   ];
   useEffect(() => {
@@ -47,14 +109,17 @@ export const CurrentModel = () => {
             icon={current.icon}
             padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
+            dispatch={streaming}
           />
         }
         items={
           <>
             {models.map((model, index) => (
               <DropdownMenuPrimitive.Item key={index} asChild>
-                <div
-                  className="flex items-center gap-xxs py-xxs px-xs rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch group"
+                <Button
+                  variant="panel"
+                  text={model.name}
+                  icon={model.icon}
                   onClick={() => {
                     if (streaming) return;
                     setCurrent({
@@ -63,39 +128,61 @@ export const CurrentModel = () => {
                       icon: model.icon,
                     });
                     dispatch(setCurrentModel(model.value));
-                    const updatedMessages = [...messages];
-                    const lastMessageIndex = updatedMessages.length - 1;
+                    const lastUserMessageIndex = messages.reduce(
+                      (lastIndex, message, currentIndex) => {
+                        if (message.role === "user") {
+                          return currentIndex;
+                        }
+                        return lastIndex;
+                      },
+                      -1
+                    );
+                    console.log("lastMessageIndex", lastUserMessageIndex);
+                    console.log("cacheAnswers", cacheAnswers[model.value]);
                     if (
                       !cacheAnswers[model.value] ||
-                      cacheAnswers[model.value].index != lastMessageIndex
+                      cacheAnswers[model.value].index != lastUserMessageIndex
                     ) {
                       // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
+
+                      store.dispatch(removeLastMessage());
+                      sendStreamingTextThunk(
+                        {
+                          messages: messages,
+                          stream: true,
+                          model: model.value,
+                        },
+                        "https://platform.keywordsai.co/",
+                        "api/playground/ask/",
+                        systemPrompt,
+                        () => {
+                          const currentModel =
+                            store.getState().playground.currentModel;
+                          const streamingText =
+                            store.getState().streamingText.streamingText;
+                          const newMessage = {
+                            role: currentModel,
+                            content: streamingText,
+                          };
+                          store.dispatch(appendMessage(newMessage));
+                          const cache = {
+                            answer: streamingText,
+                            index: lastUserMessageIndex,
+                          };
+                          store.dispatch(setCacheAnswer(currentModel, cache));
+                        }
+                      );
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message
-                      dispatch(
-                        setMessages(
-                          updatedMessages.map((message, index) => {
-                            if (index === lastMessageIndex) {
-                              return {
-                                ...message,
-                                content: cacheAnswers[model.value].answer,
-                              };
-                            }
-                            return message;
-                          })
-                        )
+                      store.dispatch(
+                        setLastMessage({
+                          role: model.value,
+                          content: cacheAnswers[model.value].answer,
+                        })
                       );
                     }
                   }}
-                >
-                  <div className="flex w-[16px] justify-center items-center gap-[10px]">
-                    {React.createElement(model.icon)}
-                  </div>
-
-                  <p className="text-sm-regular text-gray-4 group-hover:text-gray-white">
-                    {model.name}
-                  </p>
-                </div>
+                />
               </DropdownMenuPrimitive.Item>
             ))}
           </>

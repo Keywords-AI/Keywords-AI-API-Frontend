@@ -52,9 +52,9 @@ export const Button = forwardRef(
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => { },
-      onMouseLeave = () => { },
-      textClassName = "text-sm",
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
+      textClassName = "text-sm-md",
       bgColor,
       hoverColor,
       clickedColor,
@@ -71,6 +71,7 @@ export const Button = forwardRef(
       justification,
       minWidth = "",
       children,
+      disabled = false,
       // ...props
     },
     ref
@@ -126,6 +127,8 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-black";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
+        borderColor = borderColor || "border-transparent";
+        borderHoverColor = borderHoverColor || "border-gray-4";
 
         break;
       case "r4-gray-2":
@@ -186,6 +189,7 @@ export const Button = forwardRef(
         hoverColor = hoverColor || "bg-gray-2";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
+        iconPosition = iconPosition || "left";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
@@ -194,6 +198,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
+        textClassName = "text-sm-md";
 
         break;
       case "r18-white":
@@ -313,7 +318,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         minWidth = minWidth || "";
-        className = "w-[28px] h-[28px]"
+        className = "w-[28px] h-[28px]";
 
         break;
       default:
@@ -350,6 +355,7 @@ export const Button = forwardRef(
           "text-center"
         )}
         onClick={onClick}
+        disabled={disabled}
       >
         {children ? (
           <>{children}</>
