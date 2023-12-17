@@ -56,7 +56,7 @@ function ChatLeftDrawer({
       <Modal
         title="Custom prompt"
         subtitle="Add a system prompt or upload files. Custom settings coming soon."
-        open={true}
+        open={chatbot.isEditing}
         setOpen={setIsEditing}
         trigger={<Button
           variant="small"

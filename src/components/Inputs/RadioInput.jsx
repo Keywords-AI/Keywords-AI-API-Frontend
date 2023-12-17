@@ -11,7 +11,7 @@ const RadioIcon = ({ selected, setSelected, handleSelected }) => {
     )
 
 }
-export default function RadioInput({ register, name, validationSchema, handleSelected = () => { }, text }) {
+export default function RadioInput({ register = () => { }, name, validationSchema, handleSelected = () => { }, text }) {
     const [checked, setChecked] = React.useState();
     return (
         <div className="flex-row gap-xxs items-center">

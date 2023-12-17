@@ -12,7 +12,7 @@ import { IconButton } from 'src/components/Buttons';
  * @param {function} props.onFileChange - Callback function when the file is changed. Default is an empty function.
  */
 
-const FileInput = ({ register, name, validationSchema, title = "File Upload (Beta)", initialFile, onFileChange = () => { } }) => {
+const FileInput = ({ register = () => { }, name, validationSchema, title = "File Upload (Beta)", initialFile, onFileChange = () => { } }) => {
     const [file, setFile] = useState(initialFile);
     const fileUploadRef = useRef(null);
 
