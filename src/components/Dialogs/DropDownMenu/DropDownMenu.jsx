@@ -13,8 +13,6 @@ export const DropDownMenu = ({
   alignOffset = 0,
   width,
 }) => {
-  width = width || 200;
-  const widthClass = `w-[${width}px]`;
   return (
     <DropdownMenuPrimitive.Root
       modal={true}
@@ -26,18 +24,11 @@ export const DropDownMenu = ({
       </DropdownMenuPrimitive.Trigger>
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
-<<<<<<< HEAD
           className={
             cn("flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
               width || "w-[240px]"
             )
           }
-=======
-          className={cn(
-            " flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3",
-            widthClass
-          )}
->>>>>>> 0948ff3ac2dc617803fd0ddc0297b854679e8b99
           sideOffset={sideOffset}
           align={align}
           side={side}
