@@ -67,7 +67,7 @@ export const EditableBox = React.forwardRef(
 
     const handleChange = (e) => {
       setText(e.target.value);
-      onChange(e.target.value);
+      onChange(e);
     };
 
     useEffect(() => {
