@@ -12,7 +12,7 @@ import { IconButton } from 'src/components/Buttons';
  * @param {function} props.onFileChange - Callback function when the file is changed. Default is an empty function.
  */
 
-const FileInput = ({ title = "File Upload (Beta)", initialFile, onFileChange = () => { } }) => {
+const FileInput = ({ register = () => { }, name, validationSchema, title = "File Upload (Beta)", initialFile, onFileChange = () => { } }) => {
     const [file, setFile] = useState(initialFile);
     const fileUploadRef = useRef(null);
 
@@ -40,8 +40,8 @@ const FileInput = ({ title = "File Upload (Beta)", initialFile, onFileChange = (
     return (
         <div className="flex-col justify-start items-start self-stretch">
             <input
+                {...register(name, validationSchema)}
                 type="file"
-                name="uploaded_file"
                 hidden
                 accept=".pdf,.doc,.docx,.txt"
                 ref={fileUploadRef}

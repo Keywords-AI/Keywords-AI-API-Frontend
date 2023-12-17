@@ -5,6 +5,7 @@ import streamingTextReducer from "./streamingTextReducer";
 import apiKeyReducer from "./apiKeyReducer";
 import organizationReducer from "./organizationReducer";
 import billingsReducer from "./billingsReducer";
+import chatbotReducer from "./chatbotReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -15,6 +16,7 @@ const rootReducer = (state = {}, action) => {
     apiKey: apiKeyReducer(state.apiKey, action),
     organization: organizationReducer(state.organization, action),
     billings: billingsReducer(state.billings, action),
+    chatbot: chatbotReducer(state.chatbot, action),
   };
 };
 
