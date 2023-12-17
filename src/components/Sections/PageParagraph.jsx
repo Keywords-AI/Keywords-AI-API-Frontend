@@ -10,10 +10,10 @@ export default function PageParagraph({ children, heading, subheading }) {
     return (
         <div className="flex-col self-stretch items-start gap-sm">
             <Divider />
-            <TitleStaticSubheading
+            {heading && <TitleStaticSubheading
                 title={heading}
                 subtitle={subheading}
-            />
+            />}
             {children}
         </div>
     )

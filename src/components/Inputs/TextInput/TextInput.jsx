@@ -58,8 +58,7 @@ export const TextInput = React.forwardRef(({
       </label>}
       <div
         className={cn(
-          "flex items-center gap-xxxs rounded-sm border border-solid border-gray-3 self-stretch",
-          isFocused && !disabled ? "border-gray-white" : "",
+          "flex items-center gap-xxxs rounded-sm self-stretch h-[36px]",
           disabled ? "bg-gray-2" : ""
         )}
       >
@@ -72,8 +71,9 @@ export const TextInput = React.forwardRef(({
           placeholder={placeholder}
           ref={forwardedRef}
           className={cn(
-            "px-xs py-xxs text-sm-regular text-gray-4 bg-transparent outline-none self-stretch w-full h-full",
-            isFocused && !disabled ? "text-gray-white" : ""
+            "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full placeholder:text-gray-4 box-border",
+            isFocused && !disabled ? " border border-gray-white" : "border border-gray-3",
+            !disabled ? "text-gray-white" : "text-gray-4 ",
           )}
           {...register(name, validationSchema)}
           value={value} // Bind the value prop to the input

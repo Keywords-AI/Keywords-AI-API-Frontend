@@ -2,7 +2,7 @@ import React, { useEffect, lazy, Suspense } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser, isLoggedIn } from "src/store/actions/authAction";
+import { getUser, isLoggedIn } from "src/store/actions";
 import "src/styles/index.css";
 // import Playground from "./pages/PlatformPages/Playground/Playground";
 const Playground = lazy(() =>

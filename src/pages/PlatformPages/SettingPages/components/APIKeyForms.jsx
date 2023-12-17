@@ -31,7 +31,7 @@ const CreateFormNotConnected = React.forwardRef(({
   setShowForm = () => { },
   setNewKeyName,
   addKey,
-  user }, ref) => {
+  editingTrigger }, ref) => {
   const { loading, error, data, postData } = usePost({ path: `api/create-api-key/` });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
@@ -44,7 +44,7 @@ const CreateFormNotConnected = React.forwardRef(({
   useEffect(() => {
     if (data && !error) {
       console.log(data);
-      addKey(data);
+      addKey(data, editingTrigger);
     }
   }, [data])
   const handleClose = (e) => {

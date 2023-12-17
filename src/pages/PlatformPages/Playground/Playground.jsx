@@ -18,6 +18,7 @@ import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import store from "src/store/store";
+import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -37,6 +38,7 @@ const mapDispatchToProps = {
   setCacheAnswer,
   appendMessage,
   removeLastMessage,
+  abortStreamingTextRequest,
 };
 
 const Prompt = ({ setPrompt }) => {
@@ -66,13 +68,15 @@ const NotConnectedMap = ({
   setFirstTime,
   appendMessage,
   removeLastMessage,
+  systemPrompt,
+  abortStreamingTextRequest,
 }) => {
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const handleAddMessage = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
-  const handleRegenerate = () => {
+  const handleRegenerate = (event) => {
     event.stopPropagation();
     if (streaming) return;
     console.log("regenerate");
@@ -165,6 +169,12 @@ const NotConnectedMap = ({
                 onClick={handleRegenerate}
               />
             )}
+            <Button
+              variant="small"
+              text="Stop generate"
+              icon={AddMessage}
+              onClick={() => abortStreamingTextRequest()}
+            />
           </div>
         </div>
       </div>

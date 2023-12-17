@@ -1,32 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { PageContent, PageParagraph } from 'src/components/Sections';
 import usePost from 'src/hooks/usePost';
 import { TextInput, CopyInput } from 'src/components/Inputs';
 import { Button } from 'src/components/Buttons';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
+import { setOrgName } from 'src/store/actions';
 
-export const SettingPage = ({ user }) => {
+
+const mapStateToProps = (state) => ({
+    organization: state.organization,
+})
+
+const mapDispatchToProps = {
+    setOrgName,
+}
+
+export const SettingPage = ({ organization, setOrgName }) => {
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const { loading, error, data, postData } = usePost(`user/update-organization/${user?.organization?.id}/`, "PATCH");
-    const [organization, setOrganization] = React.useState({});
-    const formRef = React.useRef(null);
-
-    React.useEffect(() => {
-        if (user?.organization?.id) {
-            setOrganization(user?.organization);
-        }
-    }, [user])
-
+    const { loading, error, data, postData } = usePost({
+        path: `user/update-organization/${organization?.id}/`,
+        method: "PATCH",
+    });
     const onSubmit = (data) => {
+        console.log("Submitting", data);
+        setOrgName(data.name);
         postData(data); // send request
-        
     }
-
+    const handleChange = (e) => {
+        setOrgName(e.target.value);
+    };
+    useEffect(()=> {
+        if (errors) {
+            console.log("Errors", errors);
+        }
+    }, [errors])
     return (
         <PageContent
             title="Organization Settings"
@@ -36,38 +48,28 @@ export const SettingPage = ({ user }) => {
                 heading="General">
                 <form className="flex-col gap-sm items-start self-stretch"
                     onSubmit={handleSubmit(onSubmit)}
-                    ref={formRef}
                 >
                     <TextInput
-                        {...register("organization_name", { required: true })}
+                        {...register("name", {onChange: handleChange})}
                         title="Organization Name"
                         placeholder="Enter your organization name..."
+                        value={organization?.name || ""}
                     />
                     <CopyInput
-                        name="organization_id"
+                        name="unique_organization_id"
                         title="Organization ID - identifier sometimes used in API requests."
-                        value="blablabla"
+                        value={organization?.unique_organization_id || ""}
                         disabled={true}
                         width="w-[400px]"
                     />
-                    {
-                        // user?.organization_role?.name === "owner" 
-                        true
-                            ?
-                            <>
-                                <Button
-                                    text="Update"
-                                    variant="r4-primary"
-                                />
-                            </>
-                            :
-                            <div className="text-gray4 text-md">
-                                Only owner can edit organization name
-                            </div>
-                    }
+                    <Button
+                        type="submit"
+                        text="Update"
+                        variant="r4-primary"
+                    />
                 </form>
             </PageParagraph>
-            <PageParagraph
+            {/* <PageParagraph
                 heading="Delete organization"
                 subheading="If you want to permanently delete this organization and all of its data, you can do so below."
             >
@@ -75,13 +77,10 @@ export const SettingPage = ({ user }) => {
                     text="Delete this organization"
                     variant="r4-red"
                 />
-            </PageParagraph>
+            </PageParagraph> */}
         </PageContent>
     )
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingPage)

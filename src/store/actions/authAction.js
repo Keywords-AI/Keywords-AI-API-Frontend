@@ -2,7 +2,6 @@ import { platformURL } from "src/utilities/platformURL";
 import { getCookie } from "src/services/getCookie";
 import { retrieveConversation } from "./conversationAction";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
-import { getCSRF } from "src/authentication/Authentication";
 
 export const register = (
   email,
@@ -90,30 +89,6 @@ export const logout = () => {
 export const googleLogin = (access_code, state, random) => {
   return (dispatch) => {
     console.log("Hi there!!");
-  };
-};
-
-export const getUser = () => {
-  return (dispatch) => {
-    getCSRF();
-    fetch(`${platformURL}auth/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          dispatch({ type: "SET_USER", payload: data });
-        } else if (res.status === 401 && res.status == 403) {
-          const data = await res.text();
-          console.log(data);
-          dispatch({ type: "SET_USER", payload: {} });
-        }
-      })
-      .catch((error) => console.log(error.message));
   };
 };
 

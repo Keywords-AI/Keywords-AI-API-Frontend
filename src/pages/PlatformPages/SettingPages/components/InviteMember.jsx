@@ -17,9 +17,9 @@ function InviteMember({ user }) {
   const [errors, setErrors] = React.useState([]);
   const roleRef = React.useRef("Member");
   const emailRef = React.useRef("");
-  const { loading, error, data, postData } = usePost(
-    `user/invitations/create/`
-  );
+  const { loading, error, data, postData } = usePost({
+    path: `user/invitations/create/`
+  });
 
   const handleInvite = () => {
     console.log("invite");

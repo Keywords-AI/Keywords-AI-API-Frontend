@@ -24,7 +24,7 @@ const initialState = {
   modelOptions: {
     optimize: "speed",
     creativity: "high",
-    maxTokens: 0,
+    maxTokens: 100,
   },
   outputs: {
     score: 8.8,

@@ -26,6 +26,7 @@ const defaultOptions = [
 
 const MyComponent = React.forwardRef(({
     variant,
+    open,
     title = "selection",
     headLess = false,
     name = "text-sm",
@@ -80,10 +81,14 @@ const MyComponent = React.forwardRef(({
     }
 
     // Initialize after the switch
-    const [focused, setFocused] = React.useState(false);
+    const [focused, setFocused] = React.useState(open);
     const [selected, setSelected] = React.useState(defaultValue);
     const selectRef = React.useRef(null);
-    const [optionsVisible, setOptionsVisible] = React.useState(false);
+    const [optionsVisible, setOptionsVisible] = React.useState(open);
+    useEffect(() => {
+        setOptionsVisible(open);
+        setFocused(open);
+    }, [open])
 
     return (
         <div className={cn("flex-col justify-center items-start gap-xxs relative",
@@ -94,7 +99,7 @@ const MyComponent = React.forwardRef(({
             </label>}
             <div
                 aria-label="select-wrapper"
-                className="flex-col self-stretch"
+                className="flex-col self-stretch text-sm-regular"
                 ref={selectRef}
             >
                 <div
@@ -119,7 +124,7 @@ const MyComponent = React.forwardRef(({
                     >
                         <div
                             // The displayed selection tab
-                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none bg-gray-black",
+                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none",
                                 padding, border, borderRadius, text
                             )} aria-label="select">
                             {selected || placeholder}
@@ -133,7 +138,7 @@ const MyComponent = React.forwardRef(({
                 </div>
                 {optionsVisible &&
                     <div className={cn("flex-col justify-start items-start self-stretch bg-gray-2 ",
-                        "absolute w-full top-full"
+                        "absolute w-full top-full z-[1000]"
                     )
                     }>
                         {choices && choices.length > 0 && choices.map((choice, index) => {

@@ -1,7 +1,7 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
+import { ChatbotReactMarkdown } from "src/components/Misc/ChatbotReactMarkdown";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {
@@ -38,31 +38,8 @@ export default function ChatMessage({ message }) {
             >
               {message?.content}
             </p>
-          ) : (
-            <ReactMarkdown
-              children={message?.content}
-              components={{
-                pre: ({ node, ...props }) => (
-                  <pre
-                    {...props}
-                    style={{ margin: 0 }}
-                    className="format-pre"
-                  />
-                ),
-                p: ({ node, ...props }) => (
-                  <p
-                    {...props}
-                    style={{
-                      margin: 0,
-                      listStyle: "disc",
-                      listStylePosition: "inside",
-                      whiteSpace: "pre-line",
-                    }}
-                    className="text-md"
-                  />
-                ),
-              }}
-            />
+          ) : ( 
+            <ChatbotReactMarkdown content={message?.content} /> 
           )}
 
           {message?.role !== "user" ? (

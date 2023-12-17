@@ -26,7 +26,7 @@ function GetAPIKey({ usageData, fetchUsageData, user }) {
     const [keyList, setKeyList] = React.useState([]);
     const [displaKeyList, setDisplayKeyList] = React.useState([]);
     const [displayNew, setDisplayNew] = React.useState("");
-    const { data: prevKey, error: prevError, loading: prevLoading } = useFetch(`api/get-keys`);
+    const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({ path: `api/get-keys` });
     const { loading: deleteLoading, error: deleteError, data: deleteStatus, postData: postDelete } = usePost(`api/delete-key/`);
     const { loading: newLoading, error: newKeyError, data: newKey, postData } = usePost(`api/create-api-key/`);
     const formRef = React.useRef(null);
@@ -74,7 +74,7 @@ function GetAPIKey({ usageData, fetchUsageData, user }) {
 
     useEffect(() => {
         if (keyList?.length > 0) {
-            
+
             setDisplayKeyList(
                 keyList
                     .filter(key => !key.non_deletable)

@@ -73,7 +73,6 @@ export const sendStreamingTextThunk = async (
         reader.read(),
         timeout(readTimeout),
       ]);
-      // console.log(done, value);
       if (done) {
         reader.cancel();
         store.dispatch(sendStreamingTextSuccess());
@@ -94,7 +93,6 @@ export const sendStreamingTextThunk = async (
       if (chunks.length === 1) {
         // Handle the first chunk separately
         // if (chunks === "" || chunks[0] === "") throw new Error("Server Error");
-        console.log(chunks[0]);
         const firstChunk = JSON.parse(chunks[0]);
         if (firstChunk.evaluation) {
           const outputs = firstChunk.evaluation;
