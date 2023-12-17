@@ -2,7 +2,7 @@ import { getDateStr } from "./stringProcessing";
 
 export const digitToMonth = (digit) => {
   let month = digit;
-  if (!digit)  month = new Date().getMonth() + 1;
+  if (!digit) month = new Date().getMonth() + 1;
   const monthMap = {
     0: "January",
     1: "Febuary",
@@ -16,7 +16,7 @@ export const digitToMonth = (digit) => {
     9: "October",
     10: "November",
     11: "December",
-}
+  };
   return monthMap[month];
 };
 
@@ -35,6 +35,15 @@ export function timeSkip(currentTime, deltaTime) {
   return newTime;
 }
 
+export const processKey = (key, actions = () => {}) => {
+  return {
+    ...key,
+    created: getDateStr(key.created_at),
+    last_used: getDateStr(key.last_used),
+    actions: actions(key),
+  };
+};
+
 export const processKeyList = (keyList, actions = () => {}) => {
   /*
   keyList: [{
@@ -47,12 +56,7 @@ export const processKeyList = (keyList, actions = () => {}) => {
   */
   if (!keyList) return [];
   return keyList.map((key) => {
-    return {
-      ...key,
-      created: getDateStr(key.created_at),
-      last_used: getDateStr(key.last_used),
-      actions: actions(key),
-    };
+    return processKey(key, actions);
   });
 };
 

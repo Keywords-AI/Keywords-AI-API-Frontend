@@ -7,7 +7,14 @@ import { TextInput } from 'src/components/Inputs';
 import { Button } from 'src/components/Buttons';
 
 export const SettingPage = ({ user }) => {
-    const { loading: updateLoading, error: updateError, data: updateData, postData: patchData } = usePost(`user/update-organization/${user?.organization?.id}/`, "PATCH");
+    const { loading: updateLoading, error: 
+        updateError, 
+        data: updateData, 
+        postData: patchData } = usePost({
+        path: `user/update-organization/${organization?.id}/`,
+        method: "PATCH",
+        domain: "https://localhost:8000/"
+    });
     const [organization, setOrganization] = React.useState({});
     const formRef = React.useRef(null);
 
@@ -75,23 +82,23 @@ export const SettingPage = ({ user }) => {
                 </div> */}
                 <TextInput
                     name="Organization ID - identifier sometimes used in API requests."
-                    type = "text"
+                    type="text"
                     value="blablabla"
-                    disabled = {true}
-                    width = "w-[400px]"
+                    disabled={true}
+                    width="w-[400px]"
                 />
                 {
-                // user?.organization_role?.name === "owner" 
-                true
-                ?
-                    <Button
-                        text="Update"
-                        variant="r4-primary"
-                    />
-                    :
-                    <div className="text-gray4 text-md">
-                        Only owner can edit organization name
-                    </div>
+                    // user?.organization_role?.name === "owner" 
+                    true
+                        ?
+                        <Button
+                            text="Update"
+                            variant="r4-primary"
+                        />
+                        :
+                        <div className="text-gray4 text-md">
+                            Only owner can edit organization name
+                        </div>
                 }
             </form>
         </PageContent>
