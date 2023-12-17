@@ -6,6 +6,7 @@ import UsagePage from './UsagePage';
 import MemberPage from './MemberPage';
 import BillingPage from './BillingPage';
 import { Building } from 'src/components/Icons'
+import { IntegrationsPage } from './IntegrationsPage';
 
 const pages = [
     {
@@ -33,6 +34,12 @@ const pages = [
         title: "Billing",
         // forAdmin: true,
         page: <BillingPage />,
+    },
+
+    {
+        title: "Integrations",
+        // forAdmin: true,
+        page: <IntegrationsPage />,
     },
     // {
     //     title: "Usage",
