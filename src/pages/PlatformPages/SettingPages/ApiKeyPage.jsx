@@ -33,7 +33,9 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
           icon={Pencil}
           onClick={() => setEditingKey(key)}
         /> */}
-        <APIKeyActions modifyingKey={key} setEditingKey={setEditingKey} setDeletingKey={setDeletingKey} />
+        <div className="flex-row w-full justify-end">
+          <APIKeyActions modifyingKey={key} setEditingKey={setEditingKey} setDeletingKey={setDeletingKey} />
+        </div>
       </>
     )
   }
@@ -44,8 +46,8 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
       subtitle="Read the documentation on using our API here."
     >
       <PageParagraph
-      heading="Manage keys"
-      subheading="Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
+        heading="Manage keys"
+        subheading="Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
         {apiKey?.keyList && apiKey?.keyList.length > 0 &&
           < SettingTable

@@ -53,7 +53,7 @@ export default function SettingTable({
           key={idx}
         >
           {rowIterator?.map((header, idx) => (
-            <div className="flex-row justify-start items-center" key={idx}>{row[header]}
+            <div className="flex-row justify-start items-center self-stretch" key={idx}>{row[header]}
             </div>
           ))}
         </div>

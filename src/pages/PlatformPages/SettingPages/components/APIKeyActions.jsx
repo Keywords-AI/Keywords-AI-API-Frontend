@@ -33,7 +33,7 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
                     bgColor="bg-gray-black"
                     bgHoverColor="bg-gray-2"
                     borderColor="border-transparent"
-                    borderHoverColor ="border-transparent"
+                    borderHoverColor="border-transparent"
                     icon={Dots}
                     onClick={() => setOpen(true)}
                 />
