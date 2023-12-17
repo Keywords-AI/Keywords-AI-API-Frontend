@@ -43,7 +43,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
       title="API Keys"
       subtitle="Read the documentation on using our API here."
     >
-      <PageParagraph>
+      <PageParagraph
+      heading="Manage keys"
+      subheading="Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
+      >
         {apiKey?.keyList && apiKey?.keyList.length > 0 &&
           < SettingTable
             variant={"api-keys"}
