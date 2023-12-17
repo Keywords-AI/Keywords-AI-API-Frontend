@@ -21,7 +21,7 @@ const mapDispatchToProps = {
 }
 
 export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }) => {
-  const { data: prevKey, error: prevError, loading: prevLoading } = useFetch(`api/get-keys`);
+  const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({ path: `api/get-keys` });
   const [openCreate, setOpenCreate] = React.useState(false)
   const editingTrigger = (key) => {
     return (
@@ -32,10 +32,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
           icon={Pencil}
           onClick={() => setEditingKey(key)}
         />
-        <IconButton
+        {/* <IconButton
           icon={<Delete />}
           onClick={() => setDeletingKey(key)}
-        />
+        /> */}
       </>
     )
   }
@@ -63,6 +63,7 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
       >
         <CreateForm
           setShowForm={setOpenCreate}
+          editingTrigger={editingTrigger}
         />
       </Modal>
       <Modal

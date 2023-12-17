@@ -59,6 +59,30 @@ const NotConnectedMap = ({
   const handleAddMessage = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
+  const handleRegenerate = (event) => {
+    event.stopPropagation();
+    if (streaming) return;
+    console.log("regenerate");
+    sendStreamingTextThunk(
+      {
+        messages: messages,
+        stream: true,
+        model: currentModel,
+      },
+      "https://platform.keywordsai.co/",
+      "api/playground/ask/",
+      () => {
+        // this is the callback function after the streaming text is done
+        const streamingText = store.getState().streamingText.streamingText;
+        const currentModel = store.getState().playground.currentModel;
+        const newMessage = {
+          role: currentModel,
+          content: streamingText,
+        };
+        store.dispatch(appendMessage(newMessage));
+      }
+    );
+  };
   useEffect(() => {
     if (streamingText) {
       setGeneratingText(streamingText);

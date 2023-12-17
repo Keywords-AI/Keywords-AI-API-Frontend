@@ -20,19 +20,20 @@ const mapDispatchToProps = {
 }
 
 const dightToMonth = (digit) => {
+    // Digit is 0-indexed
     const monthMap = {
-        1: "January",
-        2: "Febuary",
-        3: "March",
-        4: "April",
-        5: "May",
-        6: "June",
-        7: "July",
-        8: "August",
-        9: "September",
-        10: "October",
-        11: "November",
-        12: "December",
+        0: "January",
+        1: "Febuary",
+        2: "March",
+        3: "April",
+        4: "May",
+        5: "June",
+        6: "July",
+        7: "August",
+        8: "September",
+        9: "October",
+        10: "November",
+        11: "December",
     }
     return monthMap[digit];
 };
@@ -119,7 +120,6 @@ function Usage({ usageData, fetchUsageData, user }) {
 
 
         <div className="flex-col items-start self-stretch">
-
             <>
                 <div className="flex-col items-center gap-lg self-stretch">
                     <div className="flex-row flex-start self-stretch">

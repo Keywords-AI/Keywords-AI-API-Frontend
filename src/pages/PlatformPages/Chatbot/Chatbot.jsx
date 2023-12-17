@@ -21,6 +21,7 @@ import useAutoScroll from "src/hooks/useAutoScroll";
 import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
+import { Modal } from "src/components/Dialogs";
 
 const mapStateToProps = (state) => {
   return {
@@ -221,15 +222,8 @@ function Chatbot({
 
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
-      {false && (
-        <Popup
-          setPromptPopup={setPromptPopup}
-          closePopup={() => {
-            setPromptPopup(false);
-          }}
-        />
-      )}
       <PanelChat
+        setPromptPopup={setPromptPopup}
         handleStop={handleStop}
         createConversation={createConversation}
         getConversations={getConversations}
@@ -239,6 +233,26 @@ function Chatbot({
         setActiveConversation={setActiveConversation}
         handleDelete={handleDelete}
       />
+
+      {promptPopup && (
+        <Modal
+          open={promptPopup}
+          setOpen={setPromptPopup}>
+          <Popup closePopup={() => {
+            setPromptPopup(false);
+          }}/>
+        </Modal>
+      )}
+      {/* <PanelChat
+        handleStop={handleStop}
+        createConversation={createConversation}
+        getConversations={getConversations}
+        conversations={conversations}
+        activeConversation={activeConversation}
+        retrieveConversation={retrieveConversation}
+        setActiveConversation={setActiveConversation}
+        handleDelete={handleDelete}
+      /> */}
       <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
           <div className="flex-row justify-center items-center gap-xxs self-stretch">
@@ -287,11 +301,9 @@ function Chatbot({
               </>
             )}
             {generatingText && (
-              <div className="chat-message bg-gray2">
-                <div className="flex-row justify-center items-start gap-sm self-stretch">
-                  <div className="text-md">{generatingText}</div>
-                </div>
-              </div>
+              <ChatMessage 
+                message={{ content: generatingText, role: 'assistant' }}
+              />
             )}
           </div>
           <div

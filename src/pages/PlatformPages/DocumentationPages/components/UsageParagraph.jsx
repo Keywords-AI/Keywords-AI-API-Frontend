@@ -39,7 +39,7 @@ const dightToMonth = (digit) => {
 
 function Usage({ usageData, fetchUsageData, user }) {
     const [keyList, setKeyList] = React.useState([]);
-    const { data: prevKey, error: prevError, loading: prevLoading } = useFetch(`api/get-keys`);
+    const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({ path: `api/get-keys` });
     const { loading: deleteLoading, error: deleteError, data: deleteStatus, postData: postDelete } = usePost(`api/delete-key/`);
     const { loading: newLoading, error: newKeyError, data: newKey, postData } = usePost(`api/create-api-key/`);
     const [currDate, setCurrDate] = React.useState(new Date());
@@ -66,11 +66,11 @@ function Usage({ usageData, fetchUsageData, user }) {
 
     const renderCustomBar = (planName) => {
         const plan = customBundle?.items?.planName;
-    
+
         if (!plan) return null;
-    
+
         const bars = [];
-    
+
         if (plan?.input && plan?.assigned_input) {
             bars.push(
                 <ProgressBar
@@ -85,7 +85,7 @@ function Usage({ usageData, fetchUsageData, user }) {
                 />
             );
         }
-    
+
         if (plan?.output && plan?.assigned_output) {
             bars.push(
                 <ProgressBar
@@ -100,7 +100,7 @@ function Usage({ usageData, fetchUsageData, user }) {
                 />
             );
         }
-    
+
         if (plan?.mixed && plan?.assigned_mixed) {
             bars.push(
                 <ProgressBar
@@ -115,10 +115,10 @@ function Usage({ usageData, fetchUsageData, user }) {
                 />
             );
         }
-    
+
         return bars;
     };
-  
+
 
 
     return (
