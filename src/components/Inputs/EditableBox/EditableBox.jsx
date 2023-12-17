@@ -114,7 +114,7 @@ export const EditableBox = React.forwardRef(
       className,
       focus = false,
       selectPrevious = false,
-      borderless = true
+      borderless = true,
     },
     forwardRef
   ) => {
@@ -184,9 +184,14 @@ export const EditableBox = React.forwardRef(
 
     return (
       <div
-        className={cn("w-full h-full flex-col self-stretch flex-grow rounded-sm border",
-          borderless ? "border-none" : (focus || isEditing ? "border-gray-white" : "border-gray-4"))
-        }
+        className={cn(
+          "w-full h-full flex-col self-stretch flex-grow rounded-sm border",
+          borderless
+            ? "border-none"
+            : focus || isEditing
+            ? "border-gray-white"
+            : "border-gray-4"
+        )}
         ref={divRef}
         onClick={handleDivClick}
         style={{ height }}
@@ -195,7 +200,7 @@ export const EditableBox = React.forwardRef(
         {true ? (
           <textarea
             className={cn(
-              "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm text-white placeholder-gray-4",
+              "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm-regular text-white placeholder-gray-4",
               className
             )}
             placeholder={placeholder}
@@ -215,7 +220,7 @@ export const EditableBox = React.forwardRef(
         ) : (
           <div
             className={cn(
-              "flex-grow whitespace-pre-wrap text-sm",
+              "flex-grow whitespace-pre-wrap text-sm-regular",
               className,
               !text && "text-gray-4"
             )}

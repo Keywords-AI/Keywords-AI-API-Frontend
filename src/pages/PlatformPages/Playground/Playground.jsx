@@ -12,12 +12,13 @@ import {
   setFirstTime,
   setCacheAnswer,
   appendMessage,
+  removeLastMessage,
 } from "src/store/actions/playgroundAction";
-import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import store from "src/store/store";
+import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -35,12 +36,14 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
+  appendMessage,
+  removeLastMessage,
+  abortStreamingTextRequest,
 };
 
-const Prompt = () => {
-  const dispatch = useDispatch();
+const Prompt = ({ setPrompt }) => {
   const handleOnChange = (event) => {
-    dispatch(setPrompt(event.target.value));
+    setPrompt(event.target.value);
   };
   return (
     <div className="flex-col w-[320px] self-stretch justify-center items-start gap-xxs">
@@ -62,9 +65,12 @@ const NotConnectedMap = ({
   firstTime,
   currentModel,
   setCacheAnswer,
+  setFirstTime,
+  appendMessage,
+  removeLastMessage,
   systemPrompt,
+  abortStreamingTextRequest,
 }) => {
-  const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const handleAddMessage = () => {
@@ -74,6 +80,7 @@ const NotConnectedMap = ({
     event.stopPropagation();
     if (streaming) return;
     console.log("regenerate");
+    removeLastMessage();
     sendStreamingTextThunk(
       {
         messages: messages,
@@ -82,6 +89,7 @@ const NotConnectedMap = ({
       },
       "https://platform.keywordsai.co/",
       "api/playground/ask/",
+      systemPrompt,
       () => {
         // this is the callback function after the streaming text is done
         const streamingText = store.getState().streamingText.streamingText;
@@ -90,14 +98,28 @@ const NotConnectedMap = ({
           role: currentModel,
           content: streamingText,
         };
-        store.dispatch(appendMessage(newMessage));
+        appendMessage(newMessage);
+        const lastUserMessageIndex = messages.reduce(
+          (lastIndex, message, currentIndex) => {
+            if (message.role === "user") {
+              return currentIndex;
+            }
+            return lastIndex;
+          },
+          -1
+        );
+        const cache = {
+          answer: streamingText,
+          index: lastUserMessageIndex,
+        };
+        setCacheAnswer(currentModel, cache);
       }
     );
   };
   useEffect(() => {
     if (streamingText) {
       setGeneratingText(streamingText);
-      dispatch(setFirstTime(false));
+      setFirstTime(false);
     }
   }, [streamingText]);
 
@@ -147,6 +169,12 @@ const NotConnectedMap = ({
                 onClick={handleRegenerate}
               />
             )}
+            <Button
+              variant="small"
+              text="Stop generate"
+              icon={AddMessage}
+              onClick={() => abortStreamingTextRequest()}
+            />
           </div>
         </div>
       </div>
@@ -167,7 +195,7 @@ const SidePannel = () => {
   );
 };
 
-export function Playground() {
+export default function Playground() {
   return (
     <div className="flex items-start justify-center self-stretch h-[calc(100vh-52.8px)] ">
       <Main />

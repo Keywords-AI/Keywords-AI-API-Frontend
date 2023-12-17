@@ -19,7 +19,7 @@ export function ModelOutput({}) {
       value: (
         <>
           <span>$</span>
-          <span>{Math.round(stateOutputs.cost * 1000) / 1000 || "0"}</span>
+          <span>{stateOutputs.cost}</span>
         </>
       ),
       icon: <Cost />,

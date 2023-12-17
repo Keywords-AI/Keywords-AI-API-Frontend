@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
 import { getUser, isLoggedIn } from "src/store/actions";
 import "src/styles/index.css";
-import { Playground } from "./pages/PlatformPages";
-import Chatbot from "/src/pages/PlatformPages/Chatbot/Chatbot";
+// import Playground from "./pages/PlatformPages/Playground/Playground";
+const Playground = lazy(() =>
+  import("./pages/PlatformPages/Playground/Playground")
+);
+const Chatbot = lazy(() => import("/src/pages/PlatformPages/Chatbot/Chatbot"));
 import { NotFound } from "src/pages/AuthPages/NotFound/NotFound";
 import LogIn from "src/pages/AuthPages/LogIn/LogIn";
 import { SignUp } from "src/pages/AuthPages/SignUp/SignUp";
@@ -13,6 +16,7 @@ import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
+
 import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
@@ -100,7 +104,7 @@ const Routes = ({ getUser, user }) => {
 
   const element = useRoutes(routes);
 
-  return <>{element}</>;
+  return <Suspense fallback={<div></div>}>{element}</Suspense>;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

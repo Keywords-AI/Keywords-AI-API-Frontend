@@ -7,6 +7,7 @@ export const DELETE_KEY = "DELETE_KEY";
 export const SET_DELETING_KEY = "SET_DELETING_KEY";
 export const SET_EDITING_KEY = "SET_EDITING_KEY";
 export const UPDATE_EDITING_KEY = "UPDATE_EDITING_KEY";
+export const ClEAR_PREV_API_KEY = "ClEAR_PREV_API_KEY";
 
 export const setNewKeyName = (name) => {
   return {
@@ -28,6 +29,12 @@ export const addKey = (key, actions) => {
     key: processKeyList([key], actions)[0],
   };
 };
+
+export const clearPrevApiKey = () => {
+  return {
+    type: ClEAR_PREV_API_KEY,
+  };
+}
 
 export const setDeletingKey = (key) => {
   return {

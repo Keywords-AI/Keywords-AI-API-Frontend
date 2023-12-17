@@ -7,7 +7,7 @@ import useFetch from 'src/hooks/useFetch'
 import { CreateForm, EditForm, DeleteForm } from './components/APIKeyForms'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Modal } from 'src/components/Dialogs'
-import { setKeyList, setEditingKey, setDeletingKey } from 'src/store/actions'
+import { setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey } from 'src/store/actions'
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -17,10 +17,11 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setKeyList,
   setEditingKey,
-  setDeletingKey
+  setDeletingKey,
+  clearPrevApiKey
 }
 
-export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }) => {
+export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey }) => {
   const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({ path: `api/get-keys` });
   const [openCreate, setOpenCreate] = React.useState(false)
   const editingTrigger = (key) => {
@@ -53,7 +54,7 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
             columnNames={["name", "prefix", "created", "last_used", "actions"]}
           />
         }
-        <Button variant="r4-primary" text="Generate new Key" onClick={() => setOpenCreate(!openCreate)} />
+        <Button variant="r4-primary" text="Generate new Key" onClick={() => { setOpenCreate(!openCreate); clearPrevApiKey(); }} />
       </PageParagraph>
       <Modal
         title={apiKey.apiKey ? "Save your API Key" : "Create new API key"}
@@ -75,6 +76,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey }
           editingKey={apiKey.editingKey}
           setEditingKey={setEditingKey}
         />
+        {/* <DeleteForm
+          deletingKey={apiKey.editingKey}
+          setDeletingKey={setEditingKey}
+        /> */}
       </Modal>
       <Modal
         title={"Revoke API key"}

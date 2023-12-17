@@ -7,27 +7,28 @@ import {
   sendStreamingTextPartial,
 } from "../actions/streamingTextAction";
 import store from "../store";
+import { setOutputs } from "../actions/playgroundAction";
+/**
+ * Sends streaming text to a specified host and path using the specified parameters.
+ *
+ * @param {Object} streamingText - The streaming text object containing the stream and messages.
+ * @param {string} host - The host to send the streaming text to.
+ * @param {string} path - The path to send the streaming text to.
+ * @param {string} prompt - The prompt for the streaming text.
+ * @param {Function} callback - The callback function to be called after the streaming text is sent.
+ * @param {number} [readTimeout=5000] - The timeout for reading data from the response in milliseconds.
+ * @param {number} [fetchTimeout=10000] - The timeout for the fetch request in milliseconds.
+ * @returns {Promise<void>} - A promise that resolves when the streaming text is sent successfully or rejects with an error.
+ */
 export const sendStreamingTextThunk = async (
   streamingText,
   host,
   path,
-  callback
+  prompt,
+  callback,
+  readTimeout = 5000,
+  fetchTimeout = 10000 // Add fetch timeout in milliseconds
 ) => {
-  let messagesWithPrompt = streamingText.messages;
-  messagesWithPrompt = messagesWithPrompt.map((item) => {
-    if (item.role !== "user") {
-      return {
-        ...item,
-        role: "assistant",
-      };
-    } else {
-      return item;
-    }
-  });
-  messagesWithPrompt = [
-    { role: "system", content: store.getState().playground.prompt },
-    ...messagesWithPrompt,
-  ];
   const abortController = new AbortController();
   const headers = {
     "Content-Type": "application/json",
@@ -37,23 +38,52 @@ export const sendStreamingTextThunk = async (
   store.dispatch(sendStreamingTextRequest());
   const body = JSON.stringify({
     stream: streamingText.stream,
-    messages: messagesWithPrompt,
+    messages: [
+      { role: "system", content: prompt },
+      ...streamingText.messages.map((item) =>
+        item.role !== "user" ? { ...item, role: "assistant" } : item
+      ),
+    ],
     model: streamingText.model,
+    // optimize: store.getState().playground.modelOptions.optimize,
+    // creativity: store.getState().playground.modelOptions.creativity,
+    // maxTokens: store.getState().playground.modelOptions.maxTokens,
   });
   try {
-    const response = await fetch(host + path, {
-      method: "POST",
-      headers,
-      body,
-      signal: abortController.signal,
-    });
+    const response = await Promise.race([
+      fetch(host + path, {
+        method: "POST",
+        headers,
+        body,
+        signal: abortController.signal,
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Fetch Timeout")), fetchTimeout)
+      ),
+    ]);
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let dataString = "";
-
+    const timeout = (ms) =>
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Read Timeout")), ms)
+      );
     while (true) {
-      const { done, value } = await reader.read();
-
+      const { done, value } = await Promise.race([
+        reader.read(),
+        timeout(readTimeout),
+      ]);
+      if (done) {
+        reader.cancel();
+        store.dispatch(sendStreamingTextSuccess());
+        if (callback && typeof callback === "function") {
+          callback();
+        }
+        break;
+      }
+      if (value === undefined) {
+        throw new Error("Backend Error");
+      }
       dataString += decoder.decode(value);
 
       const chunks = dataString.split("---");
@@ -62,11 +92,18 @@ export const sendStreamingTextThunk = async (
       }
       if (chunks.length === 1) {
         // Handle the first chunk separately
-        if (chunks === "" || chunks[0] === "") continue;
+        // if (chunks === "" || chunks[0] === "") throw new Error("Server Error");
         const firstChunk = JSON.parse(chunks[0]);
         if (firstChunk.evaluation) {
           const outputs = firstChunk.evaluation;
-          console.log("outputs", outputs);
+          store.dispatch(
+            setOutputs({
+              tokens: outputs.completion_tokens,
+              cost: outputs.cost,
+              latency: outputs.latency,
+              score: outputs.scores,
+            })
+          );
         } else if (firstChunk.choices[0]?.delta.content) {
           const firstMessageChunk = firstChunk.choices[0]?.delta.content;
           if (firstMessageChunk) {
@@ -84,25 +121,11 @@ export const sendStreamingTextThunk = async (
           if (messageChunk) {
             store.dispatch(sendStreamingTextPartial(messageChunk));
           }
-
-          if (lineChunk.evaluation) {
-            const outputs = JSON.parse(lineChunk.evaluation);
-            console.log(outputs);
-            return;
-          }
         }
-      }
-      if (done) {
-        reader.cancel();
-        store.dispatch(sendStreamingTextSuccess());
-        break;
       }
     }
     reader.releaseLock();
     abortController.abort();
-    if (callback && typeof callback === "function") {
-      callback();
-    }
   } catch (error) {
     console.error(error);
 
