@@ -69,7 +69,7 @@ export const SettingPage = ({ organization, setOrgName }) => {
                     />
                 </form>
             </PageParagraph>
-            <PageParagraph
+            {/* <PageParagraph
                 heading="Delete organization"
                 subheading="If you want to permanently delete this organization and all of its data, you can do so below."
             >
@@ -77,7 +77,7 @@ export const SettingPage = ({ organization, setOrgName }) => {
                     text="Delete this organization"
                     variant="r4-red"
                 />
-            </PageParagraph>
+            </PageParagraph> */}
         </PageContent>
     )
 }
