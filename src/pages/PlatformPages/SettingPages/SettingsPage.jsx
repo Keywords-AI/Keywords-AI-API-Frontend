@@ -51,7 +51,7 @@ export const SettingPage = ({ organization, setOrgName }) => {
                 >
                     <TextInput
                         {...register("name", {onChange: handleChange})}
-                        title="Organization Name"
+                        title="Organization name"
                         placeholder="Enter your organization name..."
                         value={organization?.name || ""}
                     />
