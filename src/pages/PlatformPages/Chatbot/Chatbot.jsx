@@ -18,7 +18,7 @@ import ChatMessage from "./components/ChatMessage/ChatMessage";
 import Popup from "./components/Popup/Popup";
 import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
+import KeywordsInput from "./components/KeywordsInput/KeywordsInput"
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { Modal } from "src/components/Dialogs";
@@ -87,10 +87,16 @@ function Chatbot({
   const [chatError, setChatError] = React.useState(null);
   const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
   const conversation = {
-    // messages: [
-    //   { role: "user", content: "Hello" },
-    //   { role: "assistant", content: "Hello" },
-    // ]
+    messages: [{ role: "assistant", content: `## My To-Do List
+
+  - [ ] Complete the market analysis report.
+  - [ ] Schedule meeting with the design team.
+  - [ ] Update project roadmap on Confluence.
+  
+  **Reminder:** Check emails by 10 AM.
+  
+  *Useful Link:* [Team Calendar](https://www.companycalendar.com)
+  `}],
   }
   const conversationRef = React.useRef(conversation);
 

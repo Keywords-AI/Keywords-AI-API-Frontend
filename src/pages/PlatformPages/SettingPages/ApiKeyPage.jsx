@@ -54,7 +54,7 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
             columnNames={["name", "prefix", "created", "last_used", "actions"]}
           />
         }
-        <Button variant="r4-primary" text="Generate new Key" onClick={() => { setOpenCreate(!openCreate); clearPrevApiKey(); }} />
+        <Button variant="r4-primary" text="Generate new key" onClick={() => { setOpenCreate(!openCreate); clearPrevApiKey(); }} />
       </PageParagraph>
       <Modal
         title={apiKey.apiKey ? "Save your API Key" : "Create new API key"}

@@ -26,9 +26,9 @@ export const UsagePage = ({ usage }) => {
           dataKeyX={"name"} dataKeyY="usage"
         />
         <ProgressBar
-          name={"Free Trial"}
+          name={"Free trial"}
           progressLegend={"Used"}
-          remainLegend={"Credis Remaining"}
+          remainLegend={"Credits remaining"}
           progressColorClass={"bg-gray-white"}
           remainColorClass={"bg-gray-black"}
           current={creditsUsed}
