@@ -69,7 +69,7 @@ export const Button = forwardRef(
       borderColor,
       borderHoverColor,
       justification,
-      minWidth = "",
+      width = "",
       children,
       disabled = false,
       // ...props
@@ -276,7 +276,7 @@ export const Button = forwardRef(
         iconPosition = iconPosition || "left";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
-        minWidth = minWidth || "w-full";
+        width = width || "w-full";
         break;
         
       case "careers":
@@ -323,7 +323,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-        minWidth = minWidth || "";
+        width = width || "";
         className = "w-[28px] h-[28px]";
 
         break;
@@ -350,7 +350,7 @@ export const Button = forwardRef(
         }}
         className={cn(
           "group inline-flex items-center gap-xxs border border-solid ",
-          minWidth,
+          width,
           justification,
           borderRadius,
           hover ? hoverColor : bgColor,
