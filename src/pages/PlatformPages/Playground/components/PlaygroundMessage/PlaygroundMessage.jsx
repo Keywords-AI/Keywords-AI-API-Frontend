@@ -4,7 +4,11 @@ import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import React from "react";
-import { setMessages, appendMessage } from "src/store/actions/playgroundAction";
+import {
+  setMessages,
+  appendMessage,
+  setCacheAnswer,
+} from "src/store/actions/playgroundAction";
 import cn from "src/utilities/ClassMerge";
 import store from "src/store/store";
 export function PlaygroundMessage({ role, content, messageIndex }) {
@@ -61,13 +65,20 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         },
         "https://platform.keywordsai.co/",
         "api/playground/ask/",
+        systemPrompt,
         () => {
-
+          const currentModel = store.getState().playground.currentModel;
+          const streamingText = store.getState().streamingText.streamingText;
           const newMessage = {
-            role: store.getState().playground.currentModel,
-            content: store.getState().streamingText.streamingText
+            role: currentModel,
+            content: streamingText,
           };
           store.dispatch(appendMessage(newMessage));
+          const cache = {
+            answer: streamingText,
+            index: messageIndex,
+          };
+          store.dispatch(setCacheAnswer(currentModel, cache));
         }
       );
     } catch (error) {
@@ -124,6 +135,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconSize="md"
             iconPosition="right"
             onClick={handleSend}
+            dispatch={streaming}
           />
         </div>
       )}

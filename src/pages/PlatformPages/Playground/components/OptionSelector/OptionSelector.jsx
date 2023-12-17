@@ -153,6 +153,7 @@ export function OptionSelector({}) {
 
   const handleChange = (event) => {
     const { value } = event.target;
+    console.log(value);
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };
@@ -204,7 +205,13 @@ export function OptionSelector({}) {
           />
         ))}
         <div className="flex w-[88px] ">
-          <NumberInput icon={Tokens} value={token} onChange={handleChange} />
+          <NumberInput
+            icon={Tokens}
+            iconClassName="fill-gray-4"
+            value={token}
+            onChange={handleChange}
+            onClick={() => setToken("")}
+          />
         </div>
       </div>
     </div>

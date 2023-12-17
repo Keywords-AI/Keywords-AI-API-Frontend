@@ -12,8 +12,8 @@ import {
   setFirstTime,
   setCacheAnswer,
   appendMessage,
+  removeLastMessage,
 } from "src/store/actions/playgroundAction";
-import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
@@ -35,12 +35,13 @@ const mapDispatchToProps = {
   setPrompt,
   setFirstTime,
   setCacheAnswer,
+  appendMessage,
+  removeLastMessage,
 };
 
-const Prompt = () => {
-  const dispatch = useDispatch();
+const Prompt = ({ setPrompt }) => {
   const handleOnChange = (event) => {
-    dispatch(setPrompt(event.target.value));
+    setPrompt(event.target.value);
   };
   return (
     <div className="flex-col w-[320px] self-stretch justify-center items-start gap-xxs">
@@ -62,9 +63,10 @@ const NotConnectedMap = ({
   firstTime,
   currentModel,
   setCacheAnswer,
-  systemPrompt,
+  setFirstTime,
+  appendMessage,
+  removeLastMessage,
 }) => {
-  const dispatch = useDispatch();
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const handleAddMessage = () => {
@@ -74,6 +76,7 @@ const NotConnectedMap = ({
     event.stopPropagation();
     if (streaming) return;
     console.log("regenerate");
+    removeLastMessage();
     sendStreamingTextThunk(
       {
         messages: messages,
@@ -82,6 +85,7 @@ const NotConnectedMap = ({
       },
       "https://platform.keywordsai.co/",
       "api/playground/ask/",
+      systemPrompt,
       () => {
         // this is the callback function after the streaming text is done
         const streamingText = store.getState().streamingText.streamingText;
@@ -90,15 +94,28 @@ const NotConnectedMap = ({
           role: currentModel,
           content: streamingText,
         };
-        console.log("hi");
-        store.dispatch(appendMessage(newMessage));
+        appendMessage(newMessage);
+        const lastUserMessageIndex = messages.reduce(
+          (lastIndex, message, currentIndex) => {
+            if (message.role === "user") {
+              return currentIndex;
+            }
+            return lastIndex;
+          },
+          -1
+        );
+        const cache = {
+          answer: streamingText,
+          index: lastUserMessageIndex,
+        };
+        setCacheAnswer(currentModel, cache);
       }
     );
   };
   useEffect(() => {
     if (streamingText) {
       setGeneratingText(streamingText);
-      dispatch(setFirstTime(false));
+      setFirstTime(false);
     }
   }, [streamingText]);
 
@@ -168,7 +185,7 @@ const SidePannel = () => {
   );
 };
 
-export function Playground() {
+export default function Playground() {
   return (
     <div className="flex items-start justify-center self-stretch h-[calc(100vh-52.8px)] ">
       <Main />

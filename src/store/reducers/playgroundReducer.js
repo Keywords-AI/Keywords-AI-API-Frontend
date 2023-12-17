@@ -8,6 +8,7 @@ import {
   SET_CACHE_ANSWER,
   APPEND_MESSAGE,
   REMOVE_LAST_MESSAGE,
+  SET_LAST_MESSAGE,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -42,6 +43,14 @@ const playgroundReducer = (state = initialState, action) => {
       return { ...state, messages: [...state.messages, action.payload] };
     case REMOVE_LAST_MESSAGE:
       return { ...state, messages: state.messages.slice(0, -1) };
+    case SET_LAST_MESSAGE:
+      return {
+        ...state,
+        messages: [
+          ...state.messages.slice(0, -1),
+          { ...state.messages.slice(-1)[0], ...action.payload },
+        ],
+      };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };
     case SET_CURRENT_MODEL:
