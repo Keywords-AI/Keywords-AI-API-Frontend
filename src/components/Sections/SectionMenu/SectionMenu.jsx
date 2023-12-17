@@ -1,17 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Quality } from 'src/components/Icons'
+import { User } from 'src/components/Icons'
 import { Button } from 'src/components/Buttons'
 import { useNavigate } from 'react-router-dom'
 
 const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
   const pages = section?.pages || [];
   const title = section?.title || "Section Title Here";
-  const icon = section?.icon || <Quality />;
+  const icon = section?.icon || <User />;
   const navigate = useNavigate()
   return (
     <div className="flex-row gap-xxs items-start self-stretch ">
-      {icon}
+      <div className="flex h-6 items-center">
+        {icon}
+      </div>
       <div className="flex-col items-start gap-xs flex-1">
         <div className="flex px-xs items-start text-md-medium text-gray-white">
           {title || "Section Title Here"}

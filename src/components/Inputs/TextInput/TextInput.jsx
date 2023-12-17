@@ -73,7 +73,7 @@ export const TextInput = React.forwardRef(({
           className={cn(
             "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full placeholder:text-gray-4 box-border",
             isFocused && !disabled ? " border border-gray-white" : "border border-gray-3",
-            !disabled ? "text-gray-white" : "text-gray-4 ",
+            !disabled ? "text-gray-white" : "text-gray-3 ",
           )}
           {...register(name, validationSchema)}
           value={value} // Bind the value prop to the input

@@ -5,6 +5,7 @@ import ApiKeyPage from './ApiKeyPage';
 import UsagePage from './UsagePage';
 import MemberPage from './MemberPage';
 import BillingPage from './BillingPage';
+import { Building } from 'src/components/Icons'
 
 const pages = [
     {
@@ -104,7 +105,8 @@ const processedUserPages = userPages.map((page, index) => {
 export const sections = [
     {
         title: "Organization",
-        pages: processedOrgPages
+        pages: processedOrgPages,
+        icon: <Building />
     },
     {
         title: "User",
