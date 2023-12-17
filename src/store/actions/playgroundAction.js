@@ -8,6 +8,7 @@ export const SET_FIRST_TIME = "SET_FIRST_TIME";
 export const SET_CACHE_ANSWER = "SET_CACHE_ANSWERS";
 export const APPEND_MESSAGE = "APPEND_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
+export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
 // Action Creator
 export const setMessages = (messages) => ({
   type: SET_MESSAGES,
@@ -21,6 +22,11 @@ export const appendMessage = (message) => ({
 
 export const removeLastMessage = () => ({
   type: REMOVE_LAST_MESSAGE,
+});
+
+export const setLastMessage = (message) => ({
+  type: SET_LAST_MESSAGE,
+  payload: message,
 });
 
 export const setFirstTime = (firstTime) => ({

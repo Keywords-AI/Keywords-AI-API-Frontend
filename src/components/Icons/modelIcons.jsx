@@ -49,5 +49,7 @@ export const ModelIcon = (model) => {
       return OpenAi;
     case "ai21":
       return Ai21;
+    default:
+      return OpenAi;
   }
 };

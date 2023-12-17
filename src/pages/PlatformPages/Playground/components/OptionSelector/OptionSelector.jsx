@@ -12,7 +12,7 @@ import {
   Speed,
   Tokens,
 } from "./icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setModelOptions } from "src/store/actions/playgroundAction";
 import { NumberInput } from "src/components/Inputs";
 
@@ -20,7 +20,9 @@ export function OptionSelector({}) {
   const dispatch = useDispatch();
   const [optimizeOpen, setOptimizeOpen] = React.useState(false);
   const [creativityOpen, setCreativityOpen] = React.useState(false);
-  const [token, setToken] = React.useState("0");
+  const [token, setToken] = React.useState(
+    useSelector((state) => state.playground.modelOptions.maxTokens)
+  );
   const [current, setCurrent] = React.useState([
     {
       name: "Speed",
@@ -153,6 +155,7 @@ export function OptionSelector({}) {
 
   const handleChange = (event) => {
     const { value } = event.target;
+    console.log(value);
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };
@@ -204,7 +207,13 @@ export function OptionSelector({}) {
           />
         ))}
         <div className="flex w-[88px] ">
-          <NumberInput icon={Tokens} value={token} onChange={handleChange} />
+          <NumberInput
+            icon={Tokens}
+            iconClassName="fill-gray-4"
+            value={token}
+            onChange={handleChange}
+            onClick={() => setToken("")}
+          />
         </div>
       </div>
     </div>
