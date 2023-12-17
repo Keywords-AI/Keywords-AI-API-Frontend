@@ -186,6 +186,7 @@ export const Button = forwardRef(
         hoverColor = hoverColor || "bg-gray-2";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
+        iconPosition = iconPosition || "left";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
