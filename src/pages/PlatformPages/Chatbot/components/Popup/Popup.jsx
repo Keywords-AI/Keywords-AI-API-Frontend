@@ -76,10 +76,6 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
     <div className="backdrop fixed h-screen w-screen flex bg-black bg-opacity-50 z-[1000] justify-center items-center" onMouseUp={handelClose}>
       <form ref={formRef}>
         <div className="inline-flex flex-col items-start gap-md p-lg max-h-full w-[600px] bg-black rounded-md relative"
-          style={{
-            boxShadow: "0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
-
-          }}
           ref={cardRef}
           onMouseDown={() => {
             setLastClicked(true);
@@ -114,48 +110,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                 className="text-sm bg-black border border-solid border-gray-3 rounded-sm text-gray-white"
                 id=""
               ></textarea>
-              {/* <input
-                type="file"
-                name="uploaded_file"
-                hidden
-                accept=".pdf,.doc,.docx,.txt"
-                ref={fileUploadRef}
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  console.log(file);
-
-                  setFile(file);
-                }}
-              />
-              <div className="flex-col justify-start items-start self-stretch gap-xxs">
-                <div className="text-sm-md text-gray-4">
-                  {hasValidFile(user) ? "File Upload (Beta)" : "Current File"}
-                </div>
-                <div
-                  onClick={() => {
-                    fileUploadRef.current.click();
-                  }}
-                >
-                  <FileUpload />
-                </div>
-              </div> */}
             </div>
-            {/* {file && (
-              <>
-                <FileCard
-                  fileName={file.name}
-                  fileType={file.name.split(".")[1]?.toUpperCase()}
-                />
-              </>
-            )}
-            {hasValidFile(user) && (
-              <>
-                <FileCard
-                  fileName={user?.current_file}
-                  fileType={user?.current_file.split(".")[1]?.toUpperCase()}
-                />
-              </>
-            )} */}
             <FileInput
               title="File Upload (Beta)"
               initialFile={file}
@@ -165,10 +120,6 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
             />
           </div>
           <div className="flex-row self-stretch flex-1 justify-between items-center">
-            {/* <div className="flex-row justify-center items-center gap-xs self-stretch">
-              <CheckBox onChecked={setChecked} checked={checked} />
-              <div className="text-sm">{"Enable for new chats"}</div>
-            </div> */}
             <RadioInput text="Enable for new chats"/>
             <div className="flex-row justify-center items-center gap-xs self-stretch">
               <Button

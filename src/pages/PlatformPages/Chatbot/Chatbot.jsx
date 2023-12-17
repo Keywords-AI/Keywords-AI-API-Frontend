@@ -233,26 +233,15 @@ function Chatbot({
         setActiveConversation={setActiveConversation}
         handleDelete={handleDelete}
       />
-
-      {promptPopup && (
-        <Modal
-          open={promptPopup}
-          setOpen={setPromptPopup}>
-          <Popup closePopup={() => {
-            setPromptPopup(false);
-          }}/>
-        </Modal>
-      )}
-      {/* <PanelChat
-        handleStop={handleStop}
-        createConversation={createConversation}
-        getConversations={getConversations}
-        conversations={conversations}
-        activeConversation={activeConversation}
-        retrieveConversation={retrieveConversation}
-        setActiveConversation={setActiveConversation}
-        handleDelete={handleDelete}
-      /> */}
+      <Modal
+        title="Custom prompt"
+        subtitle="Add a system prompt or upload files. Custom settings coming soon."
+        open={promptPopup}
+        setOpen={setPromptPopup}>
+        <Popup closePopup={() => {
+          setPromptPopup(false);
+        }} />
+      </Modal>
       <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
           <div className="flex-row justify-center items-center gap-xxs self-stretch">
@@ -301,7 +290,7 @@ function Chatbot({
               </>
             )}
             {generatingText && (
-              <ChatMessage 
+              <ChatMessage
                 message={{ content: generatingText, role: 'assistant' }}
               />
             )}

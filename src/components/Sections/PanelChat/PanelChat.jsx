@@ -2,7 +2,12 @@ import React from "react";
 import { Rocket, Edit } from "./icons";
 import { Button } from "src/components";
 import ConversationItem from "./components/ConversationItem";
-export default function ChatLeftDrawer({
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {};
+const mapDispatchToProps = {};
+
+function ChatLeftDrawer({
   handleStop,
   createConversation,
   getConversations,
@@ -14,8 +19,8 @@ export default function ChatLeftDrawer({
   setPromptPopup,
 }) {
   const conversations = [
-    {id: 1, name: "Conversation 1 φαιξσδ΄ξφικα"},
-    {id: 1, name: "Conversation 1 φαιξσδ΄ξφικα"},
+    { id: 1, name: "Conversation 1 φαιξσδ΄ξφικα" },
+    { id: 1, name: "Conversation 1 φαιξσδ΄ξφικα" },
   ];
   return (
     <div className="bg-gray-2 w-[280px] p-xs relative">
@@ -31,7 +36,7 @@ export default function ChatLeftDrawer({
         <div className="flex-col flex-1 w-full max-h-[calc(100vh-200px)] ">
           <div className="self-stretch flex-col overflow-auto">
             {conversations?.map((conversation, index) => (
-              <ConversationItem key={index} conversation={conversation}/>
+              <ConversationItem key={index} conversation={conversation} />
             ))}
           </div>
         </div>
@@ -46,3 +51,5 @@ export default function ChatLeftDrawer({
     </div>
   );
 }
+
+export default connect(null, null)(ChatLeftDrawer);
