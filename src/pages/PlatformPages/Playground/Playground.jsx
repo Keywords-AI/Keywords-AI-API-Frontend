@@ -1,4 +1,11 @@
-import { AddMessage, Right, Button, Divider } from "src/components";
+import {
+  AddMessage,
+  Right,
+  Button,
+  Divider,
+  Regenerate,
+  Stop,
+} from "src/components";
 import {
   CurrentModel,
   OptionSelector,
@@ -61,14 +68,9 @@ const NotConnectedMap = ({
   messages,
   streaming,
   streamingText,
-  setMessages,
-  firstTime,
   currentModel,
-  setCacheAnswer,
   setFirstTime,
-  appendMessage,
-  removeLastMessage,
-  systemPrompt,
+
   abortStreamingTextRequest,
 }) => {
   const { conversationBoxRef, generatingText, setGeneratingText } =
@@ -156,28 +158,6 @@ const NotConnectedMap = ({
               content={streamingText}
             />
           )}
-          <div className="flex gap-xxs">
-            <Button
-              variant="small"
-              text="Add Message"
-              icon={AddMessage}
-              onClick={handleAddMessage}
-            />
-            {!firstTime && (
-              <Button
-                variant="small"
-                text="Regenerate"
-                icon={AddMessage}
-                onClick={handleRegenerate}
-              />
-            )}
-            <Button
-              variant="small"
-              text="Stop generate"
-              icon={AddMessage}
-              onClick={() => abortStreamingTextRequest()}
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -186,16 +166,91 @@ const NotConnectedMap = ({
 
 const Main = connect(mapStateToProps, mapDispatchToProps)(NotConnectedMap);
 
-const SidePannel = () => {
+const NotConnectSidePannel = ({
+  appendMessage,
+  removeLastMessage,
+  systemPrompt,
+  currentModel,
+  streaming,
+  messages,
+  firstTime,
+}) => {
+  const handleRegenerate = (event) => {
+    event.stopPropagation();
+    if (streaming) return;
+    console.log("regenerate");
+    removeLastMessage();
+    removeLastMessage();
+
+    sendStreamingTextThunk(
+      {
+        messages: messages,
+        stream: true,
+        model: currentModel,
+      },
+      "https://platform.keywordsai.co/",
+      "api/playground/ask/",
+      systemPrompt,
+      () => {
+        // this is the callback function after the streaming text is done
+        const streamingText = store.getState().streamingText.streamingText;
+        const currentModel = store.getState().playground.currentModel;
+        const newMessage = {
+          role: currentModel,
+          content: streamingText,
+        };
+        appendMessage(newMessage);
+        const lastUserMessageIndex = messages.reduce(
+          (lastIndex, message, currentIndex) => {
+            if (message.role === "user") {
+              return currentIndex;
+            }
+            return lastIndex;
+          },
+          -1
+        );
+        const cache = {
+          answer: streamingText,
+          index: lastUserMessageIndex,
+        };
+        appendMessage({ role: "user", content: "" });
+        setCacheAnswer(currentModel, cache);
+      },
+      store.dispatch,
+      store.getState
+    );
+  };
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
       <Divider />
       <CurrentModel />
       <ModelOutput />
+      <div className="flex-col gap-xxs">
+        {!firstTime && (
+          <Button
+            variant="small"
+            text="Regenerate"
+            icon={Regenerate}
+            onClick={handleRegenerate}
+          />
+        )}
+
+        <Button
+          variant="small"
+          text="Stop generate"
+          icon={Stop}
+          onClick={() => abortStreamingTextRequest()}
+        />
+      </div>
     </div>
   );
 };
+
+const SidePannel = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotConnectSidePannel);
 
 export default function Playground() {
   return (

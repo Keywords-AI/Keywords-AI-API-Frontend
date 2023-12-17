@@ -7,6 +7,7 @@ import cn from "src/utilities/ClassMerge";
 import { DropDownMenu } from "src/components/Dialogs/DropDownMenu/DropDownMenu";
 import { logout } from "src/store/actions";
 import { AvatarButton } from "src/components/Buttons";
+import { Button, Divider } from "src/components";
 
 const mapStateToProps = (state) => {
   return {
@@ -28,10 +29,7 @@ const ProfileMenu = ({ logout, user }) => {
       )}
       onClick={() => setOpen(!open)}
     >
-      <AvatarButton
-        first_name={first_name}
-        size="sm"
-      />
+      <AvatarButton first_name={first_name} size="sm" />
       <ArrowDown
         className={cn(
           "fill-gray-4 transition-transform duration-[250] ease-in ",
@@ -80,18 +78,17 @@ const ProfileMenu = ({ logout, user }) => {
               <p className="text-sm-regular text-gray-4">{user?.email}</p>
             </div>
           </DropdownMenuPrimitive.Item>
-          <DropdownMenuPrimitive.Separator className="h-[1px] bg-gray-3 w-full" />
+          <DropdownMenuPrimitive.Item disabled asChild>
+            <div className="flex h-[1px] py-xxs w-full">
+              <Divider color="bg-gray-3" />
+            </div>
+          </DropdownMenuPrimitive.Item>
         </React.Fragment>
       );
     } else {
       return (
         <DropdownMenuPrimitive.Item key={index} asChild>
-          <div
-            className="flex px-xs py-xxs items-center gap-xxs flex-1 rounded-sm hover:bg-gray-3 hover:cursor-pointer text-gray-white outline-none self-stretch"
-            onClick={item.action}
-          >
-            <span className="text-sm-regular text-gray-white">{item.name}</span>
-          </div>
+          <Button variant="panel" text={item.name} onClick={item.action} />
         </DropdownMenuPrimitive.Item>
       );
     }

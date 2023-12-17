@@ -5,14 +5,14 @@ import useForwardRef from "src/hooks/useForwardRef";
 export const EditableBox = React.forwardRef(
   (
     {
-      register = () => { },
+      register = () => {},
       name,
       validationSchema,
       placeholder,
       value,
-      handleInput=()=>{},
+      handleInput = () => {},
       onKeyDown,
-      onChange = () => { },
+      onChange = () => {},
       streaming = false,
       type = "text",
       className,
@@ -26,7 +26,7 @@ export const EditableBox = React.forwardRef(
     const [isEditing, setIsEditing] = useState(focus);
     const [text, setText] = useState(value || "");
     const divRef = useRef(null);
-    const [height, setHeight] = useState("auto"); // <-- Add state for height
+    const [height, setHeight] = useState("auto");
 
     useEffect(() => {
       if (textareaRef.current) {
@@ -67,7 +67,7 @@ export const EditableBox = React.forwardRef(
 
     const handleChange = (e) => {
       setText(e.target.value);
-      onChange(e);
+      onChange(e.target.value);
     };
 
     useEffect(() => {
@@ -80,7 +80,6 @@ export const EditableBox = React.forwardRef(
       }
     }, [streaming]);
 
-
     return (
       <div
         className={cn(
@@ -88,8 +87,8 @@ export const EditableBox = React.forwardRef(
           borderless
             ? "border-none"
             : focus || isEditing
-              ? "border-gray-4"
-              : "border-gray-3"
+            ? "border-gray-4"
+            : "border-gray-3"
         )}
         ref={divRef}
         onClick={handleDivClick}
@@ -97,7 +96,7 @@ export const EditableBox = React.forwardRef(
       >
         <textarea
           className={cn(
-            "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm-regular text-white placeholder-gray-4 px-xs py-xxs",
+            "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm-regular text-gray-white placeholder-gray-4 px-xs py-xxs",
             className
           )}
           placeholder={placeholder}
