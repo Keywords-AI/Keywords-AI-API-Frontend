@@ -41,6 +41,7 @@ export const processKey = (key, actions = () => {}) => {
     created: getDateStr(key.created_at),
     last_used: getDateStr(key.last_used),
     actions: actions(key),
+    prefix: key.prefix.slice(3) +'...'
   };
 };
 

@@ -40,6 +40,21 @@ export const Right = ({
           />
         </svg>
       );
+    case "sm":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.29492 10.58L6.87492 6L2.29492 1.41L3.70492 0L9.70492 6L3.70492 12L2.29492 10.58Z"
+            fill="#B1B3BC"
+          />
+        </svg>
+      );
   }
 };
 
@@ -124,6 +139,21 @@ export const Left = ({
           />
         </svg>
       );
+    case "sm":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9.70508 1.42L5.12508 6L9.70508 10.59L8.29508 12L2.29508 6L8.29508 0L9.70508 1.42Z"
+            fill="#B1B3BC"
+          />
+        </svg>
+      );
   }
 };
 
@@ -189,15 +219,14 @@ export const Check = ({
       return (
         <svg
           width="12"
-          height="13"
-          viewBox="0 0 12 13"
+          height="12"
+          viewBox="0 0 12 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className={"flex-shrink-0"}
         >
           <path
-            d="M12 3.27985L3.77143 11.5084L0 7.73699L0.966857 6.77013L3.77143 9.56785L11.0331 2.31299L12 3.27985Z"
-            className={active ? activeFill : fill}
+            d="M12 2.3692L3.77143 10.5978L0 6.82634L0.966857 5.85949L3.77143 8.6572L11.0331 1.40234L12 2.3692Z"
+            fill="#F9FAFC"
           />
         </svg>
       );

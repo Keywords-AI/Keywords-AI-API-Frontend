@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { KeywordsBarChart } from 'src/components/Display'
 import { Button } from 'src/components/Buttons'
-import { Up, Down } from 'src/components/Icons'
+import { Left, Right } from 'src/components/Icons'
 import { getUsageData, getLastMonthUsageData, getNextMonthUsageData, setIsFirst, setIsLast } from 'src/store/actions'
 import { digitToMonth } from 'src/utilities/objectProcessing'
 
@@ -31,13 +31,13 @@ export const UsageChart = ({
                 <div className="flex-row gap-xxs items-center">
                     {!usage.isFirst && <Button
                         variant="icon"
-                        icon={Up}
+                        icon={Left}
                         onClick={() => { getLastMonthUsageData() }}
                     />}
                     {digitToMonth(usage?.date?.getMonth())}
                     {!usage.isLast && <Button
                         variant="icon"
-                        icon={Down}
+                        icon={Right}
                         onClick={() => { getNextMonthUsageData() }}
                     />}
                 </div>
