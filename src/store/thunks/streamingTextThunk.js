@@ -6,7 +6,6 @@ import {
   sendStreamingTextSuccess,
   sendStreamingTextPartial,
 } from "../actions/streamingTextAction";
-import store from "../store";
 import { setOutputs } from "../actions/playgroundAction";
 /**
  * Sends streaming text to a specified host and path using the specified parameters.
@@ -26,8 +25,10 @@ export const sendStreamingTextThunk = async (
   path,
   prompt,
   callback,
+  dispatch,
+  getState,
   readTimeout = 5000,
-  fetchTimeout = 10000 // Add fetch timeout in milliseconds
+  fetchTimeout = 10000, // Add fetch timeout in milliseconds
 ) => {
   const abortController = new AbortController();
   const headers = {
@@ -35,7 +36,7 @@ export const sendStreamingTextThunk = async (
     "X-CSRFToken": getCookie("csrftoken"),
     Authorization: `Bearer ${retrieveAccessToken()}`,
   };
-  store.dispatch(sendStreamingTextRequest());
+  dispatch(sendStreamingTextRequest());
   const body = JSON.stringify({
     stream: streamingText.stream,
     messages: [
@@ -45,9 +46,9 @@ export const sendStreamingTextThunk = async (
       ),
     ],
     model: streamingText.model,
-    // optimize: store.getState().playground.modelOptions.optimize,
-    // creativity: store.getState().playground.modelOptions.creativity,
-    // maxTokens: store.getState().playground.modelOptions.maxTokens,
+    // optimize: getState().playground.modelOptions.optimize,
+    // creativity: getState().playground.modelOptions.creativity,
+    // maxTokens: getState().playground.modelOptions.maxTokens,
   });
   try {
     const response = await Promise.race([
@@ -75,7 +76,7 @@ export const sendStreamingTextThunk = async (
       ]);
       if (done) {
         reader.cancel();
-        store.dispatch(sendStreamingTextSuccess());
+        dispatch(sendStreamingTextSuccess());
         if (callback && typeof callback === "function") {
           callback();
         }
@@ -87,7 +88,7 @@ export const sendStreamingTextThunk = async (
       dataString += decoder.decode(value);
 
       const chunks = dataString.split("---");
-      if (store.getState().streamingText.abort) {
+      if (getState().streamingText.abort) {
         throw new Error("Aborted");
       }
       if (chunks.length === 1) {
@@ -96,7 +97,7 @@ export const sendStreamingTextThunk = async (
         const firstChunk = JSON.parse(chunks[0]);
         if (firstChunk.evaluation) {
           const outputs = firstChunk.evaluation;
-          store.dispatch(
+          dispatch(
             setOutputs({
               tokens: outputs.completion_tokens,
               cost: outputs.cost,
@@ -107,7 +108,7 @@ export const sendStreamingTextThunk = async (
         } else if (firstChunk.choices[0]?.delta.content) {
           const firstMessageChunk = firstChunk.choices[0]?.delta.content;
           if (firstMessageChunk) {
-            store.dispatch(sendStreamingTextPartial(firstMessageChunk));
+            dispatch(sendStreamingTextPartial(firstMessageChunk));
           }
         }
         dataString = ""; // Clear dataString as the first chunk has been processed
@@ -119,7 +120,7 @@ export const sendStreamingTextThunk = async (
           if (!lineChunk.choices[0]?.delta.content) continue;
           const messageChunk = lineChunk.choices[0]?.delta.content;
           if (messageChunk) {
-            store.dispatch(sendStreamingTextPartial(messageChunk));
+            dispatch(sendStreamingTextPartial(messageChunk));
           }
         }
       }
@@ -132,6 +133,6 @@ export const sendStreamingTextThunk = async (
     const errorMessage = error.response
       ? error.response.data
       : "An error occurred";
-    store.dispatch(sendStreamingTextFailure(errorMessage));
+    dispatch(sendStreamingTextFailure(errorMessage));
   }
 };

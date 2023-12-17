@@ -52,8 +52,8 @@ export const Button = forwardRef(
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => {},
-      onMouseLeave = () => {},
+      onMouseEnter = () => { },
+      onMouseLeave = () => { },
       textClassName = "text-sm-md",
       bgColor,
       hoverColor,
@@ -79,6 +79,7 @@ export const Button = forwardRef(
     const [hover, setHover] = React.useState(false);
     switch (variant) {
       case "secondary":
+        iconPosition = iconPosition || "left";
         bgColor = bgColor || "bg-gray-white";
         hoverColor = hoverColor || "bg-gray-4";
         clickedColor = clickedColor || "bg-gray-4";
@@ -118,6 +119,7 @@ export const Button = forwardRef(
         );
         break;
       case "r4-white":
+        iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-white";
         textClassName = textClassName || "text-sm-regular";
         hoverColor = hoverColor || "bg-gray-4";
@@ -132,6 +134,7 @@ export const Button = forwardRef(
 
         break;
       case "r4-gray-2":
+        iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-2";
         clickedColor = clickedColor || "bg-gray-2";
@@ -169,6 +172,7 @@ export const Button = forwardRef(
 
         break;
       case "r4-black":
+        iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
         textClassName = textClassName || "text-sm-regular";
@@ -268,10 +272,11 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
-        justification = justification || "justify-between";
         className = className || "w-full";
         iconFill = iconFill || "fill-gray-4";
+        iconPosition = iconPosition || "left";
         iconHoverFill = iconHoverFill || "fill-gray-white";
+        justification = justification || "justify-start";
         break;
       case "careers":
         bgColor = bgColor || "bg-transparent";
@@ -349,7 +354,6 @@ export const Button = forwardRef(
           borderRadius,
           hover ? hoverColor : bgColor,
           className,
-          iconPosition === "left" ? "flex-row-reverse" : "flex-row",
           padding,
           hover ? borderHoverColor : borderColor,
           "text-center"
@@ -372,7 +376,9 @@ export const Button = forwardRef(
               </span>
             )}
             {icon && (
-              <div className="flex justify-center items-center w-[16px] gap-[10px]">
+              <div className={cn("flex justify-center items-center w-[16px] gap-[10px]",
+                iconPosition === "left" ? "order-first" : "order-last"
+              )}>
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
                   size: iconSize,

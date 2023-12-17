@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "src/utilities/ClassMerge";
+import useForwardRef from "src/hooks/useForwardRef";
 
 /**
  * `TextInput` is a reusable input component for forms.
@@ -43,6 +44,7 @@ export const TextInput = React.forwardRef(({
       setIsFocused(false);
     }
   };
+  const inputRef = useForwardRef(forwardedRef);
 
   return (
     <div
@@ -66,10 +68,13 @@ export const TextInput = React.forwardRef(({
         {/* Render the icon */}
         <input
           id={name}
+          ref={inputRef}
           name={name}
+          // For react form register to work
+          // need to have name prop
+          // onChange from parent need to be called
           type={type}
           placeholder={placeholder}
-          ref={forwardedRef}
           className={cn(
             "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full placeholder:text-gray-4 box-border",
             isFocused && !disabled ? " border border-gray-white" : "border border-gray-3",

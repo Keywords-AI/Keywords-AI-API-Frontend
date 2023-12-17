@@ -79,7 +79,9 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             index: messageIndex,
           };
           store.dispatch(setCacheAnswer(currentModel, cache));
-        }
+        },
+        store.dispatch,
+        store.getState
       );
     } catch (error) {
       console.log(error);
