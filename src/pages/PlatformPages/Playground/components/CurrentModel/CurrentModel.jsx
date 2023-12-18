@@ -110,7 +110,7 @@ export const CurrentModel = () => {
             iconPosition="left"
             padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
-            dispatch={streaming}
+            disabled={streaming}
           />
         }
         items={
@@ -176,7 +176,9 @@ export const CurrentModel = () => {
                             appendMessage({ role: "user", content: "" })
                           );
                           store.dispatch(setCacheAnswer(currentModel, cache));
-                        }
+                        },
+                        store.dispatch,
+                        store.getState
                       );
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message

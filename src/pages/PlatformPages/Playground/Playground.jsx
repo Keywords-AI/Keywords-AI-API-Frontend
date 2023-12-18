@@ -164,7 +164,9 @@ const NotConnectSidePannel = ({
         };
         appendMessage({ role: "user", content: "" });
         setCacheAnswer(currentModel, cache);
-      }
+      },
+      store.dispatch,
+      store.getState
     );
   };
   return (

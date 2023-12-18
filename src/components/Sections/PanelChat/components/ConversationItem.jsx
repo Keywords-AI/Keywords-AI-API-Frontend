@@ -1,28 +1,29 @@
 import React, { useEffect } from 'react'
 import { Delete, Check, Cross } from 'src/components/Icons/iconsDS'
 import { Button, IconButton } from 'src/components/Buttons'
-import { deleteConversation } from 'src/store/actions/conversationAction';
+import { deleteConversation, getConversation } from 'src/store/actions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => ({
 
 });
 const mapDispatchToProps = {
-    deleteConversation
+    deleteConversation,
+    getConversation,
 }
 
-function ConversationItem({ conversation, deleteConversation }) {
+function ConversationItem({
+    conversation,
+    deleteConversation,
+    getConversation
+}) {
     const [conv, setConv] = React.useState(conversation);
     const [hover, setHover] = React.useState(false);
-
-    useEffect(() => {
-        console.log("conversation", hover)
-    }, [hover])
-
     return (
         <Button
             variant="panel"
             onClick={() => {
+                getConversation()
             }}
             onMouseEnter={() => {
                 setHover(true)
@@ -30,6 +31,7 @@ function ConversationItem({ conversation, deleteConversation }) {
             onMouseLeave={() => {
                 setHover(false)
             }}
+            justification="justify-between"
         >
             <div className="flex w-40 overflow-hidden truncate text-sm text-white">
                 {conv?.name}

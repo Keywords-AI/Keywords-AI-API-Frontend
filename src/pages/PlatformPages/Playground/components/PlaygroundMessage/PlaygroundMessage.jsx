@@ -74,14 +74,16 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             role: currentModel,
             content: streamingText,
           };
-          store.dispatch(appendMessage(newMessage));
+          dispatch(appendMessage(newMessage));
           const cache = {
             answer: streamingText,
             index: messageIndex,
           };
-          store.dispatch(setCacheAnswer(currentModel, cache));
-          store.dispatch(appendMessage({ role: "user", content: "" }));
-        }
+          dispatch(setCacheAnswer(currentModel, cache));
+          dispatch(appendMessage({ role: "user", content: "" }));
+        },
+        dispatch,
+        store.getState
       );
     } catch (error) {
       console.log(error);
@@ -131,7 +133,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         />
       ) : (
         <div className="w-full h-full flex-col self-stretch flex-grow rounded-sm  text-sm-regular text-gray-white">
-          {textContent || <span className="text-gray-4">"Generating..."</span>}
+          {textContent || <span className="text-gray-4">Generating...</span>}
         </div>
       )}
       {isFocused && isUser && (
@@ -143,7 +145,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconSize="md"
             iconPosition="right"
             onClick={handleSend}
-            dispatch={streaming}
+            disabled={streaming}
           />
         </div>
       )}

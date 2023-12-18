@@ -1,5 +1,11 @@
 import { getCSRF } from "src/authentication/Authentication";
 import { retrieveAccessToken } from "src/utilities/authorization";
+import {
+  setCustomPrompt,
+  setEnableCustomPrompt,
+  setCustomPromptFile,
+  getConversation,
+} from "src/store/actions";
 import apiConfig from "src/services/apiConfig";
 import {
   // Actions
@@ -23,15 +29,25 @@ export const getUser = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
+          // Set the user object itself
           dispatch({ type: SET_USER, payload: data });
+          // Set the organizaiton of the user
           dispatch(setOrg(data.organization));
+          // Set the free credits under usage state of the user
           dispatch(
-            setFreeCredits({ 
+            setFreeCredits({
               creditsRemaining: data.free_trial_remaining,
               creditsTotal: data.free_free_trial_total || 40000,
               creditsExpired: data.free_trial_expired,
             })
           );
+          // ---------Chatbot Actions---------
+          // Set user's custom prompt for chatbot
+          dispatch(setCustomPrompt(data.system_prompt));
+          dispatch(setEnableCustomPrompt(data.system_prompt_active));
+          dispatch(setCustomPromptFile(data.current_file));
+          dispatch(getConversation(data.last_conversation));
+          // ---------End Chatbot Actions---------
         } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });

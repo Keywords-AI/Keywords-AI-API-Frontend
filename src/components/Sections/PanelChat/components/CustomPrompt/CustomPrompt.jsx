@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import "./style.css";
-import { CheckBox, Close } from "./icons";
 import { updateSystemPrompt } from "src/store/actions/authAction";
 import { connect } from "react-redux";
 import { loadingFileUpload } from "src/store/actions/authAction";
 import { Button } from "src/components";
-import { IconButton } from "src/components/Buttons";
 import { FileInput, RadioInput } from "src/components/Inputs";
 import { setIsEditing } from "src/store/actions";
 import { useForm } from "react-hook-form";
@@ -25,7 +23,6 @@ function CustomPrompt({
   chatbot,
   setIsEditing,
   user,
-  loadingFileUpload
 }) {
   const [checked, setChecked] = React.useState(false);
   const [systemPrompt, setSystemPrompt] = React.useState(chatbot.systemPrompt || "");
@@ -33,7 +30,6 @@ function CustomPrompt({
 
   const onSubmit = (data) => {
     console.log(data);
-
   };
 
   useEffect(() => {
@@ -44,6 +40,7 @@ function CustomPrompt({
       console.log(system_prompt?.content);
     }
   }, [user]);
+  
   const [file, setFile] = React.useState(null);
 
   const handelChange = (e) => {

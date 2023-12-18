@@ -1,32 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Terminate, Send } from "src/components/Icons";
-import { EditableBox } from "src/components/Inputs/EditableBox/EditableBox";
-import {IconButton} from "src/components/Buttons";
+import { EditableBox } from "src/components/Inputs";
+import { IconButton } from "src/components/Buttons";
+import { useForm } from "react-hook-form";
+import { connect } from "react-redux";
+import { sendMessage } from "src/store/actions";
 
-export default function KeywordsInput({
+const mapStateToProps = (state) => {
+  return {
+    systemPrompt: state.chatbot.customPrompt,
+    streaming: state.streamingText.isLoading,
+  };
+};
+
+const mapDispatchToProps = {
+  sendMessage,
+};
+
+function KeywordsInput({
   placeholder,
   handleStop,
-  streaming,
-  handleInput,
-  handleKeyDown,
-  handleSend,
-  abortController,
+  sendMessage=()=>{},
   value,
+  streaming,
 }) {
-  const spanRef = React.useRef(null);
-  React.useEffect(() => {
-    if (spanRef.current && value) {
-      spanRef.current.innerText = value;
-    } else if (spanRef.current) {
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const onKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.target.form.requestSubmit();
     }
-  }, [value]);
+  };
+  const onSubmit = async (data) => {
+    sendMessage();
+  };
+
   return (
-    <div className="relative flex w-full">
-      <EditableBox 
+    <form className="relative flex-col w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <EditableBox
+        {...register("message", { required: "This is required" })}
         className={"rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
         borderless={false}
         placeholder={placeholder}
-        text={streaming? "Generating":value}
+        text={streaming ? "Generating" : value}
+        onKeyDown={onKeyDown}
       />
       {streaming ? (
         <IconButton
@@ -45,6 +64,8 @@ export default function KeywordsInput({
           className="absolute right-xs bottom-[11px] cursor-pointer"
         />
       )}
-    </div>
+    </form>
   );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(KeywordsInput);
