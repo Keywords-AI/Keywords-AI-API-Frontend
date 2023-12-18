@@ -31,7 +31,6 @@ function ChatLeftDrawer({
   
 }) {
   const conversations = chatbot?.conversations;
-  const [isHovered, setIsHovered] = React.useState(false);
   useEffect(() => { getConversations() }, [])
   return (
     <div className="bg-gray-2 w-[280px] p-xs relative">
@@ -68,8 +67,6 @@ function ChatLeftDrawer({
         open={chatbot.isEditing}
         setOpen={setIsEditing}
         trigger={<Button
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           variant="small"
           icon={Pencil}
           text={"Custom prompt: " + ("on")}
