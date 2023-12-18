@@ -200,7 +200,7 @@ export const EditableBox = React.forwardRef(
         {true ? (
           <textarea
             className={cn(
-              "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm-regular text-white placeholder-gray-4",
+              "resize-none outline-none whitespace-pre-wrap bg-transparent h-auto text-sm-regular text-gray-white placeholder-gray-4",
               className
             )}
             placeholder={placeholder}

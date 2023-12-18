@@ -23,14 +23,6 @@ const Logo = ({ fill = "fill-gray-4" }) => {
   );
 };
 
-const concateTextName = (pageName) => {
-  return (
-    "text-sm " +
-    (location.pathname == `/platform/${pageName}`
-      ? "text-gray-white"
-      : "text-gray-4")
-  );
-};
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -81,7 +73,7 @@ export const NavBar = () => {
             variant="header"
             arrow={false}
             onClick={() => navigate("/feedback")}
-            textClassName={"text-sm text-gray-4"}
+            textClassName={"text-sm-regular text-gray-4"}
           />
           <ProfileMenu />
         </div>

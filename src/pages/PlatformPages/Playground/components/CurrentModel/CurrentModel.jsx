@@ -107,6 +107,7 @@ export const CurrentModel = () => {
             variant="r4-black"
             text={current.name}
             icon={current.icon}
+            iconPosition="left"
             padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
             dispatch={streaming}
@@ -146,6 +147,7 @@ export const CurrentModel = () => {
                       // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
 
                       store.dispatch(removeLastMessage());
+
                       sendStreamingTextThunk(
                         {
                           messages: messages,
@@ -169,6 +171,10 @@ export const CurrentModel = () => {
                             answer: streamingText,
                             index: lastUserMessageIndex,
                           };
+
+                          store.dispatch(
+                            appendMessage({ role: "user", content: "" })
+                          );
                           store.dispatch(setCacheAnswer(currentModel, cache));
                         }
                       );

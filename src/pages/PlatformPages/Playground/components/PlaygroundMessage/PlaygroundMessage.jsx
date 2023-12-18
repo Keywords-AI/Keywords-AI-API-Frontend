@@ -21,6 +21,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
   const currentModel = useSelector((state) => state.playground.currentModel);
+  const isUser = role === "user";
   // Update when there is streaming
   React.useEffect(() => {
     setTextContent(content);
@@ -79,6 +80,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             index: messageIndex,
           };
           store.dispatch(setCacheAnswer(currentModel, cache));
+          store.dispatch(appendMessage({ role: "user", content: "" }));
         }
       );
     } catch (error) {
@@ -118,15 +120,21 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </>
         )}
       </div>
-      <EditableBox
-        ref={textAreaRef}
-        focus={isFocused}
-        placeholder={role === "user" ? "Enter a message..." : "Generating..."}
-        value={textContent}
-        onChange={handleChange}
-        streaming={streaming}
-      />
-      {isFocused && (
+      {isUser ? (
+        <EditableBox
+          ref={textAreaRef}
+          focus={isFocused}
+          placeholder={isUser ? "Enter a message..." : "Generating..."}
+          value={textContent}
+          onChange={handleChange}
+          streaming={streaming}
+        />
+      ) : (
+        <div className="w-full h-full flex-col self-stretch flex-grow rounded-sm  text-sm-regular text-gray-white">
+          {textContent || <span className="text-gray-4">"Generating..."</span>}
+        </div>
+      )}
+      {isFocused && isUser && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
             variant="small"

@@ -155,7 +155,6 @@ export function OptionSelector({}) {
 
   const handleChange = (event) => {
     const { value } = event.target;
-    console.log(value);
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };
@@ -185,6 +184,7 @@ export function OptionSelector({}) {
                 icon={current[index].icon}
                 iconHoverFill="fill-gray-white"
                 onClick={() => item.setOpen(true)}
+                iconPosition="left"
               />
             }
             open={item.open}
