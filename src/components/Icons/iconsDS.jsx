@@ -861,3 +861,55 @@ export const Building = ({
     </svg>
   );
 };
+
+export const Regenerate = ({
+  fill = "fill-gray-4",
+  activeFill = "fill-gray-white",
+  active = false,
+  size = "sm",
+}) => {
+  switch (size) {
+    case "sm":
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+        >
+          <path
+            d="M10.2375 1.7625C9.15 0.675 7.6575 0 6 0C4.4087 0 2.88258 0.632141 1.75736 1.75736C0.632141 2.88258 0 4.4087 0 6C0 7.5913 0.632141 9.11742 1.75736 10.2426C2.88258 11.3679 4.4087 12 6 12C8.7975 12 11.13 10.0875 11.7975 7.5H10.2375C9.6225 9.2475 7.9575 10.5 6 10.5C4.80653 10.5 3.66193 10.0259 2.81802 9.18198C1.97411 8.33807 1.5 7.19347 1.5 6C1.5 4.80653 1.97411 3.66193 2.81802 2.81802C3.66193 1.97411 4.80653 1.5 6 1.5C7.245 1.5 8.355 2.0175 9.165 2.835L6.75 5.25H12V0L10.2375 1.7625Z"
+            className={active ? activeFill : fill}
+          />
+        </svg>
+      );
+  }
+};
+
+export const Stop = ({
+  fill = "fill-gray-4",
+  activeFill = "fill-gray-white",
+  active = false,
+  size = "sm",
+}) => {
+  switch (size) {
+    case "sm":
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M6 12C9.31373 12 12 9.31373 12 6C12 2.68629 9.31373 0 6 0C2.68629 0 0 2.68629 0 6C0 9.31373 2.68629 12 6 12ZM8.25 3.75H3.75V8.25H8.25V3.75Z"
+            className={active ? activeFill : fill}
+          />
+        </svg>
+      );
+  }
+};

@@ -3,12 +3,12 @@ import cn from "src/utilities/ClassMerge";
 
 export function NumberInput({
   icon = null,
-  iconClassName = "fill-gray-white",
+  iconClassName = "fill-gray-4",
   value,
   onChange = () => {},
   onClick = () => {},
   disabled = false,
-  textClassName = "text-sm-md",
+  textClassName = "text-sm-md text-gray-4",
 }) {
   return (
     <div

@@ -1,4 +1,11 @@
-import { AddMessage, Right, Button, Divider } from "src/components";
+import {
+  AddMessage,
+  Right,
+  Button,
+  Divider,
+  Regenerate,
+  Stop,
+} from "src/components";
 import {
   CurrentModel,
   OptionSelector,
@@ -180,7 +187,7 @@ const NotConnectSidePannel = ({
           <Button
             variant="small"
             text="Regenerate"
-            icon={AddMessage}
+            icon={Regenerate}
             onClick={handleRegenerate}
           />
         )}
@@ -188,7 +195,7 @@ const NotConnectSidePannel = ({
         <Button
           variant="small"
           text="Stop generate"
-          icon={AddMessage}
+          icon={Stop}
           onClick={() => abortStreamingTextRequest()}
         />
       </div>
