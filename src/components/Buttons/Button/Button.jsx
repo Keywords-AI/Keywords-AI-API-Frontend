@@ -40,7 +40,7 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
  * @param {string} [props.width=""] - The width of the button.
-*/
+ */
 
 export const Button = forwardRef(
   (
@@ -65,7 +65,7 @@ export const Button = forwardRef(
       iconFill,
       iconHoverFill,
       iconPosition,
-      iconSize = "sm",
+      iconSize,
       padding,
       borderColor,
       borderHoverColor,
@@ -278,6 +278,8 @@ export const Button = forwardRef(
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
         width = width || "w-full";
+        iconSize = iconSize || "md";
+
         break;
 
       case "careers":

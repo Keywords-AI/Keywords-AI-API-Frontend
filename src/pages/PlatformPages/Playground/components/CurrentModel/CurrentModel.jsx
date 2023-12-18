@@ -24,19 +24,16 @@ export const CurrentModel = () => {
       name: "OpenAI - GPT-3.5-turbo",
       value: "gpt-3.5-turbo",
       icon: ModelIcon("openai"),
-      iconFill: "fill-gray-white",
     },
     {
       name: "OpenAI - GPT-4-32k",
       value: "gpt-4-32k",
       icon: ModelIcon("openai"),
-      iconFill: "fill-gray-white",
     },
     {
       name: "OpenAI - GPT-4",
       value: "gpt-4",
       icon: ModelIcon("openai"),
-      iconFill: "fill-gray-white",
     },
     {
       name: "Claude 2.1",
