@@ -22,7 +22,7 @@ export const VendorCard = React.forwardRef(({ companyName, modelCount, companyLo
         </div>
       </div>
       <IconButton
-        icon={<Pencil active={isHovered} />}
+        icon={Pencil}
       />
     </div>
   );

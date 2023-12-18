@@ -29,7 +29,7 @@ export const DeleteInput = ({ prevValue, title, onClick = () => { }, placeholder
                 width="w-full"
             />
             <IconButton
-                icon={<Delete />}
+                icon={Delete}
                 text={value}
 
                 className="absolute right-xs bottom-[10px]"

@@ -63,7 +63,7 @@ export function Modal({ trigger, title, subtitle, children, open, setOpen }) {
               <div className="display-xs text-gray-white">{title}</div>
               <Dialog.Close asChild>
                 <IconButton
-                  icon={<Cross />}
+                  icon={Cross}
                 />
               </Dialog.Close>
             </Dialog.Title>

@@ -63,7 +63,7 @@ const FileInput = React.forwardRef(({ register = () => { }, name, validationSche
                     /> :
                     <IconButton
                         onClick={handleFileUploadClick}
-                        icon={<Link />}
+                        icon={Link}
                     />
                 }
             </div>
