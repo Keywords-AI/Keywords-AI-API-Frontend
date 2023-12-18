@@ -39,7 +39,8 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
- */
+ * @param {string} [props.width=""] - The width of the button.
+*/
 
 export const Button = forwardRef(
   (

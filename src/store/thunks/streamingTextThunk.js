@@ -23,8 +23,8 @@ import apiConfig from "src/services/apiConfig";
  */
 export const sendStreamingTextThunk = async ({
   params,
-  host=apiConfig.apiURL,
-  path="api/playground/ask/",
+  host = apiConfig.apiURL,
+  path = "api/playground/ask/",
   prompt,
   callback,
   dispatch,
@@ -39,14 +39,16 @@ export const sendStreamingTextThunk = async ({
     Authorization: `Bearer ${retrieveAccessToken()}`,
   };
   dispatch(sendStreamingTextRequest());
+  const messages = [
+    { role: "system", content: prompt || "" },
+    ...params.messages.map((item) =>
+      item.role !== "user" ? { ...item, role: "assistant" } : item
+    ),
+  ];
+  console.log(messages);
   const body = JSON.stringify({
     stream: params.stream,
-    messages: [
-      { role: "system", content: prompt },
-      ...params.messages.map((item) =>
-        item.role !== "user" ? { ...item, role: "assistant" } : item
-      ),
-    ],
+    messages: messages,
     model: params.model,
     // optimize: getState().playground.modelOptions.optimize,
     // creativity: getState().playground.modelOptions.creativity,

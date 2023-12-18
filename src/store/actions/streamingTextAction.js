@@ -24,7 +24,6 @@ export const sendStreamingTextSuccess = () => ({
 });
 
 export const sendStreamingTextPartial = (partialData) => {
-  console.log("partialData", partialData);
   return {
     type: SEND_STREAMINGTEXT_PARTIAL,
     payload: partialData,
