@@ -323,6 +323,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
+        justification = justification || "justify-center";
         width = width || "";
         className = "w-[28px] h-[28px]";
 
