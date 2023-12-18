@@ -20,7 +20,7 @@ const mapDispatchToProps = {
 const ProfileMenu = ({ logout, user }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const first_name = user?.first_name;
+  const firstName = user?.first_name;
   const trigger = (
     <button
       className={cn(
@@ -29,7 +29,7 @@ const ProfileMenu = ({ logout, user }) => {
       )}
       onClick={() => setOpen(!open)}
     >
-      <AvatarButton first_name={first_name} size="sm" />
+      <AvatarButton firstName={firstName} size="sm" />
       <ArrowDown
         className={cn(
           "fill-gray-4 transition-transform duration-[250] ease-in ",

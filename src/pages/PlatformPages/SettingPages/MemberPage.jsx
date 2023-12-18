@@ -5,6 +5,7 @@ import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Button } from 'src/components/Buttons'
 import { Modal } from 'src/components/Dialogs'
 import { AddMemberForm } from './components/MemberForms'
+import { SelectInput } from 'src/components/Inputs'
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -25,7 +26,7 @@ export const MemberPage = ({ organization, addMember }) => {
         heading={"Users"}
       >
         <div className="flex-row flex-wrap gap-md">
-          <MemberCard first_name="John" last_name="Doe" />
+          <MemberCard firstName="John" lastName="Doe" />
         </div>
         <Modal
           title={"Invite member"}
@@ -34,8 +35,9 @@ export const MemberPage = ({ organization, addMember }) => {
           setOpen={setOpen}
           trigger={<Button variant="r4-primary" text="Add member" />}
         >
-          <AddMemberForm setOpen={setOpen}/>
+          <AddMemberForm setOpen={setOpen} />
         </Modal>
+        {/* <SelectInput /> */}
       </PageParagraph>
     </PageContent>
   )

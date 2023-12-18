@@ -40,7 +40,7 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
  * @param {string} [props.width=""] - The width of the button.
-*/
+ */
 
 export const Button = forwardRef(
   (
@@ -53,8 +53,8 @@ export const Button = forwardRef(
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => { },
-      onMouseLeave = () => { },
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
       textClassName = "text-sm-md",
       bgColor,
       hoverColor,
@@ -65,7 +65,7 @@ export const Button = forwardRef(
       iconFill,
       iconHoverFill,
       iconPosition,
-      iconSize = "sm",
+      iconSize,
       padding,
       borderColor,
       borderHoverColor,
@@ -183,7 +183,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-3";
+        borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-4";
@@ -278,8 +278,10 @@ export const Button = forwardRef(
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
         width = width || "w-full";
+        iconSize = iconSize || "md";
+
         break;
-        
+
       case "careers":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-md-md";
@@ -336,6 +338,7 @@ export const Button = forwardRef(
     if (active) {
       bgColor = clickedColor;
       textColor = textClickedColor;
+      borderColor = borderHoverColor;
       iconFill = iconHoverFill;
     }
     return (
@@ -380,9 +383,12 @@ export const Button = forwardRef(
               </span>
             )}
             {icon && (
-              <div className={cn("flex justify-center items-center w-[16px] gap-[10px]",
-                iconPosition === "left" ? "order-first" : "order-last"
-              )}>
+              <div
+                className={cn(
+                  "flex justify-center items-center w-[16px] gap-[10px]",
+                  iconPosition === "left" ? "order-first" : "order-last"
+                )}
+              >
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
                   size: iconSize,

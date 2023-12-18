@@ -12,6 +12,7 @@ export const DropDownMenu = ({
   align = "center",
   alignOffset = 0,
   width,
+  className,
 }) => {
   return (
     <DropdownMenuPrimitive.Root
@@ -26,7 +27,8 @@ export const DropDownMenu = ({
         <DropdownMenuPrimitive.Content
           className={
             cn("flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
-              width || "w-[240px]"
+              width || "w-[240px]",
+              className
             )
           }
           sideOffset={sideOffset}

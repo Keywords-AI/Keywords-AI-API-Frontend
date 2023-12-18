@@ -83,42 +83,40 @@ const NotConnectedMap = ({
     if (streaming) return;
     console.log("regenerate");
     removeLastMessage();
-    sendStreamingTextThunk(
-      {
-        params: {
-          messages: messages,
-          stream: true,
-          model: currentModel,
-        },
-        prompt: systemPrompt,
-        callback: () => {
-          // this is the callback function after the streaming text is done
-          const streamingText = store.getState().streamingText.streamingText;
-          const currentModel = store.getState().playground.currentModel;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          appendMessage(newMessage);
-          const lastUserMessageIndex = messages.reduce(
-            (lastIndex, message, currentIndex) => {
-              if (message.role === "user") {
-                return currentIndex;
-              }
-              return lastIndex;
-            },
-            -1
-          );
-          const cache = {
-            answer: streamingText,
-            index: lastUserMessageIndex,
-          };
-          setCacheAnswer(currentModel, cache);
-        },
-        dispatch: store.dispatch,
-        getState: store.getState,
-      }
-    );
+    sendStreamingTextThunk({
+      params: {
+        messages: messages,
+        stream: true,
+        model: currentModel,
+      },
+      prompt: systemPrompt,
+      callback: () => {
+        // this is the callback function after the streaming text is done
+        const streamingText = store.getState().streamingText.streamingText;
+        const currentModel = store.getState().playground.currentModel;
+        const newMessage = {
+          role: currentModel,
+          content: streamingText,
+        };
+        appendMessage(newMessage);
+        const lastUserMessageIndex = messages.reduce(
+          (lastIndex, message, currentIndex) => {
+            if (message.role === "user") {
+              return currentIndex;
+            }
+            return lastIndex;
+          },
+          -1
+        );
+        const cache = {
+          answer: streamingText,
+          index: lastUserMessageIndex,
+        };
+        setCacheAnswer(currentModel, cache);
+      },
+      dispatch: store.dispatch,
+      getState: store.getState,
+    });
   };
   useEffect(() => {
     if (streamingText) {
@@ -236,12 +234,14 @@ const NotConnectSidePannel = ({
           />
         )}
 
-        <Button
-          variant="small"
-          text="Stop generate"
-          icon={Stop}
-          onClick={() => abortStreamingTextRequest()}
-        />
+        {streaming && (
+          <Button
+            variant="small"
+            text="Stop generate"
+            icon={Stop}
+            onClick={() => abortStreamingTextRequest()}
+          />
+        )}
       </div>
     </div>
   );

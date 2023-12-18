@@ -1,4 +1,4 @@
-import { Button, EditableBox, ModelIcon, User } from "src/components";
+import { Button, EditableBox, ModelIcon, Userpg } from "src/components";
 import { EnterKey } from "src/components/Icons/iconsDS";
 import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -112,7 +112,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       <div className="flex items-center gap-xxs px-xxs py-xxxs rounded-sm bg-gray-2">
         {role === "user" ? (
           <>
-            <User />
+            <Userpg active />
             <p className="text-sm-md text-gray-white">User</p>
           </>
         ) : (
