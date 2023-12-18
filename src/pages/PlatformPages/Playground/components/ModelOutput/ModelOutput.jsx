@@ -5,6 +5,7 @@ import { Cost, Latency, Score, Tokens } from "./icons";
 import { Compare } from "src/components";
 import React from "react";
 import { TextInput } from "src/components/Inputs";
+import MetricCard from "src/components/Cards/MetricCard";
 export function ModelOutput({}) {
   const stateOutputs = useSelector((state) => state.playground.outputs);
   const currentModel = useSelector((state) => state.playground.currentModel);
@@ -12,7 +13,7 @@ export function ModelOutput({}) {
     {
       name: "Score",
       value: Math.round(stateOutputs.score[currentModel] * 10) / 10 || "0",
-      icon: <Score />,
+      icon: Score,
     },
     {
       name: "Cost",
@@ -22,7 +23,7 @@ export function ModelOutput({}) {
           <span>{stateOutputs.cost}</span>
         </>
       ),
-      icon: <Cost />,
+      icon: Cost,
     },
     {
       name: "Latency",
@@ -32,12 +33,12 @@ export function ModelOutput({}) {
           <span>s</span>
         </>
       ),
-      icon: <Latency />,
+      icon: Latency,
     },
     {
       name: "Tokens",
       value: stateOutputs.tokens || "0",
-      icon: <Tokens />,
+      icon: Tokens,
     },
   ];
   const firstTime = useSelector((state) => state.playground.firstTime);
@@ -49,20 +50,26 @@ export function ModelOutput({}) {
       <p className="text-center text-gray-4 text-sm-regular">Output</p>
       <div className="flex-col items-start gap-xxs self-stretch">
         {outputs.map((item, index) => (
-          <div
-            className="flex-col items-start gap-xxs px-md py-sm justify-center self-stretch rounded-sm bg-gray-2"
+          // <div
+          //   className="flex-col items-start gap-xxs px-md py-sm justify-center self-stretch rounded-sm bg-gray-2"
+          //   key={index}
+          // >
+          //   <div className="flex items-center gap-xxs">
+          //     <div className="flex items-center justify-center w-[16px] gap-[10px]">
+          //       {item.icon}
+          //     </div>
+          //     <p className="text-sm-regular text-gray-4">{item.name}</p>
+          //   </div>
+          //   <p className="display-xs text-gray-white flex items-center">
+          //     {item.value}
+          //   </p>
+          // </div>
+          <MetricCard
             key={index}
-          >
-            <div className="flex items-center gap-xxs">
-              <div className="flex items-center justify-center w-[16px] gap-[10px]">
-                {item.icon}
-              </div>
-              <p className="text-sm-regular text-gray-4">{item.name}</p>
-            </div>
-            <p className="display-xs text-gray-white flex items-center">
-              {item.value}
-            </p>
-          </div>
+            icon={item.icon}
+            title={item.name}
+            number={item.value}
+          />
         ))}
       </div>
       {/* <Button
