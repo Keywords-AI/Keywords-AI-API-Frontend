@@ -13,13 +13,13 @@ export const VendorCard = ({ company_name, model_count, company_logo }) => {
         onMouseLeave={() => setIsHovered(false)}
         
     >
-        <div className="flex items-center gap-xs">
+        <div className="flex flex-row items-center gap-xs">
             <div className="flex p-xxs items-center w-[40px] h-[40px] rounded-sm bg-gray-white">
                 {company_logo}
             </div> 
-            <div className="flex-column items-start">
-                <div className="text-left text-md-medium ">{company_name}</div>
-                <div className="text-sm-regular text-gray-4 text-center">{model_count} models activated</div>
+            <div className="flex flex-col items-start">
+                <span className="text-left text-md-medium ">{company_name}</span>
+                <span className="text-sm-regular text-gray-4 text-center">{model_count} models activated</span>
             </div>
         </div>
       <IconButton
