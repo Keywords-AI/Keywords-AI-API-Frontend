@@ -29,7 +29,7 @@ export default function SettingTable({
   return (
     <div
       className="flex flex-col self-stretch border border-gray-3 rounded-md 
-        w-full max-w-[1100px]"
+        w-full max-w-[1000px]"
     >
       <div
         className={cn(
@@ -53,7 +53,7 @@ export default function SettingTable({
           key={idx}
         >
           {rowIterator?.map((header, idx) => (
-            <div className="flex-row justify-start items-center" key={idx}>{row[header]}
+            <div className="flex-row justify-start items-center self-stretch" key={idx}>{row[header]}
             </div>
           ))}
         </div>

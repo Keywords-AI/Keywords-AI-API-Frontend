@@ -1,7 +1,4 @@
 // actions/streamingTextActions.js
-
-import { sendStreamingTextThunk } from "../thunks/streamingTextThunk";
-
 export const SEND_STREAMINGTEXT_REQUEST = "SEND_STREAMINGTEXT_REQUEST";
 export const SEND_STREAMINGTEXT_SUCCESS = "SEND_STREAMINGTEXT_SUCCESS";
 export const SEND_STREAMINGTEXT_FAILURE = "SEND_STREAMINGTEXT_FAILURE";
@@ -26,10 +23,13 @@ export const sendStreamingTextSuccess = () => ({
   type: SEND_STREAMINGTEXT_SUCCESS,
 });
 
-export const sendStreamingTextPartial = (partialData) => ({
-  type: SEND_STREAMINGTEXT_PARTIAL,
-  payload: partialData,
-});
+export const sendStreamingTextPartial = (partialData) => {
+  console.log("partialData", partialData);
+  return {
+    type: SEND_STREAMINGTEXT_PARTIAL,
+    payload: partialData,
+  };
+};
 
 export const sendStreamingTextFailure = (error) => ({
   type: SEND_STREAMINGTEXT_FAILURE,

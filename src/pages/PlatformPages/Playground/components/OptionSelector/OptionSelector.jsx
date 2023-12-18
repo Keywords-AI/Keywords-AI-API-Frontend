@@ -155,7 +155,6 @@ export function OptionSelector({}) {
 
   const handleChange = (event) => {
     const { value } = event.target;
-    console.log(value);
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };
@@ -178,6 +177,7 @@ export function OptionSelector({}) {
             side="left"
             sideOffset={0}
             align="start"
+            width="w"
             trigger={
               <Button
                 variant="r4-black"
@@ -185,6 +185,7 @@ export function OptionSelector({}) {
                 icon={current[index].icon}
                 iconHoverFill="fill-gray-white"
                 onClick={() => item.setOpen(true)}
+                iconPosition="left"
               />
             }
             open={item.open}

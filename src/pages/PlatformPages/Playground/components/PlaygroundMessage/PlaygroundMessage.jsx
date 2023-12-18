@@ -21,6 +21,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(false);
   const currentModel = useSelector((state) => state.playground.currentModel);
+  const isUser = role === "user";
   // Update when there is streaming
   React.useEffect(() => {
     setTextContent(content);
@@ -33,14 +34,13 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     }
   };
 
-  const handleChange = (value) => {
-    setTextContent(value); // This sets what is displayed in the input box
-
+  const handleChange = (e) => {
+    setTextContent(e.target.value); // This sets what is displayed in the input box
     dispatch(
       setMessages(
         messages.map((message, index) => {
           if (index === messageIndex) {
-            return { ...message, content: value };
+            return { ...message, content: e.target.value };
           }
           return message;
         })
@@ -59,26 +59,28 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     try {
       await sendStreamingTextThunk(
         {
-          messages: messagesWithPrompt,
-          stream: true,
-          model: currentModel,
-        },
-        "https://platform.keywordsai.co/",
-        "api/playground/ask/",
-        systemPrompt,
-        () => {
-          const currentModel = store.getState().playground.currentModel;
-          const streamingText = store.getState().streamingText.streamingText;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          store.dispatch(appendMessage(newMessage));
-          const cache = {
-            answer: streamingText,
-            index: messageIndex,
-          };
-          store.dispatch(setCacheAnswer(currentModel, cache));
+          params: {
+            messages: messagesWithPrompt,
+            stream: true,
+            model: currentModel,
+          },
+          prompt: systemPrompt,
+          callback: () => {
+            const currentModel = store.getState().playground.currentModel;
+            const streamingText = store.getState().streamingText.streamingText;
+            const newMessage = {
+              role: currentModel,
+              content: streamingText,
+            };
+            store.dispatch(appendMessage(newMessage));
+            const cache = {
+              answer: streamingText,
+              index: messageIndex,
+            };
+            store.dispatch(setCacheAnswer(currentModel, cache));
+          },
+          dispatch: store.dispatch,
+          getState: store.getState,
         }
       );
     } catch (error) {
@@ -118,15 +120,21 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </>
         )}
       </div>
-      <EditableBox
-        ref={textAreaRef}
-        focus={isFocused}
-        placeholder={role === "user" ? "Enter a message..." : "Generating..."}
-        value={textContent}
-        onChange={handleChange}
-        streaming={streaming}
-      />
-      {isFocused && (
+      {isUser ? (
+        <EditableBox
+          ref={textAreaRef}
+          focus={isFocused}
+          placeholder={isUser ? "Enter a message..." : "Generating..."}
+          value={textContent}
+          onChange={handleChange}
+          streaming={streaming}
+        />
+      ) : (
+        <div className="w-full h-full flex-col self-stretch flex-grow rounded-sm  text-sm-regular text-gray-white">
+          {textContent || <span className="text-gray-4">Generating...</span>}
+        </div>
+      )}
+      {isFocused && isUser && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
             variant="small"
@@ -135,7 +143,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconSize="md"
             iconPosition="right"
             onClick={handleSend}
-            dispatch={streaming}
+            disabled={streaming}
           />
         </div>
       )}

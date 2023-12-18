@@ -28,19 +28,8 @@ export default function ChatMessage({ message }) {
       <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
         {message?.role === "user" ? <ChatAvatar /> : <ChatLogo />}
         <div>
-          {message?.role === "user" ? (
-            <p
-              className={"text-md"}
-              style={{
-                margin: 0,
-                whiteSpace: "pre-line",
-              }}
-            >
-              {message?.content}
-            </p>
-          ) : ( 
+          
             <ChatbotReactMarkdown content={message?.content} /> 
-          )}
 
           {message?.role !== "user" ? (
             <div

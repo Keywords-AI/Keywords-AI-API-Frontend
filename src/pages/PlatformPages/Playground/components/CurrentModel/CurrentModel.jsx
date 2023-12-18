@@ -107,9 +107,10 @@ export const CurrentModel = () => {
             variant="r4-black"
             text={current.name}
             icon={current.icon}
+            iconPosition="left"
             padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
-            dispatch={streaming}
+            disabled={streaming}
           />
         }
         items={
@@ -146,30 +147,33 @@ export const CurrentModel = () => {
                       // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
 
                       store.dispatch(removeLastMessage());
+
                       sendStreamingTextThunk(
                         {
-                          messages: messages,
-                          stream: true,
-                          model: model.value,
-                        },
-                        "https://platform.keywordsai.co/",
-                        "api/playground/ask/",
-                        systemPrompt,
-                        () => {
-                          const currentModel =
-                            store.getState().playground.currentModel;
-                          const streamingText =
-                            store.getState().streamingText.streamingText;
-                          const newMessage = {
-                            role: currentModel,
-                            content: streamingText,
-                          };
-                          store.dispatch(appendMessage(newMessage));
-                          const cache = {
-                            answer: streamingText,
-                            index: lastUserMessageIndex,
-                          };
-                          store.dispatch(setCacheAnswer(currentModel, cache));
+                          params: {
+                            messages: messages,
+                            stream: true,
+                            model: model.value,
+                          },
+                          prompt: systemPrompt,
+                          callback: () => {
+                            const currentModel =
+                              store.getState().playground.currentModel;
+                            const streamingText =
+                              store.getState().streamingText.streamingText;
+                            const newMessage = {
+                              role: currentModel,
+                              content: streamingText,
+                            };
+                            store.dispatch(appendMessage(newMessage));
+                            const cache = {
+                              answer: streamingText,
+                              index: lastUserMessageIndex,
+                            };
+                            store.dispatch(setCacheAnswer(currentModel, cache));
+                          },
+                          dispatch: store.dispatch,
+                          getState: store.getState,
                         }
                       );
                     } else {

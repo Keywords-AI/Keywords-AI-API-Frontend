@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Rocket, Edit } from "./icons";
 import { Button } from "src/components";
 import { ConversationItem, CustomPrompt } from "./components";
 import { connect } from "react-redux";
 import { Modal } from "src/components/Dialogs";
 import {
-  setIsEditing
+  setIsEditing,
+  getConversations,
+  deleteConversation,
+  createConversation,
 } from "src/store/actions/"
 
 const mapStateToProps = (state) => {
@@ -14,26 +17,20 @@ const mapStateToProps = (state) => {
   }
 };
 const mapDispatchToProps = {
-  setIsEditing
+  setIsEditing,
+  getConversations,
+  createConversation
 };
 
 function ChatLeftDrawer({
-  handleStop,
+  deleteConversation,
   createConversation,
   getConversations,
-  // conversations,
-  activeConversation,
-  retrieveConversation,
-  setActiveConversation,
-  handleDelete,
-  setPromptPopup,
   setIsEditing,
   chatbot,
 }) {
-  const conversations = [
-    { id: 1, name: "Conversation 1 φαιξσδ΄ξφικα" },
-    { id: 1, name: "Conversation 1 φαιξσδ΄ξφικα" },
-  ];
+  const conversations = chatbot?.conversations;
+  useEffect(() => { getConversations() }, [])
   return (
     <div className="bg-gray-2 w-[280px] p-xs relative">
       <div
@@ -44,12 +41,21 @@ function ChatLeftDrawer({
           icon={Rocket}
           className="self-stretch"
           text="New Chat"
+          iconPosition="left"
+          onClick={() => {
+            createConversation();
+          }}
         />
         <div className="flex-col flex-1 w-full max-h-[calc(100vh-200px)] ">
           <div className="self-stretch flex-col overflow-auto">
-            {conversations?.map((conversation, index) => (
-              <ConversationItem key={index} conversation={conversation} />
-            ))}
+            {conversations?.map((conversation) => {
+              return (
+                <ConversationItem
+                  key={conversation.id}
+                  conversation={conversation}
+                />
+              );
+            })}
           </div>
         </div>
       </div>

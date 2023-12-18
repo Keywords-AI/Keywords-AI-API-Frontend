@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FileCard } from 'src/components/Cards';
 import { Link } from 'src/components/Icons';
 import { IconButton } from 'src/components/Buttons';
@@ -12,9 +12,18 @@ import { IconButton } from 'src/components/Buttons';
  * @param {function} props.onFileChange - Callback function when the file is changed. Default is an empty function.
  */
 
-const FileInput = ({ register = () => { }, name, validationSchema, title = "File Upload (Beta)", initialFile, onFileChange = () => { } }) => {
+const FileInput = React.forwardRef(({ register = () => { }, name, validationSchema, title = "File Upload (Beta)", initialFile, onFileChange = () => { } }, ref) => {
     const [file, setFile] = useState(initialFile);
     const fileUploadRef = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        get current() {
+            return fileUploadRef.current;
+        },
+        click: () => {
+            fileUploadRef.current.click();
+        }
+    }));
 
     useEffect(() => {
         // Update the file state when the initialFile prop changes
@@ -31,10 +40,6 @@ const FileInput = ({ register = () => { }, name, validationSchema, title = "File
 
     const handleFileUploadClick = () => {
         fileUploadRef.current.click();
-    };
-
-    const hasValidFile = (file) => {
-        return file != null; // Implement additional validation logic if needed
     };
 
     return (
@@ -64,6 +69,6 @@ const FileInput = ({ register = () => { }, name, validationSchema, title = "File
             </div>
         </div>
     );
-};
+})
 
 export default FileInput;

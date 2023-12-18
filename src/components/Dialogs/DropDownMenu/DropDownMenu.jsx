@@ -1,5 +1,6 @@
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
+import cn from "src/utilities/ClassMerge";
 
 export const DropDownMenu = ({
   trigger, // The trigger elements, the buttons
@@ -10,6 +11,7 @@ export const DropDownMenu = ({
   sideOffset = 10,
   align = "center",
   alignOffset = 0,
+  width,
 }) => {
   return (
     <DropdownMenuPrimitive.Root
@@ -22,7 +24,11 @@ export const DropDownMenu = ({
       </DropdownMenuPrimitive.Trigger>
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
-          className="w-[240px] flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3"
+          className={
+            cn("flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
+              width || "w-[240px]"
+            )
+          }
           sideOffset={sideOffset}
           align={align}
           side={side}

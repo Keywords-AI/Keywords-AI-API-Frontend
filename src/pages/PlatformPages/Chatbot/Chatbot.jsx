@@ -1,18 +1,11 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { createMessage } from "src/store/actions/messageAction";
-import {
-  createConversation,
-  getConversations,
-  deleteConversation,
-} from "src/store/actions/conversationAction";
 import readStream from "src/services/readStream";
 import useStream from "src/hooks/useStream";
-import { retrieveConversation } from "src/store/actions/conversationAction";
 import {
-  setStreaming,
-  setNotStreaming,
-} from "src/store/actions/streamingAction";
+  getConversations, getConversation, createConversation, deleteConversation, createMessage,
+  abortStreamingTextRequest
+} from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import { Sample } from "src/components/Cards";
@@ -25,10 +18,9 @@ const mapStateToProps = (state) => {
   return {
     chatbot: state.chatbot,
     user: state.user,
-    conversations: state.conversations,
     messages: state.messages,
-    conversation: state.conversation,
-    streaming: state.streaming,
+    streaming: state.streamingText.isLoading,
+    streamingText: state.streamingText.streamingText,
     uploading: state.uploading,
   };
 };
@@ -37,10 +29,9 @@ const mapDispatchToProps = {
   createMessage,
   createConversation,
   getConversations,
-  retrieveConversation,
+  getConversation,
   deleteConversation,
-  setStreaming,
-  setNotStreaming,
+  abortStreamingTextRequest,
   errorMessage: (error) => {
     return {
       type: "CREATE_MESSAGE",
@@ -63,41 +54,23 @@ const normalizeMessages = (messages) => {
 };
 
 function Chatbot({
-  user,
   streaming,
-  setStreaming,
-  setNotStreaming,
-  conversations,
-  // conversation,
+  streamingText,
   createMessage,
   errorMessage,
-  createConversation,
   getConversations,
-  retrieveConversation,
-  deleteConversation,
-  uploading,
+  chatbot,
 }) {
-  const [inputText, setInputText] = React.useState("");
-  const [abortController, setAbortController] = React.useState(null);
-  const generateRef = React.useRef(null);
-  const [activeConversation, setActiveConversation] = React.useState(null);
-  const [promptPopup, setPromptPopup] = React.useState(false);
-  const fileUploadRef = React.useRef(null);
-  const [chatError, setChatError] = React.useState(null);
+  const conversation = chatbot?.conversation;
+  const [inputText, setInputText] = useState("");
+  const [abortController, setAbortController] = useState(null);
+  const generateRef = useRef(null);
+  const [activeConversation, setActiveConversation] = useState(null);
+  const [promptPopup, setPromptPopup] = useState(false);
+  const fileUploadRef = useRef(null);
+  const [chatError, setChatError] = useState(null);
   const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
-  const conversation = {
-    messages: [{ role: "assistant", content: `## My To-Do List
-
-  - [ ] Complete the market analysis report.
-  - [ ] Schedule meeting with the design team.
-  - [ ] Update project roadmap on Confluence.
-  
-  **Reminder:** Check emails by 10 AM.
-  
-  *Useful Link:* [Team Calendar](https://www.companycalendar.com)
-  `}],
-  }
-  const conversationRef = React.useRef(conversation);
+  const conversationRef = useRef(conversation);
 
 
   const handleError = (error) => {
@@ -110,65 +83,15 @@ function Chatbot({
     handleError
   );
 
-  const handleSend = (target) => {
-    console.log("inputText", inputText);
-    if (inputText && !streaming) {
-      target.textContent = "";
-      setInputText("");
-      sendText(inputText);
-    }
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     generateRef.current = generatingText;
   }, [generatingText])
 
-  const sendText = (text) => {
-    const newMessage = {
-      conversation: conversation?.id,
-      role: "user",
-      content: text,
-    };
-    let allMessages;
-    setStreaming();
-    if (conversation?.id && conversation?.id !== -1) {
-      allMessages = [...conversation?.messages, newMessage];
-      createMessage(newMessage);
-      postData({
-        messages: normalizeMessages(allMessages),
-        model: "gpt-4",
-        stream: true,
-      });
-    } else {
-      allMessages = [newMessage];
-      createConversation(newMessage);
-      postData({
-        messages: normalizeMessages(allMessages),
-        model: "gpt-4",
-        stream: true,
-      });
-    }
-  };
-  // check
-  const handleDelete = (id) => {
-    const parsedId = parseInt(id);
-    setActiveConversation(-1);
-    deleteConversation(parsedId);
-  };
+  useEffect(() => {
+    getConversations();
+  }, [])
 
-  const addText = (text) => {
-    try {
-      const contentChunk = JSON.parse(text);
-      const content = contentChunk.choices[0].delta.content;
-      if (content) {
-        setGeneratingText((prev) => prev + content);
-      }
-    } catch (error) {
-      // Handle JSON parsing error here
-    }
-  };
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
       setNotStreaming();
       errorMessage(error);
@@ -176,7 +99,7 @@ function Chatbot({
     }
   }, [error]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (conversation?.id && conversation?.id !== -1) {
       setActiveConversation(conversation?.id);
       conversationRef.current = conversation;
@@ -199,45 +122,15 @@ function Chatbot({
     setAbortController(null);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (response) {
       setAbortController(readStream(response, addText, streamComplete));
     }
   }, [response]);
 
-  const handleInput = (e) => {
-    setInputText(e.currentTarget.textContent);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend(e.target);
-    }
-  };
-
-  const handleStop = () => {
-    if (abortController && typeof abortController === "object") {
-      abortController.then((controller) => {
-        controller();
-      });
-      setNotStreaming();
-    }
-  };
-
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
-      <PanelChat
-        setPromptPopup={setPromptPopup}
-        handleStop={handleStop}
-        createConversation={createConversation}
-        getConversations={getConversations}
-        conversations={conversations}
-        activeConversation={activeConversation}
-        retrieveConversation={retrieveConversation}
-        setActiveConversation={setActiveConversation}
-        handleDelete={handleDelete}
-      />
+      <PanelChat />
       <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
           <div className="flex-row justify-center items-center gap-xxs self-stretch">
@@ -251,7 +144,7 @@ function Chatbot({
           </div>
         </div>
         <div className="chat-right flex flex-1 bg-black relative pt-sm pb-lg">
-          <div className="flex-col flex-1 h-[calc(100vh-184px)]" ref={conversationBoxRef}>
+          <div className="flex-col flex-1 h-[calc(100vh-184px)] overflow-auto" ref={conversationBoxRef}>
             {conversation?.messages?.length > 0 ? (
               <>
                 {conversation?.messages?.map((message, index) => (
@@ -285,9 +178,9 @@ function Chatbot({
                 )}
               </>
             )}
-            {generatingText && (
+            {streamingText && (
               <ChatMessage
-                message={{ content: generatingText, role: 'assistant' }}
+                message={{ content: streamingText, role: 'assistant' }}
               />
             )}
           </div>
@@ -295,7 +188,7 @@ function Chatbot({
             className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
             {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
-                <Sample sendText={sendText} />
+                <Sample />
               )}
             <div
               style={{
@@ -303,15 +196,7 @@ function Chatbot({
               }}
               className="flex-row self-stretch"
             >
-              <KeywordsInput
-                placeholder={streaming ? "Generating..." : "Send a message..."}
-                streaming={streaming}
-                handleInput={handleInput}
-                handleKeyDown={handleKeyDown}
-                handleSend={handleSend}
-                handleStop={handleStop}
-                abortController={abortController}
-              />
+              <KeywordsInput placeholder={streaming ? "Generating..." : "Send a message..."} />
             </div>
             <div className="caption text-gray-4">
               Keywords AI connects your prompts with the best model automatically.{" "}

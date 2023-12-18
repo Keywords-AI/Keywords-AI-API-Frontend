@@ -4,7 +4,7 @@ import { SettingTable } from 'src/components/Tables'
 import { Button, IconButton } from 'src/components/Buttons'
 import { Pencil, Delete } from 'src/components/Icons'
 import useFetch from 'src/hooks/useFetch'
-import { CreateForm, EditForm, DeleteForm } from './components/APIKeyForms'
+import { CreateForm, EditForm, DeleteForm, APIKeyActions } from './components'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Modal } from 'src/components/Dialogs'
 import { setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey } from 'src/store/actions'
@@ -27,16 +27,15 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
   const editingTrigger = (key) => {
     return (
       <>
-        <Button
+        {/* <Button
           variant="small"
           text={"Edit"}
           icon={Pencil}
           onClick={() => setEditingKey(key)}
-        />
-        {/* <IconButton
-          icon={<Delete />}
-          onClick={() => setDeletingKey(key)}
         /> */}
+        <div className="flex-row w-full justify-end">
+          <APIKeyActions modifyingKey={key} setEditingKey={setEditingKey} setDeletingKey={setDeletingKey} />
+        </div>
       </>
     )
   }
@@ -47,8 +46,8 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
       subtitle="Read the documentation on using our API here."
     >
       <PageParagraph
-      heading="Manage keys"
-      subheading="Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
+        heading="Manage keys"
+        subheading="Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
         {apiKey?.keyList && apiKey?.keyList.length > 0 &&
           < SettingTable
