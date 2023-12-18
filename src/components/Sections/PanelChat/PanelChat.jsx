@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Rocket, Edit } from "./icons";
+import { Rocket } from "src/components";
 import { Button, Pencil } from "src/components";
 import { ConversationItem, CustomPrompt } from "./components";
 import { connect } from "react-redux";

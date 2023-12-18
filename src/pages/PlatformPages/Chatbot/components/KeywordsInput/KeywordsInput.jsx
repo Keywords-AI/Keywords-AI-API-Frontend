@@ -54,7 +54,7 @@ function KeywordsInput({
       />
       {streaming ? (
         <IconButton
-          icon={<Terminate />}
+          icon={Terminate}
           onClick={() => {
             abortStreamingTextRequest();
           }}
@@ -64,7 +64,7 @@ function KeywordsInput({
         <IconButton
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-          icon={<Send active={isHovered}/>}
+          icon={Send}
           onClick={() => {
             handleSend(spanRef.current);
           }}

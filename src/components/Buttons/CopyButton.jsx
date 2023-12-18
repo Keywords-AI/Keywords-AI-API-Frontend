@@ -3,8 +3,8 @@ import { IconButton } from 'src/components/Buttons'
 import { Copy, Check } from 'src/components/Icons'
 
 export default function CopyButton({ text, onClick = () => { }, className = "" }) {
-    const [hover, setHover] = React.useState(false)
 const [copied, setCopied] = React.useState(false)
+const [hover, setHover] = React.useState(false);
     return (
         <IconButton
             className={className}
@@ -20,7 +20,8 @@ const [copied, setCopied] = React.useState(false)
                         }, 2000)
                     })
             }}
-            icon={copied ? <Check fill={"fill-success"} /> : <Copy active={hover} />}
+            iconProps={{fill: copied? "fill-success": (hover? "fill-gray-white":"fill-gray-3")}}
+            icon={copied ? Check : Copy}
         />
     )
 }

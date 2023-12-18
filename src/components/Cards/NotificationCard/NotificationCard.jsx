@@ -20,7 +20,7 @@ export default function NotificationCard({ title = "Notification title", message
                 </div>
             </div>
             <IconButton
-                icon={<Cross />}
+                icon={Cross}
                 className="absolute top-md right-md"
             />
         </div>
