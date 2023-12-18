@@ -4,7 +4,7 @@ import { User } from 'src/components/Icons'
 import { Button } from 'src/components/Buttons'
 import { useNavigate } from 'react-router-dom'
 
-const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
+const SectionMenu = ({ section, basePath }) => {
   const pages = section?.pages || [];
   const title = section?.title || "Section Title Here";
   const icon = section?.icon || <User />;
