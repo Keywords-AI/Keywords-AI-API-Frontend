@@ -64,6 +64,7 @@ function ConversationItem({
                                 setConv({ ...conv, deleting: true })
                             }}
                             icon={Delete}
+                            
                         />
                     }
                 </>
