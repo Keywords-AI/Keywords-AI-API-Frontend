@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Rocket, Edit } from "./icons";
-import { Button } from "src/components";
+import { Button, Pencil } from "src/components";
 import { ConversationItem, CustomPrompt } from "./components";
 import { connect } from "react-redux";
 import { Modal } from "src/components/Dialogs";
@@ -28,6 +28,7 @@ function ChatLeftDrawer({
   getConversations,
   setIsEditing,
   chatbot,
+  
 }) {
   const conversations = chatbot?.conversations;
   useEffect(() => { getConversations() }, [])
@@ -39,6 +40,7 @@ function ChatLeftDrawer({
         <Button
           variant="chat"
           icon={Rocket}
+          iconHoverFill="fill-gray-white"
           className="self-stretch"
           text="New Chat"
           iconPosition="left"
@@ -66,10 +68,11 @@ function ChatLeftDrawer({
         setOpen={setIsEditing}
         trigger={<Button
           variant="small"
-          icon={Edit}
+          icon={Pencil}
           text={"Custom prompt: " + ("on")}
           className="absolute bottom-[8px] left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           onClick={() => { setIsEditing(true) }}
+          iconHoverFill="fill-gray-white"
         />}
       >
         <CustomPrompt />

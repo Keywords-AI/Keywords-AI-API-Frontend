@@ -59,6 +59,7 @@ export const SettingPage = ({ organization, setOrgName }) => {
                         name="unique_organization_id"
                         title="Organization ID - identifier sometimes used in API requests."
                         value={organization?.unique_organization_id || ""}
+                        // value={"locked-text"}
                         disabled={true}
                         width="w-[400px]"
                     />

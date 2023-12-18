@@ -41,12 +41,13 @@ export const NavBar = () => {
         arrow={false}
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
         active={apply}
+        textClassName={"text-sm-regular"}
       />
     );
   };
   const buttons = [
     { text: "Documentation", pageName: "doc" },
-    { text: "Examples", pageName: "examples" },
+    // { text: "Examples", pageName: "examples" },
     { text: "Playground", pageName: "playground" },
     { text: "Chatbot", pageName: "chatbot" },
     { text: "API Keys", pageName: "setting" },

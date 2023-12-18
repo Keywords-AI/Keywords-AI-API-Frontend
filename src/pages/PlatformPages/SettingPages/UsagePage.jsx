@@ -19,12 +19,24 @@ export const UsagePage = ({ usage }) => {
   return (
     <PageContent
       title="Usage"
-      subtitle="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
+      subtitle="Manage and track your API usage."
     >
-      <PageParagraph>
+      <PageParagraph 
+      heading="Spending"
+      subheading="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
+      >
+        
         <UsageChart
           dataKeyX={"name"} dataKeyY="usage"
         />
+        <div className='flex flex-col justify-center items-start gap-xxs self-stretch'>
+          <span className='text-md-medium'>
+            Credits
+          </span>
+          <span className='text-sm-regular text-gray-4'>
+          Initial token credit assignment based on your plan. You will be charged usage-based only after using all your credits.
+          </span>
+        </div>
         <ProgressBar
           name={"Free trial"}
           progressLegend={"Used"}
