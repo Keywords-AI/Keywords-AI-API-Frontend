@@ -24,21 +24,24 @@ export const CurrentModel = () => {
       name: "OpenAI - GPT-3.5-turbo",
       value: "gpt-3.5-turbo",
       icon: ModelIcon("openai"),
+      iconFill: "fill-gray-white",
     },
     {
       name: "OpenAI - GPT-4-32k",
       value: "gpt-4-32k",
       icon: ModelIcon("openai"),
+      iconFill: "fill-gray-white",
     },
     {
       name: "OpenAI - GPT-4",
       value: "gpt-4",
       icon: ModelIcon("openai"),
+      iconFill: "fill-gray-white",
     },
     {
       name: "Claude 2.1",
       value: "claude-2.1",
-      icon: ModelIcon("claude"),
+      icon: ModelIcon("anthropic"),
     },
     {
       name: "OpenAI - GPT-4-1106-preview",
@@ -48,12 +51,12 @@ export const CurrentModel = () => {
     {
       name: "Claude Instant 1",
       value: "claude-instant-1",
-      icon: ModelIcon("claude"),
+      icon: ModelIcon("anthropic"),
     },
     {
       name: "Claude Instant 1.2",
       value: "claude-instant-1.2",
-      icon: ModelIcon("claude"),
+      icon: ModelIcon("anthropic"),
     },
 
     {
@@ -64,27 +67,27 @@ export const CurrentModel = () => {
     {
       name: "Chat Bison",
       value: "chat-bison",
-      icon: ModelIcon("bison"),
+      icon: ModelIcon("google"),
     },
     {
       name: "J2 Light",
       value: "j2-light",
-      icon: ModelIcon("j2"),
+      icon: ModelIcon("labs"),
     },
     {
       name: "Command Nightly",
       value: "command-nightly",
-      icon: ModelIcon("command"),
+      icon: ModelIcon("cohere"),
     },
     {
       name: "J2 Mid",
       value: "j2-mid",
-      icon: ModelIcon("j2"),
+      icon: ModelIcon("labs"),
     },
     {
       name: "J2 Ultra",
       value: "j2-ultra",
-      icon: ModelIcon("j2"),
+      icon: ModelIcon("labs"),
     },
   ];
   useEffect(() => {
@@ -102,6 +105,7 @@ export const CurrentModel = () => {
       <DropDownMenu
         open={open}
         setOpen={setOpen}
+        width="300"
         trigger={
           <Button
             variant="r4-black"
@@ -121,6 +125,7 @@ export const CurrentModel = () => {
                   variant="panel"
                   text={model.name}
                   icon={model.icon}
+                  iconFill="fill-gray-white"
                   onClick={() => {
                     if (streaming) return;
                     setCurrent({
@@ -148,34 +153,32 @@ export const CurrentModel = () => {
 
                       store.dispatch(removeLastMessage());
 
-                      sendStreamingTextThunk(
-                        {
-                          params: {
-                            messages: messages,
-                            stream: true,
-                            model: model.value,
-                          },
-                          prompt: systemPrompt,
-                          callback: () => {
-                            const currentModel =
-                              store.getState().playground.currentModel;
-                            const streamingText =
-                              store.getState().streamingText.streamingText;
-                            const newMessage = {
-                              role: currentModel,
-                              content: streamingText,
-                            };
-                            store.dispatch(appendMessage(newMessage));
-                            const cache = {
-                              answer: streamingText,
-                              index: lastUserMessageIndex,
-                            };
-                            store.dispatch(setCacheAnswer(currentModel, cache));
-                          },
-                          dispatch: store.dispatch,
-                          getState: store.getState,
-                        }
-                      );
+                      sendStreamingTextThunk({
+                        params: {
+                          messages: messages,
+                          stream: true,
+                          model: model.value,
+                        },
+                        prompt: systemPrompt,
+                        callback: () => {
+                          const currentModel =
+                            store.getState().playground.currentModel;
+                          const streamingText =
+                            store.getState().streamingText.streamingText;
+                          const newMessage = {
+                            role: currentModel,
+                            content: streamingText,
+                          };
+                          store.dispatch(appendMessage(newMessage));
+                          const cache = {
+                            answer: streamingText,
+                            index: lastUserMessageIndex,
+                          };
+                          store.dispatch(setCacheAnswer(currentModel, cache));
+                        },
+                        dispatch: store.dispatch,
+                        getState: store.getState,
+                      });
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message
                       store.dispatch(

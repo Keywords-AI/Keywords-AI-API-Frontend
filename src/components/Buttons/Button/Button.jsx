@@ -52,8 +52,8 @@ export const Button = forwardRef(
       className,
       borderRadius,
       onClick,
-      onMouseEnter = () => { },
-      onMouseLeave = () => { },
+      onMouseEnter = () => {},
+      onMouseLeave = () => {},
       textClassName = "text-sm-md",
       bgColor,
       hoverColor,
@@ -278,7 +278,7 @@ export const Button = forwardRef(
         justification = justification || "justify-start";
         width = width || "w-full";
         break;
-        
+
       case "careers":
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "text-md-md";
@@ -377,9 +377,12 @@ export const Button = forwardRef(
               </span>
             )}
             {icon && (
-              <div className={cn("flex justify-center items-center w-[16px] gap-[10px]",
-                iconPosition === "left" ? "order-first" : "order-last"
-              )}>
+              <div
+                className={cn(
+                  "flex justify-center items-center w-[16px] gap-[10px]",
+                  iconPosition === "left" ? "order-first" : "order-last"
+                )}
+              >
                 {React.createElement(icon, {
                   fill: hover ? iconHoverFill : iconFill,
                   size: iconSize,
