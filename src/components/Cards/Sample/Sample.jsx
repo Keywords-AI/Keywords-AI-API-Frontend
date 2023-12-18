@@ -211,8 +211,9 @@ export default function Sample({ sendText=()=>{} }) {
 
   React.useEffect(() => {
     let emptyArray = [];
+    let arrayLength = Math.min(topic.length, description.length);
     for (var i = 0; i < 4; i++) {
-      emptyArray.push(Math.floor(Math.random() * 100));
+      emptyArray.push(Math.floor(Math.random() * arrayLength));
     }
     setN(emptyArray);
   }, []);
@@ -222,12 +223,12 @@ export default function Sample({ sendText=()=>{} }) {
       {n.map((card, index) => (
         <div
           key={index}
-          className="rounded-sm border border-solid border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start hover:cursor-pointer bg-gray-2"
+          className="sample-card rounded-sm border border-solid border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start hover:cursor-pointer bg-gray-2 hover:border-gray-4"
           onClick={() =>
             sendText(topic[n[index]] + " " + description[n[index]])
           }
         >
-          <div className="self-stretch text-sm text-white">{topic[n[index]]}</div>
+          <div className="topic-text self-stretch text-sm text-gray-4">{topic[n[index]]}</div>
           <div className="text-sm text-gray-4 t-pre-wrap">
             {description[n[index]]}
           </div>

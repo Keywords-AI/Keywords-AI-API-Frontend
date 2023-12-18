@@ -39,7 +39,7 @@ function ConversationItem({
             {(hover || conv?.deleting) &&
                 <>
                     {conv?.deleting ?
-                        <div className="flex-row gap-xxs flex-shrink-0">
+                        <div className="flex-row gap-xxs flex-shrink-0 items-center">
                             <IconButton
                                 onClick={() => {
                                     setConv({ ...conv, deleting: false })

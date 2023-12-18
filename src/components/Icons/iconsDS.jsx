@@ -224,10 +224,11 @@ export const Check = ({
           viewBox="0 0 12 12"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          className={"flex-shrink-0"}
         >
           <path
             d="M12 2.3692L3.77143 10.5978L0 6.82634L0.966857 5.85949L3.77143 8.6572L11.0331 1.40234L12 2.3692Z"
-            fill="#F9FAFC"
+            className={active ? activeFill : fill}
           />
         </svg>
       );

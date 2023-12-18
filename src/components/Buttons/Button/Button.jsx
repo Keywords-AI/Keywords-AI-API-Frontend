@@ -202,7 +202,7 @@ export const Button = forwardRef(
         borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
-        iconHoverFill = iconHoverFill || "fill-gray-white";
+        iconHoverFill = iconHoverFill || "fill-gray-4";
         textClassName = "text-sm-md";
 
         break;
@@ -309,6 +309,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         justification = justification || "justify-center";
         className = className || "w-[256px]";
+        iconHoverFill=iconHoverFill || "fill-gray-white";
 
         break;
       case "icon":

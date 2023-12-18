@@ -38,10 +38,12 @@ function KeywordsInput({
     sendMessage(data.message);
   };
 
+  const [isHovered, setIsHovered] = React.useState(false);
   return (
     <form className="relative flex-col w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
+      
       <EditableBox
         {...register("message", { required: "This is required" })}
         className={"rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
@@ -60,7 +62,9 @@ function KeywordsInput({
         />
       ) : (
         <IconButton
-          icon={<Send />}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+          icon={<Send active={isHovered}/>}
           onClick={() => {
             handleSend(spanRef.current);
           }}

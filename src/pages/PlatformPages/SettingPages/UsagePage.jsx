@@ -19,9 +19,12 @@ export const UsagePage = ({ usage }) => {
   return (
     <PageContent
       title="Usage"
-      subtitle="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
+      subtitle="Manage and track your API usage."
     >
-      <PageParagraph heading="Spending">
+      <PageParagraph 
+      heading="Spending"
+      subheading="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
+      >
         
         <UsageChart
           dataKeyX={"name"} dataKeyY="usage"
