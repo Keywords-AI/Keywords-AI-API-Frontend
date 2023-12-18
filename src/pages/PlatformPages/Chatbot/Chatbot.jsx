@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import readStream from "src/services/readStream";
 import useStream from "src/hooks/useStream";
 import {
-  getConversations, getConversation, createConversation, deleteConversation, createMessage,
+  getConversations, getConversation, createConversation, deleteConversation,
   abortStreamingTextRequest
 } from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
@@ -26,7 +26,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  createMessage,
   createConversation,
   getConversations,
   getConversation,
@@ -56,7 +55,6 @@ const normalizeMessages = (messages) => {
 function Chatbot({
   streaming,
   streamingText,
-  createMessage,
   errorMessage,
   getConversations,
   chatbot,
@@ -110,38 +108,11 @@ function Chatbot({
     }
   }, [conversation]);
 
-  const streamComplete = () => {
-    setNotStreaming();
-    console.log(generateRef.current, "generateRef.current")
-    createMessage({
-      conversation: conversation?.id,
-      role: "assistant",
-      content: generateRef.current,
-    });
-    setGeneratingText("");
-    setAbortController(null);
-  };
-
-  useEffect(() => {
-    if (response) {
-      setAbortController(readStream(response, addText, streamComplete));
-    }
-  }, [response]);
-
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
       <PanelChat />
       <div className="flex-col self-stretch flex-1 bg-gray-black">
         <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
-          <div className="flex-row justify-center items-center gap-xxs self-stretch">
-            <div
-              className="hover-cp"
-              onClick={() => {
-                setPromptPopup(true);
-              }}
-            >
-            </div>
-          </div>
         </div>
         <div className="chat-right flex flex-1 bg-black relative pt-sm pb-lg">
           <div className="flex-col flex-1 h-[calc(100vh-184px)] overflow-auto" ref={conversationBoxRef}>

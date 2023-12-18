@@ -11,6 +11,7 @@ export const SET_CUSTOM_PROMPT_FILE = "SET_CUSTOM_PROMPT_FILE";
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_CONVERSATIONS = "SET_CONVERSATIONS";
 export const SET_CONVERSATION = "SET_CONVERSATION";
+export const RESET_CONVERSATION = "RESET_CONVERSATION";
 export const CREATE_CONVERSATION = "CREATE_CONVERSATION";
 export const DELETE_CONVERSATION = "DELETE_CONVERSATION";
 export const CREATE_MESSAGE = "CREATE_MESSAGE";
@@ -38,6 +39,9 @@ export const setEnableCustomPrompt = (enable) => {
 };
 
 export const setCustomPrompt = (customPrompt) => {
+  if (typeof customPrompt === "object") {
+    customPrompt = customPrompt.content;
+  }
   return {
     type: SET_CUSTOM_PROMPT,
     payload: customPrompt,
@@ -75,6 +79,9 @@ export const setConversation = (conversation) => {
 export const deleteConversation = (id) => {
   return (dispatch, getState) => {
     dispatch({ type: DELETE_CONVERSATION, payload: id });
+    if (getState().chatbot.conversation?.id === id) {
+      dispatch({ type: RESET_CONVERSATION });
+    }
     fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +93,7 @@ export const deleteConversation = (id) => {
       .then((res) => {
         if (res.ok) {
           if (getState().conversation?.id === id) {
-            dispatch({ type: SET_CONVERSATION, payload: {} });
+            dispatch({ type: RESET_CONVERSATION });
           }
         } else if (res.status === 401) {
         } else {
@@ -217,9 +224,9 @@ export const nameConversation = (id, content) => {
 
 export const createMessage = (msg) => {
   return (dispatch) => {
-    dispatch({ type: CREATE_MESSAGE, payload: msg });
     if (msg.conversation) {
       // Given an id, or the id is not 0
+      dispatch({ type: CREATE_MESSAGE, payload: msg });
       fetch(`${apiConfig.apiURL}chatbot/messages/`, {
         headers: {
           "Content-Type": "application/json",
@@ -268,8 +275,9 @@ export const sendMessage = (msgText) => {
   return async (dispatch, getState) => {
     const state = getState();
     const { isLoading: streaming } = state.streamingText;
-    const systemPrompt = state.chatbot.systemPrompt;
+    const systemPrompt = state.chatbot.customPrompt;
     const conversation_id = state.chatbot.conversation.id;
+    console.log(msgText);
     dispatch(
       createMessage({
         conversation: conversation_id,
@@ -279,14 +287,15 @@ export const sendMessage = (msgText) => {
     );
     const messages = getState().chatbot.conversation.messages; // get messages after creating and updating the state
     if (streaming) return;
+    const messagesToSend = messages.map((item) => {
+      return { role: item.role, content: item.content };
+    });
     try {
       await sendStreamingTextThunk({
         params: {
-          messages: messages.map((item)=>{
-            return { role: item.role, content: item.content }
-          }),
+          messages: messagesToSend,
           stream: true,
-          model: "gpt-3.5-turbo"
+          model: "gpt-3.5-turbo",
         },
         host: "http://localhost:8000/",
         prompt: systemPrompt,

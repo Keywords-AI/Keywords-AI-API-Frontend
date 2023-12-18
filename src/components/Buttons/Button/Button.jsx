@@ -39,7 +39,8 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
- */
+ * @param {string} [props.width=""] - The width of the button.
+*/
 
 export const Button = forwardRef(
   (
@@ -182,7 +183,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-3";
+        borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-4";
@@ -323,6 +324,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
+        justification = justification || "justify-center";
         width = width || "";
         className = "w-[28px] h-[28px]";
 
@@ -333,6 +335,7 @@ export const Button = forwardRef(
     if (active) {
       bgColor = clickedColor;
       textColor = textClickedColor;
+      borderColor = borderHoverColor;
       iconFill = iconHoverFill;
     }
     return (

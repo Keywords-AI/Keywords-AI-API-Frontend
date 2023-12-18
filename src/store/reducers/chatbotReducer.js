@@ -5,6 +5,7 @@ import {
   SET_ENABLE_CUSTOM_PROMPT,
   SET_CONVERSATION,
   SET_CONVERSATIONS,
+  RESET_CONVERSATION,
   CREATE_CONVERSATION,
   DELETE_CONVERSATION,
   CREATE_MESSAGE,
@@ -50,7 +51,12 @@ export default function chatbotReducer(state = initState, action) {
       );
       return {
         ...state,
-        conversations: filteredConversations
+        conversations: filteredConversations,
+      };
+    case RESET_CONVERSATION:
+      return {
+        ...state,
+        conversation: initState.conversation,
       };
     case CREATE_MESSAGE:
       return {

@@ -5,8 +5,7 @@ import { IconButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
-import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
-import store from "src/store/store";
+import { abortStreamingTextRequest } from "src/store/actions";
 
 const mapStateToProps = (state) => {
   return {
@@ -18,16 +17,15 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   sendMessage,
+  abortStreamingTextRequest,
 };
 
 function KeywordsInput({
   placeholder,
-  handleStop,
-  sendMessage = () => { },
+  sendMessage,
+  abortStreamingTextRequest,
   value,
   streaming,
-  systemPrompt,
-  messages,
 }) {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const onKeyDown = (e) => {
@@ -56,7 +54,7 @@ function KeywordsInput({
         <IconButton
           icon={<Terminate />}
           onClick={() => {
-            handleStop();
+            abortStreamingTextRequest();
           }}
           className="absolute right-xs bottom-[11px] cursor-pointer"
         />
