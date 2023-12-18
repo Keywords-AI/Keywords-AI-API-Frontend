@@ -117,24 +117,6 @@ export const sections = [
     },
     {
         title: "User",
-        // pages: [{
-        //     title: "API Keys",
-        //     paragraphs: [
-        //         {
-        //             text: <span>
-        //                 <span>
-        //                     {"Your secret API keys are listed below. Please note that we do not display your secret API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "}
-        //                 </span>
-        //                 <a href="/platform/documentation/authentication" className="text-primary">
-        //                     View API Documentation.
-        //                 </a>
-        //             </span>
-        //         },
-        //         {
-        //             text: <APIKeyParagraph />
-        //         },
-        //     ]
-        // },]
         pages: processedUserPages
     }
 ]
