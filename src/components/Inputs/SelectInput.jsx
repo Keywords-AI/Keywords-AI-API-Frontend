@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Button } from 'src/components/Buttons'
 import cn from 'src/utilities/ClassMerge';
 import { Select as SelectionIcon, Down } from 'src/components/Icons'
+import { DropDownMenu } from 'src/components/Dialogs';
+import * as DropdownPrimitives from "@radix-ui/react-dropdown-menu";
 
 /**
  * MyComponent - A custom React component for a select input with options.
@@ -30,10 +32,11 @@ const MyComponent = React.forwardRef(({
     title = "selection",
     headLess = false,
     name = "text-sm",
-    choices = defaultOptions, // Choices, list of objects or strings, as long as you define the way 
+    choices = defaultOptions, // Choices, list of objects 
     handleSelected = () => { }, // Function to handle the selected choice in the parent component
-    placeholder, // This is the option to display. It is an actual option
+    placeholder = "This is a selection", // This is the option to display. It is an actual option
     defaultValue = "",
+    onChange = () => { },
     readOnly,
     required = false,
     internalIcon = true,
@@ -45,102 +48,62 @@ const MyComponent = React.forwardRef(({
     borderRadius = "rounded-sm",
     text = "text-sm text-gray-4 focus:text-gray-white",
     icon = SelectionIcon,
+    trigger,
+    triggerProps = {}
 }, ref) => {
-    // Click outside to close
-    const handleClickOutside = (e) => {
-        if (selectRef.current && !selectRef.current.contains(e.target)) {
-            setOptionsVisible(false);
-        }
-    };
-    useEffect(() => {
-        document.addEventListener("click", handleClickOutside);
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
-    // End click outside to close
 
     const handleChange = (choice) => {
         setSelected(choice.name);
         handleSelected(choice.value);
         setOptionsVisible(false);
     };
-
-    switch (variant) {
-        case "member":
-            padding = "p-0"
-            border = "border-none"
-            borderRadius = "rounded-none"
-            text = "text-sm text-gray-4"
-            placeholder = "Select a role"
-            defaultValue = "Member"
-            internalIcon = false
-            width = ""
-            icon = Down
-            break;
-    }
-
     // Initialize after the switch
-    const [focused, setFocused] = React.useState(open);
     const [selected, setSelected] = React.useState(defaultValue);
-    const selectRef = React.useRef(null);
     const [optionsVisible, setOptionsVisible] = React.useState(open);
-    useEffect(() => {
-        setOptionsVisible(open);
-        setFocused(open);
-    }, [open])
 
     return (
-        <div className={cn("flex-col justify-center items-start gap-xxs relative",
-            width)}>
+        <div className={cn("flex-col justify-center items-start gap-xxs relative")}>
             {!headLess && <label htmlFor={name} className="text-sm-regular text-gray-4">
                 {title}
                 {required && "*"}
             </label>}
-            <div
-                aria-label="select-wrapper"
-                className="flex-col self-stretch text-sm-regular"
-                ref={selectRef}
-            >
-                <div
-                    aria-label="input-wrapper"
-                    className="flex-row relative gap-xxs items-center self-stretch"
-                    onFocus={() => { setFocused(true) }}
-                    onBlur={() => { setFocused(false) }}
-                >
-                    <input
-                        type="text" // The actual ref
-                        className="hidden"
-                        value={selected}
-                        ref={ref}
-                        readOnly
-                        {...register(name, validationSchema)}
-                    />
-                    <div className="flex-col self-stretch flex-1" // Wrapper for triggering extra states
-                        onClick={() => {
-                            setOptionsVisible(!optionsVisible);
-                            setFocused(true);
-                        }}
-                    >
+            <input
+                type="text" // The actual ref
+                className="hidden"
+                value={selected}
+                ref={ref}
+                readOnly
+                hidden
+                onChange={onChange}
+                {...register(name, validationSchema)}
+            />
+            <DropDownMenu
+                open={optionsVisible}
+                setOpen={setOptionsVisible}
+                trigger={
+                    trigger ?
+                        <div className='flex-col self-stretch'>
+                            {React.createElement(trigger, { selected, placeholder, ...triggerProps })}
+                        </div> :
                         <div
-                            // The displayed selection tab
-                            className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none",
-                                padding, border, borderRadius, text
-                            )} aria-label="select">
-                            {selected || placeholder}
+                            className={cn("flex-row relative gap-xxs items-center self-stretch", width)}
+                        >
+                            <div
+                                // The displayed selection tab
+                                className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none",
+                                    padding, border, borderRadius, text
+                                )} aria-label="select">
+                                {selected || placeholder}
+                            </div>
+                            {!readOnly && <div className={cn("flex-col",
+                                internalIcon ? "absolute right-xs top-1/2 -translate-y-1/2" : ""
+                            )}>
+                                {React.createElement(icon, { active: optionsVisible })}
+                            </div>}
                         </div>
-                    </div>
-                    {!readOnly && <div className={cn("flex-col",
-                        internalIcon ? "absolute right-xs top-1/2 -translate-y-1/2" : ""
-                    )}>
-                        {React.createElement(icon, { active: focused })}
-                    </div>}
-                </div>
-                {optionsVisible &&
-                    <div className={cn("flex-col justify-start items-start self-stretch bg-gray-2 ",
-                        "absolute w-full top-full z-[1000]"
-                    )
-                    }>
+                } // The trigger elements, the buttons
+                items={
+                    <>
                         {choices && choices.length > 0 && choices.map((choice, index) => {
                             return (
                                 <Button
@@ -153,9 +116,14 @@ const MyComponent = React.forwardRef(({
                                 />
                             )
                         })}
-                    </div>}
-            </div>
-        </div>
+                    </>
+                } // The items to be displayed in the dropdown
+                align='start'
+                alignOffset={32}
+                side="bottom"
+                width="min-w-0"
+            />
+        </div >
     )
 })
 

@@ -183,7 +183,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-3";
+        borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-4";
@@ -335,6 +335,7 @@ export const Button = forwardRef(
     if (active) {
       bgColor = clickedColor;
       textColor = textClickedColor;
+      borderColor = borderHoverColor;
       iconFill = iconHoverFill;
     }
     return (
