@@ -79,7 +79,7 @@ const ProfileMenu = ({ logout, user }) => {
             </div>
           </DropdownMenuPrimitive.Item>
           <DropdownMenuPrimitive.Item disabled asChild>
-            <div className="flex h-[1px] py-xxs w-full">
+            <div className="flex h-[1px] @w-full">
               <Divider color="bg-gray-3" />
             </div>
           </DropdownMenuPrimitive.Item>

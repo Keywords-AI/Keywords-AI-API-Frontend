@@ -19,7 +19,9 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const textAreaRef = React.useRef(null);
 
   const [textContent, setTextContent] = React.useState(content);
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(
+    role === "user" ? true : false
+  );
   const currentModel = useSelector((state) => state.playground.currentModel);
   const isUser = role === "user";
   // Update when there is streaming
@@ -57,32 +59,31 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       ...messages,
     ];
     try {
-      await sendStreamingTextThunk(
-        {
-          params: {
-            messages: messagesWithPrompt,
-            stream: true,
-            model: currentModel,
-          },
-          prompt: systemPrompt,
-          callback: () => {
-            const currentModel = store.getState().playground.currentModel;
-            const streamingText = store.getState().streamingText.streamingText;
-            const newMessage = {
-              role: currentModel,
-              content: streamingText,
-            };
-            store.dispatch(appendMessage(newMessage));
-            const cache = {
-              answer: streamingText,
-              index: messageIndex,
-            };
-            store.dispatch(setCacheAnswer(currentModel, cache));
-          },
-          dispatch: store.dispatch,
-          getState: store.getState,
-        }
-      );
+      await sendStreamingTextThunk({
+        params: {
+          messages: messagesWithPrompt,
+          stream: true,
+          model: currentModel,
+        },
+        prompt: systemPrompt,
+        callback: () => {
+          const currentModel = store.getState().playground.currentModel;
+          const streamingText = store.getState().streamingText.streamingText;
+          const newMessage = {
+            role: currentModel,
+            content: streamingText,
+          };
+          store.dispatch(appendMessage(newMessage));
+          const cache = {
+            answer: streamingText,
+            index: messageIndex,
+          };
+          store.dispatch(setCacheAnswer(currentModel, cache));
+          store.dispatch(appendMessage({ role: "user", content: "" }));
+        },
+        dispatch: store.dispatch,
+        getState: store.getState,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -104,6 +105,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       )}
       onClick={() => setIsFocused(true)}
       onFocus={() => setIsFocused(true)}
+      tabIndex="0"
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
     >
@@ -130,7 +132,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           streaming={streaming}
         />
       ) : (
-        <div className="w-full h-full flex-col self-stretch flex-grow rounded-sm  text-sm-regular text-gray-white">
+        <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
           {textContent || <span className="text-gray-4">Generating...</span>}
         </div>
       )}
