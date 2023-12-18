@@ -22,7 +22,7 @@ const IconButton = React.forwardRef(({ onClick, icon, className = "", onMouseEnt
       onClick={onClick}
     >
                 {React.createElement(icon, {
-                  fill: hover ? hoverFill : fill,
+                  active: hover,
                   ...iconProps
                 })}
     </div>

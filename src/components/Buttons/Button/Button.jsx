@@ -390,7 +390,9 @@ export const Button = forwardRef(
                 )}
               >
                 {React.createElement(icon, {
-                  fill: hover ? iconHoverFill : iconFill,
+                  fill: iconFill,
+                  activeFill: iconHoverFill,
+                  active: hover,
                   size: iconSize,
                 })}
               </div>

@@ -15,7 +15,7 @@ export const SelectionTrigger = ({ firstName, lastName, selected, placeholder, o
             <div className="flex flex-col">
                 <div className="text-md-medium text-gray-white">{firstName} {lastName}</div>
                 <div className="flex-row gap-xxs items-center">
-                    <div className="text-sm-regular text-gray-4">{selected}</div>
+                    <div className="text-sm-regular text-gray-4">{selected || placeholder}</div>
                     <Down />
                 </div>
             </div>
@@ -30,6 +30,7 @@ export const MemberCard = ({ firstName, lastName }) => {
             placeholder="placeholder"
             headLess
             trigger={SelectionTrigger}
+            defaultValue="Member"
             triggerProps={{ firstName, lastName }}
         />
     )

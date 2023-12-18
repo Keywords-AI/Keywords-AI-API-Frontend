@@ -55,7 +55,6 @@ const MyComponent = React.forwardRef(({
     const handleChange = (choice) => {
         setSelected(choice.name);
         handleSelected(choice.value);
-        setOptionsVisible(false);
     };
     // Initialize after the switch
     const [selected, setSelected] = React.useState(defaultValue);
@@ -106,14 +105,13 @@ const MyComponent = React.forwardRef(({
                     <>
                         {choices && choices.length > 0 && choices.map((choice, index) => {
                             return (
-                                <Button
-                                    text={choice?.name}
-                                    variant="panel"
-                                    onClick={() => {
-                                        handleChange(choice)
-                                    }}
-                                    key={index}
-                                />
+                                <DropdownPrimitives.Item key={index}>
+                                    <Button
+                                        text={choice?.name}
+                                        variant="panel"
+                                        onClick={() => { handleChange(choice) }}
+                                    />
+                                </DropdownPrimitives.Item>
                             )
                         })}
                     </>
