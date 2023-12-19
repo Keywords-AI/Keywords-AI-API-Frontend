@@ -277,7 +277,7 @@ export const Button = forwardRef(
         iconPosition = iconPosition || "left";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
-        width = width || "w-full";
+        width = width || "w-full self-stretch";
         iconSize = iconSize || "md";
 
         break;

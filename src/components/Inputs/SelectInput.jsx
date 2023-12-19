@@ -105,7 +105,7 @@ const MyComponent = React.forwardRef(({
                     <>
                         {choices && choices.length > 0 && choices.map((choice, index) => {
                             return (
-                                <DropdownPrimitives.Item key={index}>
+                                <DropdownPrimitives.Item key={index} className="w-full">
                                     <Button
                                         text={choice?.name}
                                         variant="panel"

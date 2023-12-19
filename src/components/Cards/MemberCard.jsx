@@ -29,6 +29,11 @@ export const MemberCard = ({ firstName, lastName }) => {
         <SelectInput
             placeholder="placeholder"
             headLess
+            choices={[
+                { name: "Member", value: "Member" },
+                { name: "Admin", value: "Admin" },
+                { name: "Owner", value: "Owner" },
+            ]}
             trigger={SelectionTrigger}
             defaultValue="Member"
             triggerProps={{ firstName, lastName }}
