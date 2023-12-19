@@ -137,7 +137,10 @@ function Chatbot({
                   <div className="flex flex-col justify-center items-center gap-md self-stretch mt-[160px]">
                     <LogoSubtract />
                     <div className="flex-col justify-center items-center gap-xxxs self-stretch">
+                      <div className="flex-row gap-xxs items-center">
                         <HeaderLogo />
+                        <span className="display-xs font-semibold">Keywords AI</span>
+                      </div>
                       <span className="text-sm-md text-gray-3">
                         Connect to the best model for your prompts.
                       </span>
