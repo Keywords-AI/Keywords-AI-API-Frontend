@@ -1,6 +1,6 @@
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import React, { useState } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 
 export const DropDownMenu = ({
   trigger, // The trigger elements, the buttons
@@ -19,7 +19,7 @@ export const DropDownMenu = ({
       modal={true}
       open={open}
       onOpenChange={(open) => setOpen(open)}
-    >
+  >
       <DropdownMenuPrimitive.Trigger asChild>
         {trigger}
       </DropdownMenuPrimitive.Trigger>

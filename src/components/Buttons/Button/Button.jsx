@@ -1,4 +1,4 @@
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";

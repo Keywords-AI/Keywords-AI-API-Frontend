@@ -7,7 +7,7 @@ import {
   UPDATE_EDITING_KEY,
   SET_DELETING_KEY,
   ClEAR_PREV_API_KEY,
-} from "../actions/apiKeyAction";
+} from "../actions/settingPagesActions/apiKeyAction";
 
 const initState = {
   keyList: [],

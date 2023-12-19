@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { ArrowDown } from "src/components/Icons/icons";
 import React, { useState } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { DropDownMenu } from "src/components/Dialogs/DropDownMenu/DropDownMenu";
 import { logout } from "src/store/actions";
 import { AvatarButton } from "src/components/Buttons";

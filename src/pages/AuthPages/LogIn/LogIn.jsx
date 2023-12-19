@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { Button } from "src/components/Buttons/Button";
 import { platformURL } from "src/utilities/platformURL";
 import { login, getUser } from "src/store/actions";

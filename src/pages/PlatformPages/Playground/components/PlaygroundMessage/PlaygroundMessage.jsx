@@ -9,7 +9,7 @@ import {
   appendMessage,
   setCacheAnswer,
 } from "src/store/actions/playgroundAction";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import store from "src/store/store";
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();

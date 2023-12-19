@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { AuthenticationTitle } from "src/components/Titles";
 import { BackButton, Button } from "src/components/Buttons";
 
