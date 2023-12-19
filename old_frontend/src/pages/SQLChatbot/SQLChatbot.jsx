@@ -13,7 +13,7 @@ import {
 } from "src/assets/svgs";
 import { connect } from "react-redux";
 import ReactMarkdown from "react-markdown";
-import { createMessage } from "src/store/actions/messageAction";
+import { createMessage } from "src/store/actions/deprecated/messageAction";
 import {
   createConversation,
   getConversations,

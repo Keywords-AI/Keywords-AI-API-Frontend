@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import readStream from "src/services/readStream";
 import useStream from "src/hooks/useStream";
 import {
   getConversations, getConversation, createConversation, deleteConversation,
