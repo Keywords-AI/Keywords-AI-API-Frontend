@@ -39,7 +39,11 @@ export function NumberInput({
           textClassName
         )}
         value={value}
-        onChange={onChange}
+        onChange={(e) => {
+          const inputValue = e.target.value;
+          const truncatedValue = inputValue.slice(0, 4);
+          onChange(truncatedValue);
+        }}
         disabled={disabled}
       />
     </div>
