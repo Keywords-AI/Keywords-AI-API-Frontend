@@ -1,5 +1,5 @@
 import React, { useImperativeHandle } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { useState, useEffect, useRef } from "react";
 import useForwardRef from "src/hooks/useForwardRef";
 export const EditableBox = React.forwardRef(
@@ -19,6 +19,7 @@ export const EditableBox = React.forwardRef(
       focus = false,
       selectPrevious = false,
       borderless = true,
+      disabled = false,
     },
     forwardedRef
   ) => {
@@ -112,6 +113,7 @@ export const EditableBox = React.forwardRef(
           onKeyDown={onKeyDown}
           onBlur={handleTextareaBlur}
           onFocus={handleFocus}
+          readOnly={disabled}
           rows={1}
           onResize={(e) => {
             e.target.style.height = "1px"; // Reset height to a small value before reading scrollHeight

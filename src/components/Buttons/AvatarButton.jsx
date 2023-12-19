@@ -1,6 +1,6 @@
 import React from 'react'
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import cn from 'src/utilities/ClassMerge';
+import cn from 'src/utilities/classMerge';
 
 export default function AvatarButton({ firstName, textClassName, onClick = () => { }, size = "w-[24px] h-[24px]" }) {
   const initials = firstName ? firstName[0] : "Err";

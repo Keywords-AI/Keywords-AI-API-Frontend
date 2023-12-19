@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { ArrowDown } from "src/components/Icons/icons";
 import React, { useState } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { DropDownMenu } from "src/components/Dialogs/DropDownMenu/DropDownMenu";
 import { logout } from "src/store/actions";
 import { AvatarButton } from "src/components/Buttons";
@@ -75,7 +75,7 @@ const ProfileMenu = ({ logout, user }) => {
   ];
 
   const renderedItems = menuItemsWithUser.map((item, index) => {
-    const authorized = (item.forAdmin ? user.is_admin : true);
+    const authorized = item.forAdmin ? user.is_admin : true;
     if (item.type === "user") {
       return (
         <React.Fragment key={index}>
@@ -86,7 +86,7 @@ const ProfileMenu = ({ logout, user }) => {
             </div>
           </DropdownMenuPrimitive.Item>
           <DropdownMenuPrimitive.Item disabled asChild>
-            <div className="flex h-[1px] @w-full">
+            <div className="flex h-[1px] w-full">
               <Divider color="bg-gray-3" />
             </div>
           </DropdownMenuPrimitive.Item>
@@ -95,9 +95,11 @@ const ProfileMenu = ({ logout, user }) => {
     } else {
       return (
         <React.Fragment key={index}>
-          {authorized && <DropdownMenuPrimitive.Item asChild>
-            <Button variant="panel" text={item.name} onClick={item.action} />
-          </DropdownMenuPrimitive.Item>}
+          {authorized && (
+            <DropdownMenuPrimitive.Item asChild>
+              <Button variant="panel" text={item.name} onClick={item.action} />
+            </DropdownMenuPrimitive.Item>
+          )}
         </React.Fragment>
       );
     }

@@ -9,7 +9,9 @@ import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
 const mapDispatchToProps = {};
 
 export const vendors = {

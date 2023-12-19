@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
 export function SignUp() {

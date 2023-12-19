@@ -1,4 +1,4 @@
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";
@@ -315,7 +315,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         justification = justification || "justify-center";
         className = className || "w-[256px]";
-        iconHoverFill=iconHoverFill || "fill-gray-white";
+        iconHoverFill = iconHoverFill || "fill-gray-white";
 
         break;
       case "icon":

@@ -153,8 +153,7 @@ export function OptionSelector({}) {
     },
   ];
 
-  const handleChange = (event) => {
-    const { value } = event.target;
+  const handleChange = (value) => {
     setToken(value);
     dispatch(setModelOptions({ maxTokens: value }));
   };

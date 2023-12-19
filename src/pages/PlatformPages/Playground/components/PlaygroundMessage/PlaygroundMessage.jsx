@@ -9,7 +9,7 @@ import {
   appendMessage,
   setCacheAnswer,
 } from "src/store/actions/playgroundAction";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import store from "src/store/store";
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
@@ -103,8 +103,12 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3 hover:cursor-pointer",
         isFocused ? "border-gray-4" : ""
       )}
-      onClick={() => setIsFocused(true)}
-      onFocus={() => setIsFocused(true)}
+      onClick={() => {
+        setIsFocused(true);
+      }}
+      onFocus={() => {
+        setIsFocused(true);
+      }}
       tabIndex="0"
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
@@ -117,26 +121,32 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </>
         ) : (
           <>
-            {React.createElement(ModelIcon("openai"))}
+            {React.createElement(ModelIcon("openai"), { size: "md" })}
             <p className="text-sm-md text-gray-white">{role}</p>
           </>
         )}
       </div>
       {isUser ? (
-        <EditableBox
-          ref={textAreaRef}
-          focus={isFocused}
-          placeholder={isUser ? "Enter a message..." : "Generating..."}
-          value={textContent}
-          onChange={handleChange}
-          streaming={streaming}
-        />
+        messageIndex === messages.length - 1 ? (
+          <EditableBox
+            ref={textAreaRef}
+            focus={isFocused}
+            placeholder={isUser ? "Enter a message..." : "Generating..."}
+            value={textContent}
+            onChange={handleChange}
+            streaming={streaming}
+          />
+        ) : (
+          <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
+            {textContent || <span className="text-gray-4">Generating...</span>}
+          </div>
+        )
       ) : (
         <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
           {textContent || <span className="text-gray-4">Generating...</span>}
         </div>
       )}
-      {isFocused && isUser && (
+      {isFocused && isUser && messageIndex === messages.length - 1 && (
         <div className="flex justify-end gap-[10px] self-stretch ">
           <Button
             variant="small"

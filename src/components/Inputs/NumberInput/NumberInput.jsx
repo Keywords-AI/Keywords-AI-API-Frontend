@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 
 export function NumberInput({
   icon = null,
@@ -39,7 +39,11 @@ export function NumberInput({
           textClassName
         )}
         value={value}
-        onChange={onChange}
+        onChange={(e) => {
+          const inputValue = e.target.value;
+          const truncatedValue = inputValue.slice(0, 4);
+          onChange(truncatedValue);
+        }}
         disabled={disabled}
       />
     </div>

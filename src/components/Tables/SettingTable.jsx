@@ -1,5 +1,5 @@
 import React from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 
 export default function SettingTable({
   headers,

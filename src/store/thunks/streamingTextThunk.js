@@ -45,7 +45,6 @@ export const sendStreamingTextThunk = async ({
       item.role !== "user" ? { ...item, role: "assistant" } : item
     ),
   ];
-  console.log(messages);
   const body = JSON.stringify({
     stream: params.stream,
     messages: messages,
