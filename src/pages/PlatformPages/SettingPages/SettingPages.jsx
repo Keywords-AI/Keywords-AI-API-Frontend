@@ -41,45 +41,6 @@ const pages = [
         // forAdmin: true,
         page: <IntegrationsPage />,
     },
-    // {
-    //     title: "Usage",
-    //     subscribedOnly: true,
-    //     paragraphs: [
-    //         {
-    //             text: "Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
-    //         },
-    //         {
-    //             text: <UsageParagraph />
-    //         },
-    //     ]
-    // },
-    // {
-    //     title: "Members",
-    //     // forAdmin: true,
-    //     paragraphs: [
-    //         {
-    //             text: <MemberManagementParagraph />
-    //         },
-    //     ]
-    // },
-    // {
-    //     title: "Billing",
-    //     subtitle: <span className="text-md t-medium text-gray4">
-    //         {"Manage your billing information and invoices. For questions about billing, contact "}
-    //         <span className="text-black">
-    //             team@keywordsai.co.
-    //         </span>
-    //     </span>,
-    //     paragraphs: [
-    //         {
-    //             title: "Current Plan",
-    //             text: <PlanStatusParagraph />
-    //         },
-    //         {
-    //             text: <BillsParagraph />
-    //         },
-    //     ]
-    // },
 
 ];
 
