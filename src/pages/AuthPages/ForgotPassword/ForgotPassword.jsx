@@ -61,8 +61,6 @@ export function ForgotPassword() {
 
               text={"Send reset link"}
               variant={"r4-white"}
-              className="w-full"
-              justification="justify-center"
             />
           </div>
         </form>

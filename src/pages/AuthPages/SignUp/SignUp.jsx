@@ -145,8 +145,6 @@ export function SignUp() {
             <Button
               text={"Create account"}
               variant={"r4-white"}
-              className="w-full"
-              justification="justify-center"
             />
             <p className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}

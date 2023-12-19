@@ -1,23 +1,24 @@
 import React, { useEffect } from 'react'
 import { textToLink } from 'src/utilities/stringProcessing';
+import {QAButtonPage} from "./QAButtonPage"
+import {QAInputPage} from "./QAInputPage"
 
 const pages = [
   {
-    title: "Endpoint",
+    title: "Button",
     // forAdmin: true,
-    path: "", // default path
     default: true,
-    page: <>HI</>,
+    page: <QAButtonPage />
   },
   {
-    title: "Endpoint",
+    title: "Button",
     // forAdmin: true,
-    page: <>HI</>,
+    page: <QAButtonPage />
   },
   {
-    title: "Get Started",
+    title: "Input Fields",
     // forAdmin: true,
-    page: <>HI</>,
+    page: <QAInputPage/>,
   },
   {
     title: "Member",
@@ -99,7 +100,7 @@ const processedUserPages = userPages.map((page, index) => {
 
 export const sections = [
   {
-    title: "Organization",
+    title: "Component",
     pages: processedOrgPages
   },
   {

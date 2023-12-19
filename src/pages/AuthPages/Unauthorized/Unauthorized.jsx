@@ -26,9 +26,7 @@ export function Unauthorized() {
           <Button
             text="View pricing plans"
             variant={"r4-white"}
-            className="w-full"
             icon={Right}
-            justification="justify-center"
             onClick={() => {
               navigate("/pricing");
             }}

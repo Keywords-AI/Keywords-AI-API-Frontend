@@ -1,3 +1,3 @@
-import QaPages from './QaPages';
+export * from 'QaPages';
+export { QAButtonPage } from './QAButtonPage';
 
-export default QaPages;

@@ -5,7 +5,6 @@ export default function HeaderLogo() {
     return (
         <div className="flex-row gap-xxs items-center">
             <Logo />
-            <span className="display-xs font-semibold">Keywords AI</span>
         </div>
     )
 }

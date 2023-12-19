@@ -40,8 +40,6 @@ function ChatLeftDrawer({
         <Button
           variant="chat"
           icon={Rocket}
-          iconHoverFill="fill-gray-white"
-          className="self-stretch"
           text="New Chat"
           iconPosition="left"
           onClick={() => {

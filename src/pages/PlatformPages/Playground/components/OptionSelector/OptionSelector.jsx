@@ -182,7 +182,6 @@ export function OptionSelector({}) {
                 variant="r4-black"
                 text={current[index].name}
                 icon={current[index].icon}
-                iconHoverFill="fill-gray-white"
                 onClick={() => item.setOpen(true)}
                 iconPosition="left"
               />

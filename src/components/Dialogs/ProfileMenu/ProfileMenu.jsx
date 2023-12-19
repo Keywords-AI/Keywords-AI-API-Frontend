@@ -70,7 +70,7 @@ const ProfileMenu = ({ logout, user }) => {
     {
       name: "QA Wall",
       forAdmin: true,
-      action: () => navigate("/qa-wall"),
+      action: () => navigate("/platform/qa-wall"),
     }, // assuming menuitems is an array of other menu items
   ];
 

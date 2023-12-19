@@ -109,7 +109,6 @@ export const CurrentModel = () => {
             text={current.name}
             icon={current.icon}
             iconPosition="left"
-            padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
             disabled={streaming}
           />
@@ -122,7 +121,6 @@ export const CurrentModel = () => {
                   variant="panel"
                   text={model.name}
                   icon={model.icon}
-                  iconFill="fill-gray-white"
                   onClick={() => {
                     if (streaming) return;
                     setCurrent({
