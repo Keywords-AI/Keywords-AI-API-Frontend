@@ -12,7 +12,7 @@ export function ModelOutput({}) {
   const outputs = [
     {
       name: "Score",
-      value: Math.round(stateOutputs.score[currentModel] * 10) / 10 || "0",
+      value: stateOutputs.score[currentModel]?.toFixed(4) || "0",
       icon: Score,
     },
     {
@@ -20,7 +20,7 @@ export function ModelOutput({}) {
       value: (
         <>
           <span>$</span>
-          <span>{stateOutputs.cost}</span>
+          <span>{stateOutputs.cost.toFixed(10) || "0"}</span>
         </>
       ),
       icon: Cost,
@@ -29,7 +29,7 @@ export function ModelOutput({}) {
       name: "Latency",
       value: (
         <>
-          <span>{Math.round(stateOutputs.latency * 100) / 100 || "0"} </span>
+          <span>{stateOutputs.latency.toFixed(4) || "0"}</span>
           <span>s</span>
         </>
       ),
@@ -50,20 +50,6 @@ export function ModelOutput({}) {
       <p className="text-center text-gray-4 text-sm-regular">Output</p>
       <div className="flex-col items-start gap-xxs self-stretch">
         {outputs.map((item, index) => (
-          // <div
-          //   className="flex-col items-start gap-xxs px-md py-sm justify-center self-stretch rounded-sm bg-gray-2"
-          //   key={index}
-          // >
-          //   <div className="flex items-center gap-xxs">
-          //     <div className="flex items-center justify-center w-[16px] gap-[10px]">
-          //       {item.icon}
-          //     </div>
-          //     <p className="text-sm-regular text-gray-4">{item.name}</p>
-          //   </div>
-          //   <p className="display-xs text-gray-white flex items-center">
-          //     {item.value}
-          //   </p>
-          // </div>
           <MetricCard
             key={index}
             icon={item.icon}
@@ -72,11 +58,6 @@ export function ModelOutput({}) {
           />
         ))}
       </div>
-      {/* <Button
-        variant={"small"}
-        text={"Compare different models"}
-        icon={Compare}
-      /> */}
     </div>
   );
 }

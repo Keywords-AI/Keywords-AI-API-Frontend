@@ -78,46 +78,7 @@ const NotConnectedMap = ({
   const handleAddMessage = () => {
     setMessages([...messages, { role: "user", content: "" }]);
   };
-  const handleRegenerate = (event) => {
-    event.stopPropagation();
-    if (streaming) return;
-    console.log("regenerate");
-    removeLastMessage();
-    sendStreamingTextThunk({
-      params: {
-        messages: messages,
-        stream: true,
-        model: currentModel,
-      },
-      prompt: systemPrompt,
-      callback: () => {
-        // this is the callback function after the streaming text is done
-        const streamingText = store.getState().streamingText.streamingText;
-        const currentModel = store.getState().playground.currentModel;
-        const newMessage = {
-          role: currentModel,
-          content: streamingText,
-        };
-        appendMessage(newMessage);
-        const lastUserMessageIndex = messages.reduce(
-          (lastIndex, message, currentIndex) => {
-            if (message.role === "user") {
-              return currentIndex;
-            }
-            return lastIndex;
-          },
-          -1
-        );
-        const cache = {
-          answer: streamingText,
-          index: lastUserMessageIndex,
-        };
-        setCacheAnswer(currentModel, cache);
-      },
-      dispatch: store.dispatch,
-      getState: store.getState,
-    });
-  };
+
   useEffect(() => {
     if (streamingText) {
       setGeneratingText(streamingText);
@@ -176,20 +137,19 @@ const NotConnectSidePannel = ({
   const handleRegenerate = (event) => {
     event.stopPropagation();
     if (streaming) return;
-    console.log("regenerate");
     removeLastMessage();
     removeLastMessage();
 
-    sendStreamingTextThunk(
-      {
+    sendStreamingTextThunk({
+      params: {
         messages: messages,
         stream: true,
         model: currentModel,
       },
-      "https://platform.keywordsai.co/",
-      "api/playground/ask/",
-      systemPrompt,
-      () => {
+      host: "https://platform.keywordsai.co/",
+      path: "api/playground/ask/",
+      prompt: systemPrompt,
+      callback: () => {
         // this is the callback function after the streaming text is done
         const streamingText = store.getState().streamingText.streamingText;
         const currentModel = store.getState().playground.currentModel;
@@ -214,14 +174,14 @@ const NotConnectSidePannel = ({
         appendMessage({ role: "user", content: "" });
         setCacheAnswer(currentModel, cache);
       },
-      store.dispatch,
-      store.getState
-    );
+      dispatch: store.dispatch,
+      getState: store.getState,
+    });
   };
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
       <OptionSelector />
-      <Divider />
+      {!firstTime && <Divider />}
       <CurrentModel />
       <ModelOutput />
       <div className="flex-col gap-xxs">

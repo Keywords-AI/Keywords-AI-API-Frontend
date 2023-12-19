@@ -130,8 +130,9 @@ export const CurrentModel = () => {
                       value: model.value,
                       icon: model.icon,
                     });
+
                     dispatch(setCurrentModel(model.value));
-                    const lastUserMessageIndex = messages.reduce(
+                    let lastUserMessageIndex = messages.reduce(
                       (lastIndex, message, currentIndex) => {
                         if (message.role === "user") {
                           return currentIndex;
@@ -140,6 +141,8 @@ export const CurrentModel = () => {
                       },
                       -1
                     );
+                    if (lastUserMessageIndex > 0) lastUserMessageIndex -= 2;
+
                     console.log("lastMessageIndex", lastUserMessageIndex);
                     console.log("cacheAnswers", cacheAnswers[model.value]);
                     if (
@@ -149,7 +152,7 @@ export const CurrentModel = () => {
                       // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
 
                       store.dispatch(removeLastMessage());
-
+                      store.dispatch(removeLastMessage());
                       sendStreamingTextThunk({
                         params: {
                           messages: messages,
@@ -167,6 +170,9 @@ export const CurrentModel = () => {
                             content: streamingText,
                           };
                           store.dispatch(appendMessage(newMessage));
+                          store.dispatch(
+                            appendMessage({ role: "user", content: "" })
+                          );
                           const cache = {
                             answer: streamingText,
                             index: lastUserMessageIndex,
@@ -178,11 +184,15 @@ export const CurrentModel = () => {
                       });
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message
+                      store.dispatch(removeLastMessage());
                       store.dispatch(
                         setLastMessage({
                           role: model.value,
                           content: cacheAnswers[model.value].answer,
                         })
+                      );
+                      store.dispatch(
+                        appendMessage({ role: "user", content: "" })
                       );
                     }
                   }}
