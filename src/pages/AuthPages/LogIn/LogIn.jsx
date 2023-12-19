@@ -105,8 +105,6 @@ const LogIn = ({ login }) => {
             <Button
               text={"Sign in with email"}
               variant={"r4-white"}
-              className="w-full"
-              justification="justify-center"
             />
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"

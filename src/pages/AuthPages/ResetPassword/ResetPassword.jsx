@@ -78,8 +78,6 @@ export function ResetPassword() {
             <Button
               text={"Change password"}
               variant={"r4-white"}
-              className="w-full"
-              justification="justify-center"
             />
           </div>
         </form>

@@ -30,10 +30,6 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
             trigger={
                 <Button
                     variant="icon"
-                    bgColor="bg-gray-black"
-                    bgHoverColor="bg-gray-2"
-                    borderColor="border-transparent"
-                    borderHoverColor="border-transparent"
                     icon={Dots}
                     onClick={() => setOpen(true)}
                 />

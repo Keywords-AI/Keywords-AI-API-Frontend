@@ -25,8 +25,6 @@ export function NotFound() {
             variant={"r18-white"}
             icon={Right}
             iconSize="xs"
-            iconFill="fill-gray-black"
-            iconHoverFill="fill-gray-white"
             iconPosition="right"
             onClick={() => {
               navigate("/");
@@ -38,7 +36,6 @@ export function NotFound() {
             iconSize="xs"
             icon={Right}
             iconPosition="right"
-            iconFill="fill-gray-white"
           />
         </div>
       </div>

@@ -38,10 +38,8 @@ export const NavBar = () => {
         key={index}
         text={text}
         variant="header"
-        arrow={false}
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
         active={apply}
-        textClassName={"text-sm-regular"}
       />
     );
   };
@@ -72,9 +70,7 @@ export const NavBar = () => {
           <Button
             text="Beta feedback"
             variant="header"
-            arrow={false}
             onClick={() => navigate("/feedback")}
-            textClassName={"text-sm-regular text-gray-4"}
           />
           <ProfileMenu />
         </div>

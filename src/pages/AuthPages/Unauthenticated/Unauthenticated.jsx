@@ -36,7 +36,6 @@ export function Unauthenticated() {
             onClick={() => {
               navigate("/signup");
             }}
-            className="border border-solid border-gray-3"
           />
         </div>
       </div>
