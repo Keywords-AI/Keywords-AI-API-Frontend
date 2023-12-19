@@ -87,7 +87,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
         >
           <IconButton
             className={"absolute top-[36px] right-[36px]"}
-            icon={<Close />}
+            icon={Close}
             onClick={closePopup}
           />
           <div className="gap-xs flex-col items-start justify-start">

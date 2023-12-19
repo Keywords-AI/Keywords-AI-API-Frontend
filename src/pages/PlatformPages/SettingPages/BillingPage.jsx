@@ -36,7 +36,7 @@ export const BillingPage = ({ billings, setBillings }) => {
     >
       <PageParagraph
         heading="Payment history"
-        subheading={loading ? "loading..." : ((billings?.length > 0) ? "You can see your payment history below. Click on View to see additional details." : "There are no invoices to display.")}
+        subheading={loading ? "loading..." : ((billings?.length > 0) ? "You can see your payment history below. For questions about billing, contact team@keywordsai.co." : "There are no invoices to display.")}
       >
         {(billings?.length > 0) && <SettingTable
           variant={"billings"}

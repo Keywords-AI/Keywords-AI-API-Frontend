@@ -1,23 +1,28 @@
 import { getDateStr } from "./stringProcessing";
 
-export const digitToMonth = (digit) => {
-  let month = digit;
-  if (!digit) month = new Date().getMonth() + 1;
+export const digitToMonth = (digit, year) => {
+  // let month = digit;
+  // if (!digit) month = new Date().getMonth() + 1;
+  // if (month === undefined) month = new Date().getMonth();
+  // if (year === undefined) year = new Date().getFullYear();
+  const now = new Date();
+  let month = digit !== undefined ? digit : now.getMonth();
+  year = year !== undefined ? year : now.getFullYear();
   const monthMap = {
-    0: "January",
-    1: "Febuary",
-    2: "March",
-    3: "April",
+    0: "Jan",
+    1: "Feb",
+    2: "Mar",
+    3: "Apr",
     4: "May",
-    5: "June",
-    6: "July",
-    7: "August",
-    8: "September",
-    9: "October",
-    10: "November",
-    11: "December",
+    5: "Jun",
+    6: "Jul",
+    7: "Aug",
+    8: "Sep",
+    9: "Oct",
+    10: "Nov",
+    11: "Dec",
   };
-  return monthMap[month];
+  return `${monthMap[month]} ${year}`;
 };
 
 export function timeSkip(currentTime, deltaTime) {
@@ -41,7 +46,7 @@ export const processKey = (key, actions = () => {}) => {
     created: getDateStr(key.created_at),
     last_used: getDateStr(key.last_used),
     actions: actions(key),
-    prefix: key.prefix.slice(3) +'...'
+    mod_prefix: key.prefix.slice(0,3) + "..."
   };
 };
 

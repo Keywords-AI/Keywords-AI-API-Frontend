@@ -64,11 +64,18 @@ const ProfileMenu = ({ logout, user }) => {
     },
     {
       name: "Admin",
+      forAdmin: true,
       action: () => navigate("/admin"),
+    }, // assuming menuitems is an array of other menu items
+    {
+      name: "QA Wall",
+      forAdmin: true,
+      action: () => navigate("/qa-wall"),
     }, // assuming menuitems is an array of other menu items
   ];
 
   const renderedItems = menuItemsWithUser.map((item, index) => {
+    const authorized = (item.forAdmin ? user.is_admin : true);
     if (item.type === "user") {
       return (
         <React.Fragment key={index}>
@@ -87,9 +94,11 @@ const ProfileMenu = ({ logout, user }) => {
       );
     } else {
       return (
-        <DropdownMenuPrimitive.Item key={index} asChild>
-          <Button variant="panel" text={item.name} onClick={item.action} />
-        </DropdownMenuPrimitive.Item>
+        <React.Fragment key={index}>
+          {authorized && <DropdownMenuPrimitive.Item asChild>
+            <Button variant="panel" text={item.name} onClick={item.action} />
+          </DropdownMenuPrimitive.Item>}
+        </React.Fragment>
       );
     }
   });

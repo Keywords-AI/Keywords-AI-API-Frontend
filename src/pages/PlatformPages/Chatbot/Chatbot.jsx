@@ -133,17 +133,14 @@ function Chatbot({
               </>
             ) : (
               <>
-                {streaming && (
-                  <div className="flex-col justify-center items-center gap-md self-stretch mt-[160px]">
+                {true && ( // ! replaced streaming
+                  <div className="flex flex-col justify-center items-center gap-md self-stretch mt-[160px]">
                     <LogoSubtract />
                     <div className="flex-col justify-center items-center gap-xxxs self-stretch">
-                      <div className="flex-row gap-xxs items-center">
                         <HeaderLogo />
-                        <span className="display-sm">Keywords AI</span>
-                      </div>
-                      <div className="text-md-medium text-gray-3">
+                      <span className="text-sm-md text-gray-3">
                         Connect to the best model for your prompts.
-                      </div>
+                      </span>
                     </div>
                   </div>
                 )}
@@ -156,7 +153,7 @@ function Chatbot({
             )}
           </div>
           <div
-            className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
+            className="absolute flex flex-col items-center gap-md left-xxxl right-xxxl bottom-lg">
             {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
                 <Sample />
@@ -171,7 +168,7 @@ function Chatbot({
             </div>
             <div className="caption text-gray-4">
               Keywords AI connects your prompts with the best model automatically.{" "}
-              <a href="/" className="text-gray-4 underline">
+              <a href="/platform/doc" className="text-gray-4 underline">
                 Learn more
               </a>
             </div>

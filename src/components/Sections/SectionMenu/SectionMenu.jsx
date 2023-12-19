@@ -4,7 +4,7 @@ import { User } from 'src/components/Icons'
 import { Button } from 'src/components/Buttons'
 import { useNavigate } from 'react-router-dom'
 
-const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
+const SectionMenu = ({ section, basePath, user }) => {
   const pages = section?.pages || [];
   const title = section?.title || "Section Title Here";
   const icon = section?.icon || <User />;
@@ -20,7 +20,9 @@ const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
         </div>
         <div className="flex-col flex-start self-stretch">
           {pages && pages.length > 0 && pages.map((page, index) => {
+            const authorized = page.forAdmin? user.is_admin:true;
             if (page?.default) return;
+            if (!authorized) return;
             return (
               <Button
                 active={window.location.pathname.includes(`${basePath}/${page?.path}`)}
@@ -38,7 +40,7 @@ const SectionMenu = ({ section, basePath = "/platform/setting" }) => {
   )
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({ user: state.user})
 
 const mapDispatchToProps = {}
 

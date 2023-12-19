@@ -1,3 +1,6 @@
+const gray3 = "#3E424A";
+const gray4 = "#B1B3BC";
+
 export default {
   extend: {
     fontFamily: {
@@ -43,8 +46,8 @@ export default {
         white: "#F9FAFC",
         black: "#05050A",
         2: "#151518",
-        3: "#3E424A",
-        4: "#B1B3BC",
+        3: gray3,
+        4: gray4,
       },
       box: "#1D1D1D",
       resend: {
@@ -55,7 +58,9 @@ export default {
       pricing: "2px 2px 10px 2px rgba(24, 24, 32, 0.40)",
       purple: "0 0 40px rgba(143, 0, 210, 0.25)",
       window: " 0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
-      key: "1px 1px 1px 0px #000",
+      key: `1px 1px 1px 0px black`,
+      border: `0px 0px 0px 1px ${gray3}`,
+      border: { active: `0px 0px 0px 1px ${gray4}` },
     },
     backgroundImage: {
       highlight:

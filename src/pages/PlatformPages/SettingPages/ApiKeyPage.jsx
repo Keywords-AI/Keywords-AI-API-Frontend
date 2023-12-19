@@ -27,12 +27,6 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
   const editingTrigger = (key) => {
     return (
       <>
-        {/* <Button
-          variant="small"
-          text={"Edit"}
-          icon={Pencil}
-          onClick={() => setEditingKey(key)}
-        /> */}
         <div className="flex-row w-full justify-end">
           <APIKeyActions modifyingKey={key} setEditingKey={setEditingKey} setDeletingKey={setDeletingKey} />
         </div>
@@ -53,7 +47,7 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
           < SettingTable
             variant={"api-keys"}
             rows={apiKey.keyList}
-            columnNames={["name", "prefix", "created", "last_used", "actions"]}
+            columnNames={["name", "mod_prefix", "created", "last_used", "actions"]}
           />
         }
         <Button variant="r4-primary" text="Generate new key" onClick={() => { setOpenCreate(!openCreate); clearPrevApiKey(); }} />
@@ -78,10 +72,6 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
           editingKey={apiKey.editingKey}
           setEditingKey={setEditingKey}
         />
-        {/* <DeleteForm
-          deletingKey={apiKey.editingKey}
-          setDeletingKey={setEditingKey}
-        /> */}
       </Modal>
       <Modal
         title={"Revoke API key"}

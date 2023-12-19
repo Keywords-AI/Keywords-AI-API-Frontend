@@ -202,7 +202,7 @@ export const Button = forwardRef(
         borderHoverColor = borderHoverColor || "border-gray-4";
         padding = padding || "py-xxxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
-        iconHoverFill = iconHoverFill || "fill-gray-white";
+        iconHoverFill = iconHoverFill || "fill-gray-4";
         textClassName = "text-sm-md";
 
         break;
@@ -277,7 +277,7 @@ export const Button = forwardRef(
         iconPosition = iconPosition || "left";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
-        width = width || "w-full";
+        width = width || "w-full self-stretch";
         iconSize = iconSize || "md";
 
         break;
@@ -311,6 +311,7 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         justification = justification || "justify-center";
         className = className || "w-[256px]";
+        iconHoverFill=iconHoverFill || "fill-gray-white";
 
         break;
       case "icon":
@@ -389,7 +390,9 @@ export const Button = forwardRef(
                 )}
               >
                 {React.createElement(icon, {
-                  fill: hover ? iconHoverFill : iconFill,
+                  fill: iconFill,
+                  activeFill: iconHoverFill,
+                  active: hover,
                   size: iconSize,
                 })}
               </div>

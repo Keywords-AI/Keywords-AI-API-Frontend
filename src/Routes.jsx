@@ -18,6 +18,8 @@ import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
 
 import { documentationChildren } from "./pages/PlatformPages/DocumentationPages/DocumentationPages";
+import { qaChildren } from "./pages/PlatformPages/QaPages/QaPages";
+
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
@@ -56,6 +58,11 @@ const Routes = ({ getUser, user }) => {
           path: "doc",
           element: <LeftNavigationLayout sectionName={"documentation"} />,
           children: documentationChildren,
+        },
+        {
+          path: "qa-wall",
+          element: <LeftNavigationLayout sectionName={"qa-wall"} />,
+          children: qaChildren,
         },
         {
           path: "test",

@@ -11,12 +11,12 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
     const [open, setOpen] = React.useState(false);
     const actionButtons = [
         {
-            action: setEditingKey,
+            action: () => { setEditingKey(modifyingKey)},
             text: "Edit",
             minWidth: "w-full",
         },
         {
-            action: setDeletingKey,
+            action: () => { setDeletingKey(modifyingKey)},
             text: "Revoke key",
             textColor: "text-error",
         },
@@ -38,19 +38,21 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
                     onClick={() => setOpen(true)}
                 />
             }
-            width="w"
+            width="min-w-0"
             open={open}
             setOpen={setOpen}
             items={
                 <React.Fragment>
-                    {actionButtons.map((option) => (
-                        <DropdownMenuPrimitive.Item key={modifyingKey.id} asChild>
+                    {actionButtons.map((option, index) => (
+                        <DropdownMenuPrimitive.Item key={index} asChild>
                             <Button
                                 variant="panel"
-                                minWidth={option.minWidth || "w"}
+                                type="button"
                                 text={option.text}
                                 textColor={option.textColor}
-                                onClick={() => option.action(modifyingKey)}
+                                onClick={() => {
+                                    option.action()
+                                }}
                                 iconPosition="left"
                             />
                         </DropdownMenuPrimitive.Item>

@@ -39,19 +39,23 @@ function ConversationItem({
             {(hover || conv?.deleting) &&
                 <>
                     {conv?.deleting ?
-                        <div className="flex-row gap-xxs flex-shrink-0">
+                        <div className="flex-row gap-xxs flex-shrink-0 items-center">
                             <IconButton
                                 onClick={() => {
                                     setConv({ ...conv, deleting: false })
                                 }}
-                                icon={<Cross fill={"fill-gray-4 hover:fill-white"} />}
+                                icon={Cross}
+                                hoverFill="fill-gray-white"
+                                fill="fill-gray-4"
                             />
                             <IconButton
                                 onClick={() => {
                                     deleteConversation(conv.id);
                                     setConv({ ...conv, deleting: false })
                                 }}
-                                icon={<Check fill={"fill-gray-4 hover:fill-white"} />}
+                                icon={Check}
+                                hoverFill="fill-gray-white"
+                                fill="fill-gray-4"
                             />
                         </div>
                         :
@@ -59,7 +63,8 @@ function ConversationItem({
                             onClick={() => {
                                 setConv({ ...conv, deleting: true })
                             }}
-                            icon={<Delete />}
+                            icon={Delete}
+                            
                         />
                     }
                 </>
