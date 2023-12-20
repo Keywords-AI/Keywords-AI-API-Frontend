@@ -3,18 +3,19 @@ import { Button, IconButton } from "src/components/Buttons";
 import { TextInput } from "src/components/Inputs";
 import { Delete } from "src/components/Icons";
 import useForwardRef from "src/hooks/useForwardRef";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
-import { createOrUpdateIntegration } from "src/store/actions";
+import { createOrUpdateIntegration, setIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 const mapDispatchToProps = {
-  createOrUpdateIntegration
+  createOrUpdateIntegration,
+  setIntegration
 };
 
 export const vendors = {
@@ -101,12 +102,19 @@ const IntegrationCardNotConnected = ({
   companyName,
   activatedModels,
   availableModels,
+  setOpen,
   createOrUpdateIntegration,
+  setIntegration,
+  integration,
 }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const [apiKeyString, setApiKeyString] = useState(apiKey);
+  const [hasKey, setHasKey] = useState(apiKey ? true : false);
+  const [apiKeyString, setApiKeyString] = useState(apiKey || "");
   const onSubmit = (data) => {
-    createOrUpdateIntegration({ ...data, vendor: vendorId, user: user.id });
+    let toSubmit = { vendor: vendorId, user: user.id, ...data };
+    
+    createOrUpdateIntegration(toSubmit);
+    setOpen(false);
   };
   const onChange = (e) => {
     setApiKeyString(e.target.value);
@@ -130,23 +138,27 @@ const IntegrationCardNotConnected = ({
           </div>
         </fieldset>
         <TextInput
-          {...register("api_key", { value: apiKeyString, onChange })}
-          title={apiKey ? "API key added" : `Your ${companyName} API key (optional)`}
+          {...register(hasKey ? "api_key_display" : "api_key", { onChange })}
+          title={hasKey ? "API key added" : `Your ${companyName} API key (optional)`}
           width={"w-full"}
-          disabled={apiKey}
+          disabled={hasKey}
+          value={apiKeyString}
           placeholder={`Paste your ${companyName} API key here`}
           action={
-            <IconButton
+            hasKey && <IconButton
               type="button"
               variant="r4-white"
               icon={Delete}
-              onClick={() => { setApiKeyString(""); console.log("delete key")}}
+              onClick={() => { setApiKeyString(""); setHasKey(false); }}
             />
           }
         />
         <div className="flex justify-end items-center gap-xs self-stretch">
-          <Button variant="r4-gray-2" text="Cancel" />
-          <Button variant="r4-primary" text="Save" />
+          <Button variant="r4-gray-2" text="Cancel"
+            type="button"
+            onClick={() => { setOpen(false) }}
+          />
+          <Button variant="r4-primary" text="Save"/>
         </div>
       </form>
     </>
@@ -183,7 +195,7 @@ export const IntegrationModal = ({ vendor }) => {
     activatedModels,
     availableModels,
     integration: vendor.integration,
-    apiKey: vendor.integration?.api_key || "",
+    apiKey: vendor.integration?.api_key_display || "",
   };
   return (
     <Modal
@@ -199,6 +211,7 @@ export const IntegrationModal = ({ vendor }) => {
       />}
     >
       <IntegrationCard
+        setOpen={setOpen}
         {...propsObj}
       />
     </Modal>
