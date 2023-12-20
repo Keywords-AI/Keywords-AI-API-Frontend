@@ -9,7 +9,6 @@ export const getVendors = () => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/vendors",
-      host: localHost,
     })
       .then((response) => response.json())
       .then((data) => {
@@ -48,7 +47,6 @@ export const createOrUpdateIntegration = (data) => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/integrations/",
-      host: localHost,
       data,
       method: "POST",
     })
