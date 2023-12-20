@@ -16,26 +16,36 @@ export const CopyInput = ({ value, title, disabled }) => {
     )
 }
 
-export const DeleteInput = ({ prevValue, title, onClick = () => { }, placeholder }) => {
-    const [value, setValue] = React.useState(prevValue)
-
+export const DeleteInput = React.forwardRef(({ 
+    name, 
+    value, 
+    title, 
+    onClick = () => { }, 
+    placeholder, 
+    onChange = () => { } 
+}, ref) => {
+    const [prevValue, setPrevValue] = React.useState(value)
+    const handleChange = (e) => {
+        setPrevValue(e.target.value)
+        onChange(e)
+    }
     return (
         <div className="relative flex-col">
             <TextInput
                 placeholder={placeholder || ""}
-                value={value}
+                name={name}
                 title={title}
-                onChange={(e) => { setValue(e.target.value) }}
+                ref={ref}
+                onChange={(e) => { setPrevValue(e.target.value) }}
                 width="w-full"
-            />
-            <IconButton
-                icon={Delete}
-                text={value}
-
-                className="absolute right-xs bottom-[10px]"
-                onClick={() => { setValue(''); onClick(); }}
+                action={<IconButton
+                    icon={Delete}
+                    text={value}
+                    onClick={() => { setPrevValue(''); onClick(); }
+                    }
+                />}
             />
         </div>
     )
-}
+})
 

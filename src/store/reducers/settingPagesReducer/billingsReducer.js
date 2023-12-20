@@ -1,4 +1,4 @@
-import { SET_BILLINGS } from '../actions/settingPagesActions/billingsAction';
+import { SET_BILLINGS } from '../../actions/settingPagesActions/billingsAction';
 const initState = [];
 
 

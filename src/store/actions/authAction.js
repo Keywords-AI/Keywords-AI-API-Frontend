@@ -1,6 +1,6 @@
 import { platformURL } from "src/utilities/platformURL";
 import { getCookie } from "src/services/getCookie";
-import { retrieveConversation } from "./conversationAction";
+import { retrieveConversation } from "./deprecated/conversationAction";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
 
 export const register = (

@@ -9,7 +9,7 @@ import {
     SET_STREAMING_TEXT,
     SET_FIRST_TIME,
     SET_CACHE_ANSWER,
-  } from "../actions/playgroundAction";
+  } from "src/store/actions/playgroundAction";
   const initialState = {
     messages: [
       {

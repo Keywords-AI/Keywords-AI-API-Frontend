@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { Button, IconButton } from "src/components/Buttons";
+import { TextInput } from "src/components/Inputs";
 import { Delete } from "src/components/Icons";
-import { Button } from "src/components/Buttons";
-import { DeleteInput } from "src/components/Inputs";
 import useForwardRef from "src/hooks/useForwardRef";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
+import { createOrUpdateIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  createOrUpdateIntegration
+};
 
 export const vendors = {
   "OpenAI": {
@@ -57,18 +60,26 @@ export const vendors = {
   },
 }
 
-export const CheckBoxButton = React.forwardRef(({ name, register = () => { }, validationSchema, text, onChange = () => { } }, ref) => {
+export const CheckBoxButton = React.forwardRef(({
+  name,
+  register = () => { },
+  validationSchema,
+  text,
+  onChange = () => { },
+  checked = false
+},
+  ref) => {
   const checkBoxRef = useForwardRef(ref);
-  const [checked, setChecked] = React.useState(false);
+  const [isChecked, setIsChecked] = React.useState(checked);
   const handelChange = (e) => {
     onChange(e);
-    setChecked(e.target.checked);
+    setIsChecked(e.target.checked);
   }
   const handleClick = () => {
     checkBoxRef.current.click();
   };
   return (
-    <Button type={"button"} variant={"r4-black"} active={checked} onClick={handleClick}>
+    <Button type={"button"} variant={"r4-black"} active={isChecked} onClick={handleClick}>
       <span>{text}</span>
       <input
         {...register(name, validationSchema)}
@@ -77,17 +88,28 @@ export const CheckBoxButton = React.forwardRef(({ name, register = () => { }, va
         type={"checkbox"}
         value={text}
         hidden
+        checked={isChecked}
         onChange={handelChange} />
     </Button>
   );
 })
 
 const IntegrationCardNotConnected = ({
+  user,
+  apiKey,
+  vendorId,
   companyName,
+  activatedModels,
+  availableModels,
+  createOrUpdateIntegration,
 }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [apiKeyString, setApiKeyString] = useState(apiKey);
   const onSubmit = (data) => {
-    console.log(data);
+    createOrUpdateIntegration({ ...data, vendor: vendorId, user: user.id });
+  };
+  const onChange = (e) => {
+    setApiKeyString(e.target.value);
   };
   return (
     <>
@@ -97,19 +119,30 @@ const IntegrationCardNotConnected = ({
         <fieldset className="flex flex-col items-start self-stretch gap-xxs">
           <span className="text-sm-regular text-gray-4">Available models</span>
           <div className="flex flex-wrap self-stretch gap-xs">
-            {vendors.companyName && vendors.companyName.models.map((model, index) => (
+            {availableModels.map((model, index) => (
               <CheckBoxButton
-                {...register("models")}
+                {...register("activated_models")}
                 key={index}
-                text={model.name}
+                text={model}
+                checked={activatedModels.includes(model)}
               />
             ))}
           </div>
         </fieldset>
-        <DeleteInput
-          title={`Your ${companyName} API key (optional)`}
+        <TextInput
+          {...register("api_key", { value: apiKeyString, onChange })}
+          title={apiKey ? "API key added" : `Your ${companyName} API key (optional)`}
           width={"w-full"}
+          disabled={apiKey}
           placeholder={`Paste your ${companyName} API key here`}
+          action={
+            <IconButton
+              type="button"
+              variant="r4-white"
+              icon={Delete}
+              onClick={() => { setApiKeyString(""); console.log("delete key")}}
+            />
+          }
         />
         <div className="flex justify-end items-center gap-xs self-stretch">
           <Button variant="r4-gray-2" text="Cancel" />
@@ -138,29 +171,35 @@ export const TitleCard = ({ companyLogo, companyName, modelCount }) => {
   )
 }
 
-export const IntegrationModal = ({ companyName }) => {
+export const IntegrationModal = ({ vendor }) => {
   const [open, setOpen] = React.useState(false);
+  const activatedModels = vendor.integration?.activated_models || [];
+  const availableModels = vendor.available_models || [];
+  const propsObj = {
+    vendorId: vendor.id,
+    companyName: vendor.name,
+    companyLogo: vendors[vendor.name] && vendors[vendor.name].companyLogo,
+    modelCount: `${activatedModels.length}/${availableModels.length}`,
+    activatedModels,
+    availableModels,
+    integration: vendor.integration,
+    apiKey: vendor.integration?.api_key || "",
+  };
   return (
     <Modal
       open={open}
       setOpen={setOpen}
       title={<TitleCard
-        companyName={companyName}
-        modelCount="3/5 "
-        companyLogo={vendors[companyName] && vendors[companyName].companyLogo}
+        {...propsObj}
       />}
       subtitle="We'll get back to you within 24 hours."
       trigger={<VendorCard
         setOpen={setOpen}
-        companyName={companyName}
-        modelCount="3/5 "
-        companyLogo={vendors[companyName] && vendors[companyName].companyLogo}
+        {...propsObj}
       />}
     >
       <IntegrationCard
-        companyName={companyName}
-        companyLogo={vendors[companyName] && vendors[companyName].companyLogo}
-        modelCount="3/5"
+        {...propsObj}
       />
     </Modal>
   )

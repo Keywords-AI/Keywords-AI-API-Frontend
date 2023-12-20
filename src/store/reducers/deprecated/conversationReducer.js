@@ -1,14 +1,5 @@
 const initState = {
-  messages: [{ role: "assistant", content: `## My To-Do List
-
-  - [ ] Complete the market analysis report.
-  - [ ] Schedule meeting with the design team.
-  - [ ] Update project roadmap on Confluence.
-  
-  **Reminder:** Check emails by 10 AM.
-  
-  *Useful Link:* [Team Calendar](https://www.companycalendar.com)
-  `}],
+  messages: [],
 };
 
 const conversationReducer = (state = initState, action) => {
