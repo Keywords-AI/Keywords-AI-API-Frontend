@@ -176,7 +176,7 @@ export const Button = forwardRef(
         iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-4";
@@ -385,7 +385,7 @@ export const Button = forwardRef(
             {icon && (
               <div
                 className={cn(
-                  "flex justify-center items-center w-[16px] gap-[10px]",
+                  "flex justify-center items-center w-[16px] h-[16px] gap-[10px]",
                   iconPosition === "left" ? "order-first" : "order-last"
                 )}
               >

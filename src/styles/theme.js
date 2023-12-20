@@ -60,7 +60,7 @@ export default {
       window: " 0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
       key: `1px 1px 1px 0px black`,
       border: `0px 0px 0px 1px ${gray3}`,
-      border: { active: `0px 0px 0px 1px ${gray4}` },
+      // border: { active: `0px 0px 0px 1px ${gray4}` },
     },
     backgroundImage: {
       highlight:

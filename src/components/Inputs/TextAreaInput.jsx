@@ -1,23 +1,73 @@
-import React from 'react'
-import useForwardRef from 'src/hooks/useForwardRef';
+import React from "react";
+import cn from "src/utilities/ClassMerge";
+import useForwardRef from "src/hooks/useForwardRef";
 
-const TextAreaInput = React.forwardRef(({ register = () => { }, name, validationSchema, onChange }, ref) => {
+const TextAreaInput = React.forwardRef(
+  (
+    {
+      name = "textarea",
+      title,
+      register = () => {},
+      errors = null,
+      required = false,
+      validationSchema = null,
+      value,
+      onChange,
+      placeholder = "Enter text here",
+      disabled = false,
+      width = "w-full",
+      height = "h-full",
+    },
+    ref
+  ) => {
+    const [isFocused, setIsFocused] = React.useState(false);
+    const handleBlur = (event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) {
+        setIsFocused(false);
+      }
+    };
     const inputRef = useForwardRef(ref);
-    const keyPress = (e) => {
-        if (e.keyCode == 13 && e.shiftKey == false) {
-            e.target.form.requestSubmit();
-        }
-    }
+
     return (
+      <div
+        className={cn(
+          "flex-col justify-center items-start gap-xxs ",
+          width,
+          height
+        )}
+        onClick={() => setIsFocused(true)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleBlur}
+      >
+        {title && (
+          <label htmlFor={name} className="text-sm-regular text-gray-4">
+            {title}
+            {required && " *"}
+          </label>
+        )}
         <textarea
-            className="bg-gray-2"
-            ref={inputRef}
-            onKeyDown={keyPress}
-            onChange={onChange}
-            name={name}
-            {...register(name, validationSchema)}
+          id={name}
+          ref={inputRef}
+          name={name}
+          placeholder={placeholder}
+          className={cn(
+            "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full h-full placeholder:text-gray-4 box-border resize-none",
+            isFocused && !disabled
+              ? "border border-gray-white"
+              : "border border-gray-3",
+            !disabled ? "text-gray-white" : "text-gray-3"
+          )}
+          {...register(name, validationSchema)}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
         />
-    )
-})
+        {errors && errors[name] && (
+          <span className="text-error caption">{errors[name]?.message}</span>
+        )}
+      </div>
+    );
+  }
+);
 
 export default TextAreaInput;

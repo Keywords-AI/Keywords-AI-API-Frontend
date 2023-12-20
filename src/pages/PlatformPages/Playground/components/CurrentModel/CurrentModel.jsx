@@ -109,7 +109,6 @@ export const CurrentModel = () => {
             text={current.name}
             icon={current.icon}
             iconPosition="left"
-            padding="py-xxxs px-xxs"
             onClick={() => setOpen(!open)}
             disabled={streaming}
           />
@@ -155,7 +154,7 @@ export const CurrentModel = () => {
                       store.dispatch(removeLastMessage());
                       sendStreamingTextThunk({
                         params: {
-                          messages: messages,
+                          messages: store.getState().playground.messages,
                           stream: true,
                           model: model.value,
                         },
