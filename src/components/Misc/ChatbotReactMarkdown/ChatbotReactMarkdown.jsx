@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import "./static/css/style.css";
 
-export default function ChatbotReactMarkdown({ content }) {
+export function ChatbotReactMarkdown({ content }) {
   return (
     <ReactMarkdown
       children={content}
       components={{
         pre: ({ node, ...props }) => (
-          <pre {...props} className="format-pre" />
+          <pre {...props} className="bg-gray-black" />
         ),
         p: ({ node, ...props }) => (
           <p {...props} className="text-sm" />

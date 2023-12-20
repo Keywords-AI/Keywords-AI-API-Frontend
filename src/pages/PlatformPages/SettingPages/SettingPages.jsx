@@ -7,6 +7,7 @@ import MemberPage from './MemberPage';
 import BillingPage from './BillingPage';
 import { Building } from 'src/components/Icons'
 import { IntegrationsPage } from './IntegrationsPage';
+import { generateChild } from 'src/utilities/objectProcessing';
 
 const pages = [
     {
@@ -17,7 +18,6 @@ const pages = [
     },
     {
         title: "Settings",
-        // forAdmin: true,
         page: <SettingsPage />,
     },
     {
@@ -57,17 +57,11 @@ const userPages = [
 
 
 const processedOrgPages = pages.map((page, index) => {
-    return {
-        ...page,
-        path: textToLink(page.title)
-    }
+    return generateChild(page);
 })
 
 const processedUserPages = userPages.map((page, index) => {
-    return {
-        ...page,
-        path: textToLink(page.title)
-    }
+    return generateChild(page);
 })
 
 export const sections = [
@@ -82,25 +76,8 @@ export const sections = [
     }
 ]
 
-const generateChild = (page) => {
-    let path = textToLink(page.title);
-    if (page?.path) {
-        path = page.path;
-    }
-    if (page?.default) {
-        path = "";
-    }
-    return {
-        title: page.title,
-        path: path,
-        element: page.page
-    };
-}
-
 export const settingChildren = sections.reduce((allPages, section) => {
-    const newPages = section.pages.map((page, index) => {
-        return generateChild(page);
-    });
+    const newPages = section.pages;
 
     return [...allPages, ...newPages];
 }, []);

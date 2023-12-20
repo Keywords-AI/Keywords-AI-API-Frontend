@@ -2,7 +2,6 @@ import React from "react";
 import { DropDownMenu } from "src/components";
 import { Button, IconButton } from "src/components/Buttons";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { set } from "react-hook-form";
 import { Dots } from "src/components/Icons";
 
 
@@ -16,7 +15,7 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
             minWidth: "w-full",
         },
         {
-            action: () => { setDeletingKey(modifyingKey)},
+            action: () => { setDeletingKey(modifyingKey);},
             text: "Revoke key",
             textColor: "text-error",
         },
@@ -30,10 +29,6 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
             trigger={
                 <Button
                     variant="icon"
-                    bgColor="bg-gray-black"
-                    bgHoverColor="bg-gray-2"
-                    borderColor="border-transparent"
-                    borderHoverColor="border-transparent"
                     icon={Dots}
                     onClick={() => setOpen(true)}
                 />

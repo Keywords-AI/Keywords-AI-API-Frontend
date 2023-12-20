@@ -1,6 +1,6 @@
 import React from "react";
-import cn from "src/utilities/ClassMerge";
 import useForwardRef from "src/hooks/useForwardRef";
+import cn from "src/utilities/classMerge";
 
 const TextAreaInput = React.forwardRef(
   (
@@ -27,7 +27,6 @@ const TextAreaInput = React.forwardRef(
       }
     };
     const inputRef = useForwardRef(ref);
-
     return (
       <div
         className={cn(

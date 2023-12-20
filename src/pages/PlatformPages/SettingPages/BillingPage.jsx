@@ -8,7 +8,7 @@ import { processBillingList } from 'src/utilities/objectProcessing'
 import useFetch from 'src/hooks/useFetch'
 import { CanelPlanForm } from './components/BillingComponents'
 import { Modal } from 'src/components/Dialogs'
-import { setBillings } from 'src/store/actions/billingsAction'
+import { setBillings } from 'src/store/actions'
 
 
 export const BillingPage = ({ billings, setBillings }) => {

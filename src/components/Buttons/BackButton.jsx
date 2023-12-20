@@ -11,9 +11,7 @@ export function BackButton({ text, link = -1 }) {
         variant={"r18-black"}
         onClick={() => navigate(link)}
         icon={Left}
-        iconSize="xxs"
-        iconPosition="left"
-        iconFill="fill-gray-white"
+        iconPosition={"left"}
       />
     </div>
   );

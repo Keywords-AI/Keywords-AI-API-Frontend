@@ -1,5 +1,5 @@
 import React from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 import useForwardRef from "src/hooks/useForwardRef";
 
 /**
@@ -37,6 +37,7 @@ export const TextInput = React.forwardRef(({
   disabled = false,
   width = "w-[400px]",
   onKeyDown = () => { },
+  action,
 }, forwardedRef) => {
   const [isFocused, setIsFocused] = React.useState(false);
   const handleBlur = (event) => {
@@ -48,7 +49,7 @@ export const TextInput = React.forwardRef(({
 
   return (
     <div
-      className={cn("flex-col justify-center items-start gap-xxs",
+      className={cn("flex-col justify-center items-start gap-xxs relative",
         width)}
       onClick={() => setIsFocused(true)}
       onFocus={() => setIsFocused(true)}
@@ -84,9 +85,12 @@ export const TextInput = React.forwardRef(({
           value={value} // Bind the value prop to the input
           onChange={onChange} // Use the onChange handler
           onKeyDown={onKeyDown}
-          disabled={disabled}
+          readOnly={disabled}
         />
       </div>
+      {action && <div className="flex-col absolute right-xs bottom-[10px]">
+        {action}
+      </div>}
       {errors && errors[name] && (
         <span className="text-error caption">{errors[name]?.message}</span>
       )}

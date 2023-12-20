@@ -7,7 +7,7 @@ import {
   UPDATE_EDITING_KEY,
   SET_DELETING_KEY,
   ClEAR_PREV_API_KEY,
-} from "../actions/apiKeyAction";
+} from "../../actions/settingPagesActions/apiKeyAction";
 
 const initState = {
   keyList: [],
@@ -63,7 +63,7 @@ export default function apiKeyReducer(state = initState, action) {
       return {
         ...state,
         deletingKey: state.keyList.find((key) => {
-          return key.created === action.key?.created;
+          return key.prefix === action.key?.prefix;
         }),
       };
     case ClEAR_PREV_API_KEY:

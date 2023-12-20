@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import cn from "src/utilities/ClassMerge";
+import cn from "src/utilities/classMerge";
 
 export function NumberInput({
   icon = null,

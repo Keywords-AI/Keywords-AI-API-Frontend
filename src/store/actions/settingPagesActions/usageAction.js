@@ -1,5 +1,5 @@
 import apiConfig from "src/services/apiConfig";
-import { getDateStr } from "../../utilities/stringProcessing";
+import { getDateStr } from "../../../utilities/stringProcessing";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { timeSkip } from "src/utilities/objectProcessing";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
-import { ChatbotReactMarkdown } from "src/components/Misc/ChatbotReactMarkdown";
+import { ChatbotReactMarkdown } from "src/components/Misc";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {

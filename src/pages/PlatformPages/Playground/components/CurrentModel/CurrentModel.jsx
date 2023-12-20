@@ -121,7 +121,6 @@ export const CurrentModel = () => {
                   variant="panel"
                   text={model.name}
                   icon={model.icon}
-                  iconFill="fill-gray-white"
                   onClick={() => {
                     if (streaming) return;
                     setCurrent({

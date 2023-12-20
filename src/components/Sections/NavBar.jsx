@@ -1,7 +1,6 @@
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { Button } from "src/components/Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import cn from "src/utilities/ClassMerge";
 import { Modal, ProfileMenu } from "src/components/Dialogs";
 import React from "react";
 import { FileInput, TextAreaInput } from "../Inputs";
@@ -43,10 +42,8 @@ export const NavBar = () => {
         key={index}
         text={text}
         variant="header"
-        arrow={false}
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
         active={apply}
-        textClassName={"text-sm-regular"}
       />
     );
   };

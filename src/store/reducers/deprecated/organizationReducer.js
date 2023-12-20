@@ -1,4 +1,4 @@
-import { SET_ORG, SET_ORG_NAME } from "../actions/organizationAction";
+import { SET_ORG, SET_ORG_NAME } from "../../actions/settingPagesActions/organizationAction";
 
 const initState = {
   id: "",

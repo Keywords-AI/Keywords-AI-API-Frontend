@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button } from 'src/components/Buttons'
-import cn from 'src/utilities/ClassMerge';
+import cn from 'src/utilities/classMerge';
 import { Select as SelectionIcon, Down } from 'src/components/Icons'
 import { DropDownMenu } from 'src/components/Dialogs';
 import * as DropdownPrimitives from "@radix-ui/react-dropdown-menu";
