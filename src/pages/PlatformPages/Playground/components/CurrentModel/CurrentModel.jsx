@@ -153,7 +153,7 @@ export const CurrentModel = () => {
                       store.dispatch(removeLastMessage());
                       sendStreamingTextThunk({
                         params: {
-                          messages: messages,
+                          messages: store.getState().playground.messages,
                           stream: true,
                           model: model.value,
                         },

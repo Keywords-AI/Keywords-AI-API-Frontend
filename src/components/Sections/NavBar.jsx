@@ -1,9 +1,13 @@
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { Button } from "src/components/Buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import cn from "src/utilities/classMerge";
-import { ProfileMenu } from "src/components/Dialogs";
+import { Modal, ProfileMenu } from "src/components/Dialogs";
 import React from "react";
+import { FileInput, TextAreaInput } from "../Inputs";
+import { set, useForm } from "react-hook-form";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { feedback } from "src/services/feedBack";
+
 const Logo = ({ fill = "fill-gray-4" }) => {
   return (
     <svg
@@ -67,14 +71,80 @@ export const NavBar = () => {
           </div>
         </div>
         <div aria-label="profile" className="flex items-center gap-xs">
-          <Button
-            text="Beta feedback"
-            variant="header"
-            onClick={() => navigate("/feedback")}
-          />
+          <Modal
+            trigger={
+              <Button
+                text="Beta feedback"
+                variant="header"
+                arrow={false}
+                textClassName={"text-sm-regular text-gray-4"}
+              />
+            }
+            title={"Contact us"}
+            subtitle={
+              <>
+                We’ll get back to you via email shortly. You can also email us
+                at
+                <br />
+                <span
+                  className="text-primary hover:cursor-pointer"
+                  onClick={() => window.open("mailto:team@keywordsai.co")}
+                >
+                  team@keywordsai.co.
+                </span>
+              </>
+            }
+          >
+            <ContactForm />
+          </Modal>
           <ProfileMenu />
         </div>
       </div>
     </Toolbar.Root>
+  );
+};
+
+const ContactForm = () => {
+  const { register, handleSubmit, setValue } = useForm();
+  const onSubmit = async (data) => {
+    try {
+      const response = await feedback({
+        content: data.message,
+        file_or_image: data.file,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  return (
+    <form
+      className="flex-col  justify-center items-start gap-md self-stretch"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <TextAreaInput
+        name="Message"
+        title="Message"
+        {...register("message", {
+          required: true,
+          minLength: 2,
+          maxLength: 500,
+        })}
+        placeholder="Describe a problem, ask questions, or share feedback..."
+        height="h-[240px]"
+      />
+
+      <FileInput
+        name="file"
+        title="Attach File"
+        {...register("file")}
+        setValue={setValue}
+      />
+      <div className="flex justify-end items-center gap-xs self-stretch">
+        <DialogClose asChild>
+          <Button text="Cancel" variant="r4-gray-2" />
+        </DialogClose>
+        <Button text="Submit" variant="r4-primary" />
+      </div>
+    </form>
   );
 };
