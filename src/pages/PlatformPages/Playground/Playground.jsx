@@ -179,7 +179,7 @@ const NotConnectSidePannel = ({
     });
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-gray-3 overflow-y-auto">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l border-gray-3 overflow-y-auto">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />

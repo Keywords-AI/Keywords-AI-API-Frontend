@@ -47,7 +47,7 @@ export default function SettingTable({
       {rows?.map((row, idx) => (
         <div
           className={cn(
-            "text-sm text-gray-4 self-stretch grid px-sm py-xxs border-t border-gray-3",
+            "text-sm text-gray-4 self-stretch grid px-sm py-xxs shadow-border-t border-gray-3",
             rowLayout || gridTemplateColumns
           )}
           key={idx}

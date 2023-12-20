@@ -60,6 +60,10 @@ export default {
       window: " 0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
       key: `1px 1px 1px 0px black`,
       border: `inset 0 0 0 1px ${gray3}`,
+      'border-l': `inset 1px 0 0 0 ${gray3}`,
+      'border-b': `inset 0 -1px 0 0 ${gray3}`,
+      'border-t': `inset 0 1px 0 0 ${gray3}`,
+      'border-r': `inset -1px 0 0 0 ${gray3}`,
     },
     backgroundImage: {
       highlight:

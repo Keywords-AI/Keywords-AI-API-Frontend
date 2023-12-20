@@ -51,7 +51,7 @@ export const NavBar = () => {
     { text: "API Keys", pageName: "setting" },
   ];
   return (
-    <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">
+    <Toolbar.Root className="flex px-lg py-xxs justify-center items-center shadow-border-b border-gray-3 bg-gray-black w-full">
       <div className="w-full flex justify-between">
         <div
           aria-label="logo and navigation"
