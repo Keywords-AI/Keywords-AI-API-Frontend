@@ -57,7 +57,7 @@ export function Modal({ trigger, title, subtitle, children, open, setOpen }) {
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col w-[600px] p-lg justify-center items-center gap-md rounded-md border border-solid border-gray-3 bg-gray-2 shadow-window">
+        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col w-[600px] p-lg justify-center items-center gap-md rounded-md shadow-border border-gray-3 bg-gray-2 shadow-window">
           <div className="flex-col items-start gap-xs self-stretch">
             <Dialog.Title className="flex self-stretch justify-between items-center">
               <div className="display-xs text-gray-white">{title}</div>

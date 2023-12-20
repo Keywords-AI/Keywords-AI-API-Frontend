@@ -6,7 +6,7 @@ export default function FileCard({
   fileType = "File type",
 }) {
   return (
-    <div className="bg-gray-2 border border-solid border-gray-3 w-[280px] px-xs py-xxs rounded-sm">
+    <div className="bg-gray-2 shadow-border border-gray-3 w-[280px] px-xs py-xxs rounded-sm">
       <div className="flex-row justify-start items-center gap-xs w-full">
         <File />
         <div className="flex-col justify-start items-start flex-grow">

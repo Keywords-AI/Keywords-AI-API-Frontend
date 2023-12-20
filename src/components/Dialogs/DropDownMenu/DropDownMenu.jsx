@@ -26,7 +26,7 @@ export const DropDownMenu = ({
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
           className={
-            cn("flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
+            cn("flex-col items-start rounded-md p-xxxs bg-gray-2 shadow-border border-gray-3 ",
               width || "w-[240px]",
               className
             )

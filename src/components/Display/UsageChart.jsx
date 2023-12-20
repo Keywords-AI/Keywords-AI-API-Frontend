@@ -26,7 +26,7 @@ export const UsageChart = ({
         getUsageData()
     }, [])
     return (
-        <div className={"flex-col flex-start gap-sm self-stretch p-xs border border-gray-3 rounded-md bg-gray-2"}>
+        <div className={"flex-col flex-start gap-sm self-stretch p-xs shadow-border border-gray-3 rounded-md bg-gray-2"}>
             <div className="flex-row self-stretch justify-between">
                 <div className="flex-row gap-xxs items-center">
                     {!usage.isFirst && <Button

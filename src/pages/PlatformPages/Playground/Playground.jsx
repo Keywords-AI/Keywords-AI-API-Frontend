@@ -57,7 +57,7 @@ const Prompt = ({ setPrompt }) => {
       <p className="text-sm-regular self-stretch text-gray-4">System prompt</p>
       <textarea
         onChange={handleOnChange}
-        className="flex self-stretch px-xs py-xxs items-end flex-1 rounded-sm border bordersolid border-gray-3 resize-none text-sm-regular text-gray-white placeholder-gray-3 bg-transparent"
+        className="flex self-stretch px-xs py-xxs items-end flex-1 rounded-sm shadow-border border-gray-3 resize-none text-sm-regular text-gray-white placeholder-gray-3 bg-transparent"
         placeholder="You are a helpful assistant."
       />
     </div>
@@ -179,7 +179,7 @@ const NotConnectSidePannel = ({
     });
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-solid border-gray-3 overflow-y-auto">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch border-l border-gray-3 overflow-y-auto">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />

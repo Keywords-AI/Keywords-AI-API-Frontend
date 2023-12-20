@@ -28,7 +28,7 @@ export default function SettingTable({
   }
   return (
     <div
-      className="flex flex-col self-stretch border border-gray-3 rounded-md 
+      className="flex flex-col self-stretch shadow-border border-gray-3 rounded-md 
         w-full max-w-[1000px]"
     >
       <div

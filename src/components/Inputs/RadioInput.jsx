@@ -4,7 +4,7 @@ const RadioIcon = ({ selected, setSelected, handleSelected }) => {
     return (
         <div
             onClick={() => { handleSelected(); setSelected(!selected) }}
-            className={`flex w-sm h-sm rounded-sm flex-shrink-0 justify-center items-center border border-gray-4 cursor-pointer`}
+            className={`flex w-sm h-sm rounded-sm flex-shrink-0 justify-center items-center shadow-border border-gray-4 cursor-pointer`}
         >
             {selected && <div className="w-xxs h-xxs bg-gray-white flex-shrink-0"></div>}
         </div>

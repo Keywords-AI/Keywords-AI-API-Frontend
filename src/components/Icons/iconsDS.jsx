@@ -404,8 +404,8 @@ export const EnterKey = ({
       return (
         <div
           className={
-            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key border border-solid " +
-            (active ? "border-gray-white" : "border-gray-3")
+            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border" +
+            (active ? "border-gray-4" : "border-gray-3") // Hendrix Mark
           }
         >
           <svg
@@ -426,8 +426,8 @@ export const EnterKey = ({
       return (
         <div
           className={
-            "flex-col w-[24px] h-[24px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key border border-solid " +
-            (active ? "border-gray-white" : "border-gray-3")
+            "flex-col w-[24px] h-[24px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border" +
+            (active ? "border-gray-4" : "border-gray-3") // Hendrix Mark
           }
         >
           <svg
