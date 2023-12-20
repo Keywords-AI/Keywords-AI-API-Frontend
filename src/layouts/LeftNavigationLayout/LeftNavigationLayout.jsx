@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import PanelSetting from 'src/components/Sections/PanelNavigation';
+import PanelNavigation from 'src/components/Sections/PanelNavigation';
 
 const LeftNavitationLayout = ({ sectionName }) => {
-  const PlatformDrawerMemo = React.memo(PanelSetting);
+  const PlatformDrawerMemo = React.memo(PanelNavigation);
   return (
     <div aria-label='setting-pages' className="flex-row self-stretch flex-1 max-h-[calc(100vh-53px)] overflow-hidden">
       <PlatformDrawerMemo sectionName={sectionName} />

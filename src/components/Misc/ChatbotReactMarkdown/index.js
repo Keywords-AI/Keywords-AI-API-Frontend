@@ -1,1 +1,1 @@
-export { default as ChatbotReactMarkdown} from "./ChatbotReactMarkdown";
+export * from "./ChatbotReactMarkdown";
