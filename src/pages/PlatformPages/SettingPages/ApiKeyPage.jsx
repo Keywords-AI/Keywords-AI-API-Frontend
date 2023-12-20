@@ -34,6 +34,7 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
     )
   }
   useEffect(() => { setKeyList(prevKey, editingTrigger) }, [prevKey])
+  useEffect(() => {  console.log(apiKey.deletingKey)  }, [apiKey.deletingKey])
   return (
     <PageContent
       title="API Keys"

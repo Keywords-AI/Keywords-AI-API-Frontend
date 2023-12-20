@@ -26,7 +26,7 @@ const IntegrationsPageNotConnected = ({ vendors, getVendors}) => {
                 heading="LLM providers"
                 subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API.">
                 <div className='flex-row items-start content-start gap-md self-stretch flex-wrap'>
-                    {vendors?.length && vendors?.length > 0 && vendors.map((vendor, index) => (
+                    {vendors?.length > 0 && vendors.map((vendor, index) => (
                         <IntegrationModal
                             key={index}
                             vendor={vendor}
