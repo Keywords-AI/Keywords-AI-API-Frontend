@@ -52,8 +52,8 @@ const TextAreaInput = React.forwardRef(
           className={cn(
             "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full h-full placeholder:text-gray-4 box-border resize-none",
             isFocused && !disabled
-              ? "border shadow-gray-white"
-              : "border shadow-gray-3",
+              ? "shadow-border shadow-gray-white"
+              : "shadow-border shadow-gray-3",
             !disabled ? "text-gray-white" : "text-gray-3"
           )}
           {...register(name, validationSchema)}

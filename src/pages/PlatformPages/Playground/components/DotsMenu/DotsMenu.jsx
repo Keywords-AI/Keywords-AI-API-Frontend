@@ -3,6 +3,7 @@ import { Button, CodeViewer, DropDownMenu } from "src/components";
 import React from "react";
 
 import { Modal } from "src/components/Dialogs";
+import { DotsButton } from "src/components/Buttons";
 
 const ViewCode = React.forwardRef((props, ref) => {
   return (
@@ -32,7 +33,7 @@ export function DotsMenu({}) {
       width={"w-full"}
       open={open}
       setOpen={setOpen}
-      trigger={<Button variant="header" text="..." />}
+      trigger={<DotsButton />}
       items={
         <>
           <DropdownMenuItem asChild>

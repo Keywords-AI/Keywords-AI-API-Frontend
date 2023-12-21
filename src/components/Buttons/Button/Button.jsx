@@ -37,6 +37,7 @@ import { Right } from "src/components/Icons";
  * @param {string} [props.padding="py-xxs px-xs"] - The padding of the button.
  * @param {string} [props.borderColor="border-transparent"] - The border color of the button.
  * @param {string} [props.borderHoverColor="hover:border-transparent"] - The border color of the button on hover.
+ * @param {string} [props.borderClickedColor="active:border-transparent"] - The border color of the button when clicked.
  * @param {string} [props.justification="justify-center"] - The justification of the button. Options are "justify-center" or "justify-start".
  * @param {React.Element} [props.children=null] - The children of the button. Custom children will override the text and icon props.
  * @param {string} [props.width=""] - The width of the button.
@@ -69,6 +70,7 @@ export const Button = forwardRef(
       padding,
       borderColor,
       borderHoverColor,
+      borderClickedColor,
       justification,
       width = "",
       children,
@@ -189,10 +191,12 @@ export const Button = forwardRef(
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "shadow-border shadow-gray-3";
+        borderClickedColor = borderClickedColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
+        
         
         break;
       case "small":
@@ -349,7 +353,7 @@ export const Button = forwardRef(
     if (active) {
       bgColor = clickedColor;
       textColor = textClickedColor;
-      borderColor = borderHoverColor;
+      borderColor = borderClickedColor || borderHoverColor;
       iconFill = iconHoverFill;
     }
     return (
@@ -371,11 +375,13 @@ export const Button = forwardRef(
           width,
           justification,
           borderRadius,
-          hover ? hoverColor : bgColor,
+          hover && !active ? hoverColor : bgColor,
           className,
           padding,
-          hover ? borderHoverColor : borderColor,
-          "text-center"
+          hover && !active ? borderHoverColor : borderColor,
+          "text-center",
+          textClassName
+          
         )}
         onClick={onClick}
         disabled={disabled}
@@ -387,8 +393,7 @@ export const Button = forwardRef(
             {text && (
               <span
                 className={cn(
-                  hover ? textHoverColor : textColor,
-                  textClassName
+                  hover ? textHoverColor : textColor
                 )}
               >
                 {text}
