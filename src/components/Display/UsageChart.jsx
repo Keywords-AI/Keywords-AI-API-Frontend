@@ -32,12 +32,14 @@ export const UsageChart = ({
                     {!usage.isFirst && <Button
                         variant="icon"
                         icon={Left}
+                        iconSize="sm"
                         onClick={() => { getLastMonthUsageData() }}
                     />}
                     {digitToMonth(usage?.date?.getMonth(), usage?.date?.getFullYear())}
                     {!usage.isLast && <Button
                         variant="icon"
                         icon={Right}
+                        iconSize="sm"
                         onClick={() => { getNextMonthUsageData() }}
                     />}
                 </div>

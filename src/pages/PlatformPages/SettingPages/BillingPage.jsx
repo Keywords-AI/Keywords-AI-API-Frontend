@@ -27,7 +27,6 @@ export const BillingPage = ({ billings }) => {
   // Fetching action is handled in PanelNavigation.jsx
   const [bilingData, setBillingData] = React.useState([]);
   const [canceling, setCanceling] = React.useState(false);
-
   useEffect(() => {
     if (billings) {
       setBillingData(processBillingList(billings, viewBillTrigger));

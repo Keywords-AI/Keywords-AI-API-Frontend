@@ -62,7 +62,7 @@ export const SettingPage = ({ organization, setOrgName, dispatchNotification }) 
                     />
                     <CopyInput
                         name="unique_organization_id"
-                        title="Organization ID - identifier sometimes used in API requests."
+                        title="Organization ID"
                         value={organization?.unique_organization_id || ""}
                         // value={"locked-text"}
                         disabled={true}
