@@ -21,6 +21,7 @@ export const BillingPage = ({ billings, setBillings }) => {
           variant="small"
           text={"View"}
           icon={Search}
+          iconSize="sm"
           onClick={() => window.open(item.hosted_invoice_url, "_blank")}
         />
       </>
