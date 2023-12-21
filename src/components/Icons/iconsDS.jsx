@@ -1324,8 +1324,6 @@ export const Bracket = ({
       );
   }
 };
-<<<<<<< HEAD
-=======
 
 export const LinkedIn = ({
   fill = "fill-gray-4",
@@ -1352,4 +1350,3 @@ export const LinkedIn = ({
       );
   }
 };
->>>>>>> origin/hendrix
