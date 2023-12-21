@@ -179,7 +179,7 @@ export function OptionSelector({}) {
             width="w-full"
             trigger={
               <Button
-                variant="r4-black"
+                variant="r4-gray-2"
                 text={current[index].name}
                 icon={current[index].icon}
                 onClick={() => item.setOpen(true)}

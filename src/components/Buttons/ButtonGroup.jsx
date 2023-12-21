@@ -10,12 +10,12 @@ export default function ButtonGroup({ buttons }) {
   };
 
   return (
-    <div className="flex-row bg-gray-black rounded-sm h-fit">
+    <div className="flex-row bg-gray-2 rounded-sm h-fit">
       {buttons.map((button, index) => (
         <Button 
           key={index}
           active={activeButton === index}
-          variant="r4-black"
+          variant="r4-gray-2"
           {...button}
           onClick={() => handleClick(button, index)}
         />

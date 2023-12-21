@@ -82,7 +82,7 @@ export const CheckBoxButton = React.forwardRef(({
     checkBoxRef.current.click();
   };
   return (
-    <Button type={"button"} variant={"r4-black"} active={isChecked} onClick={handleClick}>
+    <Button type={"button"} variant={"r4-gray-2"} active={isChecked} onClick={handleClick}>
       <span>{text}</span>
       <input
         {...register(name, validationSchema)}

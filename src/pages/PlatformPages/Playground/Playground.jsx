@@ -182,7 +182,7 @@ const NotConnectSidePannel = ({
     });
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l shadow-gray-3 overflow-y-auto">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l shadow-gray-3 overflow-y-auto bg-gray-2">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />
@@ -192,7 +192,7 @@ const NotConnectSidePannel = ({
           <Button
             variant="small"
             text="Regenerate"
-            icon={Regenerate}
+            icon={Regenerate}g
             onClick={handleRegenerate}
           />
         )}
