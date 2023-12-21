@@ -2,6 +2,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import React from "react";
 import { IconButton } from "src/components/Buttons";
 import { Cross } from "src/components/Icons";
+import cn from "src/utilities/classMerge";
 
 /**
  * Renders a modal dialog using Radix UI's Dialog component.
@@ -16,12 +17,12 @@ import { Cross } from "src/components/Icons";
  *     />
  *   }
  *   title="Modal Title"
-*   subtitle="Modal Subtitle"
+ *   subtitle="Modal Subtitle"
  * >
  *   <p>Model content</p>
  *   <TextInput name="field1" placeholder="Enter a message..." />
  * </Modal>
- * 
+ *
  * @param {Object} props - The properties passed to the Modal component.
  * @param {React.ReactNode} props.trigger - The element that triggers the modal.
  *     Typically, this should be a React element like a button that the user can interact with to open the modal.
@@ -50,30 +51,51 @@ import { Cross } from "src/components/Icons";
 //    <p>Model content</p>
 //    <TextInput name="field1" placeholder="Enter a message..." />
 // </Modal>
-export function Modal({ trigger, title, subtitle, children, open, setOpen }) {
-
-  return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col w-[600px] p-lg justify-center items-center gap-md rounded-md border border-solid border-gray-3 bg-gray-2 shadow-window">
-          <div className="flex-col items-start gap-xs self-stretch">
-            <Dialog.Title className="flex self-stretch justify-between items-center">
-              <div className="display-xs text-gray-white">{title}</div>
-              <Dialog.Close asChild>
-                <IconButton
-                  icon={Cross}
-                />
-              </Dialog.Close>
-            </Dialog.Title>
-            <Dialog.Description asChild>
-              {subtitle && <p className="text-sm-regular text-gray-4">{subtitle}</p>}
-            </Dialog.Description>
-          </div>
-          {children}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
-  );
-}
+export const Modal = React.forwardRef(
+  (
+    {
+      trigger,
+      title,
+      subtitle,
+      children,
+      open,
+      setOpen,
+      CloseButton = false,
+      width,
+    },
+    ref
+  ) => {
+    return (
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm" />
+          <Dialog.Content
+            className={cn(
+              "fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex-col  p-lg justify-center items-center gap-md rounded-md border border-solid border-gray-3 bg-gray-2 shadow-window",
+              width || "w-[600px]"
+            )}
+            ref={ref}
+          >
+            <div className="flex-col items-start gap-xs self-stretch">
+              <Dialog.Title className="flex self-stretch justify-between items-center">
+                <div className="display-xs text-gray-white">{title}</div>
+                {CloseButton && (
+                  <Dialog.Close asChild>
+                    <IconButton icon={Cross} />
+                  </Dialog.Close>
+                )}
+              </Dialog.Title>
+              <Dialog.Description asChild>
+                {subtitle && (
+                  <p className="text-sm-regular text-gray-4">{subtitle}</p>
+                )}
+              </Dialog.Description>
+            </div>
+            {children}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    );
+  }
+);
