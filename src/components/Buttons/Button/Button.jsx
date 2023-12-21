@@ -73,7 +73,7 @@ export const Button = forwardRef(
       width = "",
       children,
       disabled = false,
-      // ...props
+      ...props
     },
     ref
   ) => {
@@ -183,7 +183,7 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderHoverColor = borderHoverColor || "border-gray-3";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
@@ -350,6 +350,7 @@ export const Button = forwardRef(
         type={type || "submit"}
         aria-label={"button-" + variant}
         ref={ref}
+        {...props}
         onMouseEnter={() => {
           onMouseEnter();
           setHover(true);

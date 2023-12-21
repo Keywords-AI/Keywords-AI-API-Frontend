@@ -11,6 +11,7 @@ import {
   OptionSelector,
   ModelOutput,
   PlaygroundMessage,
+  DotsMenu,
 } from "./components";
 import React, { useEffect } from "react";
 import {
@@ -26,7 +27,7 @@ import useAutoScroll from "src/hooks/useAutoScroll";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import store from "src/store/store";
 import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
-import { TextAreaInput } from "src/components/Inputs";
+import { SelectInput, TextAreaInput } from "src/components/Inputs";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -94,7 +95,8 @@ const NotConnectedMap = ({
           Playground
         </div>
         <div className="flex items-start gap-xs">
-          <Button variant="r4-gray-2" text="View code" />
+          <SelectInput width="w-[248px]" headLess />
+          <DotsMenu />
         </div>
       </div>
       <div className="flex items-start gap-md flex-1 self-stretch h-[calc(100vh-190.5px)]">

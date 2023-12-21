@@ -19,18 +19,17 @@ export const DropDownMenu = ({
       modal={true}
       open={open}
       onOpenChange={(open) => setOpen(open)}
-  >
+    >
       <DropdownMenuPrimitive.Trigger asChild>
         {trigger}
       </DropdownMenuPrimitive.Trigger>
       <DropdownMenuPrimitive.Portal>
         <DropdownMenuPrimitive.Content
-          className={
-            cn("flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
-              width || "w-[240px]",
-              className
-            )
-          }
+          className={cn(
+            "flex-col items-start rounded-md p-xxxs bg-gray-2 border border-solid border-gray-3 ",
+            width || "w-[240px]",
+            className
+          )}
           sideOffset={sideOffset}
           align={align}
           side={side}
