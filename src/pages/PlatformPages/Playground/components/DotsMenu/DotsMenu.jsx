@@ -33,7 +33,7 @@ export function DotsMenu({}) {
       width={"w-full"}
       open={open}
       setOpen={setOpen}
-      trigger={<DotsButton />}
+      trigger={<DotsButton onClick={()=>setOpen(true)}/>}
       items={
         <>
           <DropdownMenuItem asChild>

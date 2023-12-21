@@ -3,6 +3,7 @@ import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";
 import { Right } from "src/components/Icons";
+import useForwardRef from "src/hooks/useForwardRef";
 
 /**
  * `Button` Component
@@ -79,6 +80,7 @@ export const Button = forwardRef(
     },
     ref
   ) => {
+    const reference = useForwardRef(ref);
     const [hover, setHover] = React.useState(false);
     switch (variant) {
       case "secondary":
@@ -360,7 +362,7 @@ export const Button = forwardRef(
       <button
         type={type || "submit"}
         aria-label={"button-" + variant}
-        ref={ref}
+        ref={reference}
         {...props}
         onMouseEnter={() => {
           onMouseEnter();

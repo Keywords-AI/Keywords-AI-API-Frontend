@@ -7,6 +7,7 @@ export const DotsButton = React.forwardRef(({ onClick }, ref) => {
   return (
     <div className="flex flex-col items-start gap-[10px] self-stretch justify-center">
       <Button
+        type={"button"}
         ref={ref}
         variant={"icon"}
         // onClick={() => setOpen(!open)}
