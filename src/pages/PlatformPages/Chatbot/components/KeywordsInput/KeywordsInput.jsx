@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs";
-import { IconButton } from "src/components/Buttons";
+import { DotsButton, IconButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
@@ -41,13 +41,12 @@ function KeywordsInput({
 
   const [isHovered, setIsHovered] = React.useState(false);
   return (
-    <form className="relative flex-col w-full shadow-border"
+    <form className="relative flex-col w-full shadow-border rounded-sm"
       onSubmit={handleSubmit(onSubmit)}
     >
-      
       <EditableBox
         {...register("message", { required: "This is required" })}
-        className={"rounded-sm text-sm p-xxs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
+        className={"rounded-sm text-sm py-xxs px-xs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
         borderless={false}
         placeholder={placeholder}
         text={streaming ? "Generating" : value}

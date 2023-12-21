@@ -155,7 +155,7 @@ function Chatbot({
             )}
           </div>
           <div
-            className="absolute flex flex-col items-center gap-md left-xxxl right-xxxl bottom-lg">
+            className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
             {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
                 <Sample />

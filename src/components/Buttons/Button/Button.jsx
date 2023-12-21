@@ -353,7 +353,7 @@ export const Button = forwardRef(
     if (active) {
       bgColor = clickedColor;
       textColor = textClickedColor;
-      borderColor = borderHoverColor;
+      borderColor = borderClickedColor || borderHoverColor;
       iconFill = iconHoverFill;
     }
     return (
@@ -375,10 +375,10 @@ export const Button = forwardRef(
           width,
           justification,
           borderRadius,
-          hover ? hoverColor : bgColor,
+          hover && !active ? hoverColor : bgColor,
           className,
           padding,
-          hover ? borderHoverColor : borderColor,
+          hover && !active ? borderHoverColor : borderColor,
           "text-center",
           textClassName
           
