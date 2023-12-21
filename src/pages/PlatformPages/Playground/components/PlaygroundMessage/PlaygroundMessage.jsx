@@ -11,6 +11,7 @@ import {
 } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/classMerge";
 import store from "src/store/store";
+import Markdown from "react-markdown";
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
@@ -101,7 +102,9 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     <div
       className={cn(
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3 hover:cursor-pointer",
-        isFocused ? "shadow-gray-4" : ""
+        messageIndex === messages.length - 1 && !streaming
+          ? "shadow-gray-4"
+          : ""
       )}
       onClick={() => {
         setIsFocused(true);
@@ -143,7 +146,27 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         )
       ) : (
         <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
-          {textContent || <span className="text-gray-4">Generating...</span>}
+          {textContent ? (
+            <>
+              <Markdown
+                children={textContent}
+                className="text-sm-regular text-gray-white "
+                components={{
+                  p: ({ node, ...props }) => (
+                    <p {...props} className="whitespace-pre-line " />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol
+                      {...props}
+                      className=" list-inside whitespace-pre-line list-decimal ml-1 "
+                    />
+                  ),
+                }}
+              />
+            </>
+          ) : (
+            <span className="text-gray-4">Generating...</span>
+          )}
         </div>
       )}
       {isFocused && isUser && messageIndex === messages.length - 1 && (

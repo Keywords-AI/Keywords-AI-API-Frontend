@@ -30,6 +30,7 @@ const Logo = ({ fill = "fill-gray-4" }) => {
 export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
   const generateButton = (text, pageName, index) => {
     let modifiedPageName = pageName;
     if (!pageName) {
@@ -73,13 +74,10 @@ export const NavBar = () => {
         </div>
         <div aria-label="profile" className="flex items-center gap-xs">
           <Modal
-            trigger={
-              <Button
-                text="Beta feedback"
-                variant="header"
-              />
-            }
+            trigger={<Button text="Beta feedback" variant="header" />}
             title={"Contact us"}
+            open={open}
+            setOpen={setOpen}
             subtitle={
               <>
                 We’ll get back to you via email shortly. You can also email us
@@ -94,7 +92,7 @@ export const NavBar = () => {
               </>
             }
           >
-            <ContactForm />
+            <ContactForm setOpen={setOpen} />
           </Modal>
           <ProfileMenu />
         </div>
@@ -103,7 +101,7 @@ export const NavBar = () => {
   );
 };
 
-const ContactForm = () => {
+const ContactForm = ({ setOpen }) => {
   const { register, handleSubmit, setValue } = useForm();
   const onSubmit = async (data) => {
     try {
@@ -111,6 +109,7 @@ const ContactForm = () => {
         content: data.message,
         file_or_image: data.file,
       });
+      setOpen(false);
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +133,7 @@ const ContactForm = () => {
 
       <FileInput
         name="file"
-        title="Attach File"
+        title="Attach file"
         {...register("file")}
         setValue={setValue}
       />

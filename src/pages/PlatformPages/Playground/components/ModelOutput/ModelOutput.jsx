@@ -20,7 +20,7 @@ export function ModelOutput({}) {
       value: (
         <>
           <span>$</span>
-          <span>{stateOutputs.cost.toFixed(10) || "0"}</span>
+          <span>{Number(stateOutputs.cost.toFixed(10)) || "0"}</span>
         </>
       ),
       icon: Cost,
