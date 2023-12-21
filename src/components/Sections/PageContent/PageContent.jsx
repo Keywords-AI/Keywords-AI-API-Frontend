@@ -9,7 +9,7 @@ The content of page inside left navigation layout
 
 export const PageContent = ({ children, title, subtitle, notifications }) => {
   return (
-    <div className="flex-col flex-1 self-stretch items-center gap-md overflow-auto py-lg pl-[60px] pr-[320px]">
+    <div className="flex-col flex-1 self-stretch items-start gap-md overflow-auto py-lg pl-[60px] pr-[320px]">
       <Notifications notifications={notifications} />
       <TitleStaticHeading title={title} subtitle={subtitle} />
       {children}

@@ -2,8 +2,9 @@ import react from "react";
 import { connect } from 'react-redux'
 import { PageContent, PageParagraph } from 'src/components/Sections';
 import { Button, IconButton } from 'src/components/Buttons'
-import { Logo, Rocket } from "src/components/Icons/iconsDS";
+import { Logo, Right, Rocket } from "src/components/Icons/iconsDS";
 import { HeaderLogo } from "src/components/BrandAssets";
+import { Speed } from "../Playground/components/OptionSelector/icons";
 
 
 export const QAButtonPage = () => {
@@ -18,7 +19,7 @@ export const QAButtonPage = () => {
                     <Button variant="r4-primary" text="button-r4-primary" />
                     <Button variant="r4-gray-2" text="button-r4-gray-2"/>
                     <Button variant="r4-red" text="button-r4-red" />
-                    <Button variant="r4-black" text="button-r4-black" icon={Rocket} />
+                    <Button variant="r4-black" text="button-r4-black" icon={Speed} iconPosition="left"/>
                     <Button variant="small" text="button-small" icon={Rocket} />
                     <Button variant="icon" icon={Rocket} />
                 </div>    
@@ -26,8 +27,8 @@ export const QAButtonPage = () => {
 
             <PageParagraph heading="R18 Buttons">
                 <div className="flex flex-row gap-sm flex-wrap">
-                    <Button variant="r18-white" text="button-r18-white" icon={Rocket}/>
-                    <Button variant="r18-black" text="button-r18-black" icon={Rocket} />
+                    <Button variant="r18-white" text="button-r18-white" icon={Right}/>
+                    <Button variant="r18-black" text="button-r18-black" icon={Right} />
                 </div>
             </PageParagraph>
 

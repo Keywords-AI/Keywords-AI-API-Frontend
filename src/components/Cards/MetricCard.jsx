@@ -3,7 +3,7 @@ import { Quality, Up } from "../Icons";
 
 export default function MetricCard({ icon: Icon, title, number, percentage }) {
   return (
-    <div className="p-md bg-gray-2 shadow-border border-gray-3 rounded-sm w-full flex flex-row items-end h-fit">
+    <div className="p-md bg-gray-2 shadow-border shadow-gray-3 rounded-sm w-full flex flex-row items-end h-fit">
       <div className="flex flex-col w-full gap-xxs">
         <div className="flex flex-row gap-xxs items-center">
           {Icon && <Icon />}

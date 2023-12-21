@@ -405,7 +405,7 @@ export const EnterKey = ({
         <div
           className={
             "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border" +
-            (active ? "border-gray-4" : "border-gray-3") // Hendrix Mark
+            (active ? "shadow-gray-4" : "shadow-gray-3")
           }
         >
           <svg
@@ -427,7 +427,7 @@ export const EnterKey = ({
         <div
           className={
             "flex-col w-[24px] h-[24px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border" +
-            (active ? "border-gray-4" : "border-gray-3") // Hendrix Mark
+            (active ? "shadow-gray-4" : "shadow-gray-3")
           }
         >
           <svg
@@ -1140,6 +1140,24 @@ export const User = ({
             className={active ? activeFill : fill}
           />
         </svg>
+      );
+  }
+};
+// className={"flex-shrink-0"}>
+// className={active ? activeFill : fill} />
+export const Bracket = ({
+  fill = "fill-gray-4",
+  activeFill = "fill-gray-white",
+  active = false,
+  size = "md",
+}) => {
+  switch (size) {
+    case "md":
+      return (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
+          <path d="M4.44444 0C3.97295 0 3.52076 0.187301 3.18737 0.520699C2.85397 0.854097 2.66667 1.30628 2.66667 1.77778V5.33333C2.66667 5.80483 2.47937 6.25701 2.14597 6.59041C1.81257 6.92381 1.36038 7.11111 0.888889 7.11111H0V8.88889H0.888889C1.36038 8.88889 1.81257 9.07619 2.14597 9.40959C2.47937 9.74299 2.66667 10.1952 2.66667 10.6667V14.2222C2.66667 14.6937 2.85397 15.1459 3.18737 15.4793C3.52076 15.8127 3.97295 16 4.44444 16H6.22222V14.2222H4.44444V9.77778C4.44444 9.30628 4.25714 8.8541 3.92375 8.5207C3.59035 8.1873 3.13816 8 2.66667 8C3.13816 8 3.59035 7.8127 3.92375 7.4793C4.25714 7.1459 4.44444 6.69372 4.44444 6.22222V1.77778H6.22222V0M11.5556 0C12.0271 0 12.4792 0.187301 12.8126 0.520699C13.146 0.854097 13.3333 1.30628 13.3333 1.77778V5.33333C13.3333 5.80483 13.5206 6.25701 13.854 6.59041C14.1874 6.92381 14.6396 7.11111 15.1111 7.11111H16V8.88889H15.1111C14.6396 8.88889 14.1874 9.07619 13.854 9.40959C13.5206 9.74299 13.3333 10.1952 13.3333 10.6667V14.2222C13.3333 14.6937 13.146 15.1459 12.8126 15.4793C12.4792 15.8127 12.0271 16 11.5556 16H9.77778V14.2222H11.5556V9.77778C11.5556 9.30628 11.7429 8.8541 12.0763 8.5207C12.4097 8.1873 12.8618 8 13.3333 8C12.8618 8 12.4097 7.8127 12.0763 7.4793C11.7429 7.1459 11.5556 6.69372 11.5556 6.22222V1.77778H9.77778V0H11.5556Z" className={active ? activeFill : fill} />
+        </svg>
+
       );
   }
 };

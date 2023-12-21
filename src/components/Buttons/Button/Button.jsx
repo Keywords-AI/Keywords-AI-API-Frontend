@@ -130,8 +130,8 @@ export const Button = forwardRef(
         textClickedColor = textClickedColor || "text-gray-black";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-transparent"; //border-gray-4
 
         break;
       case "r4-gray-2":
@@ -143,8 +143,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "border-gray-3";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-border";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
 
         break;
@@ -156,8 +156,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
       case "r4-red":
         bgColor = bgColor || "bg-error";
@@ -167,8 +167,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
 
         break;
@@ -176,14 +176,14 @@ export const Button = forwardRef(
         iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-2";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-4";
         textClickedColor = textClickedColor || "text-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-3";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
@@ -198,8 +198,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "shadow-border border-gray-3";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-border shadow-gray-3";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
@@ -218,14 +218,14 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-sm";
         iconFill = iconFill || "fill-gray-black";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-        borderHoverColor = borderHoverColor || "border-gray-white";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
 
         break;
       case "r18-black":
         bgColor = bgColor || "bg-gray-black";
         hoverColor = hoverColor || "bg-gray-3";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-transparent";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-transparent";
         clickedColor = clickedColor || "bg-gray-3";
         textClassName = textClassName || "text-sm-regular";
         textColor = textColor || "text-gray-4";
@@ -245,8 +245,8 @@ export const Button = forwardRef(
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-transparent";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-transparent";
         padding = padding || "py-xxs px-xs";
 
         break;
@@ -254,12 +254,13 @@ export const Button = forwardRef(
         bgColor = bgColor || "bg-transparent";
         textClassName = textClassName || "caption";
         hoverColor = hoverColor || "";
+
         clickedColor = clickedColor || "";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-transparent";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-transparent";
         padding = padding || "py-xxs px-xs";
 
         break;
@@ -297,8 +298,8 @@ export const Button = forwardRef(
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-primary";
         iconHoverFill = iconHoverFill || "fill-gray-white";
-        borderColor = borderColor || "border-transparent";
-        borderHoverColor = borderHoverColor || "border-transparent";
+        borderColor = borderColor || "shadow-transparent";
+        borderHoverColor = borderHoverColor || "shadow-transparent";
 
         break;
       case "chat":
@@ -309,8 +310,8 @@ export const Button = forwardRef(
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
-        borderColor = borderColor || "shadow-border border-gray-3";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-border shadow-gray-3";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         borderRadius = borderRadius || "rounded-sm";
         padding = padding || "py-xxs px-xs";
         justification = justification || "justify-center";
@@ -326,8 +327,8 @@ export const Button = forwardRef(
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "shadow-border border-gray-3";
-        borderHoverColor = borderHoverColor || "border-gray-4";
+        borderColor = borderColor || "shadow-border shadow-gray-3";
+        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xxs";
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
@@ -389,7 +390,7 @@ export const Button = forwardRef(
             {icon && (
               <div
                 className={cn(
-                  "flex justify-center items-center w-[16px] gap-[10px]",
+                  "flex justify-center items-center w-[16px] h-[16px] gap-[10px]",
                   iconPosition === "left" ? "order-first" : "order-last"
                 )}
               >

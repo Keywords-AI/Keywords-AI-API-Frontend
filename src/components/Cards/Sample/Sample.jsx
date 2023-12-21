@@ -223,7 +223,7 @@ export default function Sample({ sendText=()=>{} }) {
       {n.map((card, index) => (
         <div
           key={index}
-          className="sample-card rounded-sm shadow-border border-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start hover:cursor-pointer bg-gray-2 hover:border-gray-4"
+          className="sample-card rounded-sm shadow-border shadow-gray-3 flex-[1_0_400px] px-xs py-xxs flex-col justify-center items-start hover:cursor-pointer bg-gray-2 hover:shadow-gray-4"
           onClick={() =>
             sendText(topic[n[index]] + " " + description[n[index]])
           }

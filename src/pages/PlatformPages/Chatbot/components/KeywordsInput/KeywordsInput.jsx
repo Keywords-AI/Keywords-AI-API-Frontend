@@ -40,7 +40,7 @@ function KeywordsInput({
 
   const [isHovered, setIsHovered] = React.useState(false);
   return (
-    <form className="relative flex-col w-full"
+    <form className="relative flex-col w-full shadow-border"
       onSubmit={handleSubmit(onSubmit)}
     >
       

@@ -1,4 +1,4 @@
-import { getDateStr } from "./stringProcessing";
+import { getDateStr, textToLink } from "./stringProcessing";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -81,3 +81,20 @@ export const processBillingList = (billingList, actions = () => {}) => {
     return [];
   }
 };
+
+export const generateChild = (page) => {
+  let path = textToLink(page.title);
+  if (page?.path) {
+      path = page.path;
+  }
+  if (page?.default) {
+      path = "";
+  }
+  return {
+      default: page.default,
+      title: page.title,
+      path: path,
+      element: page.page,
+      page: page.page,
+  };
+}

@@ -63,7 +63,7 @@ export default function apiKeyReducer(state = initState, action) {
       return {
         ...state,
         deletingKey: state.keyList.find((key) => {
-          return key.created === action.key?.created;
+          return key.prefix === action.key?.prefix;
         }),
       };
     case ClEAR_PREV_API_KEY:

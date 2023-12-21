@@ -26,6 +26,7 @@ import useAutoScroll from "src/hooks/useAutoScroll";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import store from "src/store/store";
 import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
+import { TextAreaInput } from "src/components/Inputs";
 const mapStateToProps = (state) => {
   return {
     messages: state.playground.messages,
@@ -54,16 +55,16 @@ const Prompt = ({ setPrompt }) => {
   };
   return (
     <div className="flex-col w-[320px] self-stretch justify-center items-start gap-xxs">
-      <p className="text-sm-regular self-stretch text-gray-4">System prompt</p>
-      <textarea
-        onChange={handleOnChange}
-        className="flex self-stretch px-xs py-xxs items-end flex-1 rounded-sm shadow-border border-gray-3 resize-none text-sm-regular text-gray-white placeholder-gray-3 bg-transparent"
+      <TextAreaInput
         placeholder="You are a helpful assistant."
+        onChange={handleOnChange}
+        title="System prompt"
+        name="prompt"
       />
     </div>
   );
 };
-
+const ConnectedPrompt = connect(null, mapDispatchToProps)(Prompt);
 const NotConnectedMap = ({
   messages,
   streaming,
@@ -96,8 +97,8 @@ const NotConnectedMap = ({
           <Button variant="r4-gray-2" text="View code" />
         </div>
       </div>
-      <div className="flex items-start gap-lg flex-1 self-stretch h-[calc(100vh-190.5px)]">
-        <Prompt />
+      <div className="flex items-start gap-md flex-1 self-stretch h-[calc(100vh-190.5px)]">
+        <ConnectedPrompt />
         <div
           className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]"
           ref={conversationBoxRef}
@@ -142,7 +143,7 @@ const NotConnectSidePannel = ({
 
     sendStreamingTextThunk({
       params: {
-        messages: messages,
+        messages: store.getState().playground.messages,
         stream: true,
         model: currentModel,
       },
@@ -179,7 +180,7 @@ const NotConnectSidePannel = ({
     });
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l border-gray-3 overflow-y-auto">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l shadow-gray-3 overflow-y-auto">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />
