@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 
-const IconButton = React.forwardRef(({ onClick, icon, className = "", onMouseEnter=()=>{}, onMouseLeave=()=>{}, hoverFill, fillQq, iconProps={}}, ref) => {
-  const [hover, setHover] = React.useState(false);
+const IconButton = React.forwardRef(({ onClick, icon, className = "", onMouseEnter=()=>{}, onMouseLeave=()=>{}, hoverFill, fillQq, iconProps={}, active}, ref) => {
+  const [hover, setHover] = React.useState(active);
+  useEffect(() => {
+    setHover(active);
+  }, [active])
   const handleHover = (e) => {
     onMouseEnter(e); 
     setHover(true);

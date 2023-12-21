@@ -15,7 +15,7 @@ export const VendorCard = React.forwardRef(({ companyName, modelCount, companyLo
       <div className="flex flex-row items-center gap-xs">
         <div className="flex-col relative">
           <IconButton
-          className="absolute -top-xxxs -right-xxxs"
+          className="absolute -ztop-xxxs -right-xxxs"
             icon={Ellipse}
             iconProps={{ active }}
           />
@@ -31,6 +31,7 @@ export const VendorCard = React.forwardRef(({ companyName, modelCount, companyLo
       </div>
       <IconButton
         icon={Pencil}
+        active={isHovered}
       />
     </div>
   );
