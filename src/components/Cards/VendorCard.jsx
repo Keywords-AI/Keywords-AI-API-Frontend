@@ -6,7 +6,7 @@ import { IconButton } from 'src/components/Buttons'
 export const VendorCard = React.forwardRef(({ companyName, modelCount, companyLogo, setOpen = () => { } }, forwardedRef) => {
   const [isHovered, setIsHovered] = React.useState(false);
   return (
-    <div className="flex items-center py-sm px-md justify-between w-[360px] bg-gray-2 min-w-[200px] border border-gray-3 rounded-sm cursor-pointer hover:border-gray-4"
+    <div className="flex items-center py-sm px-md justify-between w-[360px] bg-gray-2 min-w-[200px] shadow-border shadow-gray-3 rounded-sm cursor-pointer hover:shadow-gray-4"
       onClick={() => setOpen(true)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

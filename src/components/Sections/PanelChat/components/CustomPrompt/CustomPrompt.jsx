@@ -58,7 +58,7 @@ function CustomPrompt({
           <textarea
             {...register("system_prompt", { value: systemPrompt || "", onChange: handelChange })}
             name="system_prompt"
-            className="text-sm bg-black border border-solid border-gray-3 rounded-sm text-gray-white resize-none"
+            className="text-sm bg-black shadow-border shadow-gray-3 rounded-sm text-gray-white resize-none"
           ></textarea>
         </div>
         <FileInput

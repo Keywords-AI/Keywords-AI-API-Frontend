@@ -44,7 +44,7 @@ const MyComponent = React.forwardRef(({
     register = () => { },
     validationSchema = null,
     padding = "py-xxs px-xs",
-    border = "border border-gray-3 focus:border-gray-3",
+    border = "shadow-border shadow-gray-3 focus:shadow-gray-3",
     borderRadius = "rounded-sm",
     text = "text-sm text-gray-4 focus:text-gray-white",
     icon = SelectionIcon,

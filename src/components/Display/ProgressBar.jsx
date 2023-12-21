@@ -2,7 +2,7 @@ import React from 'react'
 
 const ColorTile = ({ colorClass = "bg-gray-white" }) => {
     return (
-        <div className={"w-xs h-xs flex-shrink-0 border border-gray-3 rounded-sm " + colorClass} ></ div>
+        <div className={"w-xs h-xs flex-shrink-0 shadow-border shadow-gray-3 rounded-sm " + colorClass} ></ div>
     )
 }
 
@@ -38,7 +38,7 @@ export default function ProgressBar({
                 </div>
             </div>
             <div className={"flex-row items-center self-stretch justify-between"}>
-                <div className={"w-[70%] h-sm border border-gray-3 rounded-sm first-line:" + remainColorClass}>
+                <div className={"w-[70%] h-sm shadow-border shadow-gray-3 rounded-sm first-line:" + remainColorClass}>
                     <div className={"h-full rounded-sm " + progressColorClass
                     }
                         style={{ width: `${Math.floor((current / total) * 100)}%` }}

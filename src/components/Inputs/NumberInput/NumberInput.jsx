@@ -23,7 +23,7 @@ export function NumberInput({
     <div
       className={cn(
         "flex w-full px-xs py-xxs items-center gap-xxs group rounded-sm",
-        "border border-solid border-transparent hover:border-gray-3 hover:bg-gray-2 hover:cursor-pointer"
+        "shadow-border shadow-transparent hover:shadow-gray-3 hover:bg-gray-2 hover:cursor-pointer"
       )}
       onClick={handleDivClick}
     >

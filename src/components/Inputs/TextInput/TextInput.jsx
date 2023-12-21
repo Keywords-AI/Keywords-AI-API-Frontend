@@ -78,7 +78,7 @@ export const TextInput = React.forwardRef(({
           placeholder={placeholder}
           className={cn(
             "px-xs py-xxs text-sm-regular rounded-sm bg-transparent outline-none self-stretch w-full placeholder:text-gray-4 box-border",
-            isFocused && !disabled ? " border border-gray-white" : "border border-gray-3",
+            isFocused && !disabled ? " shadow-border shadow-gray-4" : "shadow-border shadow-gray-3",
             !disabled ? "text-gray-white" : "text-gray-3 ",
           )}
           {...register(name, validationSchema)}

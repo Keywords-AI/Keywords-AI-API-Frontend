@@ -3,6 +3,7 @@ import { DropDownMenu } from "src/components";
 import { Button, IconButton } from "src/components/Buttons";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Dots } from "src/components/Icons";
+import { DotsButton } from "src/components/Buttons/DotsButton";
 
 
 
@@ -27,11 +28,12 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
             sideOffset={0}
             align="start"
             trigger={
-                <Button
-                    variant="icon"
-                    icon={Dots}
-                    onClick={() => setOpen(true)}
-                />
+                // <Button
+                //     variant="icon"
+                //     icon={Dots}
+                //     onClick={() => setOpen(true)}
+                // />
+                <DotsButton onClick={() => setOpen(true)}/>
             }
             width="min-w-0"
             open={open}

@@ -111,7 +111,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                   });
                 }}
                 name="system_prompt"
-                className="text-sm bg-black border border-solid border-gray-3 rounded-sm text-gray-white"
+                className="text-sm bg-black shadow-border shadow-gray-3 rounded-sm text-gray-white"
                 id=""
               ></textarea>
               {/* <input

@@ -28,7 +28,7 @@ export default function SettingTable({
   }
   return (
     <div
-      className="flex flex-col self-stretch border border-gray-3 rounded-md 
+      className="flex flex-col self-stretch shadow-border shadow-gray-3 rounded-md 
         w-full max-w-[1000px]"
     >
       <div
@@ -47,7 +47,7 @@ export default function SettingTable({
       {rows?.map((row, idx) => (
         <div
           className={cn(
-            "text-sm text-gray-4 self-stretch grid px-sm py-xxs border-t border-gray-3",
+            "text-sm text-gray-4 self-stretch grid px-sm py-xxs shadow-border-t shadow-gray-3",
             rowLayout || gridTemplateColumns
           )}
           key={idx}

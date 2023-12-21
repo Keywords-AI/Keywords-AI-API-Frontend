@@ -7,7 +7,7 @@ import { Delete } from 'src/components/Icons'
 export const CopyInput = ({ value, title, disabled }) => {
     return (
         <div className="relative flex-col">
-            <TextInput value={value} title={title} disabled={disabled} width="w-full" />
+            <TextInput value={value} title={title} disabled={disabled} width="w-[400px]" />
             <CopyButton
                 text={value}
                 className="absolute right-xs bottom-[10px]"

@@ -100,8 +100,8 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   return (
     <div
       className={cn(
-        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm border border-solid border-gray-3 hover:cursor-pointer",
-        isFocused ? "border-gray-4" : ""
+        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3 hover:cursor-pointer",
+        isFocused ? "shadow-gray-4" : ""
       )}
       onClick={() => {
         setIsFocused(true);

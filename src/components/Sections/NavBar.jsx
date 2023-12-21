@@ -44,6 +44,7 @@ export const NavBar = () => {
         variant="header"
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
         active={apply}
+        // textClassName={"text-sm-regular text-gray-4"}
       />
     );
   };
@@ -55,7 +56,7 @@ export const NavBar = () => {
     { text: "API Keys", pageName: "setting" },
   ];
   return (
-    <Toolbar.Root className="flex px-lg py-xxs justify-center items-center border-b-[1px] border-gray-3 bg-gray-black w-full">
+    <Toolbar.Root className="flex px-lg py-xxs justify-center items-center shadow-border-b shadow-gray-3 bg-gray-black w-full">
       <div className="w-full flex justify-between">
         <div
           aria-label="logo and navigation"
@@ -76,7 +77,8 @@ export const NavBar = () => {
               <Button
                 text="Beta feedback"
                 variant="header"
-                textClassName={"text-sm-regular text-gray-4"}
+                arrow={false}
+                // textClassName={"text-sm-regular text-gray-4"}
               />
             }
             title={"Contact us"}

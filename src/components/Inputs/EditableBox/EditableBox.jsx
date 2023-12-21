@@ -84,12 +84,12 @@ export const EditableBox = React.forwardRef(
     return (
       <div
         className={cn(
-          "w-full h-full flex-col self-stretch flex-grow rounded-sm border",
+          "w-full h-full flex-col self-stretch flex-grow rounded-sm",
           borderless
             ? "border-none"
             : focus || isEditing
-            ? "border-gray-4"
-            : "border-gray-3"
+            ? "shadow-gray-4"
+            : "shadow-gray-3"
         )}
         ref={divRef}
         onClick={handleDivClick}

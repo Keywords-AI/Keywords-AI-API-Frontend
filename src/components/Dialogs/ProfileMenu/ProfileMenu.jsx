@@ -24,8 +24,8 @@ const ProfileMenu = ({ logout, user }) => {
   const trigger = (
     <button
       className={cn(
-        "outline-none flex justify-center items-center p-xxxs gap-xxs rounded-sm border border-solid hover:border-gray-3 hover:bg-gray-2 hover:cursor-pointer",
-        open ? "bg-gray-2 border-gray-3 " : "border-gray-black"
+        "outline-none flex justify-center items-center p-xxxs gap-xxs rounded-sm shadow-border shadow-transparent hover:shadow-gray-3 hover:bg-gray-2 hover:cursor-pointer",
+        open ? "shadow-gray-3 " : "shadow-gray-black"
       )}
       onClick={() => setOpen(!open)}
     >

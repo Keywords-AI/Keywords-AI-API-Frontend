@@ -108,6 +108,7 @@ export const CurrentModel = () => {
             variant="r4-black"
             text={current.name}
             icon={current.icon}
+            iconSize="md"
             iconPosition="left"
             onClick={() => setOpen(!open)}
             disabled={streaming}

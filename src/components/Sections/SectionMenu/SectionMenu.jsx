@@ -15,7 +15,7 @@ const SectionMenu = ({ section, basePath, user }) => {
         {icon}
       </div>
       <div className="flex-col items-start gap-xs flex-1">
-        <div className="flex px-xs items-start text-md-medium text-gray-white">
+        <div className="flex px-xs items-start text-md-medium text-gray-4">
           {title || "Section Title Here"}
         </div>
         <div className="flex-col flex-start self-stretch">
