@@ -64,6 +64,7 @@ export default {
       'border-b': `inset 0 -1px 0 0 ${gray3}`,
       'border-t': `inset 0 1px 0 0 ${gray3}`,
       'border-r': `inset -1px 0 0 0 ${gray3}`,
+      'border-tlr': `inset 1px 0 0 0 ${gray3},inset -1px 0 0 0 ${gray3},inset 0 1px 0 0 ${gray3}`,
     },
     backgroundImage: {
       highlight:

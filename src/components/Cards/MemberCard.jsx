@@ -10,7 +10,7 @@ export const SelectionTrigger = ({ firstName, lastName, selected, placeholder, o
     }
     const [hover, setHover] = React.useState(false);
     return (
-        <div className="flex-row items-center gap-sm w-[240px] cursor-pointer"
+        <div className="flex-row items-center gap-xs w-[240px] cursor-pointer"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             onClick={handleClick}>

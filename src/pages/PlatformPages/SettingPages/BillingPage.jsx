@@ -10,25 +10,30 @@ import { CanelPlanForm } from './components/BillingComponents'
 import { Modal } from 'src/components/Dialogs'
 import { setBillings } from 'src/store/actions'
 
+export const viewBillTrigger = (item) => {
+  return (
+    <>
+      <Button
+        variant="small"
+        text={"View"}
+        icon={Search}
+        onClick={() => window.open(item.hosted_invoice_url, "_blank")}
+      />
+    </>
+  )
+}
 
-export const BillingPage = ({ billings, setBillings }) => {
-  const { data, error, loading } = useFetch({ path: "payment/paid-bills"});
+export const BillingPage = ({ billings }) => {
+  // Fetching action is handled in PanelNavigation.jsx
+  const [bilingData, setBillingData] = React.useState([]);
   const [canceling, setCanceling] = React.useState(false);
-  const viewBillTrigger = (item) => {
-    return (
-      <>
-        <Button
-          variant="small"
-          text={"View"}
-          icon={Search}
-          onClick={() => window.open(item.hosted_invoice_url, "_blank")}
-        />
-      </>
-    )
-  }
+
   useEffect(() => {
-    setBillings(processBillingList(data, viewBillTrigger));
-  }, [data]);
+    if (billings) {
+      setBillingData(processBillingList(billings, viewBillTrigger));
+    }
+  }, [billings]);
+
   return (
     <PageContent
       title="Billing"
@@ -36,11 +41,11 @@ export const BillingPage = ({ billings, setBillings }) => {
     >
       <PageParagraph
         heading="Payment history"
-        subheading={loading ? "loading..." : ((billings?.length > 0) ? "You can see your payment history below. For questions about billing, contact team@keywordsai.co." : "There are no invoices to display.")}
+        subheading={((bilingData?.length > 0) ? "You can see your payment history below. For questions about billing, contact team@keywordsai.co." : "There are no invoices to display.")}
       >
-        {(billings?.length > 0) && <SettingTable
+        {(bilingData?.length > 0) && <SettingTable
           variant={"billings"}
-          rows={billings}
+          rows={bilingData}
           columnNames={["date", "amount", "payment_id", "actions"]}
         />}
         <Modal
