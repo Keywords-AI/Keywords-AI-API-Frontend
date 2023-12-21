@@ -9,6 +9,7 @@ import {
   setLastMessage,
   removeLastMessage,
   appendMessage,
+  setCurrentBrand,
 } from "src/store/actions/playgroundAction";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import store from "src/store/store";
@@ -23,72 +24,73 @@ export const CurrentModel = () => {
     {
       name: "OpenAI - GPT-3.5-turbo",
       value: "gpt-3.5-turbo",
-      icon: ModelIcon("openai"),
+      brand: "openai",
     },
     {
       name: "OpenAI - GPT-4-32k",
       value: "gpt-4-32k",
-      icon: ModelIcon("openai"),
+      brand: "openai",
     },
     {
       name: "OpenAI - GPT-4",
       value: "gpt-4",
-      icon: ModelIcon("openai"),
+      brand: "openai",
     },
     {
       name: "Claude 2.1",
       value: "claude-2.1",
-      icon: ModelIcon("anthropic"),
+      brand: "anthropic",
     },
     {
       name: "OpenAI - GPT-4-1106-preview",
       value: "gpt-4-1106-preview",
-      icon: ModelIcon("openai"),
+      brand: "openai",
     },
     {
       name: "Claude Instant 1",
       value: "claude-instant-1",
-      icon: ModelIcon("anthropic"),
+      brand: "anthropic",
     },
     {
       name: "Claude Instant 1.2",
       value: "claude-instant-1.2",
-      icon: ModelIcon("anthropic"),
+      brand: "anthropic",
     },
 
     {
       name: "OpenAI - GPT-3.5-turbo-16k",
       value: "gpt-3.5-turbo-16k",
-      icon: ModelIcon("openai"),
+      brand: "openai",
     },
     {
       name: "Chat Bison",
       value: "chat-bison",
-      icon: ModelIcon("google"),
+      brand: "bison",
     },
     {
       name: "J2 Light",
       value: "j2-light",
-      icon: ModelIcon("labs"),
+      brand: "labs",
     },
     {
       name: "Command Nightly",
       value: "command-nightly",
-      icon: ModelIcon("cohere"),
+      brand: "cohere",
     },
     {
       name: "J2 Mid",
       value: "j2-mid",
-      icon: ModelIcon("labs"),
+      brand: "labs",
     },
     {
       name: "J2 Ultra",
       value: "j2-ultra",
-      icon: ModelIcon("labs"),
+      brand: "labs",
     },
   ];
   useEffect(() => {
     dispatch(setCurrentModel(models[0].value));
+    dispatch(setCurrentBrand(models[0].brand));
   }, []);
   const [current, setCurrent] = React.useState(models[0]);
   const [open, setOpen] = React.useState(false);
@@ -107,7 +109,7 @@ export const CurrentModel = () => {
           <Button
             variant="r4-gray-2"
             text={current.name}
-            icon={current.icon}
+            icon={ModelIcon(current.brand)}
             iconSize="md"
             iconPosition="left"
             onClick={() => setOpen(!open)}
@@ -121,16 +123,17 @@ export const CurrentModel = () => {
                 <Button
                   variant="panel"
                   text={model.name}
-                  icon={model.icon}
+                  icon={ModelIcon(model.brand)}
                   onClick={() => {
                     if (streaming) return;
                     setCurrent({
                       name: model.name,
                       value: model.value,
-                      icon: model.icon,
+                      icon: ModelIcon(model.brand),
                     });
 
                     dispatch(setCurrentModel(model.value));
+                    dispatch(setCurrentBrand(model.brand));
                     let lastUserMessageIndex = messages.reduce(
                       (lastIndex, message, currentIndex) => {
                         if (message.role === "user") {

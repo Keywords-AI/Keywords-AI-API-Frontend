@@ -33,6 +33,8 @@ export function DotsMenu({}) {
   return (
     <DropDownMenu
       width={"w-full"}
+      align="end"
+      sideOffset={8}
       open={open}
       setOpen={setOpen}
       trigger={<DotsButton onClick={() => setOpen(true)} />}

@@ -136,6 +136,7 @@ const NotConnectSidePannel = ({
   streaming,
   messages,
   firstTime,
+  abortStreamingTextRequest,
 }) => {
   const handleRegenerate = (event) => {
     event.stopPropagation();
@@ -149,8 +150,7 @@ const NotConnectSidePannel = ({
         stream: true,
         model: currentModel,
       },
-      host: "http://localhost:8000/",
-      path: "api/playground/ask/",
+
       prompt: systemPrompt,
       callback: () => {
         // this is the callback function after the streaming text is done
