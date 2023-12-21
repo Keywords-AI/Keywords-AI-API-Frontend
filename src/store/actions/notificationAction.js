@@ -6,15 +6,15 @@ export const dispatchNotification = (notification) => {
     // make async call to database
     const randomId = Math.random().toString(36).substring(2, 15);
     const completeNotification = {...notification, id: randomId}
-    dispatch({ type: DISPATCH_NOTIFICATION, completeNotification });
+    dispatch({ type: DISPATCH_NOTIFICATION, payload: completeNotification });
     setTimeout(() => {
-      dispatch({ type: DISMISS_NOTIFICATION, notification });
-    }, 5000);
+      dispatch({ type: DISMISS_NOTIFICATION, payload: randomId });
+    }, 4000);
   };
 };
 
-export const dismissNotification = (notification) => {
+export const dismissNotification = (id) => {
   return (dispatch, getState) => {
-    dispatch({ type: DISMISS_NOTIFICATION, notification });
+    dispatch({ type: DISMISS_NOTIFICATION, payload: id });
   };
 };

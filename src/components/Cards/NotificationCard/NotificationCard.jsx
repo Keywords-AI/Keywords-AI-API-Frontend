@@ -1,12 +1,37 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import "./NotificationCard.css"
 import { IconButton } from 'src/components/Buttons'
 import { Cross, Success } from 'src/components/Icons'
-import "./NotificationCard.css"
+import { dismissNotification } from 'src/store/actions'
+import cn from 'src/utilities/classMerge'
 
-export default function NotificationCard({ title = "Notification title", message = "Notification message" }) {
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = { dismissNotification };
+
+export default function NotificationCard({
+    id = "notification-id",
+    title = "Notification title",
+    message = "Notification message",
+    dismissNotification,
+}) {
+    const [show, setShow] = React.useState(false);
+    const cardRef = React.useRef(null)
+    const handleDismiss = (e) => {
+        e.preventDefault();
+        setShow(false);
+        setTimeout(() => {
+            dismissNotification(id);
+        }, 1000)
+    }
+    useEffect(() => { setShow(true) }, [])
     return (
-        <div className="card-notification flex item-start py-sm px-md relative shadow-border shadow-gray-3 rounded-md shadow-window w-[360px]">
-            <div className="flex-row gap-xxs self-stretch">
+        <div
+            ref={cardRef}
+            className={cn("card-notification flex item-start py-sm px-md relative shadow-gray-3 rounded-md shadow-window w-[360px] transition-all duration-[600ms] ease-in-out",
+            )
+            }
+        >
+            < div className="flex-row gap-xxs self-stretch" >
                 <div className="flex-col gap-xxs">
                     <div className="flex-row gap-xxs items-center">
                         <Success />
@@ -18,11 +43,12 @@ export default function NotificationCard({ title = "Notification title", message
                         {message}
                     </span>
                 </div>
-            </div>
+            </div >
             <IconButton
                 icon={Cross}
+                onClick={handleDismiss}
                 className="absolute top-md right-md"
             />
-        </div>
+        </div >
     )
 }

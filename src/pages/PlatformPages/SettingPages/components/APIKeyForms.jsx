@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import usePost from "src/hooks/usePost";
 import { SelectInput, TextInput, CopyInput } from "src/components/Inputs";
-import { retrieveContext, retrievePlanName } from "src/utilities/stringProcessing";
 import { Button } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -11,6 +10,7 @@ import {
   addKey,
   deleteKey,
   updateEditingKey,
+  dispatchNotification
 } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
@@ -24,6 +24,7 @@ const mapDispatchToProps = {
   setKeyList,
   deleteKey,
   updateEditingKey,
+  dispatchNotification
 };
 
 const CreateFormNotConnected = React.forwardRef(({
@@ -31,7 +32,9 @@ const CreateFormNotConnected = React.forwardRef(({
   setShowForm = () => { },
   setNewKeyName,
   addKey,
-  editingTrigger }, ref) => {
+  editingTrigger,
+  dispatchNotification
+}, ref) => {
   const { loading, error, data, postData } = usePost({ path: `api/create-api-key/` });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
@@ -39,6 +42,10 @@ const CreateFormNotConnected = React.forwardRef(({
       data.name = "New Key";
     }
     setNewKeyName(data.name);
+    dispatchNotification({
+      title: "Key created",
+      message: "Your key has been created.",
+    });
     postData(data);
   };
   useEffect(() => {
@@ -89,7 +96,7 @@ const CreateFormNotConnected = React.forwardRef(({
 });
 export const CreateForm = connect(mapStateToProps, mapDispatchToProps)(CreateFormNotConnected);
 
-const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, deleteKey }, ref) => {
+const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, deleteKey, dispatchNotification }, ref) => {
   const {
     loading,
     error,
@@ -104,6 +111,10 @@ const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, 
     postData();
     deleteKey(deletingKey);
     setDeletingKey(null);
+    dispatchNotification({
+      title: "Key deleted",
+      message: "Your key has been deleted.",
+    })
   };
   const handleClose = () => {
     setDeletingKey(null);
@@ -127,7 +138,7 @@ const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, 
 
 export const DeleteForm = connect(mapStateToProps, mapDispatchToProps)(DeleteFormNotConnected);
 
-const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, updateEditingKey }, ref) => {
+const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, updateEditingKey, dispatchNotification }, ref) => {
   const [newName, setNewName] = React.useState(editingKey?.name);
   const {
     loading: editLoading,
@@ -141,6 +152,10 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
     postData(data);
+    dispatchNotification({
+      title: "Key updated",
+      message: "Your key has been updated.",
+    })
     updateEditingKey({ ...editingKey, ...data });
     setEditingKey(null);
   };
