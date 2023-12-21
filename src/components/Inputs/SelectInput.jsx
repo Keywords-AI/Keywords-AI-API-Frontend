@@ -15,7 +15,7 @@ import * as DropdownPrimitives from "@radix-ui/react-dropdown-menu";
  * @param {string} [props.placeholder] - The placeholder text for the input.
  * @param {boolean} [props.readOnly] - If `true`, the input is read-only.
  * @param {boolean} [props.required=false] - If `true`, indicates that the input is required.
- * @param {string} [props.width="w-[400px]"] - The width CSS class for the component.
+ * @param {string} [props.width="w-full"] - The width CSS class for the component.
  * @param {Function} [props.register=() => {}] - A function for registering the input with a form library.
  * @param {null|object} [props.validationSchema=null] - A validation schema for the input (if using form validation).
  * @returns {React.Component} A custom select input component.
@@ -40,7 +40,10 @@ const MyComponent = React.forwardRef(({
     readOnly,
     required = false,
     internalIcon = true,
-    width = "w-[400px]",
+    width = "w-full",
+    optionsWidth = "w-full",
+    align = "center",
+    alignOffset = 0,
     register = () => { },
     validationSchema = null,
     padding = "py-xxs px-xs",
@@ -116,10 +119,10 @@ const MyComponent = React.forwardRef(({
                         })}
                     </>
                 } // The items to be displayed in the dropdown
-                align='start'
-                alignOffset={32}
+                align={align}
+                alignOffset={alignOffset}
                 side="bottom"
-                width="min-w-0"
+                width={optionsWidth || width || "min-w-0"}
             />
         </div >
     )

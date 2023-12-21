@@ -57,6 +57,7 @@ export const SettingPage = ({ organization, setOrgName, dispatchNotification }) 
                     <TextInput
                         {...register("name", {value: (organization.name || ""), onChange: handleChange})}
                         title="Organization name"
+                        width="w-[400px]"
                         placeholder="Enter your organization name..."value={organization?.name || ""}
                     />
                     <CopyInput

@@ -39,6 +39,8 @@ export const MemberCard = ({ firstName, lastName }) => {
             ]}
             trigger={SelectionTrigger}
             defaultValue="Member"
+            align="start"
+            alignOffset={32}
             triggerProps={{ firstName, lastName }}
         />
     )

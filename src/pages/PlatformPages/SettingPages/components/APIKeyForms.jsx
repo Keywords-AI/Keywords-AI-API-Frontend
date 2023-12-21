@@ -26,6 +26,13 @@ const mapDispatchToProps = {
   updateEditingKey,
   dispatchNotification
 };
+const expiryOptions = [
+  { name: "Never", value: "Never" },
+
+  { name: "Two weeks", value: "Two weeks" },
+  { name: "One month", value: "One month" },
+  { name: "Three months", value: "Three months" },
+];
 
 const CreateFormNotConnected = React.forwardRef(({
   apiKey,
@@ -66,13 +73,24 @@ const CreateFormNotConnected = React.forwardRef(({
       onSubmit={handleSubmit(onSubmit)}
     >
       {!apiKey.apiKey ? (
-        <TextInput
-          title={"Name (optional)"}
-          width={"w-full"}
-          {...register("name")}
-          // onKeyDown={handleEnter}
-          placeholder={"Key-1"}
-        />
+        <div className="grid gap-sm grid-cols-[1fr,160px]">
+          <TextInput
+            title={"Name (optional)"}
+            width={"w-full"}
+            {...register("name")}
+            // onKeyDown={handleEnter}
+            placeholder={"Key-1"}
+          />
+          <SelectInput
+            title={"Expiry"}
+            optionsWidth={"w-[160px]"}
+            {...register("expiration_date")}
+            // onKeyDown={handleEnter}
+            placeholder={"Key-1"}
+            defaultValue={"Never"}
+            choices={expiryOptions}
+          />
+        </div>
       ) : (
         <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
       )}
@@ -170,13 +188,24 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
       className={"flex-col gap-sm self-stretch relative"}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <TextInput
-        title={"New name"}
-        width={"w-full"}
-        {...register("name", { value: newName, onChange: handleChange, required: true })}
-        // onKeyDown={handleEnter}
-        placeholder={"Key-1"}
-      />
+      <div className="grid gap-sm grid-cols-[1fr,160px]">
+        <TextInput
+          title={"New name"}
+          width={"w-full"}
+          {...register("name", { value: newName, onChange: handleChange, required: true })}
+          // onKeyDown={handleEnter}
+          placeholder={"Key-1"}
+        />
+        <SelectInput
+          title={"Expiry"}
+          optionsWidth={"w-[160px]"}
+          {...register("expiration_date")}
+          // onKeyDown={handleEnter}
+          placeholder={"Key-1"}
+          defaultValue={"Never"}
+          choices={expiryOptions}
+        />
+      </div>
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
           <Button variant="r4-gray-2" text={"Cancel"}
