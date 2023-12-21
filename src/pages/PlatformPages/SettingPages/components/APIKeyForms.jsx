@@ -123,9 +123,8 @@ const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, 
     data,
     postData,
   } = usePost({
-    path: `api/delete-key/${deletingKey?.id}/`,
+    path: `api/delete-key/${deletingKey?.prefix}/`,
     method: "DELETE",
-    domain: host
   });
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -168,9 +167,8 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
     data: editKey,
     postData,
   } = usePost({
-    path: `api/update-key/${editingKey?.id}/`,
+    path: `api/update-key/${editingKey?.prefix}/`,
     method: "PATCH",
-    domain: host
   });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {

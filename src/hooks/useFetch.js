@@ -43,10 +43,11 @@ export const useFetch = ({ path, domain = apiConfig.apiURL }) => {
           setData(data);
         }
       } else {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
+        // localStorage.removeItem("access_token");
+        // localStorage.removeItem("refresh_token");
         window.location = "/unauthenticated";
       }
+      console.log(await response.text())
       setLoading(false);
     }
   };

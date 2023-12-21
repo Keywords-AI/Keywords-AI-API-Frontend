@@ -3,7 +3,6 @@ import apiConfig from "src/services/apiConfig";
 
 export const refreshToken = () => {
   const refresh = localStorage.getItem("refresh_token");
-  console.log(refresh);
   fetch(`${apiConfig.apiURL}auth/jwt/refresh/`, {
     method: "POST",
     headers: {
@@ -22,7 +21,6 @@ export const refreshToken = () => {
       //     const responseJson = await res.json();
       //     console.log(responseJson);
       //   }
-      console.log(await res.text());
     })
     .catch((error) => console.log(error));
 };

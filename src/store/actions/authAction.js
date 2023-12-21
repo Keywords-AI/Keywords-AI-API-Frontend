@@ -1,4 +1,4 @@
-import { platformURL } from "src/utilities/platformURL";
+import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveConversation } from "./deprecated/conversationAction";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
@@ -13,7 +13,7 @@ export const register = (
   return (dispatch) => {
     // Return a promise from the thunk
     return new Promise((resolve, reject) => {
-      fetch(`${platformURL}auth/users/`, {
+      fetch(`${apiConfig.apiURL}auth/users/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
     return new Promise((resolve, reject) => {
-      fetch(`${platformURL}auth/jwt/create/`, {
+      fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export const resetPassword = (
   handleError = (error) => console.log(error)
 ) => {
   return (dispatch) => {
-    fetch(`${platformURL}auth/users/reset_password/`, {
+    fetch(`${apiConfig.apiURL}auth/users/reset_password/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,7 +132,7 @@ export const resetPasswordConfirm = (
   handleError = () => {}
 ) => {
   return (disatch) => {
-    fetch(`${platformURL}auth/users/reset_password_confirm/`, {
+    fetch(`${apiConfig.apiURL}auth/users/reset_password_confirm/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +166,7 @@ export const loadingFileUpload = () => {
 
 export const updateSystemPrompt = (promptAndActive) => {
   return (dispatch) => {
-    fetch(`${platformURL}user/update_user_system_prompt/`, {
+    fetch(`${apiConfig.apiURL}user/update_user_system_prompt/`, {
       headers: {
         Authorization: `Bearer ${retrieveAccessToken()}`,
         "X-CSRFToken": getCookie("csrftoken"),
@@ -193,7 +193,7 @@ export const updateSystemPrompt = (promptAndActive) => {
 
 export const updateUserSQLPrompt = (promptAndActive) => {
   return (dispatch) => {
-    fetch(`${platformURL}user/update_user_sql_prompt/`, {
+    fetch(`${apiConfig.apiURL}user/update_user_sql_prompt/`, {
       headers: {
         Authorization: `Bearer ${retrieveAccessToken()}`,
         "X-CSRFToken": getCookie("csrftoken"),
@@ -220,7 +220,7 @@ export const updateUserSQLPrompt = (promptAndActive) => {
 
 export const activateUser = (uid, token, handleSuccess, handelError) => {
   return (dispatch) => {
-    fetch(`${platformURL}auth/users/activation/`, {
+    fetch(`${apiConfig.apiURL}auth/users/activation/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -241,7 +241,7 @@ export const activateUser = (uid, token, handleSuccess, handelError) => {
 
 export const resendActivationEmail = (email, handleSuccess, handleError) => {
   return (dispatch) => {
-    fetch(`${platformURL}auth/users/resend_activation/`, {
+    fetch(`${apiConfig.apiURL}auth/users/resend_activation/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -262,7 +262,7 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
 
 export const acceptInvitation = (code, handleSuccess, handleError) => {
   return (dispatch) => {
-    fetch(`${platformURL}user/invitations/accept/`, {
+    fetch(`${apiConfig.apiURL}user/invitations/accept/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -289,7 +289,7 @@ export const deleteRole = (
   handleError = () => {}
 ) => {
   return (dispatch) => {
-    fetch(`${platformURL}user/delete-role/${id}/`, {
+    fetch(`${apiConfig.apiURL}user/delete-role/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -311,7 +311,7 @@ export const deleteRole = (
 
 export const saveAllUsers = () => {
   return (dispatch) => {
-    fetch(`${platformURL}user/all-users`, {
+    fetch(`${apiConfig.apiURL}user/all-users`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
