@@ -113,14 +113,14 @@ const IntegrationCardNotConnected = ({
   const activatedModelsWatch = watch("activated_models");
   const [hasKey, setHasKey] = useState(apiKey ? true : false);
   const [apiKeyString, setApiKeyString] = useState(apiKey || "");
-  const validateCheckbox = (value)=> {
+  const validateCheckbox = (value) => {
     if (typeof value === "string") {
       // To account for the case where only one model is selected
       return [value];
     } else if (typeof value === "boolean") {
       // To account for the case where no model is selected
       return [];
-    } 
+    }
     return value || [];
   }
   const onSubmit = (data) => {
@@ -133,7 +133,7 @@ const IntegrationCardNotConnected = ({
     createOrUpdateIntegration(toSubmit);
     setOpen(false);
   };
-  useEffect(()=>{
+  useEffect(() => {
     const newModelList = validateCheckbox(activatedModelsWatch);
     setActivatedModels(newModelList);
   }, [activatedModelsWatch])
@@ -159,6 +159,7 @@ const IntegrationCardNotConnected = ({
           </div>
         </fieldset>
         <TextInput
+          type={"password"}
           {...register(hasKey ? "api_key_display" : "api_key", { onChange })}
           title={hasKey ? "API key added" : `Your ${companyName} API key (optional)`}
           width={"w-full"}
@@ -179,7 +180,7 @@ const IntegrationCardNotConnected = ({
             type="button"
             onClick={() => { setOpen(false) }}
           />
-          <Button variant="r4-primary" text="Save"/>
+          <Button variant="r4-primary" text="Save" />
         </div>
       </form>
     </>

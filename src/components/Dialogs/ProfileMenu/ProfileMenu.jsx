@@ -65,7 +65,7 @@ const ProfileMenu = ({ logout, user }) => {
     {
       name: "Admin",
       forAdmin: true,
-      action: () => navigate("/admin"),
+      action: () => window.location.href = "https://platform.keywordsai.co/admin-panel-for-keywordsai-admin-users",
     }, // assuming menuitems is an array of other menu items
     {
       name: "QA Wall",

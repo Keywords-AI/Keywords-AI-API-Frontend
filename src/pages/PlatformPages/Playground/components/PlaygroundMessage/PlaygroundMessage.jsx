@@ -67,6 +67,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           model: currentModel,
         },
         prompt: systemPrompt,
+        host: "http://localhost:8000/",
         callback: () => {
           const currentModel = store.getState().playground.currentModel;
           const streamingText = store.getState().streamingText.streamingText;

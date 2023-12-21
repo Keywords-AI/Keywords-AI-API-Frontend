@@ -3,12 +3,16 @@ import { Modal } from "src/components/Dialogs";
 import { useSelector } from "react-redux";
 import { Cost, Latency, Score, Tokens } from "./icons";
 import { Compare } from "src/components";
-import React from "react";
+import React, { useEffect } from "react";
 import { TextInput } from "src/components/Inputs";
 import MetricCard from "src/components/Cards/MetricCard";
 export function ModelOutput({}) {
   const stateOutputs = useSelector((state) => state.playground.outputs);
   const currentModel = useSelector((state) => state.playground.currentModel);
+  useEffect(() => {
+    console.log("stateOutputs", stateOutputs);
+    console.log(stateOutputs.score[currentModel]);
+  }, [stateOutputs]);
   const outputs = [
     {
       name: "Score",

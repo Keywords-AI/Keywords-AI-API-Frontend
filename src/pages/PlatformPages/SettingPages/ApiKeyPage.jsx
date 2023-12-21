@@ -22,7 +22,8 @@ const mapDispatchToProps = {
 }
 
 export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey }) => {
-  const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({ path: `api/get-keys` });
+  const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({
+    domain:"http://localhost:8000/", path: `api/get-keys` });
   const [openCreate, setOpenCreate] = React.useState(false)
   const editingTrigger = (key) => {
     return (

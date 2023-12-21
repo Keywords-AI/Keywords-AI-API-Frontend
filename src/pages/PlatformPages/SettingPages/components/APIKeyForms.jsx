@@ -13,6 +13,8 @@ import {
   dispatchNotification
 } from "src/store/actions";
 
+const host = "http://localhost:8000/";
+
 const mapStateToProps = (state) => ({
   user: state.user,
   apiKey: state.apiKey,
@@ -123,9 +125,11 @@ const DeleteFormNotConnected = React.forwardRef(({ deletingKey, setDeletingKey, 
   } = usePost({
     path: `api/delete-key/${deletingKey?.id}/`,
     method: "DELETE",
+    domain: host
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("delete key");
     postData();
     deleteKey(deletingKey);
     setDeletingKey(null);
@@ -165,7 +169,8 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
     postData,
   } = usePost({
     path: `api/update-key/${editingKey?.id}/`,
-    method: "PATCH"
+    method: "PATCH",
+    domain: host
   });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {

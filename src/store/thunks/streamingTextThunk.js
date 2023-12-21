@@ -101,6 +101,7 @@ export const sendStreamingTextThunk = async ({
         const firstChunk = JSON.parse(chunks[0]);
         if (firstChunk.evaluation) {
           const outputs = firstChunk.evaluation;
+          console.log("outputs", outputs)
           dispatch(
             setOutputs({
               tokens: outputs.completion_tokens,
