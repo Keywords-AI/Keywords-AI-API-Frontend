@@ -102,7 +102,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     <div
       className={cn(
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3 hover:cursor-pointer",
-        isFocused && isUser && messageIndex === messages.length - 1
+        messageIndex === messages.length - 1 && !streaming
           ? "shadow-gray-4"
           : ""
       )}
