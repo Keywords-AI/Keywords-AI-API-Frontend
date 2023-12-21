@@ -2,17 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "./Button";
 import React from "react";
 import { Dots } from "../Icons";
-import cn from 'src/utilities/classMerge';
 
-export function DotsButton({onclick}) {
-  
+export const DotsButton = React.forwardRef(({ onClick }, ref) => {
   return (
     <div className="flex flex-col items-start gap-[10px] self-stretch justify-center">
       <Button
+        ref={ref}
         variant={"icon"}
-        // onClick={() => navigate(link)}
         // onClick={() => setOpen(!open)}
-        onclick={onclick}
+        onClick={onClick}
         icon={Dots}
         borderColor="shadow-transparent"
         borderHoverColor="shadow-transparent"
@@ -20,4 +18,4 @@ export function DotsButton({onclick}) {
       />
     </div>
   );
-}
+})
