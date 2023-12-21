@@ -19,13 +19,13 @@ export default function notificationReducer(state = initState, action) {
     case DISPATCH_NOTIFICATION:
       return {
         ...state,
-        notifications: [...state.notifications, action.notification],
+        notifications: [...state.notifications, action.payload],
       };
     case DISMISS_NOTIFICATION:
       const newNotifications = state.notifications.filter(
-        (notification) => notification.id !== action.notification.id
+        (notification) => notification.id !== action.payload
       );
-      return { ...state, notifications: "" };
+      return { ...state, notifications: newNotifications };
     default:
       return state;
   }

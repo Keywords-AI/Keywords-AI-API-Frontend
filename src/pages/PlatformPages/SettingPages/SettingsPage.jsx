@@ -6,6 +6,7 @@ import { TextInput, CopyInput } from 'src/components/Inputs';
 import { Button } from 'src/components/Buttons';
 import { set, useForm } from 'react-hook-form';
 import { setOrgName } from 'src/store/actions';
+import { dispatchNotification } from 'src/store/actions';
 
 
 const mapStateToProps = (state) => ({
@@ -14,9 +15,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
     setOrgName,
+    dispatchNotification
 }
 
-export const SettingPage = ({ organization, setOrgName }) => {
+export const SettingPage = ({ organization, setOrgName, dispatchNotification }) => {
     const {
         register,
         handleSubmit,
@@ -27,8 +29,11 @@ export const SettingPage = ({ organization, setOrgName }) => {
         method: "PATCH",
     });
     const onSubmit = (data) => {
-        console.log("Submitting", data);
-        setOrgName(data.name);
+        setOrgName(data.name || organization.name);
+        dispatchNotification({
+            title: "Organization name updated",
+            message: "Your organization name has been updated.",
+        })
         postData(data); // send request
     }
     const handleChange = (e) => {
@@ -50,10 +55,9 @@ export const SettingPage = ({ organization, setOrgName }) => {
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <TextInput
-                        {...register("name", {onChange: handleChange})}
+                        {...register("name", {value: (organization.name || ""), onChange: handleChange})}
                         title="Organization name"
-                        placeholder="Enter your organization name..."
-                        value={organization?.name || ""}
+                        placeholder="Enter your organization name..."value={organization?.name || ""}
                     />
                     <CopyInput
                         name="unique_organization_id"

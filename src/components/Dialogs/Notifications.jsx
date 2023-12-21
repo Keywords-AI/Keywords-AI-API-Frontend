@@ -12,17 +12,21 @@ const mapDispatchToProps = {
 }
 
 
-export const Notifications = ({ notifications, dispatchNotification }) => {
+export const Notifications = ({ notifications }) => {
 
     return (
-        <div className="flex-col items-start fixed top-xxxl right-xxxl gap-sm">
+        <div className="flex-col items-start fixed top-lg right-lg gap-sm z-[1200] translate-y-[54px]">
             {
-                notifications?.map((notification, index) => (
-                    <NotificationCard
-                        key={index}
-                        {...notification}
-                    />
-                ))
+                notifications?.map((notification, index) => {
+                    console.log("Notification", notification);
+                    return (
+                        <NotificationCard
+                            key={index}
+                            {...notification}
+                            dismissNotification={dispatchNotification}
+                        />
+                    );
+                })
             }
         </div>
     )

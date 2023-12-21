@@ -8,6 +8,7 @@ export function NavigationLayout() {
     <div className="flex-col w-full min-h-screen items-center">
       <NavBar />
       <div className="w-full h-full flex-col flex-1 overflow-hidden items-start justify-start">
+        <Notifications />
         <Outlet />
       </div>
     </div>

@@ -57,7 +57,7 @@ export default {
     boxShadow: {
       pricing: "2px 2px 10px 2px rgba(24, 24, 32, 0.40)",
       purple: "0 0 40px rgba(143, 0, 210, 0.25)", // Jialin's work, but if something went wrong, ping @Hendrix
-      window: " 0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
+      window: `0 0 10px 10px rgba(255, 255, 255, 0.05), 0 0 0 1px ${gray3}`,
       key: `1px 1px 1px 0px black`,
       border: `inset 0 0 0 1px ${gray3}`,
       'border-l': `inset 1px 0 0 0 ${gray3}`,

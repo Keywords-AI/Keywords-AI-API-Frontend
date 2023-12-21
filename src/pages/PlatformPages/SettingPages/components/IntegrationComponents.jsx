@@ -9,13 +9,15 @@ import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
 import { createOrUpdateIntegration, setIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
+import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 const mapDispatchToProps = {
   createOrUpdateIntegration,
-  setIntegration
+  setIntegration,
+  dispatchNotification
 };
 
 export const vendors = {
@@ -104,15 +106,17 @@ const IntegrationCardNotConnected = ({
   availableModels,
   setOpen,
   createOrUpdateIntegration,
-  setIntegration,
-  integration,
+  dispatchNotification,
 }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [hasKey, setHasKey] = useState(apiKey ? true : false);
   const [apiKeyString, setApiKeyString] = useState(apiKey || "");
   const onSubmit = (data) => {
     let toSubmit = { vendor: vendorId, user: user.id, ...data };
-    
+    dispatchNotification({
+      title: "Integration updated",
+      message: `Your ${companyName} integration has been updated.`,
+    });
     createOrUpdateIntegration(toSubmit);
     setOpen(false);
   };
@@ -204,7 +208,6 @@ export const IntegrationModal = ({ vendor }) => {
       title={<TitleCard
         {...propsObj}
       />}
-      subtitle="We'll get back to you within 24 hours."
       trigger={<VendorCard
         setOpen={setOpen}
         {...propsObj}
