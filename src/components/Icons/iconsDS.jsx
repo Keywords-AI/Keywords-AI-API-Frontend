@@ -1350,3 +1350,21 @@ export const LinkedIn = ({
       );
   }
 };
+// className={"flex-shrink-0"}>
+// className={active ? activeFill : fill} />
+export const Ellipse = ({
+  fill = "fill-success",
+  activeFill = "fill-error",
+  active = false,
+  size = "sm",
+}) => {
+  switch (size) {
+    case "sm":
+      return (
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
+          <circle cx="6" cy="6" r="5" stroke="#151518" stroke-width="2" className={active ? activeFill : fill} />
+        </svg>
+
+      );
+  }
+};
