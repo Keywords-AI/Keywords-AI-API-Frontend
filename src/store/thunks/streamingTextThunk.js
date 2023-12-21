@@ -40,11 +40,12 @@ export const sendStreamingTextThunk = async ({
   };
   dispatch(sendStreamingTextRequest());
   const messages = [
-    { role: "system", content: prompt || "" },
+    { role: "system", content: prompt || "You are a helpful assistant." },
     ...params.messages.map((item) =>
       item.role !== "user" ? { ...item, role: "assistant" } : item
     ),
   ];
+  console.log("messages", messages)
   const body = JSON.stringify({
     stream: params.stream,
     messages: messages,

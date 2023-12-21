@@ -149,7 +149,7 @@ const NotConnectSidePannel = ({
         stream: true,
         model: currentModel,
       },
-      host: "https://platform.keywordsai.co/",
+      host: "http://localhost:8000/",
       path: "api/playground/ask/",
       prompt: systemPrompt,
       callback: () => {
@@ -192,7 +192,7 @@ const NotConnectSidePannel = ({
           <Button
             variant="small"
             text="Regenerate"
-            icon={Regenerate}g
+            icon={Regenerate}
             onClick={handleRegenerate}
           />
         )}
