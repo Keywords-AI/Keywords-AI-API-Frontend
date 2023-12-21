@@ -37,7 +37,7 @@ export default {
       xl: "24px",
     },
     colors: {
-      primary: "#6188ED",
+      primary: "#6483F0",
       complementary: "#123456",
       success: "#73CB98",
       error: "#F55656",
