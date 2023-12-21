@@ -30,6 +30,7 @@
     "recharts": "^2.10.3",
     "redux": "^5.0.0",
     "redux-thunk": "^3.1.0",
+    "remark-gfm": "^4.0.0",
     "vite-plugin-svgr": "^4.2.0",
     "yarn": "^1.22.21"
   },

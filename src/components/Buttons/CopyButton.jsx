@@ -20,7 +20,7 @@ const [hover, setHover] = React.useState(false);
                         }, 2000)
                     })
             }}
-            iconProps={{fill: copied? "fill-success": (hover? "fill-gray-white":"fill-gray-3")}}
+            iconProps={{fill: copied? "fill-success": (hover? "fill-gray-white":"fill-gray-4")}}
             icon={copied ? Check : Copy}
         />
     )

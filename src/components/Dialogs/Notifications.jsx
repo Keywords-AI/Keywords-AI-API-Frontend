@@ -1,19 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { NotificationCard } from 'src/components/Cards'
-const defaultNotifications = [
-    // {
-    //     title: "Success",
-    //     message: "Your organization has been successfully updated.",
-    //     type: "success"
-    // },
-    // {
-    //     title: "Success",
-    //     message: "Your organization has been successfully updated.",
-    //     type: "success"
-    // },
-]
-export const Notifications = ({ notifications=defaultNotifications }) => {
+import { dispatchNotification } from 'src/store/actions/notificationAction'
+
+const mapStateToProps = (state) => ({
+    notifications: state.notification.notifications
+})
+
+const mapDispatchToProps = {
+    dispatchNotification
+}
+
+
+export const Notifications = ({ notifications, dispatchNotification }) => {
 
     return (
         <div className="flex-col items-start fixed top-xxxl right-xxxl gap-sm">
@@ -29,8 +28,5 @@ export const Notifications = ({ notifications=defaultNotifications }) => {
     )
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications)

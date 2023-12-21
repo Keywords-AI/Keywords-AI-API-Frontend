@@ -4,7 +4,7 @@ import { Overview } from './Overview';
 import { ErrorHandling } from './ErrorHandling';
 import { ApiKeys } from './ApiKeys';
 import { QuickStart } from './QuickStart';
-import { RateLimit } from './RateLimit';
+import { Limits } from './Limits';
 import { Request } from './Request';
 import { Response } from './Response';
 import { Integrations } from './Integrations';
@@ -24,20 +24,16 @@ const pages = [
         page: <Overview />,
     },
     {
-        title: "Error Handling",
-        page: <ErrorHandling />,
-    },
-    {
-        title: "API Keys",
-        page: <ApiKeys />,
-    },
-    {
         title: "Quick Start",
         page: <QuickStart />,
     },
     {
-        title: "Rate Limit",
-        page: <RateLimit />,
+        title: "Supported Models",
+        page: <SupportedModels />,
+    },
+    {
+        title: "API Keys",
+        page: <ApiKeys />,
     },
     {
         title: "Request",
@@ -52,8 +48,12 @@ const pages = [
         page: <Integrations />,
     },
     {
-        title: "Supported Models",
-        page: <SupportedModels />,
+        title: "Limits",
+        page: <Limits />,
+    },
+    {
+        title: "Error Handling",
+        page: <ErrorHandling />,
     },
 ];
 
