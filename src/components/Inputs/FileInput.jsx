@@ -66,7 +66,7 @@ const FileInput = React.forwardRef(
           onChange={handleFileChange}
         />
         <div className="flex-col justify-start items-start self-stretch gap-xxs">
-          {title && <div className="text-sm-md text-gray-4">{title}</div>}
+          {title && <div className="text-sm-regular text-gray-4">{title}</div>}
           {file ? (
             <FileCard
               fileName={file.name}

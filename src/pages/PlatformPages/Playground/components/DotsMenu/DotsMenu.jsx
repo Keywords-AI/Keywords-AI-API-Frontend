@@ -4,6 +4,7 @@ import React from "react";
 
 import { Modal } from "src/components/Dialogs";
 import { DotsButton } from "src/components/Buttons";
+import { useNavigate } from "react-router-dom";
 
 const ViewCode = React.forwardRef((props, ref) => {
   return (
@@ -28,12 +29,13 @@ const ViewCode = React.forwardRef((props, ref) => {
 });
 export function DotsMenu({}) {
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   return (
     <DropDownMenu
       width={"w-full"}
       open={open}
       setOpen={setOpen}
-      trigger={<DotsButton onClick={()=>setOpen(true)}/>}
+      trigger={<DotsButton onClick={() => setOpen(true)} />}
       items={
         <>
           <DropdownMenuItem asChild>
@@ -47,6 +49,9 @@ export function DotsMenu({}) {
               variant="panel"
               text="Clear session"
               textColor="text-error"
+              onClick={() => {
+                navigate(0);
+              }}
             />
           </DropdownMenuItem>
         </>

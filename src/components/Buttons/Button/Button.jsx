@@ -2,7 +2,6 @@ import cn from "src/utilities/classMerge";
 import "./Button.css";
 import { forwardRef } from "react";
 import React from "react";
-import { Right } from "src/components/Icons";
 import useForwardRef from "src/hooks/useForwardRef";
 
 /**
