@@ -35,7 +35,7 @@ export const TextInput = React.forwardRef(({
   onChange, // Add onChange prop
   placeholder = "This is an input",
   disabled = false,
-  width = "w-[400px]",
+  width = "w-full",
   onKeyDown = () => { },
   action,
 }, forwardedRef) => {

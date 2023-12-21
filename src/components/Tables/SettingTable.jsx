@@ -33,7 +33,7 @@ export default function SettingTable({
     >
       <div
         className={cn(
-          "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2 rounded-t-md",
+          "text-sm-md text-gray-4 self-stretch grid py-xs px-sm bg-gray-2 rounded-t-md shadow-border-tlr shadow-gray-3",
           headerLayout || gridTemplateColumns
         )}
       >

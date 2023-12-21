@@ -107,12 +107,25 @@ const IntegrationCardNotConnected = ({
   setOpen,
   createOrUpdateIntegration,
   dispatchNotification,
+  setActivatedModels,
 }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const activatedModelsWatch = watch("activated_models");
   const [hasKey, setHasKey] = useState(apiKey ? true : false);
   const [apiKeyString, setApiKeyString] = useState(apiKey || "");
+  const validateCheckbox = (value)=> {
+    if (typeof value === "string") {
+      // To account for the case where only one model is selected
+      return [value];
+    } else if (typeof value === "boolean") {
+      // To account for the case where no model is selected
+      return [];
+    } 
+    return value || [];
+  }
   const onSubmit = (data) => {
     let toSubmit = { vendor: vendorId, user: user.id, ...data };
+    toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     dispatchNotification({
       title: "Integration updated",
       message: `Your ${companyName} integration has been updated.`,
@@ -120,6 +133,10 @@ const IntegrationCardNotConnected = ({
     createOrUpdateIntegration(toSubmit);
     setOpen(false);
   };
+  useEffect(()=>{
+    const newModelList = validateCheckbox(activatedModelsWatch);
+    setActivatedModels(newModelList);
+  }, [activatedModelsWatch])
   const onChange = (e) => {
     setApiKeyString(e.target.value);
   };
@@ -189,7 +206,7 @@ export const TitleCard = ({ companyLogo, companyName, modelCount }) => {
 
 export const IntegrationModal = ({ vendor }) => {
   const [open, setOpen] = React.useState(false);
-  const activatedModels = vendor.integration?.activated_models || [];
+  const [activatedModels, setActivatedModels] = React.useState(vendor.integration?.activated_models || []);
   const availableModels = vendor.available_models || [];
   const propsObj = {
     vendorId: vendor.id,
@@ -200,6 +217,7 @@ export const IntegrationModal = ({ vendor }) => {
     availableModels,
     integration: vendor.integration,
     apiKey: vendor.integration?.api_key_display || "",
+    setActivatedModels,
   };
   return (
     <Modal
@@ -211,6 +229,7 @@ export const IntegrationModal = ({ vendor }) => {
       trigger={<VendorCard
         setOpen={setOpen}
         {...propsObj}
+        active={activatedModels.length > 0 ? true : false}
       />}
     >
       <IntegrationCard

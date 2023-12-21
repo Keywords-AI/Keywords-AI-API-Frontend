@@ -43,7 +43,7 @@ export function timeSkip(currentTime, deltaTime) {
 export const processKey = (key, actions = () => {}) => {
   return {
     ...key,
-    created: getDateStr(key.created_at),
+    created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
     actions: actions(key),
     mod_prefix: key.prefix.slice(0,3) + "..."

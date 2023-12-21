@@ -27,7 +27,7 @@ export default function NotificationCard({
     return (
         <div
             ref={cardRef}
-            className={cn("card-notification flex item-start py-sm px-md relative shadow-gray-3 rounded-md shadow-window w-[360px] transition-all duration-[600ms] ease-in-out",
+            className={cn("card-notification flex item-start py-sm px-md relative rounded-md shadow-window w-[360px] transition-all duration-[600ms] ease-in-out bg-gray-2",
             )
             }
         >

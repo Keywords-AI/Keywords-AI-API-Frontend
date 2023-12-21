@@ -17,6 +17,7 @@ export const setNewKeyName = (name) => {
 };
 
 export const setKeyList = (keyList, actions) => {
+  console.log("setKeyList", keyList);
   return {
     type: SET_KEY_LIST,
     keyList: processKeyList(keyList, actions),

@@ -598,7 +598,7 @@ export const Copy = ({
         <svg
           width="16"
           height="16"
-          viewBox="0 0 16 16"
+          viewBox="0 0 16 17"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={"flex-shrink-0"}
@@ -1347,6 +1347,24 @@ export const LinkedIn = ({
             fill="#F9FAFC"
           />
         </svg>
+      );
+  }
+};
+// className={"flex-shrink-0"}>
+// className={active ? activeFill : fill} />
+export const Ellipse = ({
+  fill = "fill-error",
+  activeFill = "fill-success",
+  active = false,
+  size = "sm",
+}) => {
+  switch (size) {
+    case "sm":
+      return (
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
+          <circle cx="6" cy="6" r="5" stroke="#151518" strokeWidth="2" className={active ? activeFill : fill} />
+        </svg>
+
       );
   }
 };
