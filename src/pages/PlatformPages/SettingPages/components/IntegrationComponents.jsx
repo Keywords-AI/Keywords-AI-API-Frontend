@@ -113,12 +113,19 @@ const IntegrationCardNotConnected = ({
   const activatedModelsWatch = watch("activated_models");
   const [hasKey, setHasKey] = useState(apiKey ? true : false);
   const [apiKeyString, setApiKeyString] = useState(apiKey || "");
+  const validateCheckbox = (value)=> {
+    if (typeof value === "string") {
+      // To account for the case where only one model is selected
+      return [value];
+    } else if (typeof value === "boolean") {
+      // To account for the case where no model is selected
+      return [];
+    } 
+    return value || [];
+  }
   const onSubmit = (data) => {
     let toSubmit = { vendor: vendorId, user: user.id, ...data };
-    if (typeof data.activated_models === "string") {
-      // To account for the case where only one model is selected
-      toSubmit.activated_models = [data.activated_models];
-    }
+    toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     dispatchNotification({
       title: "Integration updated",
       message: `Your ${companyName} integration has been updated.`,
@@ -127,8 +134,8 @@ const IntegrationCardNotConnected = ({
     setOpen(false);
   };
   useEffect(()=>{
-    if (!activatedModelsWatch) return;
-    setActivatedModels(activatedModelsWatch);
+    const newModelList = validateCheckbox(activatedModelsWatch);
+    setActivatedModels(newModelList);
   }, [activatedModelsWatch])
   const onChange = (e) => {
     setApiKeyString(e.target.value);
@@ -222,6 +229,7 @@ export const IntegrationModal = ({ vendor }) => {
       trigger={<VendorCard
         setOpen={setOpen}
         {...propsObj}
+        active={activatedModels.length > 0 ? true : false}
       />}
     >
       <IntegrationCard
