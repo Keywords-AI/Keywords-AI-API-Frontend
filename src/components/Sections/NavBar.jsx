@@ -44,6 +44,7 @@ export const NavBar = () => {
         variant="header"
         onClick={() => navigate(`/platform/${modifiedPageName}`)}
         active={apply}
+        // textClassName={"text-sm-regular text-gray-4"}
       />
     );
   };
@@ -77,7 +78,7 @@ export const NavBar = () => {
                 text="Beta feedback"
                 variant="header"
                 arrow={false}
-                textClassName={"text-sm-regular text-gray-4"}
+                // textClassName={"text-sm-regular text-gray-4"}
               />
             }
             title={"Contact us"}

@@ -55,7 +55,7 @@ export const Button = forwardRef(
       onClick,
       onMouseEnter = () => {},
       onMouseLeave = () => {},
-      textClassName = "text-sm-md",
+      textClassName,
       bgColor,
       hoverColor,
       clickedColor,
@@ -122,7 +122,7 @@ export const Button = forwardRef(
       case "r4-white":
         iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-white";
-        textClassName = textClassName || "text-sm-regular";
+        textClassName = textClassName || "text-sm-md";
         hoverColor = hoverColor || "bg-gray-4";
         clickedColor = clickedColor || "bg-gray-4";
         textColor = textColor || "text-gray-black";
@@ -137,15 +137,16 @@ export const Button = forwardRef(
       case "r4-gray-2":
         iconPosition = iconPosition || "right";
         bgColor = bgColor || "bg-gray-2";
-        hoverColor = hoverColor || "bg-gray-2";
+        hoverColor = hoverColor || "bg-gray-3";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-white";
         textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "shadow-border";
-        borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
+        borderHoverColor = borderHoverColor || "shadow-transparent";
         padding = padding || "py-xxs px-xs";
+        textClassName = textClassName || "text-sm-md";
 
         break;
       case "r4-primary":
@@ -159,6 +160,9 @@ export const Button = forwardRef(
         borderColor = borderColor || "shadow-transparent";
         borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
+        textClassName = textClassName || "text-sm-md";
+
+        break;
       case "r4-red":
         bgColor = bgColor || "bg-error";
         hoverColor = hoverColor || "bg-error";
@@ -170,6 +174,7 @@ export const Button = forwardRef(
         borderColor = borderColor || "shadow-transparent";
         borderHoverColor = borderHoverColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
+        textClassName = textClassName || "text-sm-md";
 
         break;
       case "r4-black":
@@ -188,6 +193,7 @@ export const Button = forwardRef(
         iconFill = iconFill || "fill-gray-4";
         iconHoverFill = iconHoverFill || "fill-gray-white";
         justification = justification || "justify-start";
+        
         break;
       case "small":
         bgColor = bgColor || "bg-gray-2";

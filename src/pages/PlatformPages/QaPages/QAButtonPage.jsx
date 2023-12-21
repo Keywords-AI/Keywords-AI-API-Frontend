@@ -5,6 +5,7 @@ import { Button, IconButton } from 'src/components/Buttons'
 import { Logo, Right, Rocket } from "src/components/Icons/iconsDS";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { Speed } from "../Playground/components/OptionSelector/icons";
+import { DotsButton } from "src/components/Buttons/DotsButton";
 
 
 export const QAButtonPage = () => {
@@ -22,6 +23,7 @@ export const QAButtonPage = () => {
                     <Button variant="r4-black" text="button-r4-black" icon={Speed} iconPosition="left"/>
                     <Button variant="small" text="button-small" icon={Rocket} />
                     <Button variant="icon" icon={Rocket} />
+                    <DotsButton />
                 </div>    
             </PageParagraph>
 

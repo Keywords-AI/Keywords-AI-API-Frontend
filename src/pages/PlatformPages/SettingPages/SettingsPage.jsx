@@ -61,7 +61,7 @@ export const SettingPage = ({ organization, setOrgName }) => {
                         value={organization?.unique_organization_id || ""}
                         // value={"locked-text"}
                         disabled={true}
-                        width="w-[400px]"
+
                     />
                     <Button
                         type="submit"
