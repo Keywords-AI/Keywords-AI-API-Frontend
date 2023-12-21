@@ -154,7 +154,7 @@ export function CodeViewer() {
     ],
   });
   return (
-    <div className="flex-col w-[800px] items-center rounded-md border border-solid border-gray-3 bg-gray-black">
+    <div className="flex-col w-[800px] items-center rounded-md shadow-border shadow-gray-3 bg-gray-black">
       <div className="flex items-center justify-between self-stretch px-xs py-xxs rounded-t-md">
         <DropDownMenu
           open={open}

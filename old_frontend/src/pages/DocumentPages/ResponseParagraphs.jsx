@@ -61,7 +61,7 @@ const signal = abortController.signal;
         break;
         }
         const message = decoder.decode(value);
-
+        // Splitting the returned text chunck with the delimiter
         for (const line of message.split("---")) {
         // Line is a JSON string
         callbackFunction(line);

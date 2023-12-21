@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
 import { abortStreamingTextRequest } from "src/store/actions";
+import cn from "src/utilities/classMerge";
 
 const mapStateToProps = (state) => {
   return {

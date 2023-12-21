@@ -77,6 +77,7 @@ export const NavBar = () => {
               <Button
                 text="Beta feedback"
                 variant="header"
+
               />
             }
             title={"Contact us"}

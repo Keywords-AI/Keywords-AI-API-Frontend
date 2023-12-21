@@ -7,6 +7,7 @@ import organizationReducer from "./deprecated/organizationReducer";
 import billingsReducer from "./settingPagesReducer/billingsReducer";
 import chatbotReducer from "./settingPagesReducer/chatbotReducer";
 import integrationReducer from "./settingPagesReducer/integrationReducer";
+import notificationReducer from "./notificationReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -19,6 +20,7 @@ const rootReducer = (state = {}, action) => {
     billings: billingsReducer(state.billings, action),
     chatbot: chatbotReducer(state.chatbot, action),
     integration: integrationReducer(state.integration, action),
+    notification: notificationReducer(state.notification, action),
   };
 };
 
