@@ -19,7 +19,7 @@ export const DropDownMenu = ({
       modal={true}
       open={open}
       onOpenChange={(open) => setOpen(open)}
-  >
+    >
       <DropdownMenuPrimitive.Trigger asChild>
         {trigger}
       </DropdownMenuPrimitive.Trigger>

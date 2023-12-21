@@ -77,8 +77,6 @@ export const NavBar = () => {
               <Button
                 text="Beta feedback"
                 variant="header"
-                arrow={false}
-                // textClassName={"text-sm-regular text-gray-4"}
               />
             }
             title={"Contact us"}

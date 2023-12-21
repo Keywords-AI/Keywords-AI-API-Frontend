@@ -73,7 +73,7 @@ export const Button = forwardRef(
       width = "",
       children,
       disabled = false,
-      // ...props
+      ...props
     },
     ref
   ) => {
@@ -357,6 +357,7 @@ export const Button = forwardRef(
         type={type || "submit"}
         aria-label={"button-" + variant}
         ref={ref}
+        {...props}
         onMouseEnter={() => {
           onMouseEnter();
           setHover(true);

@@ -176,7 +176,7 @@ export function OptionSelector({}) {
             side="left"
             sideOffset={0}
             align="start"
-            width="w"
+            width="w-full"
             trigger={
               <Button
                 variant="r4-black"
