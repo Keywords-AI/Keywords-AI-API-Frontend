@@ -9,6 +9,7 @@ import {
   APPEND_MESSAGE,
   REMOVE_LAST_MESSAGE,
   SET_LAST_MESSAGE,
+  SET_CURRENT_BRAND,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -55,6 +56,8 @@ const playgroundReducer = (state = initialState, action) => {
       return { ...state, prompt: action.payload };
     case SET_CURRENT_MODEL:
       return { ...state, currentModel: action.payload };
+    case SET_CURRENT_BRAND:
+      return { ...state, currentBrand: action.payload };
     case SET_MODEL_OPTIONS:
       return {
         ...state,

@@ -17,6 +17,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const messages = useSelector((state) => state.playground.messages);
   const systemPrompt = useSelector((state) => state.playground.prompt);
   const streaming = useSelector((state) => state.streamingText.isLoading);
+  const currentBrand = useSelector((state) => state.playground.currentBrand);
   const textAreaRef = React.useRef(null);
 
   const [textContent, setTextContent] = React.useState(content);
@@ -24,6 +25,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     role === "user" ? true : false
   );
   const currentModel = useSelector((state) => state.playground.currentModel);
+
   const isUser = role === "user";
   // Update when there is streaming
   React.useEffect(() => {
@@ -124,7 +126,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </>
         ) : (
           <>
-            {React.createElement(ModelIcon("openai"), { size: "md" })}
+            {React.createElement(ModelIcon(currentBrand), { size: "md" })}
             <p className="text-sm-md text-gray-white">{role}</p>
           </>
         )}

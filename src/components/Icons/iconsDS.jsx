@@ -1174,14 +1174,14 @@ export const Cohere = ({
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M5.536 9.344C5.90933 9.344 6.656 9.32533 7.70133 8.896C8.91467 8.392 11.304 7.496 13.04 6.56267C14.2533 5.90933 14.776 5.05067 14.776 3.89333C14.776 2.30667 13.488 1 11.8827 1H5.16267C2.86667 1 1 2.86667 1 5.16267C1 7.45867 2.75467 9.344 5.536 9.344Z"
             className={active ? activeFill : fill}
           />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M6.6748 12.2003C6.6748 11.0803 7.3468 10.0536 8.39214 9.62427L10.5015 8.74693C12.6481 7.8696 15.0001 9.4376 15.0001 11.7523C15.0001 13.5443 13.5441 15.0003 11.7521 15.0003H9.45614C7.92547 15.0003 6.6748 13.7496 6.6748 12.2003Z"
             className={active ? activeFill : fill}
           />

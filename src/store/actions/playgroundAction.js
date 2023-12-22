@@ -9,7 +9,7 @@ export const SET_CACHE_ANSWER = "SET_CACHE_ANSWERS";
 export const APPEND_MESSAGE = "APPEND_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
-
+export const SET_CURRENT_BRAND = "SET_CURRENT_BRAND";
 // Action Creator
 export const setMessages = (messages) => ({
   type: SET_MESSAGES,
@@ -39,6 +39,11 @@ export const setPrompt = (prompt) => ({ type: SET_PROMPT, payload: prompt });
 export const setCurrentModel = (currentModel) => ({
   type: SET_CURRENT_MODEL,
   payload: currentModel,
+});
+
+export const setCurrentBrand = (currentBrand) => ({
+  type: SET_CURRENT_BRAND,
+  payload: currentBrand,
 });
 
 export const setModelOptions = (modelOptions) => ({

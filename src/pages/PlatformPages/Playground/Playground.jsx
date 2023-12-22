@@ -192,7 +192,7 @@ const NotConnectSidePannel = ({
           <Button
             variant="small"
             text="Regenerate"
-            icon={Regenerate}g
+            icon={Regenerate}
             onClick={handleRegenerate}
           />
         )}
