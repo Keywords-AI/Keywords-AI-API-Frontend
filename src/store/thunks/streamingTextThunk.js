@@ -85,7 +85,7 @@ export const sendStreamingTextThunk = async ({
       if (value === undefined) {
         throw new Error("Backend Error");
       }
-      dataString += decoder.decode(value);
+      dataString = decoder.decode(value);
 
       const chunks = dataString.split("---");
       if (getState().streamingText.abort) {
