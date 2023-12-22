@@ -21,11 +21,11 @@ import {
   setCacheAnswer,
   appendMessage,
   removeLastMessage,
+  regeneratePlaygroundResponse,
+  stopResponding,
 } from "src/store/actions/playgroundAction";
 import { connect } from "react-redux";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
-import store from "src/store/store";
 import { abortStreamingTextRequest } from "src/store/actions/streamingTextAction";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 const mapStateToProps = (state) => {
@@ -48,6 +48,8 @@ const mapDispatchToProps = {
   appendMessage,
   removeLastMessage,
   abortStreamingTextRequest,
+  regeneratePlaygroundResponse,
+  stopResponding
 };
 
 const Prompt = ({ setPrompt }) => {
@@ -72,8 +74,6 @@ const NotConnectedMap = ({
   streamingText,
   currentModel,
   setFirstTime,
-
-  abortStreamingTextRequest,
 }) => {
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
@@ -95,7 +95,7 @@ const NotConnectedMap = ({
           Playground
         </div>
         <div className="flex items-start gap-xs">
-          <SelectInput width="w-[248px]" headLess />
+          {/* <SelectInput width="w-[248px]" headLess /> */}
           <DotsMenu />
         </div>
       </div>
@@ -129,57 +129,15 @@ const NotConnectedMap = ({
 const Main = connect(mapStateToProps, mapDispatchToProps)(NotConnectedMap);
 
 const NotConnectSidePannel = ({
-  appendMessage,
-  removeLastMessage,
-  systemPrompt,
-  currentModel,
   streaming,
-  messages,
   firstTime,
-  abortStreamingTextRequest,
+  regeneratePlaygroundResponse,
+  stopResponding,
 }) => {
   const handleRegenerate = (event) => {
     event.stopPropagation();
     if (streaming) return;
-    removeLastMessage();
-    removeLastMessage();
-
-    sendStreamingTextThunk({
-      params: {
-        messages: store.getState().playground.messages,
-        stream: true,
-        model: currentModel,
-      },
-
-      prompt: systemPrompt,
-      callback: () => {
-        // this is the callback function after the streaming text is done
-        const streamingText = store.getState().streamingText.streamingText;
-        const currentModel = store.getState().playground.currentModel;
-        const newMessage = {
-          role: currentModel,
-          content: streamingText,
-        };
-        appendMessage(newMessage);
-        const lastUserMessageIndex = messages.reduce(
-          (lastIndex, message, currentIndex) => {
-            if (message.role === "user") {
-              return currentIndex;
-            }
-            return lastIndex;
-          },
-          -1
-        );
-        const cache = {
-          answer: streamingText,
-          index: lastUserMessageIndex,
-        };
-        appendMessage({ role: "user", content: "" });
-        setCacheAnswer(currentModel, cache);
-      },
-      dispatch: store.dispatch,
-      getState: store.getState,
-    });
+    regeneratePlaygroundResponse();
   };
   return (
     <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-2">
@@ -202,7 +160,7 @@ const NotConnectSidePannel = ({
             variant="small"
             text="Stop generate"
             icon={Stop}
-            onClick={() => abortStreamingTextRequest()}
+            onClick={() => stopResponding()}
           />
         )}
       </div>

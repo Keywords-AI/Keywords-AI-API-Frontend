@@ -54,11 +54,11 @@ const Routes = ({ getUser, user }) => {
           element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
-        {
-          path: "doc",
-          element: <LeftNavigationLayout sectionName={"documentation"} />,
-          children: documentationChildren,
-        },
+        // {
+        //   path: "doc",
+        //   element: <LeftNavigationLayout sectionName={"documentation"} />,
+        //   children: documentationChildren,
+        // },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,

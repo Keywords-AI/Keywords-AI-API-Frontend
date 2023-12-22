@@ -50,7 +50,7 @@ export const NavBar = () => {
     );
   };
   const buttons = [
-    { text: "Documentation", pageName: "doc" },
+    // { text: "Documentation", pageName: "doc" },
     // { text: "Examples", pageName: "examples" },
     { text: "Playground", pageName: "playground" },
     { text: "Chatbot", pageName: "chatbot" },

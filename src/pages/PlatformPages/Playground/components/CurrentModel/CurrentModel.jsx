@@ -4,22 +4,29 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentModel,
-  setCacheAnswer,
-  setMessages,
   setLastMessage,
   removeLastMessage,
   appendMessage,
   setCurrentBrand,
+  regeneratePlaygroundResponse,
 } from "src/store/actions/playgroundAction";
-import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
-import store from "src/store/store";
-export const CurrentModel = () => {
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    messages: state.playground.messages,
+    streaming: state.playground.streaming,
+    cacheAnswers: state.playground.cacheAnswers,
+    currentModel: state.playground.currentModel,
+  };
+};
+const mapDispatchToProps = {};
+
+const findModel = (models, modelName) => {
+  return models.find((model) => model.value === modelName) || models[0];
+}
+const NotConnectedCurrentModel = ({ messages, streaming, cacheAnswers, currentModel }) => {
   const dispatch = useDispatch();
-  const messages = useSelector((state) => state.playground.messages);
-  const streaming = useSelector((state) => state.playground.streaming);
-  const currentModel = useSelector((state) => state.playground.currentModel);
-  const cacheAnswers = useSelector((state) => state.playground.cacheAnswers);
-  const systemPrompt = useSelector((state) => state.playground.prompt);
   const models = [
     {
       name: "OpenAI - GPT-3.5-turbo",
@@ -39,6 +46,11 @@ export const CurrentModel = () => {
     {
       name: "Claude 2.1",
       value: "claude-2.1",
+      brand: "anthropic",
+    },
+    {
+      name: "Claude 2",
+      value: "claude-2",
       brand: "anthropic",
     },
     {
@@ -92,7 +104,13 @@ export const CurrentModel = () => {
     dispatch(setCurrentModel(models[0].value));
     dispatch(setCurrentBrand(models[0].brand));
   }, []);
-  const [current, setCurrent] = React.useState(models[0]);
+  useEffect(() => {
+    if (currentModel) {
+      const model = findModel(models, currentModel);
+      setCurrent(model);
+    }
+  }, [currentModel]);
+  const [current, setCurrent] = React.useState(findModel(models, currentModel));
   const [open, setOpen] = React.useState(false);
   const firstTime = useSelector((state) => state.playground.firstTime);
   if (firstTime) {
@@ -144,56 +162,22 @@ export const CurrentModel = () => {
                       -1
                     );
                     if (lastUserMessageIndex > 0) lastUserMessageIndex -= 2;
-
-                    console.log("lastMessageIndex", lastUserMessageIndex);
-                    console.log("cacheAnswers", cacheAnswers[model.value]);
                     if (
-                      !cacheAnswers[model.value] ||
-                      cacheAnswers[model.value].index != lastUserMessageIndex
+                      !cacheAnswers[model.value]
+                      || cacheAnswers[model.value].index != lastUserMessageIndex
                     ) {
                       // TODO: if the model has not been cached or the cached index is not the last message index call api to get the answer
-
-                      store.dispatch(removeLastMessage());
-                      store.dispatch(removeLastMessage());
-                      sendStreamingTextThunk({
-                        params: {
-                          messages: store.getState().playground.messages,
-                          stream: true,
-                          model: model.value,
-                        },
-                        prompt: systemPrompt,
-                        callback: () => {
-                          const currentModel =
-                            store.getState().playground.currentModel;
-                          const streamingText =
-                            store.getState().streamingText.streamingText;
-                          const newMessage = {
-                            role: currentModel,
-                            content: streamingText,
-                          };
-                          store.dispatch(appendMessage(newMessage));
-                          store.dispatch(
-                            appendMessage({ role: "user", content: "" })
-                          );
-                          const cache = {
-                            answer: streamingText,
-                            index: lastUserMessageIndex,
-                          };
-                          store.dispatch(setCacheAnswer(currentModel, cache));
-                        },
-                        dispatch: store.dispatch,
-                        getState: store.getState,
-                      });
+                      dispatch(regeneratePlaygroundResponse());
                     } else {
                       // TODO: if the model has been cached and the cached index is the last message index, set the answer to the last message
-                      store.dispatch(removeLastMessage());
-                      store.dispatch(
+                      dispatch(removeLastMessage());
+                      dispatch(
                         setLastMessage({
                           role: model.value,
                           content: cacheAnswers[model.value].answer,
                         })
                       );
-                      store.dispatch(
+                      dispatch(
                         appendMessage({ role: "user", content: "" })
                       );
                     }
@@ -207,3 +191,8 @@ export const CurrentModel = () => {
     </div>
   );
 };
+
+export const CurrentModel = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NotConnectedCurrentModel);

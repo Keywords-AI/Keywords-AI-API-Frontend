@@ -45,14 +45,10 @@ export const sendStreamingTextThunk = async ({
       item.role !== "user" ? { ...item, role: "assistant" } : item
     ),
   ];
-  console.log("messages", messages)
   const body = JSON.stringify({
-    stream: params.stream,
-    messages: messages,
-    model: params.model,
-    // optimize: getState().playground.modelOptions.optimize,
-    // creativity: getState().playground.modelOptions.creativity,
-    // maxTokens: getState().playground.modelOptions.maxTokens,
+    ...params,
+    messages,
+    // @Ruifeng you don't need to pass the params here. They are specific to playground only
   });
   try {
     const response = await Promise.race([
@@ -95,40 +91,30 @@ export const sendStreamingTextThunk = async ({
       if (getState().streamingText.abort) {
         throw new Error("Aborted");
       }
-      if (chunks.length === 1) {
-        // Handle the first chunk separately
-        // if (chunks === "" || chunks[0] === "") throw new Error("Server Error");
-        const firstChunk = JSON.parse(chunks[0]);
-        if (firstChunk.evaluation) {
-          const outputs = firstChunk.evaluation;
-          console.log("outputs", outputs)
+      chunks.forEach((chunk, index) => {
+        if (!chunk || chunk === "") return;
+      
+        const parsedChunk = JSON.parse(chunk);
+        if (parsedChunk.evaluation) {
+          const { completion_tokens, cost, latency, scores } = parsedChunk.evaluation;
           dispatch(
             setOutputs({
-              tokens: outputs.completion_tokens,
-              cost: outputs.cost,
-              latency: outputs.latency,
-              score: outputs.scores,
+              tokens: completion_tokens,
+              cost,
+              latency,
+              score: scores,
             })
           );
-        } else if (firstChunk.choices[0]?.delta.content) {
-          const firstMessageChunk = firstChunk.choices[0]?.delta.content;
-          if (firstMessageChunk) {
-            dispatch(sendStreamingTextPartial(firstMessageChunk));
-          }
+        } else if (parsedChunk.choices?.[0]?.delta.content) {
+          const messageChunk = parsedChunk.choices[0].delta.content;
+          dispatch(sendStreamingTextPartial(messageChunk));
         }
-        dataString = ""; // Clear dataString as the first chunk has been processed
-      } else if (chunks.length > 1) {
-        dataString = chunks.pop(); // Store any incomplete chunk for the next iteration
-        for (const line of chunks) {
-          if (!line || line === "") continue;
-          const lineChunk = JSON.parse(line);
-          if (!lineChunk.choices[0]?.delta.content) continue;
-          const messageChunk = lineChunk.choices[0]?.delta.content;
-          if (messageChunk) {
-            dispatch(sendStreamingTextPartial(messageChunk));
-          }
+      
+        // Clear dataString after the last chunk has been processed
+        if (index === chunks.length - 1) {
+          dataString = "";
         }
-      }
+      });
     }
     reader.releaseLock();
     abortController.abort();

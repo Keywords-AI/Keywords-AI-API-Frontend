@@ -6,12 +6,11 @@ import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import React from "react";
 import {
   setMessages,
-  appendMessage,
-  setCacheAnswer,
+  streamPlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import cn from "src/utilities/classMerge";
-import store from "src/store/store";
 import Markdown from "react-markdown";
+
 export function PlaygroundMessage({ role, content, messageIndex }) {
   const dispatch = useDispatch();
   const messages = useSelector((state) => state.playground.messages);
@@ -57,41 +56,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
     event.stopPropagation();
     if (streaming) return;
     setIsFocused(false);
-    const messagesWithPrompt = [
-      { role: "system", content: systemPrompt },
-      ...messages,
-    ];
-    try {
-      await sendStreamingTextThunk({
-        params: {
-          messages: messagesWithPrompt,
-          stream: true,
-          model: currentModel,
-        },
-        prompt: systemPrompt,
-        host: "http://localhost:8000/",
-        callback: () => {
-          const currentModel = store.getState().playground.currentModel;
-          const streamingText = store.getState().streamingText.streamingText;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          store.dispatch(appendMessage(newMessage));
-          const cache = {
-            answer: streamingText,
-            index: messageIndex,
-          };
-          store.dispatch(setCacheAnswer(currentModel, cache));
-          store.dispatch(appendMessage({ role: "user", content: "" }));
-        },
-        dispatch: store.dispatch,
-        getState: store.getState,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    setIsFocused(false);
+    dispatch(streamPlaygroundResponse(messageIndex));
   };
 
   const handleKeyDown = (event) => {
@@ -104,10 +69,11 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   return (
     <div
       className={cn(
-        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3 hover:cursor-pointer",
+        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3",
         messageIndex === messages.length - 1 && !streaming
           ? "shadow-gray-4"
-          : ""
+          : "",
+          isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
       )}
       onClick={() => {
         setIsFocused(true);

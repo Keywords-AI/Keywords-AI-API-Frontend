@@ -9,10 +9,7 @@ import MetricCard from "src/components/Cards/MetricCard";
 export function ModelOutput({}) {
   const stateOutputs = useSelector((state) => state.playground.outputs);
   const currentModel = useSelector((state) => state.playground.currentModel);
-  useEffect(() => {
-    console.log("stateOutputs", stateOutputs);
-    console.log(stateOutputs.score[currentModel]);
-  }, [stateOutputs]);
+
   const outputs = [
     {
       name: "Score",
