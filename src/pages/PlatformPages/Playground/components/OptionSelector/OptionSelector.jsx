@@ -81,18 +81,18 @@ export function OptionSelector({}) {
             updateRedux("optimize", this.value);
           },
         },
-        {
-          name: "Custom",
-          value: "custom",
-          icon: Custom,
-          action: function () {
-            setCurrent((prev) => [
-              { name: this.name, value: this.value, icon: this.icon },
-              prev[1],
-            ]);
-            updateRedux("optimize", this.value);
-          },
-        },
+        // {
+        //   name: "Custom",
+        //   value: "custom",
+        //   icon: Custom,
+        //   action: function () {
+        //     setCurrent((prev) => [
+        //       { name: this.name, value: this.value, icon: this.icon },
+        //       prev[1],
+        //     ]);
+        //     updateRedux("optimize", this.value);
+        //   },
+        // },
       ],
     },
     {
@@ -129,18 +129,6 @@ export function OptionSelector({}) {
           name: "Low",
           value: "low",
           icon: Low,
-          action: function () {
-            setCurrent((prev) => [
-              prev[0],
-              { name: this.name, value: this.value, icon: this.icon },
-            ]);
-            updateRedux("creativity", this.value);
-          },
-        },
-        {
-          name: "Custom",
-          value: "custom",
-          icon: Custom,
           action: function () {
             setCurrent((prev) => [
               prev[0],

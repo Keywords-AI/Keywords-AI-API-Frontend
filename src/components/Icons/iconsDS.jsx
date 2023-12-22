@@ -404,8 +404,7 @@ export const EnterKey = ({
       return (
         <div
           className={
-            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border" +
-            (active ? "shadow-gray-4" : "shadow-gray-3")
+            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key border border-gray-3"
           }
         >
           <svg
