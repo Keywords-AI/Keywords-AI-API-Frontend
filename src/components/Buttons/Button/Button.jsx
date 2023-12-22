@@ -195,7 +195,7 @@ export const Button = forwardRef(
         borderClickedColor = borderClickedColor || "shadow-border shadow-gray-4";
         padding = padding || "py-xxs px-xs";
         iconFill = iconFill || "fill-gray-4";
-        iconHoverFill = iconHoverFill || "fill-gray-white";
+        iconHoverFill = iconHoverFill || "fill-gray-4";
         justification = justification || "justify-start";
         
         
