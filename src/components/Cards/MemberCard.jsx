@@ -35,7 +35,7 @@ export const MemberCard = ({ firstName, lastName }) => {
             choices={[
                 { name: "Member", value: "Member", textColor: "text-gray-4 focus:text-gray-white"},
                 { name: "Admin", value: "Admin", textColor: "text-gray-4 focus:text-gray-white" },
-                { name: "Remove", value: "Remove", textColor: "text-error" },
+                { name: "Remove", value: "Remove", textColor: "text-error", textHoverColor:"text-error" },
             ]}
             trigger={SelectionTrigger}
             defaultValue="Member"

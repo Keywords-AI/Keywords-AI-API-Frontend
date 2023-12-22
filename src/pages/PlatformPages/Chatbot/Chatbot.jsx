@@ -140,7 +140,7 @@ function Chatbot({
                         <HeaderLogo />
                         <span className="display-xs font-semibold">Keywords AI</span>
                       </div>
-                      <span className="text-sm-md text-gray-3">
+                      <span className="text-sm-md text-gray-3"> 
                         Connect to the best model for your prompts.
                       </span>
                     </div>

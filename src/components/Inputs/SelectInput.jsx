@@ -120,6 +120,8 @@ const MyComponent = React.forwardRef(({
                                         text={choice?.name}
                                         variant="panel"
                                         onClick={() => { handleChange(choice) }}
+                                        textColor={choice?.textColor}
+                                        textHoverColor={choice?.textHoverColor || ""}
                                     />
                                 </DropdownPrimitives.Item>
                             )
