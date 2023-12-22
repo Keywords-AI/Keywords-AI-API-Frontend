@@ -68,14 +68,14 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const [isHover, setIsHover] = React.useState(false);
   return (
     <div
-    onMouseEnter={() => setIsHover(true)}
-    onmMouseLeave={() => setIsHover(false)}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
       className={cn(
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3",
-        messageIndex === messages.length - 1 && !streaming && (isFocused) 
+        messageIndex === messages.length - 1 && !streaming && isFocused
           ? "shadow-gray-4"
-          : "shaoow-gray-3",
-          isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer",
+          : "shadow-gray-3",
+        isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
       )}
       onClick={() => {
         setIsFocused(true);
