@@ -15,7 +15,7 @@ export const VendorCard = React.forwardRef(({ companyName, modelCount, companyLo
       <div className="flex flex-row items-center gap-xs">
         <div className="flex-col relative">
           <IconButton
-          className="absolute -ztop-xxxs -right-xxxs"
+          className="absolute -top-xxxs -right-xxxs"
             icon={Ellipse}
             iconProps={{ active }}
           />

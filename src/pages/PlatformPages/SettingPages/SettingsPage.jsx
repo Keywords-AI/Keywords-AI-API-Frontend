@@ -81,7 +81,7 @@ export const SettingPage = ({ organization, setOrgName, dispatchNotification }) 
             >
                 <Button
                     text="Delete this organization"
-                    variant="r4-red"
+                    variant="r4-gray-2"
                 />
             </PageParagraph> */}
         </PageContent>

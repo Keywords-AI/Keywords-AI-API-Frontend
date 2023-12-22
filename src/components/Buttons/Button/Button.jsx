@@ -137,21 +137,21 @@ export const Button = forwardRef(
         borderHoverColor = borderHoverColor || "shadow-transparent"; //border-gray-4
 
         break;
-      case "r4-gray-2":
-        iconPosition = iconPosition || "right";
-        bgColor = bgColor || "bg-gray-2";
-        hoverColor = hoverColor || "bg-gray-3";
-        clickedColor = clickedColor || "bg-gray-2";
-        textColor = textColor || "text-gray-4";
-        textHoverColor = textHoverColor || "text-gray-white";
-        textClickedColor = textClickedColor || "text-gray-white";
-        borderRadius = borderRadius || "rounded-sm";
-        borderColor = borderColor || "shadow-border";
-        borderHoverColor = borderHoverColor || "shadow-transparent";
-        padding = padding || "py-xxs px-xs";
-        textClassName = textClassName || "text-sm-md";
+      // case "r4-gray-2":
+      //   iconPosition = iconPosition || "right";
+      //   bgColor = bgColor || "bg-gray-2";
+      //   hoverColor = hoverColor || "bg-gray-3";
+      //   clickedColor = clickedColor || "bg-gray-2";
+      //   textColor = textColor || "text-gray-4";
+      //   textHoverColor = textHoverColor || "text-gray-white";
+      //   textClickedColor = textClickedColor || "text-gray-white";
+      //   borderRadius = borderRadius || "rounded-sm";
+      //   borderColor = borderColor || "shadow-border";
+      //   borderHoverColor = borderHoverColor || "shadow-transparent";
+      //   padding = padding || "py-xxs px-xs";
+      //   textClassName = textClassName || "text-sm-md";
 
-        break;
+      //   break;
       case "r4-primary":
         bgColor = bgColor || "bg-primary";
         hoverColor = hoverColor || "bg-primary";
@@ -180,15 +180,15 @@ export const Button = forwardRef(
         textClassName = textClassName || "text-sm-md";
 
         break;
-      case "r4-black":
+      case "r4-gray-2":
         iconPosition = iconPosition || "right";
-        bgColor = bgColor || "bg-gray-black";
+        bgColor = bgColor || "bg-gray-2";
         hoverColor = hoverColor || "bg-gray-2";
         textClassName = textClassName || "text-sm-md";
         clickedColor = clickedColor || "bg-gray-2";
         textColor = textColor || "text-gray-4";
         textHoverColor = textHoverColor || "text-gray-4";
-        textClickedColor = textClickedColor || "text-gray-4";
+        textClickedColor = textClickedColor || "text-gray-white";
         borderRadius = borderRadius || "rounded-sm";
         borderColor = borderColor || "border-transparent";
         borderHoverColor = borderHoverColor || "shadow-border shadow-gray-3";

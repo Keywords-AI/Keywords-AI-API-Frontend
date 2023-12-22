@@ -105,7 +105,7 @@ export const CurrentModel = () => {
         width="300"
         trigger={
           <Button
-            variant="r4-black"
+            variant="r4-gray-2"
             text={current.name}
             icon={current.icon}
             iconSize="md"

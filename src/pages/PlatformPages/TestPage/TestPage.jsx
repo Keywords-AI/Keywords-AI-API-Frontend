@@ -13,7 +13,6 @@ const StreamingTextTest = () => {
     "r4-gray-2",
     "r4-primary",
     "r4-red",
-    "r4-black",
     "small",
     "r18-white",
     "r18-black",
