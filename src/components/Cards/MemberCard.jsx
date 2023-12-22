@@ -33,9 +33,9 @@ export const MemberCard = ({ firstName, lastName }) => {
             placeholder="placeholder"
             headLess
             choices={[
-                { name: "Member", value: "Member" },
-                { name: "Admin", value: "Admin" },
-                { name: "Owner", value: "Owner" },
+                { name: "Member", value: "Member", textColor: "text-gray-4 focus:text-gray-white"},
+                { name: "Admin", value: "Admin", textColor: "text-gray-4 focus:text-gray-white" },
+                { name: "Remove", value: "Remove", textColor: "text-error" },
             ]}
             trigger={SelectionTrigger}
             defaultValue="Member"
