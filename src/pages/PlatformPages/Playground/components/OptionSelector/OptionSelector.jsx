@@ -155,7 +155,7 @@ export function OptionSelector({}) {
 
   const handleChange = (value) => {
     setToken(value);
-    dispatch(setModelOptions({ maxTokens: value }));
+    dispatch(setModelOptions({ max_tokens: value }));
   };
   return (
     <div className="flex items-start gap-lg">
