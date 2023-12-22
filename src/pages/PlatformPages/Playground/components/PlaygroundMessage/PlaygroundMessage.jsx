@@ -124,7 +124,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </>
         ) : (
           <>
-            {React.createElement(ModelIcon("openai"), { size: "md" })}
+            {React.createElement(ModelIcon(role), { size: "md" })}
             <p className="text-sm-md text-gray-white">{role}</p>
           </>
         )}
