@@ -149,7 +149,7 @@ const NotConnectSidePannel = ({
         stream: true,
         model: currentModel,
       },
-      host: "https://platform.keywordsai.co/",
+      host: "http://localhost:8000/",
       path: "api/playground/ask/",
       prompt: systemPrompt,
       callback: () => {
@@ -182,7 +182,7 @@ const NotConnectSidePannel = ({
     });
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-border-l shadow-gray-3 overflow-y-auto bg-gray-2">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-2">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />
