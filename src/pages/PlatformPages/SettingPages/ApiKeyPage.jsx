@@ -8,6 +8,7 @@ import { CreateForm, EditForm, DeleteForm, APIKeyActions } from './components'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Modal } from 'src/components/Dialogs'
 import { setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey } from 'src/store/actions'
+import { processKeyList } from 'src/utilities/objectProcessing'
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -21,10 +22,8 @@ const mapDispatchToProps = {
   clearPrevApiKey
 }
 
-export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, clearPrevApiKey }) => {
-  const { data: prevKey, error: prevError, loading: prevLoading } = useFetch({
-    path: `api/get-keys` });
-  const [openCreate, setOpenCreate] = React.useState(false)
+export const ApiKeyPage = ({ apiKey, setEditingKey, setDeletingKey, clearPrevApiKey }) => {
+    const [openCreate, setOpenCreate] = React.useState(false)
   const editingTrigger = (key) => {
     return (
       <>
@@ -34,7 +33,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
       </>
     )
   }
-  useEffect(() => { setKeyList(prevKey, editingTrigger) }, [prevKey])
+  const [prevKey, setPrevKey] = React.useState(processKeyList(apiKey.keyList, editingTrigger) || [])
+  useEffect(()=>{
+    setPrevKey(processKeyList(apiKey.keyList, editingTrigger) || [])
+  }, [apiKey.keyList])
   return (
     <PageContent
       title="API Keys"
@@ -44,10 +46,10 @@ export const ApiKeyPage = ({ apiKey, setKeyList, setEditingKey, setDeletingKey, 
         heading="Manage proxy keys"
         subheading="Your secret Keywords AI proxy keys are listed below. Please note that we do not display your API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
-        {apiKey?.keyList && apiKey?.keyList.length > 0 &&
+        {prevKey.length > 0 &&
           < SettingTable
             variant={"api-keys"}
-            rows={apiKey.keyList}
+            rows={prevKey}
             columnNames={["name", "mod_prefix", "created", "last_used", "actions"]}
           />
         }

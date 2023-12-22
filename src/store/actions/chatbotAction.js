@@ -297,7 +297,6 @@ export const sendMessage = (msgText) => {
           stream: true,
           model: "gpt-3.5-turbo",
         },
-        host: "http://localhost:8000/",
         prompt: systemPrompt,
         callback: () => {
           console.log("callback");

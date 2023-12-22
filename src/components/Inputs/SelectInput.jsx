@@ -61,9 +61,15 @@ const MyComponent = React.forwardRef(({
         handleSelected(choice.value);
     };
     // Initialize after the switch
-    const [selected, setSelected] = React.useState(defaultValue);
+    const [selected, setSelected] = React.useState(choices.find(choice => choice.name === defaultValue)?.name || "");
     const [optionsVisible, setOptionsVisible] = React.useState(open);
-
+    const [selectedValue, setSelectedValue] = React.useState(choices.find(choice => choice.name === defaultValue)?.value || "");
+    useEffect(() => {
+        if (selected) {
+            setSelectedValue(choices.find(choice => choice.name === selected)?.value || choices[0].value);
+        }
+    }
+        , [selected])
     return (
         <div className={cn("flex-col justify-center items-start gap-xxs relative")}>
             {!headLess && <label htmlFor={name} className="text-sm-regular text-gray-4">
@@ -73,7 +79,7 @@ const MyComponent = React.forwardRef(({
             <input
                 type="text" // The actual ref
                 className="hidden"
-                value={selected}
+                value={selectedValue}
                 ref={ref}
                 readOnly
                 hidden

@@ -13,8 +13,6 @@ import {
   dispatchNotification
 } from "src/store/actions";
 
-const host = "http://localhost:8000/";
-
 const mapStateToProps = (state) => ({
   user: state.user,
   apiKey: state.apiKey,
@@ -29,11 +27,17 @@ const mapDispatchToProps = {
   dispatchNotification
 };
 const expiryOptions = [
-  { name: "Never", value: "Never" },
+  // 'Never' represented by a far future date in the specified format
+  { name: "Never", value: new Date('3000-12-31T23:59:59Z').toISOString().replace('T', ' ').replace('.000Z', '') },
 
-  { name: "Two weeks", value: "Two weeks" },
-  { name: "One month", value: "One month" },
-  { name: "Three months", value: "Three months" },
+  // Two weeks from now
+  { name: "Two weeks", value: new Date(Date.now() + 2 * 7 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
+
+  // One month (approx 30 days) from now
+  { name: "One month", value: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
+
+  // Three months (approx 90 days) from now
+  { name: "Three months", value: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
 ];
 
 const CreateFormNotConnected = React.forwardRef(({
@@ -57,6 +61,11 @@ const CreateFormNotConnected = React.forwardRef(({
     });
     postData(data);
   };
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
+  }, [error])
   useEffect(() => {
     if (data && !error) {
       console.log(data);
@@ -86,7 +95,7 @@ const CreateFormNotConnected = React.forwardRef(({
           <SelectInput
             title={"Expiry"}
             optionsWidth={"w-[160px]"}
-            {...register("expiration_date")}
+            {...register("expiry_date")}
             // onKeyDown={handleEnter}
             placeholder={"Key-1"}
             defaultValue={"Never"}
@@ -202,7 +211,7 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
         <SelectInput
           title={"Expiry"}
           optionsWidth={"w-[160px]"}
-          {...register("expiration_date")}
+          {...register("expiry_date")}
           // onKeyDown={handleEnter}
           placeholder={"Key-1"}
           defaultValue={"Never"}

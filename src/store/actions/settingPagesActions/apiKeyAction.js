@@ -1,4 +1,4 @@
-import apiConfig from "src/services/apiConfig";
+import { keywordsFetch } from "src/services/apiConfig";
 import { processKeyList, processKey } from "src/utilities/objectProcessing";
 export const SET_NEW_KEY_NAME = "SET_NEW_KEY_NAME";
 export const SET_KEY_LIST = "SET_KEY_LIST";
@@ -16,11 +16,23 @@ export const setNewKeyName = (name) => {
   };
 };
 
-export const setKeyList = (keyList, actions) => {
-  console.log("setKeyList", keyList);
+export const setKeyList = (keyList) => {
   return {
     type: SET_KEY_LIST,
-    keyList: processKeyList(keyList, actions),
+    keyList: keyList,
+  };
+};
+
+export const getKeys = () => {
+  return (dispatch) => {
+    keywordsFetch({
+      path: "api/get-keys",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        dispatch(setKeyList(data));
+      });
   };
 };
 
@@ -35,7 +47,7 @@ export const clearPrevApiKey = () => {
   return {
     type: ClEAR_PREV_API_KEY,
   };
-}
+};
 
 export const setDeletingKey = (key) => {
   return {

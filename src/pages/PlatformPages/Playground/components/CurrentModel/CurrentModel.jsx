@@ -77,7 +77,7 @@ const NotConnectedCurrentModel = ({ messages, streaming, cacheAnswers, currentMo
     {
       name: "Chat Bison",
       value: "chat-bison",
-      brand: "bison",
+      brand: "google",
     },
     {
       name: "J2 Light",

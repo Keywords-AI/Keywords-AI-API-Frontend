@@ -30,7 +30,7 @@ const initialState = {
   outputs: {
     score: 8.8,
     cost: 0.00123,
-    latency: 9.2,
+    latency: 0.8,
     tokens: 4386,
   },
 };

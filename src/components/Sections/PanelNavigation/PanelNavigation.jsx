@@ -4,14 +4,16 @@ import { SectionMenu } from 'src/components/Sections'
 import { sections as settingSections } from 'src/pages/PlatformPages/SettingPages/SettingPages';
 import { sections as documentationSections } from 'src/pages/PlatformPages/DocumentationPages/DocumentationPages';
 import { sections as qaWallSections } from 'src/pages/PlatformPages/QaPages/QaPages';
-import { getBillings } from 'src/store/actions';
+import { getBillings, getKeys } from 'src/store/actions';
 
-export const PanelNavigation = ({ getBillings, sectionName, sections = [], basePath = "/platform/setting" }) => {
+
+export const PanelNavigation = ({ getBillings, getKeys, sectionName, sections = [], basePath = "/platform/setting" }) => {
   switch (sectionName) {
     case 'setting':
       basePath = "/platform/setting";
       sections = settingSections;
       getBillings(); //Calling this here to cache the result for later
+      getKeys();
       break;
     case 'documentation':
       basePath = "/platform/doc";
@@ -35,6 +37,7 @@ export const PanelNavigation = ({ getBillings, sectionName, sections = [], baseP
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = { getBillings }
+const mapDispatchToProps = { getBillings,
+  getKeys }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelNavigation)
