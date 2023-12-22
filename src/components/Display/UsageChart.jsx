@@ -27,9 +27,11 @@ export const UsageChart = ({
     }, [])
     const [hover, isHover] = useState(false)
     return (
-        <div className={"flex-col flex-start gap-sm self-stretch p-xs shadow-border shadow-gray-3 rounded-md bg-gray-2"}>
+        <div className={"flex-col flex-start gap-sm self-stretch p-xs shadow-border shadow-gray-3 rounded-md bg-gray-2"}
+        
             onMouseEnter={() => isHover(true)}
             onMouseLeave={() => isHover(false)}
+        >
             <div className="flex-row self-stretch justify-between">
                 <div className="flex-row gap-xxs items-center">
                     {!usage.isFirst && <Button
