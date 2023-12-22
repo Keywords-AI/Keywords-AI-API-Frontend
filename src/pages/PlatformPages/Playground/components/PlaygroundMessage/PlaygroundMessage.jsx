@@ -65,15 +65,17 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       handleSend(event);
     }
   };
-
+  const [isHover, setIsHover] = React.useState(false);
   return (
     <div
+    onMouseEnter={() => setIsHover(true)}
+    onmMouseLeave={() => setIsHover(false)}
       className={cn(
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3",
-        messageIndex === messages.length - 1 && !streaming
+        messageIndex === messages.length - 1 && !streaming && (isFocused) 
           ? "shadow-gray-4"
-          : "",
-          isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
+          : "shaoow-gray-3",
+          isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer",
       )}
       onClick={() => {
         setIsFocused(true);
@@ -139,7 +141,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         </div>
       )}
       {isFocused && isUser && messageIndex === messages.length - 1 && (
-        <div className="flex justify-end gap-[10px] self-stretch ">
+        <div className="flex justify-end gap-[10px] self-stretch">
           <Button
             variant="small"
             text="Send message"

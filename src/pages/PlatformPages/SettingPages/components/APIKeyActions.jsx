@@ -12,7 +12,7 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
     const actionButtons = [
         {
             action: () => { setEditingKey(modifyingKey)},
-            text: "Edit",
+            text: "Edit key",
             minWidth: "w-full",
         },
         {
