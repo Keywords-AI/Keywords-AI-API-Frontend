@@ -10,7 +10,7 @@ export const DropDownMenu = ({
   side = "bottom",
   sideOffset = 10,
   align = "center",
-  alignOffset = 0,
+  alignOffset = -4,
   width,
   className,
 }) => {
@@ -28,7 +28,7 @@ export const DropDownMenu = ({
           className={
             cn("flex-col items-start rounded-md p-xxxs bg-gray-2 shadow-border shadow-gray-3 ",
               width || "w-[240px]",
-              className
+              className 
             )
           }
           sideOffset={sideOffset}

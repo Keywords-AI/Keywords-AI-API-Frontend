@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "src/components/Buttons";
 import { TextInput } from "src/components/Inputs";
-import { Delete } from "src/components/Icons";
+import { Delete, Ellipse } from "src/components/Icons";
 import useForwardRef from "src/hooks/useForwardRef";
 import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -189,11 +189,18 @@ const IntegrationCardNotConnected = ({
 
 export const IntegrationCard = connect(mapStateToProps, mapDispatchToProps)(IntegrationCardNotConnected);
 
-export const TitleCard = ({ companyLogo, companyName, modelCount }) => {
+export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
   return (
     <div className="flex flex-row items-center gap-xs self-stretch">
       <div className="flex p-xxs items-center w-[40px] h-[40px] rounded-sm bg-gray-white">
-        {companyLogo}
+        <div className="flex-col relative">
+          <IconButton 
+          className="absolute -top-3.5 -right-3.5"
+          icon={Ellipse}
+          iconProps={{ active }}
+          />
+          {companyLogo}
+        </div>
       </div>
       <div className="flex flex-col items-start">
         <span className="text-left text-md-medium ">{companyName}</span>
@@ -226,6 +233,7 @@ export const IntegrationModal = ({ vendor }) => {
       setOpen={setOpen}
       title={<TitleCard
         {...propsObj}
+        active={activatedModels.length > 0 ? true : false}
       />}
       trigger={<VendorCard
         setOpen={setOpen}

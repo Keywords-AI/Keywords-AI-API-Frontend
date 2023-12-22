@@ -25,7 +25,7 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
     return (
         <DropDownMenu
             side="right"
-            sideOffset={0}
+            sideOffset={8}
             align="start"
             trigger={
                 // <Button
@@ -52,6 +52,7 @@ export const APIKeyActions = ({ setEditingKey, setDeletingKey, modifyingKey }) =
                                 }}
                                 iconPosition="left"
                             />
+                            
                         </DropdownMenuPrimitive.Item>
                     ))}
                 </React.Fragment>

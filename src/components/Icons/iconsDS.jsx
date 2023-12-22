@@ -51,7 +51,7 @@ export const Right = ({
         >
           <path
             d="M2.29492 10.58L6.87492 6L2.29492 1.41L3.70492 0L9.70492 6L3.70492 12L2.29492 10.58Z"
-            fill="#B1B3BC"
+            className={active ? activeFill : fill}
           />
         </svg>
       );
@@ -151,7 +151,7 @@ export const Left = ({
         >
           <path
             d="M9.70508 1.42L5.12508 6L9.70508 10.59L8.29508 12L2.29508 6L8.29508 0L9.70508 1.42Z"
-            fill="#B1B3BC"
+            className={active ? activeFill : fill}
           />
         </svg>
       );
