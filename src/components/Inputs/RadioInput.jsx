@@ -14,7 +14,7 @@ const RadioIcon = ({ selected, setSelected, handleSelected }) => {
 const RadioInput = React.forwardRef(({ register = () => { }, name, validationSchema, handleSelected = () => { }, text }, ref) => {
     const [checked, setChecked] = React.useState();
     return (
-        <div className="flex-row gap-xxs items-center">
+        <div className="flex-row gap-xxs items-center py-xxxs">
             <input {...register(name, validationSchema)}
                 ref={ref}
                 type="radio" checked={checked} hidden className="hidden" />

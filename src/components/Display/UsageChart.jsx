@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { KeywordsBarChart } from 'src/components/Display'
 import { Button } from 'src/components/Buttons'
@@ -25,14 +25,18 @@ export const UsageChart = ({
     useEffect(() => {
         getUsageData()
     }, [])
+    const [hover, isHover] = useState(false)
     return (
         <div className={"flex-col flex-start gap-sm self-stretch p-xs shadow-border shadow-gray-3 rounded-md bg-gray-2"}>
+            onMouseEnter={() => isHover(true)}
+            onMouseLeave={() => isHover(false)}
             <div className="flex-row self-stretch justify-between">
                 <div className="flex-row gap-xxs items-center">
                     {!usage.isFirst && <Button
                         variant="icon"
                         icon={Left}
                         iconSize="sm"
+                        active={hover}
                         onClick={() => { getLastMonthUsageData() }}
                     />}
                     {digitToMonth(usage?.date?.getMonth(), usage?.date?.getFullYear())}
@@ -40,6 +44,7 @@ export const UsageChart = ({
                         variant="icon"
                         icon={Right}
                         iconSize="sm"
+                        active={hover}
                         onClick={() => { getNextMonthUsageData() }}
                     />}
                 </div>

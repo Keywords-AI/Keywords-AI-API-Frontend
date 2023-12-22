@@ -21,7 +21,7 @@ export const AddMemberForm = ({ setOpen = () => { } }) => {
                     <Button variant="r4-gray-2" text={"Cancel"}
                         type="button"
                         onClick={handleClose} />
-                    <Button variant="r4-primary" text="Rename" />
+                    <Button variant="r4-primary" text="Invite" />
                 </div>
             </div>
         </form>
