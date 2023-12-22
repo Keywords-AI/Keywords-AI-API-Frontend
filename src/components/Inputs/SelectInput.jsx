@@ -49,8 +49,9 @@ const MyComponent = React.forwardRef(({
     padding = "py-xxs px-xs",
     border = "shadow-border shadow-gray-3 focus:shadow-gray-3",
     borderRadius = "rounded-sm",
-    text = "text-sm text-gray-4 focus:text-gray-white",
+    text = "text-sm",
     icon = SelectionIcon,
+    textColor,
     trigger,
     triggerProps = {}
 }, ref) => {
@@ -93,7 +94,7 @@ const MyComponent = React.forwardRef(({
                             <div
                                 // The displayed selection tab
                                 className={cn("flex-row justify-between items-center self-stretch flex-1 cursor-pointer outline-none",
-                                    padding, border, borderRadius, text
+                                    padding, border, borderRadius, text, textColor,
                                 )} aria-label="select">
                                 {selected || placeholder}
                             </div>

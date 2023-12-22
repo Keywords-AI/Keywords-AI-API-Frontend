@@ -12,7 +12,7 @@ export default {
       xxs: "8px",
       xs: "12px",
       sm: "16px",
-      md: "20px",
+      md: "24px",
       lg: "32px",
       xl: "60px",
       xxl: "80px",

@@ -23,7 +23,7 @@ export const PanelNavigation = ({ getBillings, sectionName, sections = [], baseP
       break;
   }
   return (
-    <div className="flex-col self-stretch w-[280px] py-lg pl-lg pr-md items-start gap-lg flex-shrink-0 bg-gray-2 shadow-border-r shadow-gray-3">
+    <div className="flex-col self-stretch w-[280px] py-lg pl-lg pr-sm items-start gap-lg flex-shrink-0 bg-gray-2 shadow-border-r shadow-gray-3">
       {sections && sections.length > 0 && sections.map((section, index) => (<SectionMenu
         basePath={basePath}
         key={index}
