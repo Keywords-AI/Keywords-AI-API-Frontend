@@ -121,15 +121,24 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             <>
               <Markdown
                 children={textContent}
-                className="text-sm-regular text-gray-white "
+                className="text-sm-regular text-gray-white  "
                 components={{
                   p: ({ node, ...props }) => (
-                    <p {...props} className="whitespace-pre-line " />
+                    <p
+                      {...props}
+                      className="whitespace-pre-line inline-flex my-2"
+                    />
                   ),
                   ol: ({ node, ...props }) => (
                     <ol
                       {...props}
-                      className=" list-inside whitespace-pre-line list-decimal ml-1 "
+                      className="list-inside list-decimal space-y-2 ml-1"
+                    />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul
+                      {...props}
+                      className="list-inside list-disc space-y-2 ml-1"
                     />
                   ),
                 }}
