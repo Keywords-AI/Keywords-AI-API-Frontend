@@ -1,4 +1,4 @@
-import apiConfig, {keywordsFetch} from "src/services/apiConfig";
+import apiConfig, { keywordsFetch } from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
 import axios from "axios";
@@ -51,16 +51,27 @@ export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
     return new Promise((resolve, reject) => {
-      fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
+      // fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
+      fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": getCookie("csrftoken"),
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, username: email }),
+        credentials: "include",
       })
         .then(async (res) => {
           if (res.ok) {
+            // Convert Headers object to a simple key-value object
+            const headers = res.headers;
+            let headersObj = {};
+            headers.forEach((value, key) => {
+              headersObj[key] = value;
+            });
+
+            // Now headersObj is a regular object and can be converted to JSON
+            console.log(JSON.stringify(headersObj, null, 2));
             const responseJson = await res.json();
             localStorage.setItem("access_token", responseJson.access);
             localStorage.setItem("refresh_token", responseJson.refresh);
@@ -86,13 +97,18 @@ export const logout = () => {
   };
 };
 
-export const googleLogin = async  () => {
+export const googleLogin = async () => {
   // Retrieve the Google authorization URL
-  fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`)
-  .then(res=> res.json())
-  .then((response) => {
-    window.location.href = response.authorization_url;
-  });
+  fetch(
+    `${apiConfig.apiURL}auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`,
+    {
+      credentials: "include",
+    }
+    )
+    .then((res) => res.json())
+    .then((response) => {
+      window.location.href = response.authorization_url;
+    });
 };
 
 export const googleAuthJWT = () => {
@@ -101,26 +117,31 @@ export const googleAuthJWT = () => {
 
   // Set up the headers
   const headers = {
-    // "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Type": "application/x-www-form-urlencoded",
     "X-CSRFToken": getCookie("csrftoken"),
   };
   // Make the POST request using axios
   axios.defaults.withCredentials = true;
-  console.log(document.cookie)
+  console.log(document.cookie);
   fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, {
     method: "POST",
     headers: headers,
     body: params,
     credentials: "include",
   })
-  // axios.post(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, params, headers)
-    .then(response => {
+    // axios.post(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, params, headers)
+    .then((response) => {
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       console.log(data);
+      if (data.access) {
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
+        window.location = "/platform/playground";
+      }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Error in Google Auth JWT:", error);
     });
 };

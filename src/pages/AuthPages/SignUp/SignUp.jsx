@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
@@ -21,6 +21,7 @@ export function SignUp() {
       setBackendError(error.message);
     }
   };
+  useEffect(()=>{console.log("errors")},[errors])
   const firstnameError = errors.firstname;
   const lastnameError = errors.lastname;
   const emailError = errors.email;

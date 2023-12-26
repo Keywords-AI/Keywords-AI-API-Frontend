@@ -49,12 +49,12 @@ const LogIn = ({ login }) => {
             </span>
           }
         />
-        {/* <Button
+        <Button
         type="button"
         variant="r4-white"
         text="Sign in with Google"
         onClick={() => googleLogin()}
-        /> */}
+        />
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex-col justify-center items-center gap-md self-stretch"

@@ -7,7 +7,10 @@ import { TextInput } from "src/components/Inputs";
 import usePost from "src/hooks/usePost";
 
 export function ResetPassword() {
-  const { loading, error, data, postData } = usePost({path: "auth/users/reset-password/"});
+  const { loading, error, data, postData } = usePost({
+    path: "auth/users/reset-password/",
+    auth: false,
+  });
   const navigate = useNavigate();
   const {
     register,

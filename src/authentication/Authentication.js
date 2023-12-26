@@ -43,9 +43,9 @@ export const signup = async ({
 }) => {
   try {
     await getCSRF();
-    console.log("endpoint", `${apiurl}${endpoint}`);
+    console.log("endpoint", `${apiConfig.apiURL}${endpoint}`);
     const response = await axios.post(
-      `${apiurl}${endpoint}`,
+      `${apiConfig.apiURL}${endpoint}`,
       {
         // const response = await axios.post(`localhost:8000/${endpoint}`, {
         email: email,
