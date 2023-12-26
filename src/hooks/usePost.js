@@ -28,6 +28,7 @@ const usePost = ({ path, method = "POST", domain = apiConfig.apiURL }) => {
       .then(async (response) => {
         if (!response.ok) {
           const error = await response.json();
+          console.log(error)
           throw new Error(error.detail);
         } else {
           const data = await response.json();

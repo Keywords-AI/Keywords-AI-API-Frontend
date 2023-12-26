@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import cn from "src/utilities/classMerge";
-import { AuthenticationTitle } from "src/components/Titles";
 import { BackButton, Button } from "src/components/Buttons";
+import { AuthenticationTitle } from "src/components/Titles";
+import cn from "src/utilities/classMerge";
+import { TextInput } from "src/components/Inputs";
+import usePost from "src/hooks/usePost";
 
 export function ResetPassword() {
+  const { loading, error, data, postData } = usePost({path: "auth/users/reset-password/"});
   const navigate = useNavigate();
   const {
     register,
@@ -12,76 +15,29 @@ export function ResetPassword() {
     formState: { errors },
   } = useForm();
   const emailError = errors.email;
-  const passwordError = errors.password;
+  const onSubmit = (formData) => {
+    console.log(formData);
+    postData(formData);
+  }
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home" />
-      <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
-        <AuthenticationTitle
-          title={"Reset Password"}
-          subtitle={"Reset your password"}
-        />
-        <form
-          onSubmit={handleSubmit((data) => {
-            console.log(data);
-          })}
-          className="flex-col justify-center items-center gap-md self-stretch"
-        >
-          <div className="flex-col justify-center items-start gap-xs self-stretch">
-            <div
-              aria-label="new password field"
-              className="flex-col justify-center items-start gap-xxs self-stretch"
-            >
-              <label
-                className={cn(
-                  "self-stretch text-sm-regular text-gray-4",
-                  emailError ? "text-error" : ""
-                )}
-              >
-                New Password
-              </label>
-              <input
-                type="password"
-                {...register("newPassword", {
-                  required: true,
-                  pattern: /^(?=.*[a-zA-Z0-9]).{8,}$/,
-                })}
-                className="input-box"
-              />
-            </div>
-            <div
-              aria-label="confirm password field"
-              className="flex-col justify-center items-start gap-xxs self-stretch"
-            >
-              <label
-                className={cn(
-                  "self-stretch text-sm-regular text-gray-4",
-                  passwordError ? "text-error" : ""
-                )}
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                {...register("confirmPassword", {
-                  required: true,
-                  pattern: /^(?=.*[a-zA-Z0-9]).{8,}$/,
-                })}
-                className="input-box"
-              />
-            </div>
-          </div>
-          <p className="text-sm-regular text-error self-start">
-            Passwords do not match.
-          </p>
-          <div className="flex-col items-start gap-xs self-stretch">
-            <Button
-              text={"Change password"}
-              variant={"r4-white"}
-            />
-          </div>
-        </form>
+      <div className="flex flex-col items-start self-stretch gap-[10px]">
+        <BackButton text="Home" link="/"/>
       </div>
+      <form className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center"
+      onSubmit={handleSubmit(onSubmit)}>
+        <AuthenticationTitle title="Reset password" subtitle="Reset your password below."/>
+        <div className="flex-col justify-center items-center gap-[20px] self-stretch">
+          <div className="flex-col justify-center items-start gap-xs self-stretch">
+            <TextInput title="New password" type="password" placeholder=""/>
+            <TextInput title="Confirm password" placeholder=""/>
+          </div>
+          <div className="flex-col justify-center items-center gap-xs self-stretch">
+            <Button variant="r4-white" text="Change password" className="min-w-[60px] self-stretch items-center justify-center gap-xxs"/>
+            {false && <span className="text-error caption self-stretch">Passwords do not match.</span>}
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
