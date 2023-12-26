@@ -68,14 +68,14 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
   const [isHover, setIsHover] = React.useState(false);
   return (
     <div
-    onMouseEnter={() => setIsHover(true)}
-    onmMouseLeave={() => setIsHover(false)}
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
       className={cn(
         "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3",
-        messageIndex === messages.length - 1 && !streaming && (isFocused) 
+        messageIndex === messages.length - 1 && !streaming && isFocused
           ? "shadow-gray-4"
-          : "shaoow-gray-3",
-          isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer",
+          : "shadow-gray-3",
+        isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
       )}
       onClick={() => {
         setIsFocused(true);
@@ -121,15 +121,24 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             <>
               <Markdown
                 children={textContent}
-                className="text-sm-regular text-gray-white "
+                className="text-sm-regular text-gray-white  "
                 components={{
                   p: ({ node, ...props }) => (
-                    <p {...props} className="whitespace-pre-line " />
+                    <p
+                      {...props}
+                      className="whitespace-pre-line inline-flex my-2"
+                    />
                   ),
                   ol: ({ node, ...props }) => (
                     <ol
                       {...props}
-                      className=" list-inside whitespace-pre-line list-decimal ml-1 "
+                      className="list-inside list-decimal space-y-2 ml-1"
+                    />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul
+                      {...props}
+                      className="list-inside list-disc space-y-2 ml-1"
                     />
                   ),
                 }}

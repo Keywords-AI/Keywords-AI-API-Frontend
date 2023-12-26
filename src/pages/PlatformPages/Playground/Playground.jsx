@@ -49,7 +49,7 @@ const mapDispatchToProps = {
   removeLastMessage,
   abortStreamingTextRequest,
   regeneratePlaygroundResponse,
-  stopResponding
+  stopResponding,
 };
 
 const Prompt = ({ setPrompt }) => {
@@ -77,9 +77,6 @@ const NotConnectedMap = ({
 }) => {
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
-  const handleAddMessage = () => {
-    setMessages([...messages, { role: "user", content: "" }]);
-  };
 
   useEffect(() => {
     if (streamingText) {
@@ -102,7 +99,7 @@ const NotConnectedMap = ({
       <div className="flex items-start gap-md flex-1 self-stretch h-[calc(100vh-190.5px)]">
         <ConnectedPrompt />
         <div
-          className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-[calc(100vh-190.5px)]"
+          className="flex-col items-start gap-xxs flex-1 self-stretch  overflow-y-auto h-full"
           ref={conversationBoxRef}
         >
           {messages.map((message, index) => (

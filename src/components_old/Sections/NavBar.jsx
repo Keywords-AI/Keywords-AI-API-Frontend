@@ -31,7 +31,7 @@ export const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const generateButton = (text, pageName, index) => {
+  const generateButton = (text, pageName, index, fullRoute) => {
     let modifiedPageName = pageName;
     if (!pageName) {
       modifiedPageName = text.toLowerCase().split(" ").join("-");
@@ -43,17 +43,22 @@ export const NavBar = () => {
         key={index}
         text={text}
         variant="header"
-        onClick={() => navigate(`/platform/${modifiedPageName}`)}
+        onClick={() => {
+          if (fullRoute)
+          window.open(fullRoute, "_blank")
+          else
+          navigate(`/platform/${modifiedPageName}`) 
+        }}
         active={apply}
-        // textClassName={"text-sm-regular text-gray-4"}
+      // textClassName={"text-sm-regular text-gray-4"}
       />
     );
   };
   const buttons = [
-    // { text: "Documentation", pageName: "doc" },
+    { text: "Documentation", pageName: "doc", fullRoute: "https://docs.keywordsai.co" },
     // { text: "Examples", pageName: "examples" },
     { text: "Playground", pageName: "playground" },
-    { text: "Chatbot", pageName: "chatbot" },
+    // { text: "Chatbot", pageName: "chatbot" },
     { text: "API Keys", pageName: "setting" },
   ];
   return (
@@ -68,7 +73,7 @@ export const NavBar = () => {
           </div>
           <div className="flex items-center gap-xs">
             {buttons.map((button, index) =>
-              generateButton(button.text, button.pageName, index)
+              generateButton(button.text, button.pageName, index, button.fullRoute)
             )}
           </div>
         </div>
