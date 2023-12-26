@@ -53,11 +53,13 @@ export default {
       resend: {
         64: "rgba(239, 245, 255, 0.69)",
       },
+      notification: "rgba(115, 203, 152, 0.25)",
     },
     boxShadow: {
       pricing: "2px 2px 10px 2px rgba(24, 24, 32, 0.40)",
       purple: "0 0 40px rgba(143, 0, 210, 0.25)", // Jialin's work, but if something went wrong, ping @Hendrix
       window: `0 0 10px 10px rgba(255, 255, 255, 0.05), 0 0 0 1px ${gray3}`,
+      card: `0 0 10px 2px rgba(255, 255, 255, 0.10), 0 0 0 1px, #73CB98`,
       key: `1px 1px 1px 0px black`,
       border: `inset 0 0 0 1px ${gray3}`,
       'border-l': `inset 1px 0 0 0 ${gray3}`,

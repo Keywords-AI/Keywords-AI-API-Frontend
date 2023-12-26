@@ -33,7 +33,7 @@ const LogIn = ({ login }) => {
   const [backendError, setBackendError] = useState(null);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home" />
+      <BackButton text="Home" link="/"/>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
           title={"Sign in"}

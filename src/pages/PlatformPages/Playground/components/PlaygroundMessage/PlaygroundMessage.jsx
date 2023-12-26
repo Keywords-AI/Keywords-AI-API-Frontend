@@ -150,6 +150,8 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconPosition="right"
             onClick={handleSend}
             disabled={streaming}
+            
+            iconHoverFill="fill-gray-white"
           />
         </div>
       )}

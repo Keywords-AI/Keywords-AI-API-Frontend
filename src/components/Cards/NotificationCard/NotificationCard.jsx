@@ -27,7 +27,7 @@ export default function NotificationCard({
     return (
         <div
             ref={cardRef}
-            className={cn("card-notification flex item-start py-sm px-sm relative rounded-md shadow-window w-[360px] transition-all duration-[600ms] ease-in-out bg-gray-2",
+            className={cn("card-notification flex item-start py-sm px-sm relative rounded-md shadow-card  w-[360px] transition-all duration-[600ms] ease-in-out bg-notification",
             )
             }
         >
@@ -35,13 +35,13 @@ export default function NotificationCard({
                 <div className="flex-col gap-xxs">
                     <div className="flex-row gap-xxs items-center">
                         <Success />
-                        <span className="text-gray-white text-sm-md">
+                    <span className="text-gray-white text-sm-md">
                             {title}
                         </span>
                     </div>
-                    <span className="caption text-gray-4 pl-[24px]">
+                    {/* <span className="caption text-gray-4 pl-[24px]">
                         {message}
-                    </span>
+                    </span> */}
                 </div>
             </div >
             <IconButton

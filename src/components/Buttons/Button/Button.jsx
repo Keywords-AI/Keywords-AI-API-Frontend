@@ -217,6 +217,23 @@ export const Button = forwardRef(
         textClassName = "text-sm-md";
 
         break;
+        case "text":
+          bgColor = bgColor || "bg-transparent";
+          hoverColor = hoverColor || "bg-transparent";
+          clickedColor = clickedColor || "bg-gray-2";
+          textColor = textColor || "text-gray-4";
+          textHoverColor = textHoverColor || "text-gray-white";
+          iconPosition = iconPosition || "left";
+          textClickedColor = textClickedColor || "text-gray-white";
+          borderRadius = borderRadius || "rounded-sm";
+          borderColor = borderColor || "shadow-transparent";
+          borderHoverColor = borderHoverColor || "shadow-transparent";
+          padding = padding || "py-xxxs";
+          iconFill = iconFill || "fill-gray-4";
+          iconHoverFill = iconHoverFill || "fill-gray-white";
+          textClassName = "text-sm-md";
+  
+          break;
       case "r18-white":
         bgColor = bgColor || "bg-gray-white";
         hoverColor = hoverColor || "bg-gray-black";
@@ -234,7 +251,7 @@ export const Button = forwardRef(
         break;
       case "r18-black":
         bgColor = bgColor || "bg-gray-black";
-        hoverColor = hoverColor || "bg-gray-3";
+        hoverColor = hoverColor || "bg-gray-2";
         borderColor = borderColor || "shadow-transparent";
         borderHoverColor = borderHoverColor || "shadow-transparent";
         clickedColor = clickedColor || "bg-gray-3";

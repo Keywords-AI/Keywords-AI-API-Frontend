@@ -404,20 +404,75 @@ export const EnterKey = ({
       return (
         <div
           className={
-            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key border border-gray-3"
+            "flex-col w-[16px] h-[16px] justify-center items-center gap-[10px] rounded-sm bg-gray-2 shadow-key shadow-border"
           }
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="8"
-            height="8"
-            viewBox="0 0 8 8"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
             fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              d="M7.65706 0V2.97143C7.65706 4.61257 6.32677 5.94286 4.68563 5.94286H2.09363L3.5062 7.35543L2.85706 8L0.342773 5.48571L2.85706 2.97143L3.50163 3.616L2.09363 5.02857H4.68563C5.82849 5.02857 6.74277 4.11429 6.74277 2.97143V0H7.65706Z"
-              className={active ? activeFill : fill}
-            />
+            <g filter="url(#filter0_d_5812_5939)">
+              <rect
+                width="16"
+                height="16"
+                rx="4"
+                fill="#151518"
+                shape-rendering="crispEdges"
+              />
+              <rect
+                x="0.5"
+                y="0.5"
+                width="15"
+                height="15"
+                rx="3.5"
+                stroke="#3E424A"
+                shape-rendering="crispEdges"
+              />
+              <path
+                d="M11.6571 4V6.97143C11.6571 8.61257 10.3268 9.94286 8.68563 9.94286H6.09363L7.5062 11.3554L6.85706 12L4.34277 9.48571L6.85706 6.97143L7.50163 7.616L6.09363 9.02857H8.68563C9.82849 9.02857 10.7428 8.11429 10.7428 6.97143V4H11.6571Z"
+                className={active ? activeFill : fill}
+              />
+            </g>
+            <defs>
+              <filter
+                id="filter0_d_5812_5939"
+                x="0"
+                y="0"
+                width="18"
+                height="18"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feColorMatrix
+                  in="SourceAlpha"
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                  result="hardAlpha"
+                />
+                <feOffset dx="1" dy="1" />
+                <feGaussianBlur stdDeviation="0.5" />
+                <feComposite in2="hardAlpha" operator="out" />
+                <feColorMatrix
+                  type="matrix"
+                  values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"
+                />
+                <feBlend
+                  mode="normal"
+                  in2="BackgroundImageFix"
+                  result="effect1_dropShadow_5812_5939"
+                />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="effect1_dropShadow_5812_5939"
+                  result="shape"
+                />
+              </filter>
+            </defs>
           </svg>
         </div>
       );
@@ -1360,10 +1415,23 @@ export const Ellipse = ({
   switch (size) {
     case "sm":
       return (
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={"flex-shrink-0"}>
-          <circle cx="6" cy="6" r="5" stroke="#151518" strokeWidth="2" className={active ? activeFill : fill} />
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className={"flex-shrink-0"}
+        >
+          <circle
+            cx="6"
+            cy="6"
+            r="5"
+            stroke="#151518"
+            strokeWidth="2"
+            className={active ? activeFill : fill}
+          />
         </svg>
-
       );
   }
 };
