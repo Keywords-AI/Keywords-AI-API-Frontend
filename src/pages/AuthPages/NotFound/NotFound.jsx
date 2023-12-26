@@ -5,7 +5,6 @@ import React from "react";
 import { Right } from "src/components/Icons/iconsDS";
 export function NotFound() {
   const navigate = useNavigate();
-  console.log("Right", Right);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton iconPosition="left" text="Home" />

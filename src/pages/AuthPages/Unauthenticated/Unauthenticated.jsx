@@ -1,12 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
-
-import React from "react";
+import { googleAuthJWT } from "src/store/actions";
+import React, { useEffect } from "react";
 import { Right } from "src/components";
+import { useLocation } from "react-router-dom";
 
 export function Unauthenticated() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const params =  new URLSearchParams(location.search);
+  // useEffect(()=> {
+  //     googleAuthJWT();
+  // }, [])
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home"/>
@@ -28,6 +34,13 @@ export function Unauthenticated() {
             variant={"r18-white"}
             onClick={() => {
               navigate("/login");
+            }}
+          />
+          <Button
+            text="Login with Google"
+            variant="header"
+            onClick={() => {
+              googleAuthJWT();
             }}
           />
           <Button

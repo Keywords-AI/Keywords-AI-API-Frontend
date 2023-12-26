@@ -1,6 +1,6 @@
 import axios from "axios";
 import { platformURL } from "src/utilities/platformURL";
-import apiConfig from "src/services/apiConfig";
+import apiConfig, { keywordsFetch } from "src/services/apiConfig";
 const apiurl = platformURL;
 const genericDomain = "keywordsai.co";
 const extractMainDomain =
@@ -141,7 +141,7 @@ export const getCookie = (name = "csrftoken") => {
 
 export const getCSRF = async () => {
   try {
-    await axios.get(`${apiurl}csrf`, {
+    await axios.get(`${apiConfig.apiURL}csrf`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -185,3 +185,10 @@ function eraseCookie(name, path = "/") {
   document.cookie =
     name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
 }
+
+const googleLogin = async  () => {
+  keywordsFetch({path: `auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`})
+  .then((response) => {
+    console.log(response);
+  });
+};

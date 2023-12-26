@@ -1,7 +1,8 @@
-import apiConfig from "src/services/apiConfig";
+import apiConfig, {keywordsFetch} from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
-import { retrieveConversation } from "./deprecated/conversationAction";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
+import axios from "axios";
+axios.defaults.withCredentials = true;
 
 export const register = (
   email,
@@ -79,17 +80,49 @@ export const login = (email, password) => {
 
 export const logout = () => {
   return (dispatch) => {
-    console.log("logout");
     localStorage.removeItem("access_token");
     eraseCookie("access_token");
     window.location = "/";
   };
 };
 
-export const googleLogin = (access_code, state, random) => {
-  return (dispatch) => {
-    console.log("Hi there!!");
+export const googleLogin = async  () => {
+  // Retrieve the Google authorization URL
+  fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`)
+  .then(res=> res.json())
+  .then((response) => {
+    window.location.href = response.authorization_url;
+  });
+};
+
+export const googleAuthJWT = () => {
+  // Extract query parameters from URL
+  const params = new URLSearchParams(window.location.search);
+
+  // Set up the headers
+  const headers = {
+    // "Content-Type": "application/x-www-form-urlencoded",
+    "X-CSRFToken": getCookie("csrftoken"),
   };
+  // Make the POST request using axios
+  axios.defaults.withCredentials = true;
+  console.log(document.cookie)
+  fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, {
+    method: "POST",
+    headers: headers,
+    body: params,
+    credentials: "include",
+  })
+  // axios.post(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, params, headers)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error("Error in Google Auth JWT:", error);
+    });
 };
 
 export const isLoggedIn = (user) => {

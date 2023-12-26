@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
 import cn from "src/utilities/classMerge";
 import { Button } from "src/components/Buttons/Button";
-import { platformURL } from "src/utilities/platformURL";
-import { login, getUser } from "src/store/actions";
+import { login, googleLogin } from "src/store/actions";
 import { connect } from "react-redux";
 
 const mapDispatchToProps = {
@@ -18,7 +17,7 @@ const LogIn = ({ login }) => {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      navigate(0);
+      // navigate(0);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
@@ -50,6 +49,12 @@ const LogIn = ({ login }) => {
             </span>
           }
         />
+        {/* <Button
+        type="button"
+        variant="r4-white"
+        text="Sign in with Google"
+        onClick={() => googleLogin()}
+        /> */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex-col justify-center items-center gap-md self-stretch"

@@ -25,6 +25,7 @@ import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
+import { getCSRF } from "./authentication/Authentication";
 
 const mapStateToProps = (state) => {
   return {
@@ -100,7 +101,7 @@ const Routes = ({ getUser, user }) => {
           path: "unauthorized",
           element: <Unauthorized />,
         },
-        { path: "/", element: <Navigate to="/unauthenticated" /> },
+        { path: "/", element: <Unauthenticated /> },
         { path: "onboard", element: <OnBoard />}
       ],
     },
