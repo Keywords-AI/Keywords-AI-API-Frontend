@@ -25,7 +25,8 @@ import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
-import { getCSRF } from "./authentication/Authentication";
+// import Dashboard from "./pages/AuthPages/Dashboard/Dashboard";
+
 
 const mapStateToProps = (state) => {
   return {
@@ -42,8 +43,8 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = isLoggedIn();
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = isLoggedIn();
+  // const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -56,11 +57,6 @@ const Routes = ({ getUser, user }) => {
           element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
-        // {
-        //   path: "doc",
-        //   element: <LeftNavigationLayout sectionName={"documentation"} />,
-        //   children: documentationChildren,
-        // },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
