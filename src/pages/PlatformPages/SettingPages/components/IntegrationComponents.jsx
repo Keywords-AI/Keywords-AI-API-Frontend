@@ -10,6 +10,7 @@ import { Modal } from "src/components/Dialogs";
 import { createOrUpdateIntegration, setIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
 import { dispatchNotification } from "src/store/actions";
+import cn from "src/utilities/classMerge";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -69,7 +70,7 @@ export const CheckBoxButton = React.forwardRef(({
   validationSchema,
   text,
   onChange = () => { },
-  checked = false
+  checked = false,
 },
   ref) => {
   const checkBoxRef = useForwardRef(ref);
@@ -167,7 +168,7 @@ const IntegrationCardNotConnected = ({
           value={apiKeyString}
           placeholder={`Paste your ${companyName} API key here`}
           action={
-            hasKey && <IconButton
+            false && <IconButton
               type="button"
               variant="r4-white"
               icon={Delete}
@@ -175,12 +176,15 @@ const IntegrationCardNotConnected = ({
             />
           }
         />
-        <div className="flex justify-end items-center gap-xs self-stretch">
+        <div className="flex justify-between items-center self-stretch">
+          <Button variant="text" text="Delete key" icon={Delete} />
+          <div className="flex flex-end items-center gap-xs">
           <Button variant="r4-gray-2" text="Cancel"
             type="button"
             onClick={() => { setOpen(false) }}
           />
           <Button variant="r4-primary" text="Save" />
+          </div>
         </div>
       </form>
     </>
