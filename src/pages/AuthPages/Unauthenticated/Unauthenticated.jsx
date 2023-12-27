@@ -10,9 +10,9 @@ export function Unauthenticated() {
   const navigate = useNavigate();
   const location = useLocation();
   const params =  new URLSearchParams(location.search);
-  // useEffect(()=> {
-  //     googleAuthJWT();
-  // }, [])
+  useEffect(()=> {
+      googleAuthJWT();
+  }, [])
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <BackButton text="Home"/>
@@ -36,13 +36,13 @@ export function Unauthenticated() {
               navigate("/login");
             }}
           />
-          <Button
+          {/* <Button
             text="Login with Google"
             variant="header"
             onClick={() => {
               googleAuthJWT();
             }}
-          />
+          /> */}
           <Button
             text="Sign up"
             variant={"header"}

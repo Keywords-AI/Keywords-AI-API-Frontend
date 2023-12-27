@@ -3,7 +3,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-const usePost = ({ path, method = "POST", domain = apiConfig.apiURL }) => {
+const usePost = ({ path, method = "POST", domain = apiConfig.apiURL, auth = true }) => {
   // generic hook for posting data to apis
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,8 +15,11 @@ const usePost = ({ path, method = "POST", domain = apiConfig.apiURL }) => {
     setData(null);
     let headers = {
       "X-CSRFToken": getCookie("csrftoken"),
-      Authorization: `Bearer ${retrieveAccessToken()}`,
+      "Content-Type": "application/json",
     };
+    if (auth) {
+      headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
+    }
     if (!form) {
       headers["Content-Type"] = "application/json";
     }
