@@ -123,11 +123,13 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
                 children={textContent}
                 className="text-sm-regular text-gray-white  "
                 components={{
+                  pre: ({ node, children, ...props }) => (
+                    <pre className="clear-both" {...props}>
+                      ```{children}```
+                    </pre>
+                  ),
                   p: ({ node, ...props }) => (
-                    <p
-                      {...props}
-                      className="whitespace-pre-line inline-flex my-2"
-                    />
+                    <p {...props} className="whitespace-pre-line my-2" />
                   ),
                   ol: ({ node, ...props }) => (
                     <ol
@@ -159,7 +161,6 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconPosition="right"
             onClick={handleSend}
             disabled={streaming}
-            
             iconHoverFill="fill-gray-white"
           />
         </div>
