@@ -147,7 +147,6 @@ export const getCSRF = async () => {
       },
       timeout: 5000,
     });
-    // Axios automatically handles the CSRF token set in the cookie
   } catch (error) {
     throw error;
   }

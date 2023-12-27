@@ -98,7 +98,7 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         { path: "/", element: <Unauthenticated /> },
-        { path: "onboard", element: <OnBoard />}
+        { path: "onboard", element: <OnBoard /> },
       ],
     },
     {
