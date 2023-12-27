@@ -143,7 +143,7 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  return user.id !== null && user.id !== undefined;
+  return user?.id !== null && user?.id !== undefined;
 };
 
 export const resetPassword = (
