@@ -7,7 +7,7 @@ const extractMainDomain =
   "." +
   (window.location.hostname.includes("keywordsai.co")
     ? genericDomain
-    : apiConfig.apiurl);
+    : apiConfig.apiURL);
 
 const expirationDays = 7;
 const bypassAuth = false;
@@ -147,7 +147,6 @@ export const getCSRF = async () => {
       },
       timeout: 5000,
     });
-    // Axios automatically handles the CSRF token set in the cookie
   } catch (error) {
     throw error;
   }
@@ -185,3 +184,11 @@ function eraseCookie(name, path = "/") {
   document.cookie =
     name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
 }
+
+const googleLogin = async () => {
+  keywordsFetch({
+    path: `auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`,
+  }).then((response) => {
+    console.log(response);
+  });
+};

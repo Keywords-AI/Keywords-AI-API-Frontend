@@ -102,7 +102,7 @@ export const googleLogin = async () => {
     {
       credentials: "include",
     }
-    )
+  )
     .then((res) => res.json())
     .then((response) => {
       window.location.href = response.authorization_url;
@@ -143,7 +143,7 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  return user?.id || retrieveAccessToken();
+  return user.id !== null && user.id !== undefined;
 };
 
 export const resetPassword = (

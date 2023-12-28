@@ -42,7 +42,7 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  const isUserLoggedIn = isLoggedIn();
+  const isUserLoggedIn = isLoggedIn(user);
   // const isUserLoggedIn = true;
   const routes = [
     {
@@ -102,7 +102,7 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         { path: "/", element: <Unauthenticated /> },
-        { path: "onboard", element: <OnBoard />}
+        { path: "onboard", element: <OnBoard /> },
       ],
     },
     {
