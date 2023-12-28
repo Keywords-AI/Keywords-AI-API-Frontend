@@ -8,6 +8,7 @@ import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
+import { login, googleLogin } from "src/store/actions";
 export function SignUp() {
   const navigate = useNavigate();
   const {
@@ -158,7 +159,7 @@ export function SignUp() {
               variant={"r4-white"}
               className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
             />
-            <Button variant="r4-white" text="Continue with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs"/>
+            <Button variant="r4-white" text="Continue with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()}/>
             <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span
