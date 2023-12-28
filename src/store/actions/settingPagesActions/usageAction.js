@@ -2,6 +2,7 @@ import apiConfig from "src/services/apiConfig";
 import { getDateStr } from "../../../utilities/stringProcessing";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { timeSkip } from "src/utilities/objectProcessing";
+import { digitToMonth } from "src/utilities/objectProcessing";
 
 export const SET_DATE = "SET_DATE";
 export const SET_USAGE_DATA = "SET_USAGE_DATA";
@@ -25,6 +26,13 @@ export const getUsageData = (fetchDate) => {
   return async (dispatch, getState) => {
     const date = fetchDate || getState().usage.date;
     const month = date.getMonth();
+    if (
+      digitToMonth(date?.getMonth(), date?.getFullYear()) === "Oct 2023"
+    ) {
+      dispatch(setIsFirst(true));
+    } else {
+      dispatch(setIsFirst(false));
+    }
     if (month === new Date().getMonth()) {
       dispatch(setIsLast(true));
     } else {
@@ -69,7 +77,7 @@ export const setIsFirst = (isFirst) => {
     type: SET_IS_FIRST,
     payload: isFirst,
   };
-}
+};
 
 export const getLastMonthUsageData = () => {
   return async (dispatch, getState) => {

@@ -2,7 +2,7 @@ import react from "react";
 import { connect } from 'react-redux'
 import { PageContent, PageParagraph } from 'src/components/Sections';
 import { Button, IconButton } from 'src/components/Buttons'
-import { Delete, Logo, Right, Rocket } from "src/components/Icons/iconsDS";
+import { Delete, Logo, Right, Rocket } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { Speed } from "../Playground/components/OptionSelector/icons";
 import { DotsButton } from "src/components/Buttons/DotsButton";
