@@ -8,6 +8,7 @@ import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
+import { login, googleLogin } from "src/store/actions";
 export function SignUp() {
   const navigate = useNavigate();
   const {
