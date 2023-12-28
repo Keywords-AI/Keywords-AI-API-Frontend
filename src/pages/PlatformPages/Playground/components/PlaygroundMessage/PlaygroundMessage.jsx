@@ -54,7 +54,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   const handleSend = async (event) => {
     event.stopPropagation();
-    if (streaming) return;
+    if (streaming || textContent.length < 1) return;
     setIsFocused(false);
     dispatch(streamPlaygroundResponse(messageIndex));
   };

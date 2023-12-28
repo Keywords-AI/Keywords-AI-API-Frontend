@@ -28,7 +28,7 @@ const initialState = {
     maxTokens: 256,
   },
   outputs: {
-    score: 8.8,
+    score: {},
     cost: 0.00123,
     latency: 0.8,
     tokens: 4386,
