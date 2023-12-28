@@ -117,7 +117,7 @@ const LogIn = ({ login }) => {
               variant={"r4-white"}
               className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
             />
-            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs"/>
+            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()}/>
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}
