@@ -42,8 +42,8 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  // const isUserLoggedIn = isLoggedIn();
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = isLoggedIn();
+  // const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
