@@ -44,8 +44,7 @@ function NavBar({ user, getUser }) {
               }
             }}
           >
-
-            <Logo fill={"var(--gray4)"} />
+          <Logo fill={"var(--gray4)"} />
           </div>
           {windowSize > 768 && <NavMiddle user={user} />}
         </div>
