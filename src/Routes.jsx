@@ -23,6 +23,7 @@ import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
+import ActivationPage from "./pages/AuthPages/ActivationPage";
 
 
 const mapStateToProps = (state) => {
@@ -104,6 +105,7 @@ const Routes = ({ getUser, user }) => {
         },
         { path: "/", element: <Unauthenticated /> },
         { path: "onboard", element: <OnBoard /> },
+        { path: "activate/:uid?/:token?", element: <ActivationPage />}
       ],
     },
     {

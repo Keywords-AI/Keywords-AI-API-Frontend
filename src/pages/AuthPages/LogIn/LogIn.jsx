@@ -52,65 +52,14 @@ const LogIn = ({ login }) => {
             </span>
           }
         />
-        {/* <Button
-        type="button"
-        variant="r4-white"
-        text="Sign in with Google"
-        onClick={() => googleLogin()}
-        /> */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex-col justify-center items-center gap-[20px] self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
-            {/* <div
-              aria-label="email field"
-              className="flex-col justify-center items-start gap-xxs self-stretch"
-            >
-              <label
-                className={cn(
-                  "self-stretch text-sm-regular text-gray-4",
-                  emailError ? "text-error" : ""
-                )}
-              >
-                Email
-              </label>
-              <input
-                type="text"
-                {...register("email", {
-                  required: true,
-                  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                })}
-                className="input-box"
-              />
-            </div> */}
             <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email")}/>
             <TextInput title="Password" type="password" required placeholder="" {...register("password")}/>
-            {/* <div
-              aria-label="password field"
-              className="flex-col justify-center items-start gap-xxs self-stretch"
-            >
-              <label
-                className={cn(
-                  "self-stretch text-sm-regular text-gray-4",
-                  passwordError ? "text-error" : ""
-                )}
-              >
-                Password
-              </label>
-              <input
-                type="password"
-                {...register("password", {
-                  required: true,
-                  pattern: /^(?=.*[a-zA-Z0-9]).{8,}$/,
-                })}
-                className="input-box"
-              />
-            </div> */}
           </div>
-          {/* <p className="text-sm-regular text-error self-start">
-            {backendError ? backendError : ""}
-          </p> */}
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
               text={"Sign in"}
