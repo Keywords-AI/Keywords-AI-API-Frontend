@@ -43,9 +43,9 @@ export function DotsMenu({}) {
           <DropdownMenuItem asChild>
             <ViewCode />
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          {/* <DropdownMenuItem asChild>
             <Button variant="panel" text="Save preset" />
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem asChild>
             <Button
               variant="panel"
