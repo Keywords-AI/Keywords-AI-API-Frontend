@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import theme from "src/styles/theme.js"
+import theme from "src/components/styles/theme.js"
 import {
   BarChart,
   Bar,

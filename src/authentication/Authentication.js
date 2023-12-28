@@ -185,10 +185,3 @@ function eraseCookie(name, path = "/") {
   document.cookie =
     name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
 }
-
-const googleLogin = async  () => {
-  keywordsFetch({path: `auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`})
-  .then((response) => {
-    console.log(response);
-  });
-};

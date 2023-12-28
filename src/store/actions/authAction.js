@@ -1,8 +1,6 @@
 import apiConfig, { keywordsFetch } from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
-import axios from "axios";
-axios.defaults.withCredentials = true;
 
 export const register = (
   email,
@@ -121,8 +119,6 @@ export const googleAuthJWT = () => {
     "X-CSRFToken": getCookie("csrftoken"),
   };
   // Make the POST request using axios
-  axios.defaults.withCredentials = true;
-  console.log(document.cookie);
   fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, {
     method: "POST",
     headers: headers,
