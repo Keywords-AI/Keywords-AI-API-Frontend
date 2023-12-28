@@ -60,7 +60,7 @@ export const processKeyList = (keyList, actions = () => {}) => {
   }]
   actions: callback function (prefix) => { some actions with the prefix }
   */
-  if (!keyList) return [];
+  if (!keyList || !keyList.length) return [];
   return keyList.map((key) => {
     return processKey(key, actions);
   });
