@@ -6,6 +6,8 @@ import { TitleAuth } from "src/components/Titles";
 import cn from "src/utilities/classMerge";
 import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
+import { TextInput } from "src/components/Inputs";
+import { Google } from "src/components";
 export function SignUp() {
   const navigate = useNavigate();
   const {
@@ -20,6 +22,7 @@ export function SignUp() {
     } catch (error) {
       setBackendError(error.message);
     }
+    console.log(data)
   };
   useEffect(()=>{console.log("errors")},[errors])
   const firstnameError = errors.firstname;
@@ -30,7 +33,9 @@ export function SignUp() {
 
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home" />
+      <div className="flex-col items-start gap-[10px] self-stretch">
+        <BackButton text="Home" link={"/"}/>
+      </div>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
           title={"Create an account"}
@@ -38,11 +43,11 @@ export function SignUp() {
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-col justify-center items-center gap-md self-stretch"
+          className="flex-col justify-center items-center gap-[20px] self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
-            <div className="flex items-center justify-between gap-xs self-stretch flex-wrap">
-              <div
+            <div className="flex items-center gap-xs self-stretch">
+              {/* <div
                 aria-label="firstname field"
                 className="flex-col justify-center items-start gap-xxs self-stretch flex-1"
               >
@@ -59,10 +64,10 @@ export function SignUp() {
                   {...register("firstname", {
                     required: true,
                   })}
-                  className="input-box"
+                  className="input-box bg-transparent"
                 />
-              </div>
-              <div
+              </div> */}
+              {/* <div
                 aria-label="lastname field"
                 className="flex-col justify-center items-start gap-xxs self-stretch flex-1"
               >
@@ -79,11 +84,13 @@ export function SignUp() {
                   {...register("lastname", {
                     required: true,
                   })}
-                  className="input-box"
+                  className="input-box bg-transparent"
                 />
-              </div>
+              </div> */}
+              <TextInput title="First Name" required placeholder="First Name" {...register("firstname")}/>
+              <TextInput title="Last Name" required placeholder="Last Name" {...register("lastname")}/>
             </div>
-            <div
+            {/* <div
               aria-label="email field"
               className="flex-col justify-center items-start gap-xxs self-stretch"
             >
@@ -101,10 +108,11 @@ export function SignUp() {
                   required: true,
                   pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 })}
-                className="input-box"
+                className="input-box bg-transparent"
               />
-            </div>
-            <div
+            </div> */}
+            <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email")}/>
+            {/* <div
               aria-label="password field"
               className="flex-col justify-center items-start gap-xxs self-stretch"
             >
@@ -122,10 +130,11 @@ export function SignUp() {
                   required: true,
                   pattern: /^(?=.*[a-zA-Z0-9]).{8,}$/,
                 })}
-                className="input-box"
+                className="input-box bg-transparent"
               />
-            </div>
-            <div
+            </div> */}
+            <TextInput title="Password" type="password" required placeholder="" {...register("password")}/>
+            {/* <div
               aria-label="Organization name field"
               className="flex-col justify-center items-start gap-xxs self-stretch"
             >
@@ -135,19 +144,22 @@ export function SignUp() {
               <input
                 type="text"
                 {...register("organization", { required: false })}
-                className="input-box"
+                className="input-box bg-transparent"
               />
-            </div>
+            </div> */}
+            <TextInput title="Organization Name" placeholder="Organization Name" {...register("organization")}/>
           </div>
-          <p className="text-sm-regular text-error self-start">
+          {/* <p className="text-sm-regular text-error self-start">
             {backendError ? backendError : ""}
-          </p>
-          <div className="flex-col items-start gap-xs self-stretch">
+          </p> */}
+          <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
               text={"Create account"}
               variant={"r4-white"}
+              className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
             />
-            <p className="caption text-gray-4 self-stretch text-center">
+            <Button variant="r4-white" text="Continue with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs"/>
+            <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span
                 className=" text-primary hover:cursor-pointer"
@@ -163,7 +175,7 @@ export function SignUp() {
                 Privacy Policy
               </span>
               .
-            </p>
+            </span>
           </div>
         </form>
       </div>
