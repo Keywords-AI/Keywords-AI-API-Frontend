@@ -1,7 +1,7 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 
 const apiConfig = {
-  apiURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'? 'https://platform-test.keywordsai.co/' : 'https://platform.keywordsai.co/',
+  apiURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'? 'https://platform-test.keywordsai.co/' : 'https://platform-test.keywordsai.co/',
   // apiURL: "https://platform.keywordsai.co/",
   frontendURL: window.location.origin,
   apiKey: "your-api-key",

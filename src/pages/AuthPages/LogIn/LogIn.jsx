@@ -17,7 +17,7 @@ const LogIn = ({ login }) => {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      // navigate(0);
+      navigate(0);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
@@ -42,7 +42,6 @@ const LogIn = ({ login }) => {
               <span
                 className=" text-primary hover:cursor-pointer"
                 onClick={() => navigate("/signup")}
-                // onClick={() => navigate("/beta-access")}
               >
                 Sign up.
               </span>

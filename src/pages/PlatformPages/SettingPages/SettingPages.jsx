@@ -25,11 +25,11 @@ const pages = [
         // forAdmin: true,
         page: <UsagePage />,
     },
-    // {
-    //     title: "Member",
-    //     forAdmin: true,
-    //     page: <MemberPage />,
-    // },
+    {
+        title: "Member",
+        forAdmin: true,
+        page: <MemberPage />,
+    },
     {
         title: "Billing",
         // forAdmin: true,
