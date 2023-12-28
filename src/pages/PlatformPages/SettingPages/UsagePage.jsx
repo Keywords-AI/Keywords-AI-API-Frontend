@@ -25,7 +25,6 @@ export const UsagePage = ({ usage }) => {
       heading="Spendings"
       subheading="Below you'll find a summary of API usage for your organization. All dates and times are UTC-based, and data may be delayed up to 5 minutes."
       >
-        
         <UsageChart
           dataKeyX={"name"} dataKeyY="usage"
         />
