@@ -48,7 +48,7 @@ export const BillingPage = ({ billings }) => {
           rows={bilingData}
           columnNames={["date", "amount", "payment_id", "actions"]}
         />}
-        <Modal
+        {false && <Modal
           title="Cancel your plan"
           subtitle="We’re sorry to see you cancel your plan. To help us improve, please help us understand the reason."
           trigger={<Button variant="r4-gray-2" text="Cancel plan" />}
@@ -56,7 +56,7 @@ export const BillingPage = ({ billings }) => {
           setOpen={setCanceling}
         >
           <CanelPlanForm setCanceling={setCanceling} />
-        </Modal>
+        </Modal> }
       </PageParagraph>
     </PageContent>
   )

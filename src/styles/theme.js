@@ -38,6 +38,7 @@ export default {
     },
     colors: {
       primary: "#6483F0",
+      "primary-2": "#7590F2",
       complementary: "#123456",
       success: "#73CB98",
       error: "#F55656",
