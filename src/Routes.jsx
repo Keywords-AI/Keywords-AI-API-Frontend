@@ -24,6 +24,7 @@ import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
+import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
 
 const mapStateToProps = (state) => {
   return {
@@ -70,6 +71,10 @@ const Routes = ({ getUser, user }) => {
           path: "test",
           element: <StreamingTextTest />,
         },
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        }
       ],
     },
     {
@@ -77,7 +82,7 @@ const Routes = ({ getUser, user }) => {
       element: !isUserLoggedIn ? (
         <FullScreenLayout />
       ) : (
-        <Navigate to="/platform/playground" />
+        <Navigate to="/platform/dashborad" />
       ),
       children: [
         { path: "login", element: <LogIn /> },
@@ -111,6 +116,13 @@ const Routes = ({ getUser, user }) => {
       element: <FullScreenLayout />,
       children: [{ path: "*", element: <NotFound /> }],
     },
+    // {
+    //   path: "/dashboard",
+    //   element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+    //   children: [
+    //     { path: "", element: <Dashboard /> },
+    //   ],
+    // }
   ];
 
   const element = useRoutes(routes);
