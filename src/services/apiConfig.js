@@ -2,7 +2,9 @@ import { retrieveAccessToken } from "src/utilities/authorization";
 const selectEndpoint = () => {
   if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
     return "http://localhost:8000/";
-  } else if (window.location.hostname === "platform-test.keywordsai.co") {
+  } else if (window.location.hostname === "platform-test.keywordsai.co" 
+  || 
+  window.location.hostname === "https://keywords-platform.web.app") {
     return "https://api-test.keywordsai.co/";
   } else if (window.location.hostname === "platform.keywordsai.co") {
     return "https://api.keywordsai.co/";

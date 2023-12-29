@@ -94,7 +94,7 @@ const Routes = ({ getUser, user }) => {
           element: <ForgotPassword />,
         },
         {
-          path: "reset-password",
+          path: "forgot-password/reset/confirm/:uid?/:token?",
           element: <ResetPassword />,
         },
         {

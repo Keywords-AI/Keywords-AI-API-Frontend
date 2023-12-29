@@ -146,8 +146,6 @@ export const isLoggedIn = (user) => {
   return retrieveAccessToken() || (user?.id !== null && user?.id !== undefined);
 };
 
-
-
 export const resetPassword = (
   email,
   handleResponse = (response) => console.log(response),
@@ -176,13 +174,13 @@ export const resetPassword = (
   };
 };
 
-export const resetPasswordConfirm = (
-  password,
-  rePassword,
+export const resetPasswordConfirm = ({
+  new_password,
+  re_new_password,
   uid,
   token,
-  handleError = () => {}
-) => {
+  handleError = () => {},
+}) => {
   return (disatch) => {
     fetch(`${apiConfig.apiURL}auth/users/reset_password_confirm/`, {
       method: "POST",
@@ -190,10 +188,10 @@ export const resetPasswordConfirm = (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        new_password: password,
-        re_new_password: rePassword,
-        uid: uid,
-        token: token,
+        new_password,
+        re_new_password,
+        uid,
+        token,
       }),
     })
       .then(async (res) => {
@@ -271,10 +269,13 @@ export const updateUserSQLPrompt = (promptAndActive) => {
 };
 
 export const activateUser = (
-  uid, 
-  token, 
-  handleSuccess=()=>{window.location.href = "/login"}, 
-  handelError=()=>{}) => {
+  uid,
+  token,
+  handleSuccess = () => {
+    window.location.href = "/login";
+  },
+  handelError = () => {}
+) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}auth/users/activation/`, {
       method: "POST",
