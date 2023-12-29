@@ -1,6 +1,5 @@
 import { Button, EditableBox, ModelIcon, Userpg } from "src/components";
 import { EnterKey } from "src/components/Icons/iconsDS";
-import "./PlaygroundMessage.css";
 import { useDispatch, useSelector } from "react-redux";
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import React from "react";
@@ -71,10 +70,10 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       className={cn(
-        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm shadow-border shadow-gray-3",
+        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm bg-gray-2",
         messageIndex === messages.length - 1 && !streaming && isFocused
-          ? "shadow-gray-4"
-          : "shadow-gray-3",
+          ? "shadow-input-active"
+          : "shadow-input-default",
         isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
       )}
       onClick={() => {
@@ -116,7 +115,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
           </div>
         )
       ) : (
-        <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
+        <div className="w-full h-full flex-col self-stretch flex-grow text-sm-regular text-gray-white ">
           {textContent ? (
             <>
               <Markdown

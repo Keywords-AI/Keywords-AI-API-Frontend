@@ -137,7 +137,7 @@ const NotConnectSidePannel = ({
     regeneratePlaygroundResponse();
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-2">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-black shadow-border-l">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />

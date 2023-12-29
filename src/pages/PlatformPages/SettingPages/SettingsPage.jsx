@@ -22,7 +22,6 @@ export const SettingPage = ({
   setOrgName,
   dispatchNotification,
 }) => {
-  //to implement blocking user from updating org name when unchanged
   const {
     register,
     handleSubmit,
@@ -43,6 +42,7 @@ export const SettingPage = ({
     }
   };
   useEffect(() => {
+    console.log("sdasad")
     if (data && !error) {
       dispatchNotification({
         title: "Organization name updated",
