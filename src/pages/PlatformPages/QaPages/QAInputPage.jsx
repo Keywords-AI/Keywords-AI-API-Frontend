@@ -13,7 +13,6 @@ export const QAInputPage = () => {
         <TextInput titte="Text Input" icon={<Search size="md" />} />
         <SelectInput title="Select title" width="w-[400px]"/>
         <RadioInput text="This is a radio input"/>
-        <Button variant="r4-black" text="radio submit"/>
       </PageParagraph>
     </PageContent>
   );
