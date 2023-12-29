@@ -37,12 +37,6 @@ export const SettingPage = ({
     method: "PATCH",
   });
   const onSubmit = (data) => {
-    if (errors.name && !currName) {
-      dispatchNotification({
-        title: errors?.name?.message,
-        type: "error",
-      });
-    }
     if (currName != organization.name) {
       setOrgName(data.name || organization.name);
       postData(data); // send request
@@ -60,7 +54,14 @@ export const SettingPage = ({
     // setOrgName(e.target.value);
     setCurrName(e.target.value);
   };
-
+  useEffect(() => {
+    if (errors.name && !currName) {
+      dispatchNotification({
+        title: errors?.name?.message,
+        type: "error",
+      });
+    }
+  }, [errors]);
   return (
     <PageContent
       title="Organization Settings"
