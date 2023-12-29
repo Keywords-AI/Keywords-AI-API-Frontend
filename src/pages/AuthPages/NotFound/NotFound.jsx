@@ -3,22 +3,17 @@ import { BackButton } from "src/components/Buttons/BackButton";
 import { Button } from "src/components/Buttons/Button";
 import React from "react";
 import { Right } from "src/components/Icons/iconsDS";
+import { TitleAuth } from "src/components/Titles";
 export function NotFound() {
   const navigate = useNavigate();
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton iconPosition="left" text="Home" />
-      <div className="flex-col w-full max-w-[420px] items-center gap-md ">
-        <div
-          aria-label="section title"
-          className="flex-col items-center gap-xxs self-stretch "
-        >
-          <div className="display-lg text-gray-white">404 - Not Found</div>
-          <div className="text-md-regular text-gray-4">
-            Couldn’t find what you were looking for.
-          </div>
-        </div>
-        <div className="flex justify-center items-start gap-md self-stretch">
+      <div className="flex-col items-start gap-[10px] self-stretch">
+        <BackButton text="Home" link={"/"}/>
+      </div>
+      <div className="flex-col w-full max-w-[420px] items-center gap-[20px] ">
+        <TitleAuth title="404 - Not Found" subtitle={"Couldn’t find what you were looking for."} align="items-center"/>
+        <div className="flex items-start gap-xxs ">
           <Button
             text="Back to home"
             variant={"r18-white"}
