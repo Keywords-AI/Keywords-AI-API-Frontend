@@ -146,6 +146,8 @@ export const isLoggedIn = (user) => {
   return retrieveAccessToken() || (user?.id !== null && user?.id !== undefined);
 };
 
+
+
 export const resetPassword = (
   email,
   handleResponse = (response) => console.log(response),
@@ -268,7 +270,11 @@ export const updateUserSQLPrompt = (promptAndActive) => {
   };
 };
 
-export const activateUser = (uid, token, handleSuccess, handelError) => {
+export const activateUser = (
+  uid, 
+  token, 
+  handleSuccess=()=>{window.location.href = "/login"}, 
+  handelError=()=>{}) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}auth/users/activation/`, {
       method: "POST",

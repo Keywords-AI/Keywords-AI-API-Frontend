@@ -83,7 +83,7 @@ export const CheckBoxButton = React.forwardRef(({
     checkBoxRef.current.click();
   };
   return (
-    <Button type={"button"} variant={"r4-gray-2"} active={isChecked} onClick={handleClick}>
+    <Button type={"button"} variant={"r4-black"} active={isChecked} onClick={handleClick}>
       <span>{text}</span>
       <input
         {...register(name, validationSchema)}
@@ -179,7 +179,7 @@ const IntegrationCardNotConnected = ({
         <div className="flex justify-between items-center self-stretch">
           <Button variant="text" text="Delete key" icon={Delete} />
           <div className="flex flex-end items-center gap-xs">
-          <Button variant="r4-gray-2" text="Cancel"
+          <Button variant="r4-black" text="Cancel"
             type="button"
             onClick={() => { setOpen(false) }}
           />

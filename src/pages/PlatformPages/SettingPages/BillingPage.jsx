@@ -51,7 +51,7 @@ export const BillingPage = ({ billings }) => {
         {false && <Modal
           title="Cancel your plan"
           subtitle="We’re sorry to see you cancel your plan. To help us improve, please help us understand the reason."
-          trigger={<Button variant="r4-gray-2" text="Cancel plan" />}
+          trigger={<Button variant="r4-black" text="Cancel plan" />}
           open={canceling}
           setOpen={setCanceling}
         >
