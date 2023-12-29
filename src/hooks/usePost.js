@@ -29,9 +29,11 @@ const usePost = ({ path, method = "POST", domain = apiConfig.apiURL, auth = true
       body: form ? postData : JSON.stringify(postData),
     })
       .then(async (response) => {
+        console.log(response)
         if (!response.ok) {
           const error = await response.json();
-          console.log(error)
+          console.log(error, "this is an error")
+          setError(error.message)
           throw new Error(error.detail);
         } else {
           const data = await response.json();
@@ -42,7 +44,7 @@ const usePost = ({ path, method = "POST", domain = apiConfig.apiURL, auth = true
         setData(data);
       })
       .catch((error) => {
-        setError(error.message);
+       setError(error.message);
       })
       .finally(() => {
         setLoading(false);

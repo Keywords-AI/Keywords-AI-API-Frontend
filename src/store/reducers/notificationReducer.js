@@ -1,16 +1,16 @@
 import { DISPATCH_NOTIFICATION, DISMISS_NOTIFICATION } from "src/store/actions";
 const initState = {
   notifications: [
-    // {
-    //     title: "Success",
-    //     message: "Your organization has been successfully updated.",
-    //     type: "success"
-    // },
-    // {
-    //   title: "Success",
-    //   message: "Your organization has been successfully updated.",
-    //   type: "success",
-    // },
+    {
+      title: "Success",
+      message: "Your organization has been successfully updated.",
+      type: "success",
+    },
+    {
+      title: "Success",
+      message: "Your organization has been successfully updated.",
+      type: "success",
+    },
   ],
 };
 
