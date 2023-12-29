@@ -2208,7 +2208,14 @@
     "@replit/codemirror-lang-svelte" "^6.0.0"
     codemirror-lang-mermaid "^0.5.0"
 
-"@uiw/codemirror-themes@^4.21.21":
+"@uiw/codemirror-theme-white@^4.21.21":
+  version "4.21.21"
+  resolved "https://registry.yarnpkg.com/@uiw/codemirror-theme-white/-/codemirror-theme-white-4.21.21.tgz#ed2146b2db19bb85790bed4034560eceeaf4a2be"
+  integrity sha512-nX4iuiZXPkR0WaNelaLpx6JAcPQ1TPoMoeYEDV8XSbMvlBZgHAgFwi2KSIexwSG5Fihywpv+mkusAPrOHNF3zw==
+  dependencies:
+    "@uiw/codemirror-themes" "4.21.21"
+
+"@uiw/codemirror-themes@4.21.21", "@uiw/codemirror-themes@^4.21.21":
   version "4.21.21"
   resolved "https://registry.yarnpkg.com/@uiw/codemirror-themes/-/codemirror-themes-4.21.21.tgz#26efb06ecce9a51aa73d39311c90f8fcb06fdc43"
   integrity sha512-ljVcMGdaxo75UaH+EqxJ+jLyMVVgeSfW2AKyT1VeLy+4SDpuqNQ7wq5XVxktsG6LH+OvgSFndWXgPANf4+gQcA==

@@ -27,7 +27,6 @@ import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
 // import Dashboard from "./pages/AuthPages/Dashboard/Dashboard";
 
-
 const mapStateToProps = (state) => {
   return {
     user: state.user,
@@ -43,7 +42,7 @@ const Routes = ({ getUser, user }) => {
     getUser();
   }, []);
 
-  const isUserLoggedIn = isLoggedIn();
+  const isUserLoggedIn = isLoggedIn(user);
   // const isUserLoggedIn = true;
   const routes = [
     {
