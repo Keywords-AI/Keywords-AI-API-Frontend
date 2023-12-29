@@ -38,7 +38,6 @@ const NotConnectedCurrentModel = ({
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
     .map((entry) => entry[0]);
-  console.log(top5Keys);
   const dispatch = useDispatch();
   const models = [
     {

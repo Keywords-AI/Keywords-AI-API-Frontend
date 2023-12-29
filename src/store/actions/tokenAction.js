@@ -14,13 +14,13 @@ export const refreshToken = () => {
     }),
   })
     .then(async (res) => {
-      //   if (res.status === 200) {
-      //     const responseJson = await res.json();
-      //     localStorage.setItem("access_token", responseJson.access);
-      //   } else if (res.status === 400) {
-      //     const responseJson = await res.json();
-      //     console.log(responseJson);
-      //   }
+        if (res.status === 200) {
+          const responseJson = await res.json();
+          localStorage.setItem("access_token", responseJson.access);
+        } else if (res.status === 400) {
+          const responseJson = await res.json();
+          console.log(responseJson);
+        }
     })
     .catch((error) => console.log(error));
 };

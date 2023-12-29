@@ -15,7 +15,7 @@ export function Unauthenticated() {
   }, [])
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home"/>
+      <BackButton text="Home" link="/"/>
       <div className="flex-col w-full max-w-[420px] items-center gap-md ">
         <div
           aria-label="section title"
