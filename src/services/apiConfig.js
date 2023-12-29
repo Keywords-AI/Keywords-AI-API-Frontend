@@ -1,8 +1,17 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
+const selectEndpoint = () => {
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    return "http://localhost:8000/";
+  } else if (window.location.hostname === "platform-test.keywordsai.co") {
+    return "https://api-test.keywordsai.co/";
+  } else if (window.location.hostname === "platform.keywordsai.co") {
+    return "https://api.keywordsai.co/";
+  }
+}
 
 const apiConfig = {
-  // apiURL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'? 'https://api-test.keywordsai.co/' : 'https://api-test.keywordsai.co/',
-  apiURL: "http://localhost:8000/",
+  apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
+  // apiURL: "https://api-test.keywordsai.co", // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
