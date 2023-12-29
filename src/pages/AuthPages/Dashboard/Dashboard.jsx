@@ -9,6 +9,7 @@ import { Button } from "src/components";
 import ButtonGroup from "src/components/Buttons/ButtonGroup";
 import { UsageChart } from "src/components/Display";
 import { TitleStaticSubheading } from "src/components/Titles";
+import DashboardChart from "src/components/Display/DashboardChart";
 
 const buttons = [
   { text: "Day", onClick: () => console.log("Clicked Day") },
@@ -50,8 +51,8 @@ export function Dashboard() {
           up={false}
         />
       </div>
-      <UsageChart dataKeyX={"name"} dataKeyY="usage"/>
-      <TitleStaticSubheading title="Log" subtitle="Quality of the model output."/>
+      <DashboardChart />
+      <TitleStaticSubheading title="Log" subtitle="Coming soon!"/>
     </div>
   );
 }
