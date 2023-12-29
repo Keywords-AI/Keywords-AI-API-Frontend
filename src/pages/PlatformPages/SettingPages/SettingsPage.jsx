@@ -98,7 +98,7 @@ export const SettingPage = ({
             >
                 <Button
                     text="Delete this organization"
-                    variant="r4-gray-2"
+                    variant="r4-black"
                 />
             </PageParagraph> */}
     </PageContent>

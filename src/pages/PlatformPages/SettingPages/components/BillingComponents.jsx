@@ -32,7 +32,7 @@ const CancelPlanFormNotConnected = React.forwardRef(({ setCanceling }, ref) => {
       />
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
-          <Button variant="r4-gray-2" text={"Undo"}
+          <Button variant="r4-black" text={"Undo"}
             type="button"
             onClick={handleClose} />
           <Button variant="r4-red" text={"Cancel plan"} />

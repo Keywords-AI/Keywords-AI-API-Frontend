@@ -18,7 +18,7 @@ export const AddMemberForm = ({ setOpen = () => { } }) => {
             </div>
             <div className="flex-row justify-end self-stretch">
                 <div className="flex-row gap-xs">
-                    <Button variant="r4-gray-2" text={"Cancel"}
+                    <Button variant="r4-black" text={"Cancel"}
                         type="button"
                         onClick={handleClose} />
                     <Button variant="r4-primary" text="Invite" />
