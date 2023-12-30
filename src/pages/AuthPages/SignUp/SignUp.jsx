@@ -44,7 +44,7 @@ export function SignUp() {
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-col justify-center items-center gap-[20px] self-stretch"
+          className="flex-col justify-center items-center gap-md self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
             <div className="flex items-center gap-xs self-stretch">

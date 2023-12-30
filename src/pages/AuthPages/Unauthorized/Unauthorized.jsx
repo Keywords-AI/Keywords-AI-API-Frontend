@@ -12,7 +12,7 @@ export function Unauthorized() {
       <div className="flex-col items-start gap-[10px] self-stretch">
         <BackButton text="Home" link="/"/>
       </div>
-      <div className="flex flex-col w-full max-w-[420px] items-center gap-[20px] justify-center">
+      <div className="flex flex-col w-full max-w-[420px] items-center gap-md justify-center">
         <AuthenticationTitle title="Get started with a plan" subtitle="You have not purchased access to API keys." align="items-center"/>
         <Button variant="r4-white" text="View pricing plans" className="min-w-[60px] items-center justify-center gap-xxs" onClick={() => {navigate("/pricing");}}/>
       </div>

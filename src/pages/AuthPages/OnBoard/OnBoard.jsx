@@ -17,7 +17,7 @@ export function OnBoard() {
         </div>
       <div className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center">
         <AuthenticationTitle title="Create organization" subtitle="raymond@keywordsai.co is inviting you to join their organization. "/>
-        <div className="flex flex-col items-center justify-center gap-[20px] self-stretch">
+        <div className="flex flex-col items-center justify-center gap-md self-stretch">
             <TextInput title="Organization name" width="w-full" placeholder="Enter your organization name"/>
             <Button variant="r4-white" text="Create organization" className="min-w-[60px] self-stretch items-center justify-center gap-xxs"/>
         </div>
