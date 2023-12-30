@@ -45,7 +45,7 @@ const Routes = ({ getUser, user }) => {
     const intervalId = setInterval(() => {
       // rotate the token every 5 minutes
       setAuthToken(refreshToken());
-    }, 1000 * 60 * 5);
+    }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
   // const isUserLoggedIn = isLoggedIn(user);
@@ -86,9 +86,13 @@ const Routes = ({ getUser, user }) => {
       element: !isUserLoggedIn ? (
         <FullScreenLayout />
       ) : (
-        <Navigate to="/platform" />
+        <Navigate to="/platform/playground" />
       ),
       children: [
+        {
+          path: "",
+          element: <Dashboard />,
+        },
         { path: "login", element: <LogIn /> },
         {
           path: "signup",

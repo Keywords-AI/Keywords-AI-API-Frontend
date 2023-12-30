@@ -19,7 +19,7 @@ const LogIn = ({ login }) => {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      navigate(0);
+      window.location.href = "/";
     } catch (error) {
       setBackendError(error.detail || error.message);
     }

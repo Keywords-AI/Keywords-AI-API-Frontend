@@ -118,11 +118,6 @@ export const login = async (email, password) => {
   }
 };
 
-export const logout = () => {
-  eraseCookie("access_token");
-  eraseCookie("refresh_token");
-};
-
 export const getCookie = (name = "csrftoken") => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -184,11 +179,3 @@ function eraseCookie(name, path = "/") {
   document.cookie =
     name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
 }
-
-const googleLogin = async () => {
-  keywordsFetch({
-    path: `auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`,
-  }).then((response) => {
-    console.log(response);
-  });
-};
