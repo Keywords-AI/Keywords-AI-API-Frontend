@@ -43,7 +43,7 @@ const Routes = ({ getUser, user }) => {
   }, []);
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // rotate the token every 5 minutes
+      // rotate the token every 10 minutes
       setAuthToken(refreshToken());
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
@@ -86,13 +86,9 @@ const Routes = ({ getUser, user }) => {
       element: !isUserLoggedIn ? (
         <FullScreenLayout />
       ) : (
-        <Navigate to="/platform/playground" />
+        <Navigate to="/platform" />
       ),
       children: [
-        {
-          path: "",
-          element: <Dashboard />,
-        },
         { path: "login", element: <LogIn /> },
         {
           path: "signup",
@@ -123,14 +119,7 @@ const Routes = ({ getUser, user }) => {
       path: "*",
       element: <FullScreenLayout />,
       children: [{ path: "*", element: <NotFound /> }],
-    },
-    // {
-    //   path: "/dashboard",
-    //   element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
-    //   children: [
-    //     { path: "", element: <Dashboard /> },
-    //   ],
-    // }
+    }
   ];
 
   const element = useRoutes(routes);
