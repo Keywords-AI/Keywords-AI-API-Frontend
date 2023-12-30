@@ -5,9 +5,6 @@ const StreamingTextTest = () => {
   const variants = [
     "primary",
     "header",
-    "secondary",
-    "secondary-gray",
-    "secondary-black",
     "beta",
     "r4-white",
     "r4-black",

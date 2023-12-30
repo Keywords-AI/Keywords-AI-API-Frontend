@@ -228,7 +228,7 @@ const Bills = ({ user }) => {
             </button>
             {user?.organization?.owner?.active_subscription && (
               <button
-                className="button-secondary-gray"
+                className="button-error" //previous button was outdated, replaced with button-error to highligh which button to be switched out 
                 onClick={() => {
                   // cancelSubscription();
                   setCanceling(true);
@@ -273,7 +273,7 @@ const Bills = ({ user }) => {
                   </button>
                   <button
                     type="submit"
-                    className={"button-primary bg-error"}
+                    className={"button-error bg-error"}//previous button variant was outdated, switched to error button to highligh incorrect button to be replaced
                     onClick={(e) => {
                       e.preventDefault();
                       cancelSubscription();

@@ -22,9 +22,10 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
-import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
+import { CreateOrganization } from "./pages/AuthPages/Onboarding/CreateOrganization";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
+import { InviteTeam } from "./pages/AuthPages/Onboarding";
 
 const mapStateToProps = (state) => {
   return {
@@ -49,7 +50,11 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   const isUserLoggedIn = isLoggedIn(user);
+<<<<<<< HEAD
   // const isUserLoggedIn = true;
+=======
+  //const isUserLoggedIn = true;
+>>>>>>> origin/andy
   const routes = [
     {
       path: "/platform",
@@ -111,7 +116,8 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         { path: "/", element: <Unauthenticated /> },
-        { path: "onboard", element: <OnBoard /> },
+        { path: "create-org", element: <CreateOrganization /> },
+        { path: "invite-team", element: <InviteTeam /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
