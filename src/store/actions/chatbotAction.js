@@ -36,7 +36,7 @@ export const setEnableCustomPrompt = (enable) => {
     type: SET_ENABLE_CUSTOM_PROMPT,
     payload: enable,
   };
-};
+};  // not used
 
 export const setCustomPrompt = (customPrompt) => {
   if (typeof customPrompt === "object") {
@@ -46,35 +46,35 @@ export const setCustomPrompt = (customPrompt) => {
     type: SET_CUSTOM_PROMPT,
     payload: customPrompt,
   };
-};
+};  // not used
 
 export const setCustomPromptFile = (customPromptFile) => {
   return {
     type: SET_CUSTOM_PROMPT_FILE,
     payload: customPromptFile,
   };
-};
+};  // not used
 
 export const setMessages = (messages) => {
   return {
     type: SET_MESSAGES,
     payload: messages,
   };
-};
+};  // not used
 
 export const setConversations = (conversations) => {
   return {
     type: SET_CONVERSATIONS,
     payload: conversations,
   };
-};
+};  // not used
 
 export const setConversation = (conversation) => {
   return {
     type: SET_CONVERSATION,
     payload: conversation,
   };
-};
+};  // not used
 
 export const deleteConversation = (id) => {
   return (dispatch, getState) => {
@@ -220,7 +220,7 @@ export const nameConversation = (id, content) => {
       })
       .catch((err) => console.log(err));
   };
-};
+};  // not used
 
 export const createMessage = (msg) => {
   return (dispatch) => {
