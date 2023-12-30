@@ -5,7 +5,7 @@ import streamingTextReducer from "./streamingTextReducer";
 import apiKeyReducer from "./settingPagesReducer/apiKeyReducer";
 import organizationReducer from "./deprecated/organizationReducer";
 import billingsReducer from "./settingPagesReducer/billingsReducer";
-import chatbotReducer from "./settingPagesReducer/chatbotReducer";
+import chatbotReducer from "./chatbotReducer";
 import integrationReducer from "./settingPagesReducer/integrationReducer";
 import notificationReducer from "./notificationReducer";
 
