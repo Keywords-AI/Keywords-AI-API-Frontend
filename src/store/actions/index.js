@@ -5,3 +5,4 @@ export * from "./tokenAction";
 export * from "./chatbotAction";
 export * from "./streamingTextAction";
 export * from "./notificationAction";
+export * from "./dashboardAction";

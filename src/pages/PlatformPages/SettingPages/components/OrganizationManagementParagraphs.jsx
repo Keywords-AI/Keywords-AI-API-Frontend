@@ -85,7 +85,7 @@ function MemberManagement({ user, deleteRole }) {
                       />
                     </div>
                 }
-                {listedUser?.role?.name !== "owner" && <button className="button-secondary-gray"
+                {listedUser?.role?.name !== "owner" && <button className="button-error" //previous button was outdated, updated to button-error to highligh which button to be switched out
                   onClick={() => {
                     deleteRole(listedUser?.role?.id);
                     setUsers(users.filter(user => user.email !== listedUser?.email));
@@ -168,7 +168,7 @@ const OrganizationSetting = ({ user }) => {
         </div>
       </div>
       {user?.organization_role?.name === "owner" ?
-        <button className="button-primary">
+        <button className="button-error"> 
           Save
         </button>
         :

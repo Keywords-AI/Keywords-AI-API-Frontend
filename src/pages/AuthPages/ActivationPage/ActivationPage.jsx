@@ -43,7 +43,7 @@ export const ActivationPage = (props) => {
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-col justify-center items-center gap-[20px] self-stretch"
+          className="flex-col justify-center items-center gap-md self-stretch"
         >
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button

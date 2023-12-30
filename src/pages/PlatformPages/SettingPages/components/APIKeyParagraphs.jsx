@@ -189,7 +189,7 @@ function GetAPIKey({ usageData, fetchUsageData, user }) {
                                     setWhichForm("create");
                                     setShowForm(!showForm)
                                 }}
-                                className="button-primary"
+                                className="button-error"//previous button variant was outdated, switched to error button to highligh incorrect button to be replaced
                             >
                                 <Plus />
                                 {"Generate key"}

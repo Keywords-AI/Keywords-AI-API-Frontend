@@ -22,9 +22,10 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
-import { OnBoard } from "./pages/AuthPages/OnBoard/OnBoard";
+import { CreateOrganization } from "./pages/AuthPages/Onboarding/CreateOrganization";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
+import { InviteTeam } from "./pages/AuthPages/Onboarding";
 
 const mapStateToProps = (state) => {
   return {
@@ -43,13 +44,13 @@ const Routes = ({ getUser, user }) => {
   }, []);
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // rotate the token every 5 minutes
+      // rotate the token every 10 minutes
       setAuthToken(refreshToken());
-    }, 1000 * 60 * 5);
+    }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  // const isUserLoggedIn = isLoggedIn(user);
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = isLoggedIn(user);
+  // const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -111,7 +112,8 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         { path: "/", element: <Unauthenticated /> },
-        { path: "onboard", element: <OnBoard /> },
+        { path: "create-org", element: <CreateOrganization /> },
+        { path: "invite-team", element: <InviteTeam /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
@@ -119,14 +121,7 @@ const Routes = ({ getUser, user }) => {
       path: "*",
       element: <FullScreenLayout />,
       children: [{ path: "*", element: <NotFound /> }],
-    },
-    // {
-    //   path: "/dashboard",
-    //   element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
-    //   children: [
-    //     { path: "", element: <Dashboard /> },
-    //   ],
-    // }
+    }
   ];
 
   const element = useRoutes(routes);

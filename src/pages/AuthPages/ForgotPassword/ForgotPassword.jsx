@@ -31,7 +31,7 @@ function ForgotPasswordNotConnected({ resetPassword }) {
         onSubmit={handleSubmit(onSubmit)}
       >
         <AuthenticationTitle title="Forgot password" subtitle="You will receive a link to reset your password." />
-        <div className="flex-col justify-center items-center gap-[20px] self-stretch">
+        <div className="flex-col justify-center items-center gap-md self-stretch">
           <div className="flex-col justify-center items-start gap-xs self-stretch">
             <TextInput {...register("email")} type="email" title="Email" placeholder="Put your email here" />
           </div>

@@ -98,3 +98,16 @@ export const generateChild = (page) => {
       page: page.page,
   };
 }
+
+export const sliceChartData = (data, dataKeyX, dataKeyY) => {
+  /*
+  Slice the data to only contain the dataKeyX and dataKeyY
+  */
+  if (!data) return [];
+  return data.map((item) => {
+    return {
+      [dataKeyX]: item[dataKeyX],
+      [dataKeyY]: item[dataKeyY],
+    };
+  });
+};

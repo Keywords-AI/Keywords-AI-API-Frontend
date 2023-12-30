@@ -19,7 +19,7 @@ const LogIn = ({ login }) => {
   const onSubmit = async (data) => {
     try {
       await login(data.email, data.password);
-      navigate(0);
+      window.location.href = "/";
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
@@ -54,7 +54,7 @@ const LogIn = ({ login }) => {
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex-col justify-center items-center gap-[20px] self-stretch"
+          className="flex-col justify-center items-center gap-md self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
             <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email")}/>

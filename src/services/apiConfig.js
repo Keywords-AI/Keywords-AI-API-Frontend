@@ -18,7 +18,7 @@ const selectEndpoint = () => {
 
 const apiConfig = {
   apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  // apiURL: "https://api-test.keywordsai.co", // For anyone who doesn't have backend local server
+  // apiURL: "https://api-test.keywordsai.co/", // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
@@ -31,14 +31,20 @@ export const keywordsFetch = async ({
   host = apiConfig.apiURL,
   data,
   method = "GET",
+  auth=true,
+  credentials = "same-origin",
 }) => {
   try {
+    const headers = {
+      "Content-Type": "application/json"
+    };
+    if (auth) {
+      headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
+    }
     const callBody = {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
+      headers,
+      credentials: credentials,
     };
     if (method !== "GET") {
       callBody.body = JSON.stringify(data);

@@ -2,21 +2,18 @@ import { getCookie } from "src/services/getCookie";
 import apiConfig from "src/services/apiConfig";
 
 export const refreshToken = () => {
-  const refresh = localStorage.getItem("refresh_token");
   fetch(`${apiConfig.apiURL}auth/jwt/refresh/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-CSRFToken": getCookie("csrftoken"),
     },
-    body: JSON.stringify({
-      refresh: refresh,
-    }),
+    credentials: "include",
   })
     .then(async (res) => {
         if (res.status === 200) {
           const responseJson = await res.json();
-          localStorage.setItem("access_token", responseJson.access);
+          localStorage.setItem("access", responseJson.access);
         } else if (res.status === 400) {
           const responseJson = await res.json();
           console.log(responseJson);
@@ -33,7 +30,7 @@ export const validateToken = () => {
       "X-CSRFToken": getCookie("csrftoken"),
     },
     body: JSON.stringify({
-      token: localStorage.getItem("access_token"),
+      token: localStorage.getItem("access"),
     }),
   })
     .then(async (res) => {

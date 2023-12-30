@@ -127,7 +127,7 @@ export function BetaAccess() {
           <div className="flex-col items-start gap-xs self-stretch">
             <Button
               text={"Join waitlist"}
-              variant={"secondary"}
+              variant={"error"} //previous button variant was outdated, switched to error button to highligh incorrect button to be replaced
               borderRadius="rounded-sm"
               className="w-full"
               arrow={false}

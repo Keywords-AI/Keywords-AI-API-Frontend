@@ -51,9 +51,10 @@ function InviteMember({ user }) {
     }
   }, [error]);
 
+//previous button variant below was outdated, switched to error button to highligh incorrect button to be replaced
   return (
     <>
-      <button className="button-primary" onClick={() => setOpen(true)}>
+      <button className="button-error" onClick={() => setOpen(true)}> 
         <Plus />
         {"Invite member"}
       </button>
@@ -103,7 +104,7 @@ function InviteMember({ user }) {
               >
                 Cancel
               </button>
-              <button className="button-primary" onClick={handleInvite}>
+              <button className="button-error" onClick={handleInvite}>
                 Invite
               </button>
             </div>
