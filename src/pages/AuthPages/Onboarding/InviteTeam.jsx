@@ -8,7 +8,7 @@ import { logout } from "src/store/actions";
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 
-export function CreateOrganization() {
+export function InviteTeam() {
   const dispatch = useDispatch(); // Get the dispatch function
 
   const handleBackButtonClick = () => {
@@ -24,31 +24,29 @@ export function CreateOrganization() {
       </div>
       <div className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center">
         <AuthenticationTitle
-          title="Create organization"
-          subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
+          title="Invite team"
+          subtitle="Add members to your organization."
         />
         <div className="flex flex-col items-center justify-center gap-md self-stretch">
           <div className="flex flex-col justify-start gap-sm self-stretch ">
             <TextInput
-              title="Organization name"
-              placeholder="Enter your organization name"
+              title="Email"
+              placeholder="email@example.com, email2@example.com..."
             />
             <SelectInput
-              title="Organization size"
+              title="Role"
               width="w-full"
-              placeholder="Please select"
+              placeholder={<span>Member <span className="text-gray-4/40">- full access with limited permissions</span></span>}
               choices={[
-                { name: "1-10", value: "1-10" },
-                { name: "11-50", value: "11-50" },
-                { name: "51-200", value: "51-200" },
-                { name: "200+", value: "200+" },
+                { name: <span>Member <span className="text-gray-4/40 text-sm-regular">- full access with limited permissions</span></span>, value: "member" },
+                { name: <span>Admin <span className="text-gray-4/40 text-sm-regular">- full adminstrative access</span></span>, value: "admin" },
               ]}
               optionsWidth="w-[420px]"
             />
           </div>
           <Button
-            variant="r4-white"
-            text="Create organization"
+            variant="r4-primary"
+            text="Continue"
             className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
           />
         </div>

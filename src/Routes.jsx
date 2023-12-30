@@ -22,9 +22,10 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
-import { CreateOrganization } from "./pages/AuthPages/CreateOrganization/CreateOrganization";
+import { CreateOrganization } from "./pages/AuthPages/Onboarding/CreateOrganization";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
+import { InviteTeam } from "./pages/AuthPages/Onboarding";
 
 const mapStateToProps = (state) => {
   return {
@@ -112,6 +113,7 @@ const Routes = ({ getUser, user }) => {
         },
         { path: "/", element: <Unauthenticated /> },
         { path: "create-org", element: <CreateOrganization /> },
+        { path: "invite-team", element: <InviteTeam /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
