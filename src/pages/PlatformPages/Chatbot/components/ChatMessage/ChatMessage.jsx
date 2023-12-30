@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
 import { ChatbotReactMarkdown } from "src/components/Misc";
+import { regenerateChatbotResponse } from "src/store/actions";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {
@@ -11,8 +12,8 @@ export default function ChatMessage({ message }) {
   const handleToClipboard = (text) => {
     navigator.clipboard.writeText(text);
   };
-  const handleRegenerate = () => {
-    throw new Error("Error: Regenerate not implemented");
+  const handleRegenerate = (text) => {
+    regenerateChatbotResponsene()
   };
   return (
     <div
@@ -40,7 +41,7 @@ export default function ChatMessage({ message }) {
                 variant="small"
                 text="Regenerate"
                 icon={Regenerate}
-                onClick={() => handleToClipboard(message?.content)}
+                onClick={() => handleRegenerate(message?.content)}
               />
             </div>
           ) : null}

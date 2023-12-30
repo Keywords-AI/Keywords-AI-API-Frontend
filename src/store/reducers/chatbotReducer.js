@@ -11,6 +11,7 @@ import {
   CREATE_MESSAGE,
   DELETE_MESSAGE,
 } from "src/store/actions";
+import { REMOVE_LAST_MESSAGE } from "../actions/playgroundAction";
 
 const initState = {
   isEditing: false,
@@ -76,6 +77,14 @@ export default function chatbotReducer(state = initState, action) {
           ),
         },
       };
+      case REMOVE_LAST_MESSAGE:
+        return {
+          ...state,
+          conversations: {
+            ...state.conversation,
+            messages: state.conversation.messages.slice(0, -1),
+          },
+        };  
     default:
       return state;
   }

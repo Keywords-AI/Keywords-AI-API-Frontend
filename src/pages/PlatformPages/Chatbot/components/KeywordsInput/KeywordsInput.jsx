@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs";
 import { DotsButton, IconButton } from "src/components/Buttons";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
 import { abortStreamingTextRequest } from "src/store/actions";
@@ -22,13 +22,16 @@ const mapDispatchToProps = {
 };
 
 function KeywordsInput({
-  placeholder,
   sendMessage,
   abortStreamingTextRequest,
-  value,
   streaming,
 }) {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const [inputValue, setInputValue] = React.useState("");
+  
+  // const onChange = (e) => { 
+    
+  // }
   const onKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -37,6 +40,7 @@ function KeywordsInput({
   };
   const onSubmit = async (data) => {
     sendMessage(data.message);
+    setInputValue("");
   };
 
   const [isHovered, setIsHovered] = React.useState(false);
@@ -48,9 +52,10 @@ function KeywordsInput({
         {...register("message", { required: "This is required" })}
         className={"rounded-sm text-sm py-xxs px-xs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
         borderless={false}
-        placeholder={placeholder}
-        text={streaming ? "Generating" : value}
+        placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}
+        value={streaming ? "Generating..." : ""}
+        // onChange={(e) => setInputValue(e.target.value)}
       />
       {streaming ? (
         <IconButton
