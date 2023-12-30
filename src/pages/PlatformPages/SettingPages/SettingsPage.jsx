@@ -7,6 +7,7 @@ import { Button } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { setOrgName } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
+import {HoverPopup} from "src/components/Cards";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -88,8 +89,10 @@ export const SettingPage = ({
             value={organization?.unique_organization_id || ""}
             // value={"locked-text"}
             disabled={true}
+            hoverText={true}
           />
           <Button type="submit" text="Update" variant="r4-primary" />
+          
         </form>
       </PageParagraph>
       {/* <PageParagraph
