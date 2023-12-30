@@ -1,7 +1,7 @@
 import { Button } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import { useSelector } from "react-redux";
-import { Cost, Latency, Score, Tokens } from "./icons";
+import { Cost, Latency, Score, Tokens } from "src/components";
 import { Compare } from "src/components";
 import React, { useEffect } from "react";
 import { TextInput } from "src/components/Inputs";

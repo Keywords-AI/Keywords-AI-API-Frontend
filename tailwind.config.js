@@ -1,15 +1,9 @@
 /** @type {import('tailwindcss').Config} */
-const { join } = require("path");
 const theme = require("./src/components/styles/theme");
-
+const { colorThemes } = require("./src/components/styles/color-themes");
 export default {
-  // content: [
-  //   join(
-  //     __dirname,
-  //     "{src,pages,components,app}/**/*!(*.stories|*.spec).{js,jsx,html}"
-  //   ),
-  // ],
+  mode: "jit",
   content: ["./src/**/*.{js,tsx,jsx}"],
   theme: theme,
-  plugins: [require("./flexPlugin.js")],
+  plugins: [require("./flexPlugin.js"), colorThemes],
 };

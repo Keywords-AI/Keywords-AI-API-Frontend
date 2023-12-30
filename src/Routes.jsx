@@ -48,8 +48,8 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 60 * 5);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  const isUserLoggedIn = isLoggedIn();
-  // const isUserLoggedIn = true;
+  // const isUserLoggedIn = isLoggedIn(user);
+  const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -74,6 +74,10 @@ const Routes = ({ getUser, user }) => {
         {
           path: "dashboard",
           element: <Dashboard />,
+        },
+        {
+          path: "/platform",
+          element: <Navigate to="/platform/dashboard" />,
         }
       ],
     },
@@ -82,7 +86,7 @@ const Routes = ({ getUser, user }) => {
       element: !isUserLoggedIn ? (
         <FullScreenLayout />
       ) : (
-        <Navigate to="/platform/dashborad" />
+        <Navigate to="/platform" />
       ),
       children: [
         { path: "login", element: <LogIn /> },
