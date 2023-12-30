@@ -50,7 +50,7 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   const isUserLoggedIn = isLoggedIn(user);
-  //const isUserLoggedIn = true;
+  // const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",

@@ -9,6 +9,7 @@ import chatbotReducer from "./chatbotReducer";
 import integrationReducer from "./settingPagesReducer/integrationReducer";
 import notificationReducer from "./notificationReducer";
 import themeReducer from "./themeReducer";
+import dashboardReducer from "./dashboardReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -23,6 +24,7 @@ const rootReducer = (state = {}, action) => {
     integration: integrationReducer(state.integration, action),
     notification: notificationReducer(state.notification, action),
     theme: themeReducer(state.theme, action),
+    dashboard: dashboardReducer(state.dashboard, action),
   };
 };
 

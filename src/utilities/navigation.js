@@ -1,6 +1,16 @@
 import React from "react";
 
-export const setQueryParams = (params) => {
+export const setQueryParams = (params, navigate) => {
+  /*
+  If you want to trigger a component reload, pass in navigate
+  const navigate = useNavigate();
+  setQueryParams({ page: 1 }, navigate);
+
+  If you just want to update the URL without triggering a component reload,
+  omit the navigate argument
+  setQueryParams({ page: 1 });
+  */
+
   // Get the current location
   const location = window.location;
   // Create a new URLSearchParams object from the current search string
@@ -20,6 +30,9 @@ export const setQueryParams = (params) => {
   // The first argument (state object) could be used to store information but is often left empty
   // The second argument (title) is a title for the new history entry, which is not used by most browsers
   // The third argument (url) is the new URL to be pushed into the history
-  window.history.pushState({}, "", newUrl);
-
+  if (navigate) {
+    navigate({ search: query.toString() });
+  } else {
+    window.history.pushState({}, "", newUrl);
+  }
 };

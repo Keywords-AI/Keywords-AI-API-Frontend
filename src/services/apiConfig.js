@@ -31,14 +31,20 @@ export const keywordsFetch = async ({
   host = apiConfig.apiURL,
   data,
   method = "GET",
+  auth=true,
+  credentials = "same-origin",
 }) => {
   try {
+    const headers = {
+      "Content-Type": "application/json"
+    };
+    if (auth) {
+      headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
+    }
     const callBody = {
       method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
+      headers,
+      credentials: credentials,
     };
     if (method !== "GET") {
       callBody.body = JSON.stringify(data);

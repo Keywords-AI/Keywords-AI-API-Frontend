@@ -16,6 +16,7 @@ export const CREATE_CONVERSATION = "CREATE_CONVERSATION";
 export const DELETE_CONVERSATION = "DELETE_CONVERSATION";
 export const CREATE_MESSAGE = "CREATE_MESSAGE";
 export const DELETE_MESSAGE = "DELETE_MESSAGE";
+export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 
 export const errorMessage = (error) => ({
   type: ERROR_MESSAGE,
@@ -245,6 +246,7 @@ export const createMessage = (msg) => {
         })
         .catch((err) => console.log(err));
     } else {
+      console.log("creating conversation");
       dispatch(createConversation(msg));
     }
   };
@@ -268,7 +270,7 @@ export const deleteMesage = (id) => {
         }
       })
       .catch((err) => console.log(err));
-  };
+  }; 
 };
 
 export const sendMessage = (msgText) => {
@@ -278,6 +280,7 @@ export const sendMessage = (msgText) => {
     const systemPrompt = state.chatbot.customPrompt;
     const conversation_id = state.chatbot.conversation.id;
     console.log(msgText);
+    console.log(conversation_id);
     dispatch(
       createMessage({
         conversation: conversation_id,
@@ -309,3 +312,15 @@ export const sendMessage = (msgText) => {
     }
   };
 };
+
+export const regenerateChatbotResponse = () => { 
+  return (dispatch, getState) => {
+    dispatch(removeLastMessage());
+    dispatch(removeLastMessage());
+    dispatch();
+  };
+}
+
+export const removeLastMessage = () => ({
+  type: REMOVE_LAST_MESSAGE,
+});

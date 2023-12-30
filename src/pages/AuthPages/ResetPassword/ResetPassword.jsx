@@ -35,7 +35,7 @@ function ResetPasswordNotConnected({ resetPasswordConfirm }) {
       <form className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center"
         onSubmit={handleSubmit(onSubmit)}>
         <AuthenticationTitle title="Reset password" subtitle="Reset your password below." />
-        <div className="flex-col justify-center items-center gap-[20px] self-stretch">
+        <div className="flex-col justify-center items-center gap-md self-stretch">
           <div className="flex-col justify-center items-start gap-xs self-stretch">
             <TextInput {...register("new_password")} title="New password" type="password" placeholder="" />
             <TextInput {...register("re_new_password")} title="Confirm password" type="password" placeholder="" />

@@ -166,7 +166,7 @@ function Chatbot({
               }}
               className="flex-row self-stretch"
             >
-              <KeywordsInput placeholder={streaming ? "Generating..." : "Send a message..."} />
+              <KeywordsInput />
             </div>
             <div className="caption text-gray-4">
               Keywords AI connects your prompts with the best model automatically.{" "}

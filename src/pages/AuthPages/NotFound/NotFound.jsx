@@ -11,7 +11,7 @@ export function NotFound() {
       <div className="flex-col items-start gap-[10px] self-stretch">
         <BackButton text="Home" link={"/"}/>
       </div>
-      <div className="flex-col w-full max-w-[420px] items-center gap-[20px] ">
+      <div className="flex-col w-full max-w-[420px] items-center gap-md ">
         <TitleAuth title="404 - Not Found" subtitle={"Couldn’t find what you were looking for."} align="items-center"/>
         <div className="flex items-start gap-xxs ">
           <Button
