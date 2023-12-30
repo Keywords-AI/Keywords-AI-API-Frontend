@@ -1,6 +1,3 @@
-
-
-
 export const getCookie = (name = "csrftoken") => {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {

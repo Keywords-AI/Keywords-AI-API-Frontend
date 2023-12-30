@@ -11,5 +11,10 @@ export default {
   // ],
   content: ["./src/**/*.{js,tsx,jsx}"],
   theme: theme,
+  variants: {
+    extends: {
+      opacity: ['peer-checked']
+    }
+  },
   plugins: [require("./flexPlugin.js")],
 };

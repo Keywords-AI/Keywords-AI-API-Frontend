@@ -1,6 +1,7 @@
 import apiConfig, { keywordsFetch } from "src/services/apiConfig";
-import { getCookie } from "src/services/getCookie";
-import { eraseCookie, retrieveAccessToken } from "src/utilities/authorization";
+import { getCookie, setCookie } from "src/utilities/cookies";
+import { retrieveAccessToken } from "src/utilities/authorization";
+import { set } from "react-hook-form";
 
 export const register = (
   email,
@@ -29,8 +30,6 @@ export const register = (
         .then(async (res) => {
           if (res.ok) {
             const responseJson = await res.json();
-            localStorage.setItem("access_token", responseJson.access);
-            localStorage.setItem("refresh_token", responseJson.refresh);
             dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
             resolve(responseJson); // Resolve the promise with response data
           } else {
@@ -49,8 +48,8 @@ export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
     return new Promise((resolve, reject) => {
-      // fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
-      fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
+      fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
+        // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,14 +68,14 @@ export const login = (email, password) => {
             });
 
             // Now headersObj is a regular object and can be converted to JSON
-            console.log(JSON.stringify(headersObj, null, 2));
             const responseJson = await res.json();
-            localStorage.setItem("access_token", responseJson.access);
-            localStorage.setItem("refresh_token", responseJson.refresh);
+            localStorage.setItem("access", responseJson.access);
+            localStorage.setItem("refresh", responseJson.refresh);
             dispatch({ type: "LOGIN_SUCCESS", payload: responseJson }); // dispatch a success action
             resolve(responseJson); // Resolve the promise with response data
           } else {
             const responseJson = await res.json();
+            console.log(responseJson);
             reject(responseJson); // Reject the promise with the error object
           }
         })
@@ -89,9 +88,14 @@ export const login = (email, password) => {
 
 export const logout = () => {
   return (dispatch) => {
-    localStorage.removeItem("access_token");
-    eraseCookie("access_token");
-    window.location = "/";
+    fetch(`${apiConfig.apiURL}auth/logout/`, {
+      method: "POST",
+    })
+      .then(async (res) => {
+        localStorage.removeItem("access");
+        window.location = "/";
+      })
+      .catch((error) => console.log(error));
   };
 };
 
@@ -132,8 +136,8 @@ export const googleAuthJWT = () => {
     .then((data) => {
       console.log(data);
       if (data.access) {
-        localStorage.setItem("access_token", data.access);
-        localStorage.setItem("refresh_token", data.refresh);
+        localStorage.setItem("access", data.access);
+        localStorage.setItem("refresh", data.refresh);
         window.location = "/platform/playground";
       }
     })

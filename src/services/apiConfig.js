@@ -13,7 +13,7 @@ const selectEndpoint = () => {
 
 const apiConfig = {
   apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  // apiURL: "https://api-test.keywordsai.co", // For anyone who doesn't have backend local server
+  // apiURL: "https://api-test.keywordsai.co/", // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
