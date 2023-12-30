@@ -5,7 +5,7 @@ import { Quality, Rocket, Cost, Tokens, Speed } from "src/components/Icons";
 import ButtonGroup from "src/components/Buttons/ButtonGroup";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleStaticSubheading } from "src/components/Titles";
-import DashboardChart from "src/components/Display/DashboardChart";
+import { DashboardChart } from "src/components/Display";
 import { connect } from "react-redux";
 import { getDashboardData } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";

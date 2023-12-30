@@ -50,11 +50,7 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   const isUserLoggedIn = isLoggedIn(user);
-<<<<<<< HEAD
   // const isUserLoggedIn = true;
-=======
-  //const isUserLoggedIn = true;
->>>>>>> origin/andy
   const routes = [
     {
       path: "/platform",
