@@ -92,8 +92,9 @@ export const logout = () => {
       method: "POST",
     })
       .then(async (res) => {
+        console.log("logout")
         localStorage.removeItem("access");
-        window.location = "/";
+        window.location.href = "/login";
       })
       .catch((error) => console.log(error));
   };
