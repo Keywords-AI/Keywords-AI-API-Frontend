@@ -1,23 +1,21 @@
 import React from "react";
 // import { ButtonGroup } from "src/components/Buttons";
 import MetricCard from "src/components/Cards/MetricCard";
-import { PageContent } from "src/components/Sections";
 import { Quality, Rocket, Cost, Tokens, Speed } from "src/components/Icons";
-
-import { Button } from "src/components";
 import ButtonGroup from "src/components/Buttons/ButtonGroup";
-import { UsageChart } from "src/components/Display";
 import { TitleStaticSubheading } from "src/components/Titles";
 import DashboardChart from "src/components/Display/DashboardChart";
+import { setQueryParams } from "src/utilities/navigation";
 
-const buttons = [
-  { text: "Day", onClick: () => console.log("Clicked Day") },
-  { text: "Week", onClick: () => console.log("Clicked Week") },
-  { text: "Month", onClick: () => console.log("Clicked Month") },
-  { text: "Quarter", onClick: () => console.log("Clicked Quarter") },
-];
 
 export function Dashboard() {
+
+  const buttons = [
+    { text: "Day", onClick: () => setQueryParams({summary_type:"daily"}) },
+    { text: "Week", onClick: () => setQueryParams({summary_type:"weekly"}) },
+    { text: "Month", onClick: () => setQueryParams({summary_type:"mothly"}) },
+    { text: "Year", onClick: () => setQueryParams({summary_type:"yearly"}) },
+  ];
   return (
     <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
       <div className="flex flex-row justify-between w-full self-stretch">
