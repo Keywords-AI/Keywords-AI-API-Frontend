@@ -8,7 +8,6 @@ const useForwardRef = <T>(ref: React.ForwardedRef<T>, initialValue: any = null) 
 
   useEffect(() => {
     if (!ref) return;
-
     if (typeof ref === "function") {
       ref(targetRef.current);
     } else {

@@ -1,21 +1,24 @@
-import { Left, Button, DropDownMenu, EditableBox } from "src/components";
-import "./OptionSelector.css";
-import React from "react";
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import {
-  Cost,
-  Custom,
-  High,
+  Left,
+  Button,
+  DropDownMenu,
+  EditableBox,
   Low,
+  High,
+  Cost,
   Medium,
   Quality,
   Speed,
   Tokens,
-} from "./icons";
+} from "src/components";
+import "./OptionSelector.css";
+import React from "react";
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
 import { setModelOptions } from "src/store/actions/playgroundAction";
 import { NumberInput } from "src/components/Inputs";
-
+import { SwitchButton } from "src/components/Buttons";
+[];
 export function OptionSelector({}) {
   const dispatch = useDispatch();
   const [optimizeOpen, setOptimizeOpen] = React.useState(false);
@@ -23,6 +26,9 @@ export function OptionSelector({}) {
   const [token, setToken] = React.useState(
     useSelector((state) => state.playground.modelOptions.maxTokens)
   );
+  const handleCheckChange = (value) => {
+    console.log(value);
+  };
   const [current, setCurrent] = React.useState([
     {
       name: "Speed",
@@ -156,8 +162,11 @@ export function OptionSelector({}) {
         <div className="flex items-center gap-lg py-xxs">
           <p className="text-sm-regular text-gray-4">Max tokens</p>
         </div>
+        <div className="flex items-center gap-lg py-xxs">
+          <p className="text-sm-regular text-gray-4">Auto routing</p>
+        </div>
       </div>
-      <div className="flex-col items-start gap-sm ">
+      <div className="flex-col items-start gap-sm h-full">
         {options.map((item, index) => (
           <DropDownMenu
             key={index}
@@ -201,6 +210,9 @@ export function OptionSelector({}) {
             onChange={handleChange}
             onClick={() => setToken("")}
           />
+        </div>
+        <div className="flex h-[36px] items-center px-xs gap-[10px]">
+          <SwitchButton onCheckedChange={handleCheckChange} />
         </div>
       </div>
     </div>
