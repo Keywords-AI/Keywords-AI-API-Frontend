@@ -11,6 +11,7 @@ import notificationReducer from "./notificationReducer";
 import themeReducer from "./themeReducer";
 import dashboardReducer from "./dashboardReducer";
 import onboardingReducer from "./onboardingReducer";
+import fallbackReducer from "./settingPagesReducer/fallbackReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -27,6 +28,7 @@ const rootReducer = (state = {}, action) => {
     theme: themeReducer(state.theme, action),
     dashboard: dashboardReducer(state.dashboard, action),
     onboarding: onboardingReducer(state.onboarding, action),
+    fallback: fallbackReducer(state.fallback, action),
   };
 };
 

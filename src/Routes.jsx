@@ -50,12 +50,12 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  // const isUserLoggedIn = isLoggedIn(user);
+  //const isUserLoggedIn = isLoggedIn(user);
   const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
@@ -80,7 +80,7 @@ const Routes = ({ getUser, user }) => {
         {
           path: "/platform",
           element: <Navigate to="/platform/dashboard" />,
-        }
+        },
       ],
     },
     {
@@ -113,7 +113,15 @@ const Routes = ({ getUser, user }) => {
           path: "unauthorized",
           element: <Unauthorized />,
         },
-        { path: "/", element: <Unauthenticated /> },
+        {
+          path: "/",
+          element: isUserLoggedIn ? (
+            <Navigate to="/platform" />
+          ) : (
+            <Unauthenticated />
+          ),
+        },
+        { path: "onboarding", element: <OnboardingPage /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
@@ -125,7 +133,7 @@ const Routes = ({ getUser, user }) => {
       path: "*",
       element: <FullScreenLayout />,
       children: [{ path: "*", element: <NotFound /> }],
-    }
+    },
   ];
 
   const element = useRoutes(routes);

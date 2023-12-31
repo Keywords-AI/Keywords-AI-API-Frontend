@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import { textToLink } from "src/utilities/stringProcessing";
-import SettingsPage from "./SettingsPage";
-import ApiKeyPage from "./ApiKeyPage";
-import UsagePage from "./UsagePage";
-import MemberPage from "./MemberPage";
-import BillingPage from "./BillingPage";
-import { Building } from "src/components/Icons";
-import { IntegrationsPage } from "./IntegrationsPage";
-import { generateChild } from "src/utilities/objectProcessing";
-import UserSettings from "./UserSettings";
+import React, { useEffect } from 'react'
+import { textToLink } from 'src/utilities/stringProcessing';
+import SettingsPage from './SettingsPage';
+import ApiKeyPage from './ApiKeyPage';
+import UsagePage from './UsagePage';
+import MemberPage from './MemberPage';
+import BillingPage from './BillingPage';
+import { Building } from 'src/components/Icons'
+import { IntegrationsPage } from './IntegrationsPage';
+import { generateChild } from 'src/utilities/objectProcessing';
+import { AlertsFallbackPage } from './AlertsFallbackPage';
 
 const pages = [
   {
@@ -33,6 +33,16 @@ const pages = [
     // forAdmin: true,
     page: <BillingPage />,
   },
+    {
+        title: "Integrations",
+        // forAdmin: true,
+        page: <IntegrationsPage />,
+    },
+    {
+        title: "Alerts & Fallback",
+        // forAdmin: true,
+        page: <AlertsFallbackPage />,
+    },
 
   {
     title: "Integrations",

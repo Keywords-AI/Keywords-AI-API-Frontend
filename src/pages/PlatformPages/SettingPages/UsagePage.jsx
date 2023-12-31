@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { PageContent, PageParagraph } from "src/components/Sections";
+import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { ProgressBar, UsageChart } from "src/components/Display";
 import { getUsageData } from "src/store/actions";
 
@@ -24,6 +24,7 @@ export const UsagePage = ({ usage }) => {
       >
         <UsageChart dataKeyX={"name"} dataKeyY="usage" />
       </PageParagraph>
+      <Divider />
       <PageParagraph
         heading="Credits"
         subheading="Initial token credit assignment based on your plan. You will be
