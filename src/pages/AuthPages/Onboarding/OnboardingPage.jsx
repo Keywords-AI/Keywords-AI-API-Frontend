@@ -5,6 +5,7 @@ import { CreateOrganization } from './CreateOrganization';
 import { Button } from 'src/components/Buttons';
 import { Left } from 'src/components/Icons';
 import { useForm } from 'react-hook-form';
+import { IdentifyUseCase } from './IdentifyUseCase';
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = { logout };
@@ -33,7 +34,8 @@ export const OnboardingPage = connect(mapStateToProps, mapDispatchToProps)((
             <form
                 onSubmit={handleSubmit(onSubmit)}
             >
-                <CreateOrganization register={register} show />
+                <CreateOrganization register={register} show={true} />
+                <IdentifyUseCase register={register} show={true} />
                 <Button variant="r4-white" width="w-full" text="Test submit"/>
             </form>
         </div>

@@ -25,7 +25,8 @@ import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import { InviteTeam, OptimizeCosts } from "./pages/AuthPages/Onboarding";
+import { CreateOrganization, InviteTeam, OptimizeCosts, PrioritizeObj } from "./pages/AuthPages/Onboarding";
+import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
 
 const mapStateToProps = (state) => {
   return {
@@ -113,8 +114,11 @@ const Routes = ({ getUser, user }) => {
         },
         { path: "/", element: <Unauthenticated /> },
         { path: "onboarding", element: <OnboardingPage /> },
+        { path: "create-org", element: <CreateOrganization />},
         { path: "invite-team", element: <InviteTeam /> },
         { path: "optimize-costs", element: <OptimizeCosts /> },
+        { path: "identify-use-case", element:  <IdentifyUseCase show={true} /> },
+        { path: "prioritize-objectives", element:  <PrioritizeObj show={true} /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },

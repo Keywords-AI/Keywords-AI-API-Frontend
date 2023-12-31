@@ -7,7 +7,7 @@ import { BackButton } from "src/components/Buttons";
 /*
 @params register: the register function from react-hook-form
 */
-export function IdentifyUseCase({ show = false, register = () => {} }) {
+export function PrioritizeObj({ show = false, register = () => {} }) {
   const [isOtherChecked, setIsOtherChecked] = useState(false);
   const handleCheckboxChange = (e) => {
     if (e.target.value === "Other") {
@@ -23,7 +23,7 @@ export function IdentifyUseCase({ show = false, register = () => {} }) {
         </div>
         <OnboardingFieldSet
           show={show}
-          title="Identify use case"
+          title="Prioritize objectives"
           subtitle="Select all LLM use cases that apply."
           fields={
             <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
