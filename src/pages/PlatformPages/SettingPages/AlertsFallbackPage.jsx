@@ -7,10 +7,10 @@ import { TitleStaticSubheading } from "src/components/Titles";
 export const AlertsFallbackPage = ({}) => {
   return (
     <PageContent
-      title="Billing"
-      subtitle="Manage your billing information and invoices. For questions about billing, contact team@keywordsai.co."
+      title="Alerts & Fallback"
+      subtitle="Get notified when an LLM outage is detected and set the fallback mechanism."
     >
-      <div className="flex flex-row items-start justify-between self-stretch w-full">
+      {/* <div className="flex flex-row items-start justify-between self-stretch w-full"> //to be added once alerts are setup
         <TitleStaticSubheading
           title="Subscribe to alerts"
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
@@ -19,8 +19,16 @@ export const AlertsFallbackPage = ({}) => {
           <SwitchButton />
         </div>
       </div>
-      <Divider />
-      
+      <Divider /> */}
+        <div className="flex flex-row items-start justify-between self-stretch w-full">
+        <TitleStaticSubheading
+          title="Model fallback"
+          subtitle="Enable model fallback to boost your product’s uptime. Automatically fallback to the backup models when the preferred model is not responding."
+        />
+        <div className="flex flex-row items-start justify-center pt-[3px]">
+          <SwitchButton />
+        </div>
+      </div>
     </PageContent>
   );
 };
