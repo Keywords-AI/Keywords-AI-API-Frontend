@@ -9,13 +9,13 @@ import { useLocation } from "react-router-dom";
 export function Unauthenticated() {
   const navigate = useNavigate();
   const location = useLocation();
-  const params =  new URLSearchParams(location.search);
-  useEffect(()=> {
-      googleAuthJWT();
-  }, [])
+  const params = new URLSearchParams(location.search);
+  useEffect(() => {
+    googleAuthJWT();
+  }, []);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home" link="/"/>
+      <BackButton text="Home" link="/" />
       <div className="flex-col w-full max-w-[420px] items-center gap-md ">
         <div
           aria-label="section title"

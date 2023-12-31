@@ -25,7 +25,9 @@ export const QAInputPage = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <PageParagraph heading="">
           <TextInput titte="Text Input" icon={<Search size="md" />} />
-          <SelectInput title="Select title" width="w-[400px]" />
+          <SelectInput title="Select title" width="w-[400px]"
+            {...register("selection")}
+          />
           {/* {Array.from({ length: 5 }).map((_, i) => (
             <RadioInput
               key={i}
@@ -63,7 +65,7 @@ export const QAInputPage = () => {
             {...register("checkbox")}
             value="choice B"
           />
-          <CheckBoxButton text="test"/>
+          <CheckBoxButton text="test" />
 
         </PageParagraph>
       </form>

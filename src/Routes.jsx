@@ -22,10 +22,11 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
-import { CreateOrganization } from "./pages/AuthPages/Onboarding/CreateOrganization";
+import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import { InviteTeam, OptimizeCosts } from "./pages/AuthPages/Onboarding";
+import { CreateOrganization, InviteTeam, OptimizeCosts, PrioritizeObj } from "./pages/AuthPages/Onboarding";
+import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
 
 const mapStateToProps = (state) => {
   return {
@@ -54,7 +55,7 @@ const Routes = ({ getUser, user }) => {
   const routes = [
     {
       path: "/platform",
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
@@ -79,16 +80,17 @@ const Routes = ({ getUser, user }) => {
         {
           path: "/platform",
           element: <Navigate to="/platform/dashboard" />,
-        }
+        },
       ],
     },
     {
       path: "/",
-      element: !isUserLoggedIn ? (
-        <FullScreenLayout />
-      ) : (
-        <Navigate to="/platform" />
-      ),
+      // element: !isUserLoggedIn ? (
+      //   <FullScreenLayout />
+      // ) : (
+      //   <Navigate to="/platform" />
+      // ),
+      element: <FullScreenLayout />, // @Ruifeng, nope, the redirection should be handled by the components themseives
       children: [
         { path: "login", element: <LogIn /> },
         {
@@ -111,10 +113,20 @@ const Routes = ({ getUser, user }) => {
           path: "unauthorized",
           element: <Unauthorized />,
         },
-        { path: "/", element: <Unauthenticated /> },
-        { path: "create-org", element: <CreateOrganization /> },
+        {
+          path: "/",
+          element: isUserLoggedIn ? (
+            <Navigate to="/platform" />
+          ) : (
+            <Unauthenticated />
+          ),
+        },
+        { path: "onboarding", element: <OnboardingPage /> },
+        { path: "create-org", element: <CreateOrganization />},
         { path: "invite-team", element: <InviteTeam /> },
         { path: "optimize-costs", element: <OptimizeCosts /> },
+        { path: "identify-use-case", element:  <IdentifyUseCase show={true} /> },
+        { path: "prioritize-objectives", element:  <PrioritizeObj show={true} /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
@@ -122,7 +134,7 @@ const Routes = ({ getUser, user }) => {
       path: "*",
       element: <FullScreenLayout />,
       children: [{ path: "*", element: <NotFound /> }],
-    }
+    },
   ];
 
   const element = useRoutes(routes);

@@ -3,8 +3,14 @@ export const SET_THEME = "SET_THEME";
 
 // Action Creators
 export const setTheme = (theme) => {
-  return {
-    type: SET_THEME,
-    payload: theme,
+  return (dispatch) => {
+    // Save theme to localStorage
+    localStorage.setItem("theme", theme);
+
+    // Dispatch the SET_THEME action
+    dispatch({
+      type: SET_THEME,
+      payload: theme,
+    });
   };
 };
