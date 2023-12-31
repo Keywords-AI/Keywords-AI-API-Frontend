@@ -50,8 +50,8 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  const isUserLoggedIn = isLoggedIn(user);
-  // const isUserLoggedIn = true;
+  // const isUserLoggedIn = isLoggedIn(user);
+  const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -85,11 +85,12 @@ const Routes = ({ getUser, user }) => {
     },
     {
       path: "/",
-      element: !isUserLoggedIn ? (
-        <FullScreenLayout />
-      ) : (
-        <Navigate to="/platform" />
-      ),
+      // element: !isUserLoggedIn ? (
+      //   <FullScreenLayout />
+      // ) : (
+      //   <Navigate to="/platform" />
+      // ),
+      element: <FullScreenLayout />, // @Ruifeng, nope, the redirection should be handled by the components themseives
       children: [
         { path: "login", element: <LogIn /> },
         {
