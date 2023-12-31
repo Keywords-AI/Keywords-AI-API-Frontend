@@ -89,7 +89,7 @@ export const SettingPage = ({
             value={organization?.unique_organization_id || ""}
             // value={"locked-text"}
             disabled={true}
-            hoverText={true}
+            InfoBool={true}
           />
           <Button type="submit" text="Update" variant="r4-primary" />
           
