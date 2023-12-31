@@ -10,6 +10,7 @@ import integrationReducer from "./settingPagesReducer/integrationReducer";
 import notificationReducer from "./notificationReducer";
 import themeReducer from "./themeReducer";
 import dashboardReducer from "./dashboardReducer";
+import fallbackReducer from "./settingPagesReducer/fallbackReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -25,6 +26,7 @@ const rootReducer = (state = {}, action) => {
     notification: notificationReducer(state.notification, action),
     theme: themeReducer(state.theme, action),
     dashboard: dashboardReducer(state.dashboard, action),
+    fallback: fallbackReducer(state.fallback, action),
   };
 };
 
