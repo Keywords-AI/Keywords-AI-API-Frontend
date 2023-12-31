@@ -2,12 +2,19 @@
 import { SET_THEME } from "../actions/themeAction";
 
 // Define the initial state
-const initialState = {
-  theme: "dark",
+const loadState = () => {
+  try {
+    const value = localStorage.getItem("theme");
+    if (value === null) {
+      return { theme: "dark" };
+    }
+    return { theme: value };
+  } catch (err) {
+    return { theme: "dark" };
+  }
 };
-
 // Define the theme reducer
-const themeReducer = (state = initialState, action) => {
+const themeReducer = (state = loadState(), action) => {
   switch (action.type) {
     case SET_THEME:
       return {
