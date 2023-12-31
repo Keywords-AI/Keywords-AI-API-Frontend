@@ -8,6 +8,7 @@ import BillingPage from './BillingPage';
 import { Building } from 'src/components/Icons'
 import { IntegrationsPage } from './IntegrationsPage';
 import { generateChild } from 'src/utilities/objectProcessing';
+import { AlertsFallbackPage } from './AlertsFallbackPage';
 
 const pages = [
     {
@@ -41,6 +42,11 @@ const pages = [
         // forAdmin: true,
         page: <IntegrationsPage />,
     },
+    {
+        title: "Alerts & Fallback",
+        // forAdmin: true,
+        page: <AlertsFallbackPage />,
+    }
 
 ];
 
