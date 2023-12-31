@@ -20,7 +20,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
 
   const [textContent, setTextContent] = React.useState(content);
   const [isFocused, setIsFocused] = React.useState(
-    role === "user" ? true : false
+    role === "user" && messageIndex != 0 ? true : false
   );
   const currentModel = useSelector((state) => state.playground.currentModel);
 
