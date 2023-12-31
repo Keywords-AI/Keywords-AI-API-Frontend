@@ -9,6 +9,7 @@ import { Building } from 'src/components/Icons'
 import { IntegrationsPage } from './IntegrationsPage';
 import { generateChild } from 'src/utilities/objectProcessing';
 import { AlertsFallbackPage } from './AlertsFallbackPage';
+import { ModelRouterPage } from './ModelRouterPage';
 
 const pages = [
     {
@@ -41,13 +42,18 @@ const pages = [
         title: "Integrations",
         // forAdmin: true,
         page: <IntegrationsPage />,
+
+    },
+    {
+        title: "Model Router",
+        // forAdmin: true,
+        page: <ModelRouterPage />,
     },
     {
         title: "Alerts & Fallback",
         // forAdmin: true,
         page: <AlertsFallbackPage />,
-    }
-
+    },
 ];
 
 
