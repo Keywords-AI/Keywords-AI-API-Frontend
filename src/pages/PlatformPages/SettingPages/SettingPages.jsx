@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { textToLink } from 'src/utilities/stringProcessing';
-import UserSettings from './UserSettings';
 import SettingsPage from './SettingsPage';
 import ApiKeyPage from './ApiKeyPage';
 import UsagePage from './UsagePage';
@@ -13,81 +12,84 @@ import { AlertsFallbackPage } from './AlertsFallbackPage';
 import { ModelRouterPage } from './ModelRouterPage';
 
 const pages = [
-  {
-    title: "Settings",
-    // forAdmin: true,
-    default: true,
-    page: <SettingsPage />,
-  },
+    {
+        title: "Settings",
+        // forAdmin: true,
+        default: true,
+        page: <SettingsPage />,
+    },
+    {
+        title: "Settings",
+        page: <SettingsPage />,
+    },
+    {
+        title: "Usage",
+        // forAdmin: true,
+        page: <UsagePage />,
+    },
+    {
+        title: "Member",
+        forAdmin: true,
+        page: <MemberPage />,
+    },
+    {
+        title: "Billing",
+        // forAdmin: true,
+        page: <BillingPage />,
+    },
 
-  {
-    title: "Usage",
-    // forAdmin: true,
-    page: <UsagePage />,
-  },
-  {
-    title: "Member",
-    forAdmin: true,
-    page: <MemberPage />,
-  },
-  {
-    title: "Billing",
-    // forAdmin: true,
-    page: <BillingPage />,
-  },
-  {
-    title: "Integrations",
-    // forAdmin: true,
-    page: <IntegrationsPage />,
-  },
-  {
-    title: "Alerts & Fallback",
-    // forAdmin: true,
-    page: <AlertsFallbackPage />,
-  },
+    {
+        title: "Integrations",
+        // forAdmin: true,
+        page: <IntegrationsPage />,
 
-  {
-    title: "Integrations",
-    // forAdmin: true,
-    page: <IntegrationsPage />,
-  },
+    },
+    {
+        title: "Model Router",
+        // forAdmin: true,
+        page: <ModelRouterPage />,
+    },
+    {
+        title: "Alerts & Fallback",
+        // forAdmin: true,
+        page: <AlertsFallbackPage />,
+    },
 ];
+
+
 
 const userPages = [
-  {
-    title: "Settings",
-    page: <UserSettings />,
-  },
 
-  {
-    title: "API Keys",
-    // forAdmin: true,
-    page: <ApiKeyPage />,
-  },
-];
+    {
+        title: "API Keys",
+        // forAdmin: true,
+        page: <ApiKeyPage />,
+    },
+]
+
 
 const processedOrgPages = pages.map((page, index) => {
-  return generateChild(page);
-});
+    return generateChild(page);
+})
 
 const processedUserPages = userPages.map((page, index) => {
-  return generateChild(page);
-});
+    return generateChild(page);
+})
 
 export const sections = [
-  {
-    title: "Organization",
-    pages: processedOrgPages,
-    icon: <Building />,
-  },
-  {
-    title: "User",
-    pages: processedUserPages,
-  },
-];
+    {
+        title: "Organization",
+        pages: processedOrgPages,
+        icon: <Building />
+    },
+    {
+        title: "User",
+        pages: processedUserPages
+    }
+]
 
 export const settingChildren = sections.reduce((allPages, section) => {
-  const newPages = section.pages;
+    const newPages = section.pages;
 
-  return [...allPages, ...newPages];
+    return [...allPages, ...newPages];
 }, []);
