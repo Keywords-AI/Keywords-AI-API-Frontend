@@ -11,6 +11,7 @@ import {
   regeneratePlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { connect } from "react-redux";
+import { models } from "src/components/Misc";
 
 const mapStateToProps = (state) => {
   return {
@@ -39,79 +40,6 @@ const NotConnectedCurrentModel = ({
     .slice(0, 5)
     .map((entry) => entry[0]);
   const dispatch = useDispatch();
-  const models = [
-    {
-      name: "OpenAI - GPT-3.5-turbo",
-      value: "gpt-3.5-turbo",
-      brand: "openai",
-    },
-    {
-      name: "OpenAI - GPT-4-32k",
-      value: "gpt-4-32k",
-      brand: "openai",
-    },
-    {
-      name: "OpenAI - GPT-4",
-      value: "gpt-4",
-      brand: "openai",
-    },
-    {
-      name: "Claude 2.1",
-      value: "claude-2.1",
-      brand: "anthropic",
-    },
-    {
-      name: "Claude 2",
-      value: "claude-2",
-      brand: "anthropic",
-    },
-    {
-      name: "OpenAI - GPT-4-1106-preview",
-      value: "gpt-4-1106-preview",
-      brand: "openai",
-    },
-    {
-      name: "Claude Instant 1",
-      value: "claude-instant-1",
-      brand: "anthropic",
-    },
-    {
-      name: "Claude Instant 1.2",
-      value: "claude-instant-1.2",
-      brand: "anthropic",
-    },
-
-    {
-      name: "OpenAI - GPT-3.5-turbo-16k",
-      value: "gpt-3.5-turbo-16k",
-      brand: "openai",
-    },
-    {
-      name: "Chat Bison",
-      value: "chat-bison",
-      brand: "google",
-    },
-    {
-      name: "J2 Light",
-      value: "j2-light",
-      brand: "labs",
-    },
-    {
-      name: "Command Nightly",
-      value: "command-nightly",
-      brand: "cohere",
-    },
-    {
-      name: "J2 Mid",
-      value: "j2-mid",
-      brand: "labs",
-    },
-    {
-      name: "J2 Ultra",
-      value: "j2-ultra",
-      brand: "labs",
-    },
-  ];
   useEffect(() => {
     dispatch(setCurrentModel(models[0].value));
     dispatch(setCurrentBrand(models[0].brand));

@@ -6,6 +6,7 @@ import { SelectInput } from "src/components/Inputs";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleFallback } from "src/store/actions";
 import { CurrentModel } from "../Playground/components";
+import { models } from "src/components/Misc";
 
 export const AlertsFallbackPage = ({}) => {
   const dispatch = useDispatch();
@@ -41,21 +42,28 @@ export const AlertsFallbackPage = ({}) => {
           <SwitchButton checked={isFallbackEnabled} onCheckedChange={handleToggle} />
         </div>
       </div>
-      {isFallbackEnabled ? (
-        <div className="flex fle-col items-start gap-xs">
+      {isFallbackEnabled && (
+        <div className="flex flex-col items-start gap-xs">
           <SelectInput
             title="Model #1"
             width="w-[248px]"
             optionsWidth="w-[248px]"
-            choices={[
-              {
-                name: "OpenAI - gpt-4,5-turbo-16k",
-                value: "OpenAI - gpt-4,5-turbo-16k",
-              },
-            ]}
+            choices={models}
+          />
+          <SelectInput
+            title="Model #2"
+            width="w-[248px]"
+            optionsWidth="w-[248px]"
+            choices={models}
+          />
+          <SelectInput
+            title="Model #3"
+            width="w-[248px]"
+            optionsWidth="w-[248px]"
+            choices={models}
           />
         </div>
-      ) : null}
+      ) }
     </PageContent>
   );
 };
