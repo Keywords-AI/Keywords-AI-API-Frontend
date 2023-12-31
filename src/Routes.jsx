@@ -121,7 +121,6 @@ const Routes = ({ getUser, user }) => {
             <Unauthenticated />
           ),
         },
-        { path: "onboarding", element: <OnboardingPage /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
