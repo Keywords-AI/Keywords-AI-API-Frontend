@@ -61,7 +61,7 @@ export const OnboardingPage = connect(
         <OptimizeCosts register={register} show={curr_step==5} buttonAction={()=>{setQueryParams({curr_step: 6},navigate)}}/>
         {/* <Button variant="r4-white" width="w-full" text="Test submit" /> */}
       </form>
-      <StepsBar className="absolute bottom-0" activeStep={curr_step} />
+      <StepsBar className="absolute bottom-md" activeStep={curr_step} />
     </div>
   );
 });
