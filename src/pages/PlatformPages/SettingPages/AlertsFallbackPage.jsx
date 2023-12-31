@@ -3,27 +3,38 @@ import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
-import { toggleFallback, updateUser } from "src/store/actions";
+import { toggleFallback, updateUser, toggleSystemFallback } from "src/store/actions";
 import { models } from "src/components/Misc";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => ({
-  isFallbackEnabled: state.fallback.isFallbackEnabled,
+  isFallbackEnabled: state.user.fallback_model_enabled,
   fallbackModels: state.user.fallback_models,
+  systemFallbackeEnabled: state.user.system_fallback_enabled,
 });
-const mapDispatchToProps = { updateUser, toggleFallback };
+const mapDispatchToProps = {
+  updateUser,
+  toggleFallback,
+  toggleSystemFallback
+};
 
 
 const AlertsFallbackPageN = ({
   isFallbackEnabled,
   updateUser,
-  toggleFallback,
+  systemFallbackeEnabled,
   fallbackModels,
 }) => {
+  const [fallbackEnabled, setFallbackEnabled] = React.useState(isFallbackEnabled);
+  const [systemEnable, setSystemEnable] = React.useState(systemFallbackeEnabled);
+  useEffect(()=>{
+    setFallbackEnabled(isFallbackEnabled);
+    setSystemEnable(systemFallbackeEnabled);
+  }, [isFallbackEnabled, systemFallbackeEnabled])
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const handleToggle = () => {
-    toggleFallback(!isFallbackEnabled);
+    setFallbackEnabled(!fallbackEnabled);
   };
   const onSubmit = (data) => {
     console.log(data)
@@ -34,8 +45,12 @@ const AlertsFallbackPageN = ({
           fallback_models.push(data[key]);
       }
     })
-    updateUser({ fallback_models })
+    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled })
   };
+  const handleSystemFallbackToggle = () => {
+    setSystemEnable(!systemEnable);
+    updateUser({ system_fallback_enabled: !systemEnable })
+  }
   return (
     <PageContent
       title="Alerts & Fallback"
@@ -62,12 +77,13 @@ const AlertsFallbackPageN = ({
           />
           <div className="flex flex-row items-start justify-center pt-[3px]">
             <SwitchButton
-              checked={isFallbackEnabled}
+              checked={fallbackEnabled}
               onCheckedChange={handleToggle}
+              {...register("enable_fallback")}
             />
           </div>
         </div>
-        {isFallbackEnabled && (
+        {fallbackEnabled && (
           <>
             <div className="flex flex-col items-start gap-xs">
               <SelectInput
@@ -106,7 +122,10 @@ const AlertsFallbackPageN = ({
           subtitle="If none of the fallback models are responding, automatically fallback to a system assigned model."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          <SwitchButton />
+          <SwitchButton
+          checked={systemEnable}
+          onCheckedChange={handleSystemFallbackToggle}
+          />
         </div>
       </div>
     </PageContent>

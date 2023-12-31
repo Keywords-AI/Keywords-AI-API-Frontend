@@ -2,13 +2,27 @@ import React, { useEffect } from "react";
 import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
-import { SelectInput } from "src/components/Inputs";
-import { useSelector, useDispatch } from "react-redux";
-import { toggleFallback } from "src/store/actions";
-import { CurrentModel } from "../Playground/components";
-import { models } from "src/components/Misc";
+import { updateUser } from "src/store/actions";
+import { connect } from "react-redux";
 
-export const ModelRouterPage = ({}) => {
+const mapStateToProps = (state) => ({
+  dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
+});
+const mapDispatchToProps = { updateUser };
+
+export const ModelRouterPage = connect(mapStateToProps, mapDispatchToProps)(({ dynamicRoutingEnabled,
+updateUser
+}) => {
+  const [dynamicRouting, setDynamicRouting] = React.useState(dynamicRoutingEnabled);
+  useEffect(() => {
+    console.log(dynamicRoutingEnabled)
+    setDynamicRouting(dynamicRoutingEnabled);
+  }, [dynamicRoutingEnabled])
+
+  const handleToggleDynamicRouting = () => {
+    setDynamicRouting(!dynamicRouting);
+    updateUser({ dynamic_routing_enabled: !dynamicRouting });
+  };
   return (
     <PageContent
       title={
@@ -25,7 +39,10 @@ export const ModelRouterPage = ({}) => {
           subtitle="Enable dynamic model routing to optimize for performance."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          <SwitchButton />
+          <SwitchButton
+            checked={dynamicRouting}
+            onChange={handleToggleDynamicRouting}
+          />
         </div>
       </div>
       <Divider />
@@ -41,4 +58,4 @@ export const ModelRouterPage = ({}) => {
       </div>
     </PageContent>
   );
-};
+});
