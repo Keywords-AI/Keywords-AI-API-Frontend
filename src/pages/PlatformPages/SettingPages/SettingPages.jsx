@@ -10,6 +10,7 @@ import { Building } from 'src/components/Icons'
 import { IntegrationsPage } from './IntegrationsPage';
 import { generateChild } from 'src/utilities/objectProcessing';
 import { AlertsFallbackPage } from './AlertsFallbackPage';
+import { ModelRouterPage } from './ModelRouterPage';
 
 const pages = [
   {
