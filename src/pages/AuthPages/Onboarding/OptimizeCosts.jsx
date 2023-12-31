@@ -8,7 +8,7 @@ import { logout } from "src/store/actions";
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 
-export function InviteTeam() {
+export function OptimizeCosts() {
   const dispatch = useDispatch(); // Get the dispatch function
 
   const handleBackButtonClick = () => {
@@ -24,51 +24,67 @@ export function InviteTeam() {
       </div>
       <div className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center">
         <AuthenticationTitle
-          title="Invite team"
-          subtitle="Add members to your organization."
+          title="Optimize costs"
+          subtitle="Set your target budget for LLM usage."
         />
         <div className="flex flex-col items-center justify-center gap-md self-stretch">
           <div className="flex flex-col justify-start gap-sm self-stretch ">
-            <TextInput
-              title="Email"
-              placeholder="email@example.com, email2@example.com..."
-            />
             <SelectInput
-              title="Role"
-              width="w-full"
-              placeholder={
-                <span>
-                  Member{" "}
-                  <span className="text-gray-4/40">
-                    - full access with limited permissions
-                  </span>
-                </span>
-              }
+              title="Monthly LLM spending"
+              placeholder="Please select"
               choices={[
                 {
                   name: (
                     <span>
-                      Member{" "}
+                      $0 - $100{" "}
                       <span className="text-gray-4/40 text-sm-regular">
-                        - full access with limited permissions
+                        /month
                       </span>
                     </span>
                   ),
-                  value: "member",
+                  value: "$0 - $100",
                 },
                 {
                   name: (
                     <span>
-                      Admin{" "}
+                      $100 - $500{" "}
                       <span className="text-gray-4/40 text-sm-regular">
-                        - full adminstrative access
+                        /month
                       </span>
                     </span>
                   ),
-                  value: "admin",
+                  value: "$100 - $500",
+                },
+                {
+                  name: (
+                    <span>
+                      $500 - $1000{" "}
+                      <span className="text-gray-4/40 text-sm-regular">
+                        /month
+                      </span>
+                    </span>
+                  ),
+                  value: "$500 - $1000",
+                },
+                {
+                  name: (
+                    <span>
+                      $1000+{" "}
+                      <span className="text-gray-4/40 text-sm-regular">
+                        /month
+                      </span>
+                    </span>
+                  ),
+                  value: "$1000+",
                 },
               ]}
               optionsWidth="w-[420px]"
+            />
+            <TextInput
+              title="Spending budget goal"
+              width="w-full"
+              placeholder="$"
+              type="number"
             />
           </div>
           <Button
