@@ -181,7 +181,6 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
   });
   const { register, handleSubmit, formState: { errors } } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
     postData(data);
     dispatchNotification({
       title: "Key updated",

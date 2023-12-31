@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { textToLink } from 'src/utilities/stringProcessing';
+import UserSettings from './UserSettings';
 import SettingsPage from './SettingsPage';
 import ApiKeyPage from './ApiKeyPage';
 import UsagePage from './UsagePage';
@@ -33,16 +34,16 @@ const pages = [
     // forAdmin: true,
     page: <BillingPage />,
   },
-    {
-        title: "Integrations",
-        // forAdmin: true,
-        page: <IntegrationsPage />,
-    },
-    {
-        title: "Alerts & Fallback",
-        // forAdmin: true,
-        page: <AlertsFallbackPage />,
-    },
+  {
+    title: "Integrations",
+    // forAdmin: true,
+    page: <IntegrationsPage />,
+  },
+  {
+    title: "Alerts & Fallback",
+    // forAdmin: true,
+    page: <AlertsFallbackPage />,
+  },
 
   {
     title: "Integrations",
