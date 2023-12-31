@@ -32,6 +32,7 @@ export const OnboardingFieldSet = connect(mapStateToProps, mapDispatchToProps)((
                     text={buttonText}
                     className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
                     onClick={buttonAction}
+                    type="button"
                 />
             </div>
         </div>

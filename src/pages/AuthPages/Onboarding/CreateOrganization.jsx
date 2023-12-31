@@ -6,7 +6,7 @@ import { OnboardingFieldSet } from "./components";
 /*
 @params register: the register function from react-hook-form
 */
-export function CreateOrganization({ show = false, register=()=>{} }) {
+export function CreateOrganization({ show = false, register=()=>{}, buttonAction=()=>{} }) {
 
   return (
     <OnboardingFieldSet
@@ -19,6 +19,7 @@ export function CreateOrganization({ show = false, register=()=>{} }) {
             {...register("organization_name")}
             title="Organization name"
             placeholder="Enter your organization name"
+            required
           />
           <SelectInput
             {...register("organization_size")}
@@ -32,11 +33,12 @@ export function CreateOrganization({ show = false, register=()=>{} }) {
               { name: "200+", value: "200+" },
             ]}
             optionsWidth="w-[420px]"
+            required
           />
         </>
       }
-      buttonText="Create organization"
-      buttonAction={() => { }}
+      buttonText="Continue"
+      buttonAction={buttonAction}
     />
   );
 }

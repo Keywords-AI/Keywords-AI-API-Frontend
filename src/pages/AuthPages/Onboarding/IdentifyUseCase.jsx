@@ -7,7 +7,7 @@ import { BackButton } from "src/components/Buttons";
 /*
 @params register: the register function from react-hook-form
 */
-export function IdentifyUseCase({ show = false, register = () => {} }) {
+export function IdentifyUseCase({ show = false, register = () => {}, buttonAction=()=>{} }) {
   const [isOtherChecked, setIsOtherChecked] = useState(false);
   const handleCheckboxChange = (e) => {
     if (e.target.value === "Other") {
@@ -17,10 +17,6 @@ export function IdentifyUseCase({ show = false, register = () => {} }) {
 
   return (
     // <div className="relative">
-      <div className="flex flex-col items-center gap-xxxl justify-center self-stretch">
-        <div className="flex flex-col items-start self-stretch gap-[10px]">
-          <BackButton text="Log out" />
-        </div>
         <OnboardingFieldSet
           show={show}
           title="Identify use case"
@@ -68,16 +64,17 @@ export function IdentifyUseCase({ show = false, register = () => {} }) {
                 value="Other"
                 onChange={handleCheckboxChange}
               />
-              <TextInput
+              {isOtherChecked && <TextInput
                 placeholder="Please specify"
                 required={isOtherChecked}
-              />
+                // {...register("Objective")}  there's a bug here
+              />}
             </div>
           }
           buttonText="Continue"
-          buttonAction={() => {}}
+          buttonAction={buttonAction}
         />
-      </div>
+
     // </div>
   );
 }
