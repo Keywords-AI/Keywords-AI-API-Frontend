@@ -15,7 +15,6 @@ updateUser
 }) => {
   const [dynamicRouting, setDynamicRouting] = React.useState(dynamicRoutingEnabled);
   useEffect(() => {
-    console.log(dynamicRoutingEnabled)
     setDynamicRouting(dynamicRoutingEnabled);
   }, [dynamicRoutingEnabled])
 
@@ -41,7 +40,7 @@ updateUser
         <div className="flex flex-row items-start justify-center pt-[3px]">
           <SwitchButton
             checked={dynamicRouting}
-            onChange={handleToggleDynamicRouting}
+            onCheckedChang={handleToggleDynamicRouting}
           />
         </div>
       </div>
