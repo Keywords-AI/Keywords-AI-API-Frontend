@@ -3,8 +3,10 @@ import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
 
 
-
-export function CreateOrganization({ show = false }) {
+/*
+@params register: the register function from react-hook-form
+*/
+export function CreateOrganization({ show = false, register=()=>{} }) {
 
   return (
     <OnboardingFieldSet
@@ -14,10 +16,12 @@ export function CreateOrganization({ show = false }) {
       fields={
         <>
           <TextInput
+            {...register("organization_name")}
             title="Organization name"
             placeholder="Enter your organization name"
           />
           <SelectInput
+            {...register("organization_size")}
             title="Organization size"
             width="w-full"
             placeholder="Please select"

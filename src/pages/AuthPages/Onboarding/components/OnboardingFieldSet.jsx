@@ -10,10 +10,14 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export const OnboardingFieldSet = connect(mapStateToProps, mapDispatchToProps)(({ title, subtitle, fields, buttonText, buttonAction, show }) => {
+/**
+ * You need to handle the registration of the fields before passing them in as props
+ */
+
+export const OnboardingFieldSet = connect(mapStateToProps, mapDispatchToProps)(({ title, subtitle, fields, buttonText, buttonAction, show}) => {
     return (
         <div className={cn("w-full max-w-[420px] items-center gap-lg justify-center",
-            show ? "flex-col": "hidden"
+            show ? "flex-col" : "hidden"
         )}>
             <AuthenticationTitle
                 title={title}

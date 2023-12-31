@@ -4,6 +4,7 @@ import { logout } from 'src/store/actions';
 import { CreateOrganization } from './CreateOrganization';
 import { Button } from 'src/components/Buttons';
 import { Left } from 'src/components/Icons';
+import { useForm } from 'react-hook-form';
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = { logout };
@@ -11,11 +12,12 @@ const mapDispatchToProps = { logout };
 export const OnboardingPage = connect(mapStateToProps, mapDispatchToProps)((
     { logout, fieldSet }
 ) => {
-
+    const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const handleBackButtonClick = () => {
         logout(); // Dispatch the logout action
         window.location.href = "https://keywordsai.co";
     };
+    const onSubmit = data => { console.log(data) };
 
     return (
         <div className="flex flex-col items-center gap-xxxl justify-center self-stretch" aria-label="create-org-page">
@@ -28,8 +30,11 @@ export const OnboardingPage = connect(mapStateToProps, mapDispatchToProps)((
                     iconPosition={"left"}
                 />
             </div>
-            <form>
-                <CreateOrganization />
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+            >
+                <CreateOrganization register={register} show />
+                <Button variant="r4-white" width="w-full" text="Test submit"/>
             </form>
         </div>
     );
