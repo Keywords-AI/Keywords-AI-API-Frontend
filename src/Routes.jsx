@@ -22,7 +22,7 @@ import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
-import { CreateOrganization } from "./pages/AuthPages/Onboarding/CreateOrganization";
+import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
 import { InviteTeam, OptimizeCosts } from "./pages/AuthPages/Onboarding";
@@ -112,7 +112,7 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         { path: "/", element: <Unauthenticated /> },
-        { path: "create-org", element: <CreateOrganization /> },
+        { path: "onboarding", element: <OnboardingPage /> },
         { path: "invite-team", element: <InviteTeam /> },
         { path: "optimize-costs", element: <OptimizeCosts /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
