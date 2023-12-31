@@ -10,6 +10,7 @@ import {
 import { NavBar, PageContent, PageParagraph } from "src/components/Sections";
 import { useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
+import ModelPresetCard from "src/components/Cards/ModelPresetCard";
 
 export const QAInputPage = () => {
   const {
@@ -69,6 +70,9 @@ export const QAInputPage = () => {
 
         </PageParagraph>
       </form>
+      <PageParagraph heading="Select Input">
+        <ModelPresetCard />
+      </PageParagraph>
     </PageContent>
   );
 };

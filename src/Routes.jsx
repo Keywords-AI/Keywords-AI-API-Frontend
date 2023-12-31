@@ -50,7 +50,7 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  //const isUserLoggedIn = isLoggedIn(user);
+  // const isUserLoggedIn = isLoggedIn(user);
   const isUserLoggedIn = true;
   const routes = [
     {
@@ -121,14 +121,12 @@ const Routes = ({ getUser, user }) => {
             <Unauthenticated />
           ),
         },
-        { path: "onboarding", element: <OnboardingPage /> },
-        { path: "create-org", element: <CreateOrganization />},
-        { path: "invite-team", element: <InviteTeam /> },
-        { path: "optimize-costs", element: <OptimizeCosts /> },
-        { path: "identify-use-case", element:  <IdentifyUseCase show={true} /> },
-        { path: "prioritize-objectives", element:  <PrioritizeObj show={true} /> },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
+    },
+    {
+      path: "/onboarding/:curr_step?",
+      element: <OnboardingPage />
     },
     {
       path: "*",

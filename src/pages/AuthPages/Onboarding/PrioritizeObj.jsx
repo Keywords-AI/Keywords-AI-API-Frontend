@@ -7,7 +7,7 @@ import { BackButton } from "src/components/Buttons";
 /*
 @params register: the register function from react-hook-form
 */
-export function PrioritizeObj({ show = false, register = () => {} }) {
+export function PrioritizeObj({ show = false, register = () => {}, buttonAction=()=>{}}) {
   const [isOtherChecked, setIsOtherChecked] = useState(false);
   const handleCheckboxChange = (e) => {
     if (e.target.value === "Other") {
@@ -17,10 +17,7 @@ export function PrioritizeObj({ show = false, register = () => {} }) {
 
   return (
     // <div className="relative">
-      <div className="flex flex-col items-center gap-xxxl justify-center self-stretch">
-        <div className="flex flex-col items-start self-stretch gap-[10px]">
-          <BackButton text="Log out" />
-        </div>
+
         <OnboardingFieldSet
           show={show}
           title="Prioritize objectives"
@@ -28,56 +25,56 @@ export function PrioritizeObj({ show = false, register = () => {} }) {
           fields={
             <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
               <CheckboxInput
-                text="Conversational AI"
-                {...register("use_case")}
-                value="Conversational AI"
+                text="Eliminate downtime"
+                {...register("Objective")}
+                value="Eliminate downtime"
               />
               <CheckboxInput
-                text="Summarization"
-                {...register("use_case")}
-                value="Summarization"
+                text="Enhance output quality"
+                {...register("Objective")}
+                value="Enhance output quality"
               />
               <CheckboxInput
-                text="Coding"
-                {...register("use_case")}
-                value="Coding"
+                text="Reduce costs"
+                {...register("Objective")}
+                value="Reduce costs"
               />
               <CheckboxInput
-                text="Content generation"
-                {...register("use_case")}
-                value="Content generation"
+                text="Improve speed performance"
+                {...register("Objective")}
+                value="Improve speed performance"
               />
               <CheckboxInput
-                text="Analytical reasoning"
-                {...register("use_case")}
-                value="Analytical reasoning"
+                text="Bypass rate limits "
+                {...register("Objective")}
+                value="Bypass rate limits "
               />
               <CheckboxInput
-                text="AI agents"
-                {...register("use_case")}
-                value="AI agents"
+                text="Explore model diversity"
+                {...register("Objective")}
+                value="Explore model diversity"
               />
               <CheckboxInput
-                text="Data processing"
-                {...register("use_case")}
-                value="Data processing"
+                text="Monitor LLM applications"
+                {...register("Objective")}
+                value="Monitor LLM applications"
               />
               <CheckboxInput
                 text="Other"
-                {...register("use_case")}
+                {...register("Objective")}
                 value="Other"
                 onChange={handleCheckboxChange}
               />
-              <TextInput
+              {isOtherChecked && <TextInput
                 placeholder="Please specify"
                 required={isOtherChecked}
-              />
+                // {...register("Objective")}  there's a bug here
+              />}
             </div>
           }
           buttonText="Continue"
-          buttonAction={() => {}}
+          buttonAction={buttonAction}
         />
-      </div>
     // </div>
   );
 }
