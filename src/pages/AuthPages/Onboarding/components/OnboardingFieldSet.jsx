@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { AuthenticationTitle } from 'src/components/Titles'
 import { Button } from 'src/components/Buttons'
+import cn from 'src/utilities/classMerge'
 
 
 
@@ -9,9 +10,11 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export const OnboardingFieldSet = connect(mapStateToProps, mapDispatchToProps)(({ title, subtitle, fields, buttonText, buttonAction }) => {
+export const OnboardingFieldSet = connect(mapStateToProps, mapDispatchToProps)(({ title, subtitle, fields, buttonText, buttonAction, show }) => {
     return (
-        <div className="flex flex-col w-full max-w-[420px] items-center gap-lg justify-center">
+        <div className={cn("w-full max-w-[420px] items-center gap-lg justify-center",
+            show ? "flex-col": "hidden"
+        )}>
             <AuthenticationTitle
                 title={title}
                 subtitle={subtitle} //to add user email

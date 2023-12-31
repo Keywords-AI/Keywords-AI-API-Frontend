@@ -1,19 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { BackButton } from "src/components/Buttons/BackButton";
-import { Button } from "src/components/Buttons/Button";
-import { AuthenticationTitle } from "src/components/Titles";
-import { useDispatch } from "react-redux";
-import { logout } from "src/store/actions";
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
 
 
 
-export function CreateOrganization() {
+export function CreateOrganization({ show = false }) {
 
   return (
     <OnboardingFieldSet
+      show={show}
       title="Create organization"
       subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
       fields={

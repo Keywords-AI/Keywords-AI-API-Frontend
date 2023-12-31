@@ -28,7 +28,9 @@ export const OnboardingPage = connect(mapStateToProps, mapDispatchToProps)((
                     iconPosition={"left"}
                 />
             </div>
-            <CreateOrganization />
+            <form>
+                <CreateOrganization />
+            </form>
         </div>
     );
 })
