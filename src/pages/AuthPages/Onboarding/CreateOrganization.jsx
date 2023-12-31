@@ -7,6 +7,7 @@ import { logout } from "src/store/actions";
 
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
+import StepsBar from "src/components/Misc/StepsBar";
 
 export function CreateOrganization() {
   const dispatch = useDispatch(); // Get the dispatch function
