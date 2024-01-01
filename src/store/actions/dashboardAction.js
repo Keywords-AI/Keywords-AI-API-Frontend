@@ -1,7 +1,7 @@
 import { data } from "autoprefixer";
 import moment from 'moment';
 import { keywordsFetch } from "src/services/apiConfig";
-import { sliceChartData } from "src/utilities/objectProcessing";
+import { sliceChartData,formatDate } from "src/utilities/objectProcessing";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -86,7 +86,8 @@ export const setDateData = (data) => {
 export const getDashboardData = () => {
   return (dispatch) => {
     const params=new URLSearchParams(window.location.search);
-    params.set("date", new Date().toISOString().split('T')[0]);
+    const date = new Date();
+    params.set("date", date.toLocaleDateString()); // format: MM/DD/YYYY
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
   })
@@ -100,6 +101,7 @@ export const getDashboardData = () => {
         }
       })
       .then((data) => {
+        console.log(data);
         dispatch(setDashboardData(data));
         const dataList = data?.data;
         dispatch(setCostData(sliceChartData(dataList, "date_group", "total_cost")));
