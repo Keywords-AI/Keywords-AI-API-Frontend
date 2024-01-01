@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
 import { connect } from "react-redux";
-import { createOrganization, dispatchNotification } from "src/store/actions";
+import { createOrganization } from "src/store/actions";
 
 /*
 @params register: the register function from react-hook-form
@@ -15,12 +15,17 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
   buttonAction = () => { },
   user,
   watch,
+  createOrganization
 }) => {
   const handleClick = () => {
     const organization_name = watch("organization_name");
     const organization_size = watch("organization_size");
-    createOrganization({ name: organization_name, organization_size });
-    buttonAction();
+    new Promise((resolve, reject) => {
+      resolve(createOrganization({ name: organization_name, organization_size }))
+    })
+      .then(() => {
+        buttonAction();
+      });
   }
   return (
     <OnboardingFieldSet
