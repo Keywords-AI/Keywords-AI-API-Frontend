@@ -1,12 +1,18 @@
 import react from "react";
 import { connect } from "react-redux";
 import { PageContent, PageParagraph } from "src/components/Sections";
-import { Button, IconButton } from "src/components/Buttons";
+import { Button, ButtonGroup, IconButton } from "src/components/Buttons";
 import { Delete, Logo, Right, Rocket, Speed } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { DotsButton } from "src/components/Buttons/DotsButton";
 
 export const QAButtonPage = () => {
+  const buttons = [
+    { text: "Day", onClick: () => setSummaryType("daily") },
+    { text: "Week", onClick: () => setSummaryType("weekly") },
+    { text: "Month", onClick: () => setSummaryType("monthly") },
+    { text: "Year", onClick: () => setSummaryType("yearly") },
+  ];
   return (
     <PageContent title="Button Wall">
       <PageParagraph heading="R4 Buttons">
@@ -24,6 +30,7 @@ export const QAButtonPage = () => {
           <Button variant="icon" icon={Rocket} />
           <Button variant="text" text="text-button" icon={Delete} />
           <DotsButton />
+          <ButtonGroup buttons={buttons} />
         </div>
       </PageParagraph>
 

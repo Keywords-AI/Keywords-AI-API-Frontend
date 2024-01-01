@@ -7,14 +7,15 @@ import { setQueryParams } from "src/utilities/navigation";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
 import { connect } from "react-redux";
-import { getDashboardData } from "src/store/actions";
+import { getDashboardData, setDateData } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
 });
 const mapDispatchToProps = {
-  getDashboardData
+  getDashboardData,
+  setDateData
 };
 
 function DashboardNotConnected({
@@ -23,9 +24,10 @@ function DashboardNotConnected({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const summary_type = new URLSearchParams(location.search).get("summary_type")
+  const summary_type = new URLSearchParams(location.search).get("summary_type");
   useEffect(() => {
     getDashboardData();
+    setDateData(summary_type);
   }, [summary_type]);
 
   const setSummaryType = (summary_type) => {
@@ -55,7 +57,7 @@ function DashboardNotConnected({
           <MetricCard key={index} {...metric} />
         ))}
       </div>
-      <DashboardChart />
+      <DashboardChart/>
       <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
     </div>
   );

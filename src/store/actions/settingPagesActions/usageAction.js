@@ -17,7 +17,7 @@ const formatData = (datalist) => {
     formattedData.push({
       name: getDateStr(data?.date),
       usage: data?.total_cost,
-    });
+    });        
   }
   return formattedData;
 };

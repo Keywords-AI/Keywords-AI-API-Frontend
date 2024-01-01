@@ -9,12 +9,14 @@ import { login, googleLogin } from "src/store/actions";
 import { connect } from "react-redux";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
+import { dispatchNotification, isLoggedIn } from "src/store/actions";
 
 const mapDispatchToProps = {
   login,
+  dispatchNotification,
 };
 
-const LogIn = ({ login }) => {
+const LogIn = ({ login, }) => {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
@@ -24,6 +26,9 @@ const LogIn = ({ login }) => {
       setBackendError(error.detail || error.message);
     }
   };
+  useEffect(() => {
+    if (isLoggedIn()) navigate("/");
+  }, [isLoggedIn])
   const {
     register,
     handleSubmit,

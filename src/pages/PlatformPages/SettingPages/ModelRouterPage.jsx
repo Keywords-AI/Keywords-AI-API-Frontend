@@ -4,11 +4,13 @@ import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
+import { ModelPresetCard } from "src/components/Cards";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
 });
 const mapDispatchToProps = { updateUser };
+const AllModels = [];
 
 export const ModelRouterPage = connect(mapStateToProps, mapDispatchToProps)(({ dynamicRoutingEnabled,
 updateUser
@@ -52,6 +54,9 @@ updateUser
         />
         <div className="flex flex-col items-start gap-xs w-full">
           {/* awaiting componnets from @hendrix */}
+          <ModelPresetCard title="All models" models={[]}/>
+          <ModelPresetCard title="Recommended"/>
+          <ModelPresetCard title="Custom"/>
         </div>
         <Button variant="r4-primary" text="Create custom preset" />
       </div>
