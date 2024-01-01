@@ -25,7 +25,12 @@ import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import { CreateOrganization, InviteTeam, OptimizeCosts, PrioritizeObj } from "./pages/AuthPages/Onboarding";
+import {
+  CreateOrganization,
+  InviteTeam,
+  OptimizeCosts,
+  PrioritizeObj,
+} from "./pages/AuthPages/Onboarding";
 import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
 
 const mapStateToProps = (state) => {
@@ -50,8 +55,8 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  const isUserLoggedIn = isLoggedIn(user);
-  // const isUserLoggedIn = true;
+  //const isUserLoggedIn = isLoggedIn(user);
+  const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -126,7 +131,7 @@ const Routes = ({ getUser, user }) => {
     },
     {
       path: "/onboarding/:curr_step?",
-      element: <OnboardingPage />
+      element: <OnboardingPage />,
     },
     {
       path: "*",

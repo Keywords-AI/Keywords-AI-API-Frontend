@@ -88,7 +88,7 @@ const NotConnectedMap = ({
   return (
     <div className="flex-col p-lg items-start gap-lg flex-1 self-stretch max-h-full">
       <div className="flex justify-between items-start self-stretch">
-        <div className="flex-co items-start gap-sm display-sm text-gray-white">
+        <div className="flex-co items-start gap-sm display-sm text-gray-5">
           Playground
         </div>
         <div className="flex items-start gap-xs">
@@ -137,7 +137,7 @@ const NotConnectSidePannel = ({
     regeneratePlaygroundResponse();
   };
   return (
-    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-black shadow-border-l">
+    <div className="flex-col w-[320px] p-lg gap-md items-start self-stretch shadow-gray-3 overflow-y-auto bg-gray-1 shadow-border-l">
       <OptionSelector />
       {!firstTime && <Divider />}
       <CurrentModel />

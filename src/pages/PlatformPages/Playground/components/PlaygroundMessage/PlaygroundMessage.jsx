@@ -90,12 +90,12 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         {role === "user" ? (
           <>
             <Userpg active />
-            <p className="text-sm-md text-gray-white">User</p>
+            <p className="text-sm-md text-gray-5">User</p>
           </>
         ) : (
           <>
             {React.createElement(ModelIcon(currentBrand), { size: "md" })}
-            <p className="text-sm-md text-gray-white">{role}</p>
+            <p className="text-sm-md text-gray-5">{role}</p>
           </>
         )}
       </div>
@@ -110,17 +110,17 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             streaming={streaming}
           />
         ) : (
-          <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-white ">
+          <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-5 ">
             {textContent || <span className="text-gray-4">Generating...</span>}
           </div>
         )
       ) : (
-        <div className="w-full h-full flex-col self-stretch flex-grow text-sm-regular text-gray-white ">
+        <div className="w-full h-full flex-col self-stretch flex-grow text-sm-regular text-gray-5 ">
           {textContent ? (
             <>
               <Markdown
                 children={textContent}
-                className="text-sm-regular text-gray-white  "
+                className="text-sm-regular text-gray-5  "
                 components={{
                   pre: ({ node, children, ...props }) => (
                     <pre className="clear-both" {...props}>
@@ -160,7 +160,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             iconPosition="right"
             onClick={handleSend}
             disabled={streaming}
-            iconHoverFill="fill-gray-white"
+            iconHoverFill="fill-gray-5"
           />
         </div>
       )}

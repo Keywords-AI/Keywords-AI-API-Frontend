@@ -50,7 +50,7 @@ function KeywordsInput({
     >
       <EditableBox
         {...register("message", { required: "This is required" })}
-        className={"rounded-sm text-sm py-xxs px-xs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-black ")}
+        className={"rounded-sm text-sm py-xxs px-xs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")}
         borderless={false}
         placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}

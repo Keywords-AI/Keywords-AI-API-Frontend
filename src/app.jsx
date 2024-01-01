@@ -6,7 +6,7 @@ export function App() {
   const [user, setUser] = React.useState(null);
   const theme = useSelector((state) => state.theme.theme);
   return (
-    <div className="bg-gray-black h-full w-full" data-theme={theme}>
+    <div className="bg-gray-1 h-full w-full" data-theme={theme}>
       <AuthContext.Provider value={{ user, setUser }}>
         <Routes />
       </AuthContext.Provider>
