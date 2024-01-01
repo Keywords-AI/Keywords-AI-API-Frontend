@@ -1,5 +1,4 @@
 import { data } from "autoprefixer";
-import moment from 'moment';
 import { keywordsFetch } from "src/services/apiConfig";
 import { sliceChartData,formatDate } from "src/utilities/objectProcessing";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";

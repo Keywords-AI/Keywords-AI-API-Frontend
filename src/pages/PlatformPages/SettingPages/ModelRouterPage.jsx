@@ -12,13 +12,16 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = { updateUser };
 const AllModels = [];
 
-export const ModelRouterPage = connect(mapStateToProps, mapDispatchToProps)(({ dynamicRoutingEnabled,
-updateUser
-}) => {
-  const [dynamicRouting, setDynamicRouting] = React.useState(dynamicRoutingEnabled);
+export const ModelRouterPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ dynamicRoutingEnabled, updateUser }) => {
+  const [dynamicRouting, setDynamicRouting] = React.useState(
+    dynamicRoutingEnabled
+  );
   useEffect(() => {
     setDynamicRouting(dynamicRoutingEnabled);
-  }, [dynamicRoutingEnabled])
+  }, [dynamicRoutingEnabled]);
 
   const handleToggleDynamicRouting = () => {
     setDynamicRouting(!dynamicRouting);
@@ -52,12 +55,18 @@ updateUser
           title="Presets"
           subtitle="Use the recommended model preset or build custom presets for dynamic routing."
         />
-        <div className="flex flex-col items-start gap-xs w-full">
-          {/* awaiting componnets from @hendrix */}
-          <ModelPresetCard title="All models" models={[]}/>
-          <ModelPresetCard title="Recommended"/>
-          <ModelPresetCard title="Custom"/>
-        </div>
+        <form className="flex flex-col items-start gap-xs w-full">
+          <ModelPresetCard
+            title="All models"
+            models={[]}
+          />
+          <ModelPresetCard
+            title="Recommended"
+          />
+          <ModelPresetCard
+            title="Custom"
+          />
+        </form>
         <Button variant="r4-primary" text="Create custom preset" />
       </div>
     </PageContent>

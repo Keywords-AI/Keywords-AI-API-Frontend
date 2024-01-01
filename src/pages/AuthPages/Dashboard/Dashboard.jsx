@@ -41,7 +41,7 @@ function DashboardNotConnected({
     { text: "Year", onClick: () => setSummaryType("yearly") },
   ];
   const metrics = [
-    { icon: Cost, title: "Cost", number: `$${summary.total_cost || 0}` },
+    { icon: Cost, title: "Cost", number: `$${summary.total_cost?.toFixed(5) || 0}` },
     { icon: Rocket, title: "Request", number: summary.number_of_requests, percentage: "130" },
     { icon: Tokens, title: "Tokens", number: summary.total_tokens || 0, percentage: "29" },
     { icon: Speed, title: "Average latency / request", number: `${summary.average_latency?.toFixed(3) || 0}s`, percentage: "12", up: false },
