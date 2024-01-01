@@ -93,6 +93,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[0]}
+                placeholder="Select model #1"
               />
               <SelectInput
                 {...register("fall_back_model_2")}
@@ -101,6 +102,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[1]}
+                placeholder="Select model #2"
               />
               <SelectInput
                 {...register("fall_back_model_3")}
@@ -109,6 +111,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[2]}
+                placeholder="Select model #3"
               />
             </div>
             <Button variant="r4-primary" text="Save" />
