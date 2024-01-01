@@ -92,7 +92,6 @@ export const logout = () => {
       method: "POST",
     })
       .then(async (res) => {
-        console.log("logout");
         localStorage.removeItem("refresh");
         localStorage.removeItem("access");
         eraseCookie("access");
@@ -100,7 +99,9 @@ export const logout = () => {
         window.location.href = "/login";
         dispatch(dispatchNotification({ type: "success", title: "Logged out successfully!" }));
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        dispatch(dispatchNotification({ type: "error", title: error.message }));
+      });
   };
 };
 

@@ -68,10 +68,11 @@ const LogIn = ({ login, }) => {
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
               text={"Sign in"}
-              variant={"r4-white"}
-              className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
+              variant={"r4-primary"}
+              width={"w-full"}
             />
-            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()}/>
+            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5" 
+            width="w-full" onClick={() => googleLogin()}/>
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}
