@@ -25,7 +25,12 @@ const mapDispatchToProps = {
 
 function DashboardNotConnected({
   summary,
-  getDashboardData
+  firstName,
+  requestCountData,
+  latencyData,
+  tokenCountData,
+  costData,
+  getDashboardData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
