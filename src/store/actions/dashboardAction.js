@@ -8,37 +8,6 @@ export const SET_LATENCY_DATA = "SET_LATENCY_DATA";
 export const SET_REQUEST_COUNT_DATA = "SET_REQUEST_COUNT_DATA";
 export const SET_DATE_DATA = "SET_DATE_DATA";
 
-// export const aggregateData = (data, timePeriod) => {
-//   const formattedData = [];
-//   data.forEach(item => {
-    
-//     switch (timePeriod) {
-//       case 'daily':
-        
-//         break;
-//       case 'weekly':
-        
-//         break;
-//       case 'monthly':
-        
-//         break;
-//       case 'yearly':
-//         // dateGroup = date.startOf('year').format('YYYY-MM-DD');
-//         break;
-//       default:
-//         dateGroup = date.format('YYYY-MM-DD');
-//     }
-
-//     if (!groupedData[dateGroup]) {
-//       // groupedData[dateGroup] = { ...item, [dateKey]: dateGroup, [valueKey]: 0 };
-//     }
-//     // groupedData[dateGroup][valueKey] += item[valueKey];
-//   });
-
-//   return Object.values(groupedData);
-// };
-
-
 export const setDashboardData = (data) => {
   return {
     type: SET_DASHBOARD_DATA,

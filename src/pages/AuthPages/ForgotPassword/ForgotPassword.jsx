@@ -18,7 +18,6 @@ function ForgotPasswordNotConnected({ resetPassword }) {
   } = useForm();
   const emailError = errors.email;
   const onSubmit = (formData) => {
-    console.log(formData);
     resetPassword(formData.email);
   }
 

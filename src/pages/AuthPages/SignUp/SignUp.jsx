@@ -8,8 +8,13 @@ import { signup } from "src/authentication/Authentication";
 import { Button } from "src/components/Buttons/Button";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
-import { login, googleLogin } from "src/store/actions";
-export function SignUp() {
+import { googleLogin } from "src/store/actions";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = { googleLogin };
+
+export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogin }) => {
   const navigate = useNavigate();
   const {
     register,
@@ -53,15 +58,20 @@ export function SignUp() {
             </div>
             <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, })} />
             <TextInput title="Password" type="password" required placeholder="" {...register("password")} />
-            <TextInput title="Organization Name" placeholder="Organization Name" {...register("organization")} />
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
               text={"Create account"}
               variant={"r4-white"}
-              className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
+              width={"w-full"}
             />
-            <Button variant="r4-white" text="Continue with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()} />
+            <Button variant="r4-white" text="Continue with Google"
+              icon={Google} iconPosition="left"
+              bgColor="bg-gray-3"
+              textColor="text-gray-5"
+              iconSize="md"
+              width="w-full" onClick={() => googleLogin()}
+            />
             <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span
@@ -84,4 +94,4 @@ export function SignUp() {
       </div>
     </div>
   );
-}
+})

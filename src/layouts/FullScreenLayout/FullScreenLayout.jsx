@@ -9,7 +9,7 @@ export function FullScreenLayout() {
       <div className="flex-col px-lg py-md pb-0 justify-between items-center flex-1">
         <Notifications offset={""} />
         <Outlet />
-        <Subtract />
+        {/* <Subtract /> */}
       </div>
     </div>
   );

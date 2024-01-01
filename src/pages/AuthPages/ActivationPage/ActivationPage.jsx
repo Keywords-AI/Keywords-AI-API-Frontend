@@ -8,9 +8,9 @@ import { activateUser } from 'src/store/actions'
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = { activateUser }
 
-export const ActivationPage = (props) => {
+export const ActivationPage = ({ activateUser }) => {
   const [countDown, setCountDown] = React.useState(5);
   const { uid, token } = useParams();
   const {
@@ -21,16 +21,19 @@ export const ActivationPage = (props) => {
   const onSubmit = async (data) => {
     activateUser(uid, token);
   };
-  useEffect(()=>{
-    const interval = setInterval(()=>{
-      if (countDown===0) return;
-      setCountDown(countDown-1)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (countDown === 0) {
+        window.location.href = "/login"
+        return
+      };
+      setCountDown(countDown - 1)
     }, 1000)
-    return ()=>clearInterval(interval)
-  },[countDown])
-  useEffect(()=>{
+    return () => clearInterval(interval)
+  }, [countDown])
+  useEffect(() => {
     activateUser(uid, token);
-  },[])
+  }, [])
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <div className="flex-col items-start gap-[10px] self-stretch">

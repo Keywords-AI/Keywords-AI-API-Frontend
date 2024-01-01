@@ -79,7 +79,9 @@ export const login = (email, password) => {
           }
         })
         .catch((error) => {
-          dispatch(dispatchNotification({ type: "error", title: error.message }));
+          dispatch(
+            dispatchNotification({ type: "error", title: error.message })
+          );
           reject(error); // Handle network errors
         });
     });
@@ -97,7 +99,12 @@ export const logout = () => {
         eraseCookie("access");
         eraseCookie("refresh");
         window.location.href = "/login";
-        dispatch(dispatchNotification({ type: "success", title: "Logged out successfully!" }));
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "Logged out successfully!",
+          })
+        );
       })
       .catch((error) => {
         dispatch(dispatchNotification({ type: "error", title: error.message }));
@@ -130,7 +137,12 @@ export const googleLogin = () => {
         }
       })
       .catch((error) => {
-        dispatch(dispatchNotification({ type:"error", title: "Google Auth Error: " + error.message }));
+        dispatch(
+          dispatchNotification({
+            type: "error",
+            title: "Google Auth Error: " + error.message,
+          })
+        );
       });
   };
 };
@@ -156,15 +168,21 @@ export const googleAuthJWT = () => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       if (data.access) {
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
         window.location = "/platform/playground";
+      } else {
+        throw new Error("Sorry something went wrong, " + data.detail);
       }
     })
     .catch((error) => {
-      console.error("Error in Google Auth JWT:", error);
+      dispatch(
+        dispatchNotification({
+          type: "error",
+          title: "Google Auth Error: " + error.message,
+        })
+      );
     });
 };
 
@@ -188,8 +206,11 @@ export const resetPassword = (
       .then(async (res) => {
         if (res.ok) {
           console.log("Hi there!");
-          handleResponse(
-            "Link sent to your email inbox via thekeywordsai@gmail.com. "
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "Link sent to your email inbox via team@keywordsai.co",
+            })
           );
         } else if (!res.ok) {
           const responseJson = await res.text();
@@ -298,6 +319,7 @@ export const activateUser = (
   uid,
   token,
   handleSuccess = () => {
+    console.log("Success");
     window.location.href = "/login";
   },
   handelError = () => {}
