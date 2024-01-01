@@ -34,7 +34,7 @@ updateUser
       }
       subtitle="Build model presets for dynamic routing."
     >
-      <div className="flex flex-row items-start justify-between self-stretch w-full">
+      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
         <TitleStaticSubheading
           title="Dynamic LLM routing"
           subtitle="Enable dynamic model routing to optimize for performance."
