@@ -12,7 +12,7 @@ export function CreateOrganization({ show = false, register=()=>{}, buttonAction
     <OnboardingFieldSet
       show={show}
       title="Create organization"
-      subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
+      // subtitle="raymond@keywordsai.co is inviting you to join their organization."
       fields={
         <>
           <TextInput

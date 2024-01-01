@@ -33,7 +33,7 @@ export function OptimizeCosts({ show = false, register=()=>{}, buttonAction=()=>
         />
       </>
     }
-    buttonText="Continue"
+    buttonText="Get started"
     buttonAction={buttonAction}
   />
   );

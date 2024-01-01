@@ -22,7 +22,7 @@ export const OnboardingPage = connect(
 )(({ logout, fieldSet, currentStep,setNextStep }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    const curr_step = new URLSearchParams(location.search).get("curr_step", 1);
+    const curr_step = new URLSearchParams(location.search).get("curr_step", 1) || 1;
     React.useEffect(()=>{
         setCurrentStep(curr_step);
     }, [curr_step])
@@ -39,6 +39,10 @@ export const OnboardingPage = connect(
   const onSubmit = (data) => {
     setNextStep();
   };
+  const navigateToDashboard = () => {
+    navigate('/platform/dashboard');
+  };
+  console.log(watch());
   return (
     <div
       className="flex flex-col items-center gap-xxxl justify-start self-stretch relative h-screen p-lg"
@@ -58,7 +62,7 @@ export const OnboardingPage = connect(
         <InviteTeam register={register} show={curr_step==2} buttonAction={()=>{setQueryParams({curr_step: 3},navigate)}}/>
         <IdentifyUseCase register={register} show={curr_step==3} buttonAction={()=>{setQueryParams({curr_step: 4},navigate)}}/>
         <PrioritizeObj register={register} show={curr_step==4} buttonAction={()=>{setQueryParams({curr_step: 5},navigate)}}/>
-        <OptimizeCosts register={register} show={curr_step==5} buttonAction={()=>{setQueryParams({curr_step: 6},navigate)}}/>
+        <OptimizeCosts register={register} show={curr_step==5} buttonAction={()=>{navigateToDashboard()}}/>
         {/* <Button variant="r4-white" width="w-full" text="Test submit" /> */}
       </form>
       <StepsBar className="absolute bottom-md" activeStep={curr_step} />

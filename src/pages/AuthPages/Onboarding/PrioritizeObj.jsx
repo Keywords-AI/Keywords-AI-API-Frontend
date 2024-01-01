@@ -26,42 +26,42 @@ export function PrioritizeObj({ show = false, register = () => {}, buttonAction=
             <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
               <CheckboxInput
                 text="Eliminate downtime"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Eliminate downtime"
               />
               <CheckboxInput
                 text="Enhance output quality"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Enhance output quality"
               />
               <CheckboxInput
                 text="Reduce costs"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Reduce costs"
               />
               <CheckboxInput
                 text="Improve speed performance"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Improve speed performance"
               />
               <CheckboxInput
                 text="Bypass rate limits "
-                {...register("Objective")}
+                {...register("objective")}
                 value="Bypass rate limits "
               />
               <CheckboxInput
                 text="Explore model diversity"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Explore model diversity"
               />
               <CheckboxInput
                 text="Monitor LLM applications"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Monitor LLM applications"
               />
               <CheckboxInput
                 text="Other"
-                {...register("Objective")}
+                {...register("objective")}
                 value="Other"
                 onChange={handleCheckboxChange}
               />
