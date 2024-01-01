@@ -26,6 +26,7 @@ export const signup = (data = {}) => {
               title: "Activation link sent, please check your email",
             })
           );
+          window.location.href = "/email-confirmation" + "/" + data.email;
         } else {
           const responseJson = await res.json();
           Object.keys(responseJson).forEach((key) => {
@@ -45,7 +46,7 @@ export const signup = (data = {}) => {
       });
   };
 };
-
+// admintestpassword
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
@@ -357,7 +358,7 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          handleSuccess("The activation link has been sent to your email!");
+          dispatch(dispatchNotification({type:"success", title:"The activation link has been sent to your email!"}));
         } else if (res.status === 400) {
           const responseJson = await res.text();
           handleError(responseJson);

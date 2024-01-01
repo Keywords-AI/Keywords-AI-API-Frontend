@@ -5,6 +5,7 @@ import { TitleStaticSubheading } from "src/components/Titles";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
+import { useForm } from "react-hook-form";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
@@ -27,6 +28,7 @@ export const ModelRouterPage = connect(
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
   };
+  const {register, handleSubmit, formState: {errors}} = useForm();
   return (
     <PageContent
       title={
@@ -45,7 +47,7 @@ export const ModelRouterPage = connect(
         <div className="flex flex-row items-start justify-center pt-[3px]">
           <SwitchButton
             checked={dynamicRouting}
-            onCheckedChang={handleToggleDynamicRouting}
+            onCheckedChange={handleToggleDynamicRouting}
           />
         </div>
       </div>
@@ -59,12 +61,15 @@ export const ModelRouterPage = connect(
           <ModelPresetCard
             title="All models"
             models={[]}
+            {...register("model_preset")}
           />
           <ModelPresetCard
             title="Recommended"
+            {...register("model_preset")}
           />
           <ModelPresetCard
             title="Custom"
+            {...register("model_preset")}
           />
         </form>
         <Button variant="r4-primary" text="Create custom preset" />

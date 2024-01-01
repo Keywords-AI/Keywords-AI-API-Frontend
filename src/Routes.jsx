@@ -25,13 +25,7 @@ import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import {
-  CreateOrganization,
-  InviteTeam,
-  OptimizeCosts,
-  PrioritizeObj,
-} from "./pages/AuthPages/Onboarding";
-import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
+import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 
 const mapStateToProps = (state) => {
   return {
@@ -117,6 +111,10 @@ const Routes = ({ getUser, user }) => {
         {
           path: "unauthorized",
           element: <Unauthorized />,
+        },
+        {
+          path: "email-confirmation/:email?",
+          element: <EmailConfirmation />,
         },
         {
           path: "/",
