@@ -26,6 +26,7 @@ export const signup = (data = {}) => {
               title: "Activation link sent, please check your email",
             })
           );
+          window.location.href = "/email-confirmation" + "/" + data.email;
         } else {
           const responseJson = await res.json();
           Object.keys(responseJson).forEach((key) => {
@@ -45,7 +46,7 @@ export const signup = (data = {}) => {
       });
   };
 };
-
+// admintestpassword
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
@@ -90,7 +91,11 @@ export const login = (email, password) => {
   };
 };
 
-export const logout = () => {
+export const logout = (
+  postLogout = () => {
+    window.location.href = "/login";
+  }
+) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
@@ -100,7 +105,7 @@ export const logout = () => {
         localStorage.removeItem("access");
         eraseCookie("access");
         eraseCookie("refresh");
-        window.location.href = "/login";
+        postLogout();
         dispatch(
           dispatchNotification({
             type: "success",
@@ -357,13 +362,55 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          handleSuccess("The activation link has been sent to your email!");
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "The activation link has been sent to your email!",
+            })
+          );
         } else if (res.status === 400) {
           const responseJson = await res.text();
           handleError(responseJson);
         }
       })
       .catch((error) => console.log(error));
+  };
+};
+
+export const sendInvitation = (data) => {
+  // data = {email, role, organization}
+  return (dispatch) => {
+    keywordsFetch({
+      path: "user/invitations/create/",
+      method: "POST",
+      data: data,
+    }).then(async (res) => {
+      if (res.ok) {
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "Invitation sent to " + data.email,
+          })
+        );
+      } else {
+        const responseJson = await res.json();
+        if (responseJson.detail) {
+          // API Call errors
+          dispatch(
+            dispatchNotification({ type: "error", title: responseJson.detail })
+          );
+        } else {
+          // Serializer errors
+          Object.keys(responseJson).forEach((key)=>{
+            responseJson[key].forEach((error)=>{
+              dispatch(
+                dispatchNotification({ type: "error", title: `${key}: ${error}` })
+              );
+            })
+          })
+        }
+      }
+    });
   };
 };
 

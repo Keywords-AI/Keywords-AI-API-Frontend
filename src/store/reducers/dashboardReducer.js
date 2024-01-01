@@ -8,13 +8,13 @@ import {
 } from "src/store/actions";
 const initState = {
   data: [
-    {
-      date_group: 20,
-      total_cost: 5.6e-5,
-      total_tokens: 30,
-      average_latency: 0.23117351531982422,
-      number_of_requests: 1,
-    },
+    // {
+    //   date_group: 20,
+    //   total_cost: 5.6e-5,
+    //   total_tokens: 30,
+    //   average_latency: 0.23117351531982422,
+    //   number_of_requests: 1,
+    // },
   ],
   summary: {
     total_cost: 410.09085,

@@ -2,15 +2,14 @@ import { OnboardingFieldSet } from "./components";
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 
-export function OptimizeCosts({ show = false, register=()=>{}, buttonAction=()=>{} }) {
-
+export function OptimizeCosts({ stepNumber, register = () => { }, buttonAction = () => { } }) {
   return (
     <OnboardingFieldSet
-    show={show}
-    title="Optimize costs"
-    subtitle="Set your target budget for LLM usage." //to add user email
-    fields={
-      <>
+      stepNumber={stepNumber}
+      title="Optimize costs"
+      subtitle="Set your target budget for LLM usage." //to add user email
+      fields={
+        <>
           <SelectInput
             {...register("LLM_spending`")}
             title="Monthly LLM spending"
@@ -25,16 +24,16 @@ export function OptimizeCosts({ show = false, register=()=>{}, buttonAction=()=>
             optionsWidth="w-[420px]"
             required
           />
-        <TextInput
-          {...register("spending_budget_goal")}
-          title="Spending budget goal"
-          placeholder="$200"
-          required
-        />
-      </>
-    }
-    buttonText="Continue"
-    buttonAction={buttonAction}
-  />
+          <TextInput
+            {...register("spending_budget_goal")}
+            title="Spending budget goal"
+            placeholder="$200"
+            required
+          />
+        </>
+      }
+      buttonText="Continue"
+      buttonAction={buttonAction}
+    />
   );
 }

@@ -12,6 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
+  firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
@@ -24,11 +25,7 @@ const mapDispatchToProps = {
 
 function DashboardNotConnected({
   summary,
-  requestCountData,
-  latencyData,
-  tokenCountData,
-  costData,
-  getDashboardData,
+  getDashboardData
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,7 +79,7 @@ function DashboardNotConnected({
   return (
     <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
       <div className="flex flex-row justify-between w-full self-stretch">
-        <span className="display-sm">Welcome, first_name</span>
+        <span className="display-sm">Welcome, {firstName}</span>
         <ButtonGroup buttons={buttons} />
       </div>
       <div className="grid grid-cols-4 gap-md">

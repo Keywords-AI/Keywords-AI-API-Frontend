@@ -1,18 +1,32 @@
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
-
+import { connect } from "react-redux";
+import { createOrganization, dispatchNotification } from "src/store/actions";
 
 /*
 @params register: the register function from react-hook-form
 */
-export function CreateOrganization({ show = false, register=()=>{}, buttonAction=()=>{} }) {
-
+const mapStateToProps = (state) => ({ user: state.user });
+const mapDispatchToProps = { createOrganization };
+export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)(({
+  stepNumber,
+  register = () => { },
+  buttonAction = () => { },
+  user,
+  watch,
+}) => {
+  const handleClick = () => {
+    const organization_name = watch("organization_name");
+    const organization_size = watch("organization_size");
+    createOrganization({ name: organization_name, organization_size });
+    buttonAction();
+  }
   return (
     <OnboardingFieldSet
-      show={show}
+      stepNumber={stepNumber}
       title="Create organization"
-      subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
+      subtitle={`${user.email} is inviting you to join their organization`} //to add user email
       fields={
         <>
           <TextInput
@@ -27,10 +41,10 @@ export function CreateOrganization({ show = false, register=()=>{}, buttonAction
             width="w-full"
             placeholder="Please select"
             choices={[
-              { name: "1-10", value: "1-10" },
-              { name: "11-50", value: "11-50" },
-              { name: "51-200", value: "51-200" },
-              { name: "200+", value: "200+" },
+              { name: "1-10", value: 1 },
+              { name: "11-50", value: 11 },
+              { name: "51-200", value: 51 },
+              { name: "200+", value: 200 },
             ]}
             optionsWidth="w-[420px]"
             required
@@ -38,7 +52,7 @@ export function CreateOrganization({ show = false, register=()=>{}, buttonAction
         </>
       }
       buttonText="Continue"
-      buttonAction={buttonAction}
+      buttonAction={handleClick}
     />
   );
-}
+})
