@@ -46,11 +46,11 @@ export const OnboardingPage = connect(
     ); // Dispatch the logout action
   };
   const formfields = [
-    <CreateOrganization register={register} buttonAction={() => { setQueryParams({ curr_step: 2 }, navigate) }} />,
-    <InviteTeam register={register} buttonAction={() => { setQueryParams({ curr_step: 3 }, navigate) }} />,
-    <IdentifyUseCase register={register} buttonAction={() => { setQueryParams({ curr_step: 4 }, navigate) }} />,
-    <PrioritizeObj register={register} buttonAction={() => { setQueryParams({ curr_step: 5 }, navigate) }} />,
-    <OptimizeCosts register={register} buttonAction={() => { setQueryParams({ curr_step: 6 }, navigate) }} />,
+    <CreateOrganization />,
+    <InviteTeam />,
+    <IdentifyUseCase />,
+    <PrioritizeObj />,
+    <OptimizeCosts />,
   ];
   return (
     <>
@@ -69,7 +69,7 @@ export const OnboardingPage = connect(
         {formfields.map((field, index) => {
           return (
             <React.Fragment key={index}>
-              {React.cloneElement(field, { stepNumber: index + 1 })}
+              {React.cloneElement(field, { register, watch, stepNumber: index + 1, buttonAction: () => setQueryParams({ curr_step: index + 2 }, navigate) })}
             </React.Fragment>
           )
         })}

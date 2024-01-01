@@ -11,6 +11,7 @@ export const setOrganization = (organization) => {
 };
 
 export const createOrganization = (organization) => {
+  // organization {name, organization_size}
   return (dispatch) => {
     keywordsFetch({
       path: "organizations",
