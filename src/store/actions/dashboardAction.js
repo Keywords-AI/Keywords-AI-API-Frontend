@@ -40,6 +40,24 @@ export const aggregateData = (data, timePeriod) => {
   return Object.values(groupedData);
 };
 
+const testData = [{
+  "data": [
+      {
+          "date_group": 20,
+          "total_cost": 5.6e-05,
+          "total_tokens": 30,
+          "average_latency": 0.23117351531982422,
+          "number_of_requests": 1
+      }
+  ],
+  "summary": {
+      "total_cost": 5.6e-05,
+      "total_tokens": 30,
+      "average_latency": 0.23117351531982422,
+      "number_of_requests": 1
+  }
+}]
+console.log("test: ", testData);
 
 export const setDashboardData = (data) => {
   return {
@@ -89,6 +107,7 @@ export const getDashboardData = () => {
     const date = new Date();
     params.set("date", date.toLocaleDateString()); // format: MM/DD/YYYY
     // Yes, Fuck JS. They don't provide native formatter to convert to YYYY-mm-dd
+
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
   })
@@ -96,14 +115,13 @@ export const getDashboardData = () => {
         if (!response.ok) {
           throw new Error("Error");
         } else {
-          console.log(response.json());
           return response.json();
           
         }
       })
       .then((data) => {
-        console.log(data);
         dispatch(setDashboardData(data));
+        console.log("here: ", data);
         const dataList = data?.data;
         dispatch(setCostData(sliceChartData(dataList, "date_group", "total_cost")));
         dispatch(setTokenCountData(sliceChartData(dataList, "date_group", "total_tokens")));
