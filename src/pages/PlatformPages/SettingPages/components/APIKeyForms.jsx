@@ -28,16 +28,16 @@ const mapDispatchToProps = {
 };
 const expiryOptions = [
   // 'Never' represented by a far future date in the specified format
-  { name: "Never", value: new Date('3000-12-31T23:59:59Z').toISOString().replace('T', ' ').replace('.000Z', '') },
+  { name: "Never", value: new Date('3000-12-31T23:59:59Z').toISOString().split('T')[0] },
 
   // Two weeks from now
-  { name: "Two weeks", value: new Date(Date.now() + 2 * 7 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
+  { name: "Two weeks", value: new Date(Date.now() + 2 * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
 
   // One month (approx 30 days) from now
-  { name: "One month", value: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
+  { name: "One month", value: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
 
   // Three months (approx 90 days) from now
-  { name: "Three months", value: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().replace('T', ' ').replace('.000Z', '') },
+  { name: "Three months", value: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] },
 ];
 
 const CreateFormNotConnected = React.forwardRef(({
@@ -98,7 +98,8 @@ const CreateFormNotConnected = React.forwardRef(({
             {...register("expiry_date")}
             // onKeyDown={handleEnter}
             placeholder={"Key-1"}
-            defaultValue={"Never"}
+            //This corresponds to the 'Never' option
+            defaultValue={new Date('3000-12-31T23:59:59Z').toISOString().split('T')[0]}
             choices={expiryOptions}
           />
         </div>
@@ -170,6 +171,7 @@ export const DeleteForm = connect(mapStateToProps, mapDispatchToProps)(DeleteFor
 
 const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, updateEditingKey, dispatchNotification }, ref) => {
   const [newName, setNewName] = React.useState(editingKey?.name);
+  const [defaultTime, setDefaultTime] = React.useState(editingKey?.expiry_date || new Date('3000-12-31T23:59:59Z').toISOString());
   const {
     loading: editLoading,
     error: editKeyError,
@@ -205,16 +207,15 @@ const EditFormNotConnected = React.forwardRef(({ setEditingKey, editingKey, upda
           title={"New name"}
           width={"w-full"}
           {...register("name", { value: newName, onChange: handleChange, required: true })}
-          // onKeyDown={handleEnter}
           placeholder={"Key-1"}
         />
         <SelectInput
           title={"Expiry"}
           optionsWidth={"w-[160px]"}
           {...register("expiry_date")}
-          // onKeyDown={handleEnter}
           placeholder={"Key-1"}
-          defaultValue={"Never"}
+          //This corresponds to the fetched expiry date
+          defaultValue={new Date(defaultTime).toISOString().split('T')[0]}
           choices={expiryOptions}
         />
       </div>

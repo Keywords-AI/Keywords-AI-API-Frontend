@@ -3,44 +3,46 @@ import { eraseCookie, getCookie, setCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "./notificationAction";
 
-export const register = (
-  email,
-  password,
-  firstname,
-  lastname,
-  organization
-) => {
+// admintestpassword
+export const signup = (data = {}) => {
+  // data = {email, first_name, last_name, password}
   return (dispatch) => {
     // Return a promise from the thunk
-    return new Promise((resolve, reject) => {
-      fetch(`${apiConfig.apiURL}auth/users/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          first_name: firstname,
-          last_name: lastname,
-          organization: organization,
-        }),
+    fetch(`${apiConfig.apiURL}auth/users/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const responseJson = await res.json();
+          dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "Activation link sent, please check your email",
+            })
+          );
+        } else {
+          const responseJson = await res.json();
+          Object.keys(responseJson).forEach((key) => {
+            responseJson[key].forEach((error) => {
+              dispatch(
+                dispatchNotification({
+                  type: "error",
+                  title: `${key}: ${error}`,
+                })
+              );
+            });
+          });
+        }
       })
-        .then(async (res) => {
-          if (res.ok) {
-            const responseJson = await res.json();
-            dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
-            resolve(responseJson); // Resolve the promise with response data
-          } else {
-            const responseJson = await res.json();
-            reject(responseJson); // Reject the promise with the error object
-          }
-        })
-        .catch((error) => {
-          reject(error); // Handle network errors
-        });
-    });
+      .catch((error) => {
+        // dispatch(dispatchNotification({ type: "error", title: "Sign up failed" }));
+      });
   };
 };
 
