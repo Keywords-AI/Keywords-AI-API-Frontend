@@ -48,6 +48,7 @@ export const getDashboardData = () => {
     const params=new URLSearchParams(window.location.search);
     const date = new Date();
     params.set("date", date.toLocaleDateString()); // format: MM/DD/YYYY
+    // Yes, Fuck JS. They don't provide native formatter to convert to YYYY-mm-dd
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
   })
