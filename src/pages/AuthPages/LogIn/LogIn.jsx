@@ -9,12 +9,14 @@ import { login, googleLogin } from "src/store/actions";
 import { connect } from "react-redux";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
+import { dispatchNotification, isLoggedIn } from "src/store/actions";
 
 const mapDispatchToProps = {
   login,
+  dispatchNotification,
 };
 
-const LogIn = ({ login }) => {
+const LogIn = ({ login, }) => {
   const navigate = useNavigate();
   const onSubmit = async (data) => {
     try {
@@ -24,6 +26,9 @@ const LogIn = ({ login }) => {
       setBackendError(error.detail || error.message);
     }
   };
+  useEffect(() => {
+    if (isLoggedIn()) navigate("/");
+  }, [isLoggedIn])
   const {
     register,
     handleSubmit,
@@ -66,7 +71,9 @@ const LogIn = ({ login }) => {
               variant={"r4-white"}
               className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
             />
-            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()}/>
+            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-white" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" onClick={() => googleLogin()}
+            type="button"
+            />
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}

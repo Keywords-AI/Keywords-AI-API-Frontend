@@ -48,7 +48,7 @@ export const getCookie = (name = "csrftoken") => {
 };
 
 export function eraseCookie(name, path = "/") {
-    const domain = window.location.domain;
-    document.cookie =
-      name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
+    const domain = window.location.hostname;
+    console.log(domain);
+    document.cookie = name + "=; Max-Age=-99999999; domain=" + domain + "; path=" + path;
   }

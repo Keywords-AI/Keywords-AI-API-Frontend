@@ -1,7 +1,7 @@
 import apiConfig, { keywordsFetch } from "src/services/apiConfig";
-import { getCookie, setCookie } from "src/utilities/cookies";
+import { eraseCookie, getCookie, setCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
-import { set } from "react-hook-form";
+import { dispatchNotification } from "./notificationAction";
 
 export const register = (
   email,
@@ -75,11 +75,11 @@ export const login = (email, password) => {
             resolve(responseJson); // Resolve the promise with response data
           } else {
             const responseJson = await res.json();
-            console.log(responseJson);
-            reject(responseJson); // Reject the promise with the error object
+            throw new Error(responseJson.detail);
           }
         })
         .catch((error) => {
+          dispatch(dispatchNotification({ type: "error", title: error.message }));
           reject(error); // Handle network errors
         });
     });
@@ -92,26 +92,46 @@ export const logout = () => {
       method: "POST",
     })
       .then(async (res) => {
-        console.log("logout")
+        console.log("logout");
+        localStorage.removeItem("refresh");
         localStorage.removeItem("access");
+        eraseCookie("access");
+        eraseCookie("refresh");
         window.location.href = "/login";
+        dispatch(dispatchNotification({ type: "success", title: "Logged out successfully!" }));
       })
       .catch((error) => console.log(error));
   };
 };
 
-export const googleLogin = async () => {
-  // Retrieve the Google authorization URL
-  fetch(
-    `${apiConfig.apiURL}auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`,
-    {
-      credentials: "include",
-    }
-  )
-    .then((res) => res.json())
-    .then((response) => {
-      window.location.href = response.authorization_url;
-    });
+export const googleLogin = () => {
+  return (dispatch) => {
+    // Retrieve the Google authorization URL
+    console.log(apiConfig.frontendURL);
+    fetch(
+      `${apiConfig.apiURL}auth/o/google-oauth2/?redirect_uri=${apiConfig.frontendURL}`,
+      {
+        credentials: "include",
+      }
+    )
+      .then(async (res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          const awaitRes = await res.json();
+          throw new Error(awaitRes.detail);
+        }
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.authorization_url) {
+          window.location.href = response.authorization_url;
+        }
+      })
+      .catch((error) => {
+        dispatch(dispatchNotification({ type:"error", title: "Google Auth Error: " + error.message }));
+      });
+  };
 };
 
 export const googleAuthJWT = () => {
@@ -148,7 +168,7 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  return user?.id !== null && user?.id !== undefined;
+  return retrieveAccessToken() || (user?.id !== null && user?.id !== undefined);
 };
 
 export const resetPassword = (

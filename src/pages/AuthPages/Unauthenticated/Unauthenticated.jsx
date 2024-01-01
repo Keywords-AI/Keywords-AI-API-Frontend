@@ -36,13 +36,6 @@ export function Unauthenticated() {
               navigate("/login");
             }}
           />
-          {/* <Button
-            text="Login with Google"
-            variant="header"
-            onClick={() => {
-              googleAuthJWT();
-            }}
-          /> */}
           <Button
             text="Sign up"
             variant={"header"}

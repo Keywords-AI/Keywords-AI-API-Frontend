@@ -2,6 +2,7 @@ export const DISPATCH_NOTIFICATION = "DISPATCH_NOTIFICATION";
 export const DISMISS_NOTIFICATION = "DISMISS_NOTIFICATION";
 
 export const dispatchNotification = (notification) => {
+  // notification: { type: "success", title: "some message" }
   return (dispatch, getState) => {
     // make async call to database
     const randomId = Math.random().toString(36).substring(2, 15);
