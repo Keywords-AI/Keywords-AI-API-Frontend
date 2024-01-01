@@ -16,10 +16,10 @@ const mapDispatchToProps = {
 
 export const MemberPage = ({ organization, addMember }) => {
   const [open, setOpen] = React.useState(false);
-  const [members, setMembers] = React.useState(organization?.members || []);
+  const [members, setMembers] = React.useState(organization?.users || []);
   React.useEffect(() => {
-    setMembers(organization?.members || []);
-  }, [organization?.members]);
+    setMembers(organization?.users || []);
+  }, [organization?.users]);
   return (
     <PageContent
       title={"Members"}
@@ -31,7 +31,7 @@ export const MemberPage = ({ organization, addMember }) => {
         <div className="flex-row flex-wrap gap-md">
           {members.map((member, index) => {
             return (
-              <MemberCard key={index} firstName="John" lastName="Doe" />
+              <MemberCard key={index} {...member} />
             )
           })}
         </div>

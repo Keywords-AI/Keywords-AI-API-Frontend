@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { logout, setCurrentStep, setNextStep } from "src/store/actions";
+import {
+  logout,
+  setNextStep,
+  updateUser
+} from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
 import { Button } from "src/components/Buttons";
 import { Left } from "src/components/Icons";
@@ -16,12 +20,20 @@ import cn from "src/utilities/classMerge";
 const mapStateToProps = (state) => ({
   currentStep: state.onboarding.currentStep
 });
-const mapDispatchToProps = { logout, setNextStep };
+const mapDispatchToProps = {
+  logout,
+  setNextStep,
+  updateUser
+};
 
 export const OnboardingPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ logout, setNextStep }) => {
+)(({ 
+  logout, 
+  setNextStep,
+  updateUser,
+ }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
@@ -47,7 +59,7 @@ export const OnboardingPage = connect(
   };
   const formfields = [
     <CreateOrganization />,
-    <InviteTeam />,
+    // <InviteTeam />,
     <IdentifyUseCase />,
     <PrioritizeObj />,
     <OptimizeCosts />,
@@ -63,18 +75,25 @@ export const OnboardingPage = connect(
           iconPosition={"left"}
         />
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}
+      <div
         className="w-full max-w-[420px] flex-col flex-grow"
       >
         {formfields.map((field, index) => {
           return (
             <React.Fragment key={index}>
-              {React.cloneElement(field, { register, watch, stepNumber: index + 1, buttonAction: () => setQueryParams({ curr_step: index + 2 }, navigate) })}
+              {React.cloneElement(field, {
+                register, watch,
+                stepNumber: index + 1,
+                buttonAction: () => {
+                  updateUser({ curr_onboarding_step: index + 2 });
+                  setQueryParams({ curr_step: index + 2 }, navigate);
+                }
+              })}
             </React.Fragment>
           )
         })}
-        <GetStarted show={currentStep == 6} />
-      </form>
+        <GetStarted show={parseInt(curr_step) === formfields.length + 1} />
+      </div>
       <StepsBar
         className={cn("absolute bottom-md",
           curr_step == formfields.length + 1 ? "hidden" : "visible"

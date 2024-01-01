@@ -1,15 +1,18 @@
 
-import { OnboardingFieldSet } from "./components";
 import React, { useEffect } from "react";
-import { TextInput, SelectInput } from "src/components/Inputs";
 import { Button } from "src/components";
 import cn from "src/utilities/classMerge";
+import { updateUser } from "src/store/actions";
+import { connect } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-export function GetStarted({
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = { updateUser };
+export const GetStarted = connect(mapStateToProps, mapDispatchToProps)(({
     show = false,
-    register = () => { },
-    buttonAction = () => { },
-}) {
+    updateUser
+}) => {
+    const navigate = useNavigate();
     return (
         <div className={
             cn("flex-col self-stretch flex-grow justify-center",
@@ -17,7 +20,12 @@ export function GetStarted({
             )
         }
         >
-            <Button variant="r4-primary" text="Get started" />
+            <Button variant="r4-primary" text="Get started"
+                onClick={() => {
+                    updateUser({ onboarded: true });
+                    navigate("/");
+                }}
+            />
         </div>
     );
-}
+})
