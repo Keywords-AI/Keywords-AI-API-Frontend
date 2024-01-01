@@ -7,7 +7,8 @@ import { PageContent, PageParagraph } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { setTheme } from "src/store/actions/themeAction";
 import { useForm } from "react-hook-form";
-export default function UserSettings() {
+
+export const UserSettings = () => {
   const theme = useSelector((state) => state.theme.theme);
   const distpatch = useDispatch();
   const {
@@ -32,13 +33,14 @@ export default function UserSettings() {
           <TextInput
             title="Email"
             type="email"
-            placeholder="abc@example.com"
+            placeholder="to be updated"
+            disabled={true}
             {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
           <div className="flex self-stretch gap-xs items-center">
             <TextInput
               title="First Name"
-              placeholder="First Name"
+              placeholder="to be updated with real user first name"
               {...register("firstname", {
                 pattern: /^[a-zA-Z]+$/,
                 minLength: 1,
@@ -46,15 +48,15 @@ export default function UserSettings() {
             />
             <TextInput
               title="Last Name"
-              placeholder="Last Name"
+              placeholder="to be updated with real user first name"
               {...register("lastname", {
                 pattern: /^[a-zA-Z]+$/,
                 minLength: 1,
               })}
             />
           </div>
-          <Button text="Update" variant="r4-primary" />
         </form>
+        <Button text="Update" variant="r4-primary" />
       </PageParagraph>
       <Divider />
       <div className="flex items-start self-stretch justify-between">
@@ -69,4 +71,4 @@ export default function UserSettings() {
       </div>
     </PageContent>
   );
-}
+};

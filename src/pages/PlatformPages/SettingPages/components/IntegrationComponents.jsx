@@ -196,7 +196,7 @@ export const IntegrationCard = connect(mapStateToProps, mapDispatchToProps)(Inte
 export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
   return (
     <div className="flex flex-row items-center gap-xs self-stretch">
-      <div className="flex p-xxs items-center w-[40px] h-[40px] rounded-sm bg-gray-white">
+      <div className="flex p-xxs items-center w-[40px] h-[40px] rounded-sm bg-gray-5">
         <div className="flex-col relative">
           <IconButton 
           className="absolute -top-3.5 -right-3.5"

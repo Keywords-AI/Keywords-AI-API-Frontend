@@ -21,7 +21,7 @@ export function Unauthenticated() {
           aria-label="section title"
           className="flex-col items-center gap-xxs self-stretch "
         >
-          <div className="display-xs text-gray-white">
+          <div className="display-xs text-gray-5">
             Authentication Required
           </div>
           <div className="text-md-regular text-gray-4">

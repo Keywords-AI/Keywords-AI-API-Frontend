@@ -73,9 +73,9 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
   const [file, setFile] = React.useState(null);
 
   return (
-    <div className="backdrop fixed h-screen w-screen flex bg-black bg-opacity-50 z-[1000] justify-center items-center" onMouseUp={handelClose}>
+    <div className="backdrop fixed h-screen w-screen flex bg-gray-5 bg-opacity-50 z-[1000] justify-center items-center" onMouseUp={handelClose}>
       <form ref={formRef}>
-        <div className="inline-flex flex-col items-start gap-md p-lg max-h-full w-[600px] bg-black rounded-md relative"
+        <div className="inline-flex flex-col items-start gap-md p-lg max-h-full w-[600px] bg-gray-5 rounded-md relative"
           style={{
             boxShadow: "0px 0px 10px 10px rgba(255, 255, 255, 0.05)",
 
@@ -111,7 +111,7 @@ function Popup({ closePopup, updateSystemPrompt, user, loadingFileUpload }) {
                   });
                 }}
                 name="system_prompt"
-                className="text-sm bg-black shadow-border shadow-gray-3 rounded-sm text-gray-white"
+                className="text-sm bg-gray-5 shadow-border shadow-gray-3 rounded-sm text-gray-5"
                 id=""
               ></textarea>
               {/* <input

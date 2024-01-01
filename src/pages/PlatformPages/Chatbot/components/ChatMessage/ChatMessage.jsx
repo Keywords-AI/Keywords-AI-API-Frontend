@@ -19,7 +19,7 @@ export default function ChatMessage({ message }) {
     <div
       className={
         `chat-message ` +
-        (message && message.role === "user" ? "bg-black" : "bg-gray-2") +
+        (message && message.role === "user" ? "bg-gray-5" : "bg-gray-2") +
         (message && message.content && checkError(message.content)
           ? " bg-error"
           : "") +

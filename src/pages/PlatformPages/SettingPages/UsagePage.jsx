@@ -34,8 +34,8 @@ export const UsagePage = ({ usage }) => {
           name={"Free trial"}
           progressLegend={"Used"}
           remainLegend={"Credits remaining"}
-          progressColorClass={"bg-gray-white"}
-          remainColorClass={"bg-gray-black"}
+          progressColorClass={"bg-gray-5"}
+          remainColorClass={"bg-gray-1"}
           current={creditsUsed}
           total={creditsTotal}
           display={(current, total) => `$${current} / $${total}`}

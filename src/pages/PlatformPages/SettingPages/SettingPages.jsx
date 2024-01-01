@@ -10,6 +10,7 @@ import { IntegrationsPage } from './IntegrationsPage';
 import { generateChild } from 'src/utilities/objectProcessing';
 import { AlertsFallbackPage } from './AlertsFallbackPage';
 import { ModelRouterPage } from './ModelRouterPage';
+import { UserSettings } from './UserSettingsPage';
 
 const pages = [
     {
@@ -19,25 +20,19 @@ const pages = [
         page: <SettingsPage />,
     },
     {
-        title: "Settings",
+        title: "General",
         page: <SettingsPage />,
     },
-    {
-        title: "Usage",
-        // forAdmin: true,
-        page: <UsagePage />,
-    },
+    // {
+    //     title: "Usage",
+    //     // forAdmin: true,
+    //     page: <UsagePage />,
+    // }, feature replaced by dashboard
     {
         title: "Member",
         forAdmin: true,
         page: <MemberPage />,
     },
-    {
-        title: "Billing",
-        // forAdmin: true,
-        page: <BillingPage />,
-    },
-
     {
         title: "Integrations",
         // forAdmin: true,
@@ -54,12 +49,21 @@ const pages = [
         // forAdmin: true,
         page: <AlertsFallbackPage />,
     },
+    {
+        title: "Billing",
+        // forAdmin: true,
+        page: <BillingPage />,
+    },
 ];
 
 
 
 const userPages = [
-
+    {
+        title: "Settings",
+        // forAdmin: true,
+        page: <UserSettings />,
+    },
     {
         title: "API Keys",
         // forAdmin: true,
