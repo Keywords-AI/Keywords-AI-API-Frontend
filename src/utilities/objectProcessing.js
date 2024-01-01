@@ -25,6 +25,20 @@ export const digitToMonth = (digit, year) => {
   return `${monthMap[month]} ${year}`;
 };
 
+export function formatDate(date) {
+  var dd = date.getDate();
+  var mm = date.getMonth() + 1;
+  var yyyy = date.getFullYear();
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+  date = yyyy + "-" + mm + "-" + dd;
+  return date;
+}
+
 export function timeSkip(currentTime, deltaTime) {
   // Destructuring deltaTime object
   const { days = 0, months = 0, years = 0 } = deltaTime;
@@ -46,7 +60,7 @@ export const processKey = (key, actions = () => {}) => {
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
     actions: actions(key),
-    mod_prefix: key.prefix.slice(0,3) + "..."
+    mod_prefix: key.prefix.slice(0, 3) + "...",
   };
 };
 
@@ -85,19 +99,19 @@ export const processBillingList = (billingList, actions = () => {}) => {
 export const generateChild = (page) => {
   let path = textToLink(page.title);
   if (page?.path) {
-      path = page.path;
+    path = page.path;
   }
   if (page?.default) {
-      path = "";
+    path = "";
   }
   return {
-      default: page.default,
-      title: page.title,
-      path: path,
-      element: page.page,
-      page: page.page,
+    default: page.default,
+    title: page.title,
+    path: path,
+    element: page.page,
+    page: page.page,
   };
-}
+};
 
 export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   /*
