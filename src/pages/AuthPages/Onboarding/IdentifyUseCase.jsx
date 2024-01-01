@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextInput, SelectInput, CheckboxInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
 import StepsBar from "src/components/Misc/StepsBar";
@@ -7,7 +7,7 @@ import { BackButton } from "src/components/Buttons";
 /*
 @params register: the register function from react-hook-form
 */
-export function IdentifyUseCase({ show = false, register = () => {}, buttonAction=()=>{} }) {
+export function IdentifyUseCase({ stepNumber, register = () => {}, buttonAction=()=>{} }) {
   const [isOtherChecked, setIsOtherChecked] = useState(false);
   const handleCheckboxChange = (e) => {
     if (e.target.value === "Other") {
@@ -18,7 +18,7 @@ export function IdentifyUseCase({ show = false, register = () => {}, buttonActio
   return (
     // <div className="relative">
         <OnboardingFieldSet
-          show={show}
+          stepNumber={stepNumber}
           title="Identify use case"
           subtitle="Select all LLM use cases that apply."
           fields={

@@ -17,6 +17,7 @@ import {
 } from "src/store/actions";
 
 export const SET_USER = "SET_USER";
+export const UPDATE_USER = "UPDATE_USER";
 
 export const getUser = () => {
   return (dispatch) => {
@@ -61,6 +62,7 @@ export const getUser = () => {
 
 export const  updateUser = (data={}) => {
   return (dispatch) => {
+    dispatch({ type: UPDATE_USER, payload: data });
     fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "PATCH",
       headers: {
@@ -73,8 +75,6 @@ export const  updateUser = (data={}) => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
-          // Set the user object itself
-          dispatch({ type: SET_USER, payload: data });
           // Set the organizaiton of the user
           dispatch(setOrg(data.organization));
           // Set the free credits under usage state of the user

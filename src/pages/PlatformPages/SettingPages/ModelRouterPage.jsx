@@ -28,7 +28,10 @@ export const ModelRouterPage = connect(
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
   };
-  const {register, handleSubmit, formState: {errors}} = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = async (data) => {
+    console.log(data);
+  }
   return (
     <PageContent
       title={
@@ -57,7 +60,9 @@ export const ModelRouterPage = connect(
           title="Presets"
           subtitle="Use the recommended model preset or build custom presets for dynamic routing."
         />
-        <form className="flex flex-col items-start gap-xs w-full">
+        <form className="flex flex-col items-start gap-xs w-full"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <ModelPresetCard
             title="All models"
             models={[]}
@@ -71,8 +76,8 @@ export const ModelRouterPage = connect(
             title="Custom"
             {...register("model_preset")}
           />
+          <Button variant="r4-primary" text="Create custom preset" />
         </form>
-        <Button variant="r4-primary" text="Create custom preset" />
       </div>
     </PageContent>
   );

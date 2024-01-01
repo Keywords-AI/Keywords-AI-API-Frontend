@@ -49,8 +49,8 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  //const isUserLoggedIn = isLoggedIn(user);
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = isLoggedIn(user);
+  // const isUserLoggedIn = true;
   const routes = [
     {
       path: "/platform",
@@ -124,12 +124,12 @@ const Routes = ({ getUser, user }) => {
             <Unauthenticated />
           ),
         },
+        {
+          path: "onboarding/:curr_step?",
+          element: <OnboardingPage />,
+        },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
-    },
-    {
-      path: "/onboarding/:curr_step?",
-      element: <OnboardingPage />,
     },
     {
       path: "*",

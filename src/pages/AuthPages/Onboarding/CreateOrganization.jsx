@@ -6,11 +6,11 @@ import { OnboardingFieldSet } from "./components";
 /*
 @params register: the register function from react-hook-form
 */
-export function CreateOrganization({ show = false, register=()=>{}, buttonAction=()=>{} }) {
+export function CreateOrganization({ stepNumber, register = () => { }, buttonAction = () => { } }) {
 
   return (
     <OnboardingFieldSet
-      show={show}
+      stepNumber={stepNumber}
       title="Create organization"
       subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
       fields={

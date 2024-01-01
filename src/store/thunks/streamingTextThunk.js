@@ -9,6 +9,7 @@ import {
 // import store from "../store";
 import { setOutputs } from "../actions/playgroundAction";
 import apiConfig from "src/services/apiConfig";
+import { dispatchNotification } from "src/store/actions";
 /**
  * Sends streaming text to a specified host and path using the specified parameters.
  *
@@ -62,6 +63,10 @@ export const sendStreamingTextThunk = async ({
         setTimeout(() => reject(new Error("Fetch Timeout")), fetchTimeout)
       ),
     ]);
+    if (!response.ok) {
+      const responseJson = await response.json();
+      throw new Error(responseJson.detail);
+    }
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let dataString = "";
@@ -93,10 +98,11 @@ export const sendStreamingTextThunk = async ({
       }
       chunks.forEach((chunk, index) => {
         if (!chunk || chunk === "") return;
-      
+
         const parsedChunk = JSON.parse(chunk);
         if (parsedChunk.evaluation) {
-          const { completion_tokens, cost, latency, scores } = parsedChunk.evaluation;
+          const { completion_tokens, cost, latency, scores } =
+            parsedChunk.evaluation;
           dispatch(
             setOutputs({
               tokens: completion_tokens,
@@ -109,7 +115,7 @@ export const sendStreamingTextThunk = async ({
           const messageChunk = parsedChunk.choices[0].delta.content;
           dispatch(sendStreamingTextPartial(messageChunk));
         }
-      
+
         // Clear dataString after the last chunk has been processed
         if (index === chunks.length - 1) {
           dataString = "";
@@ -124,5 +130,9 @@ export const sendStreamingTextThunk = async ({
       ? error.response.data
       : "An error occurred";
     dispatch(sendStreamingTextFailure(errorMessage));
+    console.log(error)
+    if (error.message) {
+      dispatch(dispatchNotification({ type: "error", title: error.message }));
+    }
   }
 };

@@ -7,9 +7,29 @@ import { PageContent, PageParagraph } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { setTheme } from "src/store/actions/themeAction";
 import { useForm } from "react-hook-form";
+import { connect } from "react-redux";
+import { updateUser } from "src/store/actions";
 
-export const UserSettings = () => {
+const mapStateToProps = (state) => ({
+  user: state.user,
+});
+const mapDispatchToProps = {
+  updateUser,
+};
+
+export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
+  user,
+  updateUser
+}) => {
   const theme = useSelector((state) => state.theme.theme);
+  const [firstName, setFirstName] = React.useState(user.first_name || "");
+  const [lastName, setLastName] = React.useState(user.last_name || "");
+  React.useEffect(() => {
+    if (user.first_name)
+      setFirstName(user.first_name);
+    if (user.last_name)
+      setLastName(user.last_name);
+  }, [user])
   const distpatch = useDispatch();
   const {
     register,
@@ -20,9 +40,14 @@ export const UserSettings = () => {
     distpatch(setTheme(checked ? "dark" : "light"));
   };
   const onSubmit = async (data) => {
-    console.log(errors);
-    console.log(data);
+    updateUser(data);
   };
+  const handleFirstNameChange = (event) => {
+    setFirstName(event.target.value);
+  }
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  }
   return (
     <PageContent title="User Settings" subtitle="Manage your user profile.">
       <PageParagraph heading="Profile">
@@ -33,25 +58,29 @@ export const UserSettings = () => {
           <TextInput
             title="Email"
             type="email"
-            placeholder="to be updated"
-            disabled={true}
+            disabled
+            value={user.email || ""}
             {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
           <div className="flex self-stretch gap-xs items-center">
             <TextInput
               title="First Name"
-              placeholder="to be updated with real user first name"
-              {...register("firstname", {
+              placeholder="Enter your first name"
+              value={firstName}
+              {...register("first_name", {
                 pattern: /^[a-zA-Z]+$/,
                 minLength: 1,
+                onChange: handleFirstNameChange
               })}
             />
             <TextInput
               title="Last Name"
-              placeholder="to be updated with real user first name"
-              {...register("lastname", {
+              placeholder="Enter your last name"
+              value={lastName}
+              {...register("last_name", {
                 pattern: /^[a-zA-Z]+$/,
                 minLength: 1,
+                onChange: handleLastNameChange
               })}
             />
           </div>
@@ -71,4 +100,4 @@ export const UserSettings = () => {
       </div>
     </PageContent>
   );
-};
+});
