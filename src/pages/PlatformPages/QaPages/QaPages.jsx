@@ -77,7 +77,7 @@ const pages = [
 const userPages = [
 
   {
-    title: "API Keys",
+    title: "API",
     // forAdmin: true,
     page: <>HI</>,
   },
