@@ -49,7 +49,7 @@ function DashboardNotConnected({
   return (
     <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
       <div className="flex flex-row justify-between w-full self-stretch">
-        <span className="display-sm">Dashboard</span>
+        <span className="display-sm">Welcome, first_name</span>
         <ButtonGroup buttons={buttons} />
       </div>
       <div className="grid grid-cols-4 gap-md">

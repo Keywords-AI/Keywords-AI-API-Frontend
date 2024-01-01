@@ -7,9 +7,26 @@ import {
   SET_DATE_DATA,
 } from "src/store/actions";
 const initState = {
-  data: [],
-  summary: {},
-  costData: [],
+  data: [
+    {
+      date_group: 20,
+      total_cost: 5.6e-5,
+      total_tokens: 30,
+      average_latency: 0.23117351531982422,
+      number_of_requests: 1,
+    },
+  ],
+  summary: {
+    total_cost: 5.6e-5,
+    total_tokens: 30,
+    average_latency: 0.23117351531982422,
+    number_of_requests: 1,
+  },
+  costData: [
+    { total_cost: 0.03, date_group: 20},
+    { total_cost: 0.02, date_group: 21},
+    { total_cost: 0.05, date_group: 22},
+  ],
   tokenCountData: [],
   latencyData: [],
   requestCountData: [],
