@@ -24,7 +24,7 @@ function DashboardNotConnected({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const summary_type = new URLSearchParams(location.search).get("summary_type")
+  const summary_type = new URLSearchParams(location.search).get("summary_type");
   useEffect(() => {
     getDashboardData();
     setDateData(summary_type);
