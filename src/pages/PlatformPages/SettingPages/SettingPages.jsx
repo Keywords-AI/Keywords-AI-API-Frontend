@@ -14,7 +14,7 @@ import { UserSettings } from './UserSettingsPage';
 
 const pages = [
     {
-        title: "Settings",
+        title: "General",
         // forAdmin: true,
         default: true,
         page: <SettingsPage />,

@@ -65,7 +65,7 @@ const Routes = ({ getUser, user }) => {
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         {
-          path: "setting",
+          path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
