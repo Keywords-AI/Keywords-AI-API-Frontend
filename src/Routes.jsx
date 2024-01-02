@@ -92,7 +92,6 @@ const Routes = ({ getUser, user }) => {
       ) : (
         <FullScreenLayout />
       ),
-      element: <FullScreenLayout />,
       children: [
         { path: "login", element: <LogIn /> },
         {
