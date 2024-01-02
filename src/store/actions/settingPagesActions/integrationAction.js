@@ -1,4 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
+import { dispatchNotification } from "src/store/actions";
+import { handleApiResponseErrors } from "src/utilities/errorHandling";
 const localHost = "http://localhost:8000/";
 export const GET_VENDORS = "GET_VENDORS";
 export const GET_INTEGRATIONS = "GET_INTEGRATIONS";
@@ -29,9 +31,14 @@ export const getIntegrations = () => {
     keywordsFetch({
       path: "vendor_integration/integrations",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          handleApiResponseErrors(response, dispatchNotification);
+        }
+      })
       .then((data) => {
-        console.log(data, "inegration data");
         dispatch({
           type: GET_INTEGRATIONS,
           payload: data,
@@ -43,7 +50,7 @@ export const getIntegrations = () => {
   };
 };
 
-export const createOrUpdateIntegration = (data) => {
+export const createIntegration = (data) => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/integrations/",
@@ -52,7 +59,33 @@ export const createOrUpdateIntegration = (data) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "integration data");
+        dispatch(dispatchNotification({
+          title: "Integration updated"
+        }));
+        dispatch({
+          type: SET_INTEGRATION,
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+};
+
+export const updateIntegration = (data) => {
+  return (dispatch) => {
+    keywordsFetch({
+      path: `vendor_integration/integration/${data.integration_id}/`,
+      data,
+      method: "PATCH",
+      dispatch: dispatch,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(dispatchNotification({
+          title: "Integration updated"
+        }));
         dispatch({
           type: SET_INTEGRATION,
           payload: data,

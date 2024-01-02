@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { IntegrationModal } from './components';
 import { PageContent, PageParagraph } from 'src/components/Sections';
 import { Button } from 'src/components/Buttons'
-import { getVendors, getIntegrations, createOrUpdateIntegration } from 'src/store/actions';
+import { getVendors } from 'src/store/actions';
 
 const mapPropsToState = (state) => ({
     vendors: state.integration.vendors
