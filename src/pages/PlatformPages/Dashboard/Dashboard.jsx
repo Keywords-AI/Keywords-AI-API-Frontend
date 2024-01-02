@@ -62,7 +62,7 @@ function DashboardNotConnected({
     },
     {
       icon: Speed,
-      title: "Average latency / request",
+      title: "Average latency",
       number: `${summary.average_latency?.toFixed(3) || 0}s`,
       chartData: latencyData,
       dataKey: "average_latency",
