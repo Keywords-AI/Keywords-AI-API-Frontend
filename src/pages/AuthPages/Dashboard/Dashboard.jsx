@@ -12,15 +12,27 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
+  orgName: state.user.organization_name,
+  firstName: state.user.first_name,
+  requestCountData: state.dashboard.requestCountData,
+  latencyData: state.dashboard.latencyData,
+  tokenCountData: state.dashboard.tokenCountData,
+  costData: state.dashboard.costData,
 });
 const mapDispatchToProps = {
   getDashboardData,
-  setDateData
+  setDateData,
 };
 
 function DashboardNotConnected({
   summary,
-  getDashboardData
+  orgName,
+  firstName,
+  requestCountData,
+  latencyData,
+  tokenCountData,
+  costData,
+  getDashboardData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,7 +45,7 @@ function DashboardNotConnected({
   const setSummaryType = (summary_type) => {
     // Wrapper, for cleaner code
     setQueryParams({ summary_type }, navigate);
-  }
+  };
   const buttons = [
     { text: "Day", onClick: () => setSummaryType("daily") },
     { text: "Week", onClick: () => setSummaryType("weekly") },
@@ -41,15 +53,43 @@ function DashboardNotConnected({
     { text: "Year", onClick: () => setSummaryType("yearly") },
   ];
   const metrics = [
-    { icon: Cost, title: "Cost", number: `$${summary.total_cost || 0}` },
-    { icon: Rocket, title: "Request", number: summary.number_of_requests, percentage: "130" },
-    { icon: Tokens, title: "Tokens", number: summary.total_tokens || 0, percentage: "29" },
-    { icon: Speed, title: "Average latency / request", number: `${summary.average_latency?.toFixed(3) || 0}s`, percentage: "12", up: false },
-  ]
+    {
+      icon: Rocket,
+      title: "Request",
+      number: summary.number_of_requests,
+      chartData: requestCountData,
+      dataKey: "number_of_requests",
+    },
+    {
+      icon: Speed,
+      title: "Average latency / request",
+      number: `${summary.average_latency?.toFixed(3) || 0}s`,
+      chartData: latencyData,
+      dataKey: "average_latency",
+    },
+    {
+      icon: Tokens,
+      title: "Tokens",
+      number: summary.total_tokens || 0,
+      chartData: tokenCountData,
+      dataKey: "total_tokens",
+    },
+    {
+      icon: Cost,
+      title: "Cost",
+      number: `$${summary.total_cost?.toFixed(5) || 0}`,
+      chartData: costData,
+      dataKey: "total_cost",
+    },
+  ];
+
   return (
     <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
       <div className="flex flex-row justify-between w-full self-stretch">
-        <span className="display-sm">Dashboard</span>
+        <div className="flex flex-col gap-xxxs">
+          <span className="text-sm-regular text-gray-3">{orgName}</span>
+          <span className="display-sm">Welcome, {firstName}</span>
+        </div>
         <ButtonGroup buttons={buttons} />
       </div>
       <div className="grid grid-cols-4 gap-md">
@@ -57,10 +97,13 @@ function DashboardNotConnected({
           <MetricCard key={index} {...metric} />
         ))}
       </div>
-      <DashboardChart/>
+      <DashboardChart />
       <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
     </div>
   );
 }
 
-export const Dashboard = connect(mapStateToProps, mapDispatchToProps)(DashboardNotConnected);
+export const Dashboard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DashboardNotConnected);

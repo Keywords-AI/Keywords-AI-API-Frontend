@@ -1,6 +1,7 @@
 // Imports
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import { abortStreamingTextRequest } from "./streamingTextAction";
+import { dispatchNotification } from "./notificationAction";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -55,19 +56,18 @@ export const setModelOptions = (modelOptions) => ({
 });
 export const setOutputs = (outputs) => {
   return (dispatch, getState) => {
-
     const modelsAndScores = outputs.score;
     // Convert the object into an array of [model, score] pairs
     const modelsWithScores = Object.entries(modelsAndScores);
 
     // Sort the array based on scores in descending order
     modelsWithScores.sort((a, b) => b[1] - a[1]);
-  
+
     // Extract just the model names from the sorted array
     const sortedModels = modelsWithScores.map(([model, _score]) => model);
     const currentModel = getState().playground.currentModel;
     dispatch(setCurrentModel(currentModel || sortedModels[0]));
-    dispatch ({
+    dispatch({
       type: SET_OUTPUTS,
       payload: outputs,
     });

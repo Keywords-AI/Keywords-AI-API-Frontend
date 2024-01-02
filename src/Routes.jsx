@@ -25,13 +25,7 @@ import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import {
-  CreateOrganization,
-  InviteTeam,
-  OptimizeCosts,
-  PrioritizeObj,
-} from "./pages/AuthPages/Onboarding";
-import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
+import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 
 const mapStateToProps = (state) => {
   return {
@@ -55,17 +49,20 @@ const Routes = ({ getUser, user }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
-  //const isUserLoggedIn = isLoggedIn(user);
+
+  // comment the 2 lines below to switch between logged in/out states
+  // const isUserLoggedIn = isLoggedIn(user);
   const isUserLoggedIn = true;
+
   const routes = [
     {
       path: "/platform",
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/" />,
+      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         {
-          path: "setting",
+          path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
@@ -90,12 +87,11 @@ const Routes = ({ getUser, user }) => {
     },
     {
       path: "/",
-      // element: !isUserLoggedIn ? (
-      //   <FullScreenLayout />
-      // ) : (
-      //   <Navigate to="/platform" />
-      // ),
-      element: <FullScreenLayout />, // @Ruifeng, nope, the redirection should be handled by the components themseives
+      element: isUserLoggedIn ? (
+        <Navigate to="/platform" /> //If user is logged in, redirect to platform
+      ) : (
+        <FullScreenLayout />
+      ),
       children: [
         { path: "login", element: <LogIn /> },
         {
@@ -119,19 +115,23 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         {
+          path: "email-confirmation/:email?",
+          element: <EmailConfirmation />,
+        },
+        {
           path: "/",
           element: isUserLoggedIn ? (
-            <Navigate to="/platform" />
+            <Navigate to="/platform" /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
           ) : (
             <Unauthenticated />
           ),
         },
+        {
+          path: "onboarding/:curr_step?",
+          element: <OnboardingPage />,
+        },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
-    },
-    {
-      path: "/onboarding/:curr_step?",
-      element: <OnboardingPage />,
     },
     {
       path: "*",

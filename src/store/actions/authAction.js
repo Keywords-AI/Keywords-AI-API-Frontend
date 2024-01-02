@@ -3,47 +3,50 @@ import { eraseCookie, getCookie, setCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "./notificationAction";
 
-export const register = (
-  email,
-  password,
-  firstname,
-  lastname,
-  organization
-) => {
+// admintestpassword
+export const signup = (data = {}) => {
+  // data = {email, first_name, last_name, password}
   return (dispatch) => {
     // Return a promise from the thunk
-    return new Promise((resolve, reject) => {
-      fetch(`${apiConfig.apiURL}auth/users/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          first_name: firstname,
-          last_name: lastname,
-          organization: organization,
-        }),
+    fetch(`${apiConfig.apiURL}auth/users/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const responseJson = await res.json();
+          dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "Activation link sent, please check your email",
+            })
+          );
+          window.location.href = "/email-confirmation" + "/" + data.email;
+        } else {
+          const responseJson = await res.json();
+          Object.keys(responseJson).forEach((key) => {
+            responseJson[key].forEach((error) => {
+              dispatch(
+                dispatchNotification({
+                  type: "error",
+                  title: `${key}: ${error}`,
+                })
+              );
+            });
+          });
+        }
       })
-        .then(async (res) => {
-          if (res.ok) {
-            const responseJson = await res.json();
-            dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
-            resolve(responseJson); // Resolve the promise with response data
-          } else {
-            const responseJson = await res.json();
-            reject(responseJson); // Reject the promise with the error object
-          }
-        })
-        .catch((error) => {
-          reject(error); // Handle network errors
-        });
-    });
+      .catch((error) => {
+        // dispatch(dispatchNotification({ type: "error", title: "Sign up failed" }));
+      });
   };
 };
-
+// admintestpassword
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
@@ -79,28 +82,40 @@ export const login = (email, password) => {
           }
         })
         .catch((error) => {
-          dispatch(dispatchNotification({ type: "error", title: error.message }));
+          dispatch(
+            dispatchNotification({ type: "error", title: error.message })
+          );
           reject(error); // Handle network errors
         });
     });
   };
 };
 
-export const logout = () => {
+export const logout = (
+  postLogout = () => {
+    window.location.href = "/login";
+  }
+) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
     })
       .then(async (res) => {
-        console.log("logout");
         localStorage.removeItem("refresh");
         localStorage.removeItem("access");
         eraseCookie("access");
         eraseCookie("refresh");
-        window.location.href = "/login";
-        dispatch(dispatchNotification({ type: "success", title: "Logged out successfully!" }));
+        postLogout();
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "Logged out successfully!",
+          })
+        );
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        dispatch(dispatchNotification({ type: "error", title: error.message }));
+      });
   };
 };
 
@@ -129,7 +144,12 @@ export const googleLogin = () => {
         }
       })
       .catch((error) => {
-        dispatch(dispatchNotification({ type:"error", title: "Google Auth Error: " + error.message }));
+        dispatch(
+          dispatchNotification({
+            type: "error",
+            title: "Google Auth Error: " + error.message,
+          })
+        );
       });
   };
 };
@@ -155,15 +175,21 @@ export const googleAuthJWT = () => {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       if (data.access) {
         localStorage.setItem("access", data.access);
         localStorage.setItem("refresh", data.refresh);
         window.location = "/platform/playground";
+      } else {
+        throw new Error("Sorry something went wrong, " + data.detail);
       }
     })
     .catch((error) => {
-      console.error("Error in Google Auth JWT:", error);
+      dispatch(
+        dispatchNotification({
+          type: "error",
+          title: "Google Auth Error: " + error.message,
+        })
+      );
     });
 };
 
@@ -187,8 +213,11 @@ export const resetPassword = (
       .then(async (res) => {
         if (res.ok) {
           console.log("Hi there!");
-          handleResponse(
-            "Link sent to your email inbox via thekeywordsai@gmail.com. "
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "Link sent to your email inbox via team@keywordsai.co",
+            })
           );
         } else if (!res.ok) {
           const responseJson = await res.text();
@@ -297,6 +326,7 @@ export const activateUser = (
   uid,
   token,
   handleSuccess = () => {
+    console.log("Success");
     window.location.href = "/login";
   },
   handelError = () => {}
@@ -332,13 +362,55 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          handleSuccess("The activation link has been sent to your email!");
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "The activation link has been sent to your email!",
+            })
+          );
         } else if (res.status === 400) {
           const responseJson = await res.text();
           handleError(responseJson);
         }
       })
       .catch((error) => console.log(error));
+  };
+};
+
+export const sendInvitation = (data) => {
+  // data = {email, role, organization}
+  return (dispatch) => {
+    keywordsFetch({
+      path: "user/invitations/create/",
+      method: "POST",
+      data: data,
+    }).then(async (res) => {
+      if (res.ok) {
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "Invitation sent to " + data.email,
+          })
+        );
+      } else {
+        const responseJson = await res.json();
+        if (responseJson.detail) {
+          // API Call errors
+          dispatch(
+            dispatchNotification({ type: "error", title: responseJson.detail })
+          );
+        } else {
+          // Serializer errors
+          Object.keys(responseJson).forEach((key)=>{
+            responseJson[key].forEach((error)=>{
+              dispatch(
+                dispatchNotification({ type: "error", title: `${key}: ${error}` })
+              );
+            })
+          })
+        }
+      }
+    });
   };
 };
 

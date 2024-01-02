@@ -1,25 +1,45 @@
 import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
-
+import { connect } from "react-redux";
+import { createOrganization, updateUser } from "src/store/actions";
+import { useForm } from "react-hook-form";
 
 /*
 @params register: the register function from react-hook-form
 */
-export function CreateOrganization({ show = false, register=()=>{}, buttonAction=()=>{} }) {
-
+const mapStateToProps = (state) => ({ user: state.user, organization: state.organization });
+const mapDispatchToProps = { createOrganization };
+export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)(({
+  stepNumber,
+  buttonAction = () => { },
+  user,
+  organization,
+  createOrganization
+}) => {
+  const { register, handleSubmit } = useForm();
+  const [orgName, setOrgName] = React.useState(organization.name || "");
+  const onSubmit = (data) => {
+    createOrganization({
+      ...data,
+      user: user.id
+    }, buttonAction);
+  }
   return (
     <OnboardingFieldSet
-      show={show}
+      handleSubmit={handleSubmit(onSubmit)}
+      stepNumber={stepNumber}
       title="Create organization"
-      subtitle="raymond@keywordsai.co is inviting you to join their organization. " //to add user email
+      subtitle={`${user.email} is inviting you to join their organization`} //to add user email
       fields={
         <>
           <TextInput
-            {...register("organization_name")}
+            {...register("name")}
             title="Organization name"
             placeholder="Enter your organization name"
             required
+            value={orgName}
+            onChange={(e) => setOrgName(e.target.value)}
           />
           <SelectInput
             {...register("organization_size")}
@@ -27,18 +47,18 @@ export function CreateOrganization({ show = false, register=()=>{}, buttonAction
             width="w-full"
             placeholder="Please select"
             choices={[
-              { name: "1-10", value: "1-10" },
-              { name: "11-50", value: "11-50" },
-              { name: "51-200", value: "51-200" },
-              { name: "200+", value: "200+" },
+              { name: "1-10", value: 1 },
+              { name: "11-50", value: 11 },
+              { name: "51-200", value: 51 },
+              { name: "200+", value: 200 },
             ]}
+            defaultValue={1}
             optionsWidth="w-[420px]"
             required
           />
         </>
       }
       buttonText="Continue"
-      buttonAction={buttonAction}
     />
   );
-}
+})

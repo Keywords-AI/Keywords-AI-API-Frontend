@@ -5,6 +5,7 @@ import { TitleStaticSubheading } from "src/components/Titles";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
+import { useForm } from "react-hook-form";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
@@ -12,18 +13,25 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = { updateUser };
 const AllModels = [];
 
-export const ModelRouterPage = connect(mapStateToProps, mapDispatchToProps)(({ dynamicRoutingEnabled,
-updateUser
-}) => {
-  const [dynamicRouting, setDynamicRouting] = React.useState(dynamicRoutingEnabled);
+export const ModelRouterPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ dynamicRoutingEnabled, updateUser }) => {
+  const [dynamicRouting, setDynamicRouting] = React.useState(
+    dynamicRoutingEnabled
+  );
   useEffect(() => {
     setDynamicRouting(dynamicRoutingEnabled);
-  }, [dynamicRoutingEnabled])
+  }, [dynamicRoutingEnabled]);
 
   const handleToggleDynamicRouting = () => {
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
   };
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = async (data) => {
+    console.log(data);
+  }
   return (
     <PageContent
       title={
@@ -34,7 +42,7 @@ updateUser
       }
       subtitle="Build model presets for dynamic routing."
     >
-      <div className="flex flex-row items-start justify-between self-stretch w-full">
+      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
         <TitleStaticSubheading
           title="Dynamic LLM routing"
           subtitle="Enable dynamic model routing to optimize for performance."
@@ -42,7 +50,7 @@ updateUser
         <div className="flex flex-row items-start justify-center pt-[3px]">
           <SwitchButton
             checked={dynamicRouting}
-            onCheckedChang={handleToggleDynamicRouting}
+            onCheckedChange={handleToggleDynamicRouting}
           />
         </div>
       </div>
@@ -52,13 +60,27 @@ updateUser
           title="Presets"
           subtitle="Use the recommended model preset or build custom presets for dynamic routing."
         />
-        <div className="flex flex-col items-start gap-xs w-full">
-          {/* awaiting componnets from @hendrix */}
-          <ModelPresetCard title="All models" models={[]}/>
-          <ModelPresetCard title="Recommended"/>
-          <ModelPresetCard title="Custom"/>
-        </div>
-        <Button variant="r4-primary" text="Create custom preset" />
+        <form className="flex flex-col items-start gap-xs w-full"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <ModelPresetCard
+            title="All models"
+            models={[]}
+            {...register("model_preset")}
+            hasButton={false}
+          />
+          <ModelPresetCard
+            title="Recommended"
+            {...register("model_preset")}
+
+            hasButton={false}
+          />
+          <ModelPresetCard
+            title="Custom"
+            {...register("model_preset")}
+          />
+          {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
+        </form>
       </div>
     </PageContent>
   );

@@ -22,11 +22,13 @@ export const QAInputPage = () => {
   const onSubmit = (data) => console.log(data);
   return (
     <PageContent title="Input Field Wall">
-      <PageParagraph heading="Text Input"></PageParagraph>
+      <PageParagraph heading="Components"></PageParagraph>
       <form onSubmit={handleSubmit(onSubmit)}>
         <PageParagraph heading="">
-          <TextInput titte="Text Input" icon={<Search size="md" />} />
-          <SelectInput title="Select title" width="w-[400px]"
+          <TextInput title="Text Input" icon={<Search size="md" />} />
+          <SelectInput
+            title="Select title"
+            width="w-[400px]"
             {...register("selection")}
           />
           {/* {Array.from({ length: 5 }).map((_, i) => (
@@ -67,12 +69,9 @@ export const QAInputPage = () => {
             value="choice B"
           />
           <CheckBoxButton text="test" />
-
+          <ModelPresetCard />
         </PageParagraph>
       </form>
-      <PageParagraph heading="Select Input">
-        <ModelPresetCard />
-      </PageParagraph>
     </PageContent>
   );
 };

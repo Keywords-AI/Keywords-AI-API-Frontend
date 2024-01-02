@@ -30,15 +30,15 @@ export const SettingPage = ({
   } = useForm();
   const [currName, setCurrName] = React.useState(organization?.name);
   useEffect(() => {
-    setCurrName(organization.name);
-  }, [organization.name]);
+    setCurrName(organization?.name);
+  }, [organization?.name]);
   const { loading, error, data, postData } = usePost({
     path: `user/update-organization/${organization?.id}/`,
     method: "PATCH",
   });
   const onSubmit = (data) => {
-    if (currName != organization.name) {
-      setOrgName(data.name || organization.name);
+    if (currName != organization?.name) {
+      setOrgName(data.name || organization?.name);
       postData(data); // send request
     }
   };
@@ -87,9 +87,10 @@ export const SettingPage = ({
             name="unique_organization_id"
             title="Organization ID"
             value={organization?.unique_organization_id || ""}
-            // value={"locked-text"}
+            placeholder="Your organization ID"
             disabled={true}
             InfoBool={true}
+            width="w-[400px]"
           />
           <Button type="submit" text="Update" variant="r4-primary" />
           

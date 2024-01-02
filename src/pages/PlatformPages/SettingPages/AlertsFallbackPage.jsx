@@ -56,7 +56,7 @@ const AlertsFallbackPageN = ({
       title="Alerts & Fallback"
       subtitle="Get notified when an LLM outage is detected and set the fallback mechanism."
     >
-      <div className="flex flex-row items-start justify-between self-stretch w-full">
+      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
         <TitleStaticSubheading
           title="Subscribe to alerts"
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
@@ -70,7 +70,7 @@ const AlertsFallbackPageN = ({
       <form className="flex flex-col gap-sm items-start justify-between self-stretch"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-row items-start justify-between self-stretch w-full">
+        <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading
             title="Model fallback"
             subtitle="Enable model fallback to boost your product’s uptime. Automatically fallback to the backup models when the preferred model is not responding."
@@ -93,6 +93,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[0]}
+                placeholder="Select model #1"
               />
               <SelectInput
                 {...register("fall_back_model_2")}
@@ -101,6 +102,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[1]}
+                placeholder="Select model #2"
               />
               <SelectInput
                 {...register("fall_back_model_3")}
@@ -109,6 +111,7 @@ const AlertsFallbackPageN = ({
                 optionsWidth="w-[248px]"
                 choices={models}
                 defaultValue={fallbackModels?.[2]}
+                placeholder="Select model #3"
               />
             </div>
             <Button variant="r4-primary" text="Save" />
@@ -116,7 +119,7 @@ const AlertsFallbackPageN = ({
         )}
       </form>
       <Divider />
-      <div className="flex flex-row items-start justify-between self-stretch w-full">
+      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
         <TitleStaticSubheading
           title="Safety net"
           subtitle="If none of the fallback models are responding, automatically fallback to a system assigned model."

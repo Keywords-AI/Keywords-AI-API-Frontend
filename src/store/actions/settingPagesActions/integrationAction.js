@@ -52,7 +52,7 @@ export const createOrUpdateIntegration = (data) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "inegration data");
+        console.log(data, "integration data");
         dispatch({
           type: SET_INTEGRATION,
           payload: data,
