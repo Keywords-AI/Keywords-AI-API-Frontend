@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.user.organization_name,
+  orgName: state.user.organization_name, //not working
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,

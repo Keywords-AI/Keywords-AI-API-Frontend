@@ -213,7 +213,7 @@ export function OptionSelector({}) {
             onClick={() => setToken("")}
           />
         </div>
-        <div className="flex h-[36px] items-center px-xs gap-[10px]">
+        <div className="flex h-[36px] items-center px-xs gap-xxs">
           <SwitchButton onCheckedChange={handleCheckChange} />
         </div>
       </div>

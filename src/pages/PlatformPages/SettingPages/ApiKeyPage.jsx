@@ -67,9 +67,10 @@ export const ApiKeyPage = ({ apiKey, setEditingKey, setDeletingKey, clearPrevApi
         />
       </Modal>
       <Modal
-        title={"Rename API key"}
+        title={"Edit API key"}
         open={apiKey.editingKey}
         setOpen={setEditingKey}
+        
       >
         <EditForm
           editingKey={apiKey.editingKey}

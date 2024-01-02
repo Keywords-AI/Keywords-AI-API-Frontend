@@ -8,7 +8,7 @@ export function NotFound() {
   const navigate = useNavigate();
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <div className="flex-col items-start gap-[10px] self-stretch">
+      <div className="flex-col items-start gap-xxs self-stretch">
         <BackButton text="Home" link={"/"}/>
       </div>
       <div className="flex-col w-full max-w-[420px] items-center gap-md ">

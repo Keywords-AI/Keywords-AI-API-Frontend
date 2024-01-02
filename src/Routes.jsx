@@ -24,7 +24,7 @@ import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
-import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
+import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
 import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 
 const mapStateToProps = (state) => {
