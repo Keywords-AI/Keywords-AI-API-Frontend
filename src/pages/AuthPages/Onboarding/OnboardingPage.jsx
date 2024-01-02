@@ -18,7 +18,8 @@ import { GetStarted } from "./GetStarted";
 import cn from "src/utilities/classMerge";
 
 const mapStateToProps = (state) => ({
-  currentStep: state.onboarding.currentStep
+  currentStep: state.onboarding.currentStep,
+  user: state.user,
 });
 const mapDispatchToProps = {
   logout,
@@ -33,11 +34,17 @@ export const OnboardingPage = connect(
   logout, 
   setNextStep,
   updateUser,
+  user
  }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
+  useEffect(()=>{
+    if (user.onboarded) {
+      navigate("/");
+    }
+  }, [user])
   const {
     register,
     handleSubmit,

@@ -60,7 +60,6 @@ export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
             type="email"
             disabled
             value={user.email || ""}
-            {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           />
           <div className="flex self-stretch gap-xs items-center">
             <TextInput
@@ -84,8 +83,8 @@ export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
               })}
             />
           </div>
+          <Button text="Update" variant="r4-primary" />
         </form>
-        <Button text="Update" variant="r4-primary" />
       </PageParagraph>
       <Divider />
       <div className="flex items-start self-stretch justify-between">
