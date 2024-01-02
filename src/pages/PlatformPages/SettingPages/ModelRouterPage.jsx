@@ -67,16 +67,19 @@ export const ModelRouterPage = connect(
             title="All models"
             models={[]}
             {...register("model_preset")}
+            hasButton={false}
           />
           <ModelPresetCard
             title="Recommended"
             {...register("model_preset")}
+
+            hasButton={false}
           />
           <ModelPresetCard
             title="Custom"
             {...register("model_preset")}
           />
-          <Button variant="r4-primary" text="Create custom preset" />
+          {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
         </form>
       </div>
     </PageContent>
