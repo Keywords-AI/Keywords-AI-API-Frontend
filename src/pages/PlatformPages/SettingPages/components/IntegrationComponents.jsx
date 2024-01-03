@@ -7,26 +7,18 @@ import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
-<<<<<<< HEAD
 import { createIntegration, setIntegration, updateIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
-=======
-import { setIntegration } from "src/store/actions";
-import { OpenAI, Anthropic, Labs, Google, Cohere } from "src/components/Icons";
->>>>>>> 16c8592b17a9b9a5157a0e62ff8a22aed72921a0
 import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 const mapDispatchToProps = {
-  // createIntegration,
+  createIntegration,
   setIntegration,
   dispatchNotification,
-<<<<<<< HEAD
   updateIntegration,
-=======
->>>>>>> 16c8592b17a9b9a5157a0e62ff8a22aed72921a0
 };
 
 export const vendors = {
