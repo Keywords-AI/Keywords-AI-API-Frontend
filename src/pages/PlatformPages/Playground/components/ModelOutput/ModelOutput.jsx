@@ -31,7 +31,7 @@ export function ModelOutput({}) {
       value: (
         <>
           <span>{stateOutputs.latency.toFixed(4) || "0"}</span>
-          <span>s</span>
+          <span className="text-sm-regular text-gray-4">ms</span>
         </>
       ),
       icon: Latency,
