@@ -11,13 +11,15 @@ import { generateChild } from 'src/utilities/objectProcessing';
 import { AlertsFallbackPage } from './AlertsFallbackPage';
 import { ModelRouterPage } from './ModelRouterPage';
 import { UserSettings } from './UserSettingsPage';
+import { Navigate } from 'react-router-dom';
 
 const pages = [
     {
         title: "General",
         // forAdmin: true,
         default: true,
-        page: <SettingsPage />,
+        page: <Navigate to="/platform/api/general" />,
+
     },
     {
         title: "General",
