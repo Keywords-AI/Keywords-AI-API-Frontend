@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
-import { createIntegration, setIntegration, updateIntegration } from "src/store/actions";
+import { createIntegration, setIntegration, updateIntegration, verifyKey } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
 import { dispatchNotification } from "src/store/actions";
 
@@ -19,6 +19,7 @@ const mapDispatchToProps = {
   setIntegration,
   dispatchNotification,
   updateIntegration,
+  verifyKey,
 };
 
 export const vendors = {
@@ -111,6 +112,7 @@ const IntegrationCardNotConnected = ({
   updateIntegration,
   integration,
   setActivatedModels,
+  verifyKey,
 }) => {
   const {
     register,
@@ -135,9 +137,13 @@ const IntegrationCardNotConnected = ({
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     // This currently handles update too
     // To update and clarify
-    createIntegration(toSubmit);
-
-    setOpen(false);
+    if (
+      !apiKey && apiKeyString // entering new key
+    ) {
+      verifyKey({ ...toSubmit, api_key: apiKeyString }, ()=>{setOpen(false)});
+    } else {
+      createIntegration(toSubmit, ()=>{setOpen(false)});
+    }
   };
   useEffect(() => {
     const newModelList = validateCheckbox(activatedModelsWatch);
@@ -166,7 +172,7 @@ const IntegrationCardNotConnected = ({
           </div>
         </fieldset>
         <TextInput
-          type={"password"}
+          type={apiKey ? "text":"password"}
           {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
           title={
             apiKey ? "API key added" : `Your ${companyName} API key (optional)`
@@ -209,9 +215,8 @@ const IntegrationCardNotConnected = ({
               }}
             />
             {!apiKey && apiKeyString ? // new key entering
-              <Button variant="r4-primary" type={"button"}
-              onClick={()=>{alert("Key verification is not implemented yet.")}}
-              text="Verify Key" />
+              <Button variant="r4-primary"
+                text="Verify Key" />
               :
               <Button variant="r4-primary" text="Save" />
             }

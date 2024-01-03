@@ -17,7 +17,9 @@ export const handleApiResponseErrors = (
 ) => {
   if (responseJson.detail) {
     callback(responseJson.detail); // Regular error
+    throw new Error(responseJson.detail);
   } else {
-    handleSerializerErrors(responseJson, callback(error)); // Standard error from django
+    handleSerializerErrors(responseJson, callback); // Standard error from django
+    throw new Error("Serializer error")
   }
 };
