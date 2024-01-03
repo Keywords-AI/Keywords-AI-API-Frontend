@@ -1,4 +1,10 @@
-import { SET_ORG, SET_ORG_NAME, UPDATE_ORGANIZATION } from "src/store/actions";
+import {
+  SET_ORG,
+  SET_ORG_NAME,
+  UPDATE_ORGANIZATION,
+  DELETE_ROLE,
+  ADD_MEMBER,
+} from "src/store/actions";
 
 const initState = {
   id: "",
@@ -24,6 +30,16 @@ export default function organizationReducer(state = initState, action) {
       return {
         ...state,
         ...action.payload,
+      };
+    case ADD_MEMBER:
+      return {
+        ...state,
+        users: [...state.users, action.payload],
+      };
+    case DELETE_ROLE:
+      return {
+        ...state,
+        users: state.users.filter((user) => user.role.id !== action.payload),
       };
     default:
       return state;

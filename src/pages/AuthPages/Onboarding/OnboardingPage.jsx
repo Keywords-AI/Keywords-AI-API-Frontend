@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
 import { GetStarted } from "./GetStarted";
 import cn from "src/utilities/classMerge";
+import { REDIRECT_URI } from "src/utilities/navigation";
 
 const mapStateToProps = (state) => ({
   currentStep: state.onboarding.currentStep,
@@ -42,7 +43,7 @@ export const OnboardingPage = connect(
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
   useEffect(()=>{
     if (user.onboarded) {
-      navigate("/");
+      navigate(REDIRECT_URI);
     }
   }, [user])
   const {

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { OnboardingFieldSet } from "./components";
 import { connect } from "react-redux";
-import { createOrganization, updateUser } from "src/store/actions";
+import { createOrganization } from "src/store/actions";
 import { useForm } from "react-hook-form";
 
 /*
@@ -25,6 +25,11 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
       user: user.id
     }, buttonAction);
   }
+  useEffect(() => {
+    if (organization.name) {
+      setOrgName(organization.name);
+    }
+  }, [organization])
   return (
     <OnboardingFieldSet
       handleSubmit={handleSubmit(onSubmit)}
@@ -52,7 +57,7 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
               { name: "51-200", value: 51 },
               { name: "200+", value: 200 },
             ]}
-            defaultValue={1}
+            defaultValue={organization?.organization_size || 1}
             optionsWidth="w-[420px]"
             required
           />

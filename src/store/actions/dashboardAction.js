@@ -71,20 +71,19 @@ export const getDashboardData = () => {
       .then((data) => {
         dispatch(setDashboardData(data));
         const dataList = fillMissingDate(data?.data, params.get("summary_type"));
-        console.log("here, ", dataList);
+
         dispatch(setCostData(sliceChartData(dataList, "date_group", "total_cost")));
         dispatch(setTokenCountData(sliceChartData(dataList, "date_group", "total_tokens")));
         dispatch(setLatencyData(sliceChartData(dataList, "date_group", "average_latency")));
         dispatch(setRequestCountData(sliceChartData(dataList, "date_group", "number_of_requests")));
       })
       .catch((error) => {
-        // console.log(error);
+
       });
   };
 };
 
 export const fillMissingDate = (data, dateGroup) => {
-  console.log("date: ", dateGroup);
     //Date group is data grouped by summary type
     //Filtered by "daily": one date_group is requests summed across hours
     //All the request data aggregated by hours across the day

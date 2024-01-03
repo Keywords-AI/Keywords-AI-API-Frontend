@@ -30,7 +30,6 @@ export const getKeys = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         dispatch(setKeyList(data));
       });
   };

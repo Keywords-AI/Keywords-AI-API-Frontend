@@ -114,7 +114,7 @@ function DashboardNotConnected({
       dataKey: "total_cost",
     },
   ];
-  if (!notfirstTime) return <WelcomeState />;
+  if (notfirstTime !== undefined && !notfirstTime) return <WelcomeState />;
   else
     return (
       <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">

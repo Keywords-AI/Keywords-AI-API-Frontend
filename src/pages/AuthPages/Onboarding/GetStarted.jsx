@@ -5,6 +5,7 @@ import cn from "src/utilities/classMerge";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { REDIRECT_URI } from "src/utilities/navigation";
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = { updateUser };
@@ -23,7 +24,7 @@ export const GetStarted = connect(mapStateToProps, mapDispatchToProps)(({
             <Button variant="r4-primary" text="Get started"
                 onClick={() => {
                     updateUser({ onboarded: true });
-                    navigate("/");
+                    navigate(REDIRECT_URI);
                 }}
             />
         </div>
