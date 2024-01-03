@@ -86,8 +86,13 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex items-center gap-xxs px-xxs py-xxxs rounded-sm bg-gray-2">
-        {role === "user" ? (
+      <div
+        className={cn(
+          "flex items-center gap-xxs px-xxs py-xxxs rounded-sm ",
+          isUser ? "bg-gray-2" : "bg-gray-3"
+        )}
+      >
+        {isUser ? (
           <>
             <Userpg active />
             <p className="text-sm-md text-gray-5">User</p>
