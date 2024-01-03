@@ -7,13 +7,8 @@ import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
-<<<<<<< HEAD
 import { createIntegration, setIntegration, updateIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
-=======
-import { createOrUpdateIntegration, setIntegration } from "src/store/actions";
-import { OpenAI, Anthropic, Labs, Google, Cohere } from "src/components/Icons";
->>>>>>> origin/andy
 import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
@@ -23,10 +18,7 @@ const mapDispatchToProps = {
   createIntegration,
   setIntegration,
   dispatchNotification,
-<<<<<<< HEAD
   updateIntegration,
-=======
->>>>>>> origin/andy
 };
 
 export const vendors = {

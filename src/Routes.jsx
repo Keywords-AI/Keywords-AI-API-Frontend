@@ -26,6 +26,7 @@ import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
 import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
+import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 
 const mapStateToProps = (state) => {
   return {
@@ -57,7 +58,8 @@ const Routes = ({ getUser, user }) => {
   const routes = [
     {
       path: "/platform",
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+      element: isUserLoggedIn ? <NavigationLayout /> : 
+      <Navigate to="/login" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
@@ -83,6 +85,7 @@ const Routes = ({ getUser, user }) => {
           path: "/platform",
           element: <Navigate to="/platform/dashboard" />,
         },
+        { path: "accept/:code?", element: <AcceptInvitation /> },
       ],
     },
     {
