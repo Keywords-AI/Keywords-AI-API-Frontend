@@ -53,8 +53,9 @@ export const setDateData = (data) => {
 export const getDashboardData = () => {
   return (dispatch) => {
     const params = new URLSearchParams(window.location.search);
-    const date = new Date();
-    params.set("date", date.toISOString()); // format: MM/DD/YYYY
+    const currDate = new Date();
+    const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
+    params.set("date", date.toISOString()); // format: yyyy-mm-dd
     // Yes, Fuck JS. They don't provide native formatter to convert to YYYY-mm-dd
 
     keywordsFetch({
@@ -101,13 +102,11 @@ export const getDashboardData = () => {
 export const fillMissingDate = (data, dateGroup) => {
   const newDataArray = [];
   const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
-  const localToUtc = (utcDate) => {
-    const localDate = new Date(utcDate);
-    localDate.setMinutes(localDate.getMinutes() + localDate.getTimezoneOffset());
-    return localDate;
-  };
   // new Date creates a date object in local timezone
-
+  const localeUtc = (dateStr) => {
+    const date = new Date(dateStr);
+    return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+  }
   const handleDailyCase = () => {
     const now = new Date();
     // BE gives UTC strings, Date() converts to local timezone
@@ -148,7 +147,7 @@ export const fillMissingDate = (data, dateGroup) => {
           dayDate.getMonth() + 1
         )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear()}`;
         const found = data.find(
-          (d) => localToUtc(d.date_group).getDate() === dayDate.getDate()
+          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
@@ -163,28 +162,38 @@ export const fillMissingDate = (data, dateGroup) => {
         );
       }
       break;
-    case "monthly":
-      const now = new Date();
-      for (let day = 1; day <= 31; day++) {
-        // The start and end date will be offset by the timezone
-        // So we need to know the dates in UTC.
-        const dayString = `${formatTimeUnit(day)}`;
-        const found = data.find((d) => {
-          const date = localToUtc(d.date_group);
-          return date.getDate() === day;
-        });
-        newDataArray.push(
-          found
-            ? { ...found, date_group: dayString }
-            : {
+      case "monthly":
+        const now = new Date();
+        // Get the number of days in the current month
+        const daysInMonth = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0
+        ).getDate();
+      
+        for (let day = 1; day <= daysInMonth; day++) {
+          // Format the date string as MM/DD/YYYY
+          const month = formatTimeUnit(now.getMonth() + 1); // Month is 0-indexed
+          const year = now.getFullYear();
+          const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
+      
+          const found = data.find((d) => {
+            const date = localeUtc(d.date_group);
+            return date.getDate() === day;
+          });
+      
+          newDataArray.push(
+            found
+              ? { ...found, date_group: dayString }
+              : {
                 date_group: dayString,
                 number_of_requests: 0,
                 total_cost: 0,
                 total_tokens: 0,
                 average_latency: 0,
               }
-        );
-      }
+          );
+        }
       break;
 
     case "yearly":

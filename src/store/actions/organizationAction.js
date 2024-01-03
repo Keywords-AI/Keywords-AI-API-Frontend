@@ -51,8 +51,9 @@ export const createOrganization = (organization, callback = () => {}) => {
           dispatchNotification({ title: "Organization created successfully!" })
         );
         callback();
-      } else  {
-        if (res.status === 409) { // Conflict: Organization already exists
+      } else {
+        if (res.status === 409) {
+          // Conflict: Organization already exists
           const responseJson = await res.json();
           dispatch(
             dispatchNotification({ type: "error", title: responseJson.detail })
@@ -107,7 +108,7 @@ export const updateOrganization = (update_fields, callback = () => {}) => {
   };
 };
 
-export const sendInvitation = (data) => {
+export const sendInvitation = (data, resend = false) => {
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
@@ -123,13 +124,15 @@ export const sendInvitation = (data) => {
           })
         );
         console.log(data);
-        dispatch({
-          type: ADD_MEMBER,
-          payload: {
-            first_name: data.email,
-            ...data,
-          },
-        });
+        if (!resend) { // Only add member on UI if it is first time sending
+          dispatch({
+            type: ADD_MEMBER,
+            payload: {
+              first_name: data.email,
+              ...data,
+            },
+          });
+        }
       } else {
         const responseJson = await res.json();
         if (responseJson.detail) {

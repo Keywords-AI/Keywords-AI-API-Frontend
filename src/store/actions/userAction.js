@@ -71,6 +71,7 @@ export const getUser = () => {
 };
 
 export const updateUser = (data = {}, callback = () => {}) => {
+  // Check redux devtools for the data structure
   return (dispatch) => {
     dispatch({ type: UPDATE_USER, payload: data });
     fetch(`${apiConfig.apiURL}auth/users/me/`, {
