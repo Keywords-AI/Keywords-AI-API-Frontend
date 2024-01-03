@@ -4,11 +4,12 @@ import MetricCard from "src/components/Cards/MetricCard";
 import { Quality, Rocket, Cost, Tokens, Speed } from "src/components/Icons";
 import ButtonGroup from "src/components/Buttons/ButtonGroup";
 import { setQueryParams } from "src/utilities/navigation";
-import { TitleStaticSubheading } from "src/components/Titles";
+import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
 import { connect } from "react-redux";
 import { getDashboardData, setDateData } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Button } from "src/components";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -18,10 +19,40 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
+  notfirstTime: state.user.has_api_call,
 });
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
+};
+
+const WelcomeState = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="flex-col flex-1 self-stretch p-lg gap-lg items-start bg-gray-1 ">
+      <div className="flex-col justify-center items-center gap-md flex-1 self-stretch rounded-md shadow-window outline outline-1 outline-gray-3">
+        <TitleAuth
+          title="Welcome to Keywords AI!"
+          subtitle={"Send your first API call to view your dashboard."}
+          align="items-center"
+        />
+        <div className="flex justify-center items-center gap-xs">
+          <Button
+            variant="r4-primary"
+            text="Get API keys"
+            onClick={() => navigate("/platform/api")}
+          />
+          <Button
+            variant="r4-black"
+            text="View docs"
+            onClick={() =>
+              (window.location.href = "https://docs.keywordsai.co")
+            }
+          />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 function DashboardNotConnected({
@@ -33,6 +64,7 @@ function DashboardNotConnected({
   tokenCountData,
   costData,
   getDashboardData,
+  notfirstTime,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -82,25 +114,26 @@ function DashboardNotConnected({
       dataKey: "total_cost",
     },
   ];
-
-  return (
-    <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
-      <div className="flex flex-row justify-between w-full self-stretch">
-        <div className="flex flex-col gap-xxxs">
-          <span className="text-sm-regular text-gray-3">{orgName}</span>
-          <span className="display-sm">Welcome, {firstName}</span>
+  if (!notfirstTime) return <WelcomeState />;
+  else
+    return (
+      <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
+        <div className="flex flex-row justify-between w-full self-stretch">
+          <div className="flex flex-col gap-xxxs">
+            <span className="text-sm-regular text-gray-3">{orgName}</span>
+            <span className="display-sm">Welcome, {firstName}</span>
+          </div>
+          <ButtonGroup buttons={buttons} />
         </div>
-        <ButtonGroup buttons={buttons} />
+        <div className="grid grid-cols-4 gap-md">
+          {metrics.map((metric, index) => (
+            <MetricCard key={index} {...metric} />
+          ))}
+        </div>
+        <DashboardChart />
+        <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
       </div>
-      <div className="grid grid-cols-4 gap-md">
-        {metrics.map((metric, index) => (
-          <MetricCard key={index} {...metric} />
-        ))}
-      </div>
-      <DashboardChart />
-      <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
-    </div>
-  );
+    );
 }
 
 export const Dashboard = connect(
