@@ -63,8 +63,8 @@ const Routes = ({ getUser, user }) => {
     }
   }, [user])
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = isLoggedIn(user);
-  // const isUserLoggedIn = true;
+  //const isUserLoggedIn = isLoggedIn(user);
+  const isUserLoggedIn = true;
 
   const routes = [
     {

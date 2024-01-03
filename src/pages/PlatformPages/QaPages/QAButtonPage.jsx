@@ -6,7 +6,7 @@ import { Delete, Logo, Right, Rocket, Speed } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { DotsButton } from "src/components/Buttons/DotsButton";
 
-export const QAButtonPage = () => {
+export const QaButtonPage = () => {
   const buttons = [
     { text: "Day", onClick: () => setSummaryType("daily") },
     { text: "Week", onClick: () => setSummaryType("weekly") },
