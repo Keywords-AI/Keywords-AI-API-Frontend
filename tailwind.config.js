@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const {theme, variants} = require("./src/components/styles/tailwind.config");
+const { theme, variants } = require("./src/components/styles/tailwind.config");
 const { colorThemes } = require("./src/components/styles/color-themes");
 export default {
   mode: "jit",
