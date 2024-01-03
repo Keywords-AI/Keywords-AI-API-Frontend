@@ -134,7 +134,11 @@ export const googleLogin = () => {
           return res.json();
         } else {
           const awaitRes = await res.json();
-          throw new Error(awaitRes.detail);
+          if (awaitRes.detail) {
+            throw new Error(awaitRes.detail);
+          } else {
+            throw new Error(awaitRes.toString());
+          }
         }
       })
       .then((response) => {

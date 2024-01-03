@@ -151,7 +151,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
         </div>
       )}
       {isFocused && isUser && messageIndex === messages.length - 1 && (
-        <div className="flex justify-end gap-[10px] self-stretch">
+        <div className="flex justify-end gap-xxs self-stretch">
           <Button
             variant="small"
             text="Send message"

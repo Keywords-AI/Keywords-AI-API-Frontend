@@ -1,4 +1,5 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
+import { dispatchNotification } from "src/store/actions";
 const selectEndpoint = () => {
   if (
     window.location.hostname === "localhost" ||
@@ -33,6 +34,7 @@ export const keywordsFetch = async ({
   method = "GET",
   auth = true,
   credentials = "same-origin",
+  dispatch=()=>{},
 }) => {
   try {
     const headers = {
@@ -49,9 +51,9 @@ export const keywordsFetch = async ({
     if (method !== "GET") {
       callBody.body = JSON.stringify(data);
     }
-    const response = await fetch(host + path, callBody);
-    return response;
+    return fetch(host + path, callBody);
   } catch (error) {
+    dispatch(dispatchNotification({type:"error", title:"Something went wrong"}));
     throw error;
   }
 };

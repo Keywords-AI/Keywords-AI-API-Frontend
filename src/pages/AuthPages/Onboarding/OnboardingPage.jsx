@@ -73,7 +73,7 @@ export const OnboardingPage = connect(
   ];
   return (
     <>
-      <div className="flex flex-col items-start self-stretch gap-[10px]">
+      <div className="flex flex-col items-start self-stretch gap-xxs">
         <Button
           text={"Sign out"}
           variant={"r18-black"}
