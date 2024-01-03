@@ -7,8 +7,13 @@ import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
+<<<<<<< HEAD
 import { createIntegration, setIntegration, updateIntegration } from "src/store/actions";
 import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
+=======
+import { createOrUpdateIntegration, setIntegration } from "src/store/actions";
+import { OpenAI, Anthropic, Labs, Google, Cohere } from "src/components/Icons";
+>>>>>>> origin/andy
 import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
@@ -18,22 +23,24 @@ const mapDispatchToProps = {
   createIntegration,
   setIntegration,
   dispatchNotification,
+<<<<<<< HEAD
   updateIntegration,
+=======
+>>>>>>> origin/andy
 };
 
 export const vendors = {
-  "OpenAI": {
+  OpenAI: {
     models: [
       { name: "gpt-3.5-turbo" },
       { name: "gpt-3.5-turbo-16k" },
       { name: "gpt-4" },
       { name: "gpt-4-32k" },
       { name: "gpt-4-1106-preview" },
-
     ],
     companyLogo: <OpenAI />,
   },
-  "Anthropic": {
+  Anthropic: {
     models: [
       { name: "claude-instant-1" },
       { name: "claude-instant-1.2" },
@@ -43,60 +50,62 @@ export const vendors = {
     companyLogo: <Anthropic />,
   },
   "AI21 Labs": {
-    models: [
-      { name: "j2-light" },
-      { name: "j2-mid" },
-      { name: "j2-ultra" },
-    ],
+    models: [{ name: "j2-light" }, { name: "j2-mid" }, { name: "j2-ultra" }],
     companyLogo: <Labs />,
   },
-  "Cohere": {
-    models: [
-      { name: "command-nightly" },
-    ],
+  Cohere: {
+    models: [{ name: "command-nightly" }],
     companyLogo: <Cohere />,
   },
-  "Google": {
-    models: [
-      { name: "chat-bison" },
-    ],
+  Google: {
+    models: [{ name: "chat-bison" }],
     companyLogo: <Google />,
   },
-}
+};
 
-export const CheckBoxButton = React.forwardRef(({
-  name,
-  register = () => { },
-  validationSchema,
-  text,
-  onChange = () => { },
-  checked = false,
-},
-  ref) => {
-  const checkBoxRef = useForwardRef(ref);
-  const [isChecked, setIsChecked] = React.useState(checked);
-  const handelChange = (e) => {
-    onChange(e);
-    setIsChecked(e.target.checked);
+export const CheckBoxButton = React.forwardRef(
+  (
+    {
+      name,
+      register = () => {},
+      validationSchema,
+      text,
+      onChange = () => {},
+      checked = false,
+    },
+    ref
+  ) => {
+    const checkBoxRef = useForwardRef(ref);
+    const [isChecked, setIsChecked] = React.useState(checked);
+    const handleChange = (e) => {
+      onChange(e);
+      setIsChecked(e.target.checked);
+    };
+    const handleClick = () => {
+      checkBoxRef.current.click();
+    };
+    return (
+      <Button
+        type={"button"}
+        variant={"r4-black"}
+        active={isChecked}
+        onClick={handleClick}
+      >
+        <span>{text}</span>
+        <input
+          {...register(name, validationSchema)}
+          name={name}
+          ref={checkBoxRef}
+          type={"checkbox"}
+          value={text}
+          hidden
+          checked={isChecked}
+          onChange={handleChange}
+        />
+      </Button>
+    );
   }
-  const handleClick = () => {
-    checkBoxRef.current.click();
-  };
-  return (
-    <Button type={"button"} variant={"r4-black"} active={isChecked} onClick={handleClick}>
-      <span>{text}</span>
-      <input
-        {...register(name, validationSchema)}
-        name={name}
-        ref={checkBoxRef}
-        type={"checkbox"}
-        value={text}
-        hidden
-        checked={isChecked}
-        onChange={handelChange} />
-    </Button>
-  );
-})
+);
 
 const IntegrationCardNotConnected = ({
   user,
@@ -111,7 +120,12 @@ const IntegrationCardNotConnected = ({
   integration,
   setActivatedModels,
 }) => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const activatedModelsWatch = watch("activated_models");
   const [apiKeyString, setApiKeyString] = useState(apiKey || "");
   const validateCheckbox = (value) => {
@@ -123,7 +137,7 @@ const IntegrationCardNotConnected = ({
       return [];
     }
     return value || [];
-  }
+  };
   const onSubmit = (data) => {
     let toSubmit = { vendor: vendorId, user: user.id, ...data };
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
@@ -136,13 +150,14 @@ const IntegrationCardNotConnected = ({
   useEffect(() => {
     const newModelList = validateCheckbox(activatedModelsWatch);
     setActivatedModels(newModelList);
-  }, [activatedModelsWatch])
+  }, [activatedModelsWatch]);
   const onChange = (e) => {
     setApiKeyString(e.target.value);
   };
   return (
     <>
-      <form className="flex-col self-stretch gap-sm"
+      <form
+        className="flex-col self-stretch gap-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
         <fieldset className="flex flex-col items-start self-stretch gap-xxs">
@@ -160,8 +175,10 @@ const IntegrationCardNotConnected = ({
         </fieldset>
         <TextInput
           type={"password"}
-          {...register(apiKeyString ? "api_key_display" : "api_key", { onChange })}
-          title={apiKeyString ? "API key added" : `Your ${companyName} API key (optional)`}
+          {...register(hasKey ? "api_key_display" : "api_key", { onChange })}
+          title={
+            hasKey ? "API key added" : `Your ${companyName} API key (optional)`
+          }
           width={"w-full"}
           disabled={apiKey ? true : false}
           value={apiKeyString}
@@ -185,7 +202,10 @@ const IntegrationCardNotConnected = ({
   );
 };
 
-export const IntegrationCard = connect(mapStateToProps, mapDispatchToProps)(IntegrationCardNotConnected);
+export const IntegrationCard = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IntegrationCardNotConnected);
 
 export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
   return (
@@ -207,12 +227,14 @@ export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
         </span>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const IntegrationModal = ({ vendor }) => {
   const [open, setOpen] = React.useState(false);
-  const [activatedModels, setActivatedModels] = React.useState(vendor.integration?.activated_models || []);
+  const [activatedModels, setActivatedModels] = React.useState(
+    vendor.integration?.activated_models || []
+  );
   const availableModels = vendor.available_models || [];
   const propsObj = {
     vendorId: vendor.id,
@@ -229,20 +251,21 @@ export const IntegrationModal = ({ vendor }) => {
     <Modal
       open={open}
       setOpen={setOpen}
-      title={<TitleCard
-        {...propsObj}
-        active={activatedModels.length > 0 ? true : false}
-      />}
-      trigger={<VendorCard
-        setOpen={setOpen}
-        {...propsObj}
-        active={activatedModels.length > 0 ? true : false}
-      />}
+      title={
+        <TitleCard
+          {...propsObj}
+          active={activatedModels.length > 0 ? true : false}
+        />
+      }
+      trigger={
+        <VendorCard
+          setOpen={setOpen}
+          {...propsObj}
+          active={activatedModels.length > 0 ? true : false}
+        />
+      }
     >
-      <IntegrationCard
-        setOpen={setOpen}
-        {...propsObj}
-      />
+      <IntegrationCard setOpen={setOpen} {...propsObj} />
     </Modal>
-  )
+  );
 };

@@ -33,7 +33,7 @@ const IntegrationsPageNotConnected = ({ vendors, getVendors}) => {
                         />
                     ))}
                 </div>
-                <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} />
+                {/* <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} /> to be built later, not part of next release */}
             </PageParagraph>
         </PageContent>
     )

@@ -12,7 +12,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.user.organization_name,
+  orgName: state.user.organization_name, //not working
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,
@@ -62,7 +62,7 @@ function DashboardNotConnected({
     },
     {
       icon: Speed,
-      title: "Average latency / request",
+      title: "Average latency",
       number: `${summary.average_latency?.toFixed(3) || 0}s`,
       chartData: latencyData,
       dataKey: "average_latency",
