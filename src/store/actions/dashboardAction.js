@@ -101,15 +101,17 @@ export const getDashboardData = () => {
 export const fillMissingDate = (data, dateGroup) => {
   const newDataArray = [];
   const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
-  const utcToLocal = (utcDate) => {
+  const localToUtc = (utcDate) => {
     const localDate = new Date(utcDate);
     localDate.setMinutes(localDate.getMinutes() + localDate.getTimezoneOffset());
     return localDate;
   };
-
+  // new Date creates a date object in local timezone
 
   const handleDailyCase = () => {
     const now = new Date();
+    // BE gives UTC strings, Date() converts to local timezone
+    // The hours are accurate, but the date is not
     for (let hour = 0; hour < 24; hour++) {
       const hourString = formatTimeUnit(hour) + ":00";
       const found = data.find((d) => {
@@ -138,12 +140,15 @@ export const fillMissingDate = (data, dateGroup) => {
     case "weekly":
       for (let day = 0; day < 7; day++) {
         const dayDate = new Date();
+        // BE gives UTC strings, Date() converts to local timezone
+        // The start and end date will be offset by the timezone
+        // So we need to know the dates in UTC.
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
         )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear()}`;
         const found = data.find(
-          (d) => utcToLocal(d.date_group).getDate() === dayDate.getDate()
+          (d) => localToUtc(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
@@ -161,9 +166,11 @@ export const fillMissingDate = (data, dateGroup) => {
     case "monthly":
       const now = new Date();
       for (let day = 1; day <= 31; day++) {
+        // The start and end date will be offset by the timezone
+        // So we need to know the dates in UTC.
         const dayString = `${formatTimeUnit(day)}`;
         const found = data.find((d) => {
-          const date = utcToLocal(d.date_group);
+          const date = localToUtc(d.date_group);
           return date.getDate() === day;
         });
         newDataArray.push(
@@ -182,9 +189,12 @@ export const fillMissingDate = (data, dateGroup) => {
 
     case "yearly":
       for (let month = 0; month < 12; month++) {
+        // The start and end date will be offset by the timezone
+        // This will lead of offset in the month
+        // So we need to know the month in UTC.
         const monthString = formatTimeUnit(month + 1);
         const found = data.find((d) => {
-          const date = utcToLocal(d.date_group);
+          const date = localToUtc(d.date_group);
           return date.getMonth() === month;
         });
         newDataArray.push(
