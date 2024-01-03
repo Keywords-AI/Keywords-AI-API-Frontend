@@ -112,6 +112,14 @@ const Routes = ({ getUser, user }) => {
           path: "onboarding/:curr_step?",
           element: <OnboardingPage />,
         },
+        {
+          path: "",
+          element: isUserLoggedIn ? (
+            <Navigate to={REDIRECT_URI} /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+          ) : (
+            <Unauthenticated />
+          ),
+        },
       ]
     },
     {
@@ -145,14 +153,6 @@ const Routes = ({ getUser, user }) => {
         {
           path: "email-confirmation/:email?",
           element: <EmailConfirmation />,
-        },
-        {
-          path: "/",
-          element: isUserLoggedIn ? (
-            <Navigate to={REDIRECT_URI} /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
-          ) : (
-            <Unauthenticated />
-          ),
         },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
