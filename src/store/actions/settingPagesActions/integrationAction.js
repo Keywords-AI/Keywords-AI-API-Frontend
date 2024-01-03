@@ -110,3 +110,26 @@ export const setIntegration = (vendorName, data) => {
     payload: data,
   };
 };
+
+export const verifyKey = (data) => {
+  return (dispatch) => {
+    keywordsFetch({
+      path: "vendor_integration/verify_key/",
+      data,
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch(dispatchNotification({
+          title: "Key verified successfully"
+        }));
+        dispatch({
+          type: SET_API_KEY,
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+}

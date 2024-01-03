@@ -3,7 +3,7 @@ import { Button, IconButton } from "src/components/Buttons";
 import { TextInput } from "src/components/Inputs";
 import { Delete, Ellipse } from "src/components/Icons";
 import useForwardRef from "src/hooks/useForwardRef";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
@@ -59,10 +59,10 @@ export const CheckBoxButton = React.forwardRef(
   (
     {
       name,
-      register = () => {},
+      register = () => { },
       validationSchema,
       text,
-      onChange = () => {},
+      onChange = () => { },
       checked = false,
     },
     ref
@@ -167,9 +167,9 @@ const IntegrationCardNotConnected = ({
         </fieldset>
         <TextInput
           type={"password"}
-          {...register(hasKey ? "api_key_display" : "api_key", { onChange })}
+          {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
           title={
-            hasKey ? "API key added" : `Your ${companyName} API key (optional)`
+            apiKey ? "API key added" : `Your ${companyName} API key (optional)`
           }
           width={"w-full"}
           disabled={apiKey ? true : false}
@@ -178,24 +178,26 @@ const IntegrationCardNotConnected = ({
         />
         <div className="flex justify-between items-center self-stretch">
           {apiKeyString ? (
-            <Button
-              variant="text"
-              text="Delete key"
-              icon={Delete}
-              type="button"
-              onClick={() => {
-                updateIntegration({
-                  api_key: "",
-                  vendor: vendorId,
-                  integration_id: integration.id,
-                  user: user.id,
-                });
-                setApiKeyString("");
-              }}
-            />
+            <div className="flex gap-xxs">
+              <Button
+                variant="text"
+                text="Delete key"
+                icon={Delete}
+                type="button"
+                onClick={() => {
+                  updateIntegration({
+                    api_key: "",
+                    vendor: vendorId,
+                    integration_id: integration.id,
+                    user: user.id,
+                  });
+                  setApiKeyString("");
+                }}
+              />
+            </div>
           ) : (
             <div></div>
-          )}{" "}
+          )}
           {/*Empty div to placehold*/}
           <div className="flex flex-end items-center gap-xs">
             <Button
@@ -206,7 +208,13 @@ const IntegrationCardNotConnected = ({
                 setOpen(false);
               }}
             />
-            <Button variant="r4-primary" text="Save" />
+            {!apiKey && apiKeyString ? // new key entering
+              <Button variant="r4-primary" type={"button"}
+              onClick={()=>{alert("Key verification is not implemented yet.")}}
+              text="Verify Key" />
+              :
+              <Button variant="r4-primary" text="Save" />
+            }
           </div>
         </div>
       </form>
