@@ -11,6 +11,7 @@ import { models } from "src/utilities/constants";
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
   customPresetModels: state.user.custom_preset_models,
+  userPresetOption: state.user.preset_option,
 });
 const mapDispatchToProps = { updateUser };
 
@@ -18,14 +19,19 @@ const mapDispatchToProps = { updateUser };
 export const ModelRouterPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ dynamicRoutingEnabled, updateUser, customPresetModels }) => {
+)(({ dynamicRoutingEnabled, updateUser, customPresetModels, userPresetOption }) => {
+  const [presetOption, setPresetOption] = React.useState("all_models");
   const [dynamicRouting, setDynamicRouting] = React.useState(
     dynamicRoutingEnabled
   );
   useEffect(() => {
     setDynamicRouting(dynamicRoutingEnabled);
   }, [dynamicRoutingEnabled]);
-
+  useEffect(()=> {
+    if (userPresetOption) {
+      setPresetOption(userPresetOption);
+    }
+  }, [userPresetOption])
   const handleToggleDynamicRouting = () => {
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
@@ -88,12 +94,14 @@ export const ModelRouterPage = connect(
             {...register("model_preset")}
             hasButton={false}
             onChange={handleRadioChecked}
+            checked={presetOption === "all_models"}
           />
           <ModelPresetCard
             title="Recommended"
             {...register("model_preset")}
             hasButton={false}
             onChange={handleRadioChecked}
+            checked={presetOption === "recommended_models"}
 
           />
           <ModelPresetCard
@@ -101,6 +109,7 @@ export const ModelRouterPage = connect(
             {...register("model_preset")}
             onChange={handleRadioChecked}
             models={customDisplayModels}
+            checked={presetOption === "custom_models"}
           />
           {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
         </form>

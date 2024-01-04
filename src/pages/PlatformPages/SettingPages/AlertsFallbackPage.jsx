@@ -37,13 +37,16 @@ const AlertsFallbackPageN = ({
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
     setSystemEnable(systemFallbackeEnabled);
-  }, [isFallbackEnabled, systemFallbackeEnabled]);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
+  }, [isFallbackEnabled, systemFallbackeEnabled])
+  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const model1 = watch("fall_back_model_1");
+  const model2 = watch("fall_back_model_2");
+  const model3 = watch("fall_back_model_3");
+
+  const filteredModelsForModel2 = models.filter(model => model.value !== model1);
+  const filteredModelsForModel3 = models.filter(model => model.value !== model1 && model.value !== model2);
+
+
   const handleToggle = () => {
     setFallbackEnabled(!fallbackEnabled);
   };
@@ -52,10 +55,12 @@ const AlertsFallbackPageN = ({
     const fallback_models = [];
     Object.keys(data).forEach((key) => {
       if (key.includes("fall_back_model")) {
-        if (data[key] !== "") fallback_models.push(data[key]);
+        if (data[key] !== "" )
+          fallback_models.push(data[key]);
       }
-    });
-    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled });
+    })
+
+    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled })
   };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
@@ -113,7 +118,7 @@ const AlertsFallbackPageN = ({
                 title="Model #2"
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
-                choices={models}
+                choices={filteredModelsForModel2}
                 defaultValue={fallbackModels?.[1]}
                 placeholder="Select model #2"
               />
@@ -122,7 +127,7 @@ const AlertsFallbackPageN = ({
                 title="Model #3"
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
-                choices={models}
+                choices={filteredModelsForModel3}
                 defaultValue={fallbackModels?.[2]}
                 placeholder="Select model #3"
               />
