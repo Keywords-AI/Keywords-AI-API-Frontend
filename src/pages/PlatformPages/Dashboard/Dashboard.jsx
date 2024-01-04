@@ -95,7 +95,12 @@ function DashboardNotConnected({
     {
       icon: Speed,
       title: "Average latency",
-      number: `${summary.average_latency?.toFixed(3) || 0}s`,
+      number: (
+        <>
+          <span>${summary.average_latency?.toFixed(3) || 0} </span>
+          <span className="text-sm-regular text-gray-4">ms</span>
+        </>
+      ),
       chartData: latencyData,
       dataKey: "average_latency",
     },
