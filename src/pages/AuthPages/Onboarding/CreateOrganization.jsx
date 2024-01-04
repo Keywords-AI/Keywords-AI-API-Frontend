@@ -17,8 +17,9 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
   organization,
   createOrganization
 }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm();
   const [orgName, setOrgName] = React.useState(organization?.name || "");
+
   const onSubmit = (data) => {
     console.log(data);
     createOrganization({
@@ -31,6 +32,9 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
       setOrgName(organization?.name);
     }
   }, [organization])
+  const handleChange = (e) => {
+    setOrgName(e.target.value);
+  }
   return (
     <OnboardingFieldSet
       handleSubmit={handleSubmit(onSubmit)}
@@ -40,11 +44,11 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
       fields={
         <>
           <TextInput
-            {...register("name")}
+          // You have to put value and onChange in the register function
+          // NOT SEPARATELY
+            {...register("name", { value: orgName, onChange: handleChange })}
             title="Organization name"
             placeholder="Enter your organization name"
-            value={orgName}
-            onChange={(e) => { setOrgName(e.target.value); console.log(orgName)}}
           />
           <SelectInput
             {...register("organization_size")}
@@ -59,7 +63,6 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
             ]}
             defaultValue={organization?.organization_size || 1}
             optionsWidth="w-[420px]"
-            required
           />
         </>
       }
