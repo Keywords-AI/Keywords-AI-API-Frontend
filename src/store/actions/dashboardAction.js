@@ -204,7 +204,7 @@ export const fillMissingDate = (data, dateGroup) => {
         // So we need to know the month in UTC.
         const monthString = formatTimeUnit(month + 1);
         const found = data.find((d) => {
-          const date = localToUtc(d.date_group);
+          const date = localeUtc(d.date_group);
           return date.getMonth() === month;
         });
         newDataArray.push(

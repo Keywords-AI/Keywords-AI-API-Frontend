@@ -96,10 +96,10 @@ function DashboardNotConnected({
       icon: Speed,
       title: "Average latency",
       number: (
-        <span>
-          {summary.average_latency?.toFixed(3) * 1000 || 0}
-          <span className="text-sm-regular">ms</span>
-        </span>
+        <>
+          <span>${summary.average_latency?.toFixed(3) || 0} </span>
+          <span className="text-sm-regular text-gray-4">ms</span>
+      </>
       ),
       chartData: latencyData,
       dataKey: "average_latency",
