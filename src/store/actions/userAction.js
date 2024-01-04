@@ -7,7 +7,9 @@ import {
   setCustomPromptFile,
   getConversation,
   updateUserSQLPrompt,
+  dispatchNotification,
 } from "src/store/actions";
+import { handleSerializerErrors } from "src/utilities/objectProcessing";
 import apiConfig from "src/services/apiConfig";
 import {
   // Actions
@@ -17,6 +19,7 @@ import {
 } from "src/store/actions";
 
 export const SET_USER = "SET_USER";
+export const UPDATE_USER = "UPDATE_USER";
 
 export const getUser = () => {
   return (dispatch) => {
@@ -53,14 +56,24 @@ export const getUser = () => {
         } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
+        } else {
+          const data = await res.json();
+          handleSerializerErrors(data, (err) => {
+            dispatchNotification({
+              title: "Error setting user information",
+              message: err,
+            });
+          });
         }
       })
       .catch((error) => console.log(error.message));
   };
 };
 
-export const  updateUser = (data={}) => {
+export const updateUser = (data = {}, callback = () => {}) => {
+  // Check redux devtools for the data structure
   return (dispatch) => {
+    dispatch({ type: UPDATE_USER, payload: data });
     fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "PATCH",
       headers: {
@@ -73,8 +86,11 @@ export const  updateUser = (data={}) => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
-          // Set the user object itself
-          dispatch({ type: SET_USER, payload: data });
+          dispatch(
+            dispatchNotification({
+              title: "Successfully updated user information",
+            })
+          );
           // Set the organizaiton of the user
           dispatch(setOrg(data.organization));
           // Set the free credits under usage state of the user
@@ -93,10 +109,26 @@ export const  updateUser = (data={}) => {
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
         } else if (res.status === 401 && res.status == 403) {
-          const data = await res.text();
+          const data = await res.json();
           dispatch({ type: SET_USER, payload: {} });
+        } else {
+          const data = await res.json();
+          console.log(data);
+          if (data.detail) {
+            dispatchNotification({
+              title: "Error setting user information",
+              message: data.detail,
+            });
+          } else {
+            handleSerializerErrors(data, (err) => {
+              dispatchNotification({
+                title: "Error setting user information",
+                message: err,
+              });
+            });
+          }
         }
       })
       .catch((error) => console.log(error.message));
   };
-}
+};

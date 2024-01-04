@@ -5,10 +5,9 @@ import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Button } from 'src/components/Buttons'
 import { Modal } from 'src/components/Dialogs'
 import { AddMemberForm } from './components/MemberForms'
-import { SelectInput } from 'src/components/Inputs'
 
 const mapStateToProps = (state) => ({
-  organization: state.organization,
+  organization: state.organization || {},
 })
 
 const mapDispatchToProps = {
@@ -17,6 +16,10 @@ const mapDispatchToProps = {
 
 export const MemberPage = ({ organization, addMember }) => {
   const [open, setOpen] = React.useState(false);
+  const [members, setMembers] = React.useState(organization?.users || []);
+  React.useEffect(() => {
+    setMembers(organization?.users || []);
+  }, [organization?.users]);
   return (
     <PageContent
       title={"Members"}
@@ -26,7 +29,11 @@ export const MemberPage = ({ organization, addMember }) => {
         heading={"Users"}
       >
         <div className="flex-row flex-wrap gap-md">
-          <MemberCard firstName="John" lastName="Doe" />
+          {members.map((member, index) => {
+            return (
+              <MemberCard key={index} {...member} />
+            )
+          })}
         </div>
         <Modal
           title={"Invite member"}

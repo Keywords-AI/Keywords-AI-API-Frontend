@@ -18,8 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setModelOptions } from "src/store/actions/playgroundAction";
 import { NumberInput } from "src/components/Inputs";
 import { SwitchButton } from "src/components/Buttons";
-import { setTheme } from "src/store/actions/themeAction";
-[];
 export function OptionSelector({}) {
   const dispatch = useDispatch();
   const [optimizeOpen, setOptimizeOpen] = React.useState(false);
@@ -29,7 +27,6 @@ export function OptionSelector({}) {
   );
   const handleCheckChange = (value) => {
     console.log(value);
-    dispatch(setTheme(value ? "light" : "dark"));
   };
   const [current, setCurrent] = React.useState([
     {

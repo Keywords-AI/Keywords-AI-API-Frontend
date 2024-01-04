@@ -5,17 +5,20 @@ import { TitleStaticSubheading } from "src/components/Titles";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
+import { useForm } from "react-hook-form";
+import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
+  customPresetModels: state.user.custom_preset_models,
 });
 const mapDispatchToProps = { updateUser };
-const AllModels = [];
+
 
 export const ModelRouterPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ dynamicRoutingEnabled, updateUser }) => {
+)(({ dynamicRoutingEnabled, updateUser, customPresetModels }) => {
   const [dynamicRouting, setDynamicRouting] = React.useState(
     dynamicRoutingEnabled
   );
@@ -27,6 +30,22 @@ export const ModelRouterPage = connect(
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
   };
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = async (data) => {
+    console.log(data);
+  }
+  const handleRadioChecked=(e)=> {
+      const presetModelsString = e.target.value;
+      const presetModels = presetModelsString.split(",");
+      const preset_models = models.filter((model)=>{
+        return presetModels.includes(model.value);
+      }).map((model) => model.value);
+      updateUser({ preset_models });
+  }
+  const customDisplayModels = models.filter((model)=>{
+    const filterList = customPresetModels || [];
+    return filterList.includes(model.value);
+  })
   return (
     <PageContent
       title={
@@ -45,7 +64,7 @@ export const ModelRouterPage = connect(
         <div className="flex flex-row items-start justify-center pt-[3px]">
           <SwitchButton
             checked={dynamicRouting}
-            onCheckedChang={handleToggleDynamicRouting}
+            onCheckedChange={handleToggleDynamicRouting}
           />
         </div>
       </div>
@@ -55,19 +74,32 @@ export const ModelRouterPage = connect(
           title="Presets"
           subtitle="Use the recommended model preset or build custom presets for dynamic routing."
         />
-        <form className="flex flex-col items-start gap-xs w-full">
+        <form className="flex flex-col items-start gap-xs w-full"
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <ModelPresetCard
             title="All models"
-            models={[]}
+            models={models}
+            hideModels={true}
+            {...register("model_preset")}
+            hasButton={false}
+            onChange={handleRadioChecked}
           />
           <ModelPresetCard
             title="Recommended"
+            {...register("model_preset")}
+            hasButton={false}
+            onChange={handleRadioChecked}
+
           />
           <ModelPresetCard
             title="Custom"
+            {...register("model_preset")}
+            onChange={handleRadioChecked}
+            models={customDisplayModels}
           />
+          {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
         </form>
-        <Button variant="r4-primary" text="Create custom preset" />
       </div>
     </PageContent>
   );

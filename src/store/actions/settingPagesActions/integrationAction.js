@@ -1,4 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
+import { dispatchNotification } from "src/store/actions";
+import { handleApiResponseErrors } from "src/utilities/errorHandling";
 const localHost = "http://localhost:8000/";
 export const GET_VENDORS = "GET_VENDORS";
 export const GET_INTEGRATIONS = "GET_INTEGRATIONS";
@@ -29,9 +31,14 @@ export const getIntegrations = () => {
     keywordsFetch({
       path: "vendor_integration/integrations",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          handleApiResponseErrors(response, dispatchNotification);
+        }
+      })
       .then((data) => {
-        console.log(data, "inegration data");
         dispatch({
           type: GET_INTEGRATIONS,
           payload: data,
@@ -43,16 +50,53 @@ export const getIntegrations = () => {
   };
 };
 
-export const createOrUpdateIntegration = (data) => {
+export const createIntegration = (data, callback=()=>{}) => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/integrations/",
       data,
       method: "POST",
     })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          handleApiResponseErrors(response, dispatchNotification);
+        }
+      })
+      .then((data) => {
+        dispatch(
+          dispatchNotification({
+            title: "Integration updated",
+          })
+        );
+        dispatch({
+          type: SET_INTEGRATION,
+          payload: data,
+        });
+        callback();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+};
+
+export const updateIntegration = (data) => {
+  return (dispatch) => {
+    keywordsFetch({
+      path: `vendor_integration/integration/${data.integration_id}/`,
+      data,
+      method: "PATCH",
+      dispatch: dispatch,
+    })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "inegration data");
+        dispatch(
+          dispatchNotification({
+            title: "Integration updated",
+          })
+        );
         dispatch({
           type: SET_INTEGRATION,
           payload: data,
@@ -75,5 +119,45 @@ export const setIntegration = (vendorName, data) => {
   return {
     type: SET_API_KEY,
     payload: data,
+  };
+};
+
+export const verifyKey = (data, callback=()=>{}) => {
+  return (dispatch) => {
+    keywordsFetch({
+      path: "vendor_integration/validate-api-key/",
+      data,
+      method: "POST",
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          dispatch(
+            dispatchNotification({
+              title: "Key verified successfully",
+            })
+          );
+          dispatch(createIntegration(data));
+          callback();
+          return response.json();
+        } else {
+          const data = await response.json();
+          handleApiResponseErrors(data, dispatchNotification);
+        }
+      })
+      .then((data) => {
+        dispatch({
+          type: SET_API_KEY,
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        dispatch(
+          dispatchNotification({
+            type: "error",
+            title: "Key verification failed: " + error.message,
+          })
+        );
+      });
   };
 };

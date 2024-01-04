@@ -7,12 +7,33 @@ import {
   SET_DATE_DATA,
 } from "src/store/actions";
 const initState = {
-  data: [],
-  summary: {},
-  costData: [],
-  tokenCountData: [],
-  latencyData: [],
-  requestCountData: [],
+  data: [
+    // {
+    //   date_group: 20,
+    //   total_cost: 5.6e-5,
+    //   total_tokens: 30,
+    //   average_latency: 0.23117351531982422,
+    //   number_of_requests: 1,
+    // },
+  ],
+  summary: {
+    total_cost: 0,
+    total_tokens: 0,
+    average_latency: 0,
+    number_of_requests: 0,
+  },
+  costData: [
+    // {total_cost, date_group}
+  ],
+  tokenCountData: [
+    // {total_tokens, date_group}
+  ],
+  latencyData: [
+    // {average_latency, date_group}
+  ],
+  requestCountData: [
+    // {number_of_requests, date_group}
+  ],
 };
 
 export default function dashboardReducer(state = initState, action) {

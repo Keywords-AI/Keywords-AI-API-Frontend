@@ -24,14 +24,11 @@ import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
-import { Dashboard } from "./pages/AuthPages/Dashboard/Dashboard";
-import {
-  CreateOrganization,
-  InviteTeam,
-  OptimizeCosts,
-  PrioritizeObj,
-} from "./pages/AuthPages/Onboarding";
-import { IdentifyUseCase } from "./pages/AuthPages/Onboarding/IdentifyUseCase";
+import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
+import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
+import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
+import { REDIRECT_URI } from "./utilities/navigation";
+import { useNavigate } from "react-router-dom";
 
 const mapStateToProps = (state) => {
   return {
@@ -44,6 +41,7 @@ const mapDispatchToProps = {
 };
 
 const Routes = ({ getUser, user }) => {
+  const navigate = useNavigate();
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
     getUser();
@@ -53,14 +51,26 @@ const Routes = ({ getUser, user }) => {
       // rotate the token every 10 minutes
       setAuthToken(refreshToken());
     }, 1000 * 10 * 60);
-    return () => clearInterval(intervalId);
+  return () => clearInterval(intervalId);
   }, [authToken]);
+  useEffect(() => {
+    if (user?.onboarded && isLoggedIn(user)) {
+      const onOnboradingPage = window.location.pathname.includes("/onboarding");
+      if (!user.onboarded && !onOnboradingPage) {
+        // navigate to onboarding page if user hasn't onboarded
+        navigate("/onboarding");
+      }
+    }
+  }, [user])
+  // comment the 2 lines below to switch between logged in/out states
   const isUserLoggedIn = isLoggedIn(user);
   // const isUserLoggedIn = true;
+
   const routes = [
     {
-      path: "/platform",
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+      path: REDIRECT_URI,
+      element: isUserLoggedIn ? <NavigationLayout /> :
+        <Navigate to="/login" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
@@ -83,21 +93,43 @@ const Routes = ({ getUser, user }) => {
           element: <Dashboard />,
         },
         {
-          path: "/platform",
-          element: <Navigate to="/platform/dashboard" />,
+          path: REDIRECT_URI,
+          element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
         },
+
       ],
+    },
+    { // Handled Separately to allow special redirection
+      path: "/",
+      element: <FullScreenLayout />,
+      children: [
+        {
+          path: "login",
+          element: <LogIn />,
+        },
+        { path: "accept/:code?", element: <AcceptInvitation /> },
+        {
+          path: "onboarding/:curr_step?",
+          element: <OnboardingPage />,
+        },
+        {
+          path: "",
+          element: isUserLoggedIn ? (
+            <Navigate to={REDIRECT_URI} /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+          ) : (
+            <Unauthenticated />
+          ),
+        },
+      ]
     },
     {
       path: "/",
       element: isUserLoggedIn ? (
-        <Navigate to="/platform" /> //If user is logged in, redirect to platform
+        <Navigate to={REDIRECT_URI} /> //If user is logged in, redirect to platform
       ) : (
         <FullScreenLayout />
       ),
-      element: <FullScreenLayout />,
       children: [
-        { path: "login", element: <LogIn /> },
         {
           path: "signup",
           element: <SignUp />,
@@ -119,19 +151,11 @@ const Routes = ({ getUser, user }) => {
           element: <Unauthorized />,
         },
         {
-          path: "/",
-          element: isUserLoggedIn ? (
-            <Navigate to="/platform" /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
-          ) : (
-            <Unauthenticated />
-          ),
+          path: "email-confirmation/:email?",
+          element: <EmailConfirmation />,
         },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
-    },
-    {
-      path: "/onboarding/:curr_step?",
-      element: <OnboardingPage />,
     },
     {
       path: "*",

@@ -9,22 +9,35 @@ import { connect } from "react-redux";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
 import { dispatchNotification, isLoggedIn } from "src/store/actions";
+import { useLocation } from "react-router-dom";
+import { REDIRECT_URI } from "src/utilities/navigation";
 
+const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
   googleLogin,
 };
 
-const LogIn = ({ login, googleLogin }) => {
+const LogIn = ({ login, googleLogin, user }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
-      window.location.href = "/";
+      login(data.email, data.password);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
   };
+  useEffect(() => {
+    if (isLoggedIn(user)) {
+      const next = new URLSearchParams(location.search).get("next")
+      if (next) {
+        navigate(next);
+      } else {
+        navigate(REDIRECT_URI);
+      }
+    }
+  }, [user])
   const {
     register,
     handleSubmit,
@@ -35,7 +48,7 @@ const LogIn = ({ login, googleLogin }) => {
   const [backendError, setBackendError] = useState(null);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <div className="flex-col items-start gap-[10px] self-stretch">
+      <div className="flex-col items-start gap-xxs self-stretch">
         <BackButton text="Home" link={"/"} />
       </div>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">

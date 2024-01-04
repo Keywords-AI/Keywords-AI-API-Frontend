@@ -63,6 +63,7 @@ export const signup = async ({
     );
 
     const responseData = response.data;
+
   } catch (error) {
     if (error.code === "ECONNABORTED") {
       throw new Error("Request timed out");

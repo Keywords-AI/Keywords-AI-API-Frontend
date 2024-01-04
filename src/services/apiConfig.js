@@ -1,4 +1,5 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
+import { dispatchNotification } from "src/store/actions";
 const selectEndpoint = () => {
   if (
     window.location.hostname === "localhost" ||
@@ -7,7 +8,7 @@ const selectEndpoint = () => {
     return "http://localhost:8000/";
   } else if (
     window.location.hostname === "platform-test.keywordsai.co" ||
-    window.location.hostname === "https://keywords-platform.web.app"
+    window.location.hostname === "keywords-platform.web.app"
   ) {
     return "https://api-test.keywordsai.co/";
   } else if (window.location.hostname === "platform.keywordsai.co") {
@@ -18,7 +19,7 @@ const selectEndpoint = () => {
 
 const apiConfig = {
   apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  // apiURL: "https://api-test.keywordsai.co/", // For anyone who doesn't have backend local server
+  //  apiURL: "https://api-test.keywordsai.co/", // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
@@ -31,12 +32,13 @@ export const keywordsFetch = async ({
   host = apiConfig.apiURL,
   data,
   method = "GET",
-  auth=true,
+  auth = true,
   credentials = "same-origin",
+  dispatch=()=>{},
 }) => {
   try {
     const headers = {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     };
     if (auth) {
       headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
@@ -49,9 +51,9 @@ export const keywordsFetch = async ({
     if (method !== "GET") {
       callBody.body = JSON.stringify(data);
     }
-    const response = await fetch(host + path, callBody);
-    return response;
+    return fetch(host + path, callBody);
   } catch (error) {
+    dispatch(dispatchNotification({type:"error", title:"Something went wrong"}));
     throw error;
   }
 };

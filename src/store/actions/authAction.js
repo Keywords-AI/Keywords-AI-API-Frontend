@@ -2,52 +2,55 @@ import apiConfig, { keywordsFetch } from "src/services/apiConfig";
 import { eraseCookie, getCookie, setCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "./notificationAction";
-
-export const register = (
-  email,
-  password,
-  firstname,
-  lastname,
-  organization
-) => {
+import { handleSerializerErrors } from "src/utilities/errorHandling";
+import { REDIRECT_URI } from "src/utilities/navigation";
+// admintestpassword
+export const signup = (data = {}) => {
+  // data = {email, first_name, last_name, password}
   return (dispatch) => {
     // Return a promise from the thunk
-    return new Promise((resolve, reject) => {
-      fetch(`${apiConfig.apiURL}auth/users/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          first_name: firstname,
-          last_name: lastname,
-          organization: organization,
-        }),
+    fetch(`${apiConfig.apiURL}auth/users/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          const responseJson = await res.json();
+          dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "Activation link sent, please check your email",
+            })
+          );
+          window.location.href = "/email-confirmation" + "/" + data.email;
+        } else {
+          const responseJson = await res.json();
+          Object.keys(responseJson).forEach((key) => {
+            responseJson[key].forEach((error) => {
+              dispatch(
+                dispatchNotification({
+                  type: "error",
+                  title: `${key}: ${error}`,
+                })
+              );
+            });
+          });
+        }
       })
-        .then(async (res) => {
-          if (res.ok) {
-            const responseJson = await res.json();
-            dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
-            resolve(responseJson); // Resolve the promise with response data
-          } else {
-            const responseJson = await res.json();
-            reject(responseJson); // Reject the promise with the error object
-          }
-        })
-        .catch((error) => {
-          reject(error); // Handle network errors
-        });
-    });
+      .catch((error) => {
+        // dispatch(dispatchNotification({ type: "error", title: "Sign up failed" }));
+      });
   };
 };
-
+// admintestpassword
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
-    return new Promise((resolve, reject) => {
       fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
         // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
         method: "POST",
@@ -66,13 +69,14 @@ export const login = (email, password) => {
             headers.forEach((value, key) => {
               headersObj[key] = value;
             });
-
             // Now headersObj is a regular object and can be converted to JSON
             const responseJson = await res.json();
             localStorage.setItem("access", responseJson.access);
             localStorage.setItem("refresh", responseJson.refresh);
             dispatch({ type: "LOGIN_SUCCESS", payload: responseJson }); // dispatch a success action
-            resolve(responseJson); // Resolve the promise with response data
+            dispatch(dispatchNotification({ title: "Logged in successfully!" }));
+            const searchParams = new URLSearchParams(window.location.search);
+            window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
           } else {
             const responseJson = await res.json();
             throw new Error(responseJson.detail);
@@ -82,13 +86,15 @@ export const login = (email, password) => {
           dispatch(
             dispatchNotification({ type: "error", title: error.message })
           );
-          reject(error); // Handle network errors
         });
-    });
   };
 };
 
-export const logout = () => {
+export const logout = (
+  postLogout = () => {
+    window.location.href = "/login";
+  }
+) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
@@ -98,7 +104,7 @@ export const logout = () => {
         localStorage.removeItem("access");
         eraseCookie("access");
         eraseCookie("refresh");
-        window.location.href = "/login";
+        postLogout();
         dispatch(
           dispatchNotification({
             type: "success",
@@ -127,7 +133,11 @@ export const googleLogin = () => {
           return res.json();
         } else {
           const awaitRes = await res.json();
-          throw new Error(awaitRes.detail);
+          if (awaitRes.detail) {
+            throw new Error(awaitRes.detail);
+          } else {
+            throw new Error(awaitRes.toString());
+          }
         }
       })
       .then((response) => {
@@ -187,7 +197,8 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  return retrieveAccessToken() || (user?.id !== null && user?.id !== undefined);
+  const hasAccessToken = retrieveAccessToken()? true : false;
+  return hasAccessToken|| (user?.id !== null && user?.id !== undefined);
 };
 
 export const resetPassword = (
@@ -355,7 +366,12 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          handleSuccess("The activation link has been sent to your email!");
+          dispatch(
+            dispatchNotification({
+              type: "success",
+              title: "The activation link has been sent to your email!",
+            })
+          );
         } else if (res.status === 400) {
           const responseJson = await res.text();
           handleError(responseJson);
@@ -365,54 +381,6 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
   };
 };
 
-export const acceptInvitation = (code, handleSuccess, handleError) => {
-  return (dispatch) => {
-    fetch(`${apiConfig.apiURL}user/invitations/accept/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      body: JSON.stringify({ code: code }),
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          handleSuccess("Accepted invitation successfully!");
-        } else if (res.status === 400) {
-          const responseJson = await res.text();
-          handleError(responseJson);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-};
-
-export const deleteRole = (
-  id,
-  handleSuccess = () => {},
-  handleError = () => {}
-) => {
-  return (dispatch) => {
-    fetch(`${apiConfig.apiURL}user/delete-role/${id}/`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          handleSuccess("Deleted role successfully!");
-        } else if (res.status === 400) {
-          const responseJson = await res.text();
-          handleError(responseJson);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-};
 
 export const saveAllUsers = () => {
   return (dispatch) => {

@@ -11,13 +11,17 @@ import { generateChild } from 'src/utilities/objectProcessing';
 import { AlertsFallbackPage } from './AlertsFallbackPage';
 import { ModelRouterPage } from './ModelRouterPage';
 import { UserSettings } from './UserSettingsPage';
+import { Navigate } from 'react-router-dom';
+import { REDIRECT_URI } from 'src/utilities/navigation';
+
+
 
 const pages = [
     {
         title: "General",
         // forAdmin: true,
-        default: true,
-        page: <SettingsPage />,
+        default: true, // When default is true, page can be empty, as it will be replaced by React.cloneElement(Navigate, { to: defaultPath })
+        page: <Navigate to={`${REDIRECT_URI}/api/general`} />,
     },
     {
         title: "General",

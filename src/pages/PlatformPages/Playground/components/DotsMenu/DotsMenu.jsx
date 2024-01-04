@@ -1,5 +1,6 @@
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { Button, CodeViewer, DropDownMenu } from "src/components";
+import { Button, DropDownMenu } from "src/components";
+import { CodeViewer } from "src/components/CodeViewer";
 import React from "react";
 
 import { Modal } from "src/components/Dialogs";

@@ -1,4 +1,4 @@
-import React from "react";
+export const REDIRECT_URI = "/platform";
 
 export const setQueryParams = (params, navigate) => {
   /*

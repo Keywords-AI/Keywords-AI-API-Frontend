@@ -3,7 +3,7 @@ import usageReducer from "./usageReducer";
 import playgroundReducer from "./playgroundReducer";
 import streamingTextReducer from "./streamingTextReducer";
 import apiKeyReducer from "./settingPagesReducer/apiKeyReducer";
-import organizationReducer from "./deprecated/organizationReducer";
+import organizationReducer from "./organizationReducer";
 import billingsReducer from "./settingPagesReducer/billingsReducer";
 import chatbotReducer from "./chatbotReducer";
 import integrationReducer from "./settingPagesReducer/integrationReducer";
