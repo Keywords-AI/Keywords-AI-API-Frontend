@@ -11,7 +11,7 @@ import {
   regeneratePlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { connect } from "react-redux";
-import { models } from "src/components/Misc";
+import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => {
   return {

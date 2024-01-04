@@ -8,7 +8,7 @@ const selectEndpoint = () => {
     return "http://localhost:8000/";
   } else if (
     window.location.hostname === "platform-test.keywordsai.co" ||
-    window.location.hostname === "https://keywords-platform.web.app"
+    window.location.hostname === "keywords-platform.web.app"
   ) {
     return "https://api-test.keywordsai.co/";
   } else if (window.location.hostname === "platform.keywordsai.co") {

@@ -12,11 +12,10 @@ const mapPropsToDispatch = {
     getVendors,
 };
 
-const IntegrationsPageNotConnected = ({ vendors, getVendors}) => {
+const IntegrationsPageNotConnected = ({ vendors }) => {
     const [openRequest, setOpenRequest] = React.useState(false);
-    useEffect(() => {
-        getVendors();
-    }, []);
+    const orderedVendors = ['OpenAI', 'Anthropic', 'Cohere', 'AI21 Labs', 'Google'];
+
     return (
         <PageContent
             title="Integrations"
@@ -26,12 +25,16 @@ const IntegrationsPageNotConnected = ({ vendors, getVendors}) => {
                 heading="LLM providers"
                 subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API.">
                 <div className='flex-row items-start content-start gap-sm self-stretch flex-wrap'>
-                    {vendors?.length > 0 && vendors.map((vendor, index) => (
-                        <IntegrationModal
-                            key={index}
-                            vendor={vendor}
-                        />
-                    ))}
+                    {orderedVendors.map((vendorName, index) => {
+                        const currVendors = vendors || [];
+                        const vendor = currVendors.find(vendor => vendor.name === vendorName);
+                        if (vendor) {
+                            return (<IntegrationModal
+                                key={index}
+                                vendor={vendor}
+                            />)
+                        }
+                    })}
                 </div>
                 {/* <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} /> to be built later, not part of next release */}
             </PageParagraph>
