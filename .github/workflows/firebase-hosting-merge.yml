@@ -14,9 +14,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          submodules: 'true'
+          submodules: recursive
           token: ${{ secrets.KA_FRONTEND }}
-      - run : git submodule update --init --recursive
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
