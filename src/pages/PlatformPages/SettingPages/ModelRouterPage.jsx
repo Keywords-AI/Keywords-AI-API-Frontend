@@ -28,10 +28,14 @@ export const ModelRouterPage = connect(
     setDynamicRouting(!dynamicRouting);
     updateUser({ dynamic_routing_enabled: !dynamicRouting });
   };
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const onSubmit = async (data) => {
     console.log(data);
-  }
+  };
   return (
     <PageContent
       title={
@@ -42,7 +46,7 @@ export const ModelRouterPage = connect(
       }
       subtitle="Build model presets for dynamic routing."
     >
-      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
+      {/* <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
         <TitleStaticSubheading
           title="Dynamic LLM routing"
           subtitle="Enable dynamic model routing to optimize for performance."
@@ -53,14 +57,14 @@ export const ModelRouterPage = connect(
             onCheckedChange={handleToggleDynamicRouting}
           />
         </div>
-      </div>
-      <Divider />
+      </div> */}
       <div className="flex flex-col gap-sm items-start justify-between self-stretch">
         <TitleStaticSubheading
           title="Presets"
           subtitle="Use the recommended model preset or build custom presets for dynamic routing."
         />
-        <form className="flex flex-col items-start gap-xs w-full"
+        <form
+          className="flex flex-col items-start gap-xs w-full"
           onSubmit={handleSubmit(onSubmit)}
         >
           <ModelPresetCard
@@ -72,15 +76,24 @@ export const ModelRouterPage = connect(
           <ModelPresetCard
             title="Recommended"
             {...register("model_preset")}
-
             hasButton={false}
           />
-          <ModelPresetCard
-            title="Custom"
-            {...register("model_preset")}
-          />
-          {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
+          <ModelPresetCard title="Custom" {...register("model_preset")} />
+          {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */}
         </form>
+      </div>
+      <Divider />
+      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
+        <TitleStaticSubheading
+          title="Dynamic LLM routing"
+          subtitle="Enable dynamic model routing to optimize for performance."
+        />
+        <div className="flex flex-row items-start justify-center pt-[3px]">
+          <SwitchButton
+            checked={dynamicRouting}
+            onCheckedChange={handleToggleDynamicRouting}
+          />
+        </div>
       </div>
     </PageContent>
   );
