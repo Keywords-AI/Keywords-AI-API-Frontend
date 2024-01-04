@@ -1,6 +1,4 @@
 import { getDateStr, textToLink } from "./stringProcessing";
-import React from "react";
-import { Navigate } from "react-router-dom";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
