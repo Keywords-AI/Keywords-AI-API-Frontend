@@ -12,13 +12,10 @@ const mapPropsToDispatch = {
     getVendors,
 };
 
-const IntegrationsPageNotConnected = ({ vendors, getVendors }) => {
+const IntegrationsPageNotConnected = ({ vendors }) => {
     const [openRequest, setOpenRequest] = React.useState(false);
     const orderedVendors = ['OpenAI', 'Anthropic', 'Cohere', 'AI21 Labs', 'Google'];
 
-    useEffect(() => {
-        getVendors();
-    }, []);
     return (
         <PageContent
             title="Integrations"
@@ -31,10 +28,12 @@ const IntegrationsPageNotConnected = ({ vendors, getVendors }) => {
                     {orderedVendors.map((vendorName, index) => {
                         const currVendors = vendors || [];
                         const vendor = currVendors.find(vendor => vendor.name === vendorName);
-                        <IntegrationModal
-                            key={index}
-                            vendor={vendor}
-                        />
+                        if (vendor) {
+                            return (<IntegrationModal
+                                key={index}
+                                vendor={vendor}
+                            />)
+                        }
                     })}
                 </div>
                 {/* <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} /> to be built later, not part of next release */}

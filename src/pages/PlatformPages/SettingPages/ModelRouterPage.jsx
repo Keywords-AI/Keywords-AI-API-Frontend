@@ -32,6 +32,9 @@ export const ModelRouterPage = connect(
   const onSubmit = async (data) => {
     console.log(data);
   }
+  const handleRadioChecked=(e)=> {
+      console.log(e.target.value);
+  }
   return (
     <PageContent
       title={
@@ -68,16 +71,19 @@ export const ModelRouterPage = connect(
             models={[]}
             {...register("model_preset")}
             hasButton={false}
+            onChange={handleRadioChecked}
           />
           <ModelPresetCard
             title="Recommended"
             {...register("model_preset")}
-
             hasButton={false}
+            onChange={handleRadioChecked}
+
           />
           <ModelPresetCard
             title="Custom"
             {...register("model_preset")}
+            onChange={handleRadioChecked}
           />
           {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */} 
         </form>
