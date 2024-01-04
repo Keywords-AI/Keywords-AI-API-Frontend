@@ -38,6 +38,7 @@ export const UserSettings = connect(
     distpatch(setTheme(checked ? "dark" : "light"));
   };
   const onSubmit = async (data) => {
+    console.log(data);
     if (
       data.first_name === "" ||
       data.last_name === "" ||
@@ -72,7 +73,7 @@ export const UserSettings = connect(
               placeholder="Enter your first name"
               value={firstName}
               {...register("first_name", {
-                pattern: /^[a-zA-Z]+$/,
+                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
                 onChange: handleFirstNameChange,
               })}
@@ -82,7 +83,7 @@ export const UserSettings = connect(
               placeholder="Enter your last name"
               value={lastName}
               {...register("last_name", {
-                pattern: /^[a-zA-Z]+$/,
+                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
                 onChange: handleLastNameChange,
               })}
