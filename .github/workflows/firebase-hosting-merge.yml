@@ -7,6 +7,9 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - main
   workflow_dispatch:
+permissions:
+  contents: write
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
