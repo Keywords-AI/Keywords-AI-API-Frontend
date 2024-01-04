@@ -18,16 +18,17 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
   createOrganization
 }) => {
   const { register, handleSubmit } = useForm();
-  const [orgName, setOrgName] = React.useState(organization.name || "");
+  const [orgName, setOrgName] = React.useState(organization?.name || "");
   const onSubmit = (data) => {
+    console.log(data);
     createOrganization({
       ...data,
       user: user.id
     }, buttonAction);
   }
   useEffect(() => {
-    if (organization.name) {
-      setOrgName(organization.name);
+    if (organization?.name) {
+      setOrgName(organization?.name);
     }
   }, [organization])
   return (
@@ -42,9 +43,8 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
             {...register("name")}
             title="Organization name"
             placeholder="Enter your organization name"
-            required
             value={orgName}
-            onChange={(e) => setOrgName(e.target.value)}
+            onChange={(e) => { setOrgName(e.target.value); console.log(orgName)}}
           />
           <SelectInput
             {...register("organization_size")}
