@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          token: ${{ secrets.KA_FRONTEND }}
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
