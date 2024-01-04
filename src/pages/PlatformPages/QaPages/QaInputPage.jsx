@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
 import ModelPresetCard from "src/components/Cards/ModelPresetCard";
 
-export const QAInputPage = () => {
+export const QaInputPage = () => {
   const {
     register,
     handleSubmit,
