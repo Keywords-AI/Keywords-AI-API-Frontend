@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { textToLink } from 'src/utilities/stringProcessing';
 import {QaButtonPage} from "./QaButtonPage"
 import {QaInputPage} from "./QaInputPage"
-import { QaMiscPage } from './QAMiscPage';
+import { QaMiscPage } from './QaMisc';
 
 const pages = [
   {
