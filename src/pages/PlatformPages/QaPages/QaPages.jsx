@@ -1,24 +1,30 @@
 import React, { useEffect } from 'react'
 import { textToLink } from 'src/utilities/stringProcessing';
-import {QAButtonPage} from "./QAButtonPage"
-import {QAInputPage} from "./QAInputPage"
+import {QaButtonPage} from "./QaButtonPage"
+import {QaInputPage} from "./QaInputPage"
+import { QaMiscPage } from './QAMiscPage';
 
 const pages = [
   {
     title: "Button",
     // forAdmin: true,
     default: true,
-    page: <QAButtonPage />
+    page: <QaButtonPage />
   },
   {
     title: "Button",
     // forAdmin: true,
-    page: <QAButtonPage />
+    page: <QaButtonPage />
   },
   {
     title: "Input Fields",
     // forAdmin: true,
-    page: <QAInputPage/>,
+    page: <QaInputPage/>,
+  },
+  {
+    title: "Misc",
+    // forAdmin: true,
+    page: <QaMiscPage/>,
   },
 ];
 
