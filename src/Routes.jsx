@@ -54,7 +54,7 @@ const Routes = ({ getUser, user }) => {
   return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
-    if (user?.onboarded && isLoggedIn(user)) {
+    if (user.id && isLoggedIn(user)) {
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
       if (!user.onboarded && !onOnboradingPage) {
         // navigate to onboarding page if user hasn't onboarded
