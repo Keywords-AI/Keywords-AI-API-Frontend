@@ -129,15 +129,15 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
       const newItem = {};
       newItem[dataKeyX] = item[dataKeyX];
       dataKeyY.forEach((key) => {
-        newItem[key] = item[key];
+        newItem[key] = item[key] || 0;
       });
       return newItem;
     });
   } else {
     return data.map((item) => {
       return {
-        [dataKeyX]: item[dataKeyX],
-        [dataKeyY]: item[dataKeyY],
+        [dataKeyX]: item[dataKeyX] || 0,
+        [dataKeyY]: item[dataKeyY] || 0,
       };
     });
   }
