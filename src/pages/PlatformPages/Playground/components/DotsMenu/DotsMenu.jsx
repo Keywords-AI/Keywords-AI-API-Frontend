@@ -8,6 +8,7 @@ import { DotsButton } from "src/components/Buttons";
 import { useNavigate } from "react-router-dom";
 
 const ViewCode = React.forwardRef((props, ref) => {
+  const navigate = useNavigate();
   return (
     <Modal
       ref={ref}
@@ -19,7 +20,10 @@ const ViewCode = React.forwardRef((props, ref) => {
       <CodeViewer />
       <p className="text-sm-regular text-gray-4">
         Your API key can be found{" "}
-        <a href="www.google.com" className="text-primary">
+        <a
+          onClick={() => navigate("/platform/api/api-keys")}
+          className="text-primary cursor-pointer"
+        >
           here
         </a>
         . You should use environment variables or a secret management tool to

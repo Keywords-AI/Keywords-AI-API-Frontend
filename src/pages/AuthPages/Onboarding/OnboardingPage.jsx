@@ -42,9 +42,9 @@ export const OnboardingPage = connect(
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
   useEffect(()=>{
-    if (user.onboarded) {
-      navigate(REDIRECT_URI);
-    }
+    // if (user.onboarded) {
+    //   navigate(REDIRECT_URI);
+    // }
   }, [user])
   const {
     register,
@@ -75,13 +75,13 @@ export const OnboardingPage = connect(
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">
-        <Button
+        {!parseInt(curr_step) === formfields.length + 1 &&<Button
           text={"Sign out"}
           variant={"r18-black"}
           onClick={handleBackButtonClick}
           icon={Left}
           iconPosition={"left"}
-        />
+        />}
       </div>
       <div
         className="w-full max-w-[420px] flex-col flex-grow"

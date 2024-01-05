@@ -135,3 +135,20 @@ export const handleSerializerErrors = (errors, callback = () => {}) => {
     });
   });
 };
+
+export const flattenObject = (obj) => {
+  const result = {};
+
+  for (const key in obj) {
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      const temp = flattenObject(obj[key]);
+      for (const tempKey in temp) {
+        result[`${key}.${tempKey}`] = temp[tempKey];
+      }
+    } else {
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+};

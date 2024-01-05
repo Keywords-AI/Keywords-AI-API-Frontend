@@ -51,7 +51,7 @@ const Routes = ({ getUser, user }) => {
       // rotate the token every 10 minutes
       setAuthToken(refreshToken());
     }, 1000 * 10 * 60);
-  return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
     if (user.id && isLoggedIn(user)) {
@@ -61,16 +61,15 @@ const Routes = ({ getUser, user }) => {
         navigate("/onboarding");
       }
     }
-  }, [user])
+  }, [user]);
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = isLoggedIn(user);
-  // const isUserLoggedIn = true;
+  //const isUserLoggedIn = isLoggedIn(user);
+  const isUserLoggedIn = true;
 
   const routes = [
     {
       path: REDIRECT_URI,
-      element: isUserLoggedIn ? <NavigationLayout /> :
-        <Navigate to="/login" />,
+      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
@@ -84,10 +83,7 @@ const Routes = ({ getUser, user }) => {
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
           children: qaChildren,
         },
-        {
-          path: "test",
-          element: <StreamingTextTest />,
-        },
+
         {
           path: "dashboard",
           element: <Dashboard />,
@@ -96,10 +92,10 @@ const Routes = ({ getUser, user }) => {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
         },
-
       ],
     },
-    { // Handled Separately to allow special redirection
+    {
+      // Handled Separately to allow special redirection
       path: "/",
       element: <FullScreenLayout />,
       children: [
@@ -120,7 +116,7 @@ const Routes = ({ getUser, user }) => {
             <Unauthenticated />
           ),
         },
-      ]
+      ],
     },
     {
       path: "/",

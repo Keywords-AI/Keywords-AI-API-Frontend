@@ -17,19 +17,17 @@ const mapDispatchToProps = {
   updateUser,
 };
 
-export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
-  user,
-  updateUser
-}) => {
+export const UserSettings = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ user, updateUser }) => {
   const theme = useSelector((state) => state.theme.theme);
   const [firstName, setFirstName] = React.useState(user.first_name || "");
   const [lastName, setLastName] = React.useState(user.last_name || "");
   React.useEffect(() => {
-    if (user.first_name)
-      setFirstName(user.first_name);
-    if (user.last_name)
-      setLastName(user.last_name);
-  }, [user])
+    if (user.first_name) setFirstName(user.first_name);
+    if (user.last_name) setLastName(user.last_name);
+  }, [user]);
   const distpatch = useDispatch();
   const {
     register,
@@ -40,14 +38,21 @@ export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
     distpatch(setTheme(checked ? "dark" : "light"));
   };
   const onSubmit = async (data) => {
+    if (
+      data.first_name === "" ||
+      data.last_name === "" ||
+      (data.first_name === user.first_name && data.last_name === user.last_name)
+    ) {
+      return;
+    }
     updateUser(data);
   };
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
-  }
+  };
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
-  }
+  };
   return (
     <PageContent title="User Settings" subtitle="Manage your user profile.">
       <PageParagraph heading="Profile">
@@ -67,9 +72,9 @@ export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
               placeholder="Enter your first name"
               value={firstName}
               {...register("first_name", {
-                pattern: /^[a-zA-Z]+$/,
+                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
-                onChange: handleFirstNameChange
+                onChange: handleFirstNameChange,
               })}
             />
             <TextInput
@@ -77,9 +82,9 @@ export const UserSettings = connect(mapStateToProps, mapDispatchToProps)(({
               placeholder="Enter your last name"
               value={lastName}
               {...register("last_name", {
-                pattern: /^[a-zA-Z]+$/,
+                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
-                onChange: handleLastNameChange
+                onChange: handleLastNameChange,
               })}
             />
           </div>

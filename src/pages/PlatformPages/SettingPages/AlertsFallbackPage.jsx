@@ -3,7 +3,11 @@ import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
-import { toggleFallback, updateUser, toggleSystemFallback } from "src/store/actions";
+import {
+  toggleFallback,
+  updateUser,
+  toggleSystemFallback,
+} from "src/store/actions";
 import { models } from "src/components/Misc";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
@@ -16,9 +20,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   updateUser,
   toggleFallback,
-  toggleSystemFallback
+  toggleSystemFallback,
 };
-
 
 const AlertsFallbackPageN = ({
   isFallbackEnabled,
@@ -26,9 +29,12 @@ const AlertsFallbackPageN = ({
   systemFallbackeEnabled,
   fallbackModels,
 }) => {
-  const [fallbackEnabled, setFallbackEnabled] = React.useState(isFallbackEnabled);
-  const [systemEnable, setSystemEnable] = React.useState(systemFallbackeEnabled);
-  useEffect(()=>{
+  const [fallbackEnabled, setFallbackEnabled] =
+    React.useState(isFallbackEnabled);
+  const [systemEnable, setSystemEnable] = React.useState(
+    systemFallbackeEnabled
+  );
+  useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
     setSystemEnable(systemFallbackeEnabled);
   }, [isFallbackEnabled, systemFallbackeEnabled])
@@ -45,9 +51,9 @@ const AlertsFallbackPageN = ({
     setFallbackEnabled(!fallbackEnabled);
   };
   const onSubmit = (data) => {
-    console.log(data)
+    console.log(data);
     const fallback_models = [];
-    Object.keys(data).forEach(key => {
+    Object.keys(data).forEach((key) => {
       if (key.includes("fall_back_model")) {
         if (data[key] !== "" )
           fallback_models.push(data[key]);
@@ -58,8 +64,8 @@ const AlertsFallbackPageN = ({
   };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
-    updateUser({ system_fallback_enabled: !systemEnable })
-  }
+    updateUser({ system_fallback_enabled: !systemEnable });
+  };
   return (
     <PageContent
       title="Alerts & Fallback"
@@ -72,11 +78,14 @@ const AlertsFallbackPageN = ({
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
           {/* <SwitchButton/> */}
-          <span className="text-sm-regular text-gray-4 whitespace-nowrap">Coming soon</span>
+          <span className="text-sm-regular text-gray-4 whitespace-nowrap">
+            Coming soon
+          </span>
         </div>
       </div>
       <Divider />
-      <form className="flex flex-col gap-sm items-start justify-between self-stretch"
+      <form
+        className="flex flex-col gap-sm items-start justify-between self-stretch"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
@@ -135,8 +144,8 @@ const AlertsFallbackPageN = ({
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
           <SwitchButton
-          checked={systemEnable}
-          onCheckedChange={handleSystemFallbackToggle}
+            checked={systemEnable}
+            onCheckedChange={handleSystemFallbackToggle}
           />
         </div>
       </div>
@@ -144,4 +153,7 @@ const AlertsFallbackPageN = ({
   );
 };
 
-export const AlertsFallbackPage = connect(mapStateToProps, mapDispatchToProps)(AlertsFallbackPageN);
+export const AlertsFallbackPage = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AlertsFallbackPageN);

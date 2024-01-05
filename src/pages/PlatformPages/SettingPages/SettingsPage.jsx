@@ -7,7 +7,7 @@ import { Button } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { setOrgName } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
-import {HoverPopup} from "src/components/Cards";
+import { HoverPopup } from "src/components/Cards";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -30,6 +30,11 @@ export const SettingPage = ({
   } = useForm();
   const [currName, setCurrName] = React.useState(organization?.name);
   useEffect(() => {
+    if (organization?.name == null)
+      dispatchNotification({
+        title: "Organization name cannot be blank.",
+        type: "error",
+      });
     setCurrName(organization?.name);
   }, [organization?.name]);
   const { loading, error, data, postData } = usePost({
@@ -43,7 +48,6 @@ export const SettingPage = ({
     }
   };
   useEffect(() => {
-    console.log("sdasad")
     if (data && !error) {
       dispatchNotification({
         title: "Organization name updated",
@@ -93,7 +97,6 @@ export const SettingPage = ({
             width="w-[400px]"
           />
           <Button type="submit" text="Update" variant="r4-primary" />
-          
         </form>
       </PageParagraph>
       {/* <PageParagraph

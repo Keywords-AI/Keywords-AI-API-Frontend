@@ -48,18 +48,6 @@ export const models = [
     icon: OpenAI,
   },
   {
-    name: "Claude 2.1",
-    value: "claude-2.1",
-    brand: "anthropic",
-    icon: Anthropic,
-  },
-  {
-    name: "Claude 2",
-    value: "claude-2",
-    brand: "anthropic",
-    icon: Anthropic,
-  },
-  {
     name: "OpenAI - GPT-4-1106-preview",
     value: "gpt-4-1106-preview",
     brand: "openai",
@@ -77,6 +65,31 @@ export const models = [
     brand: "anthropic",
     icon: Anthropic,
   },
+  {
+    name: "Claude 2.1",
+    value: "claude-2.1",
+    brand: "anthropic",
+    icon: Anthropic,
+  },
+  {
+    name: "Claude 2",
+    value: "claude-2",
+    brand: "anthropic",
+    icon: Anthropic,
+  },
+
+  // {
+  //   name: "Claude Instant 1",
+  //   value: "claude-instant-1",
+  //   brand: "anthropic",
+  //   icon: Anthropic,
+  // },
+  // {
+  //   name: "Claude Instant 1.2",
+  //   value: "claude-instant-1.2",
+  //   brand: "anthropic",
+  //   icon: Anthropic,
+  // },
 
   {
     name: "OpenAI - GPT-3.5-turbo-16k",
