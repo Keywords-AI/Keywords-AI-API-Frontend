@@ -38,7 +38,6 @@ export const UserSettings = connect(
     distpatch(setTheme(checked ? "dark" : "light"));
   };
   const onSubmit = async (data) => {
-    console.log(data);
     if (
       data.first_name === "" ||
       data.last_name === "" ||

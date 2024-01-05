@@ -69,7 +69,7 @@ export const getDashboardData = () => {
         }
       })
       .then((data) => {
-        data = data.filter((item) => item.error_counts === 0);
+        // data = data.filter((item) => item.error_counts === 0);
         dispatch(setDashboardData(data));
         const dataList = fillMissingDate(
           data?.data,
@@ -148,7 +148,7 @@ export const fillMissingDate = (data, dateGroup) => {
           dayDate.getMonth() + 1
         )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear()}`;
         const found = data.find(
-          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
+          (d) => new Date(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
@@ -179,8 +179,8 @@ export const fillMissingDate = (data, dateGroup) => {
         const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
 
         const found = data.find((d) => {
-          const date = localeUtc(d.date_group);
-          return date.getDate() === day;
+          const date = new Date(d.date_group);
+          return date.getDate() === day && date.getMonth() === now.getMonth();
         });
 
         newDataArray.push(

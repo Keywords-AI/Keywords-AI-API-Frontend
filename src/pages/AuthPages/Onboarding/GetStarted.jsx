@@ -4,6 +4,7 @@ import cn from "src/utilities/classMerge";
 import { updateUser } from "src/store/actions";
 import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { TitleAuth } from "src/components/Titles";
 import { REDIRECT_URI } from "src/utilities/navigation";
 
 const mapStateToProps = (state) => ({});
@@ -16,18 +17,20 @@ export const GetStarted = connect(
   return (
     <div
       className={cn(
-        "flex-col self-stretch flex-grow justify-center gap-sm items-center",
+        "flex-col self-stretch flex-grow justify-start gap-sm items-center",
         show ? "visible" : "invisible"
       )}
     >
       <TitleAuth
         title="Setup Complete!"
+        text="text-sm-regular"
         subtitle={"Kickstart your journey to smarter LLM usage with Keywords AI."}
-        align="items-center"
+        align="items-center text-center"
       />
       <Button
         variant="r4-primary"
         text="Get started"
+        width="w-full"
         onClick={() => {
           updateUser({ onboarded: true });
           navigate(REDIRECT_URI);

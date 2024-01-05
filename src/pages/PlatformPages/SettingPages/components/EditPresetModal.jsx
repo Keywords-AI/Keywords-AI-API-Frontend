@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Pencil } from "src/components";
 import { Modal } from "src/components/Dialogs";
 import { CheckboxInput } from "src/components/Inputs";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { updateUser } from "src/store/actions";
 import { models } from "src/utilities/constants";
+import { flattenObject } from "src/utilities/objectProcessing";
 
 export default function EditPresetModal() {
   const {
@@ -16,19 +17,9 @@ export default function EditPresetModal() {
   } = useForm();
   const dispatch = useDispatch();
   const onSubmit = async (data) => {
-    try {
-      console.log(data);
-      if (typeof data.custom_preset_models ==="boolean") {
-        data.custom_preset_models = [];
-      };
-      if (typeof data.custom_preset_models ==="string") {
-        data.custom_preset_models = [data.custom_preset_models];
-      };
-      dispatch(updateUser({ ...data }));
-      setOpen(false);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(data);
+    dispatch(updateUser({ custom_preset_models: data.custom_preset_models }));
+    setOpen(false);
   };
   const [open, setOpen] = React.useState(false);
   const previousSelectedModels =
@@ -57,9 +48,9 @@ export default function EditPresetModal() {
           <CheckboxInput
             key={index}
             text={model.name}
-            value={model.value}
-            checked={previousSelectedModels.includes(model.name)}
+            checked={previousSelectedModels.includes(model.value)}
             {...register("custom_preset_models")}
+            value={model.value}
           />
         ))}
         <div className="flex justify-end items-center gap-xs self-stretch flex-1">

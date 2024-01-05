@@ -13,7 +13,7 @@ import { Button } from "src/components";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.user.organization_name, //not working
+  orgName: state.organization.name,
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,
@@ -73,6 +73,9 @@ function DashboardNotConnected({
     getDashboardData();
     setDateData(summary_type);
   }, [summary_type]);
+  useEffect(()=>{
+    getDashboardData();
+  }, [])
 
   const setSummaryType = (summary_type) => {
     // Wrapper, for cleaner code
@@ -97,7 +100,7 @@ function DashboardNotConnected({
       title: "Average latency",
       number: (
         <>
-          <span>${summary.average_latency?.toFixed(3) || 0} </span>
+          <span>{summary.average_latency?.toFixed(3) || 0} </span>
           <span className="text-sm-regular text-gray-4">ms</span>
       </>
       ),
@@ -114,7 +117,7 @@ function DashboardNotConnected({
     {
       icon: Cost,
       title: "Cost",
-      number: `$${summary.total_cost?.toFixed(5) || 0}`,
+      number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
       dataKey: "total_cost",
     },
@@ -125,7 +128,7 @@ function DashboardNotConnected({
       <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
         <div className="flex flex-row justify-between w-full self-stretch">
           <div className="flex flex-col gap-xxxs">
-            <span className="text-sm-regular text-gray-3">{orgName}</span>
+            <span className="text-sm-regular text-gray-3">{orgName || "Organization"}</span>
             <span className="display-sm">Welcome, {firstName}</span>
           </div>
           <ButtonGroup buttons={buttons} />
