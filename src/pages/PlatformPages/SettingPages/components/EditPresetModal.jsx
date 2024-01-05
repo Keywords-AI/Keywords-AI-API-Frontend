@@ -18,11 +18,7 @@ export default function EditPresetModal() {
   const dispatch = useDispatch();
   const onSubmit = async (data) => {
     try {
-      data = flattenObject(data);
-      console.log(data);
-
-      let modelList = Object.keys(data).filter((key) => data[key] === true);
-      console.log(modelList);
+      let modelList = Object.keys(data).filter((key) => data[key] == true);
       dispatch(updateUser({ custom_preset_models: modelList }));
       setOpen(false);
     } catch (error) {

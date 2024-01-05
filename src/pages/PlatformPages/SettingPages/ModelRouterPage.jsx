@@ -10,8 +10,9 @@ import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
-  customPresetModels: state.user.custom_preset_models,
   userPresetOption: state.user.preset_option,
+  userPresetModels: state.user.preset_models,
+  customPresetModels: state.user.custom_preset_models,
 });
 const mapDispatchToProps = { updateUser };
 
@@ -22,22 +23,16 @@ export const ModelRouterPage = connect(
   ({
     dynamicRoutingEnabled,
     updateUser,
-    customPresetModels,
     userPresetOption,
+    customPresetModels,
   }) => {
-    console.log(userPresetOption);
-    const [presetOption, setPresetOption] = React.useState(userPresetOption);
     const [dynamicRouting, setDynamicRouting] = React.useState(
       dynamicRoutingEnabled
     );
     useEffect(() => {
       setDynamicRouting(dynamicRoutingEnabled);
     }, [dynamicRoutingEnabled]);
-    useEffect(() => {
-      if (userPresetOption) {
-        setPresetOption(userPresetOption);
-      }
-    }, [userPresetOption]);
+
     const handleToggleDynamicRouting = () => {
       setDynamicRouting(!dynamicRouting);
       updateUser({ dynamic_routing_enabled: !dynamicRouting });
@@ -47,24 +42,18 @@ export const ModelRouterPage = connect(
       handleSubmit,
       formState: { errors },
     } = useForm();
-    const onSubmit = async (data) => {
-      console.log(data);
+
+    const handleRadioChecked = (e, presetOption) => {
+      if (presetOption !== "custom_models") {
+        let modelList = e.target.value.split(",");
+        updateUser({
+          preset_option: presetOption,
+          preset_models: modelList,
+        });
+      }
+      updateUser({ preset_option: presetOption });
     };
-    const handleRadioChecked = (e) => {
-      const presetModelsString = e.target.value;
-      const presetModels = presetModelsString.split(",");
-      const preset_models = models
-        .filter((model) => {
-          return presetModels.includes(model.value);
-        })
-        .map((model) => model.value);
-      console.log(presetOption);
-      updateUser({ preset_models });
-    };
-    const customDisplayModels = models.filter((model) => {
-      const filterList = customPresetModels || [];
-      return filterList.includes(model.value);
-    });
+
     return (
       <PageContent
         title={
@@ -92,10 +81,7 @@ export const ModelRouterPage = connect(
             title="Presets"
             subtitle="Use the recommended model preset or build custom presets for dynamic routing."
           />
-          <form
-            className="flex flex-col items-start gap-xs w-full"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          <form className="flex flex-col items-start gap-xs w-full">
             <ModelPresetCard
               title="All models"
               models={models}
@@ -103,33 +89,29 @@ export const ModelRouterPage = connect(
               {...register("model_preset")}
               hasButton={false}
               onChange={(e) => {
-                handleRadioChecked(e);
-                setPresetOption("all_models");
-                updateUser({ preset_option: "all_models" });
+                handleRadioChecked(e, "all_models");
               }}
-              checked={presetOption === "all_models"}
+              checked={userPresetOption === "all_models"}
             />
             <ModelPresetCard
               title="Recommended"
               {...register("model_preset")}
               hasButton={false}
               onChange={(e) => {
-                handleRadioChecked(e);
-                setPresetOption("recommended_models");
-                updateUser({ preset_option: "recommended_models" });
+                handleRadioChecked(e, "recommended_models");
               }}
-              checked={presetOption === "recommended_models"}
+              checked={userPresetOption === "recommended_models"}
             />
             <ModelPresetCard
               title="Custom"
               {...register("model_preset")}
+              models={models.filter((model) =>
+                customPresetModels?.includes(model.value)
+              )}
               onChange={(e) => {
-                handleRadioChecked(e);
-                setPresetOption("custom_models");
-                updateUser({ preset_option: "custom_models" });
+                handleRadioChecked(e, "custom_models");
               }}
-              models={customDisplayModels}
-              checked={presetOption === "custom_models"}
+              checked={userPresetOption === "custom_models"}
             />
             {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */}
           </form>
