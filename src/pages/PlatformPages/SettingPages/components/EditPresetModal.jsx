@@ -19,13 +19,7 @@ export default function EditPresetModal() {
   const onSubmit = async (data) => {
     console.log(data);
     dispatch(updateUser({ custom_preset_models: data.custom_preset_models }));
-    try {
-      let modelList = Object.keys(data).filter((key) => data[key] == true);
-      dispatch(updateUser({ custom_preset_models: modelList }));
-      setOpen(false);
-    } catch (error) {
-      console.log(error);
-    }
+    setOpen(false);
   };
   const [open, setOpen] = React.useState(false);
   const previousSelectedModels =

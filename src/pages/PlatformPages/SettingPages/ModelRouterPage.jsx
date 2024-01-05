@@ -44,6 +44,7 @@ export const ModelRouterPage = connect(
     } = useForm();
 
     const handleRadioChecked = (e, presetOption) => {
+      console.log(e.target.value);
       if (presetOption !== "custom_models") {
         let modelList = e.target.value.split(",");
         updateUser({
@@ -51,7 +52,10 @@ export const ModelRouterPage = connect(
           preset_models: modelList,
         });
       } else {
-        updateUser({ preset_option: presetOption, custom_preset_models:user.custom_preset_models });
+        updateUser({
+          preset_option: presetOption,
+          custom_preset_models: customPresetModels,
+        });
       }
     };
 
@@ -86,7 +90,6 @@ export const ModelRouterPage = connect(
             <ModelPresetCard
               title="All models"
               models={models}
-              hideModels={true}
               {...register("model_preset")}
               hasButton={false}
               onChange={(e) => {
