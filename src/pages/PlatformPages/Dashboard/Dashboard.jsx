@@ -100,7 +100,7 @@ function DashboardNotConnected({
       title: "Average latency",
       number: (
         <>
-          <span>${summary.average_latency?.toFixed(3) || 0} </span>
+          <span>{summary.average_latency?.toFixed(3) || 0} </span>
           <span className="text-sm-regular text-gray-4">ms</span>
       </>
       ),
@@ -117,7 +117,7 @@ function DashboardNotConnected({
     {
       icon: Cost,
       title: "Cost",
-      number: `$${summary.total_cost?.toFixed(5) || 0}`,
+      number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
       dataKey: "total_cost",
     },
