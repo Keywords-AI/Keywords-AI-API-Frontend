@@ -91,6 +91,7 @@ export const ModelRouterPage = connect(
               title="All models"
               models={models}
               {...register("model_preset")}
+              hideModels
               hasButton={false}
               onChange={(e) => {
                 handleRadioChecked(e, "all_models");
