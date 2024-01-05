@@ -90,7 +90,6 @@ export const PrioritizeObj = connect(mapStateToProps, mapDispatchToProps)(({
           />
           {isOtherChecked && <TextInput
             placeholder="Please specify"
-            required={isOtherChecked}
             {...register("other_objective")}
           />}
         </div>
