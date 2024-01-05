@@ -105,7 +105,7 @@ export const fillMissingDate = (data, dateGroup) => {
   // new Date creates a date object in local timezone
   const localeUtc = (dateStr) => {
     const date = new Date(dateStr);
-    return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
   }
   const handleDailyCase = () => {
     const now = new Date();
