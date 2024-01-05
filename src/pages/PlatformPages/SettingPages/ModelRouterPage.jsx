@@ -50,8 +50,9 @@ export const ModelRouterPage = connect(
           preset_option: presetOption,
           preset_models: modelList,
         });
+      } else {
+        updateUser({ preset_option: presetOption, custom_preset_models:user.custom_preset_models });
       }
-      updateUser({ preset_option: presetOption });
     };
 
     return (

@@ -17,6 +17,8 @@ export default function EditPresetModal() {
   } = useForm();
   const dispatch = useDispatch();
   const onSubmit = async (data) => {
+    console.log(data);
+    dispatch(updateUser({ custom_preset_models: data.custom_preset_models }));
     try {
       let modelList = Object.keys(data).filter((key) => data[key] == true);
       dispatch(updateUser({ custom_preset_models: modelList }));
@@ -53,7 +55,8 @@ export default function EditPresetModal() {
             key={index}
             text={model.name}
             checked={previousSelectedModels.includes(model.value)}
-            {...register(model.value)}
+            {...register("custom_preset_models")}
+            value={model.value}
           />
         ))}
         <div className="flex justify-end items-center gap-xs self-stretch flex-1">

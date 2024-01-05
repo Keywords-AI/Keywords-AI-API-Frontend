@@ -31,7 +31,7 @@ const colors = [
 export const models = [
   {
     name: "OpenAI - GPT-3.5-turbo",
-    value: "gpt-3_5-turbo",
+    value: "gpt-3.5-turbo",
     brand: "openai",
     icon: OpenAI,
   },
@@ -61,7 +61,7 @@ export const models = [
   },
   {
     name: "Claude Instant 1.2",
-    value: "claude-instant-1_2",
+    value: "claude-instant-1.2",
     brand: "anthropic",
     icon: Anthropic,
   },
@@ -92,8 +92,8 @@ export const models = [
   // },
 
   {
-    name: "OpenAI - GPT-3_5-turbo-16k",
-    value: "gpt-3_5-turbo-16k",
+    name: "OpenAI - GPT-3.5-turbo-16k",
+    value: "gpt-3.5-turbo-16k",
     brand: "openai",
     icon: OpenAI,
   },
