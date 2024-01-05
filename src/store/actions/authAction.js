@@ -51,42 +51,40 @@ export const signup = (data = {}) => {
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
-      fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
-        // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({ email, password, username: email }),
-        credentials: "include",
+    fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
+      // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify({ email, password, username: email }),
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          // Convert Headers object to a simple key-value object
+          const headers = res.headers;
+          let headersObj = {};
+          headers.forEach((value, key) => {
+            headersObj[key] = value;
+          });
+          // Now headersObj is a regular object and can be converted to JSON
+          const responseJson = await res.json();
+          localStorage.setItem("access", responseJson.access);
+          localStorage.setItem("refresh", responseJson.refresh);
+          dispatch({ type: "LOGIN_SUCCESS", payload: responseJson }); // dispatch a success action
+          dispatch(dispatchNotification({ title: "Logged in successfully!" }));
+          const searchParams = new URLSearchParams(window.location.search);
+          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
+        } else {
+          const responseJson = await res.json();
+          throw new Error(responseJson.detail);
+        }
       })
-        .then(async (res) => {
-          if (res.ok) {
-            // Convert Headers object to a simple key-value object
-            const headers = res.headers;
-            let headersObj = {};
-            headers.forEach((value, key) => {
-              headersObj[key] = value;
-            });
-            // Now headersObj is a regular object and can be converted to JSON
-            const responseJson = await res.json();
-            localStorage.setItem("access", responseJson.access);
-            localStorage.setItem("refresh", responseJson.refresh);
-            dispatch({ type: "LOGIN_SUCCESS", payload: responseJson }); // dispatch a success action
-            dispatch(dispatchNotification({ title: "Logged in successfully!" }));
-            const searchParams = new URLSearchParams(window.location.search);
-            window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
-          } else {
-            const responseJson = await res.json();
-            throw new Error(responseJson.detail);
-          }
-        })
-        .catch((error) => {
-          dispatch(
-            dispatchNotification({ type: "error", title: error.message })
-          );
-        });
+      .catch((error) => {
+        dispatch(dispatchNotification({ type: "error", title: error.message }));
+      });
   };
 };
 
@@ -197,8 +195,12 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  const hasAccessToken = retrieveAccessToken()? true : false;
-  return hasAccessToken|| (user?.id !== null && user?.id !== undefined);
+    
+    const hasAccessToken = retrieveAccessToken() ? true : false;
+    if (user) {
+      return (user?.id !== null && user?.id !== undefined)
+    }
+    else hasAccessToken;
 };
 
 export const resetPassword = (
@@ -380,7 +382,6 @@ export const resendActivationEmail = (email, handleSuccess, handleError) => {
       .catch((error) => console.log(error));
   };
 };
-
 
 export const saveAllUsers = () => {
   return (dispatch) => {
