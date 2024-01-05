@@ -100,7 +100,6 @@ export const IdentifyUseCase = connect(mapStateToProps, mapDispatchToProps)(({
           />
           {isOtherChecked && <TextInput
             placeholder="Please specify"
-            required={isOtherChecked}
             {...register("other_use_case")}
           />}
         </div>

@@ -27,7 +27,7 @@ export const setOrgName = (orgName) => {
 
 export const addMember = (member) => {
   return (dispatch) => {
-    dispatch({ type: ADD_MEMBER, payload: member });
+    dispatch({ type: ADD_MEMBER, payload: {member, pending: true} });
   };
 };
 
@@ -123,14 +123,16 @@ export const sendInvitation = (data, resend = false) => {
             title: "Invitation sent to " + data.email,
           })
         );
-        console.log(data);
+        const responseJson = await res.json()
+        const payLoad = {
+          ...responseJson.temp_role,
+          role: responseJson.temp_role,
+        }
+        console.log(payLoad);
         if (!resend) { // Only add member on UI if it is first time sending
           dispatch({
             type: ADD_MEMBER,
-            payload: {
-              first_name: data.email,
-              ...data,
-            },
+            payload: payLoad,
           });
         }
       } else {

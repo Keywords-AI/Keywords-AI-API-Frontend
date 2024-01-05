@@ -31,6 +31,7 @@ const AlertsFallbackPageN = ({
 }) => {
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
+  const [currentFallbackModels, setCurrentFallbackModels] = React.useState(fallbackModels || []);
   const [systemEnable, setSystemEnable] = React.useState(
     systemFallbackeEnabled
   );
@@ -110,7 +111,7 @@ const AlertsFallbackPageN = ({
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
                 choices={models}
-                defaultValue={fallbackModels?.[0]}
+                defaultValue={currentFallbackModels?.[0]}
                 placeholder="Select model #1"
               />
               <SelectInput

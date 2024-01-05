@@ -5,6 +5,7 @@ import {
   SET_LATENCY_DATA,
   SET_REQUEST_COUNT_DATA,
   SET_DATE_DATA,
+  SET_ERROR_DATA,
 } from "src/store/actions";
 const initState = {
   data: [
@@ -34,6 +35,7 @@ const initState = {
   requestCountData: [
     // {number_of_requests, date_group}
   ],
+  errorCountData: [],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -50,6 +52,8 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, requestCountData: action.payload };
     case SET_DATE_DATA:
       return { ...state, dateData: action.payload };
+    case SET_ERROR_DATA:
+      return { ...state, errorCountData: action.payload };
     default:
       return state;
   }
