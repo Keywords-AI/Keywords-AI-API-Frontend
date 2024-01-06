@@ -13,7 +13,7 @@ import { Button } from "src/components";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.organization?.name,
+  organization: state.organization,
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,
@@ -57,7 +57,7 @@ const WelcomeState = () => {
 
 function DashboardNotConnected({
   summary,
-  orgName,
+  organization,
   firstName,
   requestCountData,
   latencyData,
@@ -124,7 +124,7 @@ function DashboardNotConnected({
       <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
         <div className="flex flex-row justify-between w-full self-stretch">
           <div className="flex flex-col gap-xxxs">
-            <span className="text-sm-regular text-gray-3">{orgName || "Organization"}</span>
+            <span className="text-sm-regular text-gray-3">{organization?.name || "Organization"}</span>
             <span className="display-sm">Welcome, {firstName}</span>
           </div>
           <ButtonGroup buttons={buttons} />

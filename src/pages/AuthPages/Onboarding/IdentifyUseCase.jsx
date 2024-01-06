@@ -31,7 +31,7 @@ export const IdentifyUseCase = connect(mapStateToProps, mapDispatchToProps)(({
   const controlSubmit = (e) => {
     e.preventDefault();
     handleSubmit(onSubmit)(e);
-}
+  }
   const onSubmit = (data) => {
     if (typeof data.product_use_cases === "boolean") {
       data.product_use_cases = null;
@@ -39,7 +39,7 @@ export const IdentifyUseCase = connect(mapStateToProps, mapDispatchToProps)(({
       // and will be handled by the backend
       dispatchNotification({
         type: "error",
-        title: "Please select at least one use case"
+        title: "This field cannot be empty"
       })
       return;
     } else if (typeof data.product_use_cases === "string") {
@@ -48,7 +48,15 @@ export const IdentifyUseCase = connect(mapStateToProps, mapDispatchToProps)(({
     if (isOtherChecked) {
       data.product_use_cases.push(data.other_use_case);
     }
-    // updateOrganization(data, buttonAction);
+    if (data.product_use_cases?.length > 0) {
+      updateOrganization(data, buttonAction);
+    } else {
+      console.log(data);
+      dispatchNotification({
+        type: "error",
+        title: "Please select at least one use case"
+      })
+    }
   };
   return (
     // <div className="relative">

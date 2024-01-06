@@ -22,6 +22,7 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
 }) => {
   const { register, handleSubmit, watch } = useForm();
   const [orgName, setOrgName] = React.useState(organization?.name || "");
+  const [orgSize, setOrgSize] = React.useState(organization?.organization_size || 1);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -64,7 +65,7 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
               { name: "51-200", value: 51 },
               { name: "200+", value: 200 },
             ]}
-            defaultValue={organization?.organization_size || 1}
+            defaultValue={orgSize}
             optionsWidth="w-[420px]"
           />
         </>
