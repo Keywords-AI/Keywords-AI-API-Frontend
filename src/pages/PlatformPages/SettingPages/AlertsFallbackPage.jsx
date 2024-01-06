@@ -52,7 +52,6 @@ const AlertsFallbackPageN = ({
     setFallbackEnabled(!fallbackEnabled);
   };
   const onSubmit = (data) => {
-    console.log(data);
     const fallback_models = [];
     Object.keys(data).forEach((key) => {
       if (key.includes("fall_back_model")) {
