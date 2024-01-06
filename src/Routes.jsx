@@ -106,7 +106,11 @@ const Routes = ({ getUser, user }) => {
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
           path: "onboarding/:curr_step?",
-          element: <OnboardingPage />,
+          element: isUserLoggedIn ? (
+            <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+          ) : (
+            <Navigate to="/login" />
+          ),
         },
         {
           path: "",
