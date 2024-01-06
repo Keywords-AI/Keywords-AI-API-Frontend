@@ -108,7 +108,7 @@ export const updateOrganization = (update_fields, callback = () => {}) => {
   };
 };
 
-export const sendInvitation = (data, resend = false) => {
+export const sendInvitation = (data, callback, resend = false) => {
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
@@ -117,6 +117,7 @@ export const sendInvitation = (data, resend = false) => {
       data: data,
     }).then(async (res) => {
       if (res.ok) {
+        callback();
         dispatch(
           dispatchNotification({
             type: "success",
