@@ -1,10 +1,10 @@
 import requests
 
-stream = False
-local = True
+stream = True
+local = False
 def demo_call(input, 
               model="gpt-4" ,
-              token="WsbFn2aC.gWDu4UQAT2890RXSlhaV5LvtDcI37Bet", 
+              token="jT23ADXU.60oNDZwyXPYHQcXXeExkJuzjhoU86ngF", 
               stream=stream
               ):
     headers = {
@@ -21,7 +21,7 @@ def demo_call(input,
 
         response = requests.post('http://localhost:8000/api/generate/', headers=headers, json=data, stream=stream)
     else:
-        response = requests.post('https://api.keywordsai.co/api/generate/', headers=headers, json=data, stream=stream)
+        response = requests.post('https://api-test.keywordsai.co/api/generate/', headers=headers, json=data, stream=stream)
     return response
 
 messages = "Say 'Hello World'"
