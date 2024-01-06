@@ -13,7 +13,8 @@ const mapDispatchToProps = { updateOrganization, dispatchNotification };
 export const PrioritizeObj = connect(mapStateToProps, mapDispatchToProps)(({
   stepNumber,
   buttonAction = () => { },
-  updateOrganization
+  updateOrganization,
+  dispatchNotification
 }) => {
   const [isOtherChecked, setIsOtherChecked] = useState(false);
   const handleCheckboxChange = (e) => {
@@ -28,9 +29,10 @@ export const PrioritizeObj = connect(mapStateToProps, mapDispatchToProps)(({
   };
   const onSubmit = (data) => {
     if (typeof data.prioritize_objectives === "boolean") {
+      data.prioritize_objectives = [];
       dispatchNotification({
         type: "error",
-        title: "Please select at least one use case"
+        title: "This field cannot be empty"
       })
       return;
     } else if (typeof data.prioritize_objectives === "string") {
@@ -39,7 +41,14 @@ export const PrioritizeObj = connect(mapStateToProps, mapDispatchToProps)(({
     if (isOtherChecked) {
       data.prioritize_objectives.push(data.prioritize_objectives);
     }
-    updateOrganization(data, buttonAction);
+    if (data.prioritize_objectives?.length > 0) {
+      updateOrganization(data, buttonAction);
+    } else {
+      dispatchNotification({
+        type: "error",
+        title: "Please select at least one objective"
+      })
+    }
   }
   return (
     <OnboardingFieldSet
