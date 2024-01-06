@@ -72,7 +72,6 @@ export const UserSettings = connect(
               placeholder="Enter your first name"
               value={firstName}
               {...register("first_name", {
-                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
                 onChange: handleFirstNameChange,
               })}
@@ -82,7 +81,6 @@ export const UserSettings = connect(
               placeholder="Enter your last name"
               value={lastName}
               {...register("last_name", {
-                pattern: /^[a-zA-Z0-9]+$/,
                 minLength: 1,
                 onChange: handleLastNameChange,
               })}
