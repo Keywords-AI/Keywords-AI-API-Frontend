@@ -95,7 +95,7 @@ export const PrioritizeObj = connect(mapStateToProps, mapDispatchToProps)(({
             value="Explore model diversity"
             disabled={selectedCount >= 3 && !selectedOptions.includes("Explore model diversity")}
           />
-          <CheckboxInput
+          <CheckboxInputdash
             text="Monitor LLM applications"
             {...register("prioritize_objectives")}
             value="Monitor LLM applications"

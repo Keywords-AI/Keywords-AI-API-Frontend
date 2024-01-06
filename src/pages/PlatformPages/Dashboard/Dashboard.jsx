@@ -135,7 +135,7 @@ function DashboardNotConnected({
           ))}
         </div>
         <DashboardChart />
-        <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
+        <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
       </div>
     );
 }
