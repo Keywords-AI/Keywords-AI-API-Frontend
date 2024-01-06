@@ -13,7 +13,7 @@ import { Button } from "src/components";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.organization.name,
+  orgName: state.organization?.name,
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,

@@ -8,7 +8,10 @@ import { useForm } from "react-hook-form";
 /*
 @params register: the register function from react-hook-form
 */
-const mapStateToProps = (state) => ({ user: state.user, organization: state.organization });
+const mapStateToProps = (state) => ({ 
+  user: state.user, 
+  organization: state.organization 
+});
 const mapDispatchToProps = { createOrganization };
 export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)(({
   stepNumber,

@@ -195,12 +195,13 @@ export const googleAuthJWT = () => {
 };
 
 export const isLoggedIn = (user) => {
-  if (user) {
-    return user?.id !== null && user?.id !== undefined;
-  } else {
-    const hasAccessToken = retrieveAccessToken() ? true : false;
-    return hasAccessToken;
-  }
+  // if (user) {
+  //   return user?.id !== null && user?.id !== undefined;
+  // } else {
+  //   const hasAccessToken = retrieveAccessToken() ? true : false;
+  //   return hasAccessToken;
+  // }
+  return (user?.id !== null && user?.id !== undefined) || retrieveAccessToken() ? true : false;
 };
 
 export const resetPassword = (
