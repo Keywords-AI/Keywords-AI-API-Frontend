@@ -75,7 +75,7 @@ export const OnboardingPage = connect(
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">
-        {!parseInt(curr_step) === formfields.length + 1 &&<Button
+        {parseInt(curr_step) <= formfields.length + 1 &&<Button
           text={"Sign out"}
           variant={"r18-black"}
           onClick={handleBackButtonClick}
@@ -100,7 +100,7 @@ export const OnboardingPage = connect(
             </React.Fragment>
           )
         })}
-        <GetStarted show={parseInt(curr_step) === formfields.length + 1} />
+        <GetStarted show={parseInt(curr_step) >= formfields.length + 1} />
       </div>
       <StepsBar
         className={cn("absolute bottom-md",

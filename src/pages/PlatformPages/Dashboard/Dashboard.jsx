@@ -13,7 +13,7 @@ import { Button } from "src/components";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
-  orgName: state.organization.name,
+  organization: state.organization,
   firstName: state.user.first_name,
   requestCountData: state.dashboard.requestCountData,
   latencyData: state.dashboard.latencyData,
@@ -57,7 +57,7 @@ const WelcomeState = () => {
 
 function DashboardNotConnected({
   summary,
-  orgName,
+  organization,
   firstName,
   requestCountData,
   latencyData,
@@ -98,14 +98,10 @@ function DashboardNotConnected({
     {
       icon: Speed,
       title: "Average latency",
-      number: (
-        <>
-          <span>{summary.average_latency?.toFixed(3) || 0} </span>
-          <span className="text-sm-regular text-gray-4">ms</span>
-      </>
-      ),
+      number: `${summary.average_latency?.toFixed(3) || 0}` ,
       chartData: latencyData,
       dataKey: "average_latency",
+      unit: true,
     },
     {
       icon: Tokens,
@@ -128,7 +124,7 @@ function DashboardNotConnected({
       <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
         <div className="flex flex-row justify-between w-full self-stretch">
           <div className="flex flex-col gap-xxxs">
-            <span className="text-sm-regular text-gray-3">{orgName || "Organization"}</span>
+            <span className="text-sm-regular text-gray-3">{organization?.name || "Organization"}</span>
             <span className="display-sm">Welcome, {firstName}</span>
           </div>
           <ButtonGroup buttons={buttons} />
@@ -139,7 +135,7 @@ function DashboardNotConnected({
           ))}
         </div>
         <DashboardChart />
-        <TitleStaticSubheading title="Log" subtitle="Coming soon!" />
+        <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
       </div>
     );
 }

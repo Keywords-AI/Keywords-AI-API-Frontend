@@ -7,6 +7,7 @@ export const SET_TOKEN_COUNT_DATA = "SET_TOKEN_COUNT_DATA";
 export const SET_LATENCY_DATA = "SET_LATENCY_DATA";
 export const SET_REQUEST_COUNT_DATA = "SET_REQUEST_COUNT_DATA";
 export const SET_DATE_DATA = "SET_DATE_DATA";
+export const SET_ERROR_DATA = "SET_ERROR_DATA";
 
 export const setDashboardData = (data) => {
   return {
@@ -50,6 +51,13 @@ export const setDateData = (data) => {
   };
 };
 
+export const setErrorData = (data) => {
+  return {
+    type: SET_ERROR_DATA,
+    payload: data,
+  };
+};
+
 export const getDashboardData = () => {
   return (dispatch) => {
     const params = new URLSearchParams(window.location.search);
@@ -70,12 +78,15 @@ export const getDashboardData = () => {
       })
       .then((data) => {
         // data = data.filter((item) => item.error_counts === 0);
+        console.log(data);
         dispatch(setDashboardData(data));
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
         );
-
+        dispatch(
+          setErrorData(sliceChartData(dataList, "date_group", "error_count"))
+        );
         dispatch(
           setCostData(sliceChartData(dataList, "date_group", "total_cost"))
         );
@@ -91,7 +102,10 @@ export const getDashboardData = () => {
         );
         dispatch(
           setRequestCountData(
-            sliceChartData(dataList, "date_group", "number_of_requests")
+            sliceChartData(dataList, "date_group", [
+              "error_count",
+              "number_of_requests",
+            ])
           )
         );
       })
@@ -127,6 +141,7 @@ export const fillMissingDate = (data, dateGroup) => {
               number_of_requests: 0,
               total_cost: 0,
               total_tokens: 0,
+              error_count: 0,
               average_latency: 0,
             }
       );
@@ -148,7 +163,7 @@ export const fillMissingDate = (data, dateGroup) => {
           dayDate.getMonth() + 1
         )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear()}`;
         const found = data.find(
-          (d) => new Date(d.date_group).getDate() === dayDate.getDate()
+          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
@@ -158,6 +173,7 @@ export const fillMissingDate = (data, dateGroup) => {
                 number_of_requests: 0,
                 total_cost: 0,
                 total_tokens: 0,
+                error_count: 0,
                 average_latency: 0,
               }
         );
@@ -179,7 +195,7 @@ export const fillMissingDate = (data, dateGroup) => {
         const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
 
         const found = data.find((d) => {
-          const date = new Date(d.date_group);
+          const date = localeUtc(d.date_group);
           return date.getDate() === day && date.getMonth() === now.getMonth();
         });
 
@@ -191,6 +207,7 @@ export const fillMissingDate = (data, dateGroup) => {
                 number_of_requests: 0,
                 total_cost: 0,
                 total_tokens: 0,
+                error_count: 0,
                 average_latency: 0,
               }
         );
@@ -215,6 +232,7 @@ export const fillMissingDate = (data, dateGroup) => {
                 number_of_requests: 0,
                 total_cost: 0,
                 total_tokens: 0,
+                error_count: 0,
                 average_latency: 0,
               }
         );

@@ -22,10 +22,14 @@ export const AddMemberForm = connect(mapStateToProps, mapDispatchToProps)(({
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
     const onSubmit = async (data) => {
         if (!organization.id) {
-            dispatchNotification({ type: "error", message: "You need to create an organization first" })
+            dispatchNotification({ type: "error", title: "You need to create an organization first" })
             return;
         }
-        sendInvitation({ ...data, organization: organization.id });
+        if (organization?.users?.find((user)=>user.email === data.email)) {
+            dispatchNotification({ type: "error", title: "This user is already a member of your organization" })
+            return;
+        }
+        sendInvitation({ ...data, organization: organization.id }, ()=>{setOpen(false)});
     }
     return (
         <form className="flex-col gap-sm w-full"

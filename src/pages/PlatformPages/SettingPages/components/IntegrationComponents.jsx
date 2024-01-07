@@ -113,6 +113,7 @@ const IntegrationCardNotConnected = ({
   integration,
   setActivatedModels,
   verifyKey,
+  vendor
 }) => {
   const {
     register,
@@ -140,9 +141,9 @@ const IntegrationCardNotConnected = ({
     if (
       !apiKey && apiKeyString // entering new key
     ) {
-      verifyKey({ ...toSubmit, api_key: apiKeyString }, ()=>{setOpen(false)});
+      verifyKey({ ...toSubmit, api_key: apiKeyString }, () => { setOpen(false) });
     } else {
-      createIntegration(toSubmit, ()=>{setOpen(false)});
+      createIntegration(toSubmit, () => { setOpen(false) });
     }
   };
   useEffect(() => {
@@ -172,7 +173,7 @@ const IntegrationCardNotConnected = ({
           </div>
         </fieldset>
         <TextInput
-          type={apiKey ? "text":"password"}
+          type={apiKey ? "text" : "password"}
           {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
           title={
             apiKey ? "API key added" : `Your ${companyName} API key (optional)`
@@ -191,12 +192,14 @@ const IntegrationCardNotConnected = ({
                 icon={Delete}
                 type="button"
                 onClick={() => {
-                  updateIntegration({
-                    api_key: "",
-                    vendor: vendorId,
-                    integration_id: integration.id,
-                    user: user.id,
-                  });
+                  if (integration?.id) {
+                    updateIntegration({
+                      api_key: "",
+                      vendor: vendorId,
+                      integration_id: integration.id,
+                      user: user.id,
+                    });
+                  }
                   setApiKeyString("");
                 }}
               />
@@ -212,6 +215,7 @@ const IntegrationCardNotConnected = ({
               type="button"
               onClick={() => {
                 setOpen(false);
+                setActivatedModels(vendor.integration?.activated_models || []);
               }}
             />
             {!apiKey && apiKeyString ? // new key entering
@@ -270,6 +274,7 @@ export const IntegrationModal = ({ vendor }) => {
     availableModels,
     integration: vendor.integration,
     apiKey: vendor.integration?.api_key_display || "",
+    vendor,
     setActivatedModels,
   };
   return (

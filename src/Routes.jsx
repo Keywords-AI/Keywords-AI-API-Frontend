@@ -63,8 +63,8 @@ const Routes = ({ getUser, user }) => {
     }
   }, [user]);
   // comment the 2 lines below to switch between logged in/out states
-  //const isUserLoggedIn = isLoggedIn(user);
-  const isUserLoggedIn = true;
+  const isUserLoggedIn = isLoggedIn(user);
+  // const isUserLoggedIn = true;
 
   const routes = [
     {
@@ -106,7 +106,11 @@ const Routes = ({ getUser, user }) => {
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
           path: "onboarding/:curr_step?",
-          element: <OnboardingPage />,
+          element: isUserLoggedIn ? (
+            <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+          ) : (
+            <Navigate to="/login" />
+          ),
         },
         {
           path: "",

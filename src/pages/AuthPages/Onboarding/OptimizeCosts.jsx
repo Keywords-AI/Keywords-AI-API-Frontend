@@ -23,7 +23,15 @@ export const OptimizeCosts = connect(
     handleSubmit(onSubmit)(e);
   };
   const onSubmit = (data) => {
-    updateOrganization(data, buttonAction);
+    if (data.monthly_spending && data.budget_goal) {
+      console.log(data);
+      updateOrganization(data, buttonAction);
+    } else {
+      dispatchNotification({
+        type: "error",
+        title: "Please fill out all fields"
+      })
+    }
   };
   return (
     <OnboardingFieldSet
@@ -33,7 +41,7 @@ export const OptimizeCosts = connect(
       fields={
         <>
           <SelectInput
-            {...register("monthly_spending`")}
+            {...register("monthly_spending")}
             title="Monthly LLM spending"
             width="w-full"
             placeholder="Please select"

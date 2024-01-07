@@ -116,14 +116,31 @@ export const generateChild = (page) => {
 export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   /*
   Slice the data to only contain the dataKeyX and dataKeyY
+  datakeyY can be an array of keys:
+  {
+    dataKeyX: "date_group",
+    dataKeyY: ["error_count", "total_cost"]
+  }
   */
   if (!data) return [];
-  return data.map((item) => {
-    return {
-      [dataKeyX]: item[dataKeyX],
-      [dataKeyY]: item[dataKeyY],
-    };
-  });
+  if (dataKeyY && Array.isArray(dataKeyY)) {
+    console.log("dataKeyY is an array")
+    return data.map((item) => {
+      const newItem = {};
+      newItem[dataKeyX] = item[dataKeyX];
+      dataKeyY.forEach((key) => {
+        newItem[key] = item[key] || 0;
+      });
+      return newItem;
+    });
+  } else {
+    return data.map((item) => {
+      return {
+        [dataKeyX]: item[dataKeyX] || 0,
+        [dataKeyY]: item[dataKeyY] || 0,
+      };
+    });
+  }
 };
 
 export const handleSerializerErrors = (errors, callback = () => {}) => {
