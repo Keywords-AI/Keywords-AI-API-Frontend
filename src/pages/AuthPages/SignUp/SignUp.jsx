@@ -54,13 +54,13 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
               variant={"r4-white"}
               width={"w-full"}
             />
-            <Button variant="r4-white" text="Continue with Google"
+            {/* <Button variant="r4-white" text="Continue with Google"
               icon={Google} iconPosition="left"
               bgColor="bg-gray-3"
               textColor="text-gray-5"
               iconSize="md"
               width="w-full" onClick={() => googleLogin()}
-            />
+            /> */}
             <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span

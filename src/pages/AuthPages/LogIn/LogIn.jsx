@@ -80,8 +80,8 @@ const LogIn = ({ login, googleLogin, user }) => {
               variant={"r4-primary"}
               width={"w-full"}
             />
-            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
-              width="w-full" onClick={() => googleLogin()} type="button" />
+            {/* <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
+              width="w-full" onClick={() => googleLogin()} type="button" /> */}
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}
