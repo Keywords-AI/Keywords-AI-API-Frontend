@@ -5,8 +5,7 @@ import { retrieveAccessToken } from "src/utilities/authorization";
 export const createPaymentSession = async (lookupKeys) => {
   // Checkout items
   /* 
-  Product lookup keys will be the stripe lookup_keys
-
+  lookupKeys will be an array of strings, stripe lookup_keys for its price objects
   */
   try {
     const body = {
