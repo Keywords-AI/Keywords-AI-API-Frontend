@@ -18,7 +18,6 @@ const selectEndpoint = () => {
   return "https://api.keywordsai.co/";
 };
 
-const yourURL = process.env.FETCH_ENDPOINT;
 // Make your own .env file as it will be ignored by git
 // set a variabled named FETCH_ENDPOINT
 // Option values are:
