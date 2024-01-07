@@ -2,8 +2,16 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 
-export const createPaymentSession = async (checkoutItems) => {
+export const createPaymentSession = async (lookupKeys) => {
+  // Checkout items
+  /* 
+  Product lookup keys will be the stripe lookup_keys
+
+  */
   try {
+    const body = {
+      lookup_keys: lookupKeys,
+    }
     const response = await fetch(
       `${apiConfig.apiURL}payment/create-payment-session/`,
       {
@@ -13,7 +21,7 @@ export const createPaymentSession = async (checkoutItems) => {
           "X-CSRFToken": getCookie("csrftoken"),
           Authorization: `Bearer ${retrieveAccessToken()}`,
         },
-        body: JSON.stringify(checkoutItems),
+        body: JSON.stringify(body),
       }
     );
     const session = await response.json();
