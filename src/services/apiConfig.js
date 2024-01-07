@@ -1,5 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
+
 const selectEndpoint = () => {
   if (
     window.location.hostname === "localhost" ||
@@ -17,9 +18,18 @@ const selectEndpoint = () => {
   return "https://api.keywordsai.co/";
 };
 
+const yourURL = process.env.FETCH_ENDPOINT;
+// Make your own .env file as it will be ignored by git
+// set a variabled named FETCH_ENDPOINT
+// Option values are:
+// http://localhost:8000/
+// https://api-test.keywordsai.co/
+// https://api.keywordsai.co/
+
+// example .env can be found named .env.example
 const apiConfig = {
-  apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  //  apiURL: "https://api-test.keywordsai.co/", // For anyone who doesn't have backend local server
+  // apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
+  apiURL: process.env.FETCH_ENDPOINT, // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
