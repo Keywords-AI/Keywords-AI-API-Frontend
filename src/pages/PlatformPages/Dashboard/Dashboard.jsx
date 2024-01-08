@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import { ButtonGroup } from "src/components/Buttons";
 import MetricCard from "src/components/Cards/MetricCard";
 import { Quality, Rocket, Cost, Tokens, Speed } from "src/components/Icons";
@@ -7,9 +7,10 @@ import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
 import { connect } from "react-redux";
-import { getDashboardData, setDateData } from "src/store/actions";
+import { getDashboardData, setDateData, setPanelData } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "src/components";
+import {PanelGraph} from "src/components/Sections";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -20,10 +21,12 @@ const mapStateToProps = (state) => ({
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
   notfirstTime: state.user.has_api_call,
+  panelData: state.dashboard.panelData,
 });
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
+  setPanelData,
 };
 
 const WelcomeState = () => {
@@ -65,17 +68,26 @@ function DashboardNotConnected({
   costData,
   getDashboardData,
   notfirstTime,
+  panelData,
+  setPanelData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const summary_type = new URLSearchParams(location.search).get("summary_type");
+  const [isPanel, setIsPanel] = useState(false);
   useEffect(() => {
     getDashboardData();
     setDateData(summary_type);
   }, [summary_type]);
-  useEffect(()=>{
+  useEffect(() => {
     getDashboardData();
-  }, [])
+  }, []);
+
+
+  const handleClick = (data) => {
+    setPanelData(data);
+    setIsPanel(true);
+  };
 
   const setSummaryType = (summary_type) => {
     // Wrapper, for cleaner code
@@ -94,14 +106,16 @@ function DashboardNotConnected({
       number: summary.number_of_requests,
       chartData: requestCountData,
       dataKey: "number_of_requests",
+      onClick: () => (handleClick("Request"))
     },
     {
       icon: Speed,
-      title: "Average latency",
-      number: `${summary.average_latency?.toFixed(3) || 0}` ,
+      title: "Latency",
+      number: `${summary.average_latency?.toFixed(3) || 0}`,
       chartData: latencyData,
       dataKey: "average_latency",
       unit: true,
+      onClick: () => (handleClick("Latency"))
     },
     {
       icon: Tokens,
@@ -109,6 +123,7 @@ function DashboardNotConnected({
       number: summary.total_tokens || 0,
       chartData: tokenCountData,
       dataKey: "total_tokens",
+      onClick: () => (handleClick("Tokens"))
     },
     {
       icon: Cost,
@@ -116,26 +131,33 @@ function DashboardNotConnected({
       number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
       dataKey: "total_cost",
+      onClick: () => (handleClick("Cost"))
     },
   ];
+  const MetricNumber = (panelData) => metrics.find(metric => metric.title === panelData)?.number || 0;
   if (notfirstTime !== undefined && !notfirstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
-        <div className="flex flex-row justify-between w-full self-stretch">
-          <div className="flex flex-col gap-xxxs">
-            <span className="text-sm-regular text-gray-3">{organization?.name || "Organization"}</span>
-            <span className="display-sm">Welcome, {firstName}</span>
+      <div className="flex flex-row w-full">
+        <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
+          <div className="flex flex-row justify-between w-full self-stretch">
+            <div className="flex flex-col gap-xxxs">
+              <span className="text-sm-regular text-gray-3">
+                {organization?.name || "Organization"}
+              </span>
+              <span className="display-sm">Welcome, {firstName}</span>
+            </div>
+            <ButtonGroup buttons={buttons} />
           </div>
-          <ButtonGroup buttons={buttons} />
+          <div className="grid grid-cols-4 gap-md">
+            {metrics.map((metric, index) => (
+              <MetricCard key={index} {...metric} />
+            ))}
+          </div>
+          <DashboardChart />
+          <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
         </div>
-        <div className="grid grid-cols-4 gap-md">
-          {metrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
-          ))}
-        </div>
-        <DashboardChart />
-        <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
+        {isPanel && <PanelGraph metric={panelData} number={MetricNumber(panelData)}/>}
       </div>
     );
 }

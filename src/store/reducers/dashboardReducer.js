@@ -6,9 +6,12 @@ import {
   SET_REQUEST_COUNT_DATA,
   SET_DATE_DATA,
   SET_ERROR_DATA,
+  SET_PANEL_DATA,
+  SET_MODEL_DATA,
+  SET_API_DATA,
 } from "src/store/actions";
 const initState = {
-  data: [
+  dataByDate: [
     // {
     //   date_group: 20,
     //   total_cost: 5.6e-5,
@@ -36,6 +39,17 @@ const initState = {
     // {number_of_requests, date_group}
   ],
   errorCountData: [],
+  panelData: [],
+  modelData: [
+    // {
+    //   model:"",
+    //   total_cost:0,
+    //   total_tokens:0,
+    //   average_latency:0,
+    //   number_of_requests:0,
+    // }
+  ],
+  apiData: [],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -54,6 +68,12 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, dateData: action.payload };
     case SET_ERROR_DATA:
       return { ...state, errorCountData: action.payload };
+    case SET_PANEL_DATA:
+      return { ...state, panelData: action.payload };
+    case SET_MODEL_DATA:
+      return { ...state, modelData: action.payload };  
+    case SET_API_DATA:
+      return { ...state, apiData: action.payload };  
     default:
       return state;
   }
