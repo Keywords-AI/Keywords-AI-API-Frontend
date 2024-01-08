@@ -29,8 +29,10 @@ jobs:
       - name: Build
         run: yarn run build
         env:
-          VITE_PRODUCT_LOOKUP_KEYS: ${{ secrets.VITE_PRODUCT_LOOKUP_KEYS }}
-          VITE_AUTH_ENABLED: ${{ secrets.VITE_AUTH_ENABLED}}
+          VITE_STRIPE_STATER_LOOKUP_KEY: 'keywords_ai_api_starter_plan'
+          VITE_STRIPE_TEAM_LOOKUP_KEY: 'keywords_ai_api_team_plan'
+          VITE_AUTH_ENABLED: 'true'
+          VITE_FETCH_ENDPOINT: 'https://api-test.keywords.ai'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
