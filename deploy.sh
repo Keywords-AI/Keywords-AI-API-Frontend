@@ -1,2 +1,2 @@
 yarn run build
-firebase deploy --project platform
+firebase deploy --only hosting --project platform
