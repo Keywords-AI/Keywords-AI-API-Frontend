@@ -1,5 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
+import { FETCH_ENDPOINT } from "src/utilities/env";
 
 const selectEndpoint = () => {
   if (
@@ -28,7 +29,7 @@ const selectEndpoint = () => {
 // example .env can be found named .env.example
 const apiConfig = {
   // apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  apiURL: import.meta.env.VITE_FETCH_ENDPOINT, // For anyone who doesn't have backend local server
+  apiURL: FETCH_ENDPOINT, // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,

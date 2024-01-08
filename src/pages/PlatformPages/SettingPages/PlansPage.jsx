@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { SmallPricingCard } from 'src/components/Cards'
 import { createPaymentSession } from 'src/services/stripe'
-
-const starterPlanKey = import.meta.env.VITE_STRIPE_STATER_LOOKUP_KEY;
-const teamPlanKey = import.meta.env.VITE_STRIPE_TEAM_LOOKUP_KEY;
+import { STRIPE_STATER_LOOKUP_KEY, STRIPE_TEAM_LOOKUP_KEY } from 'src/utilities/env'
 
 const mapStateToProps = (state) => ({
     userSubscription: state.user.user_subscription,
@@ -57,7 +55,7 @@ export const PlansPage = connect(mapStateToProps, mapDispatchToProps)(({        
                 buttonVariant: "r4-primary",
             },
             buttonOnClick: () => { 
-                createPaymentSession([starterPlanKey])
+                createPaymentSession([STRIPE_STATER_LOOKUP_KEY])
             },
         },
         {
@@ -74,7 +72,7 @@ export const PlansPage = connect(mapStateToProps, mapDispatchToProps)(({        
                 buttonVariant: "r4-primary",
             },
             buttonOnClick: () => {
-                createPaymentSession([teamPlanKey])
+                createPaymentSession([STRIPE_TEAM_LOOKUP_KEY])
              },
         },
         {
