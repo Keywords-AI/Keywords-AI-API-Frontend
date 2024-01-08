@@ -190,3 +190,15 @@ export const flattenObject = (obj) => {
 
   return result;
 };
+
+export const aggregateModelData = (data) => {
+  // data: [{model, total_cost, total_tokens, average_latency, number_of_requests}]
+  if (data.length === 0) return {};
+  // loop through the data and aggregate the data by model
+  const modelMap = data.reduce((totalMap, item) => {
+    const { model, ...rest } = item;
+    totalMap[model] = rest;
+    return totalMap;
+    }, {});
+  return modelMap;
+}
