@@ -35,6 +35,7 @@ const mapStateToProps = (state) => {
   };
 };
 
+
 const mapDispatchToProps = {
   getUser,
 };
@@ -89,10 +90,6 @@ const Routes = ({ getUser, user }) => {
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
-        },
-        {
-          path: "payment",
-          element: <Payment />,
         },
       ],
     },

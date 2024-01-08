@@ -13,6 +13,7 @@ import { ModelRouterPage } from './ModelRouterPage';
 import { UserSettings } from './UserSettingsPage';
 import { Navigate } from 'react-router-dom';
 import { REDIRECT_URI } from 'src/utilities/navigation';
+import { PlansPage } from './PlansPage';
 
 
 
@@ -58,6 +59,11 @@ const pages = [
         // forAdmin: true,
         page: <BillingPage />,
     },
+    {
+        title: "Plans",
+        // forAdmin: true,
+        page: <PlansPage />,
+    }
 ];
 
 
