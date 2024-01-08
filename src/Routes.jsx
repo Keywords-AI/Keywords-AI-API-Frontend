@@ -28,6 +28,7 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
+import Payment from "./pages/PlatformPages/Payment";
 
 const mapStateToProps = (state) => {
   return {
@@ -63,7 +64,8 @@ const Routes = ({ getUser, user }) => {
     }
   }, [user]);
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = import.meta.env.VITE_AUTH_ENABLED === "true"? isLoggedIn(user): true;
+  const isUserLoggedIn =
+    import.meta.env.VITE_AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
   const routes = [
     {
