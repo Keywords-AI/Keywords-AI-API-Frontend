@@ -113,27 +113,33 @@ const CreateFormNotConnected = React.forwardRef(
         onSubmit={handleSubmit(onSubmit)}
       >
         {!apiKey.apiKey ? (
-          <div className="grid gap-sm grid-cols-[1fr,160px]">
-            <TextInput
-              title={"Name (optional)"}
-              width={"w-full"}
-              {...register("name")}
-              // onKeyDown={handleEnter}
-              placeholder={"Key-1"}
-            />
-            <SelectInput
-              title={"Expiry"}
-              optionsWidth={"w-[160px]"}
-              {...register("expiry_date")}
-              // onKeyDown={handleEnter}
-              placeholder={"Key-1"}
-              //This corresponds to the 'Never' option
-              defaultValue={
-                new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
-              }
-              choices={expiryOptions}
-            />
-          </div>
+          !loading ? (
+            <div className="grid gap-sm grid-cols-[1fr,160px]">
+              <TextInput
+                title={"Name (optional)"}
+                width={"w-full"}
+                {...register("name")}
+                // onKeyDown={handleEnter}
+                placeholder={"Key-1"}
+              />
+              <SelectInput
+                title={"Expiry"}
+                optionsWidth={"w-[160px]"}
+                {...register("expiry_date")}
+                // onKeyDown={handleEnter}
+                placeholder={"Key-1"}
+                //This corresponds to the 'Never' option
+                defaultValue={
+                  new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+                }
+                choices={expiryOptions}
+              />
+            </div>
+          ) : (
+            <div className="text-sm-regular text-gray-4">
+              please wait for a quick sec
+            </div>
+          )
         ) : (
           <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
         )}
