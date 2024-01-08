@@ -54,17 +54,38 @@ export function timeSkip(currentTime, deltaTime) {
   return newTime;
 }
 
-export const processKey = (key, actions = () => {}) => {
+export const processKey = (
+  key,
+  actions = () => {},
+  renderStatus = () => {}
+) => {
+  const today = new Date();
+  const expireDate = isNaN(new Date(key.expire_date).getTime())
+    ? "Infinite"
+    : new Date(key.expire_date);
+  // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
+
+  let status = "Active";
+  if (expireDate === "Infinite") {
+    status = "Active";
+  } else if (expireDate < today) {
+    status = "Expired";
+  }
   return {
     ...key,
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
+    Status: renderStatus(status),
     actions: actions(key),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
 };
 
-export const processKeyList = (keyList, actions = () => {}) => {
+export const processKeyList = (
+  keyList,
+  actions = () => {},
+  renderStatus = () => {}
+) => {
   /*
   keyList: [{
     prefix: 1,
@@ -76,7 +97,7 @@ export const processKeyList = (keyList, actions = () => {}) => {
   */
   if (!keyList || !keyList.length) return [];
   return keyList.map((key) => {
-    return processKey(key, actions);
+    return processKey(key, actions, renderStatus);
   });
 };
 
@@ -124,7 +145,7 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   */
   if (!data) return [];
   if (dataKeyY && Array.isArray(dataKeyY)) {
-    console.log("dataKeyY is an array")
+    console.log("dataKeyY is an array");
     return data.map((item) => {
       const newItem = {};
       newItem[dataKeyX] = item[dataKeyX];
