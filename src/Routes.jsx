@@ -21,7 +21,6 @@ import { qaChildren } from "./pages/PlatformPages/QaPages/QaPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
-import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
@@ -29,7 +28,6 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { Payment} from "./pages/PlatformPages/Payment"
 
 const mapStateToProps = (state) => {
   return {
