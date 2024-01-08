@@ -28,7 +28,6 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import Payment from "./pages/PlatformPages/Payment";
 
 const mapStateToProps = (state) => {
   return {
