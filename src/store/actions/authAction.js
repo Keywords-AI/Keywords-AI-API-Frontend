@@ -51,6 +51,7 @@ export const signup = (data = {}) => {
 export const login = (email, password) => {
   return (dispatch) => {
     // Return a promise from the thunk
+    console.log(`${apiConfig.apiURL}auth/jwt/create/`);
     fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
       // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
       method: "POST",
