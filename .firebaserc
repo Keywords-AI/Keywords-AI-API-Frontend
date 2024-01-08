@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "keywords-platform"
+    "default": "keywords-platform",
+    "platform-test": "keywords-platform",
+    "platform": "keywords-platform-production"
   }
 }
