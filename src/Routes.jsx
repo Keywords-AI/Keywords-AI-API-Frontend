@@ -21,7 +21,6 @@ import { qaChildren } from "./pages/PlatformPages/QaPages/QaPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
-import StreamingTextTest from "./pages/PlatformPages/TestPage/TestPage";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
 import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
@@ -29,12 +28,14 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
+import Payment from "./pages/PlatformPages/Payment";
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
   };
 };
+
 
 const mapDispatchToProps = {
   getUser,
@@ -63,12 +64,12 @@ const Routes = ({ getUser, user }) => {
     }
   }, [user]);
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = isLoggedIn(user);
-  // const isUserLoggedIn = true;
+  const isUserLoggedIn =
+    import.meta.env.VITE_AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
   const routes = [
     {
-      path: REDIRECT_URI,
+      path: REDIRECT_URI, // "/platform"
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
         { path: "playground", element: <Playground /> },

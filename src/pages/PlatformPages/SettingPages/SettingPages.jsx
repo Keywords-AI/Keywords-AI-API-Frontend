@@ -13,6 +13,7 @@ import { ModelRouterPage } from './ModelRouterPage';
 import { UserSettings } from './UserSettingsPage';
 import { Navigate } from 'react-router-dom';
 import { REDIRECT_URI } from 'src/utilities/navigation';
+import { PlansPage } from './PlansPage';
 
 
 
@@ -27,11 +28,11 @@ const pages = [
         title: "General",
         page: <SettingsPage />,
     },
-    // {
-    //     title: "Usage",
-    //     // forAdmin: true,
-    //     page: <UsagePage />,
-    // }, feature replaced by dashboard
+    {
+        title: "Usage",
+        // forAdmin: true,
+        page: <UsagePage />,
+    },
     {
         title: "Member",
         forAdmin: true,
@@ -58,6 +59,11 @@ const pages = [
         // forAdmin: true,
         page: <BillingPage />,
     },
+    {
+        title: "Plans",
+        // forAdmin: true,
+        page: <PlansPage />,
+    }
 ];
 
 

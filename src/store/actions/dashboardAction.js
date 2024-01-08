@@ -8,6 +8,9 @@ export const SET_LATENCY_DATA = "SET_LATENCY_DATA";
 export const SET_REQUEST_COUNT_DATA = "SET_REQUEST_COUNT_DATA";
 export const SET_DATE_DATA = "SET_DATE_DATA";
 export const SET_ERROR_DATA = "SET_ERROR_DATA";
+export const SET_PANEL_DATA = "SET_PANEL_DATA";
+export const SET_MODEL_DATA = "SET_MODEL_DATA";
+export const SET_API_DATA = "SET_API_DATA";
 
 export const setDashboardData = (data) => {
   return {
@@ -51,6 +54,28 @@ export const setDateData = (data) => {
   };
 };
 
+export const setPanelData = (data) => {
+  return {
+    type: SET_PANEL_DATA,
+    payload: data,
+  };
+};
+
+
+export const setModelData = (data) => {
+  return {
+    type: SET_MODEL_DATA,
+    payload: data,
+  };
+};
+
+export const setApiData = (data) => {
+  return {
+    type: SET_API_DATA,
+    payload: data,
+  };
+};
+
 export const setErrorData = (data) => {
   return {
     type: SET_ERROR_DATA,
@@ -80,6 +105,7 @@ export const getDashboardData = () => {
         // data = data.filter((item) => item.error_counts === 0);
         console.log(data);
         dispatch(setDashboardData(data));
+
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
@@ -107,6 +133,10 @@ export const getDashboardData = () => {
               "number_of_requests",
             ])
           )
+        );
+
+        dispatch(
+          setModelData(data?.data_by_model)
         );
       })
       .catch((error) => {});
