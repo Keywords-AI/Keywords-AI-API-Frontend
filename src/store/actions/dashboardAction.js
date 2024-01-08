@@ -138,6 +138,9 @@ export const getDashboardData = () => {
         dispatch(
           setModelData(data?.data_by_model)
         );
+        dispatch(
+          setApiData(data?.data_by_key)
+        );
       })
       .catch((error) => {});
   };
