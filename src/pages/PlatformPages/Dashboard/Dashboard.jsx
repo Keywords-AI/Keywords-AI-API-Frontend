@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
-  notfirstTime: state.user.has_api_call,
+  firstTime: !state.organization.has_api_call,
   panelData: state.dashboard.panelData,
 });
 const mapDispatchToProps = {
@@ -67,7 +67,7 @@ function DashboardNotConnected({
   tokenCountData,
   costData,
   getDashboardData,
-  notfirstTime,
+  firstTime,
   panelData,
   setPanelData,
 }) {
@@ -135,8 +135,8 @@ function DashboardNotConnected({
     },
   ];
   const MetricNumber = (panelData) => metrics.find(metric => metric.title === panelData)?.number || 0;
-  if (notfirstTime !== undefined && notfirstTime) return <WelcomeState />;
-  else
+  if (firstTime !== undefined && firstTime) return <WelcomeState />;
+  else 
     return (
       <div className="flex flex-row w-full">
         <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">

@@ -211,3 +211,14 @@ export const safeAccess = (array, index) => {
     return null;
   }
 };
+export const aggregateApiData = (data) => {
+  // data: [{model, total_cost, total_tokens, average_latency, number_of_requests}]
+  if (data.length === 0) return {};
+  // loop through the data and aggregate the data by model
+  const apiMap = data.reduce((totalMap, item) => {
+    const { api, ...rest } = item;
+    totalMap[api] = rest;
+    return totalMap;
+    }, {});
+  return apiMap;
+}
