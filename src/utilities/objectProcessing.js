@@ -202,3 +202,12 @@ export const aggregateModelData = (data) => {
     }, {});
   return modelMap;
 }
+
+
+export const safeAccess = (array, index) => {
+  if (array?.length > index) {
+    return array[index];
+  } else {
+    return null;
+  }
+};
