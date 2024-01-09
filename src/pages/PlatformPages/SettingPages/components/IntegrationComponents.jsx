@@ -46,18 +46,18 @@ export const vendors = {
       { name: "claude-2.1" },
       { name: "claude-2" },
     ],
-    apiPageAddress: "https://platform.openai.com/api-keys",
+    apiPageAddress: "https://console.anthropic.com/account/keys",
     companyLogo: <Anthropic />,
   },
   "AI21 Labs": {
     models: [{ name: "j2-light" }, { name: "j2-mid" }, { name: "j2-ultra" }],
     companyLogo: <Labs />,
-    apiPageAddress: "https://platform.openai.com/api-keys",
+    apiPageAddress: "https://www.aicontentlabs.com/settings/api-keys",
   },
   Cohere: {
     models: [{ name: "command-nightly" }],
     companyLogo: <Cohere />,
-    apiPageAddress: "https://platform.openai.com/api-keys",
+    apiPageAddress: "https://dashboard.cohere.com/api-keys",
   },
   Google: {
     models: [{ name: "chat-bison" }],
