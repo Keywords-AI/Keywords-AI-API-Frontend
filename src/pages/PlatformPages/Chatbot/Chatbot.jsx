@@ -2,14 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import useStream from "src/hooks/useStream";
 import {
-  getConversations, getConversation, createConversation, deleteConversation,
-  abortStreamingTextRequest
+  getConversations,
+  getConversation,
+  createConversation,
+  deleteConversation,
+  abortStreamingTextRequest,
 } from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
-import KeywordsInput from "./components/KeywordsInput/KeywordsInput"
+import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 
@@ -66,9 +69,9 @@ function Chatbot({
   const [promptPopup, setPromptPopup] = useState(false);
   const fileUploadRef = useRef(null);
   const [chatError, setChatError] = useState(null);
-  const { conversationBoxRef, generatingText, setGeneratingText } = useAutoScroll();
+  const { conversationBoxRef, generatingText, setGeneratingText } =
+    useAutoScroll();
   const conversationRef = useRef(conversation);
-
 
   const handleError = (error) => {
     console.log("error", error);
@@ -82,11 +85,11 @@ function Chatbot({
 
   useEffect(() => {
     generateRef.current = generatingText;
-  }, [generatingText])
+  }, [generatingText]);
 
   useEffect(() => {
     getConversations();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -110,11 +113,13 @@ function Chatbot({
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
       <PanelChat />
-      <div className="flex-col self-stretch flex-1 bg-gray-1">
-        <div className="flex text-sm text-gray4 t-c bg-gray2 model-name">
-        </div>
-        <div className="chat-right flex flex-1 bg-gray-5 relative pt-sm pb-lg">
-          <div className="flex-col flex-1 h-[calc(100vh-184px)] overflow-auto" ref={conversationBoxRef}>
+      <div className="flex-col self-stretch flex-1 bg-red-500">
+        <div className="flex text-sm text-gray4 t-c  model-name "></div>
+        <div className="chat-right flex flex-1 bg-gray-1 relative pt-sm pb-lg ">
+          <div
+            className="flex-col flex-1 h-[calc(100vh-184px)] overflow-auto bg-gray-1"
+            ref={conversationBoxRef}
+          >
             {conversation?.messages?.length > 0 ? (
               <>
                 {conversation?.messages?.map((message, index) => (
@@ -138,9 +143,11 @@ function Chatbot({
                     <div className="flex-col justify-center items-center gap-xxxs self-stretch">
                       <div className="flex-row gap-xxs items-center">
                         <HeaderLogo />
-                        <span className="display-xs font-semibold">Keywords AI</span>
+                        <span className="display-xs font-semibold">
+                          Keywords AI
+                        </span>
                       </div>
-                      <span className="text-sm-md text-gray-3"> 
+                      <span className="text-sm-md text-gray-3">
                         Connect to the best model for your prompts.
                       </span>
                     </div>
@@ -148,18 +155,17 @@ function Chatbot({
                 )}
               </>
             )}
-            {streamingText && (
+            {streaming && streamingText && (
               <ChatMessage
-                message={{ content: streamingText, role: 'assistant' }}
+                message={{ content: streamingText, role: "assistant" }}
               />
             )}
           </div>
-          <div
-            className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
+          <div className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
             {(!conversation?.messages ||
               (conversation?.messages?.length === 0 && !streaming)) && (
-                <Sample />
-              )}
+              <Sample />
+            )}
             <div
               style={{
                 position: "relative",
@@ -169,7 +175,8 @@ function Chatbot({
               <KeywordsInput />
             </div>
             <div className="caption text-gray-4">
-              Keywords AI connects your prompts with the best model automatically.{" "}
+              Keywords AI connects your prompts with the best model
+              automatically.{" "}
               <a href="/platform/doc" className="text-gray-4 underline">
                 Learn more
               </a>
