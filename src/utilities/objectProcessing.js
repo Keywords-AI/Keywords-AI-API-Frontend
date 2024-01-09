@@ -203,6 +203,14 @@ export const aggregateModelData = (data) => {
   return modelMap;
 }
 
+
+export const safeAccess = (array, index) => {
+  if (array?.length > index) {
+    return array[index];
+  } else {
+    return null;
+  }
+};
 export const aggregateApiData = (data) => {
   // data: [{model, total_cost, total_tokens, average_latency, number_of_requests}]
   if (data.length === 0) return {};
@@ -214,11 +222,3 @@ export const aggregateApiData = (data) => {
     }, {});
   return apiMap;
 }
-
-export const safeAccess = (array, index) => {
-  if (array?.length > index) {
-    return array[index];
-  } else {
-    return null;
-  }
-};

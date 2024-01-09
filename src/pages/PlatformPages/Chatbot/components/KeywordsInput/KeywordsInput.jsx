@@ -25,12 +25,18 @@ function KeywordsInput({
   sendMessage,
   abortStreamingTextRequest,
   streaming,
+  handleSend = () => {},
 }) {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const [inputValue, setInputValue] = React.useState("");
-  
-  // const onChange = (e) => { 
-    
+
+  // const onChange = (e) => {
+
   // }
   const onKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -45,12 +51,16 @@ function KeywordsInput({
 
   const [isHovered, setIsHovered] = React.useState(false);
   return (
-    <form className="relative flex-col w-full shadow-border rounded-sm"
+    <form
+      className="relative flex-col w-full shadow-border rounded-sm"
       onSubmit={handleSubmit(onSubmit)}
     >
       <EditableBox
         {...register("message", { required: "This is required" })}
-        className={"rounded-sm text-sm py-xxs px-xs " + (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")}
+        className={
+          "rounded-sm text-sm py-xxs px-xs " +
+          (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")
+        }
         borderless={false}
         placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}
@@ -66,15 +76,14 @@ function KeywordsInput({
           className="absolute right-xs bottom-[11px] cursor-pointer"
         />
       ) : (
-        <IconButton
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-          icon={Send}
-          onClick={() => {
-            handleSend(spanRef.current);
-          }}
-          className="absolute right-xs bottom-[11px] cursor-pointer"
-        />
+        <button>
+          <IconButton
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            icon={Send}
+            className="absolute right-xs bottom-[11px] cursor-pointer"
+          />
+        </button>
       )}
     </form>
   );
