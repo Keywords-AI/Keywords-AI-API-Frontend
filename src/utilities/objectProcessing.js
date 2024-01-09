@@ -214,3 +214,11 @@ export const aggregateApiData = (data) => {
     }, {});
   return apiMap;
 }
+
+export const safeAccess = (array, index) => {
+  if (array?.length > index) {
+    return array[index];
+  } else {
+    return null;
+  }
+};
