@@ -36,8 +36,8 @@ export const PlansPage = connect(
   mapStateToProps,
   mapDispatchToProps
 )(({ userSubscription, organization }) => {
-  const [isYearly, setIsYearly] = useState(false);
-  const [teamPrice, setTeamPrice] = useState("29");
+  const [isYearly, setIsYearly] = useState(true);
+  const [teamPrice, setTeamPrice] = useState("39");
   const cards = [
     {
       title: "Free",
