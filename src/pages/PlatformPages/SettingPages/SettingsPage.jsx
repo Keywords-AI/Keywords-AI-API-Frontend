@@ -5,7 +5,7 @@ import usePost from "src/hooks/usePost";
 import { TextInput, CopyInput } from "src/components/Inputs";
 import { Button } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
-import { setOrgName } from "src/store/actions";
+import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
 import { HoverPopup } from "src/components/Cards";
 
@@ -15,12 +15,14 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   setOrgName,
+  updateOrganization,
   dispatchNotification,
 };
 
 export const SettingPage = ({
   organization,
   setOrgName,
+  updateOrganization,
   dispatchNotification,
 }) => {
   const {
@@ -37,24 +39,13 @@ export const SettingPage = ({
       });
     setCurrName(organization?.name);
   }, [organization?.name]);
-  const { loading, error, data, postData } = usePost({
-    path: `user/update-organization/${organization?.id}/`,
-    method: "PATCH",
-  });
   const onSubmit = (data) => {
     if (currName != organization?.name) {
       setOrgName(data.name || organization?.name);
-      postData(data); // send request
+      updateOrganization(data);
     }
   };
-  useEffect(() => {
-    if (data && !error) {
-      dispatchNotification({
-        title: "Organization name updated",
-        type: "success",
-      });
-    }
-  }, [error, data]);
+
   const handleChange = (e) => {
     // setOrgName(e.target.value);
     setCurrName(e.target.value);

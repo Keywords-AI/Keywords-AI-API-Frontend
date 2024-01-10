@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
-import { updateUser } from "src/store/actions";
+import { updateUser, updateOrganization } from "src/store/actions";
 import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
 import { useForm } from "react-hook-form";
@@ -10,11 +10,11 @@ import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
-  userPresetOption: state.user.preset_option,
-  userPresetModels: state.user.preset_models,
-  customPresetModels: state.user.custom_preset_models,
+  userPresetOption: state.organization?.preset_option,
+  userPresetModels: state.organization?.preset_models,
+  customPresetModels: state.organization?.custom_preset_models,
 });
-const mapDispatchToProps = { updateUser };
+const mapDispatchToProps = { updateUser, updateOrganization};
 
 export const ModelRouterPage = connect(
   mapStateToProps,
@@ -25,6 +25,7 @@ export const ModelRouterPage = connect(
     updateUser,
     userPresetOption,
     customPresetModels,
+    updateOrganization,
   }) => {
     const [dynamicRouting, setDynamicRouting] = React.useState(
       dynamicRoutingEnabled
@@ -35,7 +36,7 @@ export const ModelRouterPage = connect(
 
     const handleToggleDynamicRouting = () => {
       setDynamicRouting(!dynamicRouting);
-      updateUser({ dynamic_routing_enabled: !dynamicRouting });
+      updateOrganization({ dynamic_routing_enabled: !dynamicRouting });
     };
     const {
       register,
@@ -47,12 +48,12 @@ export const ModelRouterPage = connect(
       console.log(e.target.value);
       if (presetOption !== "custom_models") {
         let modelList = e.target.value.split(",");
-        updateUser({
+        updateOrganization({
           preset_option: presetOption,
           preset_models: modelList,
         });
       } else {
-        updateUser({
+        updateOrganization({
           preset_option: presetOption,
           custom_preset_models: customPresetModels,
         });

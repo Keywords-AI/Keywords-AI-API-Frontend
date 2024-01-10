@@ -5,7 +5,7 @@ import { Modal } from "src/components/Dialogs";
 import { CheckboxInput } from "src/components/Inputs";
 import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { updateUser } from "src/store/actions";
+import { updateUser, updateOrganization } from "src/store/actions";
 import { models } from "src/utilities/constants";
 import { flattenObject } from "src/utilities/objectProcessing";
 
@@ -18,7 +18,7 @@ export default function EditPresetModal() {
   const dispatch = useDispatch();
   const onSubmit = async (data) => {
     console.log(data);
-    dispatch(updateUser({ custom_preset_models: data.custom_preset_models }));
+    dispatch(updateOrganization({ custom_preset_models: data.custom_preset_models }));
     setOpen(false);
   };
   const [open, setOpen] = React.useState(false);
