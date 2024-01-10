@@ -28,11 +28,11 @@ const pages = [
         title: "General",
         page: <SettingsPage />,
     },
-    {
-        title: "Usage",
-        // forAdmin: true,
-        page: <UsagePage />,
-    },
+    // {
+    //     title: "Usage",
+    //     // forAdmin: true,
+    //     page: <UsagePage />,
+    // },
     {
         title: "Member",
         forAdmin: true,
