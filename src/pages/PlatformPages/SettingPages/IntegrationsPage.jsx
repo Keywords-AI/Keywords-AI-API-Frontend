@@ -4,7 +4,6 @@ import { IntegrationModal } from "./components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Button } from "src/components/Buttons";
 import { getVendors } from "src/store/actions";
-import CreatePreset from "./components/CreatePreset";
 
 const mapPropsToState = (state) => ({
   vendors: state.integration.vendors,
@@ -43,7 +42,7 @@ const IntegrationsPageNotConnected = ({ vendors }) => {
             }
           })}
         </div>
-        <CreatePreset />
+        
         {/* <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} /> to be built later, not part of next release */}
       </PageParagraph>
     </PageContent>
