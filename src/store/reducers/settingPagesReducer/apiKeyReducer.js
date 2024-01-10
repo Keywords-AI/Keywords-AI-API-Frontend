@@ -6,7 +6,8 @@ import {
   SET_EDITING_KEY,
   UPDATE_EDITING_KEY,
   SET_DELETING_KEY,
-  ClEAR_PREV_API_KEY,
+  CLEAR_PREV_API_KEY,
+  SET_LOADING,
 } from "../../actions/settingPagesActions/apiKeyAction";
 
 const initState = {
@@ -15,6 +16,7 @@ const initState = {
   editingKey: null,
   apiKey: "",
   deletingKey: null,
+  loading: false,
 };
 
 export default function apiKeyReducer(state = initState, action) {
@@ -24,8 +26,14 @@ export default function apiKeyReducer(state = initState, action) {
         ...state,
         newKey: { ...state.newKey, name: action.name },
       };
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.loading,
+      };
     case ADD_KEY:
       const { api_key, ...secretLessKey } = action.key;
+      console.log(api_key)
       return {
         ...state,
         keyList: [...state.keyList, secretLessKey],
@@ -66,7 +74,7 @@ export default function apiKeyReducer(state = initState, action) {
           return key.prefix === action.key?.prefix;
         }),
       };
-    case ClEAR_PREV_API_KEY:
+    case CLEAR_PREV_API_KEY:
       return {
         ...state,
         apiKey: "",

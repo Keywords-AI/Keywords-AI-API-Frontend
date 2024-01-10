@@ -8,6 +8,9 @@ export const refreshToken = () => {
       "Content-Type": "application/json",
       "X-CSRFToken": getCookie("csrftoken"),
     },
+    body: JSON.stringify({
+      refresh: localStorage.getItem("refresh"),
+    }),
     credentials: "include",
   })
     .then(async (res) => {

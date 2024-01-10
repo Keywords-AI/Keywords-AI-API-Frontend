@@ -2,19 +2,21 @@ import React, { useEffect } from "react";
 import { Divider, PageContent, PageParagraph } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
-import { updateUser } from "src/store/actions";
+import { updateUser, updateOrganization } from "src/store/actions";
 import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
 import { useForm } from "react-hook-form";
 import { models } from "src/utilities/constants";
+import CreatePreset from "./components/CreatePreset";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
-  userPresetOption: state.user.preset_option,
-  userPresetModels: state.user.preset_models,
-  customPresetModels: state.user.custom_preset_models,
+  userPresetOption: state.organization?.preset_option,
+  userPresetModels: state.organization?.preset_models,
+  customPresetModels: state.organization?.custom_preset_models,
+  customPresets: state.user.custom_presets,
 });
-const mapDispatchToProps = { updateUser };
+const mapDispatchToProps = { updateUser, updateOrganization};
 
 export const ModelRouterPage = connect(
   mapStateToProps,
@@ -25,6 +27,8 @@ export const ModelRouterPage = connect(
     updateUser,
     userPresetOption,
     customPresetModels,
+    customPresets,
+    updateOrganization,
   }) => {
     const [dynamicRouting, setDynamicRouting] = React.useState(
       dynamicRoutingEnabled
@@ -35,7 +39,7 @@ export const ModelRouterPage = connect(
 
     const handleToggleDynamicRouting = () => {
       setDynamicRouting(!dynamicRouting);
-      updateUser({ dynamic_routing_enabled: !dynamicRouting });
+      updateOrganization({ dynamic_routing_enabled: !dynamicRouting });
     };
     const {
       register,
@@ -47,12 +51,12 @@ export const ModelRouterPage = connect(
       console.log(e.target.value);
       if (presetOption !== "custom_models") {
         let modelList = e.target.value.split(",");
-        updateUser({
+        updateOrganization({
           preset_option: presetOption,
           preset_models: modelList,
         });
       } else {
-        updateUser({
+        updateOrganization({
           preset_option: presetOption,
           custom_preset_models: customPresetModels,
         });
@@ -107,7 +111,7 @@ export const ModelRouterPage = connect(
               }}
               checked={userPresetOption === "recommended_models"}
             />
-            <ModelPresetCard
+            {/* <ModelPresetCard
               title="Custom"
               {...register("model_preset")}
               models={models.filter((model) =>
@@ -117,10 +121,24 @@ export const ModelRouterPage = connect(
                 handleRadioChecked(e, "custom_models");
               }}
               checked={userPresetOption === "custom_models"}
-            />
-            {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */}
+            /> */}
+            {customPresets &&
+              customPresets.map((preset, index) => (
+                <ModelPresetCard
+                  title={preset.preset_name}
+                  {...register(preset.preset_name)}
+                  models={models.filter((model) =>
+                    preset.created_preset_models.includes(model.value)
+                  )}
+                  onChange={(e) => {
+                    handleRadioChecked(e, preset.preset_name);
+                  }}
+                  checked={userPresetOption === preset.preset_name}
+                />
+              ))}
           </form>
         </div>
+        <CreatePreset />
         <Divider />
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading

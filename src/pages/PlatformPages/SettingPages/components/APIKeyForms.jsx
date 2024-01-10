@@ -9,6 +9,7 @@ import {
   setKeyList,
   addKey,
   deleteKey,
+  createApiKey,
   updateEditingKey,
   dispatchNotification,
 } from "src/store/actions";
@@ -20,6 +21,7 @@ import "./specialInput.css"
 const mapStateToProps = (state) => ({
   user: state.user,
   apiKey: state.apiKey,
+  loading: state.apiKey.loading,
 });
 
 const mapDispatchToProps = {
@@ -28,6 +30,7 @@ const mapDispatchToProps = {
   setKeyList,
   deleteKey,
   updateEditingKey,
+  createApiKey,
   dispatchNotification,
 };
 const expiryOptions = [
@@ -67,19 +70,19 @@ const unitOptions = [
   // 'Never' represented by a far future date in the specified format
   {
     name: "per minute",
-    value: 60,
+    value: 1,
   },
 
   // Two weeks from now
   {
     name: "per hour",
-    value: 3600,
+    value: 60,
   },
 
   // One month (approx 30 days) from now
   {
     name: "per day",
-    value: 86400,
+    value: 1440,
   },
 ];
 
@@ -89,15 +92,13 @@ const CreateFormNotConnected = React.forwardRef(
       apiKey,
       setShowForm = () => {},
       setNewKeyName,
-      addKey,
       editingTrigger,
+      createApiKey,
+      loading,
       dispatchNotification,
     },
     ref
   ) => {
-    const { loading, error, data, postData } = usePost({
-      path: `api/create-api-key/`,
-    });
     const {
       register,
       handleSubmit,
@@ -109,22 +110,9 @@ const CreateFormNotConnected = React.forwardRef(
         data.name = "New Key";
       }
       setNewKeyName(data.name);
-      dispatchNotification({
-        title: "Key created"
-      });
-      postData(data);
+      console.log(data);
+      createApiKey(data, editingTrigger);
   };
-    useEffect(() => {
-      if (error) {
-        console.log(error);
-      }
-    }, [error]);
-    useEffect(() => {
-      if (data && !error) {
-        console.log(data);
-        addKey(data, editingTrigger);
-      }
-    }, [data]);
     const handleClose = (e) => {
       e.preventDefault();
       e.stopPropagation();
@@ -199,6 +187,7 @@ const CreateFormNotConnected = React.forwardRef(
                   {...register("rate_limit")}
                   // onKeyDown={handleEnter}
                   placeholder={"None"}
+                  type="number"
                   pseudoElementClass="special-input"
                 />
                 <SelectInput
@@ -209,7 +198,7 @@ const CreateFormNotConnected = React.forwardRef(
                   placeholder={"per minute"}
                   //This corresponds to the 'Never' option
                   choices={unitOptions}
-                  deaultValue={60}
+                  deaultValue={1}
                 />
               </div>}
               <div className="flex flex-row items-center gap-xxs relative">
@@ -225,8 +214,11 @@ const CreateFormNotConnected = React.forwardRef(
                   {...register("spending_limit")}
                   // onKeyDown={handleEnter}
                   placeholder={"$100"}
+                  type="number"
+                  defaultValue={100}
                 />
               </div>}
+
             </React.Fragment>
           ) : (
             <div className="text-sm-regular text-gray-4">

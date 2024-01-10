@@ -279,8 +279,6 @@ export const sendMessage = (msgText) => {
     const { isLoading: streaming } = state.streamingText;
     const systemPrompt = state.chatbot.customPrompt;
     const conversation_id = state.chatbot.conversation.id;
-    console.log(msgText);
-    console.log(conversation_id);
     dispatch(
       createMessage({
         conversation: conversation_id,
