@@ -111,7 +111,7 @@ export const PlansPage = connect(
 
   const handleSwitchChange = (checked) => {
     setIsYearly(checked);
-    setTeamPrice(checked ? "21" : "29");
+    setTeamPrice(checked ? "29" : "39");
   };
 
   return (
@@ -132,7 +132,7 @@ export const PlansPage = connect(
             <span className="text-lg text-gray-4 text-center"> Yearly </span>
             <span className="text-lg text-primary text-center">
               {" "}
-              (25% off){" "}
+              (35% off){" "}
             </span>
           </div>
         </div>
