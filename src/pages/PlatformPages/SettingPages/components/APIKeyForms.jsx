@@ -9,6 +9,7 @@ import {
   setKeyList,
   addKey,
   deleteKey,
+  createApiKey,
   updateEditingKey,
   dispatchNotification,
 } from "src/store/actions";
@@ -20,6 +21,7 @@ import "./specialInput.css"
 const mapStateToProps = (state) => ({
   user: state.user,
   apiKey: state.apiKey,
+  loading: state.apiKey.loading,
 });
 
 const mapDispatchToProps = {
@@ -28,6 +30,7 @@ const mapDispatchToProps = {
   setKeyList,
   deleteKey,
   updateEditingKey,
+  createApiKey,
   dispatchNotification,
 };
 const expiryOptions = [
@@ -89,15 +92,13 @@ const CreateFormNotConnected = React.forwardRef(
       apiKey,
       setShowForm = () => {},
       setNewKeyName,
-      addKey,
       editingTrigger,
+      createApiKey,
+      loading,
       dispatchNotification,
     },
     ref
   ) => {
-    const { loading, error, data, postData } = usePost({
-      path: `api/create-api-key/`,
-    });
     const {
       register,
       handleSubmit,
@@ -112,19 +113,9 @@ const CreateFormNotConnected = React.forwardRef(
       dispatchNotification({
         title: "Key created"
       });
-      postData(data);
+      console.log(data);
+      createApiKey(data, editingTrigger);
   };
-    useEffect(() => {
-      if (error) {
-        console.log(error);
-      }
-    }, [error]);
-    useEffect(() => {
-      if (data && !error) {
-        console.log(data);
-        addKey(data, editingTrigger);
-      }
-    }, [data]);
     const handleClose = (e) => {
       e.preventDefault();
       e.stopPropagation();

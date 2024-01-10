@@ -61,10 +61,8 @@ export const ApiKeyPage = ({
   const handleGenerateNewKey = () => {
     const currentKeyAmount = apiKey.keyList.length;
     const isUserFreeTier =
-      user.user_subscription.plan === "none" ||
-      user.user_subscription.plan === "starter" ||
-      user.user_subscription.plan === "team" ||
-      !user.user_subscription.plan;
+      (user.user_subscription.plan === "none" ||
+      !user.user_subscription.plan) && !user.is_admin;
     if (currentKeyAmount >= 1 && isUserFreeTier) {
       dispatchNotification({
         type: "error",

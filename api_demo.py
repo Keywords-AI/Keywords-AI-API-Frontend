@@ -3,8 +3,8 @@ import requests
 stream = True
 local = False
 def demo_call(input, 
-              model="gpt-4" ,
-              token="jT23ADXU.60oNDZwyXPYHQcXXeExkJuzjhoU86ngF", 
+              model="claude-2.1" ,
+              token="yjr0xgYF.mNbUaPC7jOK3ervtaaOU5lQFuD53Zoja", 
               stream=stream
               ):
     headers = {
