@@ -18,6 +18,8 @@ import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  owner: state.organization?.owner,
+  organization: state.organization,
 });
 const mapDispatchToProps = {
   createIntegration,
@@ -117,6 +119,7 @@ const IntegrationCardNotConnected = ({
   companyName,
   activatedModels,
   availableModels,
+  organization,
   setOpen,
   createIntegration,
   updateIntegration,
@@ -145,7 +148,7 @@ const IntegrationCardNotConnected = ({
     return value || [];
   };
   const onSubmit = (data) => {
-    let toSubmit = { vendor: vendorId, user: user.id, ...data };
+    let toSubmit = { vendor: vendorId, user: user?.id, organization: organization?.id, ...data };
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     // This currently handles update too
     // To update and clarify
@@ -243,7 +246,7 @@ const IntegrationCardNotConnected = ({
                       api_key: "",
                       vendor: vendorId,
                       integration_id: integration.id,
-                      user: user.id,
+                      user: user.id, //Admin could change this too, this records who changed the integration last
                     });
                   }
                   setApiKeyString("");
