@@ -50,9 +50,12 @@ const AlertsFallbackPageN = ({
   const model1 = watch("fall_back_model_1");
   const model2 = watch("fall_back_model_2");
   const model3 = watch("fall_back_model_3");
-
+  
+  const filteredModelsForModel1 = models.filter(
+    (model) => model.value !== model2 && model.value !== model3
+  );
   const filteredModelsForModel2 = models.filter(
-    (model) => model.value !== model1
+    (model) => model.value !== model1 && model.value !== model3
   );
   const filteredModelsForModel3 = models.filter(
     (model) => model.value !== model1 && model.value !== model2
@@ -118,7 +121,7 @@ const AlertsFallbackPageN = ({
                 title="Model #1"
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
-                choices={models}
+                choices={filteredModelsForModel1}
                 defaultValue={currentFallbackModels?.[0]}
                 placeholder="Select model #1"
               />

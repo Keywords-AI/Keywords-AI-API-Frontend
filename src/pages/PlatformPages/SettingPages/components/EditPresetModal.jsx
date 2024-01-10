@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { updateUser, updateOrganization } from "src/store/actions";
 import { models } from "src/utilities/constants";
-import { flattenObject } from "src/utilities/objectProcessing";
 
 export default function EditPresetModal() {
   const {

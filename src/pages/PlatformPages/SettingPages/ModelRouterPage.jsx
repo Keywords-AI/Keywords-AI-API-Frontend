@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { ModelPresetCard } from "src/components/Cards";
 import { useForm } from "react-hook-form";
 import { models } from "src/utilities/constants";
+import CreatePreset from "./components/CreatePreset";
 
 const mapStateToProps = (state) => ({
   dynamicRoutingEnabled: state.user.dynamic_routing_enabled,
@@ -122,6 +123,7 @@ export const ModelRouterPage = connect(
             {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */}
           </form>
         </div>
+        <CreatePreset />
         <Divider />
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading
