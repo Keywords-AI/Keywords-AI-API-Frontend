@@ -14,6 +14,7 @@ const mapStateToProps = (state) => ({
   userPresetOption: state.user.preset_option,
   userPresetModels: state.user.preset_models,
   customPresetModels: state.user.custom_preset_models,
+  customPresets: state.user.custom_presets,
 });
 const mapDispatchToProps = { updateUser };
 
@@ -26,6 +27,7 @@ export const ModelRouterPage = connect(
     updateUser,
     userPresetOption,
     customPresetModels,
+    customPresets,
   }) => {
     const [dynamicRouting, setDynamicRouting] = React.useState(
       dynamicRoutingEnabled
@@ -108,7 +110,7 @@ export const ModelRouterPage = connect(
               }}
               checked={userPresetOption === "recommended_models"}
             />
-            <ModelPresetCard
+            {/* <ModelPresetCard
               title="Custom"
               {...register("model_preset")}
               models={models.filter((model) =>
@@ -118,8 +120,21 @@ export const ModelRouterPage = connect(
                 handleRadioChecked(e, "custom_models");
               }}
               checked={userPresetOption === "custom_models"}
-            />
-            {/* <Button variant="r4-primary" text="Create custom preset" />  //to be added in future, not part of current ver */}
+            /> */}
+            {customPresets &&
+              customPresets.map((preset, index) => (
+                <ModelPresetCard
+                  title={preset.preset_name}
+                  {...register(preset.preset_name)}
+                  models={models.filter((model) =>
+                    preset.created_preset_models.includes(model.value)
+                  )}
+                  onChange={(e) => {
+                    handleRadioChecked(e, preset.preset_name);
+                  }}
+                  checked={userPresetOption === preset.preset_name}
+                />
+              ))}
           </form>
         </div>
         <CreatePreset />
