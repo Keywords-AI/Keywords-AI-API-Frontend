@@ -59,11 +59,11 @@ const pages = [
         // forAdmin: true,
         page: <BillingPage />,
     },
-    // {
-    //     title: "Plans",
-    //     // forAdmin: true,
-    //     page: <PlansPage />,
-    // }
+    {
+        title: "Plans",
+        // forAdmin: true,
+        page: <PlansPage />,
+    }
 ];
 
 
