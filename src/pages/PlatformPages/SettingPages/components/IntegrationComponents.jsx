@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "src/components/Buttons";
 import { TextInput } from "src/components/Inputs";
-import { Delete, Ellipse } from "src/components/Icons";
+import { Delete, Ellipse, Info } from "src/components/Icons";
 import useForwardRef from "src/hooks/useForwardRef";
 import { useForm } from "react-hook-form";
 import { connect } from "react-redux";
-import { VendorCard } from "src/components/Cards";
+import { HoverPopup, VendorCard } from "src/components/Cards";
 import { Modal } from "src/components/Dialogs";
-import { createIntegration, setIntegration, updateIntegration, verifyKey } from "src/store/actions";
-import { OpenAI, Anthropic, Labs, Google, Cohere } from 'src/components/Icons';
+import {
+  createIntegration,
+  setIntegration,
+  updateIntegration,
+  verifyKey,
+} from "src/store/actions";
+import { OpenAI, Anthropic, Labs, Google, Cohere } from "src/components/Icons";
 import { dispatchNotification } from "src/store/actions";
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  owner: state.organization?.owner,
+  organization: state.organization,
 });
 const mapDispatchToProps = {
   createIntegration,
@@ -31,6 +38,7 @@ export const vendors = {
       { name: "gpt-4-32k" },
       { name: "gpt-4-1106-preview" },
     ],
+    apiPageAddress: "https://platform.openai.com/api-keys",
     companyLogo: <OpenAI />,
   },
   Anthropic: {
@@ -40,19 +48,23 @@ export const vendors = {
       { name: "claude-2.1" },
       { name: "claude-2" },
     ],
+    apiPageAddress: "https://console.anthropic.com/account/keys",
     companyLogo: <Anthropic />,
   },
   "AI21 Labs": {
     models: [{ name: "j2-light" }, { name: "j2-mid" }, { name: "j2-ultra" }],
     companyLogo: <Labs />,
+    apiPageAddress: "https://www.aicontentlabs.com/settings/api-keys",
   },
   Cohere: {
     models: [{ name: "command-nightly" }],
     companyLogo: <Cohere />,
+    apiPageAddress: "https://dashboard.cohere.com/api-keys",
   },
   Google: {
     models: [{ name: "chat-bison" }],
     companyLogo: <Google />,
+    apiPageAddress: "https://platform.openai.com/api-keys",
   },
 };
 
@@ -60,10 +72,10 @@ export const CheckBoxButton = React.forwardRef(
   (
     {
       name,
-      register = () => { },
+      register = () => {},
       validationSchema,
       text,
-      onChange = () => { },
+      onChange = () => {},
       checked = false,
     },
     ref
@@ -107,13 +119,15 @@ const IntegrationCardNotConnected = ({
   companyName,
   activatedModels,
   availableModels,
+  organization,
   setOpen,
   createIntegration,
   updateIntegration,
   integration,
   setActivatedModels,
   verifyKey,
-  vendor
+  vendor,
+  apiPageAddress,
 }) => {
   const {
     register,
@@ -134,16 +148,21 @@ const IntegrationCardNotConnected = ({
     return value || [];
   };
   const onSubmit = (data) => {
-    let toSubmit = { vendor: vendorId, user: user.id, ...data };
+    let toSubmit = { vendor: vendorId, user: user?.id, organization: organization?.id, ...data };
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     // This currently handles update too
     // To update and clarify
     if (
-      !apiKey && apiKeyString // entering new key
+      !apiKey &&
+      apiKeyString // entering new key
     ) {
-      verifyKey({ ...toSubmit, api_key: apiKeyString }, () => { setOpen(false) });
+      verifyKey({ ...toSubmit, api_key: apiKeyString }, () => {
+        setOpen(false);
+      });
     } else {
-      createIntegration(toSubmit, () => { setOpen(false) });
+      createIntegration(toSubmit, () => {
+        setOpen(false);
+      });
     }
   };
   useEffect(() => {
@@ -153,13 +172,14 @@ const IntegrationCardNotConnected = ({
   const onChange = (e) => {
     setApiKeyString(e.target.value);
   };
+  const [showInfo, setShowInfo] = useState(false);
   return (
     <>
       <form
         className="flex-col self-stretch gap-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="flex flex-col items-start self-stretch gap-xxs">
+        {/* <fieldset className="flex flex-col items-start self-stretch gap-xxs">
           <span className="text-sm-regular text-gray-4">Available models</span>
           <div className="flex flex-wrap self-stretch gap-xs">
             {availableModels.map((model, index) => (
@@ -171,12 +191,41 @@ const IntegrationCardNotConnected = ({
               />
             ))}
           </div>
-        </fieldset>
+        </fieldset> */}
         <TextInput
           type={apiKey ? "text" : "password"}
           {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
           title={
-            apiKey ? "API key added" : `Your ${companyName} API key (optional)`
+            apiKey ? (
+              "API key"
+            ) : (
+              <div className="flex items-center gap-xxs relative">
+                API key{" "}
+                <IconButton
+                  icon={Info}
+                  onMouseEnter={() => setShowInfo(true)}
+                  onMouseLeave={() =>
+                    setTimeout(() => setShowInfo(false), 5000)
+                  }
+                />
+                {showInfo && (
+                  <HoverPopup
+                    className="absolute bottom-1/2 translate-y-1/2 left-full translate-x-xxs"
+                    text={
+                      <span className="caption text-gray-4">
+                        Retrieve your {companyName} key at{" "}
+                        <a
+                          className="underline cursor-pointer"
+                          href={apiPageAddress}
+                        >
+                          {apiPageAddress}
+                        </a>
+                      </span>
+                    }
+                  />
+                )}
+              </div>
+            )
           }
           width={"w-full"}
           disabled={apiKey ? true : false}
@@ -197,7 +246,7 @@ const IntegrationCardNotConnected = ({
                       api_key: "",
                       vendor: vendorId,
                       integration_id: integration.id,
-                      user: user.id,
+                      user: user.id, //Admin could change this too, this records who changed the integration last
                     });
                   }
                   setApiKeyString("");
@@ -218,12 +267,11 @@ const IntegrationCardNotConnected = ({
                 setActivatedModels(vendor.integration?.activated_models || []);
               }}
             />
-            {!apiKey && apiKeyString ? // new key entering
-              <Button variant="r4-primary"
-                text="Verify Key" />
-              :
+            {!apiKey && apiKeyString ? ( // new key entering
+              <Button variant="r4-primary" text="Verify Key" />
+            ) : (
               <Button variant="r4-primary" text="Save" />
-            }
+            )}
           </div>
         </div>
       </form>
@@ -236,7 +284,13 @@ export const IntegrationCard = connect(
   mapDispatchToProps
 )(IntegrationCardNotConnected);
 
-export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
+export const TitleCard = ({
+  companyLogo,
+  companyName,
+  modelCount,
+  active,
+  apiKey,
+}) => {
   return (
     <div className="flex flex-row items-center gap-xs self-stretch">
       <div className="flex p-xxs items-center w-[40px] h-[40px] rounded-sm bg-gray-5">
@@ -251,9 +305,18 @@ export const TitleCard = ({ companyLogo, companyName, modelCount, active }) => {
       </div>
       <div className="flex flex-col items-start">
         <span className="text-left text-md-medium ">{companyName}</span>
-        <span className="text-sm-regular text-gray-4 text-center">
+        {/* <span className="text-sm-regular text-gray-4 text-center">
           {modelCount} models activated
-        </span>
+        </span> */}
+        {apiKey ? (
+          <span className="text-sm-regular text-gray-4 text-center">
+            API key added
+          </span>
+        ) : (
+          <span className="text-sm-regular text-gray-4 text-center">
+            API key not added
+          </span>
+        )}
       </div>
     </div>
   );
@@ -274,6 +337,7 @@ export const IntegrationModal = ({ vendor }) => {
     availableModels,
     integration: vendor.integration,
     apiKey: vendor.integration?.api_key_display || "",
+    apiPageAddress: vendors[vendor.name] && vendors[vendor.name].apiPageAddress,
     vendor,
     setActivatedModels,
   };

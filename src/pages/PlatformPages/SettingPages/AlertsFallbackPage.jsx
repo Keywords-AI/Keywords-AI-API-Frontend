@@ -31,22 +31,35 @@ const AlertsFallbackPageN = ({
 }) => {
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
-  const [currentFallbackModels, setCurrentFallbackModels] = React.useState(fallbackModels || []);
+  const [currentFallbackModels, setCurrentFallbackModels] = React.useState(
+    fallbackModels || []
+  );
   const [systemEnable, setSystemEnable] = React.useState(
     systemFallbackeEnabled
   );
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
     setSystemEnable(systemFallbackeEnabled);
-  }, [isFallbackEnabled, systemFallbackeEnabled])
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  }, [isFallbackEnabled, systemFallbackeEnabled]);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
   const model1 = watch("fall_back_model_1");
   const model2 = watch("fall_back_model_2");
   const model3 = watch("fall_back_model_3");
-
-  const filteredModelsForModel2 = models.filter(model => model.value !== model1);
-  const filteredModelsForModel3 = models.filter(model => model.value !== model1 && model.value !== model2);
-
+  
+  const filteredModelsForModel1 = models.filter(
+    (model) => model.value !== model2 && model.value !== model3
+  );
+  const filteredModelsForModel2 = models.filter(
+    (model) => model.value !== model1 && model.value !== model3
+  );
+  const filteredModelsForModel3 = models.filter(
+    (model) => model.value !== model1 && model.value !== model2
+  );
 
   const handleToggle = () => {
     setFallbackEnabled(!fallbackEnabled);
@@ -55,12 +68,11 @@ const AlertsFallbackPageN = ({
     const fallback_models = [];
     Object.keys(data).forEach((key) => {
       if (key.includes("fall_back_model")) {
-        if (data[key] !== "" )
-          fallback_models.push(data[key]);
+        if (data[key] !== "") fallback_models.push(data[key]);
       }
-    })
+    });
 
-    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled })
+    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled });
   };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
@@ -109,7 +121,7 @@ const AlertsFallbackPageN = ({
                 title="Model #1"
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
-                choices={models}
+                choices={filteredModelsForModel1}
                 defaultValue={currentFallbackModels?.[0]}
                 placeholder="Select model #1"
               />
@@ -137,18 +149,20 @@ const AlertsFallbackPageN = ({
         )}
       </form>
       <Divider />
-      <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
-        <TitleStaticSubheading
-          title="Safety net"
-          subtitle="If none of the fallback models are responding, automatically fallback to a system assigned model."
-        />
-        <div className="flex flex-row items-start justify-center pt-[3px]">
-          <SwitchButton
-            checked={systemEnable}
-            onCheckedChange={handleSystemFallbackToggle}
+      { fallbackEnabled &&
+        <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
+          <TitleStaticSubheading
+            title="Safety net"
+            subtitle="If none of the fallback models are responding, automatically fallback to a system assigned model."
           />
+          <div className="flex flex-row items-start justify-center pt-[3px]">
+            <SwitchButton
+              checked={systemEnable}
+              onCheckedChange={handleSystemFallbackToggle}
+            />
+          </div>
         </div>
-      </div>
+      }
     </PageContent>
   );
 };

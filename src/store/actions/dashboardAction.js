@@ -194,7 +194,7 @@ export const fillMissingDate = (data, dateGroup) => {
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
-        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear()}`;
+        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear().toString().slice(-2)}`;
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
@@ -224,7 +224,7 @@ export const fillMissingDate = (data, dateGroup) => {
       for (let day = 1; day <= daysInMonth; day++) {
         // Format the date string as MM/DD/YYYY
         const month = formatTimeUnit(now.getMonth() + 1); // Month is 0-indexed
-        const year = now.getFullYear();
+        const year = now.getFullYear().toString().slice(-2);
         const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
 
         const found = data.find((d) => {

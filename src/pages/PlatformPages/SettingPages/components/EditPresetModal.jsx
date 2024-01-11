@@ -5,25 +5,38 @@ import { Modal } from "src/components/Dialogs";
 import { CheckboxInput } from "src/components/Inputs";
 import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { updateUser } from "src/store/actions";
+import { updateUser, updateOrganization } from "src/store/actions";
 import { models } from "src/utilities/constants";
-import { flattenObject } from "src/utilities/objectProcessing";
 
-export default function EditPresetModal() {
+export default function EditPresetModal({
+  previousSelectedModels,
+  presetName,
+}) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
+  const previousCustomPresets = useSelector(
+    (state) => state.user.custom_presets
+  );
   const onSubmit = async (data) => {
     console.log(data);
-    dispatch(updateUser({ custom_preset_models: data.custom_preset_models }));
+    const newCustomPresets = previousCustomPresets.map((preset) => {
+      if (preset.name === presetName) {
+        return {
+          ...preset,
+          created_preset_models: data.custom_preset_models,
+        };
+      }
+      return preset;
+    });
+    dispatch(updateUser({ custom_presets: newCustomPresets }));
     setOpen(false);
   };
   const [open, setOpen] = React.useState(false);
-  const previousSelectedModels =
-    useSelector((state) => state.user.custom_preset_models) || [];
+  previousSelectedModels = previousSelectedModels.map((model) => model.value);
   return (
     <Modal
       open={open}

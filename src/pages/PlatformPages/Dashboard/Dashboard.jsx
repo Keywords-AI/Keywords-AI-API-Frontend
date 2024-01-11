@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { getDashboardData, setDateData, setPanelData } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "src/components";
-import {PanelGraph} from "src/components/Sections";
+import { PanelGraph } from "src/components/Sections";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
-  firstTime: !state.organization.has_api_call,
+  firstTime: !state.organization?.has_api_call,
   panelData: state.dashboard.panelData,
 });
 const mapDispatchToProps = {
@@ -48,9 +48,7 @@ const WelcomeState = () => {
           <Button
             variant="r4-black"
             text="View docs"
-            onClick={() =>
-              (window.location.href = "https://docs.keywordsai.co")
-            }
+            onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
           />
         </div>
       </div>
@@ -83,7 +81,6 @@ function DashboardNotConnected({
     getDashboardData();
   }, []);
 
-
   const handleClick = (data) => {
     setPanelData(data);
     setIsPanel(true);
@@ -106,7 +103,7 @@ function DashboardNotConnected({
       number: summary.number_of_requests,
       chartData: requestCountData,
       dataKey: "number_of_requests",
-      onClick: () => (handleClick("Request"))
+      onClick: () => handleClick("Request"),
     },
     {
       icon: Speed,
@@ -115,7 +112,7 @@ function DashboardNotConnected({
       chartData: latencyData,
       dataKey: "average_latency",
       unit: true,
-      onClick: () => (handleClick("Latency"))
+      onClick: () => handleClick("Latency"),
     },
     {
       icon: Tokens,
@@ -123,7 +120,7 @@ function DashboardNotConnected({
       number: summary.total_tokens || 0,
       chartData: tokenCountData,
       dataKey: "total_tokens",
-      onClick: () => (handleClick("Tokens"))
+      onClick: () => handleClick("Tokens"),
     },
     {
       icon: Cost,
@@ -131,12 +128,13 @@ function DashboardNotConnected({
       number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
       dataKey: "total_cost",
-      onClick: () => (handleClick("Cost"))
+      onClick: () => handleClick("Cost"),
     },
   ];
-  const MetricNumber = (panelData) => metrics.find(metric => metric.title === panelData)?.number || 0;
+  const MetricNumber = (panelData) =>
+    metrics.find((metric) => metric.title === panelData)?.number || 0;
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
-  else 
+  else
     return (
       <div className="flex flex-row w-full">
         <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
@@ -157,7 +155,9 @@ function DashboardNotConnected({
           <DashboardChart />
           <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
         </div>
-        {isPanel && <PanelGraph metric={panelData} number={MetricNumber(panelData)}/>}
+        {isPanel && (
+          <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
+        )}
       </div>
     );
 }

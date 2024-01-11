@@ -43,6 +43,7 @@ export default function chatbotReducer(state = initState, action) {
       return {
         ...state,
         conversations: [...state.conversations, action.payload],
+        conversation: action.payload,
       };
     case DELETE_CONVERSATION:
       const filteredConversations = state.conversations.filter(

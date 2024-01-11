@@ -14,7 +14,6 @@ export const getVendors = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "data");
         dispatch({
           type: GET_VENDORS,
           payload: data,
@@ -50,18 +49,29 @@ export const getIntegrations = () => {
   };
 };
 
-export const createIntegration = (data, callback=()=>{}) => {
+export const createIntegration = (data, callback = () => {}) => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/integrations/",
       data,
       method: "POST",
     })
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
           return response.json();
         } else {
-          handleApiResponseErrors(response, dispatchNotification);
+          const error = await response.json();
+          if (error.detail) {
+            dispatch(
+              dispatchNotification({
+                type: "error",
+                title: error.detail,
+              })
+            );
+          } else {
+            handleApiResponseErrors(response, dispatchNotification);
+          }
+          throw new Error("Something went wrong");
         }
       })
       .then((data) => {
@@ -122,7 +132,7 @@ export const setIntegration = (vendorName, data) => {
   };
 };
 
-export const verifyKey = (data, callback=()=>{}) => {
+export const verifyKey = (data, callback = () => {}) => {
   return (dispatch) => {
     keywordsFetch({
       path: "vendor_integration/validate-api-key/",
@@ -136,8 +146,7 @@ export const verifyKey = (data, callback=()=>{}) => {
               title: "Key verified successfully",
             })
           );
-          dispatch(createIntegration(data));
-          callback();
+          dispatch(createIntegration(data, callback));
           return response.json();
         } else {
           const data = await response.json();
@@ -151,7 +160,6 @@ export const verifyKey = (data, callback=()=>{}) => {
         });
       })
       .catch((error) => {
-        console.error("Error:", error);
         dispatch(
           dispatchNotification({
             type: "error",
