@@ -6,7 +6,7 @@ import { createPaymentSession } from "src/services/stripe";
 import {
   STRIPE_STATER_LOOKUP_KEY,
   STRIPE_TEAM_LOOKUP_KEY,
-  STRIPE_TEAM_YEARLY_LOOKUP_KEY
+  STRIPE_TEAM_YEARLY_LOOKUP_KEY,
 } from "src/utilities/env";
 import { SwitchButton } from "src/components/Buttons";
 
@@ -40,10 +40,22 @@ export const PlansPage = connect(
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
     {
-      title: "Free",
+      title: "Starter",
       plan: "starter",
       subtitle: "Best for solo builders.",
       price: 0,
+      billFrequency: "Free forever",
+      featureTitle: "Free plan fretures",
+      features: [
+        "10,000 API requests",
+        "1 developer seat",
+        "1 proxy API key",
+        "Usage analytics",
+        "Status monitoring",
+        "Dynamic LLM router",
+        "OpenAI credits support",
+        "Email support",
+      ],
       downgradeText: "Downgrade to Starter",
       downgradeParams: {
         buttonText: "Downgrade to Custom",
@@ -62,6 +74,18 @@ export const PlansPage = connect(
       plan: "team",
       subtitle: "Best for startups and teams.",
       price: teamPrice,
+      billFrequency: isYearly ? "Billed annually" : "Billed monthly",
+      featureTitle: "Everything in Free, plus",
+      features: [
+        "Unlimited API requests",
+        "Unlimited seats",
+        "Unlimited proxy keys",
+        "Advanced usage analytics",
+        "Advanced model fallback",
+        "Priority model access",
+        "Admin roles",
+        "CTO priority support",
+      ],
       downgradeParams: {
         buttonText: "Downgrade to team",
         buttonVariant: "r4-black",
@@ -71,14 +95,25 @@ export const PlansPage = connect(
         buttonVariant: "r4-primary",
       },
       buttonOnClick: () => {
-        if (isYearly) {createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY])}
-        else {createPaymentSession([STRIPE_TEAM_LOOKUP_KEY])};
+        if (isYearly) {
+          createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
+        } else {
+          createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
+        }
       },
     },
     {
       title: "Custom",
       plan: "custom",
-      subtitle: "For large teams",
+      subtitle: "Fully tailored for your use case.",
+      featureTitle: "Everything in Team, plus",
+      features: [
+        "Testing playground",
+        "Integration assistance",
+        "Use-case optimization",
+        "Increased rate limit",
+        "Volume discount",
+      ],
       downgradeParams: {
         buttonText: "Book a demo",
         buttonVariant: "r4-black",
@@ -143,7 +178,10 @@ export const PlansPage = connect(
                 key={index}
                 title={card.title}
                 subtitle={card.subtitle}
+                featureTitle={card.featureTitle}
+                features={card.features}
                 price={card.price}
+                billFrequency={card.billFrequency}
                 {...displayParams(
                   index,
                   card.downgradeParams,
