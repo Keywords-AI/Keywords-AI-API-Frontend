@@ -14,7 +14,6 @@ export const getVendors = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "data");
         dispatch({
           type: GET_VENDORS,
           payload: data,
@@ -161,7 +160,6 @@ export const verifyKey = (data, callback = () => {}) => {
         });
       })
       .catch((error) => {
-        console.error("Error:", error);
         dispatch(
           dispatchNotification({
             type: "error",
