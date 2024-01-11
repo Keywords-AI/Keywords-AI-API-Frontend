@@ -28,7 +28,7 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { AUTH_ENABLED } from "src/utilities/env";
+import { AUTH_ENABLED } from "src/env.js";
 
 const mapStateToProps = (state) => {
   return {

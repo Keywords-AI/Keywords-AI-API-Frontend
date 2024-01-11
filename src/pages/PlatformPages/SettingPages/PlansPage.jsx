@@ -7,7 +7,7 @@ import {
     STRIPE_STATER_LOOKUP_KEY,
     STRIPE_TEAM_LOOKUP_KEY,
     STRIPE_TEAM_YEARLY_LOOKUP_KEY
-} from "src/utilities/env";
+} from "src/env.js";
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
@@ -56,17 +56,19 @@ export const PlansPage = connect(
         "OpenAI credits support",
         "Email support",
       ],
-      downgradeText: "Downgrade to Starter",
       downgradeParams: {
-        buttonText: "Downgrade to Custom",
+        buttonText: "Downgrade to starter",
         buttonVariant: "r4-black",
+        buttonOnClick: () => {
+          createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
+        },
       },
       buttonParams: {
         buttonText: "Get started",
         buttonVariant: "r4-primary",
-      },
-      buttonOnClick: () => {
-        createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
+        buttonOnClick: () => {
+          createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
+        },
       },
     },
     {
@@ -89,17 +91,24 @@ export const PlansPage = connect(
       downgradeParams: {
         buttonText: "Downgrade to team",
         buttonVariant: "r4-black",
+        buttonOnClick: () => {
+          if (isYearly) {
+            createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
+          } else {
+            createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
+          }
+        },
       },
       buttonParams: {
         buttonText: "Upgrade to team",
         buttonVariant: "r4-primary",
-      },
-      buttonOnClick: () => {
-        if (isYearly) {
-          createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
-        } else {
-          createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
-        }
+        buttonOnClick: () => {
+          if (isYearly) {
+            createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
+          } else {
+            createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
+          }
+        },
       },
     },
     {
@@ -117,14 +126,18 @@ export const PlansPage = connect(
       downgradeParams: {
         buttonText: "Book a demo",
         buttonVariant: "r4-black",
+        buttonOnClick: () => {
+          // To update to the correct link
+          window.open("https://keywordsai.co", "_blank");
+        },
       },
       buttonParams: {
         buttonText: "Book a demo",
         buttonVariant: "r4-black",
-      },
-      buttonOnClick: () => {
-        // To update to the correct link
-        window.open("https://keywordsai.co", "_blank");
+        buttonOnClick: () => {
+          // To update to the correct link
+          window.open("https://keywordsai.co", "_blank");
+        },
       },
     },
   ];
@@ -138,6 +151,7 @@ export const PlansPage = connect(
       return {
         buttonText: "Current plan",
         buttonVariant: "r4-black",
+        buttonOnClick: () => {},
       };
     } else {
       return buttonParams;
@@ -187,7 +201,6 @@ export const PlansPage = connect(
                   card.downgradeParams,
                   card.buttonParams
                 )}
-                buttonOnClick={card.buttonOnClick}
               />
             );
           })}

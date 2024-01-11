@@ -1,7 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
 import { dispatchNotification } from "src/store/actions";
 import { handleApiResponseErrors } from "src/utilities/errorHandling";
-const localHost = "http://localhost:8000/";
 export const GET_VENDORS = "GET_VENDORS";
 export const GET_INTEGRATIONS = "GET_INTEGRATIONS";
 export const SET_API_KEY = "SET_API_KEY";
