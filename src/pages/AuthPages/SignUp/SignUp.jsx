@@ -21,9 +21,7 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    console.log("signup");
     signup(data);
-
   };
   // Keywords666
   return (

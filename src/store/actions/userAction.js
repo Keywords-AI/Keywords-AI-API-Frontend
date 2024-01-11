@@ -17,12 +17,14 @@ import {
   setFreeCredits,
   // Action Types
 } from "src/store/actions";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
 
 export const getUser = () => {
   return (dispatch) => {
+    console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
     getCSRF();
     fetch(`${apiConfig.apiURL}auth/users/me`, {
       method: "GET",
@@ -53,17 +55,11 @@ export const getUser = () => {
           dispatch(setCustomPromptFile(data.current_file));
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
-        } else if (res.status === 401 && res.status == 403) {
+      } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
         } else {
           const data = await res.json();
-          handleSerializerErrors(data, (err) => {
-            dispatchNotification({
-              title: "Error setting user information",
-              message: err,
-            });
-          });
         }
       })
       .catch((error) => console.log(error.message));

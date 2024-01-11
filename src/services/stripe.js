@@ -8,6 +8,7 @@ export const createPaymentSession = async (lookupKeys) => {
   lookupKeys will be an array of strings, stripe lookup_keys for its price objects
   */
   try {
+    console.log("Production lookupKeys: ", lookupKeys);
     const body = {
       lookup_keys: lookupKeys,
     }

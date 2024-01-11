@@ -29,10 +29,12 @@ jobs:
       - name: Build
         run: yarn run build
         env:
-          VITE_STRIPE_STATER_LOOKUP_KEY: 'keywords_ai_api_starter_plan'
-          VITE_STRIPE_TEAM_LOOKUP_KEY: 'keywords_ai_api_team_plan'
           VITE_AUTH_ENABLED: 'true'
           VITE_FETCH_ENDPOINT: 'https://api-test.keywordsai.co/'
+          VITE_STRIPE_STATER_LOOKUP_KEY: 'keywords_ai_api_starter_plan'
+          VITE_STRIPE_TEAM_LOOKUP_KEY: 'keywords_ai_api_team_plan_monthly'
+          VITE_STRIPE_TEAM_YEARLY_LOOKUP_KEY: keywords_ai_api_team_plan_yearly'
+          VITE_SANITY_CHECK: 'This is a test live server'
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

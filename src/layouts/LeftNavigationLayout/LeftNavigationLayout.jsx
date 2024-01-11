@@ -8,7 +8,7 @@ const LeftNavitationLayout = ({ sectionName }) => {
   return (
     <div
       aria-label="setting-pages"
-      className="flex-row self-stretch flex-1 max-h-[calc(100vh-54px)] overflow-hidden"
+      className="flex-row self-stretch flex-1 max-h-[calc(100vh-54px)] overflow-auto"
     >
       <PlatformDrawerMemo sectionName={sectionName} />
       <Outlet />

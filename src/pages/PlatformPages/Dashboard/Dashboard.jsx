@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
-  firstTime: !state.organization.has_api_call,
+  firstTime: !state.organization?.has_api_call,
   panelData: state.dashboard.panelData,
 });
 const mapDispatchToProps = {

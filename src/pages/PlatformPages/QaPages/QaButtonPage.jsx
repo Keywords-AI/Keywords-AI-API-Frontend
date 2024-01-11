@@ -26,6 +26,12 @@ export const QaButtonPage = () => {
             icon={Speed}
             iconPosition="left"
           />
+          <Button
+            variant="r4-gray2"
+            text="button-r4-gray2"
+            icon={Speed}
+            iconPosition="left"
+          />
           <Button variant="small" text="button-small" icon={Rocket} />
           <Button variant="icon" icon={Rocket} />
           <Button variant="text" text="text-button" icon={Delete} />

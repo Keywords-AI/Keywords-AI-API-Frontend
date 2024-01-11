@@ -1,6 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
-import { FETCH_ENDPOINT } from "src/utilities/env";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
 
 const selectEndpoint = () => {
   if (
