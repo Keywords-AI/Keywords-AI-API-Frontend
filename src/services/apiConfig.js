@@ -1,6 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
-import { FETCH_ENDPOINT } from "src/utilities/env";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/utilities/env";
 
 const selectEndpoint = () => {
   if (
@@ -27,7 +27,7 @@ const selectEndpoint = () => {
 // https://api.keywordsai.co/
 
 // example .env can be found named .env.example
-console.log("FETCH_ENDPOINT", FETCH_ENDPOINT);
+console.log("SANITY ", SANITY_CHECK);
 const apiConfig = {
   // apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
   apiURL: FETCH_ENDPOINT, // For anyone who doesn't have backend local server

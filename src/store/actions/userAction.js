@@ -58,12 +58,6 @@ export const getUser = () => {
           dispatch({ type: SET_USER, payload: {} });
         } else {
           const data = await res.json();
-          handleSerializerErrors(data, (err) => {
-            dispatchNotification({
-              title: "Error setting user information",
-              message: err,
-            });
-          });
         }
       })
       .catch((error) => console.log(error.message));
