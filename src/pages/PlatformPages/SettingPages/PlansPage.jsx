@@ -7,7 +7,7 @@ import {
     STRIPE_STATER_LOOKUP_KEY,
     STRIPE_TEAM_LOOKUP_KEY,
     STRIPE_TEAM_YEARLY_LOOKUP_KEY
-} from "src/utilities/env";
+} from "src/env.js";
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
