@@ -42,9 +42,9 @@ export const OnboardingPage = connect(
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
   useEffect(()=>{
-    // if (user.onboarded) {
-    //   navigate(REDIRECT_URI);
-    // }
+    if (user.onboarded) {
+      navigate(REDIRECT_URI);
+    }
   }, [user])
   const {
     register,
