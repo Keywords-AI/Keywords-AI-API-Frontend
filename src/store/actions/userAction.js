@@ -17,14 +17,14 @@ import {
   setFreeCredits,
   // Action Types
 } from "src/store/actions";
-import { SANITY_CHECK } from "src/utilities/env";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/utilities/env";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
 
 export const getUser = () => {
   return (dispatch) => {
-    console.log("SANITY ", SANITY_CHECK);
+    console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
     getCSRF();
     fetch(`${apiConfig.apiURL}auth/users/me`, {
       method: "GET",

@@ -4,37 +4,37 @@ import { PageContent, PageParagraph } from "src/components/Sections";
 import { SmallPricingCard } from "src/components/Cards";
 import { createPaymentSession } from "src/services/stripe";
 import {
-  STRIPE_STATER_LOOKUP_KEY,
-  STRIPE_TEAM_LOOKUP_KEY,
-  STRIPE_TEAM_YEARLY_LOOKUP_KEY,
+    STRIPE_STATER_LOOKUP_KEY,
+    STRIPE_TEAM_LOOKUP_KEY,
+    STRIPE_TEAM_YEARLY_LOOKUP_KEY
 } from "src/utilities/env";
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
-  userSubscription: state.user.user_subscription,
-  organization: state.organization,
+    userSubscription: state.user.user_subscription,
+    organization: state.organization,
 });
 
 const mapDispatchToProps = {};
 
 const Subheading = connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(({ userCount = 3, price = 29, newMonth = "January 11, 2024" }) => {
-  return (
-    <div>
-      {"You’re currently on the Team Monthly plan. Your organization of "}
-      <span>{userCount}</span>
-      {" users costs $"}
-      {price} {" per month, and will renew on "}
-      <span>{newMonth}</span>
-    </div>
-  );
+    return (
+        <div>
+            {"You’re currently on the Team Monthly plan. Your organization of "}
+            <span>{userCount}</span>
+            {" users costs $"}
+            {price} {" per month, and will renew on "}
+            <span>{newMonth}</span>
+        </div>
+    );
 });
 
 export const PlansPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(({ userSubscription, organization }) => {
   const [isYearly, setIsYearly] = useState(false);
   const [teamPrice, setTeamPrice] = useState("29");
@@ -144,10 +144,10 @@ export const PlansPage = connect(
     }
   };
 
-  const handleSwitchChange = (checked) => {
-    setIsYearly(checked);
-    setTeamPrice(checked ? "29" : "39");
-  };
+    const handleSwitchChange = (checked) => {
+        setIsYearly(checked);
+        setTeamPrice(checked ? "29" : "39");
+    };
 
   return (
     <PageContent
