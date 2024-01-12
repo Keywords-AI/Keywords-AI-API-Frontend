@@ -128,7 +128,9 @@ export const sendInvitation = (data, callback=()=>{}, resend = false) => {
           })
         );
         const responseJson = await res.json()
+        console.log(responseJson);
         const payLoad = {
+          email: data.email,
           ...responseJson.temp_role,
           role: responseJson.temp_role,
         }
