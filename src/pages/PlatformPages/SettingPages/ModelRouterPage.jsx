@@ -47,19 +47,23 @@ export const ModelRouterPage = connect(
     } = useForm();
 
     const handleRadioChecked = (e, presetOption) => {
-      console.log(e.target.value);
-      if (presetOption.includes("custom_models")) {
-        let modelList = e.target.value.split(",");
-        updateOrganization({
-          preset_option: presetOption,
-          preset_models: modelList,
-        });
-      } else {
-        updateOrganization({
-          preset_option: presetOption,
-          custom_preset_models: customPresetModels,
-        });
-      }
+      // if (presetOption.includes("custom_models")) {
+      //   let modelList = e.target.value.split(",");
+      //   updateOrganization({
+      //     preset_option: presetOption,
+      //     preset_models: modelList,
+      //   });
+      // } else {
+      //   updateOrganization({
+      //     preset_option: presetOption,
+      //     custom_preset_models: customPresetModels,
+      //   });
+      // }
+      let modelList = e.target.value.split(",");
+      updateOrganization({
+        preset_option: presetOption,
+        preset_models: modelList,
+      });
     };
 
     return (
