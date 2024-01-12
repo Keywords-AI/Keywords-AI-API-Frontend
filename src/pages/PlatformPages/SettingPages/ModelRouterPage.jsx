@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
   userPresetOption: state.organization?.preset_option,
   userPresetModels: state.organization?.preset_models,
   customPresetModels: state.organization?.custom_preset_models,
-  customPresets: state.user.custom_presets,
+  customPresets: state.organization?.organization_model_presets,
 });
 const mapDispatchToProps = { updateUser, updateOrganization};
 
@@ -24,7 +24,6 @@ export const ModelRouterPage = connect(
 )(
   ({
     dynamicRoutingEnabled,
-    updateUser,
     userPresetOption,
     customPresetModels,
     customPresets,
@@ -49,7 +48,7 @@ export const ModelRouterPage = connect(
 
     const handleRadioChecked = (e, presetOption) => {
       console.log(e.target.value);
-      if (presetOption !== "custom_models") {
+      if (presetOption.includes("custom_models")) {
         let modelList = e.target.value.split(",");
         updateOrganization({
           preset_option: presetOption,
@@ -101,16 +100,19 @@ export const ModelRouterPage = connect(
             />
             {customPresets &&
               customPresets.map((preset, index) => (
+                // Do not register this, this should be updated in the edit form
                 <ModelPresetCard
-                  title={preset.preset_name}
-                  {...register(preset.preset_name)}
-                  models={models.filter((model) =>
-                    preset.created_preset_models.includes(model.value)
-                  )}
+                  title={preset.name}
+                  key={preset.id}
+                  models={models.filter((model)=>{
+                    return preset?.preset_models.includes(model.value)
+                  })}
                   onChange={(e) => {
-                    handleRadioChecked(e, preset.preset_name);
+                    handleRadioChecked(e, `custom_models_${preset.id}`);
                   }}
-                  checked={userPresetOption === preset.preset_name}
+                  hasButton={true}
+                  presetId={preset.id}
+                  checked={userPresetOption === `custom_models_${preset.id}`}
                 />
               ))}
           </form>

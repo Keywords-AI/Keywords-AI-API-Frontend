@@ -1,8 +1,8 @@
 // Import necessary types
 import apiConfig from "src/services/apiConfig"; // Adjust this import according to your project setup
 import { retrieveAccessToken } from "src/utilities/authorization";
-import { dispatchNotification } from "src/store/actions";
-import { handleApiResponseErrors } from "./errorHandling";
+import { handleApiResponseErrors } from "src/store/actions";
+import { AppDispatch } from "src/store/store";
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
   path: string; // The URL path for the request
@@ -11,6 +11,7 @@ type KeywordsFetchRequestConfig = {
   method?: string; // HTTP method (e.g., "GET", "POST"), defaults to "GET"
   auth?: boolean; // Indicates whether to include an authorization token, defaults to true
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
+  dispatch?: AppDispatch | undefined; // Optional Redux dispatch function, requried for notifications
 };
 
 /**
@@ -35,6 +36,7 @@ export const keywordsRequest = async ({
   method = "GET",
   auth = true,
   credentials = "same-origin",
+  dispatch,
 }: KeywordsFetchRequestConfig): Promise<any> => {
   try {
     const headers: Record<string, string> = {
@@ -57,7 +59,10 @@ export const keywordsRequest = async ({
     } else {
       if (response.status === 400) {
         const error = await response.json();
-        return handleApiResponseErrors(error);
+        if (dispatch && typeof dispatch === "function") {
+          dispatch(handleApiResponseErrors(error));
+        }
+        throw error;
       } else {
         throw new Error(response.statusText);
       }

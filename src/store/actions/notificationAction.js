@@ -1,3 +1,4 @@
+import { handleSerializerErrors } from "src/utilities/errorHandling";
 export const DISPATCH_NOTIFICATION = "DISPATCH_NOTIFICATION";
 export const DISMISS_NOTIFICATION = "DISMISS_NOTIFICATION";
 
@@ -6,7 +7,7 @@ export const dispatchNotification = (notification) => {
   return (dispatch, getState) => {
     // make async call to database
     const randomId = Math.random().toString(36).substring(2, 15);
-    const completeNotification = {...notification, id: randomId}
+    const completeNotification = { ...notification, id: randomId };
     dispatch({ type: DISPATCH_NOTIFICATION, payload: completeNotification });
     setTimeout(() => {
       dispatch({ type: DISMISS_NOTIFICATION, payload: randomId });
@@ -20,8 +21,21 @@ export const dismissNotification = (id) => {
   };
 };
 
-export const dispatchErrorNotification = (errorString) => {
+export const handleApiResponseErrors = (
+  responseJson // Json object from the api
+) => {
   return (dispatch) => {
-    dispatch(dispatchNotification({ type: "error", title: errorString }));
-  }
-}
+    console.log("dispatched", dispatch);
+    if (responseJson.detail) {
+      dispatch(
+        dispatchNotification({ type: "error", title: responseJson.detail })
+      ); // Regular error
+      throw new Error(responseJson.detail);
+    } else {
+      handleSerializerErrors(responseJson, (error) =>
+        dispatch(dispatchNotification({ type: "error", title: error }))
+      ); // Standard error from django
+      throw new Error("Serializer error");
+    }
+  };
+};
