@@ -5,8 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "src/components";
 import { Modal } from "src/components/Dialogs";
 import { CheckboxInput, TextInput } from "src/components/Inputs";
-import { dispatchNotification, updateUser } from "src/store/actions";
+import { dispatchNotification, updateUser} from "src/store/actions";
 import { models } from "src/utilities/constants";
+
 export default function CreatePreset() {
   const [open, setOpen] = React.useState(false);
   const custom_presets =
@@ -30,7 +31,9 @@ export default function CreatePreset() {
       return;
     } else {
       try {
-        dispatch(updateUser({ custom_presets: [...custom_presets, data] }));
+        console.log(data);
+        dispatch(createPreset(data));
+        // dispatch(updateUser({ custom_presets: [...custom_presets, data] }));
         dispatch(
           dispatchNotification({
             title: `Preset created successfully`,

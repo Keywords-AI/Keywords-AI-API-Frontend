@@ -1,4 +1,5 @@
 import { keywordsFetch } from "src/services/apiConfig";
+import { keywordsRequest } from "src/utilities/requests";
 import { dispatchNotification } from "./notificationAction";
 import { handleSerializerErrors } from "src/utilities/objectProcessing";
 import apiConfig from "src/services/apiConfig";
@@ -12,6 +13,7 @@ export const SET_ORG = "SET_ORG";
 export const SET_ORG_NAME = "SET_ORG_NAME";
 export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_ROLE = "DELETE_ROLE";
+export const ADD_PRESET = "ADD_PRESET";
 
 export const setOrg = (org) => {
   return (dispatch) => {
@@ -239,3 +241,29 @@ export const deleteRole = (id) => {
       .catch((error) => console.log(error));
   };
 };
+
+export const addModelPreset = (preset) => {
+  return {
+    type: ADD_PRESET,
+    payload: preset,
+};
+}
+
+// export const createPreset = (data, callback=()=>{}) => {
+//   return (dispatch) => {
+//     keywordsRequest({
+//       path: "user/model-presets/",
+//       method: "POST",
+//       data: data,
+//     })
+//     .then((responseData) => {
+//       dispatch(
+//         dispatchNotification({
+//           title: "Preset created!",
+//         })
+//       );
+//       dispatch(addModelPreset(responseData));
+//       callback();
+//     })
+//   };
+// }
