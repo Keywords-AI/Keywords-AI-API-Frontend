@@ -5,12 +5,13 @@ import { Modal } from "src/components/Dialogs";
 import { CheckboxInput } from "src/components/Inputs";
 import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { updateUser, updateOrganization } from "src/store/actions";
+import { updateUser, updateOrganization, deletePreset } from "src/store/actions";
 import { models } from "src/utilities/constants";
 
 export default function EditPresetModal({
   previousSelectedModels,
   presetName,
+  presetId,
 }) {
   const {
     register,
@@ -67,6 +68,11 @@ export default function EditPresetModal({
           />
         ))}
         <div className="flex justify-end items-center gap-xs self-stretch flex-1">
+          <Button text="Delete Preset" variant="r4-red" type="button"
+            onClick={() => { 
+              dispatch(deletePreset(presetId, ()=>setOpen(false)));
+            }}
+          />
           <DialogClose asChild>
             <Button text="Cancel" variant="r4-black" />
           </DialogClose>

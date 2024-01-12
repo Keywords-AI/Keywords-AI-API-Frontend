@@ -1,7 +1,6 @@
-import { keywordsFetch } from "src/services/apiConfig";
-import { handleSerializerErrors } from "src/utilities/errorHandling";
+import { keywordsRequest } from "src/utilities/requests";
+import { dispatchNotification } from "src/store/actions";
 import { processKeyList, processKey } from "src/utilities/objectProcessing";
-import { dispatchNotification } from "../notificationAction";
 export const SET_NEW_KEY_NAME = "SET_NEW_KEY_NAME";
 export const SET_KEY_LIST = "SET_KEY_LIST";
 export const ADD_KEY = "ADD_KEY";
@@ -35,12 +34,10 @@ export const setKeyList = (keyList) => {
 
 export const getKeys = () => {
   return (dispatch) => {
-    keywordsFetch({
+    keywordsRequest({
       path: "api/get-keys",
     })
-      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         dispatch(setKeyList(data));
       });
   };
@@ -56,34 +53,17 @@ export const addKey = (key, actions) => {
 export const createApiKey = (data, actions) => {
   return (dispatch) => {
     dispatch(setLoading(true));
-    keywordsFetch({
+    keywordsRequest({
       path: "api/create-api-key/",
       method: "POST",
       data: data,
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          const errors = await response.json();
-          if (errors.detail) {
-            dispatch(
-              dispatchNotification({ type: "error", title: errors.detail })
-            );
-          } else {
-            console.log("serializer errors", errors)
-            // handleSerializerErrors(errors, (err) => {
-            //   dispatch(dispatchNotification({ type: "error", title: err }));
-            // });
-          }
-        }
-      })
       .then((data) => {
         dispatch(setLoading(false));
         dispatch(addKey(data, actions));
+        dispatch(dispatchNotification({ title: "API Key created successfully!" }));
       })
       .catch((err) => {
-        console.log(err);
         dispatch(setLoading(false));
       });
   };

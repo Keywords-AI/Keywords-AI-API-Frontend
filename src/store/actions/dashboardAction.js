@@ -13,6 +13,7 @@ export const SET_MODEL_DATA = "SET_MODEL_DATA";
 export const SET_API_DATA = "SET_API_DATA";
 
 export const setDashboardData = (data) => {
+  console.log(data);
   return {
     type: SET_DASHBOARD_DATA,
     payload: data,
@@ -83,9 +84,14 @@ export const setErrorData = (data) => {
   };
 };
 
-export const getDashboardData = () => {
+export const getDashboardData = (
+  overrideParams // search string
+  ) => {
   return (dispatch) => {
-    const params = new URLSearchParams(window.location.search);
+    let params = new URLSearchParams(window.location.search);
+    if (overrideParams) {
+      params = new URLSearchParams(overrideParams);
+    }
     const currDate = new Date();
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
@@ -103,7 +109,6 @@ export const getDashboardData = () => {
       })
       .then((data) => {
         // data = data.filter((item) => item.error_counts === 0);
-        console.log(data);
         dispatch(setDashboardData(data));
 
         const dataList = fillMissingDate(

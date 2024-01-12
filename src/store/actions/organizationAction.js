@@ -14,6 +14,7 @@ export const SET_ORG_NAME = "SET_ORG_NAME";
 export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_ROLE = "DELETE_ROLE";
 export const ADD_PRESET = "ADD_PRESET";
+export const DELETE_PRESET = "DELETE_PRESET";
 
 export const setOrg = (org) => {
   return (dispatch) => {
@@ -127,7 +128,9 @@ export const sendInvitation = (data, callback=()=>{}, resend = false) => {
           })
         );
         const responseJson = await res.json()
+        console.log(responseJson);
         const payLoad = {
+          email: data.email,
           ...responseJson.temp_role,
           role: responseJson.temp_role,
         }
@@ -249,21 +252,49 @@ export const addModelPreset = (preset) => {
 };
 }
 
-// export const createPreset = (data, callback=()=>{}) => {
-//   return (dispatch) => {
-//     keywordsRequest({
-//       path: "user/model-presets/",
-//       method: "POST",
-//       data: data,
-//     })
-//     .then((responseData) => {
-//       dispatch(
-//         dispatchNotification({
-//           title: "Preset created!",
-//         })
-//       );
-//       dispatch(addModelPreset(responseData));
-//       callback();
-//     })
-//   };
-// }
+export const createPreset = (data, callback=()=>{}) => {
+  return (dispatch) => {
+    keywordsRequest({
+      path: "user/model-presets/",
+      method: "POST",
+      data: data,
+      dispatch,
+    })
+    .then((responseData) => {
+      dispatch(
+        dispatchNotification({
+          title: "Preset created!",
+        })
+      );
+      dispatch(addModelPreset(responseData));
+      callback();
+    })
+    .catch((error) => {});
+  };
+}
+
+export const deletePreset = (id, callback) => {
+  return (dispatch) => {
+    dispatch({
+      type: DELETE_PRESET,
+      payload: id,
+    })
+    keywordsRequest({
+      path: `user/model-preset/${id}/`,
+      method: "DELETE",
+      dispatch,
+    })
+    .then((responseData) => {
+      dispatch(
+        dispatchNotification({
+          title: "Preset deleted!",
+        })
+      );
+      if (callback && typeof callback === "function") {
+        console.log("callback")
+        callback();
+      }
+    })
+    .catch((error) => {});
+  };
+}
