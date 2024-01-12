@@ -153,11 +153,8 @@ function DashboardNotConnected({
             ))}
           </div>
           <DashboardChart />
-          <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
         </div>
-        {isPanel && (
-          <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
-        )}
+        <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
       </div>
     );
 }

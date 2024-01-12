@@ -73,18 +73,6 @@ export const ModelRouterPage = connect(
         }
         subtitle="Build model presets for dynamic routing."
       >
-        {/* <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
-        <TitleStaticSubheading
-          title="Dynamic LLM routing"
-          subtitle="Enable dynamic model routing to optimize for performance."
-        />
-        <div className="flex flex-row items-start justify-center pt-[3px]">
-          <SwitchButton
-            checked={dynamicRouting}
-            onCheckedChange={handleToggleDynamicRouting}
-          />
-        </div>
-      </div> */}
         <div className="flex flex-col gap-sm items-start justify-between self-stretch">
           <TitleStaticSubheading
             title="Presets"
@@ -111,17 +99,6 @@ export const ModelRouterPage = connect(
               }}
               checked={userPresetOption === "recommended_models"}
             />
-            {/* <ModelPresetCard
-              title="Custom"
-              {...register("model_preset")}
-              models={models.filter((model) =>
-                customPresetModels?.includes(model.value)
-              )}
-              onChange={(e) => {
-                handleRadioChecked(e, "custom_models");
-              }}
-              checked={userPresetOption === "custom_models"}
-            /> */}
             {customPresets &&
               customPresets.map((preset, index) => (
                 <ModelPresetCard

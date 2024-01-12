@@ -19,3 +19,9 @@ export const dismissNotification = (id) => {
     dispatch({ type: DISMISS_NOTIFICATION, payload: id });
   };
 };
+
+export const dispatchErrorNotification = (errorString) => {
+  return (dispatch) => {
+    dispatch(dispatchNotification({ type: "error", title: errorString }));
+  }
+}
