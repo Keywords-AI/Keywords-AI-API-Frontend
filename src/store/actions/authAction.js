@@ -1,45 +1,41 @@
 import apiConfig, { keywordsFetch } from "src/services/apiConfig";
+import { keywordsRequest } from "src/utilities/requests";
 import { eraseCookie, getCookie, setCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "./notificationAction";
-import { handleSerializerErrors } from "src/utilities/errorHandling";
 import { REDIRECT_URI } from "src/utilities/navigation";
 // admintestpassword
-export const signup = (data = {}) => {
+export const signup = (data = {}, code) => {
   // data = {email, first_name, last_name, password}
+  const param = new URLSearchParams(window.location.search);
   return (dispatch) => {
     // Return a promise from the thunk
-    fetch(`${apiConfig.apiURL}auth/users/`, {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    keywordsRequest({
+      path: "auth/users/",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-      body: JSON.stringify(data),
+      data: data,
+      auth: false,
+      dispatch,
     })
-      .then(async (res) => {
-        if (res.ok) {
-          const responseJson = await res.json();
-          dispatch({ type: "REGISTER_SUCCESS", payload: responseJson }); // Dispatch a success action
+      .then((responseJson) => {
+        if (code) {
+          console.log("code", code);
+          // If user is invited, log them in
           dispatch(
             dispatchNotification({
-              type: "success",
+              title: "Welcome, invited user!",
+            })
+          );
+          dispatch(login({ ...data, code }));
+        } else {
+          dispatch(
+            dispatchNotification({
               title: "Activation link sent, please check your email",
             })
           );
           window.location.href = "/email-confirmation" + "/" + data.email;
-        } else {
-          const responseJson = await res.json();
-          Object.keys(responseJson).forEach((key) => {
-            responseJson[key].forEach((error) => {
-              dispatch(
-                dispatchNotification({
-                  type: "error",
-                  title: `${key}: ${error}`,
-                })
-              );
-            });
-          });
         }
       })
       .catch((error) => {
@@ -48,43 +44,30 @@ export const signup = (data = {}) => {
   };
 };
 // admintestpassword
-export const login = (email, password) => {
+export const login = (loginData) => {
   return (dispatch) => {
     // Return a promise from the thunk
-    console.log(`${apiConfig.apiURL}auth/jwt/create/`);
-    fetch(`${apiConfig.apiURL}auth/jwt/create/`, {
-      // fetch(`${apiConfig.apiURL}dj-rest-auth/login/`, {
+    const data = { ...loginData, username: loginData.email };
+    keywordsRequest({
+      path: "auth/jwt/create/",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-      body: JSON.stringify({ email, password, username: email }),
+      data: data,
       credentials: "include",
+      dispatch,
     })
-      .then(async (res) => {
-        if (res.ok) {
-          // Convert Headers object to a simple key-value object
-          const headers = res.headers;
-          let headersObj = {};
-          headers.forEach((value, key) => {
-            headersObj[key] = value;
-          });
-          // Now headersObj is a regular object and can be converted to JSON
-          const responseJson = await res.json();
-          localStorage.setItem("access", responseJson.access);
-          localStorage.setItem("refresh", responseJson.refresh);
-          dispatch({ type: "LOGIN_SUCCESS", payload: responseJson }); // dispatch a success action
-          dispatch(dispatchNotification({ title: "Logged in successfully!" }));
-          const searchParams = new URLSearchParams(window.location.search);
-          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
+      .then((responseJson) => {
+        localStorage.setItem("access", responseJson.access);
+        localStorage.setItem("refresh", responseJson.refresh);
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.get("next")) {
+          window.location.href = searchParams.get("next");
         } else {
-          const responseJson = await res.json();
-          throw new Error(responseJson.detail);
+          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
         }
       })
       .catch((error) => {
-        dispatch(dispatchNotification({ type: "error", title: error.message }));
+        // dispatch(dispatchNotification({ type: "error", title: error.message }));
+        console.log(error);
       });
   };
 };
@@ -202,7 +185,9 @@ export const isLoggedIn = (user) => {
   //   const hasAccessToken = retrieveAccessToken() ? true : false;
   //   return hasAccessToken;
   // }
-  return (user?.id !== null && user?.id !== undefined) || retrieveAccessToken() ? true : false;
+  return (user?.id !== null && user?.id !== undefined) || retrieveAccessToken()
+    ? true
+    : false;
 };
 
 export const resetPassword = (
@@ -211,26 +196,18 @@ export const resetPassword = (
   handleError = (error) => console.log(error)
 ) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}auth/users/reset_password/`, {
+    keywordsRequest({
+      path: "auth/users/reset_password/",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
+      data: { email },
+      auth: false,
     })
-      .then(async (res) => {
-        if (res.ok) {
-          console.log("Hi there!");
+      .then((responseJson) => {
           dispatch(
             dispatchNotification({
-              type: "success",
               title: "Link sent to your email inbox via team@keywordsai.co",
             })
           );
-        } else if (!res.ok) {
-          const responseJson = await res.text();
-          handleError(responseJson);
-        }
       })
       .catch((error) => handleError(error));
   };

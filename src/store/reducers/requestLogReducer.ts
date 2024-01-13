@@ -4,7 +4,7 @@ import {
 } from "src/store/actions/requestLogActions";
 
 const initState = {
-  requestLogs: [],
+  data: [],
 };
 
 export default function requestLogReducer(state = initState, action: any) {
@@ -12,12 +12,12 @@ export default function requestLogReducer(state = initState, action: any) {
     case GET_REQUEST_LOGS:
       return {
         ...state,
-        requestLogs: action.payload,
+        data: action.payload,
       };
     case SET_REQUEST_LOGS:
       return {
         ...state,
-        requestLogs: action.payload,
+        data: action.payload,
       };
     default:
       return state;

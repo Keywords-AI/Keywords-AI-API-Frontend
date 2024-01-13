@@ -25,7 +25,6 @@ export const handleApiResponseErrors = (
   responseJson // Json object from the api
 ) => {
   return (dispatch) => {
-    console.log("dispatched", dispatch);
     if (responseJson.detail) {
       dispatch(
         dispatchNotification({ type: "error", title: responseJson.detail })

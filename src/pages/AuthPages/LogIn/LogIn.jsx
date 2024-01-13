@@ -11,7 +11,6 @@ import { Google } from "src/components";
 import { dispatchNotification, isLoggedIn } from "src/store/actions";
 import { useLocation } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
-
 const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
@@ -21,9 +20,10 @@ const mapDispatchToProps = {
 const LogIn = ({ login, googleLogin, user }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      login(data.email, data.password);
+      login(data);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
@@ -58,8 +58,8 @@ const LogIn = ({ login, googleLogin, user }) => {
             <span>
               Don’t have an account?{" "}
               <span
-                className=" text-primary hover:cursor-pointer"
-                onClick={() => navigate("/signup")}
+                className="text-primary hover:cursor-pointer"
+                onClick={() => navigate(`/signup?${params.toString()}`)}
               >
                 Sign up.
               </span>
