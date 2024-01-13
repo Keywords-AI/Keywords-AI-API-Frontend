@@ -1,4 +1,4 @@
-import { envVars } from "./local_env";
+import { envVars } from "./env_test";
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 export const FETCH_ENDPOINT =
   envVars.FETCH_ENDPOINT || "https://api.keywordsai.co/";

@@ -36,7 +36,7 @@ export const PlansPage = connect(
     mapStateToProps,
     mapDispatchToProps
 )(({ userSubscription, organization }) => {
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
     {
@@ -176,7 +176,7 @@ export const PlansPage = connect(
       <div className="flex flex-col w-full items-center gap-lg">
         <div className="flex justify-center items-center gap-sm">
           <span className="text-lg text-gray-4 text-center"> Monthly </span>
-          <SwitchButton onCheckedChange={handleSwitchChange} />
+          <SwitchButton onCheckedChange={handleSwitchChange} checked={isYearly}/>
           <div>
             <span className="text-lg text-gray-4 text-center"> Yearly </span>
             <span className="text-lg text-primary text-center">

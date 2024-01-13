@@ -114,6 +114,14 @@ function DashboardNotConnected({
       unit: true,
       onClick: () => handleClick("Latency"),
     },
+    // {
+    //   icon: Tokens,
+    //   title: "Prompt Tokens",
+    //   number: summary.total_tokens || 0,
+    //   chartData: tokenCountData,
+    //   dataKey: "total_tokens",
+    //   onClick: () => handleClick("Tokens"),
+    // },
     {
       icon: Tokens,
       title: "Tokens",
@@ -140,24 +148,23 @@ function DashboardNotConnected({
         <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
           <div className="flex flex-row justify-between w-full self-stretch">
             <div className="flex flex-col gap-xxxs">
-              <span className="text-sm-regular text-gray-3">
+              {/* <span className="text-sm-regular text-gray-3">
                 {organization?.name || "Organization"}
-              </span>
+              </span> */}
               <span className="display-sm">Welcome, {firstName}</span>
             </div>
             <ButtonGroup buttons={buttons} />
           </div>
-          <div className="grid grid-cols-4 gap-md">
+          <div className="grid grid-cols-4 gap-xs">
             {metrics.map((metric, index) => (
               <MetricCard key={index} {...metric} />
             ))}
           </div>
-          <DashboardChart />
-          <TitleStaticSubheading title="Logs" subtitle="Coming soon!" />
+          <div className="flex flex-row gap-sm items-start self-stretch">
+            <DashboardChart />
+            {/* <PanelGraph metric={panelData} number={MetricNumber(panelData)} /> */}
+          </div>
         </div>
-        {isPanel && (
-          <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
-        )}
       </div>
     );
 }
