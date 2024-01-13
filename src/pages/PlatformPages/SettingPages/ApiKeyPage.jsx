@@ -83,6 +83,7 @@ export const ApiKeyPage = ({
           <SettingTable
             variant={"api-keys"}
             rows={prevKey}
+            headers={["Name", "Key", "Created", "Last Used", "Status"]}
             columnNames={[
               "name",
               "mod_prefix",
