@@ -37,7 +37,7 @@ export const BillingPage = ({ billings }) => {
   return (
     <PageContent
       title="Billing"
-      subtitle="Manage your billing information and invoices. For questions about billing, contact team@keywordsai.co."
+      subtitle="Manage your billing information and invoices."
     >
       <PageParagraph
         heading="Payment history"
