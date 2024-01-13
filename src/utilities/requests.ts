@@ -57,15 +57,11 @@ export const keywordsRequest = async ({
     if (response.ok) {
       return await response.json();
     } else {
-      if (response.status === 400) {
-        const error = await response.json();
-        if (dispatch && typeof dispatch === "function") {
-          dispatch(handleApiResponseErrors(error));
-        }
-        throw error;
-      } else {
-        throw new Error(response.statusText);
+      const error = await response.json();
+      if (dispatch && typeof dispatch === "function") {
+        dispatch(handleApiResponseErrors(error));
       }
+      throw new Error(response.statusText);
     }
   } catch (error: Error | any) {
     throw error;

@@ -11,6 +11,7 @@ import themeReducer from "./themeReducer";
 import dashboardReducer from "./dashboardReducer";
 import onboardingReducer from "./onboardingReducer";
 import fallbackReducer from "./settingPagesReducer/fallbackReducer";
+import requestLogReducer from "./requestLogReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
@@ -27,6 +28,7 @@ const rootReducer = (state = {}, action) => {
     dashboard: dashboardReducer(state.dashboard, action),
     onboarding: onboardingReducer(state.onboarding, action),
     fallback: fallbackReducer(state.fallback, action),
+    requestLogs: requestLogReducer(state.requestLogs, action),
   };
 };
 
