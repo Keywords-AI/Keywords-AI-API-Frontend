@@ -60,7 +60,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
         },
@@ -92,7 +92,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
@@ -127,7 +127,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -135,7 +135,7 @@ export const PlansPage = connect(
       },
       buttonParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -152,7 +152,7 @@ export const PlansPage = connect(
     } else if (index === currIndex) {
       return {
         buttonText: "Current plan",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray2",
         buttonOnClick: () => {},
       };
     } else {
@@ -175,8 +175,8 @@ export const PlansPage = connect(
         />
       }
     >
-      <div className="flex flex-col w-full items-center gap-lg">
-        <div className="flex justify-center items-center gap-sm">
+      <div className="flex flex-col w-full items-center gap-sm">
+        <div className="flex justify-center items-center gap-xs">
           <span className="text-sm-md text-gray-4">Monthly</span>
           <SwitchButton
             onCheckedChange={handleSwitchChange}
