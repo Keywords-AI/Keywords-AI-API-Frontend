@@ -11,7 +11,6 @@ import {
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
-    userSubscription: state.user.user_subscription,
     organization: state.organization,
 });
 
@@ -35,7 +34,7 @@ const Subheading = connect(
 export const PlansPage = connect(
     mapStateToProps,
     mapDispatchToProps
-)(({ userSubscription, organization }) => {
+)(({ organization }) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
@@ -142,7 +141,7 @@ export const PlansPage = connect(
     },
   ];
   const currIndex = cards.indexOf(
-    cards.find((card) => card.plan === userSubscription?.plan)
+    cards.find((card) => card.plan === organization?.organization_subscription?.plan)
   );
   const displayParams = (index, downgradeParams, buttonParams) => {
     if (index < currIndex) {
