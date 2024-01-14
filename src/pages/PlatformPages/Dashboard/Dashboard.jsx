@@ -114,20 +114,20 @@ function DashboardNotConnected({
       unit: true,
       onClick: () => handleClick("Latency"),
     },
-    // {
-    //   icon: Tokens,
-    //   title: "Prompt Tokens",
-    //   number: summary.total_tokens || 0,
-    //   chartData: tokenCountData,
-    //   dataKey: "total_tokens",
-    //   onClick: () => handleClick("Tokens"),
-    // },
     {
       icon: Tokens,
-      title: "Tokens",
-      number: summary.total_tokens || 0,
+      title: "Prompt Tokens",
+      number: summary.total_prompt_tokens || 0,
       chartData: tokenCountData,
-      dataKey: "total_tokens",
+      dataKey: "total_prompt_tokens",
+      onClick: () => handleClick("Tokens"),
+    },
+    {
+      icon: Tokens,
+      title: "Output Tokens",
+      number: summary.total_completion_tokens || 0,
+      chartData: tokenCountData,
+      dataKey: "total_completion_tokens",
       onClick: () => handleClick("Tokens"),
     },
     {
@@ -155,7 +155,7 @@ function DashboardNotConnected({
             </div>
             <ButtonGroup buttons={buttons} />
           </div>
-          <div className="grid grid-cols-4 gap-xs">
+          <div className="grid grid-cols-5 gap-xs">
             {metrics.map((metric, index) => (
               <MetricCard key={index} {...metric} />
             ))}

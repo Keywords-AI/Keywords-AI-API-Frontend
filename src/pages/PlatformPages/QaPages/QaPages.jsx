@@ -7,23 +7,23 @@ import { QaMiscPage } from './QaMisc';
 const pages = [
   {
     title: "Button",
-    // forAdmin: true,
+    forAdmin: true,
     default: true,
     page: <QaButtonPage />
   },
   {
     title: "Button",
-    // forAdmin: true,
+    forAdmin: true,
     page: <QaButtonPage />
   },
   {
     title: "Input Fields",
-    // forAdmin: true,
+    forAdmin: true,
     page: <QaInputPage/>,
   },
   {
     title: "Misc",
-    // forAdmin: true,
+    forAdmin: true,
     page: <QaMiscPage/>,
   },
 ];

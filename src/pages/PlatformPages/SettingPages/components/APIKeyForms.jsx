@@ -174,7 +174,7 @@ const CreateFormNotConnected = React.forwardRef(
                 />
                 {showInfo && (
                   <HoverPopup
-                    className="absolute bottom-1/2 translate-y-1/2 left-full translate-x-xxs"
+                    className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
                     text="rate limit"
                   />
                 )}

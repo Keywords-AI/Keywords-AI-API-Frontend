@@ -2,6 +2,8 @@ import {
   SET_DASHBOARD_DATA,
   SET_COST_DATA,
   SET_TOKEN_COUNT_DATA,
+  SET_PROMPT_TOKEN_COUNT_DATA,
+  SET_COMPLETION_TOKEN_COUNT_DATA,
   SET_LATENCY_DATA,
   SET_REQUEST_COUNT_DATA,
   SET_DATE_DATA,
@@ -23,6 +25,8 @@ const initState = {
   summary: {
     total_cost: 0,
     total_tokens: 0,
+    total_prompt_tokens: 0,
+    total_completion_tokens: 0,
     average_latency: 0,
     number_of_requests: 0,
   },
@@ -31,6 +35,12 @@ const initState = {
   ],
   tokenCountData: [
     // {total_tokens, date_group}
+  ],
+  promptTokenCountData: [
+    // {total_prompt_tokens, date_group}
+  ], 
+  completionTokenCountData: [
+    // {total_completion_tokens, date_group}
   ],
   latencyData: [
     // {average_latency, date_group}
@@ -60,6 +70,10 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, costData: action.payload };
     case SET_TOKEN_COUNT_DATA:
       return { ...state, tokenCountData: action.payload };
+    case SET_PROMPT_TOKEN_COUNT_DATA:
+      return { ...state, promptTokenCountData: action.payload };
+    case SET_COMPLETION_TOKEN_COUNT_DATA:
+      return { ...state, completionTokenCountData: action.payload };
     case SET_LATENCY_DATA:
       return { ...state, latencyData: action.payload };
     case SET_REQUEST_COUNT_DATA:
