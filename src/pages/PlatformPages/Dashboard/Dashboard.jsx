@@ -144,8 +144,7 @@ function DashboardNotConnected({
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex flex-row w-full">
-        <div className="flex flex-wrap flex-col w-full h-full p-lg gap-lg">
+        <div className="flex flex-col w-full h-full">
           <div className="flex flex-row justify-between w-full self-stretch">
             <div className="flex flex-col gap-xxxs">
               {/* <span className="text-sm-regular text-gray-3">
@@ -153,19 +152,16 @@ function DashboardNotConnected({
               </span> */}
               <span className="display-sm">Welcome, {firstName}</span>
             </div>
-            <ButtonGroup buttons={buttons} />
+            {/* <ButtonGroup buttons={buttons} /> */}
           </div>
           <div className="grid grid-cols-5 gap-xs">
             {metrics.map((metric, index) => (
               <MetricCard key={index} {...metric} />
             ))}
           </div>
-          <div className="flex flex-row gap-sm items-start self-stretch">
             <DashboardChart />
             {/* <PanelGraph metric={panelData} number={MetricNumber(panelData)} /> */}
-          </div>
         </div>
-      </div>
     );
 }
 
