@@ -22,6 +22,7 @@ import { Button } from "src/components";
 import { PanelGraph } from "src/components/Sections";
 import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
+import { useForm } from "react-hook-form";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -86,8 +87,20 @@ function DashboardNotConnected({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const summary_type = new URLSearchParams(location.search).get("summary_type") || "monthly";
+  const { register, handleSubmit, watch } = useForm();
+
+  const summary_type =
+    new URLSearchParams(location.search).get("summary_type") || "monthly";
+  const performance_param =
+    new URLSearchParams(location.search).get("performance_param") ||
+    "request_count";
+  const calculation_type =
+    new URLSearchParams(location.search).get("calculation_type") || "total";
+  const breakdown_type =
+    new URLSearchParams(location.search).get("breakdown_type") || "none";
+
   const [isPanel, setIsPanel] = useState(false);
+
   useEffect(() => {
     getDashboardData();
     setDateData(summary_type);
@@ -98,16 +111,34 @@ function DashboardNotConnected({
 
   const handleClick = (data) => {
     setPanelData(data);
-    setIsPanel(prevIsPanel => !prevIsPanel);
-  };
+    setIsPanel((prevIsPanel) => !prevIsPanel);
+  }; 
 
   const handleTimePeriodSelection = (selectedValue) => {
     setSummaryType(selectedValue);
   };
+
+  const onSubmit = (data) => {
+    setPerformanceParam(data.metric);
+    setCalculationType(data.type);
+    setBreakdownType(data.breakdown);
+  };
+
   const setSummaryType = (summary_type) => {
     // Wrapper, for cleaner code
     setQueryParams({ summary_type }, navigate);
   };
+  const setPerformanceParam = (performance_param) => {
+    setQueryParams({ performance_param }, navigate);
+  };
+  const setCalculationType = (calculation_type) => {
+    setQueryParams({ calculation_type }, navigate);
+  };
+  const setBreakdownType = (breakdown_type) => {
+    setQueryParams({ breakdown_type }, navigate);
+  };
+
+
   // const buttons = [
   //   { text: "Day", onClick: () => setSummaryType("daily") },
   //   { text: "Week", onClick: () => setSummaryType("weekly") },
@@ -200,13 +231,68 @@ function DashboardNotConnected({
               secIcon={Down}
               secIconPosition="right"
             />
+            <SelectInput
+              {...register("metric")}
+              headLess
+              placeholder="Request"
+              align="start"
+              icon={Down}
+              padding="py-xxxs px-xs"
+              gap="gap-xxs"
+              choices={[
+                { name: "Request", value: "request_count" },
+                { name: "Error", value: "error_count" },
+                { name: "Total cost", value: "cost" },
+                { name: "Latency", value: "latency" },
+                { name: "Output tokens", value: "output_token_count" },
+                { name: "Prompt tokens", value: "prompt_token_count" },
+                { name: "Total tokens", value: "token_count" },
+                // { name: "TTFT", value: "monthly" },
+              ]}
+            />
+            <SelectInput
+              {...register("type")}
+              headLess
+              placeholder="Total"
+              align="start"
+              icon={Down}
+              padding="py-xxxs px-xs"
+              gap="gap-xxs"
+              choices={[
+                { name: "Total", value: "total" },
+                { name: "Average", value: "avg" },
+                // { name: "TTFT", value: "monthly" },
+              ]}
+            />
+
+            <SelectInput
+              {...register("breakdown")}
+              headLess
+              placeholder="None"
+              align="start"
+              icon={Down}
+              padding="py-xxxs px-xs"
+              gap="gap-xxs"
+              choices={[
+                { name: "None", value: "none" },
+                { name: "By model", value: "by_model" },
+                { name: "By key", value: "by_key" },
+                { name: "By token type", value: "by_token_type" }, //only for total tokens
+              ]}
+            />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            <DotsButton icon={sideBar} bgColor="bg-gray-2" onClick={() => handleClick("Request")}/>
+            <DotsButton
+              icon={sideBar}
+              bgColor="bg-gray-2"
+              onClick={() => handleClick("Request")}
+            />
           </div>
         </div>
         <div className="flex flex-row">
-        <DashboardChart />
-        {isPanel && <PanelGraph metric={panelData} number={MetricNumber(panelData)} />}
+          <DashboardChart />
+          {isPanel && (
+            <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
+          )}
         </div>
       </div>
     );
