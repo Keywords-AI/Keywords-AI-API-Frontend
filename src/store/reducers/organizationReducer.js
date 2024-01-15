@@ -4,6 +4,8 @@ import {
   UPDATE_ORGANIZATION,
   DELETE_ROLE,
   ADD_MEMBER,
+  ADD_PRESET,
+  DELETE_PRESET
 } from "src/store/actions";
 
 const initState = {
@@ -15,6 +17,7 @@ const initState = {
   usage: 0,
   unique_organization_id: "",
   organization_size: "",
+  organization_model_presets: [],
 };
 
 export default function organizationReducer(state = initState, action) {
@@ -40,6 +43,21 @@ export default function organizationReducer(state = initState, action) {
       return {
         ...state,
         users: state.users.filter((user) => user.role.id !== action.payload),
+      };
+    case ADD_PRESET:
+      return {
+        ...state,
+        organization_model_presets: [
+          ...state.organization_model_presets,
+          action.payload,
+        ],
+      };
+    case DELETE_PRESET:
+      return {
+        ...state,
+        organization_model_presets: state.organization_model_presets.filter(
+          (preset) => preset.id !== action.payload
+        ),
       };
     default:
       return state;

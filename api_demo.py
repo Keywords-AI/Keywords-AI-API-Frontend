@@ -4,7 +4,7 @@ stream = True
 local = False
 def demo_call(input, 
               model="claude-2.1" ,
-              token="yjr0xgYF.mNbUaPC7jOK3ervtaaOU5lQFuD53Zoja", 
+              token="qRwi5qOt.lzVeuAM04W0dNyilu82yIF064xXET7Yu", 
               stream=stream
               ):
     headers = {

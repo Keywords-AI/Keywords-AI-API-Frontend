@@ -11,7 +11,7 @@ import {
   SET_API_DATA,
 } from "src/store/actions";
 const initState = {
-  dataByDate: [
+  data: [
     // {
     //   date_group: 20,
     //   total_cost: 5.6e-5,

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
@@ -32,7 +32,7 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
           title={"Create an account"}
-          subtitle={<span>Sign up to retrieve a free trial API key.</span>}
+          subtitle={`Sign up to retrieve a free trial API key.`}
         />
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -59,6 +59,13 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
               iconSize="md"
               width="w-full" onClick={() => googleLogin()}
             /> */}
+            <span className="text-sm-regular text-gray-4">
+              {"Already have an account? "}
+              <span className="text-primary cursor-pointer" 
+              onClick={()=>navigate(`/login?${params.toString()}`)}>{
+                "Sign in"
+              }</span>
+              </span>
             <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span

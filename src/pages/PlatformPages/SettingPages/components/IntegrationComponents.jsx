@@ -64,7 +64,7 @@ export const vendors = {
   Google: {
     models: [{ name: "chat-bison" }],
     companyLogo: <Google />,
-    apiPageAddress: "https://platform.openai.com/api-keys",
+    apiPageAddress: "https://ai.google.dev/docs",
   },
 };
 
