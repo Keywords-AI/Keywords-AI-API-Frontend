@@ -135,7 +135,7 @@ const CreateFormNotConnected = React.forwardRef(
 
     return (
       <form
-        ref={ref}
+        
         className={"flex-col gap-sm self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >

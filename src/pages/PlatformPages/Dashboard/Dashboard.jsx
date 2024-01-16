@@ -17,12 +17,13 @@ import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
 import { connect } from "react-redux";
 import { getDashboardData, setDateData, setPanelData } from "src/store/actions";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Form } from "react-router-dom";
 import { Button } from "src/components";
 import { PanelGraph } from "src/components/Sections";
 import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
+import { Popover } from "src/components/Dialogs";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -88,6 +89,8 @@ function DashboardNotConnected({
   const navigate = useNavigate();
   const location = useLocation();
   const { register, handleSubmit, watch } = useForm();
+  const [showPopover, setShowPopover] = useState(false);
+  const [isPanel, setIsPanel] = useState(false);
 
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "monthly";
@@ -98,8 +101,6 @@ function DashboardNotConnected({
     new URLSearchParams(location.search).get("calculation_type") || "total";
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown_type") || "none";
-
-  const [isPanel, setIsPanel] = useState(false);
 
   useEffect(() => {
     getDashboardData();
@@ -112,8 +113,12 @@ function DashboardNotConnected({
   const handleClick = (data) => {
     setPanelData(data);
     setIsPanel((prevIsPanel) => !prevIsPanel);
-  }; 
-
+  };
+  const handleClose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShowPopover(false);
+  };
   const handleTimePeriodSelection = (selectedValue) => {
     setSummaryType(selectedValue);
   };
@@ -138,13 +143,6 @@ function DashboardNotConnected({
     setQueryParams({ breakdown_type }, navigate);
   };
 
-
-  // const buttons = [
-  //   { text: "Day", onClick: () => setSummaryType("daily") },
-  //   { text: "Week", onClick: () => setSummaryType("weekly") },
-  //   { text: "Month", onClick: () => setSummaryType("monthly") },
-  //   { text: "Year", onClick: () => setSummaryType("yearly") },
-  // ];
   const metrics = [
     {
       title: "Request",
@@ -189,11 +187,6 @@ function DashboardNotConnected({
   else
     return (
       <div className="flex flex-col w-full h-full">
-        {/* <span className="text-sm-regular text-gray-3">
-                {organization?.name || "Organization"}
-              </span> */}
-
-        {/* <ButtonGroup buttons={buttons} /> */}
         <div className="grid grid-cols-6 px-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
             <span className="text-sm-md text-gray-4">Welcome</span>
@@ -224,62 +217,99 @@ function DashboardNotConnected({
               ]}
               handleSelected={handleTimePeriodSelection}
             />
-            <Button
-              variant="small"
-              text="Display"
-              icon={Display}
-              secIcon={Down}
-              secIconPosition="right"
-            />
-            <SelectInput
-              {...register("metric")}
-              headLess
-              placeholder="Request"
+            <Popover
+              trigger={
+                <Button
+                  variant="small"
+                  text="Display"
+                  icon={Display}
+                  secIcon={Down}
+                  secIconPosition="right"
+                  onClick={() => setShowPopover((prev) => !prev)}
+                />
+              }
+              open={showPopover}
+              setOpen={setShowPopover}
+              side="bottom"
               align="start"
-              icon={Down}
-              padding="py-xxxs px-xs"
-              gap="gap-xxs"
-              choices={[
-                { name: "Request", value: "request_count" },
-                { name: "Error", value: "error_count" },
-                { name: "Total cost", value: "cost" },
-                { name: "Latency", value: "latency" },
-                { name: "Output tokens", value: "output_token_count" },
-                { name: "Prompt tokens", value: "prompt_token_count" },
-                { name: "Total tokens", value: "token_count" },
-                // { name: "TTFT", value: "monthly" },
-              ]}
-            />
-            <SelectInput
-              {...register("type")}
-              headLess
-              placeholder="Total"
-              align="start"
-              icon={Down}
-              padding="py-xxxs px-xs"
-              gap="gap-xxs"
-              choices={[
-                { name: "Total", value: "total" },
-                { name: "Average", value: "avg" },
-                // { name: "TTFT", value: "monthly" },
-              ]}
-            />
+              width="min-w-[240px]"
+            >
+              <form
+                className={"flex flex-col gap-xs items-end"}
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="flex flex-col items-start gap-xxs self-stretch">
+                  <div className="flex justify-between items-center self-stretch ">
+                    <span className="text-sm-regular text-gray-4">Metric</span>
+                    <SelectInput
+                      {...register("metric")}
+                      headLess
+                      placeholder="Request"
+                      align="start"
+                      icon={Down}
+                      padding="py-xxxs px-xs"
+                      gap="gap-xxs"
+                      width="min-w-[140px]"
+                      choices={[
+                        { name: "Request", value: "request_count" },
+                        { name: "Error", value: "error_count" },
+                        { name: "Total cost", value: "cost" },
+                        { name: "Latency", value: "latency" },
+                        { name: "Output tokens", value: "output_token_count" },
+                        { name: "Prompt tokens", value: "prompt_token_count" },
+                        { name: "Total tokens", value: "token_count" },
+                        // { name: "TTFT", value: "monthly" },
+                      ]}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center self-stretch ">
+                    <span className="text-sm-regular text-gray-4">Type</span>
+                    <SelectInput
+                      {...register("type")}
+                      headLess
+                      placeholder="Total"
+                      align="start"
+                      icon={Down}
+                      padding="py-xxxs px-xs"
+                      gap="gap-xxs"
+                      width="min-w-[140px]"
+                      choices={[
+                        { name: "Total", value: "total" },
+                        { name: "Average", value: "avg" },
+                        // { name: "TTFT", value: "monthly" },
+                      ]}
+                    />
+                  </div>
+                  <div className="flex justify-between items-center self-stretch ">
+                    <span className="text-sm-regular text-gray-4">
+                      Breakdown
+                    </span>
+                    <SelectInput
+                      {...register("breakdown")}
+                      headLess
+                      placeholder="None"
+                      align="start"
+                      icon={Down}
+                      padding="py-xxxs px-xs"
+                      gap="gap-xxs"
+                      width="min-w-[140px]"
+                      choices={[
+                        { name: "None", value: "none" },
+                        { name: "By model", value: "by_model" },
+                        { name: "By key", value: "by_key" },
+                        { name: "By token type", value: "by_token_type" }, //only for total tokens
+                      ]}
+                    />
+                  </div>
+                </div>
+                <Button
+                  variant="text"
+                  text="Apply"
+                  textColor="text-primary"
+                />
+              </form>
+            </Popover>
 
-            <SelectInput
-              {...register("breakdown")}
-              headLess
-              placeholder="None"
-              align="start"
-              icon={Down}
-              padding="py-xxxs px-xs"
-              gap="gap-xxs"
-              choices={[
-                { name: "None", value: "none" },
-                { name: "By model", value: "by_model" },
-                { name: "By key", value: "by_key" },
-                { name: "By token type", value: "by_token_type" }, //only for total tokens
-              ]}
-            />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={sideBar}
