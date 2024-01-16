@@ -36,6 +36,7 @@ export const getKeys = () => {
   return (dispatch) => {
     keywordsRequest({
       path: "api/get-keys",
+      dispatch,
     })
       .then((data) => {
         dispatch(setKeyList(data));
@@ -57,6 +58,7 @@ export const createApiKey = (data, actions) => {
       path: "api/create-api-key/",
       method: "POST",
       data: data,
+      dispatch,
     })
       .then((data) => {
         dispatch(setLoading(false));
