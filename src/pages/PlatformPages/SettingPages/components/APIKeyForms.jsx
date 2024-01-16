@@ -105,11 +105,12 @@ const CreateFormNotConnected = React.forwardRef(
       formState: { errors },
     } = useForm();
     const onSubmit = (data) => {
-      console.log(JSON.stringify(data));
       if (!data.name) {
         data.name = "New Key";
       }
       setNewKeyName(data.name);
+      data.preset_models = data.preset_models.split(",").filter((model)=> model !== "");
+      console.log(data);
       createApiKey(data);
   };
     const handleClose = (e) => {
@@ -219,11 +220,12 @@ const CreateFormNotConnected = React.forwardRef(
               </div>}
                   <SelectInput
                   title={"Select preset"}
-                  {...register("preset")}
+                  {...register("preset_models")}
+                  defaultValue={models.reduce((modelStr, model)=> modelStr + "," + model.value, "")}
                   choices={[
-                    {name: "All", models: models.map((model)=> model.value)},
+                    {name: "All", value: models.reduce((modelStr, model)=> modelStr + "," + model.value, "")},
                     ...organization?.organization_model_presets.map((preset)=> {
-                      return {name: preset.name, value: preset.preset_models}
+                      return {name: preset.name, value: preset.preset_models.reduce((modelStr, model)=> modelStr + "," + model, "")}
                     })
                   ]}
                   />
