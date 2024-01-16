@@ -3,7 +3,13 @@ import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
+export const SET_AVG_COST_DATA = "SET_AVG_COST_DATA";
 export const SET_TOKEN_COUNT_DATA = "SET_TOKEN_COUNT_DATA";
+export const SET_AVG_TOKEN_COUNT_DATA = "SET_AVG_TOKEN_COUNT_DATA";
+export const SET_PROMPT_TOKEN_COUNT_DATA = "SET_PROMPT_TOKEN_COUNT_DATA";
+export const SET_AVG_PROMPT_TOKEN_COUNT_DATA = "SET_AVG_PROMPT_TOKEN_COUNT_DATA";
+export const SET_COMPLETION_TOKEN_COUNT_DATA = "SET_COMPLETION_TOKEN_COUNT_DATA";
+export const SET_AVG_COMPLETION_TOKEN_COUNT_DATA = "SET_AVG_COMPLETION_TOKEN_COUNT_DATA";
 export const SET_LATENCY_DATA = "SET_LATENCY_DATA";
 export const SET_REQUEST_COUNT_DATA = "SET_REQUEST_COUNT_DATA";
 export const SET_DATE_DATA = "SET_DATE_DATA";
@@ -27,9 +33,51 @@ export const setCostData = (data) => {
   };
 };
 
+export const setAvgCostData = (data) => {
+  return {
+    type: SET_AVG_COST_DATA,
+    payload: data,
+  };
+};
+
 export const setTokenCountData = (data) => {
   return {
     type: SET_TOKEN_COUNT_DATA,
+    payload: data,
+  };
+};
+
+export const setAvgTokenCountData = (data) => {
+  return {
+    type: SET_AVG_TOKEN_COUNT_DATA,
+    payload: data,
+  };
+};
+
+export const setPromptTokenCountData = (data) => {
+  return {
+    type: SET_PROMPT_TOKEN_COUNT_DATA,
+    payload: data,
+  };
+};
+
+export const setAvgPromptTokenCountData = (data) => {
+  return {
+    type: SET_AVG_PROMPT_TOKEN_COUNT_DATA,
+    payload: data,
+  };
+};
+
+export const setCompletionTokenCountData = (data) => {
+  return {
+    type: SET_COMPLETION_TOKEN_COUNT_DATA,
+    payload: data,
+  };
+};
+
+export const setAvgCompletionTokenCountData = (data) => {
+  return {
+    type: SET_AVG_COMPLETION_TOKEN_COUNT_DATA,
     payload: data,
   };
 };
@@ -122,8 +170,36 @@ export const getDashboardData = (
           setCostData(sliceChartData(dataList, "date_group", "total_cost"))
         );
         dispatch(
+          setAvgCostData(sliceChartData(dataList, "date_group", "average_cost"))
+        );
+        dispatch(
           setTokenCountData(
             sliceChartData(dataList, "date_group", "total_tokens")
+          )
+        );
+        dispatch(
+          setAvgTokenCountData(
+            sliceChartData(dataList, "date_group", "average_tokens")
+          )
+        );
+        dispatch(
+          setPromptTokenCountData(
+            sliceChartData(dataList, "date_group", "total_prompt_tokens")
+          )
+        );
+        dispatch(
+          setAvgPromptTokenCountData(
+            sliceChartData(dataList, "date_group", "average_prompt_tokens")
+          )
+        );
+        dispatch(
+          setCompletionTokenCountData(
+            sliceChartData(dataList, "date_group", "total_completion_tokens")
+          )
+        );
+        dispatch(
+          setAvgCompletionTokenCountData(
+            sliceChartData(dataList, "date_group", "average_completion_tokens")
           )
         );
         dispatch(
