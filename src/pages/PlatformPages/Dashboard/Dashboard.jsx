@@ -24,6 +24,7 @@ import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
+import { Metrics } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -91,7 +92,6 @@ function DashboardNotConnected({
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
-
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "monthly";
   const performance_param =
@@ -111,7 +111,6 @@ function DashboardNotConnected({
   }, []);
 
   const handleClick = (data) => {
-    setPanelData(data);
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
   const handleClose = (e) => {
@@ -124,7 +123,9 @@ function DashboardNotConnected({
   };
 
   const onSubmit = (data) => {
+    console.log(data);
     setPerformanceParam(data.metric);
+    setPanelData(data.metric);
     setCalculationType(data.type);
     setBreakdownType(data.breakdown);
     setShowPopover(false);
@@ -146,44 +147,44 @@ function DashboardNotConnected({
 
   const metrics = [
     {
-      title: "Request",
+      title: Metrics.number_of_requests.name,
       number: summary.number_of_requests,
       chartData: requestCountData,
-      dataKey: "number_of_requests",
+      dataKey: Metrics.number_of_requests.value,
       // onClick: () => handleClick("Request"),
     },
     {
-      title: "Latency",
+      title: Metrics.average_latency.name,
       number: `${summary.average_latency?.toFixed(3) || 0}`,
       chartData: latencyData,
-      dataKey: "average_latency",
+      dataKey: Metrics.average_latency.value,
       unit: true,
       // onClick: () => handleClick("Latency"),
     },
     {
-      title: "Prompt Tokens",
+      title: Metrics.total_prompt_tokens.name,
       number: summary.total_prompt_tokens || 0,
       chartData: promptTokenCountData,
-      dataKey: "total_prompt_tokens",
+      dataKey: Metrics.total_prompt_tokens.value,
       // onClick: () => handleClick("Tokens"),
     },
     {
-      title: "Output Tokens",
+      title: Metrics.output_token_count.name,
       number: summary.total_completion_tokens || 0,
       chartData: completionTokenCountData,
-      dataKey: "total_completion_tokens",
+      dataKey: Metrics.output_token_count.value,
       // onClick: () => handleClick("Tokens"),
     },
     {
-      title: "Cost",
+      title: Metrics.total_cost.name,
       number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
-      dataKey: "total_cost",
+      dataKey: Metrics.total_cost.value,
       // onClick: () => handleClick("Cost"),
     },
   ];
   const MetricNumber = (panelData) =>
-    metrics.find((metric) => metric.title === panelData)?.number || 0;
+    metrics.find((metric) => metric.dataKey === panelData)?.number || 0;
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
@@ -254,14 +255,34 @@ function DashboardNotConnected({
                       gap="gap-xxs"
                       width="min-w-[140px]"
                       choices={[
-                        { name: "Request", value: "request_count" },
-                        { name: "Error", value: "error_count" },
-                        { name: "Total cost", value: "cost" },
-                        { name: "Latency", value: "latency" },
-                        { name: "Output tokens", value: "output_token_count" },
-                        { name: "Prompt tokens", value: "prompt_token_count" },
-                        { name: "Total tokens", value: "token_count" },
-                        // { name: "TTFT", value: "monthly" },
+                        {
+                          name: Metrics.number_of_requests.name,
+                          value: Metrics.number_of_requests.value,
+                        },
+                        {
+                          name: Metrics.error_count.name,
+                          value: Metrics.error_count.value,
+                        },
+                        {
+                          name: Metrics.total_cost.name,
+                          value: Metrics.total_cost.value,
+                        },
+                        {
+                          name: Metrics.average_latency.name,
+                          value: Metrics.average_latency.value,
+                        },
+                        {
+                          name: Metrics.output_token_count.name,
+                          value: Metrics.output_token_count.value,
+                        },
+                        {
+                          name: Metrics.total_prompt_tokens.name,
+                          value: Metrics.total_prompt_tokens.value,
+                        },
+                        {
+                          name: Metrics.total_token_count.name,
+                          value: Metrics.total_token_count.value,
+                        },
                       ]}
                     />
                   </div>
