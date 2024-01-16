@@ -1,10 +1,4 @@
-import {
-  OpenAI,
-  Anthropic,
-  Google,
-  Labs,
-  Cohere,
-} from "src/components/Icons"
+import { OpenAI, Anthropic, Google, Labs, Cohere } from "src/components/Icons";
 
 const colors = [
   "var(--primary)",
@@ -129,7 +123,16 @@ export const models = [
   },
 ];
 
-
 export const randomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+export const Metrics = {
+  number_of_requests: { name: "Request", value: "number_of_requests" },
+  average_latency: { name: "Latency", value: "average_latency" },
+  total_prompt_tokens: { name: "Prompt Tokens", value: "total_prompt_tokens" },
+  output_token_count: { name: "Output Tokens", value: "output_token_count" },
+  total_token_count: { name: "Total tokens", value: "total_token_count" },
+  total_cost: { name: "Cost", value: "total_cost" },
+  error_count: { name: "Errors", value: "error_count" },
 };

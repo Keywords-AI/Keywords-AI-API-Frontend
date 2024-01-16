@@ -127,6 +127,7 @@ function DashboardNotConnected({
     setPerformanceParam(metric);
     setCalculationType(type);
     setBreakdownType(breakdown);
+    setShowPopover(false);
   };
 
   const setSummaryType = (summary_type) => {
@@ -268,8 +269,10 @@ function DashboardNotConnected({
               open={showPopover}
               setOpen={setShowPopover}
               side="bottom"
-              align="start"
-              width="min-w-[240px]"
+              sideOffset={5}
+              align="end"
+              alignOffset={-45}
+              width="min-w-[240px] w-[320px]"
             >
               <form
                 className={"flex flex-col gap-xs items-end"}
@@ -327,11 +330,7 @@ function DashboardNotConnected({
                     />
                   </div>
                 </div>
-                <Button
-                  variant="text"
-                  text="Apply"
-                  textColor="text-primary"
-                />
+                <Button variant="text" text="Apply" textColor="text-primary" />
               </form>
             </Popover>
 
