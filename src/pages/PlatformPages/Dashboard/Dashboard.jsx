@@ -114,11 +114,11 @@ function DashboardNotConnected({
     setPanelData(data);
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
-  const handleClose = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowPopover(false);
-  };
+  // const handlMetricClick = (data) => {
+  //   // const param = data.dataKey;
+  //   // setPerformanceParam(param);
+  // };
+
   const handleTimePeriodSelection = (selectedValue) => {
     setSummaryType(selectedValue);
   };
@@ -127,6 +127,7 @@ function DashboardNotConnected({
     setPerformanceParam(data.metric);
     setCalculationType(data.type);
     setBreakdownType(data.breakdown);
+    setPanelData(data.metric);
   };
 
   const setSummaryType = (summary_type) => {
@@ -182,7 +183,8 @@ function DashboardNotConnected({
     },
   ];
   const MetricNumber = (panelData) =>
-    metrics.find((metric) => metric.title === panelData)?.number || 0;
+    metrics.find((metric) => metric.dataKey === panelData)?.number || 0;
+    
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
@@ -201,7 +203,7 @@ function DashboardNotConnected({
             {" "}
           </div>
           <div className="flex items-center gap-xxs">
-            <Button variant="small" text="Today" />
+            <Button variant="small" text="Today" onClick={() =>handleTimePeriodSelection("daily")} />
             <SelectInput
               headLess
               placeholder="Month"
