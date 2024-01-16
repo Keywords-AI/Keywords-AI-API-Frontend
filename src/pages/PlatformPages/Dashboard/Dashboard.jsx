@@ -124,9 +124,9 @@ function DashboardNotConnected({
   };
 
   const onSubmit = (data) => {
-    setPerformanceParam(data.metric);
-    setCalculationType(data.type);
-    setBreakdownType(data.breakdown);
+    setPerformanceParam(metric);
+    setCalculationType(type);
+    setBreakdownType(breakdown);
   };
 
   const setSummaryType = (summary_type) => {
@@ -181,6 +181,43 @@ function DashboardNotConnected({
       // onClick: () => handleClick("Cost"),
     },
   ];
+
+  const [metric, setMetric] = useState('request_count');
+  const [type, setType] = useState('total');
+  const [breakdown, setBreakdown] = useState('none');
+
+  const metricChoices = [
+    { name: "Request", value: "request_count" },
+    { name: "Error", value: "error_count" },
+    { name: "Total cost", value: "cost" },
+    { name: "Latency", value: "latency" },
+    { name: "Output tokens", value: "output_token_count" },
+    { name: "Prompt tokens", value: "prompt_token_count" },
+    { name: "Total tokens", value: "token_count" },
+  ];
+
+  const typeChoices = [
+    { name: "Total", value: "total" },
+    { name: "Average", value: "avg" },
+  ];
+
+  const breakdownChoices = [
+    { name: "None", value: "none" },
+    { name: "By model", value: "by_model" },
+    { name: "By key", value: "by_key" },
+    { name: "By token type", value: "by_token_type" }, //only for total tokens
+  ];
+
+  useEffect(() => {
+    if ((metric === 'output_token_count' || metric === 'prompt_token_count') && breakdown === 'by_token_type') {
+      setBreakdown('none'); // Default to 'request_count' or any other metric
+    }
+  }, [metric, breakdown]);
+
+  const filteredBreakdownChoices = (metric === 'output_token_count' || metric === 'prompt_token_count')
+    ? breakdownChoices.filter(choice => choice.value !== 'by_token_type') 
+    : breakdownChoices;
+
   const MetricNumber = (panelData) =>
     metrics.find((metric) => metric.title === panelData)?.number || 0;
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
@@ -250,16 +287,9 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      choices={[
-                        { name: "Request", value: "request_count" },
-                        { name: "Error", value: "error_count" },
-                        { name: "Total cost", value: "cost" },
-                        { name: "Latency", value: "latency" },
-                        { name: "Output tokens", value: "output_token_count" },
-                        { name: "Prompt tokens", value: "prompt_token_count" },
-                        { name: "Total tokens", value: "token_count" },
-                        // { name: "TTFT", value: "monthly" },
-                      ]}
+                      value={metric}
+                      onChange={(e) => setMetric(e.target.value)}
+                      choices={metricChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
@@ -273,11 +303,9 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      choices={[
-                        { name: "Total", value: "total" },
-                        { name: "Average", value: "avg" },
-                        // { name: "TTFT", value: "monthly" },
-                      ]}
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      choices={typeChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
@@ -293,12 +321,9 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      choices={[
-                        { name: "None", value: "none" },
-                        { name: "By model", value: "by_model" },
-                        { name: "By key", value: "by_key" },
-                        { name: "By token type", value: "by_token_type" }, //only for total tokens
-                      ]}
+                      value={breakdown}
+                      onChange={(e) => setBreakdown(e.target.value)}
+                      choices={filteredBreakdownChoices}
                     />
                   </div>
                 </div>
