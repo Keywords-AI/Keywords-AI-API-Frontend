@@ -44,14 +44,15 @@ export const getKeys = () => {
   };
 };
 
-export const addKey = (key, actions) => {
+export const addKey = (key) => {
   return {
     type: ADD_KEY,
-    key: processKeyList([key], actions)[0],
+    // No need to add actions here, setPrevKey (in ApiKeyPage) will get triggered once list is updated
+    key: processKeyList([key], ()=>{})[0],
   };
 };
 
-export const createApiKey = (data, actions) => {
+export const createApiKey = (data) => {
   return (dispatch) => {
     dispatch(setLoading(true));
     keywordsRequest({
@@ -62,7 +63,7 @@ export const createApiKey = (data, actions) => {
     })
       .then((data) => {
         dispatch(setLoading(false));
-        dispatch(addKey(data, actions));
+        dispatch(addKey(data));
         dispatch(dispatchNotification({ title: "API Key created successfully!" }));
       })
       .catch((err) => {

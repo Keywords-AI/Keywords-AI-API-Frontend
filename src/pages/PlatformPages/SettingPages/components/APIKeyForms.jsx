@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import {
   setNewKeyName,
   setKeyList,
-  addKey,
   deleteKey,
   createApiKey,
   updateEditingKey,
@@ -17,16 +16,17 @@ import { Icon } from "@radix-ui/react-select";
 import { Info } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css"
+import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   user: state.user,
   apiKey: state.apiKey,
   loading: state.apiKey.loading,
+  organization: state.organization,
 });
 
 const mapDispatchToProps = {
   setNewKeyName,
-  addKey,
   setKeyList,
   deleteKey,
   updateEditingKey,
@@ -95,7 +95,7 @@ const CreateFormNotConnected = React.forwardRef(
       editingTrigger,
       createApiKey,
       loading,
-      dispatchNotification,
+      organization,
     },
     ref
   ) => {
@@ -110,8 +110,7 @@ const CreateFormNotConnected = React.forwardRef(
         data.name = "New Key";
       }
       setNewKeyName(data.name);
-      console.log(data);
-      createApiKey(data, editingTrigger);
+      createApiKey(data);
   };
     const handleClose = (e) => {
       e.preventDefault();
@@ -218,7 +217,16 @@ const CreateFormNotConnected = React.forwardRef(
                   defaultValue={100}
                 />
               </div>}
-
+                  <SelectInput
+                  title={"Select preset"}
+                  {...register("preset")}
+                  choices={[
+                    {name: "All", models: models.map((model)=> model.value)},
+                    ...organization?.organization_model_presets.map((preset)=> {
+                      return {name: preset.name, value: preset.preset_models}
+                    })
+                  ]}
+                  />
             </React.Fragment>
           ) : (
             <div className="text-sm-regular text-gray-4">
