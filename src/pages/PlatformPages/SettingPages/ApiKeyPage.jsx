@@ -8,7 +8,6 @@ import { CreateForm, EditForm, DeleteForm, APIKeyActions } from "./components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Modal } from "src/components/Dialogs";
 import {
-  setKeyList,
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
@@ -22,7 +21,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setKeyList,
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
