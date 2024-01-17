@@ -145,7 +145,6 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   */
   if (!data) return [];
   if (dataKeyY && Array.isArray(dataKeyY)) {
-    console.log("dataKeyY is an array");
     return data.map((item) => {
       const newItem = {};
       newItem[dataKeyX] = item[dataKeyX];

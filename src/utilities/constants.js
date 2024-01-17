@@ -131,7 +131,10 @@ export const Metrics = {
   number_of_requests: { name: "Request", value: "number_of_requests" },
   average_latency: { name: "Latency", value: "average_latency" },
   total_prompt_tokens: { name: "Prompt Tokens", value: "total_prompt_tokens" },
-  output_token_count: { name: "Output Tokens", value: "output_token_count" },
+  output_token_count: {
+    name: "Output Tokens",
+    value: "total_completion_tokens",
+  },
   total_token_count: { name: "Total tokens", value: "total_token_count" },
   total_cost: { name: "Cost", value: "total_cost" },
   error_count: { name: "Errors", value: "error_count" },

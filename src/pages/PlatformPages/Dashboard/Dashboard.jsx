@@ -373,7 +373,11 @@ function DashboardNotConnected({
         <div className="flex flex-row">
           <DashboardChart />
           {isPanel && (
-            <PanelGraph metric={panelData} number={MetricNumber(panelData)} />
+            <PanelGraph
+              metric={panelData}
+              number={MetricNumber(panelData)}
+              type={calculation_type}
+            />
           )}
         </div>
       </div>
