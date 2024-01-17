@@ -186,25 +186,9 @@ function DashboardNotConnected({
     },
   ];
 
-<<<<<<< HEAD
-  const [metric, setMetric] = useState('request_count');
-  const [type, setType] = useState('total');
-  const [breakdown, setBreakdown] = useState('none');
-
-  // const metricChoices = [
-  //   { name: "Request", value: "request_count" },
-  //   { name: "Error", value: "error_count" },
-  //   { name: "Total cost", value: "cost" },
-  //   { name: "Latency", value: "latency" },
-  //   { name: "Output tokens", value: "output_token_count" },
-  //   { name: "Prompt tokens", value: "prompt_token_count" },
-  //   { name: "Total tokens", value: "token_count" },
-  // ];
-=======
   const [metric, setMetric] = useState("request_count");
   const [type, setType] = useState("total");
   const [breakdown, setBreakdown] = useState("none");
->>>>>>> 598db64f9044ccecedf63930bf4f7cac4d890153
 
   const typeChoices = [
     { name: "Total", value: "total" },
