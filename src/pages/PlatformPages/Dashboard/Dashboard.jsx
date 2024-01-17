@@ -123,7 +123,7 @@ function DashboardNotConnected({
   };
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("data", data);
     setPerformanceParam(data.metric);
     setPanelData(data.metric);
     setCalculationType(data.type);
@@ -142,6 +142,7 @@ function DashboardNotConnected({
     setQueryParams({ calculation_type }, navigate);
   };
   const setBreakdownType = (breakdown_type) => {
+    console.log("breakdown_type", breakdown_type);
     setQueryParams({ breakdown_type }, navigate);
   };
 
@@ -184,19 +185,9 @@ function DashboardNotConnected({
     },
   ];
 
-  const [metric, setMetric] = useState('request_count');
-  const [type, setType] = useState('total');
-  const [breakdown, setBreakdown] = useState('none');
-
-  const metricChoices = [
-    { name: "Request", value: "request_count" },
-    { name: "Error", value: "error_count" },
-    { name: "Total cost", value: "cost" },
-    { name: "Latency", value: "latency" },
-    { name: "Output tokens", value: "output_token_count" },
-    { name: "Prompt tokens", value: "prompt_token_count" },
-    { name: "Total tokens", value: "token_count" },
-  ];
+  const [metric, setMetric] = useState("request_count");
+  const [type, setType] = useState("total");
+  const [breakdown, setBreakdown] = useState("none");
 
   const typeChoices = [
     { name: "Total", value: "total" },
@@ -211,14 +202,19 @@ function DashboardNotConnected({
   ];
 
   useEffect(() => {
-    if ((metric === 'output_token_count' || metric === 'prompt_token_count') && breakdown === 'by_token_type') {
-      setBreakdown('none'); // Default to 'request_count' or any other metric
+    if (
+      (metric === "output_token_count" || metric === "prompt_token_count") &&
+      breakdown === "by_token_type"
+    ) {
+      console.log("here");
+      setBreakdown("none"); // Default to 'request_count' or any other metric
     }
   }, [metric, breakdown]);
 
-  const filteredBreakdownChoices = (metric === 'output_token_count' || metric === 'prompt_token_count')
-    ? breakdownChoices.filter(choice => choice.value !== 'by_token_type') 
-    : breakdownChoices;
+  const filteredBreakdownChoices =
+    metric === "output_token_count" || metric === "prompt_token_count"
+      ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
+      : breakdownChoices;
 
   const MetricNumber = (panelData) =>
     metrics.find((metric) => metric.dataKey === panelData)?.number || 0;
@@ -289,8 +285,10 @@ function DashboardNotConnected({
                       align="start"
                       icon={Down}
                       padding="py-xxxs px-xs"
+                      defaultValue={Metrics.number_of_requests.value}
                       gap="gap-xxs"
                       width="min-w-[140px]"
+                      value={Metrics.number_of_requests.value}
                       choices={[
                         {
                           name: Metrics.number_of_requests.name,
@@ -334,6 +332,7 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
+                      defaultValue="total"
                       value={type}
                       onChange={(e) => setType(e.target.value)}
                       choices={typeChoices}
@@ -352,6 +351,7 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
+                      defaultValue="none"
                       value={breakdown}
                       onChange={(e) => setBreakdown(e.target.value)}
                       choices={filteredBreakdownChoices}
