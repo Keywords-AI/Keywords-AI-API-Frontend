@@ -14,7 +14,9 @@ import {
   SET_ERROR_DATA,
   SET_PANEL_DATA,
   SET_MODEL_DATA,
+  SET_AVG_MODEL_DATA,
   SET_API_DATA,
+  SET_AVG_API_DATA,
 } from "src/store/actions";
 const initState = {
   data: [
@@ -75,7 +77,9 @@ const initState = {
     //   number_of_requests:0,
     // }
   ],
+  avgModelData: [],
   apiData: [],
+  avgApiData: [],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -110,8 +114,12 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, panelData: action.payload };
     case SET_MODEL_DATA:
       return { ...state, modelData: action.payload };
+    case SET_AVG_MODEL_DATA:
+      return { ...state, avgModelData: action.payload };
     case SET_API_DATA:
       return { ...state, apiData: action.payload };
+    case SET_AVG_API_DATA:
+      return { ...state, avgApiData: action.payload };
     default:
       return state;
   }

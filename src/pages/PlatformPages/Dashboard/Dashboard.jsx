@@ -189,15 +189,15 @@ function DashboardNotConnected({
   const [type, setType] = useState('total');
   const [breakdown, setBreakdown] = useState('none');
 
-  const metricChoices = [
-    { name: "Request", value: "request_count" },
-    { name: "Error", value: "error_count" },
-    { name: "Total cost", value: "cost" },
-    { name: "Latency", value: "latency" },
-    { name: "Output tokens", value: "output_token_count" },
-    { name: "Prompt tokens", value: "prompt_token_count" },
-    { name: "Total tokens", value: "token_count" },
-  ];
+  // const metricChoices = [
+  //   { name: "Request", value: "request_count" },
+  //   { name: "Error", value: "error_count" },
+  //   { name: "Total cost", value: "cost" },
+  //   { name: "Latency", value: "latency" },
+  //   { name: "Output tokens", value: "output_token_count" },
+  //   { name: "Prompt tokens", value: "prompt_token_count" },
+  //   { name: "Total tokens", value: "token_count" },
+  // ];
 
   const typeChoices = [
     { name: "Total", value: "total" },
@@ -275,7 +275,7 @@ function DashboardNotConnected({
               sideOffset={5}
               align="end"
               alignOffset={-45}
-              width="min-w-[240px] w-[320px]"
+              width="w-[320px]"
             >
               <form
                 className={"flex flex-col gap-xs items-end"}

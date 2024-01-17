@@ -128,11 +128,11 @@ export const randomColor = () => {
 };
 
 export const Metrics = {
-  number_of_requests: { name: "Request", value: "number_of_requests" },
-  average_latency: { name: "Latency", value: "average_latency" },
-  total_prompt_tokens: { name: "Prompt Tokens", value: "total_prompt_tokens" },
+  number_of_requests: { name: "Request", value: "request_count" },
+  average_latency: { name: "Latency", value: "latency" },
+  total_prompt_tokens: { name: "Prompt Tokens", value: "prompt_tokens_count" },
   output_token_count: { name: "Output Tokens", value: "output_token_count" },
-  total_token_count: { name: "Total tokens", value: "total_token_count" },
-  total_cost: { name: "Cost", value: "total_cost" },
+  total_token_count: { name: "Total tokens", value: "token_count" },
+  total_cost: { name: "Cost", value: "cost" },
   error_count: { name: "Errors", value: "error_count" },
 };

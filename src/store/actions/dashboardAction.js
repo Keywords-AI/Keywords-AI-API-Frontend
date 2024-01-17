@@ -16,7 +16,9 @@ export const SET_DATE_DATA = "SET_DATE_DATA";
 export const SET_ERROR_DATA = "SET_ERROR_DATA";
 export const SET_PANEL_DATA = "SET_PANEL_DATA";
 export const SET_MODEL_DATA = "SET_MODEL_DATA";
+export const SET_AVG_MODEL_DATA = "SET_AVG_MODEL_DATA";
 export const SET_API_DATA = "SET_API_DATA";
+export const SET_AVG_API_DATA = "SET_AVG_API_DATA";
 
 export const setDashboardData = (data) => {
   console.log(data);
@@ -118,9 +120,23 @@ export const setModelData = (data) => {
   };
 };
 
+export const setAvgModelData = (data) => {
+  return {
+    type: SET_AVG_MODEL_DATA,
+    payload: data,
+  };
+};
+
 export const setApiData = (data) => {
   return {
     type: SET_API_DATA,
+    payload: data,
+  };
+};
+
+export const setAvgApiData = (data) => {
+  return {
+    type: SET_AVG_API_DATA,
     payload: data,
   };
 };
@@ -221,6 +237,12 @@ export const getDashboardData = (
         );
         dispatch(
           setApiData(data?.data_by_key)
+        );
+        dispatch(
+          setAvgModelData(data?.data_avg_by_model)
+        );
+        dispatch(
+          setAvgApiData(data?.data_avg_by_key)
         );
       })
       .catch((error) => {});
