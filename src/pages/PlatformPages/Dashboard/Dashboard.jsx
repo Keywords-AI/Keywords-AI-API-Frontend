@@ -24,6 +24,7 @@ import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
+import { Metrics } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -91,7 +92,6 @@ function DashboardNotConnected({
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
-
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "monthly";
   const performance_param =
@@ -111,7 +111,6 @@ function DashboardNotConnected({
   }, []);
 
   const handleClick = (data) => {
-    setPanelData(data);
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
   // const handlMetricClick = (data) => {
@@ -124,10 +123,13 @@ function DashboardNotConnected({
   };
 
   const onSubmit = (data) => {
+    console.log(data);
     setPerformanceParam(data.metric);
+    setPanelData(data.metric);
     setCalculationType(data.type);
     setBreakdownType(data.breakdown);
     setPanelData(data.metric);
+    setShowPopover(false);
   };
 
   const setSummaryType = (summary_type) => {
@@ -146,42 +148,79 @@ function DashboardNotConnected({
 
   const metrics = [
     {
-      title: "Request",
+      title: Metrics.number_of_requests.name,
       number: summary.number_of_requests,
       chartData: requestCountData,
-      dataKey: "number_of_requests",
+      dataKey: Metrics.number_of_requests.value,
       // onClick: () => handleClick("Request"),
     },
     {
-      title: "Latency",
+      title: Metrics.average_latency.name,
       number: `${summary.average_latency?.toFixed(3) || 0}`,
       chartData: latencyData,
-      dataKey: "average_latency",
+      dataKey: Metrics.average_latency.value,
       unit: true,
       // onClick: () => handleClick("Latency"),
     },
     {
-      title: "Prompt Tokens",
+      title: Metrics.total_prompt_tokens.name,
       number: summary.total_prompt_tokens || 0,
       chartData: promptTokenCountData,
-      dataKey: "total_prompt_tokens",
+      dataKey: Metrics.total_prompt_tokens.value,
       // onClick: () => handleClick("Tokens"),
     },
     {
-      title: "Output Tokens",
+      title: Metrics.output_token_count.name,
       number: summary.total_completion_tokens || 0,
       chartData: completionTokenCountData,
-      dataKey: "total_completion_tokens",
+      dataKey: Metrics.output_token_count.value,
       // onClick: () => handleClick("Tokens"),
     },
     {
-      title: "Cost",
+      title: Metrics.total_cost.name,
       number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
-      dataKey: "total_cost",
+      dataKey: Metrics.total_cost.value,
       // onClick: () => handleClick("Cost"),
     },
   ];
+
+  const [metric, setMetric] = useState('request_count');
+  const [type, setType] = useState('total');
+  const [breakdown, setBreakdown] = useState('none');
+
+  const metricChoices = [
+    { name: "Request", value: "request_count" },
+    { name: "Error", value: "error_count" },
+    { name: "Total cost", value: "cost" },
+    { name: "Latency", value: "latency" },
+    { name: "Output tokens", value: "output_token_count" },
+    { name: "Prompt tokens", value: "prompt_token_count" },
+    { name: "Total tokens", value: "token_count" },
+  ];
+
+  const typeChoices = [
+    { name: "Total", value: "total" },
+    { name: "Average", value: "avg" },
+  ];
+
+  const breakdownChoices = [
+    { name: "None", value: "none" },
+    { name: "By model", value: "by_model" },
+    { name: "By key", value: "by_key" },
+    { name: "By token type", value: "by_token_type" }, //only for total tokens
+  ];
+
+  useEffect(() => {
+    if ((metric === 'output_token_count' || metric === 'prompt_token_count') && breakdown === 'by_token_type') {
+      setBreakdown('none'); // Default to 'request_count' or any other metric
+    }
+  }, [metric, breakdown]);
+
+  const filteredBreakdownChoices = (metric === 'output_token_count' || metric === 'prompt_token_count')
+    ? breakdownChoices.filter(choice => choice.value !== 'by_token_type') 
+    : breakdownChoices;
+
   const MetricNumber = (panelData) =>
     metrics.find((metric) => metric.dataKey === panelData)?.number || 0;
     
@@ -233,8 +272,10 @@ function DashboardNotConnected({
               open={showPopover}
               setOpen={setShowPopover}
               side="bottom"
-              align="start"
-              width="min-w-[240px]"
+              sideOffset={5}
+              align="end"
+              alignOffset={-45}
+              width="min-w-[240px] w-[320px]"
             >
               <form
                 className={"flex flex-col gap-xs items-end"}
@@ -253,14 +294,34 @@ function DashboardNotConnected({
                       gap="gap-xxs"
                       width="min-w-[140px]"
                       choices={[
-                        { name: "Request", value: "request_count" },
-                        { name: "Error", value: "error_count" },
-                        { name: "Total cost", value: "cost" },
-                        { name: "Latency", value: "latency" },
-                        { name: "Output tokens", value: "output_token_count" },
-                        { name: "Prompt tokens", value: "prompt_token_count" },
-                        { name: "Total tokens", value: "token_count" },
-                        // { name: "TTFT", value: "monthly" },
+                        {
+                          name: Metrics.number_of_requests.name,
+                          value: Metrics.number_of_requests.value,
+                        },
+                        {
+                          name: Metrics.error_count.name,
+                          value: Metrics.error_count.value,
+                        },
+                        {
+                          name: Metrics.total_cost.name,
+                          value: Metrics.total_cost.value,
+                        },
+                        {
+                          name: Metrics.average_latency.name,
+                          value: Metrics.average_latency.value,
+                        },
+                        {
+                          name: Metrics.output_token_count.name,
+                          value: Metrics.output_token_count.value,
+                        },
+                        {
+                          name: Metrics.total_prompt_tokens.name,
+                          value: Metrics.total_prompt_tokens.value,
+                        },
+                        {
+                          name: Metrics.total_token_count.name,
+                          value: Metrics.total_token_count.value,
+                        },
                       ]}
                     />
                   </div>
@@ -275,11 +336,9 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      choices={[
-                        { name: "Total", value: "total" },
-                        { name: "Average", value: "avg" },
-                        // { name: "TTFT", value: "monthly" },
-                      ]}
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      choices={typeChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
@@ -295,20 +354,13 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      choices={[
-                        { name: "None", value: "none" },
-                        { name: "By model", value: "by_model" },
-                        { name: "By key", value: "by_key" },
-                        { name: "By token type", value: "by_token_type" }, //only for total tokens
-                      ]}
+                      value={breakdown}
+                      onChange={(e) => setBreakdown(e.target.value)}
+                      choices={filteredBreakdownChoices}
                     />
                   </div>
                 </div>
-                <Button
-                  variant="text"
-                  text="Apply"
-                  textColor="text-primary"
-                />
+                <Button variant="text" text="Apply" textColor="text-primary" />
               </form>
             </Popover>
 

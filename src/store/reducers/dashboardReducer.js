@@ -37,14 +37,11 @@ const initState = {
     average_completion_tokens: 0,
     average_latency: 0,
     number_of_requests: 0,
-
   },
   costData: [
     // {total_cost, date_group}
   ],
-  avgCostData :[
-
-  ],
+  avgCostData: [],
   tokenCountData: [
     // {total_tokens, date_group}
   ],
@@ -53,16 +50,14 @@ const initState = {
   ],
   promptTokenCountData: [
     // {total_prompt_tokens, date_group}
-  ], 
+  ],
   avgPromptTokenCountData: [
     // {total_prompt_tokens, date_group}
   ],
   completionTokenCountData: [
     // {total_completion_tokens, date_group}
   ],
-  avgCompletionTokenCountData: [
-    
-  ],
+  avgCompletionTokenCountData: [],
   latencyData: [
     // {average_latency, date_group}
   ],
@@ -70,7 +65,7 @@ const initState = {
     // {number_of_requests, date_group}
   ],
   errorCountData: [],
-  panelData: [],
+  panelData: "number_of_requests",
   modelData: [
     // {
     //   model:"",
@@ -114,9 +109,9 @@ export default function dashboardReducer(state = initState, action) {
     case SET_PANEL_DATA:
       return { ...state, panelData: action.payload };
     case SET_MODEL_DATA:
-      return { ...state, modelData: action.payload };  
+      return { ...state, modelData: action.payload };
     case SET_API_DATA:
-      return { ...state, apiData: action.payload };  
+      return { ...state, apiData: action.payload };
     default:
       return state;
   }
