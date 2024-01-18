@@ -17,7 +17,7 @@ import {
   setFreeCredits,
   // Action Types
 } from "src/store/actions";
-import { FETCH_ENDPOINT, SANITY_CHECK } from "src/utilities/env";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";

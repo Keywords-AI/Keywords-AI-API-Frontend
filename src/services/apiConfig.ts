@@ -1,23 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
-import { FETCH_ENDPOINT, SANITY_CHECK } from "src/utilities/env";
-
-const selectEndpoint = () => {
-  if (
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1"
-  ) {
-    return "http://localhost:8000/";
-  } else if (
-    window.location.hostname === "platform-test.keywordsai.co" ||
-    window.location.hostname === "keywords-platform.web.app"
-  ) {
-    return "https://api-test.keywordsai.co/";
-  } else if (window.location.hostname === "platform.keywordsai.co") {
-    return "https://api.keywordsai.co/";
-  }
-  return "https://api.keywordsai.co/";
-};
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
 
 // Make your own .env file as it will be ignored by git
 // set a variabled named FETCH_ENDPOINT
@@ -28,14 +11,14 @@ const selectEndpoint = () => {
 
 // example .env can be found named .env.example
 const apiConfig = {
-  apiURL: selectEndpoint(), // For Raymond or anyone who has setup backend local server
-  // apiURL: FETCH_ENDPOINT, // For anyone who doesn't have backend local server
+  apiURL: FETCH_ENDPOINT, // For anyone who doesn't have backend local server
   frontendURL: window.location.origin,
   apiKey: "your-api-key",
   timeout: 5000,
 };
 
 export default apiConfig;
+
 
 export const keywordsFetch = async ({
   path,
@@ -67,3 +50,4 @@ export const keywordsFetch = async ({
     throw error;
   }
 };
+

@@ -28,7 +28,8 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { AUTH_ENABLED } from "src/utilities/env";
+import { AUTH_ENABLED } from "src/env.js";
+import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
 
 const mapStateToProps = (state) => {
   return {
@@ -73,6 +74,7 @@ const Routes = ({ getUser, user }) => {
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
+        { path: "usage-logs", element: <UsageLogs /> },
         {
           path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,

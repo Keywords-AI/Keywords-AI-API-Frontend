@@ -1,6 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
 import { dispatchNotification } from "src/store/actions";
-import { handleApiResponseErrors } from "src/utilities/errorHandling";
+import { handleApiResponseErrors } from "src/store/actions";
 export const GET_VENDORS = "GET_VENDORS";
 export const GET_INTEGRATIONS = "GET_INTEGRATIONS";
 export const SET_API_KEY = "SET_API_KEY";
@@ -33,7 +33,7 @@ export const getIntegrations = () => {
         if (response.ok) {
           return response.json();
         } else {
-          handleApiResponseErrors(response, dispatchNotification);
+          handleApiResponseErrors(response);
         }
       })
       .then((data) => {
@@ -68,7 +68,7 @@ export const createIntegration = (data, callback = () => {}) => {
               })
             );
           } else {
-            handleApiResponseErrors(response, dispatchNotification);
+            handleApiResponseErrors(response);
           }
           throw new Error("Something went wrong");
         }
@@ -149,7 +149,7 @@ export const verifyKey = (data, callback = () => {}) => {
           return response.json();
         } else {
           const data = await response.json();
-          handleApiResponseErrors(data, dispatchNotification);
+          handleApiResponseErrors(DataTransferItem);
         }
       })
       .then((data) => {

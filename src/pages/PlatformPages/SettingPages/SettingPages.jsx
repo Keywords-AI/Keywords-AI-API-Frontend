@@ -63,7 +63,12 @@ const pages = [
         title: "Plans",
         // forAdmin: true,
         page: <PlansPage />,
-    }
+    },
+    {
+        title: "Proxy Keys",
+        // forAdmin: true,
+        page: <ApiKeyPage />,
+    },
 ];
 
 
@@ -74,11 +79,7 @@ const userPages = [
         // forAdmin: true,
         page: <UserSettings />,
     },
-    {
-        title: "API Keys",
-        // forAdmin: true,
-        page: <ApiKeyPage />,
-    },
+    
 ]
 
 

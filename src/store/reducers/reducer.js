@@ -1,5 +1,4 @@
 import userReducer from "./userReducer";
-import usageReducer from "./usageReducer";
 import playgroundReducer from "./playgroundReducer";
 import streamingTextReducer from "./streamingTextReducer";
 import apiKeyReducer from "./settingPagesReducer/apiKeyReducer";
@@ -12,11 +11,11 @@ import themeReducer from "./themeReducer";
 import dashboardReducer from "./dashboardReducer";
 import onboardingReducer from "./onboardingReducer";
 import fallbackReducer from "./settingPagesReducer/fallbackReducer";
+import requestLogReducer from "./requestLogReducer";
 
 const rootReducer = (state = {}, action) => {
   return {
     user: userReducer(state.user, action),
-    usage: usageReducer(state.usage, action),
     playground: playgroundReducer(state.playground, action),
     streamingText: streamingTextReducer(state.streamingText, action),
     apiKey: apiKeyReducer(state.apiKey, action),
@@ -29,6 +28,7 @@ const rootReducer = (state = {}, action) => {
     dashboard: dashboardReducer(state.dashboard, action),
     onboarding: onboardingReducer(state.onboarding, action),
     fallback: fallbackReducer(state.fallback, action),
+    requestLogs: requestLogReducer(state.requestLogs, action),
   };
 };
 

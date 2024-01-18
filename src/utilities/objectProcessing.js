@@ -145,7 +145,6 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   */
   if (!data) return [];
   if (dataKeyY && Array.isArray(dataKeyY)) {
-    console.log("dataKeyY is an array");
     return data.map((item) => {
       const newItem = {};
       newItem[dataKeyX] = item[dataKeyX];
@@ -199,10 +198,9 @@ export const aggregateModelData = (data) => {
     const { model, ...rest } = item;
     totalMap[model] = rest;
     return totalMap;
-    }, {});
+  }, {});
   return modelMap;
-}
-
+};
 
 export const safeAccess = (array, index) => {
   if (array?.length > index) {
@@ -213,12 +211,12 @@ export const safeAccess = (array, index) => {
 };
 export const aggregateApiData = (data) => {
   // data: [{model, total_cost, total_tokens, average_latency, number_of_requests}]
-  if (data.length === 0) return {};
+  if (data.length === 0) return null;
   // loop through the data and aggregate the data by model
   const apiMap = data.reduce((totalMap, item) => {
     const { api, ...rest } = item;
     totalMap[api] = rest;
     return totalMap;
-    }, {});
+  }, {});
   return apiMap;
-}
+};

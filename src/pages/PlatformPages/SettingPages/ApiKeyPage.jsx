@@ -8,7 +8,6 @@ import { CreateForm, EditForm, DeleteForm, APIKeyActions } from "./components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Modal } from "src/components/Dialogs";
 import {
-  setKeyList,
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
@@ -22,7 +21,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  setKeyList,
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
@@ -59,17 +57,6 @@ export const ApiKeyPage = ({
     );
   };
   const handleGenerateNewKey = () => {
-    const currentKeyAmount = apiKey.keyList.length;
-    const isUserFreeTier =
-      (user.user_subscription.plan === "none" ||
-      !user.user_subscription.plan) && !user.is_admin;
-    if (currentKeyAmount >= 1 && isUserFreeTier) {
-      dispatchNotification({
-        type: "error",
-        title: `free tier limit reached`,
-      });
-      return;
-    }
     setOpenCreate(!openCreate);
     clearPrevApiKey();
   };
@@ -94,6 +81,7 @@ export const ApiKeyPage = ({
           <SettingTable
             variant={"api-keys"}
             rows={prevKey}
+            headers={["Name", "Key", "Created", "Last Used", "Status"]}
             columnNames={[
               "name",
               "mod_prefix",

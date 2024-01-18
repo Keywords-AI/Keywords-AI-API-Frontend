@@ -97,7 +97,7 @@ const AlertsFallbackPageN = ({
       </div>
       <Divider />
       <form
-        className="flex flex-col gap-sm items-start justify-between self-stretch"
+        className="flex flex-col gap-sm items-start justify-between self-stretch w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
