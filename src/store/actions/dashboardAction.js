@@ -433,6 +433,9 @@ export const fillMissingDate = (data, dateGroup) => {
 export const getBreakDownData = (data, callback) => {
   // data ={
   // date_group: "2021-05-25T00:00:00.000Z",
+  // total_cost: 0.000003,
+  // Gpt-4: 0.000001,
+  // Gpt-3: 0.000002,
   // }
   return (dispatch) => {
     const params = new URLSearchParams(window.location.search);
