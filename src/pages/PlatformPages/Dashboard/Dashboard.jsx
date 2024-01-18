@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from "react";
-// import { ButtonGroup } from "src/components/Buttons";
 import MetricCard from "src/components/Cards/MetricCard";
-import {
-  Quality,
-  Rocket,
-  Cost,
-  Tokens,
-  Speed,
-  Display,
-  Down,
-  sideBar,
-} from "src/components/Icons";
-import ButtonGroup from "src/components/Buttons/ButtonGroup";
+import { Display, Down, sideBar } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
-import { connect } from "react-redux";
-import { getDashboardData, setDateData, setPanelData } from "src/store/actions";
+import { connect, useDispatch, useSelector } from "react-redux";
+import {
+  getDashboardData,
+  setDateData,
+  setDisplayBreakdown,
+  setDisplayMetric,
+  setDisplayTimeRange,
+  setDisplayType,
+  setPanelData,
+} from "src/store/actions";
 import { useNavigate, useLocation, Form } from "react-router-dom";
 import { Button } from "src/components";
-import { PanelGraph } from "src/components/Sections";
 import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
 import { Metrics } from "src/utilities/constants";
+import { PanelGraph } from "src/components/Sections";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -35,14 +32,12 @@ const mapStateToProps = (state) => ({
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
   firstTime: !state.organization?.has_api_call,
-  panelData: state.dashboard.panelData,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
 });
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
-  setPanelData,
 };
 
 const WelcomeState = () => {
@@ -74,38 +69,24 @@ const WelcomeState = () => {
 
 function DashboardNotConnected({
   summary,
-  organization,
   firstName,
   requestCountData,
   latencyData,
-  tokenCountData,
   promptTokenCountData,
   completionTokenCountData,
   costData,
   getDashboardData,
   firstTime,
-  panelData,
-  setPanelData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { register, handleSubmit, watch } = useForm();
+  const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
-  const summary_type =
-    new URLSearchParams(location.search).get("summary_type") || "monthly";
-  const performance_param =
-    new URLSearchParams(location.search).get("performance_param") ||
-    "request_count";
-  const calculation_type =
-    new URLSearchParams(location.search).get("calculation_type") || "total";
-  const breakdown_type =
-    new URLSearchParams(location.search).get("breakdown_type") || "none";
+  const time_range =
+    new URLSearchParams(location.search).get("time_range") || "monthly";
 
-  useEffect(() => {
-    getDashboardData();
-    setDateData(summary_type);
-  }, [summary_type]);
   useEffect(() => {
     getDashboardData();
   }, []);
@@ -113,38 +94,10 @@ function DashboardNotConnected({
   const handleClick = (data) => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
-  // const handlMetricClick = (data) => {
-  //   // const param = data.dataKey;
-  //   // setPerformanceParam(param);
-  // };
 
   const handleTimePeriodSelection = (selectedValue) => {
-    setSummaryType(selectedValue);
-  };
-
-  const onSubmit = (data) => {
-    console.log("data", data);
-    setPerformanceParam(data.metric);
-    setPanelData(data.metric);
-    setCalculationType(data.type);
-    setBreakdownType(data.breakdown);
-    setPanelData(data.metric);
-    setShowPopover(false);
-  };
-
-  const setSummaryType = (summary_type) => {
-    // Wrapper, for cleaner code
-    setQueryParams({ summary_type }, navigate);
-  };
-  const setPerformanceParam = (performance_param) => {
-    setQueryParams({ performance_param }, navigate);
-  };
-  const setCalculationType = (calculation_type) => {
-    setQueryParams({ calculation_type }, navigate);
-  };
-  const setBreakdownType = (breakdown_type) => {
-    console.log("breakdown_type", breakdown_type);
-    setQueryParams({ breakdown_type }, navigate);
+    dispatch(setDisplayTimeRange(selectedValue, setQueryParams));
+    getDashboardData();
   };
 
   const metrics = [
@@ -171,10 +124,10 @@ function DashboardNotConnected({
       // onClick: () => handleClick("Tokens"),
     },
     {
-      title: Metrics.output_token_count.name,
+      title: Metrics.total_completion_tokens.name,
       number: summary.total_completion_tokens || 0,
       chartData: completionTokenCountData,
-      dataKey: Metrics.output_token_count.value,
+      dataKey: Metrics.total_completion_tokens.value,
       // onClick: () => handleClick("Tokens"),
     },
     {
@@ -185,10 +138,18 @@ function DashboardNotConnected({
       // onClick: () => handleClick("Cost"),
     },
   ];
-
-  const [metric, setMetric] = useState("request_count");
-  const [type, setType] = useState("total");
-  const [breakdown, setBreakdown] = useState("none");
+  const currentMetric = useSelector(
+    (state) => state.dashboard.displayFilter.metric
+  );
+  const currentType = useSelector(
+    (state) => state.dashboard.displayFilter.type
+  );
+  const currentBreakdown = useSelector(
+    (state) => state.dashboard.displayFilter.breakDown
+  );
+  const currentTimeRange = useSelector(
+    (state) => state.dashboard.displayFilter.timeRange
+  );
 
   const typeChoices = [
     { name: "Total", value: "total" },
@@ -197,29 +158,20 @@ function DashboardNotConnected({
 
   const breakdownChoices = [
     { name: "None", value: "none" },
-    { name: "By model", value: "by_model" },
+    {
+      name: "By model",
+      value: "by_model",
+    },
     { name: "By key", value: "by_key" },
     { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
 
-  useEffect(() => {
-    if (
-      (metric === "output_token_count" || metric === "prompt_token_count") &&
-      breakdown === "by_token_type"
-    ) {
-      console.log("here");
-      setBreakdown("none"); // Default to 'request_count' or any other metric
-    }
-  }, [metric, breakdown]);
-
   const filteredBreakdownChoices =
-    metric === "output_token_count" || metric === "prompt_token_count"
+    currentMetric === "output_token_count" ||
+    currentMetric === "prompt_token_count"
       ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
       : breakdownChoices;
 
-  const MetricNumber = (panelData) =>
-    metrics.find((metric) => metric.dataKey === panelData)?.number || 0;
-    
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
@@ -238,11 +190,16 @@ function DashboardNotConnected({
             {" "}
           </div>
           <div className="flex items-center gap-xxs">
-            <Button variant="small" text="Today" onClick={() =>handleTimePeriodSelection("daily")} />
+            <Button
+              variant="small"
+              text="Today"
+              onClick={() => handleTimePeriodSelection("daily")}
+            />
             <SelectInput
               headLess
               placeholder="Month"
               align="start"
+              value={currentTimeRange}
               icon={Down}
               padding="py-xxxs px-xxs"
               gap="gap-xxs"
@@ -273,10 +230,7 @@ function DashboardNotConnected({
               alignOffset={-45}
               width="w-[320px]"
             >
-              <form
-                className={"flex flex-col gap-xs items-end"}
-                onSubmit={handleSubmit(onSubmit)}
-              >
+              <form className={"flex flex-col gap-xs items-end"}>
                 <div className="flex flex-col items-start gap-xxs self-stretch">
                   <div className="flex justify-between items-center self-stretch ">
                     <span className="text-sm-regular text-gray-4">Metric</span>
@@ -287,10 +241,14 @@ function DashboardNotConnected({
                       align="start"
                       icon={Down}
                       padding="py-xxxs px-xxs"
-                      defaultValue={Metrics.number_of_requests.value}
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      value={Metrics.number_of_requests.value}
+                      onChange={(e) =>
+                        dispatch(
+                          setDisplayMetric(e.target.value, setQueryParams)
+                        )
+                      }
+                      value={currentMetric}
                       choices={[
                         {
                           name: Metrics.number_of_requests.name,
@@ -309,16 +267,16 @@ function DashboardNotConnected({
                           value: Metrics.average_latency.value,
                         },
                         {
-                          name: Metrics.output_token_count.name,
-                          value: Metrics.output_token_count.value,
+                          name: Metrics.total_completion_tokens.name,
+                          value: Metrics.total_completion_tokens.value,
                         },
                         {
                           name: Metrics.total_prompt_tokens.name,
                           value: Metrics.total_prompt_tokens.value,
                         },
                         {
-                          name: Metrics.total_token_count.name,
-                          value: Metrics.total_token_count.value,
+                          name: Metrics.total_tokens.name,
+                          value: Metrics.total_tokens.value,
                         },
                       ]}
                     />
@@ -334,9 +292,10 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      defaultValue="total"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
+                      value={currentType}
+                      onChange={(e) =>
+                        dispatch(setDisplayType(e.target.value, setQueryParams))
+                      }
                       choices={typeChoices}
                     />
                   </div>
@@ -353,14 +312,16 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      defaultValue="none"
-                      value={breakdown}
-                      onChange={(e) => setBreakdown(e.target.value)}
+                      value={currentBreakdown}
+                      onChange={(e) =>
+                        dispatch(
+                          setDisplayBreakdown(e.target.value, setQueryParams)
+                        )
+                      }
                       choices={filteredBreakdownChoices}
                     />
                   </div>
                 </div>
-                <Button variant="text" text="Apply" textColor="text-primary" />
               </form>
             </Popover>
 
@@ -374,13 +335,7 @@ function DashboardNotConnected({
         </div>
         <div className="flex flex-row">
           <DashboardChart />
-          {isPanel && (
-            <PanelGraph
-              metric={panelData}
-              number={MetricNumber(panelData)}
-              type={calculation_type}
-            />
-          )}
+          {isPanel && <PanelGraph />}
         </div>
       </div>
     );

@@ -1,4 +1,6 @@
+import { set } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
+import { Metrics } from "src/utilities/constants";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
@@ -8,9 +10,12 @@ export const SET_AVG_COST_DATA = "SET_AVG_COST_DATA";
 export const SET_TOKEN_COUNT_DATA = "SET_TOKEN_COUNT_DATA";
 export const SET_AVG_TOKEN_COUNT_DATA = "SET_AVG_TOKEN_COUNT_DATA";
 export const SET_PROMPT_TOKEN_COUNT_DATA = "SET_PROMPT_TOKEN_COUNT_DATA";
-export const SET_AVG_PROMPT_TOKEN_COUNT_DATA = "SET_AVG_PROMPT_TOKEN_COUNT_DATA";
-export const SET_COMPLETION_TOKEN_COUNT_DATA = "SET_COMPLETION_TOKEN_COUNT_DATA";
-export const SET_AVG_COMPLETION_TOKEN_COUNT_DATA = "SET_AVG_COMPLETION_TOKEN_COUNT_DATA";
+export const SET_AVG_PROMPT_TOKEN_COUNT_DATA =
+  "SET_AVG_PROMPT_TOKEN_COUNT_DATA";
+export const SET_COMPLETION_TOKEN_COUNT_DATA =
+  "SET_COMPLETION_TOKEN_COUNT_DATA";
+export const SET_AVG_COMPLETION_TOKEN_COUNT_DATA =
+  "SET_AVG_COMPLETION_TOKEN_COUNT_DATA";
 export const SET_LATENCY_DATA = "SET_LATENCY_DATA";
 export const SET_REQUEST_COUNT_DATA = "SET_REQUEST_COUNT_DATA";
 export const SET_DATE_DATA = "SET_DATE_DATA";
@@ -20,9 +25,44 @@ export const SET_MODEL_DATA = "SET_MODEL_DATA";
 export const SET_AVG_MODEL_DATA = "SET_AVG_MODEL_DATA";
 export const SET_API_DATA = "SET_API_DATA";
 export const SET_AVG_API_DATA = "SET_AVG_API_DATA";
+export const SET_DISPLAY_METRIC = "SET_DISPLAY_METRIC";
+export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
+export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
+export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
+
+export const setDisplayTimeRange = (timeRange, setParam) => {
+  setParam({ summary_type: timeRange });
+  return {
+    type: SET_DISPLAY_TIME_RANGE,
+    payload: timeRange,
+  };
+};
+
+export const setDisplayMetric = (metric, setParam) => {
+  setParam({ metric: metric });
+  return {
+    type: SET_DISPLAY_METRIC,
+    payload: metric,
+  };
+};
+
+export const setDisplayType = (type, setParam) => {
+  setParam({ type: type });
+  return {
+    type: SET_DISPLAY_TYPE,
+    payload: type,
+  };
+};
+
+export const setDisplayBreakdown = (breakdown, setParam) => {
+  setParam({ breakdown: breakdown });
+  return {
+    type: SET_DISPLAY_BREAKDOWN,
+    payload: breakdown,
+  };
+};
 
 export const setDashboardData = (data) => {
-  console.log(data);
   return {
     type: SET_DASHBOARD_DATA,
     payload: data,
@@ -113,7 +153,6 @@ export const setPanelData = (data) => {
   };
 };
 
-
 export const setModelData = (data) => {
   return {
     type: SET_MODEL_DATA,
@@ -151,7 +190,7 @@ export const setErrorData = (data) => {
 
 export const getDashboardData = (
   overrideParams // search string
-  ) => {
+) => {
   return (dispatch) => {
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
@@ -175,25 +214,29 @@ export const getDashboardData = (
       .then((data) => {
         // data = data.filter((item) => item.error_counts === 0);
         dispatch(setDashboardData(data));
-
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
         );
         dispatch(
-          setErrorData(sliceChartData(dataList, "date_group", "error_count"))
+          setErrorData(
+            sliceChartData(dataList, "date_group", Metrics.error_count.value)
+          )
         );
         dispatch(
-          setCostData(sliceChartData(dataList, "date_group", "total_cost"))
+          setCostData(
+            sliceChartData(dataList, "date_group", Metrics.total_cost.value)
+          )
         );
         dispatch(
           setAvgCostData(sliceChartData(dataList, "date_group", "average_cost"))
         );
         dispatch(
           setTokenCountData(
-            sliceChartData(dataList, "date_group", "total_tokens")
+            sliceChartData(dataList, "date_group", Metrics.total_tokens.value)
           )
         );
+
         dispatch(
           setAvgTokenCountData(
             sliceChartData(dataList, "date_group", "average_tokens")
@@ -201,7 +244,11 @@ export const getDashboardData = (
         );
         dispatch(
           setPromptTokenCountData(
-            sliceChartData(dataList, "date_group", "total_prompt_tokens")
+            sliceChartData(
+              dataList,
+              "date_group",
+              Metrics.total_prompt_tokens.value
+            )
           )
         );
         dispatch(
@@ -211,7 +258,11 @@ export const getDashboardData = (
         );
         dispatch(
           setCompletionTokenCountData(
-            sliceChartData(dataList, "date_group", "total_completion_tokens")
+            sliceChartData(
+              dataList,
+              "date_group",
+              Metrics.total_completion_tokens.value
+            )
           )
         );
         dispatch(
@@ -233,18 +284,10 @@ export const getDashboardData = (
           )
         );
 
-        dispatch(
-          setModelData(data?.data_by_model)
-        );
-        dispatch(
-          setApiData(data?.data_by_key)
-        );
-        dispatch(
-          setAvgModelData(data?.data_avg_by_model)
-        );
-        dispatch(
-          setAvgApiData(data?.data_avg_by_key)
-        );
+        dispatch(setModelData(data?.data_by_model));
+        dispatch(setApiData(data?.data_by_key));
+        dispatch(setAvgModelData(data?.data_avg_by_model));
+        dispatch(setAvgApiData(data?.data_avg_by_key));
       })
       .catch((error) => {});
   };
@@ -298,7 +341,10 @@ export const fillMissingDate = (data, dateGroup) => {
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
-        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate.getFullYear().toString().slice(-2)}`;
+        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate
+          .getFullYear()
+          .toString()
+          .slice(-2)}`;
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );

@@ -17,7 +17,28 @@ import {
   SET_AVG_MODEL_DATA,
   SET_API_DATA,
   SET_AVG_API_DATA,
+  SET_DISPLAY_METRIC,
+  SET_DISPLAY_BREAKDOWN,
+  SET_DISPLAY_TYPE,
+  SET_DISPLAY_TIME_RANGE,
 } from "src/store/actions";
+
+const loadFilter = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const metric = urlParams.get("metric");
+  const type = urlParams.get("type");
+  const breakDown = urlParams.get("breakDown");
+  const timeRange = urlParams.get("summary_type");
+  // Use the retrieved values from the URL parameters
+  // to set the displayFilter in the state
+  return {
+    metric: metric || "number_of_requests",
+    type: type || "total",
+    breakDown: breakDown || "none",
+    timeRange: timeRange || "monthly",
+  };
+};
+
 const initState = {
   data: [
     // {
@@ -67,7 +88,6 @@ const initState = {
     // {number_of_requests, date_group}
   ],
   errorCountData: [],
-  panelData: "number_of_requests",
   modelData: [
     // {
     //   model:"",
@@ -80,6 +100,7 @@ const initState = {
   avgModelData: [],
   apiData: [],
   avgApiData: [],
+  displayFilter: loadFilter(),
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -120,6 +141,26 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, apiData: action.payload };
     case SET_AVG_API_DATA:
       return { ...state, avgApiData: action.payload };
+    case SET_DISPLAY_METRIC:
+      return {
+        ...state,
+        displayFilter: { ...state.displayFilter, metric: action.payload },
+      };
+    case SET_DISPLAY_BREAKDOWN:
+      return {
+        ...state,
+        displayFilter: { ...state.displayFilter, breakDown: action.payload },
+      };
+    case SET_DISPLAY_TYPE:
+      return {
+        ...state,
+        displayFilter: { ...state.displayFilter, type: action.payload },
+      };
+    case SET_DISPLAY_TIME_RANGE:
+      return {
+        ...state,
+        displayFilter: { ...state.displayFilter, timeRange: action.payload },
+      };
     default:
       return state;
   }
