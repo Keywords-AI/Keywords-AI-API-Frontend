@@ -77,6 +77,7 @@ function DashboardNotConnected({
   costData,
   getDashboardData,
   firstTime,
+  organization,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -84,8 +85,6 @@ function DashboardNotConnected({
   const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
-  const time_range =
-    new URLSearchParams(location.search).get("time_range") || "monthly";
 
   useEffect(() => {
     getDashboardData();
@@ -106,7 +105,12 @@ function DashboardNotConnected({
       number: summary.number_of_requests,
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
-      // onClick: () => handleClick("Request"),
+      onClick: () => {
+        dispatch(
+          setDisplayMetric(Metrics.number_of_requests.value, setQueryParams)
+        );
+        getDashboardData();
+      },
     },
     {
       title: Metrics.average_latency.name,
@@ -114,28 +118,49 @@ function DashboardNotConnected({
       chartData: latencyData,
       dataKey: Metrics.average_latency.value,
       unit: true,
-      // onClick: () => handleClick("Latency"),
+      onClick: () => {
+        dispatch(
+          setDisplayMetric(Metrics.average_latency.value, setQueryParams)
+        );
+        getDashboardData();
+      },
     },
     {
       title: Metrics.total_prompt_tokens.name,
       number: summary.total_prompt_tokens || 0,
       chartData: promptTokenCountData,
       dataKey: Metrics.total_prompt_tokens.value,
-      // onClick: () => handleClick("Tokens"),
+      onClick: () => {
+        dispatch(
+          setDisplayMetric(Metrics.total_prompt_tokens.value, setQueryParams)
+        );
+        getDashboardData();
+      },
     },
     {
       title: Metrics.total_completion_tokens.name,
       number: summary.total_completion_tokens || 0,
       chartData: completionTokenCountData,
       dataKey: Metrics.total_completion_tokens.value,
-      // onClick: () => handleClick("Tokens"),
+      onClick: () => {
+        dispatch(
+          setDisplayMetric(
+            Metrics.total_completion_tokens.value,
+            setQueryParams
+          )
+        );
+        getDashboardData();
+      },
     },
     {
       title: Metrics.total_cost.name,
       number: `$${summary.total_cost?.toFixed(3) || 0}`,
       chartData: costData,
       dataKey: Metrics.total_cost.value,
-      // onClick: () => handleClick("Cost"),
+      onClick: () => {
+        dispatch(setDisplayMetric(Metrics.total_cost.value, setQueryParams));
+        getDashboardData();
+      },
     },
   ];
   const currentMetric = useSelector(
@@ -178,7 +203,7 @@ function DashboardNotConnected({
       <div className="flex flex-col w-full h-full">
         <div className="grid grid-cols-6 px-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
-            <span className="text-sm-md text-gray-4">Welcome</span>
+            <span className="text-sm-md text-gray-4">{organization?.name}</span>
             <span className="display-sm text-gray-5">{firstName} </span>
           </div>
           {metrics.map((metric, index) => (
@@ -243,11 +268,12 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      onChange={(e) =>
+                      onChange={(e) => {
                         dispatch(
-                          setDisplayMetric(e.target.value, (params)=>setQueryParams(params, navigate))
-                        )
-                      }
+                          setDisplayMetric(e.target.value, setQueryParams)
+                        );
+                        getDashboardData();
+                      }}
                       value={currentMetric}
                       choices={[
                         {
@@ -333,7 +359,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row h-fu">
           <DashboardChart />
           {isPanel && <PanelGraph />}
         </div>
