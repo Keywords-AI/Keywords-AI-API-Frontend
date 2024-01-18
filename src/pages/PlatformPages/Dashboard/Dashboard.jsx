@@ -94,7 +94,7 @@ function DashboardNotConnected({
   };
 
   const handleTimePeriodSelection = (selectedValue) => {
-    dispatch(setDisplayTimeRange(selectedValue, setQueryParams));
+    dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
   };
 
@@ -106,7 +106,11 @@ function DashboardNotConnected({
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.number_of_requests.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.number_of_requests.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -119,7 +123,11 @@ function DashboardNotConnected({
       unit: true,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.average_latency.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.average_latency.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -131,7 +139,11 @@ function DashboardNotConnected({
       dataKey: Metrics.total_prompt_tokens.value,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.total_prompt_tokens.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.total_prompt_tokens.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -145,7 +157,8 @@ function DashboardNotConnected({
         dispatch(
           setDisplayMetric(
             Metrics.total_completion_tokens.value,
-            setQueryParams
+            setQueryParams,
+            navigate
           )
         );
         getDashboardData();
@@ -157,7 +170,9 @@ function DashboardNotConnected({
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {
-        dispatch(setDisplayMetric(Metrics.total_cost.value, setQueryParams));
+        dispatch(
+          setDisplayMetric(Metrics.total_cost.value, setQueryParams, navigate)
+        );
         getDashboardData();
       },
     },
@@ -269,7 +284,11 @@ function DashboardNotConnected({
                       width="min-w-[140px]"
                       onChange={(e) => {
                         dispatch(
-                          setDisplayMetric(e.target.value, setQueryParams)
+                          setDisplayMetric(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
                         );
                         getDashboardData();
                       }}
@@ -319,7 +338,13 @@ function DashboardNotConnected({
                       width="min-w-[140px]"
                       value={currentType}
                       onChange={(e) =>
-                        dispatch(setDisplayType(e.target.value, setQueryParams))
+                        dispatch(
+                          setDisplayType(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
+                        )
                       }
                       choices={typeChoices}
                     />
@@ -340,7 +365,11 @@ function DashboardNotConnected({
                       value={currentBreakdown}
                       onChange={(e) =>
                         dispatch(
-                          setDisplayBreakdown(e.target.value, setQueryParams)
+                          setDisplayBreakdown(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
                         )
                       }
                       choices={filteredBreakdownChoices}
