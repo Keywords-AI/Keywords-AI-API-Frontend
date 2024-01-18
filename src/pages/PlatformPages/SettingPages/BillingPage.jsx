@@ -42,7 +42,8 @@ export const BillingPage = ({ billings }) => {
       title="Billing"
       subtitle="Manage your billing information and invoices."
     >
-      <PageParagraph
+      {/*Comment out this for now 1/18/2023  -- Raymond*/}
+      {/* <PageParagraph
         heading="Current plan"
         subheading={
           <span>
@@ -53,7 +54,7 @@ export const BillingPage = ({ billings }) => {
         }
       >
         <Button
-          variant="r4-black"
+          variant="r4-gray2"
           text="Update plan"
           onClick={() => navigate("/platform/api/plans")}
         />
@@ -71,12 +72,12 @@ export const BillingPage = ({ billings }) => {
           </div>
         </div>
         <Button
-          variant="r4-black"
+          variant="r4-gray2"
           text="Edit"
           onClick={() => navigate("plans")}
         />
       </PageParagraph>
-      <Divider />
+      <Divider /> */}
       <PageParagraph
         heading="Payment history"
         subheading={
