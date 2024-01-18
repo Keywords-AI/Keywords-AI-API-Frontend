@@ -244,7 +244,7 @@ function DashboardNotConnected({
               placeholder="Month"
               align="start"
               icon={Down}
-              padding="py-xxxs px-xs"
+              padding="py-xxxs px-xxs"
               gap="gap-xxs"
               choices={[
                 { name: "Day", value: "daily" },
@@ -286,7 +286,7 @@ function DashboardNotConnected({
                       placeholder="Request"
                       align="start"
                       icon={Down}
-                      padding="py-xxxs px-xs"
+                      padding="py-xxxs px-xxs"
                       defaultValue={Metrics.number_of_requests.value}
                       gap="gap-xxs"
                       width="min-w-[140px]"
@@ -331,7 +331,7 @@ function DashboardNotConnected({
                       placeholder="Total"
                       align="start"
                       icon={Down}
-                      padding="py-xxxs px-xs"
+                      padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
                       defaultValue="total"
@@ -350,7 +350,7 @@ function DashboardNotConnected({
                       placeholder="None"
                       align="start"
                       icon={Down}
-                      padding="py-xxxs px-xs"
+                      padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
                       defaultValue="none"
