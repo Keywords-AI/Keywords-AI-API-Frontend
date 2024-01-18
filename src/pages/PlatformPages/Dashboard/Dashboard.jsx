@@ -153,17 +153,17 @@ function DashboardNotConnected({
 
   const typeChoices = [
     { name: "Total", value: "total" },
-    { name: "Average", value: "avg" },
+    // { name: "Average", value: "average" },
   ];
 
   const breakdownChoices = [
     { name: "None", value: "none" },
-    {
-      name: "By model",
-      value: "by_model",
-    },
-    { name: "By key", value: "by_key" },
-    { name: "By token type", value: "by_token_type" }, //only for total tokens
+    // {
+    //   name: "By model",
+    //   value: "by_model",
+    // },
+    // { name: "By key", value: "by_key" },
+    // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
 
   const filteredBreakdownChoices =
