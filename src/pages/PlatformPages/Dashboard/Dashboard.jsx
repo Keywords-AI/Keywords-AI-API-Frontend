@@ -77,6 +77,7 @@ function DashboardNotConnected({
   costData,
   getDashboardData,
   firstTime,
+  organization,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -178,7 +179,7 @@ function DashboardNotConnected({
       <div className="flex flex-col w-full h-full">
         <div className="grid grid-cols-6 px-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
-            <span className="text-sm-md text-gray-4">Welcome</span>
+            <span className="text-sm-md text-gray-4">{organization?.name}</span>
             <span className="display-sm text-gray-5">{firstName} </span>
           </div>
           {metrics.map((metric, index) => (
@@ -333,7 +334,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row h-fu">
           <DashboardChart />
           {isPanel && <PanelGraph />}
         </div>
