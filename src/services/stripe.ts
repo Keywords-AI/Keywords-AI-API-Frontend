@@ -37,7 +37,7 @@ export const createPaymentSession = (
 };
 
 export const cancelSubscription = (successPath = "/") => {
-  return (dispatch: Dispatch) => {
+  return (dispatch: TypedDispatch) => {
     const body = {
       success_url: `${window.location.origin}${successPath}`,
     };
