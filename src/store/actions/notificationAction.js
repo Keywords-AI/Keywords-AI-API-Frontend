@@ -22,16 +22,17 @@ export const dismissNotification = (id) => {
 };
 
 export const handleApiResponseErrors = (
-  responseJson // Json object from the api
+  errorJson // Json object from the api
 ) => {
   return (dispatch) => {
-    if (responseJson.detail) {
+    console.log(errorJson)
+    if (errorJson.detail) {
       dispatch(
-        dispatchNotification({ type: "error", title: responseJson.detail })
+        dispatchNotification({ type: "error", title: errorJson.detail })
       ); // Regular error
-      throw new Error(responseJson.detail);
+      throw new Error(errorJson.detail);
     } else {
-      handleSerializerErrors(responseJson, (error) =>
+      handleSerializerErrors(errorJson, (error) =>
         dispatch(dispatchNotification({ type: "error", title: error }))
       ); // Standard error from django
       throw new Error("Serializer error");
