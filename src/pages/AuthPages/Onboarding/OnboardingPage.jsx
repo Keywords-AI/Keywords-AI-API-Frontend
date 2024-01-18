@@ -15,6 +15,7 @@ import StepsBar from "src/components/Misc/StepsBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
 import { GetStarted } from "./GetStarted";
+import { StartWithPlan } from "./Plans";
 import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
 
@@ -31,19 +32,19 @@ const mapDispatchToProps = {
 export const OnboardingPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ 
-  logout, 
+)(({
+  logout,
   setNextStep,
   updateUser,
   user
- }) => {
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
-  useEffect(()=>{
+  useEffect(() => {
     if (user.onboarded) {
-      navigate(REDIRECT_URI);
+      console.log("onboarded")
     }
   }, [user])
   const {
@@ -75,7 +76,7 @@ export const OnboardingPage = connect(
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">
-        {parseInt(curr_step) <= formfields.length + 1 &&<Button
+        {parseInt(curr_step) <= formfields.length + 1 && <Button
           text={"Sign out"}
           variant={"r18-black"}
           onClick={handleBackButtonClick}
@@ -94,13 +95,19 @@ export const OnboardingPage = connect(
                 stepNumber: index + 1,
                 buttonAction: () => {
                   updateUser({ curr_onboarding_step: index + 2 });
-                  setQueryParams({ curr_step: index + 2 }, navigate);
+                  if (index + 1 == formfields.length) {
+                    // end of forms to fill
+                    if (!user.active_subscription) {
+                      navigate("/onboarding/plans");
+                    }
+                  } else {
+                    setQueryParams({ curr_step: index + 2 }, navigate);
+                  }
                 }
               })}
             </React.Fragment>
           )
         })}
-        <GetStarted show={parseInt(curr_step) >= formfields.length + 1} />
       </div>
       <StepsBar
         className={cn("absolute bottom-md",

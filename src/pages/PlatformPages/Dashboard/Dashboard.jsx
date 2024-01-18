@@ -48,7 +48,7 @@ const WelcomeState = () => {
         <TitleAuth
           title="Welcome to Keywords AI!"
           subtitle={"Send your first API call to view your dashboard."}
-          align="items-center"
+          textAlign="text-center"
         />
         <div className="flex justify-center items-center gap-xs">
           <Button

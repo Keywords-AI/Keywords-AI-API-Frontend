@@ -17,15 +17,14 @@ export const GetStarted = connect(
   return (
     <div
       className={cn(
-        "flex-col self-stretch flex-grow justify-start gap-sm items-center",
-        show ? "visible" : "invisible"
+        "flex-col flex-grow gap-sm items-center self-center justify-center"
       )}
     >
       <TitleAuth
         title="Setup Complete!"
         text="text-sm-regular"
         subtitle={"Kickstart your journey to smarter LLM usage with Keywords AI."}
-        align="items-center text-center"
+        textAlign="text-center"
       />
       <Button
         variant="r4-primary"

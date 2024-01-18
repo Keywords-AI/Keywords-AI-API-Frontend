@@ -21,7 +21,7 @@ export function Unauthenticated() {
             <TitleAuth
               title="Social Authentication in Progress..."
               subtitle="You will be redirected soon."
-              align="items-center"
+              textAlign="text-center"
             />
           </>
           :
@@ -29,7 +29,7 @@ export function Unauthenticated() {
             <TitleAuth
               title="Authentication Required"
               subtitle="Please log in to access this page."
-              align="items-center"
+              textAlign="text-center"
             />
             <div className="flex justify-center items-center gap-md self-stretch">
               <Button
