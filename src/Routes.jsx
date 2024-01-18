@@ -30,6 +30,8 @@ import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env.js";
 import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
+import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
+import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 
 const mapStateToProps = (state) => {
   return {
@@ -106,13 +108,34 @@ const Routes = ({ getUser, user }) => {
           element: <LogIn />,
         },
         { path: "accept/:code?", element: <AcceptInvitation /> },
+        // {
+        //   path: "onboarding",
+        //   element: isUserLoggedIn ? (
+        //     <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+        //   ) : (
+        //     <Navigate to="/login" />
+        //   ),
+        // },
+        // {
+        //   path: "onboarding/plans",
+        //   element: <StartWithPlan />,
+        // },
+        // {
+        //   path: "onboarding/get-started",
+        //   element: <GetStarted />,
+        // },
         {
-          path: "onboarding/:curr_step?",
+          path: "/onboarding",
           element: isUserLoggedIn ? (
-            <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
+            <OnboardingPage />
           ) : (
             <Navigate to="/login" />
           ),
+          children: [
+            { path: "plans", element: <StartWithPlan /> },
+            { path: "get-started", element: <GetStarted /> },
+            // Add other onboarding steps as needed
+          ],
         },
         {
           path: "",

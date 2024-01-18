@@ -212,7 +212,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
-        // data = data.filter((item) => item.error_counts === 0);
+        console.log("data", data);
         dispatch(setDashboardData(data));
         const dataList = fillMissingDate(
           data?.data,

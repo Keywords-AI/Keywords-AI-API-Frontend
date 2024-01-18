@@ -12,7 +12,7 @@ export function NotFound() {
         <BackButton text="Home" link={"/"}/>
       </div>
       <div className="flex-col w-full max-w-[420px] items-center gap-md ">
-        <TitleAuth title="404 - Not Found" subtitle={"Couldn’t find what you were looking for."} align="items-center"/>
+        <TitleAuth title="404 - Not Found" subtitle={"Couldn’t find what you were looking for."} textAlign="text-center"/>
         <div className="flex items-start gap-xxs ">
           <Button
             text="Back to home"

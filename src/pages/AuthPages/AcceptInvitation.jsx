@@ -27,7 +27,7 @@ export const AcceptInvitation = connect(mapStateToProps, mapDispatchToProps)((
                 <TitleAuth
                     title="Accept Invitation"
                     subtitle="Click the button below to accept the invitation to your organization."
-                    align="items-center"
+                    textAlign="text-center"
                 />
                 <Button
                     text="Accept Invitation"
