@@ -245,7 +245,7 @@ function DashboardNotConnected({
                       width="min-w-[140px]"
                       onChange={(e) =>
                         dispatch(
-                          setDisplayMetric(e.target.value, setQueryParams)
+                          setDisplayMetric(e.target.value, (params)=>setQueryParams(params, navigate))
                         )
                       }
                       value={currentMetric}
