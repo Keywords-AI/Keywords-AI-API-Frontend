@@ -1,5 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
+import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -382,3 +383,20 @@ export const fillMissingDate = (data, dateGroup) => {
 
   return newDataArray;
 };
+
+export const getBreakDownData = (data, callback) => {
+  // data ={
+  // date_group: "2021-05-25T00:00:00.000Z",
+  // }
+  return (dispatch) => {
+    const params = new URLSearchParams(window.location.search);
+    const dateGroup = data.date_group;
+    keywordsRequest({
+      path: `api/dashboard/breakdown${params.toString()}&date_group=${dateGroup}`,
+      dispatch
+    })
+    .then((responseJson)=>{
+      console.log(responseJson);
+    })
+  }
+}
