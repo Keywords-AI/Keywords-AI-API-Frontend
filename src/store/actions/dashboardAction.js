@@ -30,32 +30,32 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 
-export const setDisplayTimeRange = (timeRange, setParam) => {
-  setParam({ summary_type: timeRange });
+export const setDisplayTimeRange = (timeRange, setParam, navigate) => {
+  setParam({ summary_type: timeRange }, navigate);
   return {
     type: SET_DISPLAY_TIME_RANGE,
     payload: timeRange,
   };
 };
 
-export const setDisplayMetric = (metric, setParam) => {
-  setParam({ metric: metric });
+export const setDisplayMetric = (metric, setParam, navigate) => {
+  setParam({ metric: metric }, navigate);
   return {
     type: SET_DISPLAY_METRIC,
     payload: metric,
   };
 };
 
-export const setDisplayType = (type, setParam) => {
-  setParam({ type: type });
+export const setDisplayType = (type, setParam, navigate) => {
+  setParam({ type: type }, navigate);
   return {
     type: SET_DISPLAY_TYPE,
     payload: type,
   };
 };
 
-export const setDisplayBreakdown = (breakdown, setParam) => {
-  setParam({ breakdown: breakdown });
+export const setDisplayBreakdown = (breakdown, setParam, navigate) => {
+  setParam({ breakdown: breakdown }, navigate);
   return {
     type: SET_DISPLAY_BREAKDOWN,
     payload: breakdown,
@@ -442,10 +442,9 @@ export const getBreakDownData = (data, callback) => {
     const dateGroup = data.date_group;
     keywordsRequest({
       path: `api/dashboard/breakdown${params.toString()}&date_group=${dateGroup}`,
-      dispatch
-    })
-    .then((responseJson)=>{
+      dispatch,
+    }).then((responseJson) => {
       console.log(responseJson);
-    })
-  }
-}
+    });
+  };
+};

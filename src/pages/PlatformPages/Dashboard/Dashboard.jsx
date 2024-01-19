@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MetricCard from "src/components/Cards/MetricCard";
-import { Display, Down, sideBar } from "src/components/Icons";
+import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart } from "src/components/Display";
@@ -90,12 +90,12 @@ function DashboardNotConnected({
     getDashboardData();
   }, []);
 
-  const handleClick = (data) => {
+  const handleOPenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
 
   const handleTimePeriodSelection = (selectedValue) => {
-    dispatch(setDisplayTimeRange(selectedValue, setQueryParams));
+    dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
   };
 
@@ -107,7 +107,11 @@ function DashboardNotConnected({
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.number_of_requests.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.number_of_requests.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -120,7 +124,11 @@ function DashboardNotConnected({
       unit: true,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.average_latency.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.average_latency.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -132,7 +140,11 @@ function DashboardNotConnected({
       dataKey: Metrics.total_prompt_tokens.value,
       onClick: () => {
         dispatch(
-          setDisplayMetric(Metrics.total_prompt_tokens.value, setQueryParams)
+          setDisplayMetric(
+            Metrics.total_prompt_tokens.value,
+            setQueryParams,
+            navigate
+          )
         );
         getDashboardData();
       },
@@ -146,7 +158,8 @@ function DashboardNotConnected({
         dispatch(
           setDisplayMetric(
             Metrics.total_completion_tokens.value,
-            setQueryParams
+            setQueryParams,
+            navigate
           )
         );
         getDashboardData();
@@ -158,7 +171,9 @@ function DashboardNotConnected({
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {
-        dispatch(setDisplayMetric(Metrics.total_cost.value, setQueryParams));
+        dispatch(
+          setDisplayMetric(Metrics.total_cost.value, setQueryParams, navigate)
+        );
         getDashboardData();
       },
     },
@@ -201,7 +216,7 @@ function DashboardNotConnected({
   else
     return (
       <div className="flex flex-col w-full h-full">
-        <div className="grid grid-cols-6 px-lg items-start self-stretch">
+        <div className="grid grid-cols-6 pl-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
             <span className="text-sm-md text-gray-4">{organization?.name}</span>
             <span className="display-sm text-gray-5">{firstName} </span>
@@ -223,7 +238,7 @@ function DashboardNotConnected({
             <SelectInput
               headLess
               placeholder="Month"
-              align="start"
+              align="end"
               value={currentTimeRange}
               icon={Down}
               padding="py-xxxs px-xxs"
@@ -252,10 +267,9 @@ function DashboardNotConnected({
               side="bottom"
               sideOffset={5}
               align="end"
-              alignOffset={-45}
               width="w-[320px]"
             >
-              <form className={"flex flex-col gap-xs items-end"}>
+              <form className={"flex flex-col gap-xxs items-end"}>
                 <div className="flex flex-col items-start gap-xxs self-stretch">
                   <div className="flex justify-between items-center self-stretch ">
                     <span className="text-sm-regular text-gray-4">Metric</span>
@@ -270,7 +284,11 @@ function DashboardNotConnected({
                       width="min-w-[140px]"
                       onChange={(e) => {
                         dispatch(
-                          setDisplayMetric(e.target.value, setQueryParams)
+                          setDisplayMetric(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
                         );
                         getDashboardData();
                       }}
@@ -320,7 +338,13 @@ function DashboardNotConnected({
                       width="min-w-[140px]"
                       value={currentType}
                       onChange={(e) =>
-                        dispatch(setDisplayType(e.target.value, setQueryParams))
+                        dispatch(
+                          setDisplayType(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
+                        )
                       }
                       choices={typeChoices}
                     />
@@ -341,7 +365,11 @@ function DashboardNotConnected({
                       value={currentBreakdown}
                       onChange={(e) =>
                         dispatch(
-                          setDisplayBreakdown(e.target.value, setQueryParams)
+                          setDisplayBreakdown(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
                         )
                       }
                       choices={filteredBreakdownChoices}
@@ -353,9 +381,9 @@ function DashboardNotConnected({
 
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
-              icon={sideBar}
+              icon={isPanel ? SideBarActive : SideBar}
               bgColor="bg-gray-2"
-              onClick={() => handleClick("Request")}
+              onClick={() => handleOPenPanel()}
             />
           </div>
         </div>

@@ -35,7 +35,7 @@ const loadFilter = () => {
     metric: metric || "number_of_requests",
     type: type || "total",
     breakDown: breakDown || "none",
-    timeRange: timeRange || "monthly",
+    timeRange: timeRange || "daily",
   };
 };
 
