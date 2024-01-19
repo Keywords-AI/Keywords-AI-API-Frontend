@@ -25,7 +25,7 @@ import {
 
 const loadFilter = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const metric = urlParams.get("metric");
+  const metric = urlParams.get("[metric]");
   const type = urlParams.get("type");
   const breakDown = urlParams.get("breakDown");
   const timeRange = urlParams.get("summary_type");
