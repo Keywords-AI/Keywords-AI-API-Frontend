@@ -213,10 +213,12 @@ export const getDashboardData = (
       })
       .then((data) => {
         dispatch(setDashboardData(data));
+
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
         );
+        getgroupByData(data.raw_data);
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -429,21 +431,16 @@ export const fillMissingDate = (data, dateGroup) => {
   return newDataArray;
 };
 
-export const getBreakDownData = (data, callback) => {
-  // data ={
-  // date_group: "2021-05-25T00:00:00.000Z",
-  // total_cost: 0.000003,
-  // Gpt-4: 0.000001,
-  // Gpt-3: 0.000002,
-  // }
-  return (dispatch) => {
-    const params = new URLSearchParams(window.location.search);
-    const dateGroup = data.date_group;
-    keywordsRequest({
-      path: `api/dashboard/breakdown${params.toString()}&date_group=${dateGroup}`,
-      dispatch,
-    }).then((responseJson) => {
-      console.log(responseJson);
-    });
-  };
+export const getgroupByData = (data) => {
+  const result = Object.groupBy(data, ({ date_group }) => date_group);
+  const byModel = result;
+  Object.keys(result).forEach((key) => {
+    const updatedItem = Object.groupBy(result[key], ({ model }) => model);
+    byModel[key] = updatedItem;
+  });
+  const array = Object.keys(byModel).map((key) => {
+    return { name: key, ...byModel[key] };
+  });
+  console.log("byModel", array);
+  return;
 };
