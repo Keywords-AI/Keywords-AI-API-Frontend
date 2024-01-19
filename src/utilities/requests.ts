@@ -2,7 +2,7 @@
 import apiConfig from "src/services/apiConfig"; // Adjust this import according to your project setup
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { handleApiResponseErrors } from "src/store/actions";
-import { TypedDispatch } from "src/store/store";
+import { TypedDispatch } from "src/types";
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
   path: string; // The URL path for the request
@@ -12,6 +12,7 @@ type KeywordsFetchRequestConfig = {
   auth?: boolean; // Indicates whether to include an authorization token, defaults to true
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
   dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
+  muteNotifications?: boolean; // Optional flag to mute notifications
 };
 
 /**

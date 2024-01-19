@@ -2,7 +2,7 @@ import React, { useEffect, lazy, Suspense } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser, isLoggedIn } from "src/store/actions";
+import { getUser, isLoggedIn, updateUser } from "src/store/actions";
 import "src/components/styles/index.css";
 import { retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
@@ -36,6 +36,7 @@ import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    organization: state.organization,
   };
 };
 
@@ -44,7 +45,7 @@ const mapDispatchToProps = {
   getUser,
 };
 
-const Routes = ({ getUser, user }) => {
+const Routes = ({ getUser, user, organization }) => {
   const navigate = useNavigate();
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
@@ -58,9 +59,10 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
-    if (user.id && isLoggedIn(user)) {
+    if (organization?.id) {
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
-      if (!user.onboarded && !onOnboradingPage) {
+      if (!onOnboradingPage && !organization.onboarded) {
+        console.log(onOnboradingPage, organization.onboarded)
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }

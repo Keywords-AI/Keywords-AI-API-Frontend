@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   logout,
   setNextStep,
+  updateOrganization,
   updateUser
 } from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
@@ -14,20 +15,16 @@ import { InviteTeam, OptimizeCosts, PrioritizeObj } from ".";
 import StepsBar from "src/components/Misc/StepsBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
-import { GetStarted } from "./GetStarted";
-import { StartWithPlan } from "./Plans";
 import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
 
 const mapStateToProps = (state) => ({
-  currentStep: state.onboarding.currentStep,
   user: state.user,
   organization: state.organization
 });
 const mapDispatchToProps = {
   logout,
-  setNextStep,
-  updateUser
+  updateOrganization
 };
 
 export const OnboardingPage = connect(
@@ -35,15 +32,13 @@ export const OnboardingPage = connect(
   mapDispatchToProps
 )(({
   logout,
-  setNextStep,
-  updateUser,
+  updateOrganization,
   user,
   organization
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
-  const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
 
   const {
     register,
@@ -51,9 +46,6 @@ export const OnboardingPage = connect(
     watch,
     formState: { errors },
   } = useForm();
-  useEffect(() => {
-    setCurrentStep(parseInt(curr_step));
-  }, [curr_step])
   const handleBackButtonClick = () => {
     logout(
       () => {
@@ -69,10 +61,9 @@ export const OnboardingPage = connect(
     <OptimizeCosts />,
   ];
   useEffect(() => {
-    if (user.onboarded) {
-      // navigate(REDIRECT_URI);
-    }
-    if (user.curr_onboarding_step >= formfields.length) {
+    if (organization?.onboarded) {
+      navigate(REDIRECT_URI);
+    } else if (organization?.curr_onboarding_step >= formfields.length) {
       navigate("/onboarding/plans");
     }
   }, [user])
@@ -97,7 +88,7 @@ export const OnboardingPage = connect(
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  updateUser({ curr_onboarding_step: index + 2 });
+                  updateOrganization({ curr_onboarding_step: index + 2 });
                   if (index + 1 == formfields.length) {
                     // end of forms to fill
                     if (!user.active_subscription) {

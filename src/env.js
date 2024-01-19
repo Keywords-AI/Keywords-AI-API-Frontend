@@ -15,4 +15,4 @@ export const STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY =
   envVars.STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY || "keywords_ai_api_team_plan_yearly_flat";
 export const STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY =
   envVars.STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY || "keywords_ai_api_team_plan_yearly_usage";
-export const SANITY_CHECK = envVars.SANITY_CHECK || "Fuck, not sane";
+export const SANITY_CHECK = envVars.SANITY_CHECK || "Environmental variables are not loaded";
