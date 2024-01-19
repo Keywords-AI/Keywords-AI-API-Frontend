@@ -22,6 +22,7 @@ import { REDIRECT_URI } from "src/utilities/navigation";
 const mapStateToProps = (state) => ({
   currentStep: state.onboarding.currentStep,
   user: state.user,
+  organization: state.organization
 });
 const mapDispatchToProps = {
   logout,
@@ -36,7 +37,8 @@ export const OnboardingPage = connect(
   logout,
   setNextStep,
   updateUser,
-  user
+  user,
+  organization
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,9 +54,6 @@ export const OnboardingPage = connect(
   useEffect(() => {
     setCurrentStep(parseInt(curr_step));
   }, [curr_step])
-  const onSubmit = (data) => {
-    setNextStep();
-  };
   const handleBackButtonClick = () => {
     logout(
       () => {

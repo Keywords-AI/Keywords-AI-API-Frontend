@@ -11,26 +11,7 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PricingCardParams, PricingButtonParams } from "src/types";
 import { TitleStaticHeading } from "src/components/Titles";
 
-
-const Subheading = (({ price = "29", newMonth = "January 11, 2024" }) => {
-  const userCount: number = useTypedSelector((state) => state.organization.users.length || 3);
-  return (
-    <div>
-      {"You’re currently on the Team Monthly plan. Your organization of "}
-      <span className="text-gray-5">{userCount}</span>
-
-      {" users costs "}
-      <span className="text-gray-5">${price} </span>
-      {" per month, and will renew on "}
-      <span className="text-gray-5">{newMonth}</span>
-    </div>
-  );
-});
-
-export const StartWithPlan = ({ 
-  show: boolean=false,
-
-}) => {
+export const StartWithPlan = () => {
   const dispatch = useTypedDispatch();
   const organization = useTypedSelector((state) => state.organization);
   const [isYearly, setIsYearly] = useState(true);
