@@ -12,12 +12,28 @@ import { SwitchButton } from "src/components/Buttons";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PricingCardParams, PricingButtonParams } from "src/types";
 import { TitleStaticHeading } from "src/components/Titles";
+import { useNavigate } from "react-router-dom";
+import { REDIRECT_URI } from "src/utilities/navigation";
+
 
 export const StartWithPlan = () => {
+  const navigate = useNavigate();
   const dispatch = useTypedDispatch();
-  const organization = useTypedSelector((state) => state.organization);
+  const {organization} = useTypedSelector((state) => {
+    return {
+      organization: state.organization,
+      user: state.user,
+    }
+  });
+  useEffect(()=>{
+    // If subscribed users stumbled on this page, redirect them
+    if (organization.active_subscription){
+      navigate(REDIRECT_URI);
+    }
+  }, [organization])
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
+
   const cards: PricingCardParams[] = [
     {
       title: "Starter",

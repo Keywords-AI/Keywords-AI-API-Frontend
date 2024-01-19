@@ -23,7 +23,9 @@ const initState = {
 export default function organizationReducer(state = initState, action) {
   switch (action.type) {
     case SET_ORG:
-      return action.payload;
+      if (action.payload)
+        return action.payload;
+      return initState
     case SET_ORG_NAME:
       return {
         ...state,

@@ -14,13 +14,10 @@ import { InviteTeam, OptimizeCosts, PrioritizeObj } from ".";
 import StepsBar from "src/components/Misc/StepsBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
-import { GetStarted } from "./GetStarted";
-import { StartWithPlan } from "./Plans";
 import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
 
 const mapStateToProps = (state) => ({
-  currentStep: state.onboarding.currentStep,
   user: state.user,
   organization: state.organization
 });
@@ -43,7 +40,6 @@ export const OnboardingPage = connect(
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
-  const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
 
   const {
     register,
@@ -51,9 +47,6 @@ export const OnboardingPage = connect(
     watch,
     formState: { errors },
   } = useForm();
-  useEffect(() => {
-    setCurrentStep(parseInt(curr_step));
-  }, [curr_step])
   const handleBackButtonClick = () => {
     logout(
       () => {
@@ -70,7 +63,7 @@ export const OnboardingPage = connect(
   ];
   useEffect(() => {
     if (user.onboarded) {
-      // navigate(REDIRECT_URI);
+      navigate(REDIRECT_URI);
     }
     if (user.curr_onboarding_step >= formfields.length) {
       navigate("/onboarding/plans");

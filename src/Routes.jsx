@@ -2,7 +2,7 @@ import React, { useEffect, lazy, Suspense } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser, isLoggedIn } from "src/store/actions";
+import { getUser, isLoggedIn, updateUser } from "src/store/actions";
 import "src/components/styles/index.css";
 import { retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
@@ -32,6 +32,7 @@ import { AUTH_ENABLED } from "src/env.js";
 import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
+import organizationReducer from "./store/reducers/organizationReducer";
 
 const mapStateToProps = (state) => {
   return {
@@ -60,7 +61,7 @@ const Routes = ({ getUser, user }) => {
   useEffect(() => {
     if (user.id && isLoggedIn(user)) {
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
-      if (!user.onboarded && !onOnboradingPage) {
+      if ((!user.onboarded && !onOnboradingPage) || !user.organization) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
