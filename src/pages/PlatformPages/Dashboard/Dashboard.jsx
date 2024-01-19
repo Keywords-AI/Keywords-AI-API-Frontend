@@ -198,10 +198,10 @@ function DashboardNotConnected({
 
   const breakdownChoices = [
     { name: "None", value: "none" },
-    // {
-    //   name: "By model",
-    //   value: "by_model",
-    // },
+    {
+      name: "By model",
+      value: "by_model",
+    },
     // { name: "By key", value: "by_key" },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
@@ -387,7 +387,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row h-fu">
+        <div className="flex flex-row h-full">
           <DashboardChart />
           {isPanel && <PanelGraph />}
         </div>
