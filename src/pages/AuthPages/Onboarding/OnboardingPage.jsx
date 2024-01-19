@@ -22,6 +22,7 @@ import { REDIRECT_URI } from "src/utilities/navigation";
 const mapStateToProps = (state) => ({
   currentStep: state.onboarding.currentStep,
   user: state.user,
+  organization: state.organization
 });
 const mapDispatchToProps = {
   logout,
@@ -36,17 +37,14 @@ export const OnboardingPage = connect(
   logout,
   setNextStep,
   updateUser,
-  user
+  user,
+  organization
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
   const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
-  useEffect(() => {
-    if (user.onboarded) {
-      console.log("onboarded")
-    }
-  }, [user])
+
   const {
     register,
     handleSubmit,
@@ -56,9 +54,6 @@ export const OnboardingPage = connect(
   useEffect(() => {
     setCurrentStep(parseInt(curr_step));
   }, [curr_step])
-  const onSubmit = (data) => {
-    setNextStep();
-  };
   const handleBackButtonClick = () => {
     logout(
       () => {
@@ -73,6 +68,14 @@ export const OnboardingPage = connect(
     <PrioritizeObj />,
     <OptimizeCosts />,
   ];
+  useEffect(() => {
+    if (user.onboarded) {
+      // navigate(REDIRECT_URI);
+    }
+    if (user.curr_onboarding_step >= formfields.length) {
+      navigate("/onboarding/plans");
+    }
+  }, [user])
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">

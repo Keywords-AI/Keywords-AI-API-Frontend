@@ -2,7 +2,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsRequest } from "src/utilities/requests";
-import { TypedDispatch } from "src/store/store";
+import { TypedDispatch } from "src/types";
 
 // !!!!!!!!!!!!!!!! This is a redux action, dispatch it!!!!!!!!!!
 export const createPaymentSession = (
@@ -37,7 +37,7 @@ export const createPaymentSession = (
 };
 
 export const cancelSubscription = (successPath = "/") => {
-  return (dispatch: Dispatch) => {
+  return (dispatch: TypedDispatch) => {
     const body = {
       success_url: `${window.location.origin}${successPath}`,
     };

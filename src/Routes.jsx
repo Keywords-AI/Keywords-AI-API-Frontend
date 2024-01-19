@@ -108,34 +108,21 @@ const Routes = ({ getUser, user }) => {
           element: <LogIn />,
         },
         { path: "accept/:code?", element: <AcceptInvitation /> },
-        // {
-        //   path: "onboarding",
-        //   element: isUserLoggedIn ? (
-        //     <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
-        //   ) : (
-        //     <Navigate to="/login" />
-        //   ),
-        // },
-        // {
-        //   path: "onboarding/plans",
-        //   element: <StartWithPlan />,
-        // },
-        // {
-        //   path: "onboarding/get-started",
-        //   element: <GetStarted />,
-        // },
         {
-          path: "/onboarding",
+          path: "onboarding",
           element: isUserLoggedIn ? (
-            <OnboardingPage />
+            <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
           ) : (
             <Navigate to="/login" />
           ),
-          children: [
-            { path: "plans", element: <StartWithPlan /> },
-            { path: "get-started", element: <GetStarted /> },
-            // Add other onboarding steps as needed
-          ],
+        },
+        {
+          path: "onboarding/plans",
+          element: <StartWithPlan />,
+        },
+        {
+          path: "onboarding/get-started",
+          element: <GetStarted />,
         },
         {
           path: "",
