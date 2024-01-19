@@ -11,7 +11,7 @@ import { Organization } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 const initState: Organization = {
-  id: -1,
+  id: null,
   name: "",
   organization_size: 0,
   owner: {},

@@ -37,6 +37,7 @@ export const getUser = () => {
         if (res.ok) {
           const data = await res.json();
           const { organization, ...user } = data;
+          console.log("USER ", JSON.stringify(user));
           // Set the user object itself
           dispatch({ type: SET_USER, payload: user });
           // Set the organizaiton of the user

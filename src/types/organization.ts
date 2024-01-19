@@ -1,5 +1,5 @@
 export type Organization={
-    id: number;
+    id: number | null;
     name: string;
     organization_model_presets: any[];
     owner: any;
