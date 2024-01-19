@@ -13,10 +13,12 @@ import {
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
-    organization: state.organization,
+  organization: state.organization,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  createPaymentSession
+};
 
 const Subheading = connect(
   mapStateToProps,
@@ -36,9 +38,13 @@ const Subheading = connect(
 });
 
 export const PlansPage = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(({ organization }) => {
+  mapStateToProps,
+  mapDispatchToProps
+)(({
+  organization,
+  createPaymentSession
+
+}) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
@@ -154,7 +160,7 @@ export const PlansPage = connect(
       return {
         buttonText: "Current plan",
         buttonVariant: "r4-gray2",
-        buttonOnClick: () => {},
+        buttonOnClick: () => { },
       };
     } else {
       return buttonParams;

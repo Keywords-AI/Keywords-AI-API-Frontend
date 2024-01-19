@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 import { dispatchNotification } from "src/store/actions"
 
 const mapStateToProps = (state) => ({
-    organization: state.user.organization || {},
+    organization: state.organization || {},
 });
 const mapDispatchToProps = {
     sendInvitation,

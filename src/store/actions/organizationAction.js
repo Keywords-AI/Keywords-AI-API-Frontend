@@ -79,34 +79,23 @@ export const createOrganization = (organization, callback = () => {}) => {
   };
 };
 
-export const updateOrganization = (update_fields, callback = () => {}) => {
+export const updateOrganization = (update_fields, callback = () => {}, muteNotifications=false) => {
   return (dispatch, getState) => {
     const organization = getState().organization;
     dispatch({ type: UPDATE_ORGANIZATION, payload: update_fields });
-    keywordsFetch({
+    keywordsRequest({
       path: `user/organization/${organization.id}/`,
       method: "PATCH",
       data: update_fields,
-    }).then(async (res) => {
-      if (res.ok) {
+      dispatch,
+      muteNotifications,
+    }).then((responseJson) => {
         dispatch(
           dispatchNotification({
             title: "Organization information updated successfully!",
           })
         );
         callback();
-      } else {
-        const errors = await res.json();
-        if (errors.detail) {
-          dispatch(
-            dispatchNotification({ type: "error", title: errors.detail })
-          );
-        } else {
-          handleSerializerErrors(errors, (err) => {
-            dispatch(dispatchNotification({ type: "error", title: err }));
-          });
-        }
-      }
     });
   };
 };

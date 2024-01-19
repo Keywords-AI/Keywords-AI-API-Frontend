@@ -1,4 +1,6 @@
+import { AnyNode } from "postcss";
 import { getDateStr, textToLink } from "./stringProcessing";
+import { Page } from "src/types"
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -39,7 +41,7 @@ export function formatDate(date) {
   return date;
 }
 
-export function timeSkip(currentTime, deltaTime) {
+export function timeSkip(currentTime: string, deltaTime: any) {
   // Destructuring deltaTime object
   const { days = 0, months = 0, years = 0 } = deltaTime;
 
@@ -55,9 +57,9 @@ export function timeSkip(currentTime, deltaTime) {
 }
 
 export const processKey = (
-  key,
-  actions = () => {},
-  renderStatus = () => {}
+  key: any,
+  actions = (key:any) => {},
+  renderStatus = (status: any) => {}
 ) => {
   const today = new Date();
   const expireDate = isNaN(new Date(key.expire_date).getTime())
@@ -82,7 +84,7 @@ export const processKey = (
 };
 
 export const processKeyList = (
-  keyList,
+  keyList: any[],
   actions = () => {},
   renderStatus = () => {}
 ) => {
@@ -101,9 +103,9 @@ export const processKeyList = (
   });
 };
 
-export const processBillingList = (billingList, actions = () => {}) => {
+export const processBillingList = (billingList: any, actions = (item: any) => {}) => {
   if (billingList && billingList?.length > 0) {
-    return billingList.map((item) => {
+    return billingList.map((item: any) => {
       return {
         ...item,
         date: getDateStr(item.created, false, true),
@@ -117,7 +119,7 @@ export const processBillingList = (billingList, actions = () => {}) => {
   }
 };
 
-export const generateChild = (page) => {
+export const generateChild = (page: any): Page => {
   let path = textToLink(page.title);
   if (page?.path) {
     path = page.path;
@@ -127,6 +129,7 @@ export const generateChild = (page) => {
   }
   return {
     default: page.default,
+    forAdmin: page.forAdmin,
     title: page.title,
     path: path,
     element: page.page,
@@ -163,10 +166,10 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   }
 };
 
-export const handleSerializerErrors = (errors, callback = () => {}) => {
+export const handleSerializerErrors = (errors: any, callback = (errorString: string) => {}) => {
   // errors: {key: [error1, error2], key2: [error1, error2]}
   Object.keys(errors).forEach((key) => {
-    errors[key].forEach((error) => {
+    errors[key].forEach((error: any) => {
       const errorString = `${key}: ${error}`;
       callback(errorString);
     });

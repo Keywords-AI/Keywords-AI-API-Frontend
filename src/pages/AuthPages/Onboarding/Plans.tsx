@@ -12,12 +12,33 @@ import { SwitchButton } from "src/components/Buttons";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PricingCardParams, PricingButtonParams } from "src/types";
 import { TitleStaticHeading } from "src/components/Titles";
+import { useNavigate } from "react-router-dom";
+import { REDIRECT_URI } from "src/utilities/navigation";
+import { createSelector } from "@reduxjs/toolkit";
+import { RootState } from "src/types";
 
 export const StartWithPlan = () => {
+  const navigate = useNavigate();
   const dispatch = useTypedDispatch();
-  const organization = useTypedSelector((state) => state.organization);
+  const memoSelector = createSelector(
+    [(state: RootState) => state.organization, (state) => state.user],
+    (organization, user) => ({ organization, user }),
+  ); // This creates a memorized selector callback
+  const { organization, user } = useTypedSelector(memoSelector);
+  useEffect(() => {
+    // If subscribed users stumbled on this page, redirect them
+    console.log("organization", organization);
+    if (organization?.active_subscription) {
+      if (organization?.onboarded) {
+        navigate(REDIRECT_URI);
+      } else {
+        navigate("/onboarding/get-started");
+      }
+    }
+  }, [organization]);
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
+
   const cards: PricingCardParams[] = [
     {
       title: "Starter",
@@ -73,9 +94,19 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           if (isYearly) {
-            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]));
+            dispatch(
+              createPaymentSession([
+                STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+                STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              ])
+            );
           } else {
-            dispatch(createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]));
+            dispatch(
+              createPaymentSession([
+                STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+                STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              ])
+            );
           }
         },
       },
@@ -84,9 +115,19 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
-            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]));
+            dispatch(
+              createPaymentSession([
+                STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+                STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              ])
+            );
           } else {
-            dispatch(createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]));
+            dispatch(
+              createPaymentSession([
+                STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+                STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              ])
+            );
           }
         },
       },
