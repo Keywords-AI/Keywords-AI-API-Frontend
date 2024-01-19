@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {
   logout,
   setNextStep,
+  updateOrganization,
   updateUser
 } from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
@@ -23,8 +24,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   logout,
-  setNextStep,
-  updateUser
+  updateOrganization
 };
 
 export const OnboardingPage = connect(
@@ -32,8 +32,7 @@ export const OnboardingPage = connect(
   mapDispatchToProps
 )(({
   logout,
-  setNextStep,
-  updateUser,
+  updateOrganization,
   user,
   organization
 }) => {
@@ -62,10 +61,9 @@ export const OnboardingPage = connect(
     <OptimizeCosts />,
   ];
   useEffect(() => {
-    if (user.onboarded) {
+    if (organization?.onboarded) {
       navigate(REDIRECT_URI);
-    }
-    if (user.curr_onboarding_step >= formfields.length) {
+    } else if (organization?.curr_onboarding_step >= formfields.length) {
       navigate("/onboarding/plans");
     }
   }, [user])
@@ -90,7 +88,7 @@ export const OnboardingPage = connect(
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  updateUser({ curr_onboarding_step: index + 2 });
+                  updateOrganization({ curr_onboarding_step: index + 2 });
                   if (index + 1 == formfields.length) {
                     // end of forms to fill
                     if (!user.active_subscription) {

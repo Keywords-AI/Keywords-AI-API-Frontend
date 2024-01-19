@@ -36,10 +36,11 @@ export const getUser = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
+          const { organization, ...user } = data;
           // Set the user object itself
-          dispatch({ type: SET_USER, payload: data });
+          dispatch({ type: SET_USER, payload: user });
           // Set the organizaiton of the user
-          dispatch(setOrg(data.organization));
+          dispatch(setOrg(organization));
           // Set the free credits under usage state of the user
           dispatch(
             setFreeCredits({

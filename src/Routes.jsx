@@ -32,11 +32,11 @@ import { AUTH_ENABLED } from "src/env.js";
 import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
-import organizationReducer from "./store/reducers/organizationReducer";
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    organization: state.organization,
   };
 };
 
@@ -45,7 +45,7 @@ const mapDispatchToProps = {
   getUser,
 };
 
-const Routes = ({ getUser, user }) => {
+const Routes = ({ getUser, user, organization }) => {
   const navigate = useNavigate();
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
@@ -59,9 +59,10 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
-    if (user.id && isLoggedIn(user)) {
+    if (organization?.id) {
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
-      if ((!user.onboarded && !onOnboradingPage) || !user.organization) {
+      if (!onOnboradingPage && !organization.onboarded) {
+        console.log(onOnboradingPage, organization.onboarded)
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
