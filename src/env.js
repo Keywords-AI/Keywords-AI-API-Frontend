@@ -5,8 +5,14 @@ export const FETCH_ENDPOINT =
 export const AUTH_ENABLED = envVars.AUTH_ENABLED || "true";
 export const STRIPE_STATER_LOOKUP_KEY =
   envVars.STRIPE_STATER_LOOKUP_KEY || "keywords_ai_api_starter_plan";
-export const STRIPE_TEAM_LOOKUP_KEY =
-  envVars.STRIPE_TEAM_LOOKUP_KEY || "keywords_ai_api_team_plan_monthly";
-export const STRIPE_TEAM_YEARLY_LOOKUP_KEY =
-  envVars.STRIPE_TEAM_YEARLY_LOOKUP_KEY || "keywords_ai_api_team_plan_yearly";
+export const STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY =
+  envVars.STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY ||
+  "keywords_ai_api_team_plan_monthly_flat";
+export const STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY =
+  envVars.STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY ||
+  "keywords_ai_api_team_plan_monthly_usage";
+export const STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY =
+  envVars.STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY || "keywords_ai_api_team_plan_yearly_flat";
+export const STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY =
+  envVars.STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY || "keywords_ai_api_team_plan_yearly_usage";
 export const SANITY_CHECK = envVars.SANITY_CHECK || "Fuck, not sane";

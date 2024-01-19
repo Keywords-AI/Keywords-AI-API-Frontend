@@ -3,17 +3,20 @@ import { SmallPricingCard } from "src/components/Cards";
 import { createPaymentSession } from "src/services/stripe";
 import {
   STRIPE_STATER_LOOKUP_KEY,
-  STRIPE_TEAM_LOOKUP_KEY,
-  STRIPE_TEAM_YEARLY_LOOKUP_KEY,
+  STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+  STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+  STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+  STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
 } from "src/env.js";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PricingCardParams, PricingButtonParams } from "src/types";
 import { TitleStaticHeading } from "src/components/Titles";
 
-
-const Subheading = (({ price = "29", newMonth = "January 11, 2024" }) => {
-  const userCount: number = useTypedSelector((state) => state.organization.users.length || 3);
+const Subheading = ({ price = "29", newMonth = "January 11, 2024" }) => {
+  const userCount: number = useTypedSelector(
+    (state) => state.organization.users.length || 3
+  );
   return (
     <div>
       {"You’re currently on the Team Monthly plan. Your organization of "}
@@ -25,12 +28,9 @@ const Subheading = (({ price = "29", newMonth = "January 11, 2024" }) => {
       <span className="text-gray-5">{newMonth}</span>
     </div>
   );
-});
+};
 
-export const StartWithPlan = ({ 
-  show: boolean=false,
-
-}) => {
+export const StartWithPlan = ({ show: boolean = false }) => {
   const dispatch = useTypedDispatch();
   const organization = useTypedSelector((state) => state.organization);
   const [isYearly, setIsYearly] = useState(true);
@@ -57,14 +57,14 @@ export const StartWithPlan = ({
         buttonText: "Downgrade to starter",
         buttonVariant: "r4-gray2",
         buttonOnClick: () => {
-          dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]))
+          dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]));
         },
       },
       buttonParams: {
         buttonText: "Get started",
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
-          dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]))
+          dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]));
         },
       },
     },
@@ -90,9 +90,9 @@ export const StartWithPlan = ({
         buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           if (isYearly) {
-            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]))
+            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]));
           } else {
-            dispatch(createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]))
+            dispatch(createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]));
           }
         },
       },
@@ -101,9 +101,9 @@ export const StartWithPlan = ({
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
-            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]))
+            dispatch(createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]));
           } else {
-            dispatch(createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]))
+            dispatch(createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]));
           }
         },
       },
@@ -140,10 +140,15 @@ export const StartWithPlan = ({
     },
   ];
   const currCard: PricingCardParams | undefined = cards.find(
-    (card: PricingCardParams) => card?.plan === organization?.organization_subscription?.plan
+    (card: PricingCardParams) =>
+      card?.plan === organization?.organization_subscription?.plan
   );
   const currIndex: number | undefined = currCard && cards.indexOf(currCard);
-  const displayParams = (index:number, downgradeParams: PricingButtonParams, buttonParams: PricingButtonParams): PricingButtonParams =>  {
+  const displayParams = (
+    index: number,
+    downgradeParams: PricingButtonParams,
+    buttonParams: PricingButtonParams
+  ): PricingButtonParams => {
     if (currIndex && index < currIndex) {
       return downgradeParams;
     } else if (index === currIndex) {
@@ -165,40 +170,44 @@ export const StartWithPlan = ({
   return (
     <div className="flex flex-col w-full max-w-[800px] gap-sm pb-xxxl">
       <div className="flex flex-col w-full items-center gap-lg">
-        <TitleStaticHeading title="Subscription options" subtitle="Start for free and scale as you go. Upgrade to enable unlimited requests and additional features." textAlign="text-center"/>
+        <TitleStaticHeading
+          title="Subscription options"
+          subtitle="Start for free and scale as you go. Upgrade to enable unlimited requests and additional features."
+          textAlign="text-center"
+        />
         <div className="flex flex-col w-full items-center gap-sm">
-        <div className="flex justify-center items-center gap-xs">
-          <span className="text-sm-md text-gray-4">Monthly</span>
-          <SwitchButton
-            onCheckedChange={handleSwitchChange}
-            checked={isYearly}
-          />
-          <div>
-            <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary"> (35% off) </span>
+          <div className="flex justify-center items-center gap-xs">
+            <span className="text-sm-md text-gray-4">Monthly</span>
+            <SwitchButton
+              onCheckedChange={handleSwitchChange}
+              checked={isYearly}
+            />
+            <div>
+              <span className="text-sm-md text-gray-4">Yearly</span>
+              <span className="text-sm-md text-primary"> (35% off) </span>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-row gap-sm self-stretch">
-          {cards.map((card, index) => {
-            return (
-              <SmallPricingCard
-                key={index}
-                plan={card?.plan}
-                title={card?.title}
-                subtitle={card?.subtitle}
-                featureTitle={card?.featureTitle}
-                features={card?.features}
-                price={card?.price}
-                billFrequency={card?.billFrequency}
-                {...displayParams(
-                  index,
-                  card?.downgradeParams,
-                  card?.buttonParams
-                )}
-              />
-            );
-          })}
-        </div>
+          <div className="flex flex-row gap-sm self-stretch">
+            {cards.map((card, index) => {
+              return (
+                <SmallPricingCard
+                  key={index}
+                  plan={card?.plan}
+                  title={card?.title}
+                  subtitle={card?.subtitle}
+                  featureTitle={card?.featureTitle}
+                  features={card?.features}
+                  price={card?.price}
+                  billFrequency={card?.billFrequency}
+                  {...displayParams(
+                    index,
+                    card?.downgradeParams,
+                    card?.buttonParams
+                  )}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
