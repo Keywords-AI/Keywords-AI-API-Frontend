@@ -12,8 +12,8 @@ import dashboardReducer from "./dashboardReducer";
 import onboardingReducer from "./onboardingReducer";
 import fallbackReducer from "./settingPagesReducer/fallbackReducer";
 import requestLogReducer from "./requestLogReducer";
-
-const rootReducer = (state = {}, action) => {
+import { PayloadAction } from "@reduxjs/toolkit";
+const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
   return {
     user: userReducer(state.user, action),
     playground: playgroundReducer(state.playground, action),

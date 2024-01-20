@@ -387,7 +387,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row h-fu">
+        <div className="flex flex-row h-full">
           <DashboardChart />
           {isPanel && <PanelGraph />}
         </div>

@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { textToLink } from "src/utilities/stringProcessing";
+import { PreProcessPage, Page } from "src/types";
 import SettingsPage from "./SettingsPage";
 import ApiKeyPage from "./ApiKeyPage";
-import UsagePage from "./UsagePage";
-import MemberPage from "./MemberPage";
+import { MemberPage } from "./MemberPage";
 import BillingPage from "./BillingPage";
 import { Building } from "src/components/Icons";
 import { IntegrationsPage } from "./IntegrationsPage";
@@ -15,7 +14,8 @@ import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 
-const pages = [
+
+const pages: PreProcessPage[] = [
   {
     title: "General",
     // forAdmin: true,
@@ -26,11 +26,6 @@ const pages = [
     title: "General",
     page: <SettingsPage />,
   },
-  // {
-  //     title: "Usage",
-  //     // forAdmin: true,
-  //     page: <UsagePage />,
-  // },
   {
     title: "Member",
     forAdmin: true,
@@ -81,7 +76,7 @@ const processedOrgPages = pages.map((page, index) => {
   return generateChild(page);
 });
 
-const processedUserPages = userPages.map((page, index) => {
+const processedUserPages: Page[] = userPages.map((page, index) => {
   return generateChild(page);
 });
 
@@ -97,7 +92,7 @@ export const sections = [
   },
 ];
 
-export const settingChildren = sections.reduce((allPages, section) => {
+export const settingChildren = sections.reduce((allPages: Page[], section) => {
   const newPages = section.pages;
 
   return [...allPages, ...newPages];
