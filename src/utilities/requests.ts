@@ -3,6 +3,7 @@ import apiConfig from "src/services/apiConfig"; // Adjust this import according 
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { handleApiResponseErrors } from "src/store/actions";
 import { TypedDispatch } from "src/types";
+
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
   path: string; // The URL path for the request
@@ -12,7 +13,6 @@ type KeywordsFetchRequestConfig = {
   auth?: boolean; // Indicates whether to include an authorization token, defaults to true
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
   dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
-  muteNotifications?: boolean; // Optional flag to mute notifications
 };
 
 /**
@@ -25,8 +25,9 @@ type KeywordsFetchRequestConfig = {
  *   @param {string} [KeywordsFetchRequestConfig.method] - HTTP method (e.g., "GET", "POST"), defaults to "GET".
  *   @param {boolean} [KeywordsFetchRequestConfig.auth] - Indicates whether to include an authorization token, defaults to true.
  *   @param {RequestCredentials} [KeywordsFetchRequestConfig.credentials] - Credentials policy for the request, defaults to "same-origin".
- *   @param {TypedDispatch | undefined} [KeywordsFetchRequestConfig.dispatch] - Optional Redux dispatch function.
+ *   @param {TypedDispatch | undefined} [KeywordsFetchRequestConfig.dispatch] - Optional Redux dispatch function. Not passing this will mute notifications.
  * @returns {Promise<any>} A promise that resolves to the response body in json format.
+ *
  */
 
 // Define the function with TypeScript

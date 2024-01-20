@@ -43,7 +43,7 @@ export const BillingPage = ({ billings }) => {
       subtitle="Manage your billing information and invoices."
     >
       {/*Comment out this for now 1/18/2023  -- Raymond*/}
-      {/* <PageParagraph
+      <PageParagraph
         heading="Current plan"
         subheading={
           <span>
@@ -77,7 +77,7 @@ export const BillingPage = ({ billings }) => {
           onClick={() => navigate("plans")}
         />
       </PageParagraph>
-      <Divider /> */}
+      <Divider />
       <PageParagraph
         heading="Payment history"
         subheading={
@@ -110,7 +110,7 @@ export const BillingPage = ({ billings }) => {
 };
 
 const mapStateToProps = (state) => ({
-  billings: state.billings,
+  billings: state.billings.billings,
 });
 
 const mapDispatchToProps = {

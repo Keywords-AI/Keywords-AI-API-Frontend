@@ -1,6 +1,7 @@
 import { AnyNode } from "postcss";
 import { getDateStr, textToLink } from "./stringProcessing";
 import { Page } from "src/types"
+import { ReactElement } from "react";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -58,8 +59,8 @@ export function timeSkip(currentTime: string, deltaTime: any) {
 
 export const processKey = (
   key: any,
-  actions = (key:any) => {},
-  renderStatus = (status: any) => {}
+  actions = (key: any): ReactElement => { return <></> },
+  renderStatus = (status: any): ReactElement => { return <></> }
 ) => {
   const today = new Date();
   const expireDate = isNaN(new Date(key.expire_date).getTime())
@@ -85,8 +86,8 @@ export const processKey = (
 
 export const processKeyList = (
   keyList: any[],
-  actions = () => {},
-  renderStatus = () => {}
+  actions = (key: any): ReactElement => { return <></> },
+  renderStatus = (status: any): ReactElement => { return <></> }
 ) => {
   /*
   keyList: [{
@@ -103,7 +104,7 @@ export const processKeyList = (
   });
 };
 
-export const processBillingList = (billingList: any, actions = (item: any) => {}) => {
+export const processBillingList = (billingList: any, actions = (item: any) => { }) => {
   if (billingList && billingList?.length > 0) {
     return billingList.map((item: any) => {
       return {
@@ -129,7 +130,8 @@ export const generateChild = (page: any): Page => {
   }
   return {
     default: page.default,
-    forAdmin: page.forAdmin,
+    forKeywordsAdmin: page.forKeywordsAdmin,
+    forOrgAdmin: page.forOrgAdmin ?? false,
     title: page.title,
     path: path,
     element: page.page,
@@ -166,7 +168,7 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   }
 };
 
-export const handleSerializerErrors = (errors: any, callback = (errorString: string) => {}) => {
+export const handleSerializerErrors = (errors: any, callback = (errorString: string) => { }) => {
   // errors: {key: [error1, error2], key2: [error1, error2]}
   Object.keys(errors).forEach((key) => {
     errors[key].forEach((error: any) => {

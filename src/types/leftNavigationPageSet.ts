@@ -2,7 +2,8 @@ import { ReactElement } from 'react';
 
 export type PreProcessPage = {
     default?: boolean,
-    forAdmin?: boolean,
+    forKeywordsAdmin?: boolean,
+    forOrgAdmin?: boolean,
     title: string,
     path?: string,
     page: ReactElement,
@@ -10,7 +11,8 @@ export type PreProcessPage = {
 
 export type Page = {
     default?: boolean,
-    forAdmin?: boolean,
+    forKeywordsAdmin?: boolean,
+    forOrgAdmin: boolean,
     title: string,
     path: string,
     element: ReactElement,
