@@ -28,38 +28,37 @@ const pages: PreProcessPage[] = [
   },
   {
     title: "Member",
-    forAdmin: true,
+    forOrgAdmin: true,
     page: <MemberPage />,
   },
   {
     title: "Integrations",
-    // forAdmin: true,
+    forOrgAdmin: true,
     page: <IntegrationsPage />,
   },
   {
     title: "Model Router",
-    // forAdmin: true,
+    forOrgAdmin: true,
     page: <ModelRouterPage />,
   },
   {
     title: "Alerts & Fallback",
-    // forAdmin: true,
+    forOrgAdmin: true,
     page: <AlertsFallbackPage />,
   },
   {
     title: "Plans",
-    // forAdmin: true,
+    forOrgAdmin: true,
     page: <PlansPage />,
   },
   {
     title: "Billing",
-    // forAdmin: true,
+    forOrgAdmin: true,
     page: <BillingPage />,
   },
 
   {
     title: "Proxy Keys",
-    // forAdmin: true,
     page: <ApiKeyPage />,
   },
 ];
