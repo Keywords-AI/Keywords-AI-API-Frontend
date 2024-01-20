@@ -464,7 +464,8 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   // https://recharts.org/en-US/examples/StackedBarChart
   // Group data by date_group
   data = data.map((item) => {
-    let newDateGroup;
+    let newDateGroup = new Date(item.timestamp);
+    // timeRange = "monthly";
     if (timeRange === "yearly") {
       newDateGroup = (new Date(item.timestamp).getMonth() + 1)
         .toString()
@@ -490,12 +491,13 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   const byModel = {};
   // Group data by model or api_key
   const groupByCallback = isbyModel
-    ? ({ model }) => (model == "" ? "default" : model)
+    ? ({ model }) => (model == "" ? "Unknown Model" : model)
     : ({ api_key }) => api_key;
   Object.keys(by_date_group).forEach((key) => {
     const updatedItem = Object.groupBy(by_date_group[key], groupByCallback);
     Object.keys(updatedItem).forEach((key) => {
       // Aggregate the data for each model
+      // let request = updatedItem[key].length()
       updatedItem[key] = updatedItem[key].reduce((accumulator, current) => {
         accumulator.prompt_tokens =
           (accumulator.prompt_tokens || 0) + current.prompt_tokens;
@@ -505,12 +507,14 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
         accumulator.cost = (accumulator.cost || 0) + current.cost;
         accumulator.error_count =
           (accumulator.failed === true ? 1 : 0) + current.error_count || 0;
-        accumulator.number_of_requests = 1 + (accumulator.request || 0);
+        accumulator.timestamp = current.timestamp;
+        accumulator.number_of_requests = (accumulator.number_of_requests || 0) + 1 ;
         return accumulator;
       }, {});
       // Calculate the average and change naming
       updatedItem[key].total_cost = updatedItem[key].cost;
       delete updatedItem[key].cost;
+      // updatedItem[key].number_of_requests = request;
       updatedItem[key].total_prompt_tokens = updatedItem[key].prompt_tokens;
       delete updatedItem[key].prompt_tokens;
       updatedItem[key].total_completion_tokens =
@@ -525,7 +529,21 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     });
     byModel[key] = updatedItem;
   });
-  return Object.keys(byModel).map((key) => {
-    return { name: key, ...byModel[key] };
-  });
+  return Object.keys(byModel)
+    .map((key) => {
+      let time;
+      if (key.includes(":")) {
+
+        time = new Date();
+        time.setHours(key.split(":")[0]);
+      }else{
+        time = new Date(key);
+      }
+      return {
+        name: key,
+        timestamp: time.toString(),
+        ...byModel[key],
+      };
+    })
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 };
