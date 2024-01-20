@@ -193,7 +193,7 @@ function DashboardNotConnected({
 
   const typeChoices = [
     { name: "Total", value: "total" },
-    // { name: "Average", value: "average" },
+    { name: "Average", value: "average" },
   ];
 
   const breakdownChoices = [
