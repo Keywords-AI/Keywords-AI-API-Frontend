@@ -486,12 +486,11 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     }
     return { ...item, date_group: newDateGroup };
   });
-  console.log(data);
   const by_date_group = Object.groupBy(data, ({ date_group }) => date_group);
   const byModel = {};
   // Group data by model or api_key
   const groupByCallback = isbyModel
-    ? ({ model }) => model
+    ? ({ model }) => (model == "" ? "default" : model)
     : ({ api_key }) => api_key;
   Object.keys(by_date_group).forEach((key) => {
     const updatedItem = Object.groupBy(by_date_group[key], groupByCallback);
