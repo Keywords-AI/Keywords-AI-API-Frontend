@@ -85,6 +85,7 @@ function DashboardNotConnected({
   const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
+  const [activeCard, setActiveCard] = useState(null);
 
   useEffect(() => {
     getDashboardData();
@@ -97,6 +98,10 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
+  };
+
+  const handleCardClick = (metricKey) => {
+    setActiveCard(activeCard === metricKey ? null : metricKey);
   };
 
   const metrics = [
@@ -193,7 +198,7 @@ function DashboardNotConnected({
 
   const typeChoices = [
     { name: "Total", value: "total" },
-    // { name: "Average", value: "average" },
+    { name: "Average", value: "average" },
   ];
 
   const breakdownChoices = [
@@ -222,7 +227,15 @@ function DashboardNotConnected({
             <span className="display-sm text-gray-5">{firstName} </span>
           </div>
           {metrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
+            <MetricCard
+              key={index}
+              {...metric}
+              isActive={activeCard === metric.dataKey}
+              onClick={() => {
+                handleCardClick(metric.dataKey);
+                metric.onClick(); // Call the original onClick function
+              }}
+            />
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
@@ -382,7 +395,6 @@ function DashboardNotConnected({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
-              bgColor="bg-gray-2"
               onClick={() => handleOPenPanel()}
             />
           </div>
