@@ -59,13 +59,18 @@ const Routes = ({ getUser, user, organization }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
-    if (organization?.id) {
+    // Distinct between org is empty because of loading vs org is empty because user doesn't have org
+    if (organization?.id) { // The init state of org is not empty, but the id is null
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
       if (!onOnboradingPage && !organization.onboarded) {
         console.log(onOnboradingPage, organization.onboarded)
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
+    }
+    if (!organization) { // If user doesn't have org, fetching the user will make org null
+      // navigate to dashboard if user has onboarded
+      navigate("/onboarding");
     }
   }, [user]);
   // comment the 2 lines below to switch between logged in/out states
