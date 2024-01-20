@@ -1,6 +1,6 @@
 import { envVars } from "./env_test";
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
-const envVars = undefined;
+// const envVars = undefined;
 export const FETCH_ENDPOINT =
   envVars?.FETCH_ENDPOINT || "https://api.keywordsai.co/";
 export const AUTH_ENABLED = envVars?.AUTH_ENABLED || "true";

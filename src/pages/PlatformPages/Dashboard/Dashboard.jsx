@@ -208,14 +208,27 @@ function DashboardNotConnected({
       value: "by_model",
     },
     { name: "By key", value: "by_key" },
-    { name: "By token type", value: "by_token_type" }, //only for total tokens
+    // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
+  let filteredtypeChoices;
+    if (currentMetric === "number_of_requests" || currentMetric === "error_count") {
+    filteredtypeChoices = typeChoices.filter((choice) => choice.value !== "average")
+  }  else {
+    filteredtypeChoices = typeChoices
+  }
+  
+  // currentMetric === "number_of_requests" ||
+  //                             currentMetric === "error_count" 
+  //                               ? typeChoices.filter((choice) => choice.value !== "average")
+  //                               : typeChoices;
 
-  const filteredBreakdownChoices =
-    currentMetric === "output_token_count" ||
-    currentMetric === "prompt_token_count"
-      ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
-      : breakdownChoices;
+  const filteredBreakdownChoices = breakdownChoices;
+    // currentMetric === "total_tokens" ||
+    // currentMetric === "total_prompt_tokens"
+    //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
+    //   : breakdownChoices;
+
+  // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
 
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
@@ -359,7 +372,7 @@ function DashboardNotConnected({
                           )
                         )
                       }
-                      choices={typeChoices}
+                      choices={filteredtypeChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
