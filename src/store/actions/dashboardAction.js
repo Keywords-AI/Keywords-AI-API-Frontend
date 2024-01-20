@@ -1,4 +1,3 @@
-import { set } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics } from "src/utilities/constants";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
@@ -29,6 +28,14 @@ export const SET_DISPLAY_METRIC = "SET_DISPLAY_METRIC";
 export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
+export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
+
+export const setGroupByData = (data) => {
+  return {
+    type: SET_GROUP_BY_DATA,
+    payload: data,
+  };
+};
 
 export const setDisplayTimeRange = (timeRange, setParam, navigate) => {
   setParam({ summary_type: timeRange }, navigate);
@@ -213,12 +220,23 @@ export const getDashboardData = (
       })
       .then((data) => {
         dispatch(setDashboardData(data));
+        const by_model = getgroupByData(
+          data.raw_data,
+          true,
+          params.get("summary_type")
+        );
+        const by_key = getgroupByData(
+          data.raw_data,
+          false,
+          params.get("summary_type")
+        );
 
+        dispatch(setGroupByData({ by_model, by_key }));
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
         );
-        getgroupByData(data.raw_data);
+
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -324,6 +342,8 @@ export const fillMissingDate = (data, dateGroup) => {
               total_tokens: 0,
               error_count: 0,
               average_latency: 0,
+              api_key: data.api_key,
+              model: data.model,
             }
       );
     }
@@ -359,6 +379,8 @@ export const fillMissingDate = (data, dateGroup) => {
                 total_tokens: 0,
                 error_count: 0,
                 average_latency: 0,
+                api_key: data.api_key,
+                model: data.model,
               }
         );
       }
@@ -393,6 +415,8 @@ export const fillMissingDate = (data, dateGroup) => {
                 total_tokens: 0,
                 error_count: 0,
                 average_latency: 0,
+                api_key: data.api_key,
+                model: data.model,
               }
         );
       }
@@ -418,6 +442,8 @@ export const fillMissingDate = (data, dateGroup) => {
                 total_tokens: 0,
                 error_count: 0,
                 average_latency: 0,
+                api_key: data.api_key,
+                model: data.model,
               }
         );
       }
@@ -431,16 +457,76 @@ export const fillMissingDate = (data, dateGroup) => {
   return newDataArray;
 };
 
-export const getgroupByData = (data) => {
-  const result = Object.groupBy(data, ({ date_group }) => date_group);
-  const byModel = result;
-  Object.keys(result).forEach((key) => {
-    const updatedItem = Object.groupBy(result[key], ({ model }) => model);
+export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
+  // this function returns the data grouped by date_group and model or api_key:
+  //[{name: "2021-07-21T00:00:00.000Z",
+  //modelname:{metrics...}}]
+  // https://recharts.org/en-US/examples/StackedBarChart
+  // Group data by date_group
+  data = data.map((item) => {
+    let newDateGroup;
+    if (timeRange === "yearly") {
+      newDateGroup = (new Date(item.timestamp).getMonth() + 1)
+        .toString()
+        .padStart(2, "0");
+    } else if (timeRange === "monthly") {
+      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      });
+    } else if (timeRange === "weekly") {
+      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      });
+    } else {
+      newDateGroup = new Date(item.timestamp).getHours() + ":00";
+    }
+    return { ...item, date_group: newDateGroup };
+  });
+  console.log(data);
+  const by_date_group = Object.groupBy(data, ({ date_group }) => date_group);
+  const byModel = {};
+  // Group data by model or api_key
+  const groupByCallback = isbyModel
+    ? ({ model }) => model
+    : ({ api_key }) => api_key;
+  Object.keys(by_date_group).forEach((key) => {
+    const updatedItem = Object.groupBy(by_date_group[key], groupByCallback);
+    Object.keys(updatedItem).forEach((key) => {
+      // Aggregate the data for each model
+      updatedItem[key] = updatedItem[key].reduce((accumulator, current) => {
+        accumulator.prompt_tokens =
+          (accumulator.prompt_tokens || 0) + current.prompt_tokens;
+        accumulator.completion_tokens =
+          (accumulator.completion_tokens || 0) + current.completion_tokens;
+        accumulator.latency = (accumulator.latency || 0) + current.latency;
+        accumulator.cost = (accumulator.cost || 0) + current.cost;
+        accumulator.error_count =
+          (accumulator.failed === true ? 1 : 0) + current.error_count || 0;
+        accumulator.number_of_requests = 1 + (accumulator.request || 0);
+        return accumulator;
+      }, {});
+      // Calculate the average and change naming
+      updatedItem[key].total_cost = updatedItem[key].cost;
+      delete updatedItem[key].cost;
+      updatedItem[key].total_prompt_tokens = updatedItem[key].prompt_tokens;
+      delete updatedItem[key].prompt_tokens;
+      updatedItem[key].total_completion_tokens =
+        updatedItem[key].completion_tokens;
+      delete updatedItem[key].completion_tokens;
+      updatedItem[key].average_latency =
+        updatedItem[key].latency / updatedItem[key].number_of_requests;
+      delete updatedItem[key].latency;
+      updatedItem[key].total_tokens =
+        updatedItem[key].total_prompt_tokens +
+        updatedItem[key].total_completion_tokens;
+    });
     byModel[key] = updatedItem;
   });
-  const array = Object.keys(byModel).map((key) => {
+  return Object.keys(byModel).map((key) => {
     return { name: key, ...byModel[key] };
   });
-  console.log("byModel", array);
-  return;
 };

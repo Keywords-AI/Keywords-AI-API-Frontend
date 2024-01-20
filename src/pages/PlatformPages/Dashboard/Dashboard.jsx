@@ -198,12 +198,12 @@ function DashboardNotConnected({
 
   const breakdownChoices = [
     { name: "None", value: "none" },
-    // {
-    //   name: "By model",
-    //   value: "by_model",
-    // },
-    // { name: "By key", value: "by_key" },
-    // { name: "By token type", value: "by_token_type" }, //only for total tokens
+    {
+      name: "By model",
+      value: "by_model",
+    },
+    { name: "By key", value: "by_key" },
+    { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
 
   const filteredBreakdownChoices =
