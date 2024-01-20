@@ -85,6 +85,7 @@ function DashboardNotConnected({
   const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
+  const [activeCard, setActiveCard] = useState(null);
 
   useEffect(() => {
     getDashboardData();
@@ -97,6 +98,10 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
+  };
+
+  const handleCardClick = (metricKey) => {
+    setActiveCard(activeCard === metricKey ? null : metricKey);
   };
 
   const metrics = [
@@ -203,14 +208,27 @@ function DashboardNotConnected({
       value: "by_model",
     },
     { name: "By key", value: "by_key" },
-    { name: "By token type", value: "by_token_type" }, //only for total tokens
+    // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
+  let filteredtypeChoices;
+    if (currentMetric === "number_of_requests" || currentMetric === "error_count") {
+    filteredtypeChoices = typeChoices.filter((choice) => choice.value !== "average")
+  }  else {
+    filteredtypeChoices = typeChoices
+  }
+  
+  // currentMetric === "number_of_requests" ||
+  //                             currentMetric === "error_count" 
+  //                               ? typeChoices.filter((choice) => choice.value !== "average")
+  //                               : typeChoices;
 
-  const filteredBreakdownChoices =
-    currentMetric === "output_token_count" ||
-    currentMetric === "prompt_token_count"
-      ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
-      : breakdownChoices;
+  const filteredBreakdownChoices = breakdownChoices;
+    // currentMetric === "total_tokens" ||
+    // currentMetric === "total_prompt_tokens"
+    //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
+    //   : breakdownChoices;
+
+  // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
 
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
@@ -222,7 +240,15 @@ function DashboardNotConnected({
             <span className="display-sm text-gray-5">{firstName} </span>
           </div>
           {metrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
+            <MetricCard
+              key={index}
+              {...metric}
+              isActive={activeCard === metric.dataKey}
+              onClick={() => {
+                handleCardClick(metric.dataKey);
+                metric.onClick(); // Call the original onClick function
+              }}
+            />
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
@@ -346,7 +372,7 @@ function DashboardNotConnected({
                           )
                         )
                       }
-                      choices={typeChoices}
+                      choices={filteredtypeChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
@@ -382,7 +408,6 @@ function DashboardNotConnected({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
-              bgColor="bg-gray-2"
               onClick={() => handleOPenPanel()}
             />
           </div>
