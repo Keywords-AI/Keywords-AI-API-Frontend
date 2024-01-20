@@ -212,6 +212,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
+        console.log(data);
         dispatch(setDashboardData(data));
 
         const dataList = fillMissingDate(

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "src/components/Buttons/Button/Button";
 import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
 import { ChatbotReactMarkdown } from "src/components/Misc";
-import { regenerateChatbotResponse } from "src/store/actions";
+import cn from "src/utilities/classMerge";
 
 export default function ChatMessage({ message }) {
   const checkError = (text) => {
@@ -18,12 +18,13 @@ export default function ChatMessage({ message }) {
   return (
     <div
       className={
-        `chat-message ` +
-        (message && message.role === "user" ? "bg-gray-1" : "bg-gray-2") +
+        cn(`chat-message `,
+        (message && message.role === "user" ? "bg-gray-1" : "bg-gray-2"),
         (message && message.content && checkError(message.content)
           ? " bg-error"
-          : "") +
-        " flex px-xxxl py-[24px] justify-between align-start"
+          : ""),
+        " flex px-xxxl py-[24px] justify-between align-start",
+        )
       }
     >
       <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
