@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   logout,
-  setNextStep,
-  updateOrganization,
-  updateUser
+  updateOrganization
 } from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
 import { Button } from "src/components/Buttons";
@@ -12,33 +10,27 @@ import { Left } from "src/components/Icons";
 import { useForm } from "react-hook-form";
 import { IdentifyUseCase } from "./IdentifyUseCase";
 import { InviteTeam, OptimizeCosts, PrioritizeObj } from ".";
-import StepsBar from "src/components/Misc/StepsBar";
+import { StepsBar } from "src/components/Misc";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
 import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
+import { createSelector } from "reselect";
+import { useTypedSelector, useTypedDispatch } from "src/store/store";
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-  organization: state.organization
-});
-const mapDispatchToProps = {
-  logout,
-  updateOrganization
-};
 
-export const OnboardingPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(({
-  logout,
-  updateOrganization,
-  user,
-  organization
-}) => {
+export const OnboardingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
+  const curr_step: number = parseInt(new URLSearchParams(location.search).get("curr_step") || "1");
+  const dispatch = useTypedDispatch();
+  const orgUserSelector = createSelector(
+    (state) => state.organization,
+    (state) => state.user,
+    (organization, user) => ({ organization, user })
+  ); // Memoize the selector
+  const { organization, user } = useTypedSelector(orgUserSelector);
+
 
   const {
     register,
@@ -47,11 +39,11 @@ export const OnboardingPage = connect(
     formState: { errors },
   } = useForm();
   const handleBackButtonClick = () => {
-    logout(
+    dispatch(logout(
       () => {
         window.location.href = "https://keywordsai.co";
       }
-    ); // Dispatch the logout action
+    ));
   };
   const formfields = [
     <CreateOrganization />,
@@ -70,7 +62,7 @@ export const OnboardingPage = connect(
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">
-        {parseInt(curr_step) <= formfields.length + 1 && <Button
+        {curr_step <= formfields.length + 1 && <Button
           text={"Sign out"}
           variant={"r18-black"}
           onClick={handleBackButtonClick}
@@ -88,10 +80,10 @@ export const OnboardingPage = connect(
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  updateOrganization({ curr_onboarding_step: index + 2 });
+                  dispatch(updateOrganization({ curr_onboarding_step: index + 2 }));
                   if (index + 1 == formfields.length) {
                     // end of forms to fill
-                    if (!user.active_subscription) {
+                    if (!organization.active_subscription) {
                       navigate("/onboarding/plans");
                     }
                   } else {
@@ -106,7 +98,7 @@ export const OnboardingPage = connect(
       <StepsBar
         className={cn("absolute bottom-md",
           curr_step == formfields.length + 1 ? "hidden" : "visible"
-        )} activeStep={curr_step} totalSteps={formfields.length} />
+        )} totalSteps={formfields.length} />
     </>
   );
-});
+};
