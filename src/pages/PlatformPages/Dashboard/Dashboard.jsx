@@ -207,8 +207,8 @@ function DashboardNotConnected({
       name: "By model",
       value: "by_model",
     },
-    // { name: "By key", value: "by_key" },
-    // { name: "By token type", value: "by_token_type" }, //only for total tokens
+    { name: "By key", value: "by_key" },
+    { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
 
   const filteredBreakdownChoices =

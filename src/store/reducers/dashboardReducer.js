@@ -21,13 +21,14 @@ import {
   SET_DISPLAY_BREAKDOWN,
   SET_DISPLAY_TYPE,
   SET_DISPLAY_TIME_RANGE,
+  SET_GROUP_BY_DATA,
 } from "src/store/actions";
 
 const loadFilter = () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const metric = urlParams.get("[metric]");
+  const metric = urlParams.get("metric");
   const type = urlParams.get("type");
-  const breakDown = urlParams.get("breakDown");
+  const breakDown = urlParams.get("breakdown");
   const timeRange = urlParams.get("summary_type");
   // Use the retrieved values from the URL parameters
   // to set the displayFilter in the state
@@ -101,6 +102,7 @@ const initState = {
   apiData: [],
   avgApiData: [],
   displayFilter: loadFilter(),
+  groupByData: {},
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -161,6 +163,8 @@ export default function dashboardReducer(state = initState, action) {
         ...state,
         displayFilter: { ...state.displayFilter, timeRange: action.payload },
       };
+    case SET_GROUP_BY_DATA:
+      return { ...state, groupByData: action.payload };
     default:
       return state;
   }
