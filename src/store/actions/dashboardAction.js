@@ -1,3 +1,4 @@
+import { get } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics } from "src/utilities/constants";
 import { getQueryParam, setQueryParams } from "src/utilities/navigation";
@@ -30,22 +31,12 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
-export const INCREASE_TIME_FRAME_OFFSET = "INCREASE_TIME_FRAME_OFFSET";
-export const DECREASE_TIME_FRAME_OFFSET = "DECREASE_TIME_FRAME_OFFSET";
-export const increaseTimeFrameOffset = (navigate) => {
-  const currentTimeFrameOffset = getQueryParam("timeFrameOffset") || 0;
-  setQueryParams({ timeFrameOffset: +currentTimeFrameOffset + 1 }, navigate);
+export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
+export const setTimeFrameOffset = (offsetType, currTime, offset, navigate) => {
+  // setQueryParams({ timeFrameOffset: offset }, navigate);
   return {
-    type: INCREASE_TIME_FRAME_OFFSET,
-    payload: currentTimeFrameOffset + 1,
-  };
-};
-export const decreaseTimeFrameOFfset = (navigate) => {
-  const currentTimeFrameOffset = getQueryParam("timeFrameOffset") || 0;
-  setQueryParams({ timeFrameOffset: +currentTimeFrameOffset - 1 }, navigate);
-  return {
-    type: DECREASE_TIME_FRAME_OFFSET,
-    payload: currentTimeFrameOffset - 1,
+    type: SET_TIME_FRAME_OFFSET,
+    payload: { offsetType, currTime, offset },
   };
 };
 export const SET_P50_DATA = "SET_P50_DATA";
@@ -249,16 +240,13 @@ export const setP99Data = (data) => {
 export const getDashboardData = (
   overrideParams // search string
 ) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
-    const currDate = new Date();
-    const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
-    params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    // Yes, Fuck JS. They don't provide native formatter to convert to YYYY-mm-dd
-
+    const timeFrame = getState().dashboard.timeFrame;
+    params.set("date", timeFrame); //
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -270,7 +258,6 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
-        console.log(data);
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(
@@ -278,7 +265,6 @@ export const getDashboardData = (
           true,
           params.get("summary_type")
         );
-        console.log("hreere", data);
         const by_key = getgroupByData(
           data.raw_data,
           false,
@@ -358,7 +344,6 @@ export const getDashboardData = (
         );
 
         dispatch(setModelData(data?.data_by_model));
-        console.log("data?.data_by_key", data?.data_by_key);
         dispatch(setApiData(data?.data_by_key));
         dispatch(setAvgModelData(data?.data_avg_by_model));
         dispatch(setAvgApiData(data?.data_avg_by_key));

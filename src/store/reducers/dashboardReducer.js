@@ -26,6 +26,7 @@ import {
   SET_P90_DATA,
   SET_P95_DATA,
   SET_P99_DATA,
+  SET_TIME_FRAME_OFFSET,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -43,6 +44,8 @@ const loadFilter = () => {
     timeRange: timeRange || "daily",
   };
 };
+
+const currDate = new Date();
 
 const initState = {
   data: [
@@ -115,7 +118,9 @@ const initState = {
   p90Data: [],
   p95Data: [],
   p99Data: [],
-  timeFrameOffset: 0,
+  timeFrame: new Date(
+    currDate - currDate.getTimezoneOffset() * 60 * 1000
+  ).toISOString(),
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -187,7 +192,51 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, p95Data: action.payload };
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
-    
+    case SET_TIME_FRAME_OFFSET:
+      const { offsetType, currTime, offset } = action.payload;
+      console.log(offsetType, currTime, offset);
+      switch (offsetType) {
+        case "yearly":
+          let newYear = new Date(currTime).setFullYear(
+            new Date(currTime).getFullYear() + offset
+          );
+
+          newYear = new Date(newYear).toISOString();
+          return {
+            ...state,
+            timeFrame: newYear,
+          };
+        case "monthly":
+          let newMonth = new Date(currTime).setMonth(
+            new Date(currTime).getMonth() + offset
+          );
+          newMonth = new Date(newMonth).toISOString();
+          return {
+            ...state,
+            timeFrame: newMonth,
+          };
+        case "weekly":
+          let newWeek = new Date(currTime).setDate(
+            new Date(currTime).getDate() + offset * 7
+          );
+          newWeek = new Date(newWeek).toISOString();
+
+          return {
+            ...state,
+            timeFrame: newWeek,
+          };
+        default:
+          let newDate = new Date(currTime).setDate(
+            new Date(currTime).getDate() + offset
+          );
+          newDate = new Date(newDate).toISOString();
+
+          return {
+            ...state,
+            timeFrame: newDate,
+          };
+      }
+
     default:
       return state;
   }
