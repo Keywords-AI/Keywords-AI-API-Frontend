@@ -29,9 +29,10 @@ import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env";
-import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
+
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
+import { Requests } from "./pages/PlatformPages/Requests";
 
 const mapStateToProps = (state) => {
   return {
@@ -83,7 +84,7 @@ const Routes = ({ getUser, user, organization }) => {
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
-        { path: "usage-logs", element: <UsageLogs /> },
+        { path: "requests", element: <Requests /> },
         {
           path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,
