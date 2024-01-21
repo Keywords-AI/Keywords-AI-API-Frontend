@@ -247,6 +247,7 @@ export const getDashboardData = (
     }
     const timeFrame = getState().dashboard.timeFrame;
     params.set("date", timeFrame); //
+    params.set("timezone_offset", new Date().getTimezoneOffset() / 60);
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -258,6 +259,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
+        console.log("getData", data)
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(
