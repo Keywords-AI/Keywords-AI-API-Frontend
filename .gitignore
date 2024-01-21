@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 .env
-deploy.sh
 .firebase/
-src/local_env.js
+src/branch_env.ts
