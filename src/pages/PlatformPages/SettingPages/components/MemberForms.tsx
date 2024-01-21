@@ -27,7 +27,9 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => { } }) => {
             onSubmit={handleSubmit(onSubmit)}
         >
             <div className="flex-row gap-xs self-stretch">
-                <TextInput {...register("email")} title="Email" width="flex-grow" />
+                <TextInput {...register("email")} title="Email" width="flex-grow"
+                placeholder="example@example.com"
+                />
                 {/* <SelectInput
                     {...register("role")}
                     title="Role"

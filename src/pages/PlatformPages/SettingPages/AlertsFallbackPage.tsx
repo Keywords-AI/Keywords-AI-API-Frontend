@@ -1,46 +1,41 @@
 import React, { useEffect } from "react";
-import { Divider, PageContent, PageParagraph } from "src/components/Sections";
+import { Divider, PageContent } from "src/components/Sections";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
 import {
   toggleFallback,
-  updateUser,
+  updateOrganization,
   toggleSystemFallback,
 } from "src/store/actions";
-import { models } from "src/components/Misc";
+import { RootState } from "src/types";
 import { useForm } from "react-hook-form";
-import { connect } from "react-redux";
+import { models } from "src/utilities/constants";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
-const mapStateToProps = (state) => ({
-  isFallbackEnabled: state.user.fallback_model_enabled,
-  fallbackModels: state.user.fallback_models,
-  systemFallbackeEnabled: state.user.system_fallback_enabled,
-});
-const mapDispatchToProps = {
-  updateUser,
-  toggleFallback,
-  toggleSystemFallback,
-};
 
-const AlertsFallbackPageN = ({
-  isFallbackEnabled,
-  updateUser,
-  systemFallbackeEnabled,
-  fallbackModels,
-}) => {
+export const AlertsFallbackPage = () => {
+  const {
+    isFallbackEnabled,
+    fallbackModels,
+    systemFallbackEnabled
+  } = useTypedSelector((state: RootState) => ({
+    isFallbackEnabled: state.organization?.fallback_model_enabled,
+    fallbackModels: state.organization?.fallback_models,
+    systemFallbackEnabled: state.organization?.system_fallback_enabled,
+  }));
+
+  const dispatch = useTypedDispatch();
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
-  const [currentFallbackModels, setCurrentFallbackModels] = React.useState(
-    fallbackModels || []
-  );
+
   const [systemEnable, setSystemEnable] = React.useState(
-    systemFallbackeEnabled
+    systemFallbackEnabled
   );
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
-    setSystemEnable(systemFallbackeEnabled);
-  }, [isFallbackEnabled, systemFallbackeEnabled]);
+    setSystemEnable(systemFallbackEnabled);
+  }, [isFallbackEnabled, systemFallbackEnabled]);
   const {
     register,
     handleSubmit,
@@ -50,7 +45,7 @@ const AlertsFallbackPageN = ({
   const model1 = watch("fall_back_model_1");
   const model2 = watch("fall_back_model_2");
   const model3 = watch("fall_back_model_3");
-  
+
   const filteredModelsForModel1 = models.filter(
     (model) => model.value !== model2 && model.value !== model3
   );
@@ -64,19 +59,19 @@ const AlertsFallbackPageN = ({
   const handleToggle = () => {
     setFallbackEnabled(!fallbackEnabled);
   };
-  const onSubmit = (data) => {
-    const fallback_models = [];
+  const onSubmit = (data: any) => {
+    const fallback_models: any[] = [];
     Object.keys(data).forEach((key) => {
       if (key.includes("fall_back_model")) {
         if (data[key] !== "") fallback_models.push(data[key]);
       }
     });
 
-    updateUser({ fallback_models, fallback_model_enabled: fallbackEnabled });
+    dispatch(updateOrganization({ fallback_models, fallback_model_enabled: fallbackEnabled }));
   };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
-    updateUser({ system_fallback_enabled: !systemEnable });
+    dispatch(updateOrganization({ system_fallback_enabled: !systemFallbackEnabled }));
   };
   return (
     <PageContent
@@ -122,7 +117,7 @@ const AlertsFallbackPageN = ({
                 width="w-[248px]"
                 optionsWidth="w-[248px]"
                 choices={filteredModelsForModel1}
-                defaultValue={currentFallbackModels?.[0]}
+                defaultValue={fallbackModels?.[0]}
                 placeholder="Select model #1"
               />
               <SelectInput
@@ -149,7 +144,7 @@ const AlertsFallbackPageN = ({
         )}
       </form>
       <Divider />
-      { fallbackEnabled &&
+      {fallbackEnabled &&
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading
             title="Safety net"
@@ -165,9 +160,4 @@ const AlertsFallbackPageN = ({
       }
     </PageContent>
   );
-};
-
-export const AlertsFallbackPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AlertsFallbackPageN);
+}
