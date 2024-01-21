@@ -48,7 +48,11 @@ export const setPrevTimeRange = (currentTimeFrameOffset, setParam, navigate) => 
     type: SET_PREVIOUS_TIME_FRAME,
     payload: currentTimeFrameOffset - 1,
   };
-};
+};export const SET_P50_DATA = "SET_P50_DATA";
+export const SET_P90_DATA = "SET_P90_DATA";
+export const SET_P95_DATA = "SET_P95_DATA";
+export const SET_P99_DATA = "SET_P99_DATA";
+
 export const setGroupByData = (data) => {
   return {
     type: SET_GROUP_BY_DATA,
@@ -214,6 +218,34 @@ export const setErrorData = (data) => {
   };
 };
 
+export const setP50Data = (data) => { 
+  return {
+    type: SET_P50_DATA,
+    payload: data,
+  };
+};
+
+export const setP90Data = (data) => {
+  return {
+    type: SET_P90_DATA,
+    payload: data,
+  };
+};
+
+export const setP95Data = (data) => {
+  return { 
+    type: SET_P95_DATA,
+    payload: data,
+  };
+};
+
+export const setP99Data = (data) => {
+  return {
+    type: SET_P99_DATA,
+    payload: data,
+  };
+};
+
 export const getDashboardData = (
   overrideParams // search string
 ) => {
@@ -245,6 +277,7 @@ export const getDashboardData = (
           true,
           params.get("summary_type")
         );
+        console.log("hreere", data);
         const by_key = getgroupByData(
           data.raw_data,
           false,
@@ -256,6 +289,7 @@ export const getDashboardData = (
           data?.data,
           params.get("summary_type")
         );
+
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -326,6 +360,10 @@ export const getDashboardData = (
         dispatch(setApiData(data?.data_by_key));
         dispatch(setAvgModelData(data?.data_avg_by_model));
         dispatch(setAvgApiData(data?.data_avg_by_key));
+        dispatch(setP50Data(data?.latency_p_50));
+        dispatch(setP90Data(data?.latency_p_90));
+        dispatch(setP95Data(data?.latency_p_95));
+        dispatch(setP99Data(data?.latency_p_99));
       })
       .catch((error) => {});
   };

@@ -22,6 +22,10 @@ import {
   SET_DISPLAY_TYPE,
   SET_DISPLAY_TIME_RANGE,
   SET_GROUP_BY_DATA,
+  SET_P50_DATA,
+  SET_P90_DATA,
+  SET_P95_DATA,
+  SET_P99_DATA,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -61,6 +65,10 @@ const initState = {
     average_completion_tokens: 0,
     average_latency: 0,
     number_of_requests: 0,
+    latency_p_50: 0,
+    latency_p_90: 0,
+    latency_p_95: 0,
+    latency_p_99: 0,
   },
   costData: [
     // {total_cost, date_group}
@@ -103,6 +111,10 @@ const initState = {
   avgApiData: [],
   displayFilter: loadFilter(),
   groupByData: {},
+  p50Data:[],
+  p90Data:[],
+  p95Data:[],
+  p99Data:[],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -166,6 +178,14 @@ export default function dashboardReducer(state = initState, action) {
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
 
+    case SET_P50_DATA:  
+      return { ...state, p50Data: action.payload };
+    case SET_P90_DATA:
+      return { ...state, p90Data: action.payload };
+    case SET_P95_DATA:
+      return { ...state, p95Data: action.payload };
+    case SET_P99_DATA:
+      return { ...state, p99Data: action.payload };
     default:
       return state;
   }
