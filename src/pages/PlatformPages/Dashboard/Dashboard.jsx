@@ -22,6 +22,8 @@ import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
 import { Metrics } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
+import useKeyboardShortcut from 'use-keyboard-shortcut'
+
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -87,6 +89,8 @@ function DashboardNotConnected({
   const [isPanel, setIsPanel] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
 
+  const useKeyboardShortcut = (shortcutKeys, callback) => {}
+
   useEffect(() => {
     getDashboardData();
   }, []);
@@ -103,6 +107,7 @@ function DashboardNotConnected({
   const handleCardClick = (metricKey) => {
     setActiveCard(activeCard === metricKey ? null : metricKey);
   };
+
 
   const metrics = [
     {
