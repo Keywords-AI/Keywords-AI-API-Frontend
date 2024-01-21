@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from "react";
 import { connect, ConnectedComponent, DispatchProp  } from "react-redux";
-import { AppDispatch, RootState } from "src/store/store";
+import { RootState } from "src/types";
 import { SettingTable } from "src/components/Tables";
 import { getDashboardData } from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";

@@ -2,7 +2,8 @@
 import apiConfig from "src/services/apiConfig"; // Adjust this import according to your project setup
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { handleApiResponseErrors } from "src/store/actions";
-import { AppDispatch } from "src/store/store";
+import { TypedDispatch } from "src/types";
+
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
   path: string; // The URL path for the request
@@ -11,7 +12,7 @@ type KeywordsFetchRequestConfig = {
   method?: string; // HTTP method (e.g., "GET", "POST"), defaults to "GET"
   auth?: boolean; // Indicates whether to include an authorization token, defaults to true
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
-  dispatch?: AppDispatch | undefined; // Optional Redux dispatch function, requried for notifications
+  dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
 };
 
 /**
@@ -24,8 +25,9 @@ type KeywordsFetchRequestConfig = {
  *   @param {string} [KeywordsFetchRequestConfig.method] - HTTP method (e.g., "GET", "POST"), defaults to "GET".
  *   @param {boolean} [KeywordsFetchRequestConfig.auth] - Indicates whether to include an authorization token, defaults to true.
  *   @param {RequestCredentials} [KeywordsFetchRequestConfig.credentials] - Credentials policy for the request, defaults to "same-origin".
- *   @param {AppDispatch | undefined} [KeywordsFetchRequestConfig.dispatch] - Optional Redux dispatch function.
+ *   @param {TypedDispatch | undefined} [KeywordsFetchRequestConfig.dispatch] - Optional Redux dispatch function. Not passing this will mute notifications.
  * @returns {Promise<any>} A promise that resolves to the response body in json format.
+ *
  */
 
 // Define the function with TypeScript
@@ -57,9 +59,10 @@ export const keywordsRequest = async ({
     if (response.ok) {
       return await response.json();
     } else {
+      const status = response.status;
       const error = await response.json();
       if (dispatch && typeof dispatch === "function") {
-        dispatch(handleApiResponseErrors(error));
+        dispatch(handleApiResponseErrors(error, status));
       }
       throw new Error(response.statusText);
     }

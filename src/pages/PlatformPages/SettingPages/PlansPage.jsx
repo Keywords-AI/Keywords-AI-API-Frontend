@@ -5,16 +5,20 @@ import { SmallPricingCard } from "src/components/Cards";
 import { createPaymentSession } from "src/services/stripe";
 import {
   STRIPE_STATER_LOOKUP_KEY,
-  STRIPE_TEAM_LOOKUP_KEY,
-  STRIPE_TEAM_YEARLY_LOOKUP_KEY,
-} from "src/env.js";
+  STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+  STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+  STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+  STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY
+} from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({
-    organization: state.organization,
+  organization: state.organization,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  createPaymentSession
+};
 
 const Subheading = connect(
   mapStateToProps,
@@ -34,9 +38,13 @@ const Subheading = connect(
 });
 
 export const PlansPage = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(({ organization }) => {
+  mapStateToProps,
+  mapDispatchToProps
+)(({
+  organization,
+  createPaymentSession
+
+}) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
@@ -94,9 +102,9 @@ export const PlansPage = connect(
         buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           if (isYearly) {
-            createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
+            createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]);
           } else {
-            createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
+            createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]);
           }
         },
       },
@@ -105,9 +113,9 @@ export const PlansPage = connect(
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
-            createPaymentSession([STRIPE_TEAM_YEARLY_LOOKUP_KEY]);
+            createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]);
           } else {
-            createPaymentSession([STRIPE_TEAM_LOOKUP_KEY]);
+            createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]);
           }
         },
       },
@@ -152,7 +160,7 @@ export const PlansPage = connect(
       return {
         buttonText: "Current plan",
         buttonVariant: "r4-gray2",
-        buttonOnClick: () => {},
+        buttonOnClick: () => { },
       };
     } else {
       return buttonParams;

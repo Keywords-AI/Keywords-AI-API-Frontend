@@ -271,7 +271,7 @@ export const CreateForm = connect(
 )(CreateFormNotConnected);
 
 const DeleteFormNotConnected = React.forwardRef(
-  ({ deletingKey, setDeletingKey, deleteKey, dispatchNotification }, ref) => {
+  ({ deletingKey, setDeletingKey, deleteKey}, ref) => {
     const { loading, error, data, postData } = usePost({
       path: `api/delete-key/${deletingKey?.prefix}/`,
       method: "DELETE",
@@ -282,10 +282,6 @@ const DeleteFormNotConnected = React.forwardRef(
       postData();
       deleteKey(deletingKey);
       setDeletingKey(null);
-      dispatchNotification({
-        title: "Key deleted",
-        message: "Your key has been deleted.",
-      });
     };
     const handleClose = () => {
       setDeletingKey(null);

@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import {
   logout,
-  setNextStep,
-  updateUser
+  updateOrganization
 } from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
 import { Button } from "src/components/Buttons";
@@ -11,59 +10,40 @@ import { Left } from "src/components/Icons";
 import { useForm } from "react-hook-form";
 import { IdentifyUseCase } from "./IdentifyUseCase";
 import { InviteTeam, OptimizeCosts, PrioritizeObj } from ".";
-import StepsBar from "src/components/Misc/StepsBar";
+import { StepsBar } from "src/components/Misc";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
-import { GetStarted } from "./GetStarted";
 import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
+import { createSelector } from "reselect";
+import { useTypedSelector, useTypedDispatch } from "src/store/store";
 
-const mapStateToProps = (state) => ({
-  currentStep: state.onboarding.currentStep,
-  user: state.user,
-});
-const mapDispatchToProps = {
-  logout,
-  setNextStep,
-  updateUser
-};
 
-export const OnboardingPage = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(({ 
-  logout, 
-  setNextStep,
-  updateUser,
-  user
- }) => {
+export const OnboardingPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const curr_step = new URLSearchParams(location.search).get("curr_step") || 1;
-  const [currentStep, setCurrentStep] = React.useState(parseInt(curr_step));
-  useEffect(()=>{
-    if (user.onboarded) {
-      navigate(REDIRECT_URI);
-    }
-  }, [user])
+  const curr_step: number = parseInt(new URLSearchParams(location.search).get("curr_step") || "1");
+  const dispatch = useTypedDispatch();
+  const orgUserSelector = createSelector(
+    (state) => state.organization,
+    (state) => state.user,
+    (organization, user) => ({ organization, user })
+  ); // Memoize the selector
+  const { organization, user } = useTypedSelector(orgUserSelector);
+
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  useEffect(() => {
-    setCurrentStep(parseInt(curr_step));
-  }, [curr_step])
-  const onSubmit = (data) => {
-    setNextStep();
-  };
   const handleBackButtonClick = () => {
-    logout(
+    dispatch(logout(
       () => {
         window.location.href = "https://keywordsai.co";
       }
-    ); // Dispatch the logout action
+    ));
   };
   const formfields = [
     <CreateOrganization />,
@@ -72,10 +52,17 @@ export const OnboardingPage = connect(
     <PrioritizeObj />,
     <OptimizeCosts />,
   ];
+  useEffect(() => {
+    if (organization?.onboarded) {
+      navigate(REDIRECT_URI);
+    } else if (organization?.curr_onboarding_step >= formfields.length) {
+      navigate("/onboarding/plans");
+    }
+  }, [user])
   return (
     <>
       <div className="flex flex-col items-start self-stretch gap-xxs">
-        {parseInt(curr_step) <= formfields.length + 1 &&<Button
+        {curr_step <= formfields.length + 1 && <Button
           text={"Sign out"}
           variant={"r18-black"}
           onClick={handleBackButtonClick}
@@ -93,19 +80,26 @@ export const OnboardingPage = connect(
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  updateUser({ curr_onboarding_step: index + 2 });
-                  setQueryParams({ curr_step: index + 2 }, navigate);
+                  console.log("button action", index + 1 == formfields.length);
+                  dispatch(updateOrganization({ curr_onboarding_step: index + 2 }));
+                  if (index + 1 == formfields.length) {
+                    // end of forms to fill
+                    if (!organization.active_subscription) {
+                      navigate("/onboarding/plans");
+                    }
+                  } else {
+                    setQueryParams({ curr_step: index + 2 }, navigate);
+                  }
                 }
               })}
             </React.Fragment>
           )
         })}
-        <GetStarted show={parseInt(curr_step) >= formfields.length + 1} />
       </div>
       <StepsBar
         className={cn("absolute bottom-md",
           curr_step == formfields.length + 1 ? "hidden" : "visible"
-        )} activeStep={curr_step} totalSteps={formfields.length} />
+        )} totalSteps={formfields.length} />
     </>
   );
-});
+};

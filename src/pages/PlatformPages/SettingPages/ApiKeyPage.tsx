@@ -2,8 +2,6 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { SettingTable } from "src/components/Tables";
 import { Button, IconButton } from "src/components/Buttons";
-import { Pencil, Delete } from "src/components/Icons";
-import useFetch from "src/hooks/useFetch";
 import { CreateForm, EditForm, DeleteForm, APIKeyActions } from "./components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Modal } from "src/components/Dialogs";
@@ -14,8 +12,9 @@ import {
   dispatchNotification,
 } from "src/store/actions";
 import { processKeyList } from "src/utilities/objectProcessing";
+import { RootState } from "src/types";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootState) => ({
   user: state.user,
   apiKey: state.apiKey,
 });
@@ -32,8 +31,6 @@ export const ApiKeyPage = ({
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
-  dispatchNotification,
-  user,
 }) => {
   const [openCreate, setOpenCreate] = React.useState(false);
   const editingTrigger = (key) => {

@@ -1,4 +1,8 @@
-import { getDateStr, textToLink } from "./stringProcessing";
+import { AnyNode } from "postcss";
+import { getDateStr, textToLink, capitalize } from "./stringProcessing";
+import { Page } from "src/types"
+import React, { ReactElement } from "react";
+import { Billing, StripeBillingItem, Subscription, StripeSubscription } from "src/types";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -39,7 +43,7 @@ export function formatDate(date) {
   return date;
 }
 
-export function timeSkip(currentTime, deltaTime) {
+export function timeSkip(currentTime: string, deltaTime: any) {
   // Destructuring deltaTime object
   const { days = 0, months = 0, years = 0 } = deltaTime;
 
@@ -55,9 +59,9 @@ export function timeSkip(currentTime, deltaTime) {
 }
 
 export const processKey = (
-  key,
-  actions = () => {},
-  renderStatus = () => {}
+  key: any,
+  actions = (key: any): ReactElement => { return <></> },
+  renderStatus = (status: any): ReactElement => { return <></> }
 ) => {
   const today = new Date();
   const expireDate = isNaN(new Date(key.expire_date).getTime())
@@ -82,9 +86,9 @@ export const processKey = (
 };
 
 export const processKeyList = (
-  keyList,
-  actions = () => {},
-  renderStatus = () => {}
+  keyList: any[],
+  actions = (key: any): ReactElement => { return <></> },
+  renderStatus = (status: any): ReactElement => { return <></> }
 ) => {
   /*
   keyList: [{
@@ -101,23 +105,37 @@ export const processKeyList = (
   });
 };
 
-export const processBillingList = (billingList, actions = () => {}) => {
+export const processSubscription = (subscription: StripeSubscription): Subscription => {
+  return {
+    name: capitalize(subscription?.items.data[0].plan.nickname ?? "none"),
+    renewal_date: getDateStr(subscription?.current_period_end, false, true),
+    amount: `$${(subscription?.items.data[0].plan.amount ?? 0) / 100}`,
+    interval: capitalize(subscription?.items.data[0].plan.interval ?? ""),
+  };
+}
+
+export const processBillingItem = (billingItem: StripeBillingItem, actions = (item: any): React.ReactNode => { return <></> }): Billing => {
+  return {
+    name: billingItem?.customer_name,
+    email: billingItem?.customer_email,
+    date: getDateStr(billingItem?.created, false, true),
+    amount: `$${(billingItem?.amount_paid ?? 0) / 100}`,
+    payment_id: billingItem?.id,
+    actions: actions(billingItem),
+  } as Billing;
+};
+
+export const processBillingList = (billingList: StripeBillingItem[], actions = (item: any): React.ReactNode => { return <></> }): Billing[] => {
   if (billingList && billingList?.length > 0) {
-    return billingList.map((item) => {
-      return {
-        ...item,
-        date: getDateStr(item.created, false, true),
-        amount: `$${item.amount_paid / 100}`,
-        payment_id: item.id,
-        actions: actions(item),
-      };
+    return billingList.map((item): Billing => {
+      return processBillingItem(item, actions);
     });
   } else {
     return [];
   }
 };
 
-export const generateChild = (page) => {
+export const generateChild = (page: any): Page => {
   let path = textToLink(page.title);
   if (page?.path) {
     path = page.path;
@@ -127,6 +145,8 @@ export const generateChild = (page) => {
   }
   return {
     default: page.default,
+    forKeywordsAdmin: page.forKeywordsAdmin,
+    forOrgAdmin: page.forOrgAdmin ?? false,
     title: page.title,
     path: path,
     element: page.page,
@@ -163,10 +183,10 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   }
 };
 
-export const handleSerializerErrors = (errors, callback = () => {}) => {
+export const handleSerializerErrors = (errors: any, callback = (errorString: string) => { }) => {
   // errors: {key: [error1, error2], key2: [error1, error2]}
   Object.keys(errors).forEach((key) => {
-    errors[key].forEach((error) => {
+    errors[key].forEach((error: any) => {
       const errorString = `${key}: ${error}`;
       callback(errorString);
     });

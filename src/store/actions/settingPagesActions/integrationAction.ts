@@ -1,17 +1,16 @@
-import { keywordsFetch } from "src/services/apiConfig";
+import { keywordsRequest } from "src/utilities/requests";
 import { dispatchNotification } from "src/store/actions";
-import { handleApiResponseErrors } from "src/store/actions";
+import { TypedDispatch } from "src/types";
 export const GET_VENDORS = "GET_VENDORS";
 export const GET_INTEGRATIONS = "GET_INTEGRATIONS";
 export const SET_API_KEY = "SET_API_KEY";
 export const SET_INTEGRATION = "SET_INTEGRATION";
 
 export const getVendors = () => {
-  return (dispatch) => {
-    keywordsFetch({
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       path: "vendor_integration/vendors",
     })
-      .then((response) => response.json())
       .then((data) => {
         dispatch({
           type: GET_VENDORS,
@@ -25,17 +24,11 @@ export const getVendors = () => {
 };
 
 export const getIntegrations = () => {
-  return (dispatch) => {
-    keywordsFetch({
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       path: "vendor_integration/integrations",
+      dispatch
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          handleApiResponseErrors(response);
-        }
-      })
       .then((data) => {
         dispatch({
           type: GET_INTEGRATIONS,
@@ -48,32 +41,15 @@ export const getIntegrations = () => {
   };
 };
 
-export const createIntegration = (data, callback = () => {}) => {
-  return (dispatch) => {
-    keywordsFetch({
+export const createIntegration = (data, callback = () => { }) => {
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       path: "vendor_integration/integrations/",
       data,
       method: "POST",
+      dispatch
     })
-      .then(async (response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          const error = await response.json();
-          if (error.detail) {
-            dispatch(
-              dispatchNotification({
-                type: "error",
-                title: error.detail,
-              })
-            );
-          } else {
-            handleApiResponseErrors(response);
-          }
-          throw new Error("Something went wrong");
-        }
-      })
-      .then((data) => {
+      .then((responseJson) => {
         dispatch(
           dispatchNotification({
             title: "Integration updated",
@@ -81,7 +57,7 @@ export const createIntegration = (data, callback = () => {}) => {
         );
         dispatch({
           type: SET_INTEGRATION,
-          payload: data,
+          payload: responseJson,
         });
         callback();
       })
@@ -92,15 +68,14 @@ export const createIntegration = (data, callback = () => {}) => {
 };
 
 export const updateIntegration = (data) => {
-  return (dispatch) => {
-    keywordsFetch({
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       path: `vendor_integration/integration/${data.integration_id}/`,
       data,
       method: "PATCH",
-      dispatch: dispatch,
+      dispatch
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then((responseJson) => {
         dispatch(
           dispatchNotification({
             title: "Integration updated",
@@ -108,7 +83,7 @@ export const updateIntegration = (data) => {
         );
         dispatch({
           type: SET_INTEGRATION,
-          payload: data,
+          payload: responseJson,
         });
       })
       .catch((error) => {
@@ -131,31 +106,24 @@ export const setIntegration = (vendorName, data) => {
   };
 };
 
-export const verifyKey = (data, callback = () => {}) => {
-  return (dispatch) => {
-    keywordsFetch({
+export const verifyKey = (data, callback = () => { }) => {
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       path: "vendor_integration/validate-api-key/",
       data,
       method: "POST",
+      dispatch
     })
-      .then(async (response) => {
-        if (response.ok) {
-          dispatch(
-            dispatchNotification({
-              title: "Key verified successfully",
-            })
-          );
-          dispatch(createIntegration(data, callback));
-          return response.json();
-        } else {
-          const data = await response.json();
-          handleApiResponseErrors(DataTransferItem);
-        }
-      })
-      .then((data) => {
+      .then((responseJson) => {
+        dispatch(
+          dispatchNotification({
+            title: "Key verified successfully",
+          })
+        );
+        dispatch(createIntegration(data, callback));
         dispatch({
           type: SET_API_KEY,
-          payload: data,
+          payload: responseJson,
         });
       })
       .catch((error) => {

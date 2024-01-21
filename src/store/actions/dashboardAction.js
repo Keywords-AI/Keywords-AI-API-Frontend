@@ -2,6 +2,7 @@ import { set } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics } from "src/utilities/constants";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
+import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -29,32 +30,32 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 
-export const setDisplayTimeRange = (timeRange, setParam) => {
-  setParam({ summary_type: timeRange });
+export const setDisplayTimeRange = (timeRange, setParam, navigate) => {
+  setParam({ summary_type: timeRange }, navigate);
   return {
     type: SET_DISPLAY_TIME_RANGE,
     payload: timeRange,
   };
 };
 
-export const setDisplayMetric = (metric, setParam) => {
-  setParam({ metric: metric });
+export const setDisplayMetric = (metric, setParam, navigate) => {
+  setParam({ metric: metric }, navigate);
   return {
     type: SET_DISPLAY_METRIC,
     payload: metric,
   };
 };
 
-export const setDisplayType = (type, setParam) => {
-  setParam({ type: type });
+export const setDisplayType = (type, setParam, navigate) => {
+  setParam({ type: type }, navigate);
   return {
     type: SET_DISPLAY_TYPE,
     payload: type,
   };
 };
 
-export const setDisplayBreakdown = (breakdown, setParam) => {
-  setParam({ breakdown: breakdown });
+export const setDisplayBreakdown = (breakdown, setParam, navigate) => {
+  setParam({ breakdown: breakdown }, navigate);
   return {
     type: SET_DISPLAY_BREAKDOWN,
     payload: breakdown,
@@ -211,12 +212,14 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
-        // data = data.filter((item) => item.error_counts === 0);
+        console.log(data);
         dispatch(setDashboardData(data));
+
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
         );
+        getgroupByData(data.raw_data);
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -427,4 +430,18 @@ export const fillMissingDate = (data, dateGroup) => {
   }
 
   return newDataArray;
+};
+
+export const getgroupByData = (data) => {
+  const result = Object.groupBy(data, ({ date_group }) => date_group);
+  const byModel = result;
+  Object.keys(result).forEach((key) => {
+    const updatedItem = Object.groupBy(result[key], ({ model }) => model);
+    byModel[key] = updatedItem;
+  });
+  const array = Object.keys(byModel).map((key) => {
+    return { name: key, ...byModel[key] };
+  });
+  console.log("byModel", array);
+  return;
 };

@@ -2,7 +2,7 @@ import React, { useEffect, lazy, Suspense } from "react";
 import { useRoutes, Navigate, Outlet } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser, isLoggedIn } from "src/store/actions";
+import { getUser, isLoggedIn, updateUser } from "src/store/actions";
 import "src/components/styles/index.css";
 import { retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
@@ -28,12 +28,15 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { AUTH_ENABLED } from "src/env.js";
+import { AUTH_ENABLED } from "src/env";
 import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
+import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
+import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 
 const mapStateToProps = (state) => {
   return {
     user: state.user,
+    organization: state.organization,
   };
 };
 
@@ -42,7 +45,7 @@ const mapDispatchToProps = {
   getUser,
 };
 
-const Routes = ({ getUser, user }) => {
+const Routes = ({ getUser, user, organization }) => {
   const navigate = useNavigate();
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
@@ -56,12 +59,18 @@ const Routes = ({ getUser, user }) => {
     return () => clearInterval(intervalId);
   }, [authToken]);
   useEffect(() => {
-    if (user.id && isLoggedIn(user)) {
+    // Distinct between org is empty because of loading vs org is empty because user doesn't have org
+    if (organization?.id) { // The init state of org is not empty, but the id is null
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
-      if (!user.onboarded && !onOnboradingPage) {
+      if (!onOnboradingPage && !organization.onboarded) {
+        console.log(onOnboradingPage, organization.onboarded)
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
+    }
+    if (!organization) { // If user doesn't have org, fetching the user will make org null
+      // navigate to dashboard if user has onboarded
+      navigate("/onboarding");
     }
   }, [user]);
   // comment the 2 lines below to switch between logged in/out states
@@ -111,12 +120,20 @@ const Routes = ({ getUser, user }) => {
         },
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
-          path: "onboarding/:curr_step?",
+          path: "onboarding",
           element: isUserLoggedIn ? (
             <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
           ) : (
             <Navigate to="/login" />
           ),
+        },
+        {
+          path: "onboarding/plans",
+          element: <StartWithPlan />,
+        },
+        {
+          path: "onboarding/get-started",
+          element: <GetStarted />,
         },
         {
           path: "",

@@ -1,7 +1,7 @@
 import { NavigateFunction } from 'react-router-dom';
 export const REDIRECT_URI = "/platform";
 
-export const setQueryParams = (params: { [key: string]: string }, navigate: NavigateFunction) => {
+export const setQueryParams = (params: { [key: string]: any }, navigate: NavigateFunction) => {
 
   /*
   If you want to trigger a component reload, pass in navigate

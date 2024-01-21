@@ -17,7 +17,7 @@ import {
   setFreeCredits,
   // Action Types
 } from "src/store/actions";
-import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
@@ -36,10 +36,11 @@ export const getUser = () => {
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
+          const { organization, ...user } = data;
           // Set the user object itself
-          dispatch({ type: SET_USER, payload: data });
+          dispatch({ type: SET_USER, payload: user });
           // Set the organizaiton of the user
-          dispatch(setOrg(data.organization));
+          dispatch(setOrg(organization));
           // Set the free credits under usage state of the user
           dispatch(
             setFreeCredits({
@@ -109,7 +110,6 @@ export const updateUser = (data = {}, callback = () => {}) => {
           dispatch({ type: SET_USER, payload: {} });
         } else {
           const data = await res.json();
-          console.log(data);
           if (data.detail) {
             dispatchNotification({
               title: "Error setting user information",
