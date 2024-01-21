@@ -83,7 +83,7 @@ const Routes = ({ getUser, user, organization }) => {
       children: [
       { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
-        { path: "usage-logs", element: <UsageLogs /> },
+        { path: "request-log", element: <UsageLogs /> },
         {
           path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,
