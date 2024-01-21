@@ -358,15 +358,14 @@ export const getDashboardData = (
         );
 
         dispatch(setModelData(data?.data_by_model));
+        console.log("data?.data_by_key", data?.data_by_key);
         dispatch(setApiData(data?.data_by_key));
-        console.log("data?.data_avg_by_model", data?.data_avg_by_model);
         dispatch(setAvgModelData(data?.data_avg_by_model));
-        
         dispatch(setAvgApiData(data?.data_avg_by_key));
-        dispatch(setP50Data(data?.latency_p_50));
-        dispatch(setP90Data(data?.latency_p_90));
-        dispatch(setP95Data(data?.latency_p_95));
-        dispatch(setP99Data(data?.latency_p_99));
+        dispatch(setP50Data(data?.summary.latency_p_50));
+        dispatch(setP90Data(data?.summary.latency_p_90));
+        dispatch(setP95Data(data?.summary.latency_p_95));
+        dispatch(setP99Data(data?.summary.latency_p_99));
       })
       .catch((error) => {});
   };
