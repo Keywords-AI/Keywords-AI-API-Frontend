@@ -9,7 +9,7 @@ import {
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY
-} from "src/env.js";
+} from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 
 const mapStateToProps = (state) => ({

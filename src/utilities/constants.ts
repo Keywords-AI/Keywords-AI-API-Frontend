@@ -29,12 +29,12 @@ export const models = [
     brand: "openai",
     icon: OpenAI,
   },
-  {
-    name: "OpenAI - GPT-4-32k",
-    value: "gpt-4-32k",
-    brand: "openai",
-    icon: OpenAI,
-  },
+  // {
+  //   name: "OpenAI - GPT-4-32k",
+  //   value: "gpt-4-32k",
+  //   brand: "openai",
+  //   icon: OpenAI,
+  // },
   {
     name: "OpenAI - GPT-4",
     value: "gpt-4",

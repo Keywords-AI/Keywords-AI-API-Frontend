@@ -1,50 +1,43 @@
 import { TextInput, SelectInput } from "src/components/Inputs"
 import { Button } from "src/components/Buttons"
 import { useForm } from "react-hook-form"
-import { sendInvitation } from "src/store/actions"
-import { connect } from "react-redux"
-import { dispatchNotification } from "src/store/actions"
+import { sendInvitation, dispatchNotification } from "src/store/actions"
+import { useTypedSelector, useTypedDispatch } from "src/store/store"
+import { RootState } from "src/types"
 
-const mapStateToProps = (state) => ({
-    organization: state.organization || {},
-});
-const mapDispatchToProps = {
-    sendInvitation,
-    dispatchNotification
-};
-
-export const AddMemberForm = connect(mapStateToProps, mapDispatchToProps)(({
-    setOpen = () => { },
-    sendInvitation,
-    organization,
-    dispatchNotification
-}) => {
+export const AddMemberForm = ({ setOpen = (open: boolean) => { } }) => {
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
-    const onSubmit = async (data) => {
-        if (!organization.id) {
-            dispatchNotification({ type: "error", title: "You need to create an organization first" })
+    const { organization } = useTypedSelector((state: RootState) => state);
+    const dispatch = useTypedDispatch();
+
+    const onSubmit = async (data: any) => {
+        if (!organization?.id) {
+            dispatch(dispatchNotification({ type: "error", title: "You need to create an organization first" }))
             return;
         }
         if (organization?.users?.find((user)=>user.email === data.email)) {
-            dispatchNotification({ type: "error", title: "This user is already a member of your organization" })
+            dispatch(dispatchNotification({ type: "error", title: "This user is already a member of your organization" }))
             return;
         }
-        sendInvitation({ ...data, organization: organization.id }, ()=>{setOpen(false)});
+        dispatch(sendInvitation({ ...data, organization: organization.id }, ()=>{setOpen(false)}));
     }
+
     return (
         <form className="flex-col gap-sm w-full"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <div className="grid grid-cols-[1fr,160px] gap-xs self-stretch">
-                <TextInput {...register("email")} title="Email" width="w-full" />
-                <SelectInput
+            <div className="flex-row gap-xs self-stretch">
+                <TextInput {...register("email")} title="Email" width="flex-grow"
+                placeholder="example@example.com"
+                />
+                {/* <SelectInput
                     {...register("role")}
                     title="Role"
                     choices={[{ name: "Admin", value: "admin" }, { name: "Member", value: "member" }]}
                     placeholder="Member"
                     defaultValue="member"
-                    width="w-full"
-                />
+                    width="w-[160px]"
+                /> */}
             </div>
             <div className="flex-row justify-end self-stretch">
                 <div className="flex-row gap-xs">
@@ -56,4 +49,4 @@ export const AddMemberForm = connect(mapStateToProps, mapDispatchToProps)(({
             </div>
         </form>
     )
-})
+}

@@ -104,16 +104,17 @@ const CreateFormNotConnected = React.forwardRef(
       handleSubmit,
       formState: { errors },
     } = useForm();
-    const onSubmit = (data) => {
+    const onSubmit = (data: any) => {
       if (!data.name) {
         data.name = "New Key";
       }
       setNewKeyName(data.name);
       data.preset_models = data.preset_models.split(",").filter((model)=> model !== "");
+      data.rate_limit = Math.round(data.rate_limit / data.unit);
       console.log(data);
       createApiKey(data);
   };
-    const handleClose = (e) => {
+    const handleClose = (e: any) => {
       e.preventDefault();
       e.stopPropagation();
       setShowForm(false);
@@ -271,7 +272,7 @@ export const CreateForm = connect(
 )(CreateFormNotConnected);
 
 const DeleteFormNotConnected = React.forwardRef(
-  ({ deletingKey, setDeletingKey, deleteKey, dispatchNotification }, ref) => {
+  ({ deletingKey, setDeletingKey, deleteKey}, ref) => {
     const { loading, error, data, postData } = usePost({
       path: `api/delete-key/${deletingKey?.prefix}/`,
       method: "DELETE",
@@ -282,10 +283,6 @@ const DeleteFormNotConnected = React.forwardRef(
       postData();
       deleteKey(deletingKey);
       setDeletingKey(null);
-      dispatchNotification({
-        title: "Key deleted",
-        message: "Your key has been deleted.",
-      });
     };
     const handleClose = () => {
       setDeletingKey(null);

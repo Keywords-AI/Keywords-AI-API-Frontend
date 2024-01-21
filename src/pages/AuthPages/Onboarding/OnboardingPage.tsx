@@ -80,6 +80,7 @@ export const OnboardingPage = () => {
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
+                  console.log("button action", index + 1 == formfields.length);
                   dispatch(updateOrganization({ curr_onboarding_step: index + 2 }));
                   if (index + 1 == formfields.length) {
                     // end of forms to fill

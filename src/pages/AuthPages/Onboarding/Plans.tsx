@@ -7,7 +7,7 @@ import {
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
-} from "src/env.js";
+} from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PricingCardParams, PricingButtonParams } from "src/types";

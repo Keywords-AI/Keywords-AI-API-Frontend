@@ -5,6 +5,7 @@ import { handleSerializerErrors } from "src/utilities/objectProcessing";
 import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
+import { TypedDispatch } from "src/types";
 
 export const SET_ORGANIZATION = "SET_ORGANIZATION";
 export const CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
@@ -15,6 +16,7 @@ export const ADD_MEMBER = "ADD_MEMBER";
 export const DELETE_ROLE = "DELETE_ROLE";
 export const ADD_PRESET = "ADD_PRESET";
 export const DELETE_PRESET = "DELETE_PRESET";
+export const CHANGE_ROLE = "CHANGE_ROLE";
 
 export const setOrg = (org) => {
   return (dispatch) => {
@@ -30,17 +32,11 @@ export const setOrgName = (orgName) => {
 
 export const addMember = (member) => {
   return (dispatch) => {
-    dispatch({ type: ADD_MEMBER, payload: {member, pending: true} });
+    dispatch({ type: ADD_MEMBER, payload: { member, pending: true } });
   };
 };
 
-export const setOrganization = (organization) => {
-  return (dispatch) => {
-    dispatch({ type: SET_ORGANIZATION, payload: organization });
-  };
-};
-
-export const createOrganization = (organization, callback = () => {}) => {
+export const createOrganization = (organization, callback = () => { }) => {
   // organization {name, organization_size}
   return (dispatch) => {
     keywordsFetch({
@@ -48,12 +44,11 @@ export const createOrganization = (organization, callback = () => {}) => {
       method: "POST",
       data: organization,
     }).then(async (res) => {
-      console.log(res.status === 409);
       if (res.ok) {
         dispatch(
           dispatchNotification({ title: "Organization created successfully!" })
         );
-        callback();
+        return res.json();
       } else {
         if (res.status === 409) {
           // Conflict: Organization already exists
@@ -75,11 +70,15 @@ export const createOrganization = (organization, callback = () => {}) => {
           }
         }
       }
-    });
+    })
+      .then((responseJson) => {
+        dispatch(setOrg(responseJson));
+        callback();
+      })
   };
 };
 
-export const updateOrganization = (update_fields, callback = () => {}, muteNotifications=false) => {
+export const updateOrganization = (update_fields, callback = () => { }, muteNotifications = false) => {
   return (dispatch, getState) => {
     const organization = getState().organization;
     dispatch({ type: UPDATE_ORGANIZATION, payload: update_fields });
@@ -90,17 +89,17 @@ export const updateOrganization = (update_fields, callback = () => {}, muteNotif
       dispatch,
       muteNotifications,
     }).then((responseJson) => {
-        dispatch(
-          dispatchNotification({
-            title: "Organization information updated successfully!",
-          })
-        );
-        callback();
+      dispatch(
+        dispatchNotification({
+          title: "Organization information updated successfully!",
+        })
+      );
+      callback();
     });
   };
 };
 
-export const sendInvitation = (data, callback=()=>{}, resend = false) => {
+export const sendInvitation = (data, callback = () => { }, resend = false) => {
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
@@ -238,10 +237,10 @@ export const addModelPreset = (preset) => {
   return {
     type: ADD_PRESET,
     payload: preset,
-};
+  };
 }
 
-export const createPreset = (data, callback=()=>{}) => {
+export const createPreset = (data, callback = () => { }) => {
   return (dispatch) => {
     keywordsRequest({
       path: "user/model-presets/",
@@ -249,16 +248,16 @@ export const createPreset = (data, callback=()=>{}) => {
       data: data,
       dispatch,
     })
-    .then((responseData) => {
-      dispatch(
-        dispatchNotification({
-          title: "Preset created!",
-        })
-      );
-      dispatch(addModelPreset(responseData));
-      callback();
-    })
-    .catch((error) => {});
+      .then((responseData) => {
+        dispatch(
+          dispatchNotification({
+            title: "Preset created!",
+          })
+        );
+        dispatch(addModelPreset(responseData));
+        callback();
+      })
+      .catch((error) => { });
   };
 }
 
@@ -273,17 +272,40 @@ export const deletePreset = (id, callback) => {
       method: "DELETE",
       dispatch,
     })
-    .then((responseData) => {
-      dispatch(
-        dispatchNotification({
-          title: "Preset deleted!",
-        })
-      );
-      if (callback && typeof callback === "function") {
-        console.log("callback")
-        callback();
-      }
-    })
-    .catch((error) => {});
+      .then((responseData) => {
+        dispatch(
+          dispatchNotification({
+            title: "Preset deleted!",
+          })
+        );
+        if (callback && typeof callback === "function") {
+          console.log("callback")
+          callback();
+        }
+      })
+      .catch((error) => { });
   };
+}
+
+export const changeRole = (id: number, roleName: string) => {
+  return (dispatch: TypedDispatch) => {
+    dispatch({
+      type: CHANGE_ROLE,
+      payload: { id, roleName },
+    })
+    keywordsRequest({
+      path: `user/organization-user-role/${id}/`,
+      method: "PATCH",
+      data: { role: roleName },
+      dispatch,
+    })
+      .then((responseData) => {
+        dispatch(
+          dispatchNotification({
+            title: "Role changed!",
+          })
+        );
+      })
+      .catch((error) => { });
+  }
 }

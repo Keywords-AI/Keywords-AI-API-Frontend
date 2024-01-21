@@ -1,7 +1,8 @@
 import { AnyNode } from "postcss";
-import { getDateStr, textToLink } from "./stringProcessing";
+import { getDateStr, textToLink, capitalize } from "./stringProcessing";
 import { Page } from "src/types"
-import { ReactElement } from "react";
+import React, { ReactElement } from "react";
+import { Billing, StripeBillingItem, Subscription, StripeSubscription } from "src/types";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -111,16 +112,30 @@ export const processKeyList = (
   });
 };
 
-export const processBillingList = (billingList: any, actions = (item: any) => { }) => {
+export const processSubscription = (subscription: StripeSubscription): Subscription => {
+  return {
+    name: capitalize(subscription?.items.data[0].plan.nickname ?? "none"),
+    renewal_date: getDateStr(subscription?.current_period_end, false, true),
+    amount: `$${(subscription?.items.data[0].plan.amount ?? 0) / 100}`,
+    interval: capitalize(subscription?.items.data[0].plan.interval ?? ""),
+  };
+}
+
+export const processBillingItem = (billingItem: StripeBillingItem, actions = (item: any): React.ReactNode => { return <></> }): Billing => {
+  return {
+    name: billingItem?.customer_name,
+    email: billingItem?.customer_email,
+    date: getDateStr(billingItem?.created, false, true),
+    amount: `$${(billingItem?.amount_paid ?? 0) / 100}`,
+    payment_id: billingItem?.id,
+    actions: actions(billingItem),
+  } as Billing;
+};
+
+export const processBillingList = (billingList: StripeBillingItem[], actions = (item: any): React.ReactNode => { return <></> }): Billing[] => {
   if (billingList && billingList?.length > 0) {
-    return billingList.map((item: any) => {
-      return {
-        ...item,
-        date: getDateStr(item.created, false, true),
-        amount: `$${item.amount_paid / 100}`,
-        payment_id: item.id,
-        actions: actions(item),
-      };
+    return billingList.map((item): Billing => {
+      return processBillingItem(item, actions);
     });
   } else {
     return [];

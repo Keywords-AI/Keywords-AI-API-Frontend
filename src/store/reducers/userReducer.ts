@@ -4,6 +4,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: User = {
   id: null,
+  is_organization_admin: false,
   organization_role: {
     id: null,
     access_level: 0,
@@ -57,7 +58,7 @@ const initialState: User = {
   profile_color: "",
 };
 
-export default function userReducer(state = initialState, action: PayloadAction<any>) {
+export default function userReducer(state = initialState, action: PayloadAction<any>): User {
   switch (action.type) {
     case UPDATE_USER:
       return { ...state, ...action.payload };

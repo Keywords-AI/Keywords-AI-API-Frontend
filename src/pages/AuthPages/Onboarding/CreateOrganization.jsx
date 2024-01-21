@@ -25,7 +25,6 @@ export const CreateOrganization = connect(mapStateToProps, mapDispatchToProps)((
   const [orgSize, setOrgSize] = React.useState(organization?.organization_size || 1);
 
   const onSubmit = (data) => {
-    console.log(data);
     createOrganization({
       ...data,
       user: user.id
