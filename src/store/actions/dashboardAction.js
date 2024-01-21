@@ -1,5 +1,6 @@
 import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics } from "src/utilities/constants";
+import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
@@ -29,26 +30,25 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
-export const SET_NEXT_TIME_FRAME = "SET_NEXT_TIME_FRAME";
-export const SET_PREVIOUS_TIME_FRAME = "SET_PREVIOUS_TIME_FRAME";
-export const setNextTimeRange = (
-  currentTimeFrameOffset,
-  setParam,
-  navigate
-) => {
-  setParam({ timeFrameOffset: currentTimeFrameOffset + 1 }, navigate);
+export const INCREASE_TIME_FRAME_OFFSET = "INCREASE_TIME_FRAME_OFFSET";
+export const DECREASE_TIME_FRAME_OFFSET = "DECREASE_TIME_FRAME_OFFSET";
+export const increaseTimeFrameOffset = (navigate) => {
+  const currentTimeFrameOffset = getQueryParam("timeFrameOffset") || 0;
+  setQueryParams({ timeFrameOffset: +currentTimeFrameOffset + 1 }, navigate);
   return {
-    type: SET_NEXT_TIME_FRAME,
+    type: INCREASE_TIME_FRAME_OFFSET,
     payload: currentTimeFrameOffset + 1,
   };
 };
-export const setPrevTimeRange = (currentTimeFrameOffset, setParam, navigate) => {
-  setParam({ timeFrameOffset: currentTimeFrameOffset - 1 }, navigate);
+export const decreaseTimeFrameOFfset = (navigate) => {
+  const currentTimeFrameOffset = getQueryParam("timeFrameOffset") || 0;
+  setQueryParams({ timeFrameOffset: +currentTimeFrameOffset - 1 }, navigate);
   return {
-    type: SET_PREVIOUS_TIME_FRAME,
+    type: DECREASE_TIME_FRAME_OFFSET,
     payload: currentTimeFrameOffset - 1,
   };
-};export const SET_P50_DATA = "SET_P50_DATA";
+};
+export const SET_P50_DATA = "SET_P50_DATA";
 export const SET_P90_DATA = "SET_P90_DATA";
 export const SET_P95_DATA = "SET_P95_DATA";
 export const SET_P99_DATA = "SET_P99_DATA";
@@ -218,7 +218,7 @@ export const setErrorData = (data) => {
   };
 };
 
-export const setP50Data = (data) => { 
+export const setP50Data = (data) => {
   return {
     type: SET_P50_DATA,
     payload: data,
@@ -233,7 +233,7 @@ export const setP90Data = (data) => {
 };
 
 export const setP95Data = (data) => {
-  return { 
+  return {
     type: SET_P95_DATA,
     payload: data,
   };

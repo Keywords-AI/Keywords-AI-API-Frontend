@@ -111,10 +111,11 @@ const initState = {
   avgApiData: [],
   displayFilter: loadFilter(),
   groupByData: {},
-  p50Data:[],
-  p90Data:[],
-  p95Data:[],
-  p99Data:[],
+  p50Data: [],
+  p90Data: [],
+  p95Data: [],
+  p99Data: [],
+  timeFrameOffset: 0,
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -178,7 +179,7 @@ export default function dashboardReducer(state = initState, action) {
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
 
-    case SET_P50_DATA:  
+    case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
       return { ...state, p90Data: action.payload };
@@ -186,6 +187,7 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, p95Data: action.payload };
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
+    
     default:
       return state;
   }
