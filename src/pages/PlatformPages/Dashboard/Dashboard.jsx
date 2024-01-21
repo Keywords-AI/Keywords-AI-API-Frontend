@@ -92,6 +92,7 @@ function DashboardNotConnected({
   const useKeyboardShortcut = (shortcutKeys, callback) => {};
 
   const performance_param = new URLSearchParams(location.search).get("metric");
+  const breakdown_type = new URLSearchParams(location.search).get("breakdown");
 
   useEffect(() => {
     getDashboardData();
@@ -262,26 +263,32 @@ function DashboardNotConnected({
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
-          <div className="flex items-center content-center gap-xs flex-wrap">
-            {modelData
-              .sort((a, b) => b[currentMetric] - a[currentMetric])
-              .map((model, index) => model.model)
-              .filter((name, index, self) => self.indexOf(name) === index)
-              .map((name, index) => (
-                <div className="flex items-center gap-xxs" key={index}>
-                  <div
-                    className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                    style={{
-                      backgroundColor:
-                        colorTagsClasses[index % colorTagsClasses.length],
-                    }}
-                  ></div>
-                  <span className="caption text-gray-4">
-                    {name || "unknown model"}
-                  </span>
+          {
+            <div>
+              {breakdown_type === "by_model" &&
+                <div className="flex items-center content-center gap-xs flex-wrap">
+                  {modelData
+                    .sort((a, b) => b[currentMetric] - a[currentMetric])
+                    .map((model, index) => model.model)
+                    .filter((name, index, self) => self.indexOf(name) === index)
+                    .map((name, index) => (
+                      <div className="flex items-center gap-xxs" key={index}>
+                        <div
+                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                          style={{
+                            backgroundColor:
+                              colorTagsClasses[index % colorTagsClasses.length],
+                          }}
+                        ></div>
+                        <span className="caption text-gray-4">
+                          {name || "unknown model"}
+                        </span>
+                      </div>
+                    ))}
                 </div>
-              ))}
-          </div>
+              }
+            </div>
+          }
           <div className="flex items-center gap-xxs">
             <Button
               variant="small"
@@ -378,32 +385,36 @@ function DashboardNotConnected({
                       ]}
                     />
                   </div>
-                  {performance_param !== Metrics.number_of_requests.value && performance_param !== Metrics.error_count.value && performance_param !== Metrics.average_latency.value &&
-                    (<div className="flex justify-between items-center self-stretch ">
-                      <span className="text-sm-regular text-gray-4">Type</span>
-                      <SelectInput
-                        {...register("type")}
-                        headLess
-                        placeholder="Total"
-                        align="start"
-                        icon={Down}
-                        padding="py-xxxs px-xxs"
-                        gap="gap-xxs"
-                        width="min-w-[140px]"
-                        value={currentType}
-                        onChange={(e) =>
-                          dispatch(
-                            setDisplayType(
-                              e.target.value,
-                              setQueryParams,
-                              navigate
+                  {performance_param !== Metrics.number_of_requests.value &&
+                    performance_param !== Metrics.error_count.value &&
+                    performance_param !== Metrics.average_latency.value && (
+                      <div className="flex justify-between items-center self-stretch ">
+                        <span className="text-sm-regular text-gray-4">
+                          Type
+                        </span>
+                        <SelectInput
+                          {...register("type")}
+                          headLess
+                          placeholder="Total"
+                          align="start"
+                          icon={Down}
+                          padding="py-xxxs px-xxs"
+                          gap="gap-xxs"
+                          width="min-w-[140px]"
+                          value={currentType}
+                          onChange={(e) =>
+                            dispatch(
+                              setDisplayType(
+                                e.target.value,
+                                setQueryParams,
+                                navigate
+                              )
                             )
-                          )
-                        }
-                        choices={filteredtypeChoices}
-                      />
-                    </div>)
-                  }
+                          }
+                          choices={filteredtypeChoices}
+                        />
+                      </div>
+                    )}
                   <div className="flex justify-between items-center self-stretch ">
                     <span className="text-sm-regular text-gray-4">
                       Breakdown

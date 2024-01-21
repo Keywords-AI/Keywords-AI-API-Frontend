@@ -241,8 +241,8 @@ export const aggregateApiData = (data) => {
   if (data.length === 0) return null;
   // loop through the data and aggregate the data by model
   const apiMap = data.reduce((totalMap, item) => {
-    const { api, ...rest } = item;
-    totalMap[api] = rest;
+    const { organization_key__name, ...rest } = item;
+    totalMap[organization_key__name] = rest;
     return totalMap;
   }, {});
   return apiMap;
