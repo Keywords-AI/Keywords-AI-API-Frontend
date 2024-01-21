@@ -12,7 +12,6 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
-  setPanelData,
 } from "src/store/actions";
 import { useNavigate, useLocation, Form } from "react-router-dom";
 import { Button } from "src/components";
@@ -20,8 +19,10 @@ import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
-import { Metrics } from "src/utilities/constants";
+import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
+import cn from "src/utilities/classMerge";
+import { aggregateModelData } from "src/utilities/objectProcessing";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -34,6 +35,7 @@ const mapStateToProps = (state) => ({
   firstTime: !state.organization?.has_api_call,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
+  modelData: state.dashboard.modelData,
 });
 const mapDispatchToProps = {
   getDashboardData,
@@ -78,6 +80,7 @@ function DashboardNotConnected({
   getDashboardData,
   firstTime,
   organization,
+  modelData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,6 +88,9 @@ function DashboardNotConnected({
   const dispatch = useDispatch();
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
+  const [activeCard, setActiveCard] = useState(null);
+  console.log("modelData", modelData);
+  const useKeyboardShortcut = (shortcutKeys, callback) => {};
 
   useEffect(() => {
     getDashboardData();
@@ -97,6 +103,10 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
+  };
+
+  const handleCardClick = (metricKey) => {
+    setActiveCard(activeCard === metricKey ? null : metricKey);
   };
 
   const metrics = [
@@ -193,7 +203,7 @@ function DashboardNotConnected({
 
   const typeChoices = [
     { name: "Total", value: "total" },
-    // { name: "Average", value: "average" },
+    { name: "Average", value: "average" },
   ];
 
   const breakdownChoices = [
@@ -202,16 +212,33 @@ function DashboardNotConnected({
       name: "By model",
       value: "by_model",
     },
-    // { name: "By key", value: "by_key" },
+    { name: "By key", value: "by_key" },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
+  let filteredtypeChoices;
+  if (
+    currentMetric === "number_of_requests" ||
+    currentMetric === "error_count"
+  ) {
+    filteredtypeChoices = typeChoices.filter(
+      (choice) => choice.value !== "average"
+    );
+  } else {
+    filteredtypeChoices = typeChoices;
+  }
 
-  const filteredBreakdownChoices =
-    currentMetric === "output_token_count" ||
-    currentMetric === "prompt_token_count"
-      ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
-      : breakdownChoices;
+  // currentMetric === "number_of_requests" ||
+  //                             currentMetric === "error_count"
+  //                               ? typeChoices.filter((choice) => choice.value !== "average")
+  //                               : typeChoices;
 
+  const filteredBreakdownChoices = breakdownChoices;
+  // currentMetric === "total_tokens" ||
+  // currentMetric === "total_prompt_tokens"
+  //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
+  //   : breakdownChoices;
+
+  // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
@@ -222,12 +249,37 @@ function DashboardNotConnected({
             <span className="display-sm text-gray-5">{firstName} </span>
           </div>
           {metrics.map((metric, index) => (
-            <MetricCard key={index} {...metric} />
+            <MetricCard
+              key={index}
+              {...metric}
+              isActive={activeCard === metric.dataKey}
+              onClick={() => {
+                handleCardClick(metric.dataKey);
+                metric.onClick(); // Call the original onClick function
+              }}
+            />
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           <div className="flex items-center content-center gap-xs flex-wrap">
-            {" "}
+            {modelData
+              .sort((a, b) => b[currentMetric] - a[currentMetric])
+              .map((model, index) => model.model)
+              .filter((name, index, self) => self.indexOf(name) === index)
+              .map((name, index) => (
+                <div className="flex items-center gap-xxs" key={index}>
+                  <div
+                    className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                    style={{
+                      backgroundColor:
+                        colorTagsClasses[index % colorTagsClasses.length],
+                    }}
+                  ></div>
+                  <span className="caption text-gray-4">
+                    {name || "unknown model"}
+                  </span>
+                </div>
+              ))}
           </div>
           <div className="flex items-center gap-xxs">
             <Button
@@ -346,7 +398,7 @@ function DashboardNotConnected({
                           )
                         )
                       }
-                      choices={typeChoices}
+                      choices={filteredtypeChoices}
                     />
                   </div>
                   <div className="flex justify-between items-center self-stretch ">
@@ -382,7 +434,6 @@ function DashboardNotConnected({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
-              bgColor="bg-gray-2"
               onClick={() => handleOPenPanel()}
             />
           </div>

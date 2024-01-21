@@ -31,6 +31,9 @@ const initState: Organization = {
   dynamic_routing_enabled: false,
   curr_onboarding_step: 0,
   onboarded: false,
+  fallback_model_enabled: false,
+  fallback_models: [],
+  system_fallback_enabled: false,
 };
 
 export default function organizationReducer(state: Organization = initState, action: PayloadAction<any>): Organization {

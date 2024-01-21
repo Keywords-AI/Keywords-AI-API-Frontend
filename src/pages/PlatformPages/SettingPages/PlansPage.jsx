@@ -53,8 +53,8 @@ export const PlansPage = connect(
       plan: "starter",
       subtitle: "Best for solo builders.",
       price: 0,
-      billFrequency: "Free forever",
-      featureTitle: "Starter plan fretures",
+      billFrequency: "",
+      featureTitle: "Starter plan features",
       features: [
         "10,000 API requests",
         "1 developer seat",
@@ -109,7 +109,7 @@ export const PlansPage = connect(
         },
       },
       buttonParams: {
-        buttonText: "Upgrade to team",
+        buttonText: "Upgrade to Team",
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
@@ -145,7 +145,7 @@ export const PlansPage = connect(
         buttonVariant: "r4-gray2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://zcal.co/keywords-ai", "_blank");
         },
       },
     },
@@ -207,6 +207,7 @@ export const PlansPage = connect(
                 featureTitle={card.featureTitle}
                 features={card.features}
                 price={card.price}
+                plan={card.plan}
                 billFrequency={card.billFrequency}
                 {...displayParams(
                   index,

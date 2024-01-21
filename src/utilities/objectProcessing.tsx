@@ -10,24 +10,31 @@ export const digitToMonth = (digit, year) => {
   // if (month === undefined) month = new Date().getMonth();
   // if (year === undefined) year = new Date().getFullYear();
   const now = new Date();
+  let date = digit !== undefined ? digit : now.getDate();
   let month = digit !== undefined ? digit : now.getMonth();
   year = year !== undefined ? year : now.getFullYear();
   const monthMap = {
-    0: "Jan",
-    1: "Feb",
-    2: "Mar",
-    3: "Apr",
+    0: "January",
+    1: "Febuary",
+    2: "March",
+    3: "April",
     4: "May",
-    5: "Jun",
-    6: "Jul",
-    7: "Aug",
-    8: "Sep",
-    9: "Oct",
-    10: "Nov",
-    11: "Dec",
+    5: "June",
+    6: "July",
+    7: "August",
+    8: "September",
+    9: "October",
+    10: "November",
+    11: "December",
   };
-  return `${monthMap[month]} ${year}`;
+  return `${monthMap[month]}`;
 };
+
+export const digitToYear = (digit) => {
+  const now = new Date();
+  let year = digit !== undefined ? digit : now.getFullYear();
+  return year;
+}
 
 export function formatDate(date) {
   var dd = date.getDate();
@@ -239,4 +246,103 @@ export const aggregateApiData = (data) => {
     return totalMap;
   }, {});
   return apiMap;
+};
+
+interface DataItem {
+  name: string;
+  [key: string]: any;
+}
+
+export const addMissingDate = (data: DataItem[], dateGroup: string): DataItem[] => {
+  if(!data) return [];
+  const newDataArray: DataItem[] = [];
+  const formatTimeUnit = (unit: number): string => unit.toString().padStart(2, "0");
+  const localeUtc = (dateStr: string): Date => {
+    const date = new Date(dateStr);
+    return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+  };
+  const keys = data?.length > 0 ? Object.keys(data[0]).filter((key) => key !== "name") : [];
+  const defaultFields = keys.reduce((acc, key) => {
+    acc[key] = 0;
+    return acc;
+  }, {});
+  const handleDailyCase = (): void => {
+    const now = new Date();
+    for (let hour = 0; hour < 24; hour++) {
+      const found = data.find((d) => {
+        return d.name.split(":")[0] === hour.toString();
+       
+      });
+      newDataArray.push(
+        found
+          ? { ...found }
+          : { name: hour + ":00", ...defaultFields }
+      );
+    }
+  };
+  switch (dateGroup) {
+    case "daily":
+      handleDailyCase();
+      break;
+    case "weekly":
+      for (let day = 0; day < 7; day++) {
+        const dayDate = new Date();
+        dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+        const dateString = `${formatTimeUnit(
+          dayDate.getMonth() + 1
+        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate
+          .getFullYear()
+          .toString()
+          .slice(-2)}`;
+        const found = data.find(
+          (d) => localeUtc(d.name).getDate() === dayDate.getDate()
+        );
+        newDataArray.push(
+          found
+            ? { ...found, name: dateString }
+            : { name: dateString, ...defaultFields }
+        );
+      }
+      break;
+    case "monthly":
+      const now = new Date();
+      const daysInMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0
+      ).getDate();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const month = formatTimeUnit(now.getMonth() + 1);
+        const year = now.getFullYear().toString().slice(-2);
+        const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
+        const found = data.find((d) => {
+          const date = localeUtc(d.name);
+          return date.getDate() === day && date.getMonth() === now.getMonth();
+        });
+        newDataArray.push(
+          found
+            ? { ...found, name: dayString }
+            : { name: dayString, ...defaultFields }
+        );
+      }
+      break;
+    case "yearly":
+      for (let month = 0; month < 12; month++) {
+        const monthString = formatTimeUnit(month + 1);
+        const found = data.find((d) => {
+          const date = localeUtc(d.name);
+          return date.getMonth() === month;
+        });
+        newDataArray.push(
+          found
+            ? { ...found, name: monthString }
+            : { name: monthString, ...defaultFields }
+        );
+      }
+      break;
+    default:
+      handleDailyCase();
+      break;
+  }
+  return newDataArray;
 };
