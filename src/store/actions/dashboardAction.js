@@ -290,7 +290,6 @@ export const getDashboardData = (
           data?.data,
           params.get("summary_type")
         );
-
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -358,7 +357,6 @@ export const getDashboardData = (
         );
 
         dispatch(setModelData(data?.data_by_model));
-        console.log("data?.data_by_key", data?.data_by_key);
         dispatch(setApiData(data?.data_by_key));
         dispatch(setAvgModelData(data?.data_avg_by_model));
         dispatch(setAvgApiData(data?.data_avg_by_key));
