@@ -363,12 +363,12 @@ function DashboardNotConnected({
                           value: Metrics.error_count.value,
                         },
                         {
-                          name: Metrics.total_cost.name,
-                          value: Metrics.total_cost.value,
-                        },
-                        {
                           name: Metrics.average_latency.name,
                           value: Metrics.average_latency.value,
+                        },
+                        {
+                          name: Metrics.total_cost.name,
+                          value: Metrics.total_cost.value,
                         },
                         {
                           name: Metrics.total_tokens.name,
