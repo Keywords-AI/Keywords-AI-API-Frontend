@@ -113,11 +113,11 @@ function Chatbot({
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
       <PanelChat />
-      <div className="flex-col self-stretch flex-1 bg-red-500">
+      <div className="flex-col self-stretch flex-1 bg-red-500 w-[calc(100vw-280px)]">
         <div className="flex text-sm text-gray4 t-c  model-name "></div>
         <div className="chat-right flex flex-1 bg-gray-1 relative pt-sm pb-lg ">
           <div
-            className="flex-col flex-1 h-[calc(100vh-184px)] overflow-auto bg-gray-1"
+            className="flex-col flex-1 h-[calc(100vh-184px)] overflow-y-auto overflow-x-hidden bg-gray-1"
             ref={conversationBoxRef}
           >
             {conversation?.messages?.length > 0 ? (

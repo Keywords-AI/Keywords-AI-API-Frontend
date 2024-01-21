@@ -3,7 +3,7 @@ import { PreProcessPage, Page } from "src/types";
 import SettingsPage from "./SettingsPage";
 import ApiKeyPage from "./ApiKeyPage";
 import { MemberPage } from "./MemberPage";
-import BillingPage from "./BillingPage";
+import { BillingPage } from "./BillingPage";
 import { Building } from "src/components/Icons";
 import { IntegrationsPage } from "./IntegrationsPage";
 import { generateChild } from "src/utilities/objectProcessing";
@@ -28,7 +28,6 @@ const pages: PreProcessPage[] = [
   },
   {
     title: "Member",
-    forOrgAdmin: true,
     page: <MemberPage />,
   },
   {
@@ -53,7 +52,6 @@ const pages: PreProcessPage[] = [
   },
   {
     title: "Billing",
-    forOrgAdmin: true,
     page: <BillingPage />,
   },
 

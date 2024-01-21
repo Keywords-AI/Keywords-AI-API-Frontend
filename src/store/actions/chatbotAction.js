@@ -296,8 +296,8 @@ export const sendMessage = (msgText) => {
         params: {
           messages: messagesToSend,
           stream: true,
-          model: "gpt-3.5-turbo",
         },
+        path: "api/playground/chatbot/",
         prompt: systemPrompt,
         callback: () => {
           const prevMessages = getState().chatbot.conversation.messages;

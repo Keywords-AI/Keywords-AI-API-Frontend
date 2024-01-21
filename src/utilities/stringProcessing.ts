@@ -1,27 +1,36 @@
-export const textToLink = (text) => {
+export const textToLink = (text: string) => {
   return text.toLowerCase().replaceAll(" ", "-");
 };
 
-export const getDateStr = (date, lastUsed = false, inSeconds) => {
-  var dateFromAPI;
-  var checkedDate;
-  if (inSeconds && date) {
+export const capitalize = (text: string) => {
+  if (typeof text !== "string" || !text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+export const getDateStr = (date: number | undefined | null, lastUsed: boolean = false, inSeconds: boolean = false): string => {
+  if (!date) {
+    if (lastUsed) {
+      return "Never";
+    } else {
+      date = Date.now();
+    }
+  }
+
+  let checkedDate: number;
+  if (inSeconds) {
     checkedDate = date * 1000;
   } else {
     checkedDate = date;
   }
-  if (!date && lastUsed) return "Never";
-  else if (!date) {
-    var dateFromAPI = new Date();
-  } else {
-    var dateFromAPI = new Date(checkedDate);
-  }
+
+  const dateFromAPI = new Date(checkedDate);
   const timeStamp = dateFromAPI.getTime();
-  const format = {
+  const format: Intl.DateTimeFormatOptions = {
     month: "2-digit",
     day: "2-digit",
     year: "2-digit",
   };
+
   if (timeStamp === 0) {
     return "Never";
   } else {

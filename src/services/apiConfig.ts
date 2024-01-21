@@ -1,6 +1,6 @@
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { dispatchNotification } from "src/store/actions";
-import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env.js";
+import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env";
 
 // Make your own .env file as it will be ignored by git
 // set a variabled named FETCH_ENDPOINT

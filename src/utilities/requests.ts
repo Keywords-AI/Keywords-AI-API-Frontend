@@ -59,9 +59,10 @@ export const keywordsRequest = async ({
     if (response.ok) {
       return await response.json();
     } else {
+      const status = response.status;
       const error = await response.json();
       if (dispatch && typeof dispatch === "function") {
-        dispatch(handleApiResponseErrors(error));
+        dispatch(handleApiResponseErrors(error, status));
       }
       throw new Error(response.statusText);
     }

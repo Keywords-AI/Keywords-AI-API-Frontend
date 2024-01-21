@@ -1,17 +1,16 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { MemberCard } from 'src/components/Cards/MemberCard'
 import { PageContent, PageParagraph } from 'src/components/Sections'
 import { Button } from 'src/components/Buttons'
 import { Modal } from 'src/components/Dialogs'
 import { AddMemberForm } from './components/MemberForms'
-import { createSelector } from 'reselect'
 import { useTypedSelector } from 'src/store/store'
 import { RootState } from 'src/types'
 
 
 export const MemberPage = () => {
   const organization = useTypedSelector((state: RootState) => state.organization)
+  const user = useTypedSelector((state: RootState) => state.user)
   const [open, setOpen] = React.useState(false);
   const [members, setMembers] = React.useState(organization?.users || []);
   React.useEffect(() => {
@@ -32,6 +31,7 @@ export const MemberPage = () => {
             )
           })}
         </div>
+        {user.is_organization_admin && 
         <Modal
           title={"Invite member"}
           subtitle={"Add team members with email. They'll receive an invite to join. "}
@@ -39,8 +39,9 @@ export const MemberPage = () => {
           setOpen={setOpen}
           trigger={<Button variant="r4-primary" text="Add member" />}
         >
+
           <AddMemberForm setOpen={setOpen} />
-        </Modal>
+        </Modal>}
         {/* <SelectInput /> */}
       </PageParagraph>
     </PageContent>

@@ -52,7 +52,7 @@ function KeywordsInput({
   const [isHovered, setIsHovered] = React.useState(false);
   return (
     <form
-      className="relative flex-col w-full shadow-border rounded-sm"
+      className="relative flex-col w-full shadow-border rounded-sm bg-gray-2"
       onSubmit={handleSubmit(onSubmit)}
     >
       <EditableBox

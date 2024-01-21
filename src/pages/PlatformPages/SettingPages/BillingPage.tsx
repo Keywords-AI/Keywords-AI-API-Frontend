@@ -1,18 +1,17 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
 import { SettingTable } from "src/components/Tables";
 import { Button } from "src/components/Buttons";
 import { Search } from "src/components/Icons";
 import { PageContent, PageParagraph } from "src/components/Sections";
-import { processBillingList } from "src/utilities/objectProcessing";
-import useFetch from "src/hooks/useFetch";
+import { processBillingList, processBillingItem, processSubscription } from "src/utilities/objectProcessing";
 import { CanelPlanForm } from "./components/BillingComponents";
 import { Modal } from "src/components/Dialogs";
-import { setBillings } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import { Divider } from "../../../components/Sections/Divider";
+import { Billing, RootState } from "src/types";
+import { useTypedSelector, useTypedDispatch } from "src/store/store";
 
-export const viewBillTrigger = (item) => {
+export const viewBillTrigger = (item: any) => { // The complete stripe Invoice object
   return (
     <>
       <Button
@@ -26,56 +25,64 @@ export const viewBillTrigger = (item) => {
   );
 };
 
-export const BillingPage = ({ billings }) => {
+export const BillingPage = () => {
   // Fetching action is handled in PanelNavigation.jsx
-  const [bilingData, setBillingData] = React.useState([]);
+  const billings = useTypedSelector((state) => state.billings.billings);
+  const currentBilling = useTypedSelector((state) => state.billings.currentBilling);
+  const currentSubscription = useTypedSelector((state) => state.billings.currentSubscription);
+  const user = useTypedSelector((state) => state.user);
+  const dispatch = useTypedDispatch();
+  const [bilingData, setBillingData] = React.useState<Billing[]>([]);
+  const [currentBillingData, setCurrentBillingData] = React.useState<Billing>(null); // [currentBilling, setCurrentBilling
   const [canceling, setCanceling] = React.useState(false);
   const navigate = useNavigate();
   useEffect(() => {
-    if (billings) {
+    if (billings.length > 0) {
       setBillingData(processBillingList(billings, viewBillTrigger));
     }
-  }, [billings]);
+    if (currentBilling) {
+      setCurrentBillingData(processBillingItem(currentBilling, viewBillTrigger));
+    }
+  }, [billings, currentBilling]);
 
   return (
     <PageContent
       title="Billing"
       subtitle="Manage your billing information and invoices."
     >
-      {/*Comment out this for now 1/18/2023  -- Raymond*/}
       <PageParagraph
         heading="Current plan"
         subheading={
           <span>
-            Team Monthly
+            {`${currentSubscription?.name} ${currentSubscription?.interval}`}
             <br />
-            $39 per month - renews on January 11, 2024.
+            {`${currentSubscription?.amount} per ${currentSubscription?.interval.toLowerCase()} - renews on ${currentSubscription?.renewal_date}`}
           </span>
         }
       >
-        <Button
+        {user.is_organization_admin && <Button
           variant="r4-gray2"
           text="Update plan"
           onClick={() => navigate("/platform/api/plans")}
-        />
+        />}
       </PageParagraph>
       <Divider />
       <PageParagraph heading="Billing details">
         <div className="flex-col items-start gap-xxs">
           <div className="flex items-center gap-md">
             <p className="text-sm-md text-gray-5">Name</p>
-            <p className="text-sm-regular text-gray-4">hehe</p>
+            <p className="text-sm-regular text-gray-4">{currentBillingData?.name}</p>
           </div>
           <div className="flex items-center gap-md">
             <p className="text-sm-md text-gray-5">Email</p>
-            <p className="text-sm-regular text-gray-4">email@example.com</p>
+            <p className="text-sm-regular text-gray-4">{currentBillingData?.email}</p>
           </div>
         </div>
-        <Button
+        {/* <Button
           variant="r4-gray2"
           text="Edit"
           onClick={() => navigate("plans")}
-        />
+        /> */}
       </PageParagraph>
       <Divider />
       <PageParagraph
@@ -90,7 +97,6 @@ export const BillingPage = ({ billings }) => {
           <SettingTable
             variant={"billings"}
             rows={bilingData}
-            columnNames={["date", "amount", "payment_id", "actions"]}
           />
         )}
         {false && (
@@ -108,13 +114,3 @@ export const BillingPage = ({ billings }) => {
     </PageContent>
   );
 };
-
-const mapStateToProps = (state) => ({
-  billings: state.billings.billings,
-});
-
-const mapDispatchToProps = {
-  setBillings,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(BillingPage);

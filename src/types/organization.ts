@@ -1,4 +1,4 @@
-export type Organization={
+export type Organization = {
     id: number | null;
     name: string;
     organization_model_presets: any[];
@@ -18,4 +18,7 @@ export type Organization={
     dynamic_routing_enabled: boolean;
     curr_onboarding_step: number;
     onboarded: boolean;
+    fallback_model_enabled: boolean;
+    fallback_models: string[];
+    system_fallback_enabled: boolean;
 } | null;
