@@ -25,4 +25,4 @@ dist-ssr
 .env
 deploy.sh
 .firebase/
-src/branc_env.ts
+src/branch_env.ts
