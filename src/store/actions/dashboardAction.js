@@ -29,7 +29,26 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
-
+export const SET_NEXT_TIME_FRAME = "SET_NEXT_TIME_FRAME";
+export const SET_PREVIOUS_TIME_FRAME = "SET_PREVIOUS_TIME_FRAME";
+export const setNextTimeRange = (
+  currentTimeFrameOffset,
+  setParam,
+  navigate
+) => {
+  setParam({ timeFrameOffset: currentTimeFrameOffset + 1 }, navigate);
+  return {
+    type: SET_NEXT_TIME_FRAME,
+    payload: currentTimeFrameOffset + 1,
+  };
+};
+export const setPrevTimeRange = (currentTimeFrameOffset, setParam, navigate) => {
+  setParam({ timeFrameOffset: currentTimeFrameOffset - 1 }, navigate);
+  return {
+    type: SET_PREVIOUS_TIME_FRAME,
+    payload: currentTimeFrameOffset - 1,
+  };
+};
 export const setGroupByData = (data) => {
   return {
     type: SET_GROUP_BY_DATA,
@@ -220,6 +239,7 @@ export const getDashboardData = (
       })
       .then((data) => {
         dispatch(setDashboardData(data));
+
         const by_model = getgroupByData(
           data.raw_data,
           true,
@@ -490,7 +510,7 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   const byModel = {};
   // Group data by model or api_key
   const groupByCallback = isbyModel
-    ? ({ model }) => (model == "" ? "Unknown Model" : model)
+    ? ({ model }) => (model == "" ? "unknown model" : model)
     : ({ api_key }) => api_key;
   Object.keys(by_date_group).forEach((key) => {
     const updatedItem = Object.groupBy(by_date_group[key], groupByCallback);
@@ -507,7 +527,8 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
         accumulator.error_count =
           (accumulator.failed === true ? 1 : 0) + current.error_count || 0;
         accumulator.timestamp = current.timestamp;
-        accumulator.number_of_requests = (accumulator.number_of_requests || 0) + 1 ;
+        accumulator.number_of_requests =
+          (accumulator.number_of_requests || 0) + 1;
         return accumulator;
       }, {});
       // Calculate the average and change naming
@@ -532,10 +553,9 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     .map((key) => {
       let time;
       if (key.includes(":")) {
-
         time = new Date();
         time.setHours(key.split(":")[0]);
-      }else{
+      } else {
         time = new Date(key);
       }
       return {

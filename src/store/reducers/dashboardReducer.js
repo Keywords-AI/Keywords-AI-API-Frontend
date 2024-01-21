@@ -165,6 +165,7 @@ export default function dashboardReducer(state = initState, action) {
       };
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
+
     default:
       return state;
   }

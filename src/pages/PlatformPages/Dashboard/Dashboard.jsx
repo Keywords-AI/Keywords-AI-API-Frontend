@@ -12,7 +12,6 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
-  setPanelData,
 } from "src/store/actions";
 import { useNavigate, useLocation, Form } from "react-router-dom";
 import { Button } from "src/components";
@@ -20,10 +19,10 @@ import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
-import { Metrics } from "src/utilities/constants";
+import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
-import useKeyboardShortcut from 'use-keyboard-shortcut'
-
+import cn from "src/utilities/classMerge";
+import { aggregateModelData } from "src/utilities/objectProcessing";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -36,6 +35,7 @@ const mapStateToProps = (state) => ({
   firstTime: !state.organization?.has_api_call,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
+  modelData: state.dashboard.modelData,
 });
 const mapDispatchToProps = {
   getDashboardData,
@@ -80,6 +80,7 @@ function DashboardNotConnected({
   getDashboardData,
   firstTime,
   organization,
+  modelData,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -88,8 +89,8 @@ function DashboardNotConnected({
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
-
-  const useKeyboardShortcut = (shortcutKeys, callback) => {}
+  console.log("modelData", modelData);
+  const useKeyboardShortcut = (shortcutKeys, callback) => {};
 
   useEffect(() => {
     getDashboardData();
@@ -107,7 +108,6 @@ function DashboardNotConnected({
   const handleCardClick = (metricKey) => {
     setActiveCard(activeCard === metricKey ? null : metricKey);
   };
-
 
   const metrics = [
     {
@@ -216,25 +216,29 @@ function DashboardNotConnected({
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
   let filteredtypeChoices;
-    if (currentMetric === "number_of_requests" || currentMetric === "error_count") {
-    filteredtypeChoices = typeChoices.filter((choice) => choice.value !== "average")
-  }  else {
-    filteredtypeChoices = typeChoices
+  if (
+    currentMetric === "number_of_requests" ||
+    currentMetric === "error_count"
+  ) {
+    filteredtypeChoices = typeChoices.filter(
+      (choice) => choice.value !== "average"
+    );
+  } else {
+    filteredtypeChoices = typeChoices;
   }
-  
+
   // currentMetric === "number_of_requests" ||
-  //                             currentMetric === "error_count" 
+  //                             currentMetric === "error_count"
   //                               ? typeChoices.filter((choice) => choice.value !== "average")
   //                               : typeChoices;
 
   const filteredBreakdownChoices = breakdownChoices;
-    // currentMetric === "total_tokens" ||
-    // currentMetric === "total_prompt_tokens"
-    //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
-    //   : breakdownChoices;
+  // currentMetric === "total_tokens" ||
+  // currentMetric === "total_prompt_tokens"
+  //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
+  //   : breakdownChoices;
 
   // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
@@ -258,7 +262,24 @@ function DashboardNotConnected({
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           <div className="flex items-center content-center gap-xs flex-wrap">
-            {" "}
+            {modelData
+              .sort((a, b) => b[currentMetric] - a[currentMetric])
+              .map((model, index) => model.model)
+              .filter((name, index, self) => self.indexOf(name) === index)
+              .map((name, index) => (
+                <div className="flex items-center gap-xxs" key={index}>
+                  <div
+                    className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                    style={{
+                      backgroundColor:
+                        colorTagsClasses[index % colorTagsClasses.length],
+                    }}
+                  ></div>
+                  <span className="caption text-gray-4">
+                    {name || "unknown model"}
+                  </span>
+                </div>
+              ))}
           </div>
           <div className="flex items-center gap-xxs">
             <Button
