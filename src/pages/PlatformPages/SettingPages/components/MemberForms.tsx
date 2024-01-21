@@ -26,16 +26,16 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => { } }) => {
         <form className="flex-col gap-sm w-full"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <div className="grid grid-cols-[1fr,160px] gap-xs self-stretch">
-                <TextInput {...register("email")} title="Email" width="w-full" />
-                <SelectInput
+            <div className="flex-row gap-xs self-stretch">
+                <TextInput {...register("email")} title="Email" width="flex-grow" />
+                {/* <SelectInput
                     {...register("role")}
                     title="Role"
                     choices={[{ name: "Admin", value: "admin" }, { name: "Member", value: "member" }]}
                     placeholder="Member"
                     defaultValue="member"
-                    width="w-full"
-                />
+                    width="w-[160px]"
+                /> */}
             </div>
             <div className="flex-row justify-end self-stretch">
                 <div className="flex-row gap-xs">
