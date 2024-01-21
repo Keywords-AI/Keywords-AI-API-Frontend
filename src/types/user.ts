@@ -17,6 +17,7 @@ export type User = {
   id: number | null;
   organization_role: OrganizationRole;
   has_product_access: boolean;
+  is_organization_admin: boolean;
   last_login: null;
   email: string;
   placeholder: boolean;

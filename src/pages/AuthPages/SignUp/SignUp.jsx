@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation} from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
@@ -15,6 +15,8 @@ const mapDispatchToProps = { googleLogin, signup };
 // admintestpassword
 export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogin, signup }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
   const {
     register,
     handleSubmit,

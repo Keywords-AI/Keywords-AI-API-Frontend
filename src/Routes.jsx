@@ -28,7 +28,7 @@ import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { AUTH_ENABLED } from "src/env.js";
+import { AUTH_ENABLED } from "src/env";
 import { UsageLogs } from "./pages/PlatformPages/UsageLogs";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";

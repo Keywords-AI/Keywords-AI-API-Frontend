@@ -6,6 +6,7 @@ import {
   ADD_MEMBER,
   ADD_PRESET,
   DELETE_PRESET,
+  CHANGE_ROLE,
 } from "src/store/actions";
 import { Organization } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -70,6 +71,18 @@ export default function organizationReducer(state: Organization = initState, act
         ...state,
         organization_model_presets: state?.organization_model_presets.filter(
           (preset) => preset.id !== action.payload
+        ),
+      } as Organization;
+    case CHANGE_ROLE:
+      return {
+        ...state,
+        users: state?.users.map((user) =>
+          user.role.id === action.payload.id
+            ? { ...user, role: {
+              ...user.role,
+              name: action.payload.roleName
+            } }
+            : user
         ),
       } as Organization;
     default:
