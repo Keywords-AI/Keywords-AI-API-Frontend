@@ -245,8 +245,14 @@ export const getDashboardData = (
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
-    const timeFrame = getState().dashboard.timeFrame;
-    params.set("date", timeFrame); //
+    // const timeFrame = getState().dashboard.timeFrame;
+    const timeOffset = getState().dashboard.timeOffset;
+    params.set("timezone_offset", timeOffset);
+    // console.log("timeFrame", timeFrame);
+    const currDate = new Date();
+    const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
+    params.set("date", date.toISOString()); // format: yyyy-mm-dd
+    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -258,6 +264,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
+        console.log("getData", data)
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(

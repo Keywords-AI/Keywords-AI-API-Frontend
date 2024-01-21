@@ -82,7 +82,7 @@ const Routes = ({ getUser, user, organization }) => {
       path: REDIRECT_URI, // "/platform"
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
-        { path: "playground", element: <Playground /> },
+      { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "requests", element: <Requests /> },
         {

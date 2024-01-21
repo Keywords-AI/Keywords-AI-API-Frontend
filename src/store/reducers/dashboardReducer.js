@@ -121,6 +121,7 @@ const initState = {
   timeFrame: new Date(
     currDate - currDate.getTimezoneOffset() * 60 * 1000
   ).toISOString(),
+  timeOffset: 0,
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -205,6 +206,7 @@ export default function dashboardReducer(state = initState, action) {
           return {
             ...state,
             timeFrame: newYear,
+            timeOffset: state.timeOffset + offset,
           };
         case "monthly":
           let newMonth = new Date(currTime).setMonth(
@@ -214,6 +216,7 @@ export default function dashboardReducer(state = initState, action) {
           return {
             ...state,
             timeFrame: newMonth,
+            timeOffset: state.timeOffset + offset,
           };
         case "weekly":
           let newWeek = new Date(currTime).setDate(
@@ -224,6 +227,7 @@ export default function dashboardReducer(state = initState, action) {
           return {
             ...state,
             timeFrame: newWeek,
+            timeOffset: state.timeOffset + offset,
           };
         default:
           let newDate = new Date(currTime).setDate(
@@ -234,6 +238,7 @@ export default function dashboardReducer(state = initState, action) {
           return {
             ...state,
             timeFrame: newDate,
+            timeOffset: state.timeOffset + offset,
           };
       }
 

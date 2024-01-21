@@ -1,17 +1,19 @@
 import React, { useEffect } from "react";
 import { Divider, PageContent } from "src/components/Sections";
-import { Button, SwitchButton } from "src/components/Buttons";
+import { Button, IconButton, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
 import {
   toggleFallback,
   updateOrganization,
   toggleSystemFallback,
+  updateUser,
 } from "src/store/actions";
 import { RootState } from "src/types";
 import { useForm } from "react-hook-form";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import { Redirect } from "src/components";
 
 
 export const AlertsFallbackPage = () => {
@@ -58,7 +60,8 @@ export const AlertsFallbackPage = () => {
 
   const handleToggle = () => {
     setFallbackEnabled(!fallbackEnabled);
-  };
+    dispatch(updateOrganization({ fallback_model_enabled: !isFallbackEnabled })
+    );};
   const onSubmit = (data: any) => {
     const fallback_models: any[] = [];
     Object.keys(data).forEach((key) => {
@@ -84,10 +87,8 @@ export const AlertsFallbackPage = () => {
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          {/* <SwitchButton/> */}
-          <span className="text-sm-regular text-gray-4 whitespace-nowrap">
-            Coming soon
-          </span>
+
+          <IconButton icon={Redirect} onClick={()=>window.open("https://status.keywordsai.co", "_blank")}/>
         </div>
       </div>
       <Divider />
@@ -102,7 +103,7 @@ export const AlertsFallbackPage = () => {
           />
           <div className="flex flex-row items-start justify-center pt-[3px]">
             <SwitchButton
-              checked={fallbackEnabled}
+              checked={isFallbackEnabled || false}
               onCheckedChange={handleToggle}
               {...register("enable_fallback")}
             />
