@@ -89,14 +89,15 @@ function DashboardNotConnected({
   const [showPopover, setShowPopover] = useState(false);
   const [isPanel, setIsPanel] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
-  console.log("modelData", modelData);
   const useKeyboardShortcut = (shortcutKeys, callback) => {};
+
+  const performance_param = new URLSearchParams(location.search).get("metric");
 
   useEffect(() => {
     getDashboardData();
   }, []);
 
-  const handleOPenPanel = () => {
+  const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
 
@@ -363,6 +364,10 @@ function DashboardNotConnected({
                           value: Metrics.average_latency.value,
                         },
                         {
+                          name: Metrics.total_tokens.name,
+                          value: Metrics.total_tokens.value,
+                        },
+                        {
                           name: Metrics.total_completion_tokens.name,
                           value: Metrics.total_completion_tokens.value,
                         },
@@ -370,37 +375,35 @@ function DashboardNotConnected({
                           name: Metrics.total_prompt_tokens.name,
                           value: Metrics.total_prompt_tokens.value,
                         },
-                        {
-                          name: Metrics.total_tokens.name,
-                          value: Metrics.total_tokens.value,
-                        },
                       ]}
                     />
                   </div>
-                  <div className="flex justify-between items-center self-stretch ">
-                    <span className="text-sm-regular text-gray-4">Type</span>
-                    <SelectInput
-                      {...register("type")}
-                      headLess
-                      placeholder="Total"
-                      align="start"
-                      icon={Down}
-                      padding="py-xxxs px-xxs"
-                      gap="gap-xxs"
-                      width="min-w-[140px]"
-                      value={currentType}
-                      onChange={(e) =>
-                        dispatch(
-                          setDisplayType(
-                            e.target.value,
-                            setQueryParams,
-                            navigate
+                  {performance_param !== Metrics.number_of_requests.value && performance_param !== Metrics.error_count.value && performance_param !== Metrics.average_latency.value &&
+                    (<div className="flex justify-between items-center self-stretch ">
+                      <span className="text-sm-regular text-gray-4">Type</span>
+                      <SelectInput
+                        {...register("type")}
+                        headLess
+                        placeholder="Total"
+                        align="start"
+                        icon={Down}
+                        padding="py-xxxs px-xxs"
+                        gap="gap-xxs"
+                        width="min-w-[140px]"
+                        value={currentType}
+                        onChange={(e) =>
+                          dispatch(
+                            setDisplayType(
+                              e.target.value,
+                              setQueryParams,
+                              navigate
+                            )
                           )
-                        )
-                      }
-                      choices={filteredtypeChoices}
-                    />
-                  </div>
+                        }
+                        choices={filteredtypeChoices}
+                      />
+                    </div>)
+                  }
                   <div className="flex justify-between items-center self-stretch ">
                     <span className="text-sm-regular text-gray-4">
                       Breakdown
@@ -434,7 +437,7 @@ function DashboardNotConnected({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
-              onClick={() => handleOPenPanel()}
+              onClick={() => handleOpenPanel()}
             />
           </div>
         </div>

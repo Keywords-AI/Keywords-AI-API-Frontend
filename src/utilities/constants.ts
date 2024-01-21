@@ -124,14 +124,15 @@ export const models = [
 ];
 
 export const colorTagsClasses =   [
-  "#DCB697",
-  "#F6C05C",
-  "#EBDD60",
-  "#70AD82",
-  "#96D1F2",
-  "#6483F0",
-  "#AE75EB",
-  "#F89098",
+  "#F55656",
+  "#FFB340",
+  "#FFD426",
+  "#31DE4B",
+  "#66D4CF",
+  "#5DE6FF",
+  "#DA8FFF",
+  "#FF6482",
+  "#B59469",
 ];
 export const randomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];

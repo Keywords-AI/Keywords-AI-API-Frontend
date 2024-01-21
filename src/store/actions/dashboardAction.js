@@ -358,7 +358,9 @@ export const getDashboardData = (
 
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
+        console.log("data?.data_avg_by_model", data?.data_avg_by_model);
         dispatch(setAvgModelData(data?.data_avg_by_model));
+        
         dispatch(setAvgApiData(data?.data_avg_by_key));
         dispatch(setP50Data(data?.latency_p_50));
         dispatch(setP90Data(data?.latency_p_90));
