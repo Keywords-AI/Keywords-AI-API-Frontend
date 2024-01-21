@@ -90,15 +90,15 @@ export const SettingPage = ({
           <Button type="submit" text="Update" variant="r4-primary" />
         </form>
       </PageParagraph>
-      {/* <PageParagraph
+      <PageParagraph
                 heading="Delete organization"
                 subheading="If you want to permanently delete this organization and all of its data, you can do so below."
             >
                 <Button
                     text="Delete this organization"
-                    variant="r4-black"
+                    variant="r4-gray2"
                 />
-            </PageParagraph> */}
+            </PageParagraph>
     </PageContent>
   );
 };
