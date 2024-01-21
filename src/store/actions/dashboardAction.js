@@ -282,7 +282,6 @@ export const getDashboardData = (
           data?.data,
           params.get("summary_type")
         );
-
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
