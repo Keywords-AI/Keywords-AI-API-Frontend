@@ -1,4 +1,4 @@
-import { envVars } from "./branch_env";
+import { envVars } from "./local_env";
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 // const envVars = undefined;
 export const FETCH_ENDPOINT =
