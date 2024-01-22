@@ -45,6 +45,7 @@ openai.api_key = "{YOUR_KEYWORDSD_AI_API_KEY}" # You should replace this with yo
                     {`Unfortunately, API key will only show once after you generate it. If you have lost your API key, you will have to regerate your [API Keys](https://platform.keywordsai.co/platform/organization/api-keys) on the platform.`}
                 </DocumentationMarkdown>
             </PageParagraph>
+            
         </PageContent>
     )
 }

@@ -12,8 +12,9 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
+  setModelColors,
 } from "src/store/actions";
-import { useNavigate, useLocation, Form } from "react-router-dom";
+import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
 import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
+  setModelColors,
 };
 
 const WelcomeState = () => {
@@ -81,6 +83,7 @@ function DashboardNotConnected({
   firstTime,
   organization,
   modelData,
+  setModelColors,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,9 +96,20 @@ function DashboardNotConnected({
 
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
+  const sortedModel = modelData
+    .sort((a, b) => b[performance_param] - a[performance_param])
+    .map((model, index) => (model.model == "" ? "unknown model" : model.model))
+    .filter((name, index, self) => self.indexOf(name) === index);
 
   useEffect(() => {
     getDashboardData();
+
+    setModelColors(
+      sortedModel.reduce((acc, key, index) => {
+        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        return acc;
+      }, {})
+    );
   }, []);
 
   const handleOpenPanel = () => {
@@ -105,6 +119,12 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
+    setModelColors(
+      sortedModel.reduce((acc, key, index) => {
+        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        return acc;
+      }, {})
+    );
   };
 
   const handleCardClick = (metricKey) => {
@@ -126,6 +146,7 @@ function DashboardNotConnected({
           )
         );
         getDashboardData();
+        
       },
     },
     {
@@ -265,28 +286,24 @@ function DashboardNotConnected({
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           {
             <div>
-              {breakdown_type === "by_model" &&
+              {breakdown_type === "by_model" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
-                  {modelData
-                    .sort((a, b) => b[currentMetric] - a[currentMetric])
-                    .map((model, index) => model.model)
-                    .filter((name, index, self) => self.indexOf(name) === index)
-                    .map((name, index) => (
-                      <div className="flex items-center gap-xxs" key={index}>
-                        <div
-                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                          style={{
-                            backgroundColor:
-                              colorTagsClasses[index % colorTagsClasses.length],
-                          }}
-                        ></div>
-                        <span className="caption text-gray-4">
-                          {name || "unknown model"}
-                        </span>
-                      </div>
-                    ))}
+                  {sortedModel.map((name, index) => (
+                    <div className="flex items-center gap-xxs" key={index}>
+                      <div
+                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                        style={{
+                          backgroundColor:
+                            colorTagsClasses[index % colorTagsClasses.length],
+                        }}
+                      ></div>
+                      <span className="caption text-gray-4">
+                        {name || "unknown model"}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              }
+              )}
             </div>
           }
           <div className="flex items-center gap-xxs">
