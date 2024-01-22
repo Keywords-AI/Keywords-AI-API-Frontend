@@ -29,7 +29,6 @@ import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
 import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env";
-
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 import { Requests } from "./pages/PlatformPages/Requests";
@@ -84,7 +83,6 @@ const Routes = ({ getUser, user, organization }) => {
       children: [
       { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
-        { path: "request-log", element: <UsageLogs /> },
         { path: "requests", element: <Requests /> },
         {
           path: "api",

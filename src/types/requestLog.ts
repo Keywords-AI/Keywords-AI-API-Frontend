@@ -1,3 +1,4 @@
+import React from "react";
 import { ChatMessage } from "./chatMessage";
 
 export type LogItem = {
@@ -15,4 +16,15 @@ export type LogItem = {
     organization_key: string;
     failed: boolean;
     category: string;
+    api_key: string;
+}
+
+export type DisplayLogItem = {
+    time: string;
+    prompt: React.ReactNode;
+    response: React.ReactNode;
+    cost: string;
+    latency: string;
+    tokens: number;
+    tagGroup: React.ReactNode;
 }
