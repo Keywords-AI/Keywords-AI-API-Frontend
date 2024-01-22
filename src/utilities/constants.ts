@@ -126,8 +126,8 @@ export const models = [
 export const colorTagsClasses =   [
   "#F55656",
   "#FFB340",
-  "#31DE4B",
   "#FFD426",
+  "#31DE4B",
   "#66D4CF",
   "#5DE6FF",
   "#DA8FFF",

@@ -80,10 +80,22 @@ function DashboardNotConnected({
     setModelColors(
       sortedModel.reduce((acc, key, index) => {
         acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        // console.log("acc", acc);
         return acc;
       }, {})
     );
   }, []);
+
+  // useEffect(() => {
+  //   setModelColors(
+  //     sortedModel.reduce((acc, key, index) => {
+  //       acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+  //       // console.log("acc", acc);
+  //       return acc;
+  //     }, {})
+  //   );
+  // }, [modelData]);
+
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -95,6 +107,7 @@ function DashboardNotConnected({
     setModelColors(
       sortedModel.reduce((acc, key, index) => {
         acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        console.log("acc", acc);
         return acc;
       }, {})
     );
