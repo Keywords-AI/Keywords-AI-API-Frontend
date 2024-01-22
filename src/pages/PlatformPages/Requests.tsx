@@ -191,9 +191,35 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   }
 
   const filteredBreakdownChoices = breakdownChoices;
-  const SidePanel = ({ logItem: LogItem }) => {
+  const SidePanel = ({
+    LogItem = {
+      timestamp: Date.now(),
+      cost: 0.2134,
+      latency: 3.36,
+      status: "Success",
+      completion_tokens: 4220,
+      prompt_tokens: 2312,
+      model: "gpt-4",
+      id: "sample-id",
+      completion_message: "Sample completion message",
+      prompt_messages: [
+        {
+          role: "user",
+          content: "This is a prompt message",
+        },
+        {
+          role: "ai",
+          content: "This is a response message",
+        },
+      ],
+      error_message: null,
+      organization_key: "production",
+      failed: false,
+      category: "sample-category",
+    },
+  }) => {
     const {
-      timestamp,
+      timestamp = null,
       cost,
       latency,
       status,
@@ -209,16 +235,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       category,
     } = LogItem;
 
-    const sampleMessages = [
-      {
-        role: "user",
-        content: "This is a prompt message",
-      },
-      {
-        role: "ai",
-        content: "This is a response message",
-      },
-    ];
     const displayObj = {
       "Created at": (
         <span className="text-sm-regular text-gray-4">
@@ -287,23 +303,22 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         </div>
         <Divider />
         <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-          {prompt_messages ||
-            sampleMessages.map((message, index) => (
-              <div
-                key={index}
-                className="flex-col items-start gap-xxs self-stretch"
-              >
-                <div className="flex justify-between items-center self-stretch">
-                  <p className="text-sm-md text-gray-5">
-                    {message.role === "user" ? "Prompt" : "Response"}
-                  </p>
-                  <CopyButton text={message.content} />
-                </div>
-                <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-                  {message.content}
-                </div>
+          {prompt_messages?.map((message, index) => (
+            <div
+              key={index}
+              className="flex-col items-start gap-xxs self-stretch"
+            >
+              <div className="flex justify-between items-center self-stretch">
+                <p className="text-sm-md text-gray-5">
+                  {message.role === "user" ? "Prompt" : "Response"}
+                </p>
+                <CopyButton text={message.content} />
               </div>
-            ))}
+              <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
+                {message.content}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -575,6 +590,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <Button variant="small" icon={Export} text="Export" />
           </div>
         </div>
+        <SidePanel logItem={requestLogs[0]} />
       </div>
 
       // <div className="flex-col flex-grow self-stretch">
