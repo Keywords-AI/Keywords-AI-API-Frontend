@@ -62,12 +62,11 @@ export function QaTablePage() {
           "Tokens",
           "",
         ]}
-        headerLayout={"grid-cols-[120px_120px_120px_80px_80px_80px_1fr]"}
+        headerLayout={"gap-x-sm grid-cols-[120px_120px_120px_80px_80px_80px_1fr]"}
         rows={displayedLogs}
-        rowLayout={"grid-cols-[120px_120px_120px_80px_80px_80px_1fr]"}
+        rowLayout={"gap-x-sm grid-cols-[120px_120px_120px_80px_80px_80px_1fr]"}
         columnNames={Object.keys(dummyLogItem)}
       />
-
     </PageContent>
   );
 }
