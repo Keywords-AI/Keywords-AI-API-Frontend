@@ -3,11 +3,8 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/types";
 import {
   getDashboardData,
-  setDisplayBreakdown,
-  setDisplayMetric,
-  setDisplayTimeRange,
-  setDisplayType,
   setSidePanelOpen,
+  setSelectedRequest
 } from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
@@ -24,16 +21,21 @@ const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call ?? false,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
+  selectedRequest: state.requestLogs.selectedRequest,
 });
 
 const mapDispatchToProps = {
   getDashboardData,
   getRequestLogs,
+  setSidePanelOpen,
+  setSelectedRequest
 };
 
 interface Actions {
   getDashboardData: (overrideParams?: any) => void;
   getRequestLogs: () => void;
+  setSidePanelOpen: (open: boolean) => void;
+  setSelectedRequest: (id: number) => void;
 }
 
 type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
@@ -43,6 +45,9 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   getRequestLogs,
   firstTime,
   sidePanelOpen,
+  setSidePanelOpen,
+  selectedRequest,
+  setSelectedRequest
 }) => {
   useEffect(() => {
     getRequestLogs();
@@ -180,16 +185,28 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs">
-              <span className="text-sm-regular text-gray-4">{requestLogs.length}</span>
+              <span className="text-sm-regular text-gray-4">
+                {requestLogs.length}
+              </span>
               <span className="text-sm-regular text-gray-4">/</span>
-              <span className="text-sm-regular text-gray-4">{requestLogs.length}</span>
+              <span className="text-sm-regular text-gray-4">
+                {requestLogs.length}
+              </span>
             </div>
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             {/* <Button variant="small" icon={Export} text="Export" />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div> */}
             <DotsButton
               icon={sidePanelOpen ? SideBarActive : SideBar}
-              onClick={() => setSidePanelOpen(!sidePanelOpen)}
+              onClick={() => {
+                if (!selectedRequest) {
+                  setSelectedRequest(requestLogs?.[0]?.id);
+                }
+                if (sidePanelOpen) {
+                  setSelectedRequest(-1);
+                }
+                setSidePanelOpen(!sidePanelOpen);
+              }}
             />
           </div>
         </div>
@@ -199,12 +216,17 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex-col flex-grow max-h-full items-start overflow-auto">
             <RequestLogTable />
-            {showFilter && <div className="flex-row py-lg justify-center items-center w-full">
-              <div className="flex-row gap-sm items-center">
-                <span className="text-sm-md">{requestLogs.length - requestLogs.length} entries hidden by filter</span>
-                <Button variant="small" text="Clear filters" />
+            {showFilter && (
+              <div className="flex-row py-lg justify-center items-center w-full">
+                <div className="flex-row gap-sm items-center">
+                  <span className="text-sm-md">
+                    {requestLogs.length - requestLogs.length} entries hidden by
+                    filter
+                  </span>
+                  <Button variant="small" text="Clear filters" />
+                </div>
               </div>
-            </div>}
+            )}
           </div>
           <div className="flex-col items-start h-full overflow-auto">
             <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />

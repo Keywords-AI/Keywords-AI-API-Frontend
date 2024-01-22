@@ -57,12 +57,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     Cost: (
       <span className="text-sm-regular text-gray-4">
-        {"$" + logItem?.cost || "0.2134"}
+        {"$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
     Latency: (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.latency || "3.360" + "s"}
+        {(logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
   };
