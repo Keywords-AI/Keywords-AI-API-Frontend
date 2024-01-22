@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { SettingTable, LineTable } from "src/components/Tables";
+import { LineTable } from "src/components/Tables";
 import { Button, IconButton } from "src/components/Buttons";
 import {
   CreateForm,
@@ -8,7 +8,7 @@ import {
   DeleteForm,
   APIKeyActions,
   IntegrationModal,
-} from "./components";
+} from "../components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Modal } from "src/components/Dialogs";
 import {
@@ -16,13 +16,14 @@ import {
   setDeletingKey,
   clearPrevApiKey,
   dispatchNotification,
-  processKeyList
+  processKeyList,
 } from "src/store/actions";
-import { RootState, DisplayApiKey, ApiKey } from "src/types";
+import { RootState, DisplayApiKey, ApiKey, ApiKeyState } from "src/types";
 import { Divider } from "src/components/Sections";
+import { ModelTags } from "./ApiKeyComponents";
+import { StateTag } from "src/components/Misc";
 
 const mapStateToProps = (state: RootState) => ({
-  user: state.user,
   apiKey: state.apiKey,
   vendors: state.integration.vendors,
   apiKeyLimit: state.organization?.organization_subscription.api_key_limit ?? 0,
@@ -35,6 +36,15 @@ const mapDispatchToProps = {
   dispatchNotification,
 };
 
+interface ApiKeyPageProps {
+  apiKey: ApiKeyState;
+  setEditingKey: any;
+  setDeletingKey: any;
+  clearPrevApiKey: any;
+  vendors: any;
+  apiKeyLimit: number;
+};
+
 export const ApiKeyPage = ({
   apiKey,
   setEditingKey,
@@ -42,38 +52,34 @@ export const ApiKeyPage = ({
   clearPrevApiKey,
   vendors,
   apiKeyLimit,
-}) => {
-  const [openCreate, setOpenCreate] = React.useState(false);
-  const editingTrigger = (key) => {
+}: ApiKeyPageProps) => {
+
+  const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const editingTrigger = (key: ApiKey, active: boolean) => {
     return (
-      <>
         <div className="flex-row w-full justify-end">
+          <StateTag
+            text={active ? "Active" : "Expired"}
+            ok={active}
+          />
           <APIKeyActions
             modifyingKey={key}
             setEditingKey={setEditingKey}
             setDeletingKey={setDeletingKey}
           />
         </div>
-      </>
-    );
-  };
-  const renderStatus = (status) => {
-    return status === "Active" ? (
-      <p className="text-sm-regular text-success">Active</p>
-    ) : (
-      <p className="text-sm-regular text-error">Expired</p>
     );
   };
   const handleGenerateNewKey = () => {
     setOpenCreate(!openCreate);
     clearPrevApiKey();
   };
-  const [prevKey, setPrevKey] = React.useState(
-    processKeyList(apiKey.keyList, editingTrigger, renderStatus) || []
+  const [prevKey, setPrevKey] = React.useState<DisplayApiKey[]>(
+    processKeyList(apiKey.keyList, editingTrigger, ModelTags) || []
   );
   useEffect(() => {
     setPrevKey(
-      processKeyList(apiKey.keyList, editingTrigger, renderStatus) || []
+      processKeyList(apiKey.keyList, editingTrigger, ModelTags) || []
     );
   }, [apiKey.keyList]);
   const orderedVendors = [
@@ -83,7 +89,6 @@ export const ApiKeyPage = ({
     "AI21 Labs",
     "Google",
   ];
-  const keyLeft = apiKeyLimit - (apiKey.keyList?.length || 0);
   return (
     <PageContent
       title="API Keys"
@@ -97,13 +102,13 @@ export const ApiKeyPage = ({
           <LineTable
             variant={"api-keys"}
             rows={prevKey}
-            headers={["Key", "Last Used", "Model", `${keyLeft}/${apiKeyLimit}`]}
-            columnNames={[
-              "name",
-              "last_used",
-              "Status",
-              "actions",
+            headers={[
+              "Key",
+              "Last used",
+              "Models",
+              `${apiKey.keyList?.length}/${apiKeyLimit}`,
             ]}
+            columnNames={["name", "last_used", "models", "actions"]}
           />
         )}
         <Button

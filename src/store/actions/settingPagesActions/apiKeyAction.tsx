@@ -1,6 +1,6 @@
 import { keywordsRequest } from "src/utilities/requests";
 import { dispatchNotification } from "src/store/actions";
-import { ApiKey } from "src/types";
+import { ApiKey, DisplayApiKey } from "src/types";
 import { getDateStr } from "src/utilities/stringProcessing";
 import React from "react";
 export const SET_NEW_KEY_NAME = "SET_NEW_KEY_NAME";
@@ -13,18 +13,23 @@ export const UPDATE_EDITING_KEY = "UPDATE_EDITING_KEY";
 export const CLEAR_PREV_API_KEY = "CLEAR_PREV_API_KEY";
 export const SET_LOADING = "SET_LOADING";
 
+
 export const processKey = (
-  key: any,
-  actions = (key: any): React.ReactNode => { return <></> },
-  renderStatus = (status: any): React.ReactNode => { return <></> }
-) => {
+  key: ApiKey,
+  actions = (key: ApiKey, active: boolean): React.ReactNode => {
+    return <></>;
+  },
+  Models = (models: string[]):React.ReactNode => {
+    return <></>;
+  },
+): DisplayApiKey => {
   const today = new Date();
-  const expireDate = isNaN(new Date(key.expire_date).getTime())
+  const expireDate = isNaN(new Date(key.expiry_date).getTime())
     ? "Infinite"
-    : new Date(key.expire_date);
+    : new Date(key.expiry_date);
   // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
 
-  let status = "Active";
+let status = "Active";
   if (expireDate === "Infinite") {
     status = "Active";
   } else if (expireDate < today) {
@@ -34,17 +39,21 @@ export const processKey = (
     ...key,
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
-    Status: renderStatus(status),
-    actions: actions(key),
+    actions: actions(key, !key.revoked),
+    models: Models(key.preset_models),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
 };
 
 export const processKeyList = (
   keyList: ApiKey[],
-  actions = (key: any): React.ReactNode => { return <></> },
-  renderStatus = (status: any): React.ReactNode => { return <></> }
-) => {
+  actions = (key: ApiKey, active: boolean): React.ReactNode => {
+    return <></>;
+  },
+  Models= (models: string[]):React.ReactNode => {
+    return <></>;
+  },
+): DisplayApiKey[] => {
   /*
   keyList: [{
     prefix: 1,
@@ -56,28 +65,28 @@ export const processKeyList = (
   */
   if (!keyList || !keyList.length) return [];
   return keyList.map((key) => {
-    return processKey(key, actions, renderStatus);
+    return processKey(key, actions, Models);
   });
 };
 
 export const setNewKeyName = (name) => {
   return {
     type: SET_NEW_KEY_NAME,
-    name: name,
+    payload: name,
   };
 };
 
 export const setLoading = (loading) => {
   return {
     type: SET_LOADING,
-    loading: loading,
+    payload: loading,
   };
-}
+};
 
 export const setKeyList = (keyList) => {
   return {
     type: SET_KEY_LIST,
-    keyList: keyList,
+    payload: keyList,
   };
 };
 
@@ -86,10 +95,9 @@ export const getKeys = () => {
     keywordsRequest({
       path: "api/get-keys",
       dispatch,
-    })
-      .then((data) => {
-        dispatch(setKeyList(data));
-      });
+    }).then((data) => {
+      dispatch(setKeyList(data));
+    });
   };
 };
 
@@ -97,7 +105,7 @@ export const addKey = (key) => {
   return {
     type: ADD_KEY,
     // No need to add actions here, setPrevKey (in ApiKeyPage) will get triggered once list is updated
-    key: processKeyList([key])[0],
+    payload: processKeyList([key])[0],
   };
 };
 
@@ -113,7 +121,9 @@ export const createApiKey = (data) => {
       .then((data) => {
         dispatch(setLoading(false));
         dispatch(addKey(data));
-        dispatch(dispatchNotification({ title: "API Key created successfully!" }));
+        dispatch(
+          dispatchNotification({ title: "API Key created successfully!" })
+        );
       })
       .catch((err) => {
         dispatch(setLoading(false));
@@ -130,27 +140,27 @@ export const clearPrevApiKey = () => {
 export const setDeletingKey = (key) => {
   return {
     type: SET_DELETING_KEY,
-    key: key,
+    payload: key,
   };
 };
 
 export const deleteKey = (key) => {
   return {
     type: DELETE_KEY,
-    key: key,
+    payload: key,
   };
 };
 
 export const setEditingKey = (key) => {
   return {
     type: SET_EDITING_KEY,
-    key: key,
+    payload: key,
   };
 };
 
 export const updateEditingKey = (key) => {
   return {
     type: UPDATE_EDITING_KEY,
-    key: key,
+    payload: key,
   };
 };

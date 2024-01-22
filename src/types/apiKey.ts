@@ -35,6 +35,8 @@
 //   organization: 141,
 // };
 
+import React from "react";
+
 export type ApiKey = {
     id: string;
     api_key: string;
@@ -70,10 +72,20 @@ export type DisplayApiKey = {
     last_used: string;
     plan_name: string;
     non_deletable: boolean;
-    preset_models: string[];
+    models: React.ReactNode;
     rate_limit: number;
     spending_limit: number;
     user: number;
     organization: number;
+    actions: React.ReactNode;
+    mod_prefix: string;
+};
 
+export type ApiKeyState = {
+    keyList: ApiKey[];
+    newKey: ApiKey | undefined;
+    editingKey: ApiKey | undefined;
+    apiKey: string;
+    deletingKey: ApiKey | undefined;
+    loading: boolean;
 };

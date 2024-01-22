@@ -9,17 +9,10 @@ import {
   CLEAR_PREV_API_KEY,
   SET_LOADING,
 } from "src/store/actions";
-import { ApiKey, DisplayApiKey } from "src/types";
+import { ApiKey, ApiKeyState } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-type ApiKeyState = {
-  keyList: DisplayApiKey[];
-  newKey: ApiKey | undefined;
-  editingKey: ApiKey | undefined;
-  apiKey: string;
-  deletingKey: ApiKey | undefined;
-  loading: boolean;
-};
+
 
 const initState: ApiKeyState = {
   keyList: [],
@@ -35,15 +28,15 @@ export default function apiKeyReducer(state = initState, action: PayloadAction<a
     case SET_NEW_KEY_NAME:
       return {
         ...state,
-        newKey: { ...state.newKey, name: action.name },
+        newKey: { ...state.newKey, name: action.payload } as ApiKey,
       };
     case SET_LOADING:
       return {
         ...state,
-        loading: action.loading,
+        loading: action.payload,
       };
     case ADD_KEY:
-      const { api_key, ...secretLessKey } = action.key;
+      const { api_key, ...secretLessKey } = action.payload;
       console.log(api_key)
       return {
         ...state,
@@ -55,26 +48,26 @@ export default function apiKeyReducer(state = initState, action: PayloadAction<a
       return {
         ...state,
         keyList: state.keyList.filter(
-          (key) => key.prefix !== action.key?.prefix
+          (key) => key.prefix !== action.payload?.prefix
         ),
       };
     case SET_KEY_LIST:
       return {
         ...state,
-        keyList: action.keyList,
+        keyList: action.payload,
       };
     case SET_EDITING_KEY:
       return {
         ...state,
         editingKey: state.keyList.find(
-          (key) => key.prefix === action.key?.prefix
+          (key) => key.prefix === action.payload?.prefix
         ),
       };
     case UPDATE_EDITING_KEY:
       return {
         ...state,
         keyList: state.keyList.map((key) => {
-          if (key.prefix === action.key?.prefix) return action.key;
+          if (key.prefix === action.payload?.prefix) return action.payload;
           return key;
         }),
       };
@@ -82,7 +75,7 @@ export default function apiKeyReducer(state = initState, action: PayloadAction<a
       return {
         ...state,
         deletingKey: state.keyList.find((key) => {
-          return key.prefix === action.key?.prefix;
+          return key.prefix === action.payload?.prefix;
         }),
       };
     case CLEAR_PREV_API_KEY:
