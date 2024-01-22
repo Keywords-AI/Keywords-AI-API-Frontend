@@ -38,9 +38,10 @@ import { setQueryParams } from "src/utilities/navigation";
 import { Popover } from "src/components/Dialogs";
 import { useForm } from "react-hook-form";
 import { DotsButton } from "src/components/Buttons";
+import { RequestLogTable } from "src/components/Tables";
 
 const mapStateToProps = (state: RootState) => ({
-  requestLogs: state.requestLogs.data as LogItem[],
+  requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call ?? false,
 });
 
@@ -194,7 +195,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   else
     return (
       <div className="flex flex-col items-start self-stretch flex-grow rounded-xs bg-gray-1">
-        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
+        <div aria-label="" className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
           <div className="flex flex-row items-center gap-xxxs">
             {!showFilter && (
               <Button
@@ -376,7 +377,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             </Popover>
           </div>
         </div>
-        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
+        <div className="flex bg-red flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             {showFilter && (
               <React.Fragment>
@@ -449,33 +450,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <Button variant="small" icon={Export} text="Export" />
           </div>
         </div>
+        <RequestLogTable />
       </div>
-
-      // <div className="flex-col flex-grow self-stretch">
-      //   <SettingTable
-      //     headers={[
-      //       "Time",
-      //       "Prompt tokens",
-      //       "Completion tokens",
-      //       "Latency",
-      //       "Cost",
-      //       "Status",
-      //       "Category",
-      //     ]}
-      //     headerLayout={"grid-cols-8"}
-      //     rows={requestLogs}
-      //     rowLayout={"grid-cols-8"}
-      //     columnNames={[
-      //       "timestamp",
-      //       "prompt_tokens",
-      //       "completion_tokens",
-      //       "latency",
-      //       "cost",
-      //       "status",
-      //       "category",
-      //     ]}
-      //   />
-      // </div>
     );
 };
 

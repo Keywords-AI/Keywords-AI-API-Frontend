@@ -21,17 +21,18 @@ export const processRequestLogs = (
   }) => React.ReactNode
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
+    console.log(log.api_key);
     return {
       time: formatISOToReadableDate(log.timestamp),
-      prompt: concatMessages(log.prompt_messages),
-      response: concatMessages([log.completion_message]),
+      prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
+      response: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
       cost: `$${log.cost.toFixed(6)}`,
       tokens: log.completion_tokens + log.prompt_tokens,
       latency: `${log.latency.toFixed(3)} s`, // + converts string to number
       tagGroup: tagGroup({
         key: log.api_key,
         model: log.model,
-        status: log.status,
+        status: log.failed? "failed" : "success",
       })
     };
   });

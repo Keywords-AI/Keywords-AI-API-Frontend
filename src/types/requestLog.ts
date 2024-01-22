@@ -5,7 +5,6 @@ export type LogItem = {
     timestamp: string;
     cost: number;
     latency: number;
-    status: string;
     completion_tokens: number;
     prompt_tokens: number;
     model: string;
