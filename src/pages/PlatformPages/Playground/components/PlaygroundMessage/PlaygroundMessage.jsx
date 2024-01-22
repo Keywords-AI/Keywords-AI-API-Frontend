@@ -115,7 +115,7 @@ export function PlaygroundMessage({ role, content, messageIndex }) {
             streaming={streaming}
           />
         ) : (
-          <div className="w-full h-full flex-col self-stretch flex-grow  text-sm-regular text-gray-5 ">
+          <div className=" h-full flex-col  text-sm-regular text-gray-5 bg-red-500 text-wrap">
             {textContent || <span className="text-gray-4">Generating...</span>}
           </div>
         )
