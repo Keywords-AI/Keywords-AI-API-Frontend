@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { SettingTable } from "src/components/Tables";
+import { SettingTable, LineTable } from "src/components/Tables";
 import { Button, IconButton } from "src/components/Buttons";
 import {
   CreateForm,
@@ -16,15 +16,16 @@ import {
   setDeletingKey,
   clearPrevApiKey,
   dispatchNotification,
+  processKeyList
 } from "src/store/actions";
-import { processKeyList } from "src/utilities/objectProcessing";
-import { RootState } from "src/types";
+import { RootState, DisplayApiKey, ApiKey } from "src/types";
 import { Divider } from "src/components/Sections";
 
 const mapStateToProps = (state: RootState) => ({
   user: state.user,
   apiKey: state.apiKey,
   vendors: state.integration.vendors,
+  apiKeyLimit: state.organization?.organization_subscription.api_key_limit ?? 0,
 });
 
 const mapDispatchToProps = {
@@ -40,6 +41,7 @@ export const ApiKeyPage = ({
   setDeletingKey,
   clearPrevApiKey,
   vendors,
+  apiKeyLimit,
 }) => {
   const [openCreate, setOpenCreate] = React.useState(false);
   const editingTrigger = (key) => {
@@ -81,6 +83,7 @@ export const ApiKeyPage = ({
     "AI21 Labs",
     "Google",
   ];
+  const keyLeft = apiKeyLimit - (apiKey.keyList?.length || 0);
   return (
     <PageContent
       title="API Keys"
@@ -91,14 +94,12 @@ export const ApiKeyPage = ({
         subheading="Your secret Keywords AI proxy keys are listed below. Please note that we do not display your API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
         {prevKey.length > 0 && (
-          <SettingTable
+          <LineTable
             variant={"api-keys"}
             rows={prevKey}
-            headers={["Name", "Key", "Created", "Last Used", "Status"]}
+            headers={["Key", "Last Used", "Model", `${keyLeft}/${apiKeyLimit}`]}
             columnNames={[
               "name",
-              "mod_prefix",
-              "created",
               "last_used",
               "Status",
               "actions",

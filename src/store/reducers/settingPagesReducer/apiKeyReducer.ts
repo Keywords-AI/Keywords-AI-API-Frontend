@@ -8,18 +8,29 @@ import {
   SET_DELETING_KEY,
   CLEAR_PREV_API_KEY,
   SET_LOADING,
-} from "../../actions/settingPagesActions/apiKeyAction";
+} from "src/store/actions";
+import { ApiKey, DisplayApiKey } from "src/types";
+import { PayloadAction } from "@reduxjs/toolkit";
 
-const initState = {
+type ApiKeyState = {
+  keyList: DisplayApiKey[];
+  newKey: ApiKey | undefined;
+  editingKey: ApiKey | undefined;
+  apiKey: string;
+  deletingKey: ApiKey | undefined;
+  loading: boolean;
+};
+
+const initState: ApiKeyState = {
   keyList: [],
-  newKey: { name: "" },
-  editingKey: null,
+  newKey: undefined,
+  editingKey: undefined,
   apiKey: "",
-  deletingKey: null,
+  deletingKey: undefined,
   loading: false,
 };
 
-export default function apiKeyReducer(state = initState, action) {
+export default function apiKeyReducer(state = initState, action: PayloadAction<any>): ApiKeyState {
   switch (action.type) {
     case SET_NEW_KEY_NAME:
       return {
