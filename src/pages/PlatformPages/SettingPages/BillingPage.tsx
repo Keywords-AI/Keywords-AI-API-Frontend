@@ -53,13 +53,13 @@ export const BillingPage = () => {
       <PageParagraph
         heading="Current plan"
         subheading={
-          <span>
-            {`${currentSubscription?.name} ${currentSubscription?.interval}`}
-            <br />
-            {`${currentSubscription?.amount} per ${currentSubscription?.interval.toLowerCase()} - renews on ${currentSubscription?.renewal_date}`}
-          </span>
+          <div className="flex-col items-start gap-xxs"> 
+            <p>{`${currentSubscription?.name} ${currentSubscription?.interval}`}</p>
+            <p>{`${currentSubscription?.amount} per ${currentSubscription?.interval.toLowerCase()} - renews on ${currentSubscription?.renewal_date}`}</p>
+          </div>
         }
       >
+
         {user.is_organization_admin && <Button
           variant="r4-gray2"
           text="Update plan"
@@ -70,11 +70,11 @@ export const BillingPage = () => {
       <PageParagraph heading="Billing details">
         <div className="flex-col items-start gap-xxs">
           <div className="flex items-center gap-md">
-            <p className="text-sm-md text-gray-5">Name</p>
+            <p className="text-sm-md text-gray-5 w-[20px]">Name</p>
             <p className="text-sm-regular text-gray-4">{currentBillingData?.name}</p>
           </div>
           <div className="flex items-center gap-md">
-            <p className="text-sm-md text-gray-5">Email</p>
+            <p className="text-sm-md text-gray-5 w-[20px]">Email</p>
             <p className="text-sm-regular text-gray-4">{currentBillingData?.email}</p>
           </div>
         </div>

@@ -110,8 +110,7 @@ const CreateFormNotConnected = React.forwardRef(
       }
       setNewKeyName(data.name);
       data.preset_models = data.preset_models.split(",").filter((model)=> model !== "");
-      data.rate_limit = Math.round(data.rate_limit / data.unit);
-      console.log(data);
+      data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       createApiKey(data);
   };
     const handleClose = (e: any) => {
@@ -120,8 +119,9 @@ const CreateFormNotConnected = React.forwardRef(
       setShowForm(false);
     };
     const [showInfo, setShowInfo] = useState(false);
-
+    const [currentKeyName, setCurrentKeyName] = useState("New Key");
     const [isRateLimitEnabled, setIsRateLimitEnabled] = useState(false);
+    const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
     const [isSpendingLimitEnabled, setIsSpendingLimitEnabled] = useState(false);
 
 
@@ -147,7 +147,8 @@ const CreateFormNotConnected = React.forwardRef(
                 <TextInput
                   title={"Name"}
                   width={"w-full"}
-                  {...register("name")}
+                  {...register("name", { value: currentKeyName, 
+                    onChange: (e) => setCurrentKeyName(e.target.value) })}
                   // onKeyDown={handleEnter}
                   placeholder={"test key 1"}
                 />
@@ -194,12 +195,11 @@ const CreateFormNotConnected = React.forwardRef(
                 <SelectInput
                   title={"Unit"}
                   optionsWidth={"w-[160px]"}
-                  {...register("unit")}
+                  {...register("unit", {value: currentUnit, onChange: (e) => setCurrentUnit(e.target.value) })}
                   // onKeyDown={handleEnter}
                   placeholder={"per minute"}
                   //This corresponds to the 'Never' option
                   choices={unitOptions}
-                  deaultValue={1}
                 />
               </div>}
               <div className="flex flex-row items-center gap-xxs relative">
