@@ -27,6 +27,7 @@ import {
   SET_P95_DATA,
   SET_P99_DATA,
   SET_TIME_FRAME_OFFSET,
+  SET_MODEL_COLORS,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -122,6 +123,7 @@ const initState = {
     currDate - currDate.getTimezoneOffset() * 60 * 1000
   ).toISOString(),
   timeOffset: 0,
+  modelColors: {},
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -241,6 +243,8 @@ export default function dashboardReducer(state = initState, action) {
             timeOffset: state.timeOffset + offset,
           };
       }
+    case SET_MODEL_COLORS:
+      return { ...state, modelColors: action.payload };
 
     default:
       return state;
