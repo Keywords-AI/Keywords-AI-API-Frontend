@@ -3,6 +3,7 @@ import { textToLink } from 'src/utilities/stringProcessing';
 import {QaButtonPage} from "./QaButtonPage"
 import {QaInputPage} from "./QaInputPage"
 import { QaMiscPage } from './QaMisc';
+import { QaTablePage } from './QaTablePage';
 
 const pages = [
   {
@@ -25,6 +26,11 @@ const pages = [
     title: "Misc",
     forAdmin: true,
     page: <QaMiscPage/>,
+  },
+  {
+    title: "Table",
+    forAdmin: true,
+    page: <QaTablePage/>,
   },
 ];
 

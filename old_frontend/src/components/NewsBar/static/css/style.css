@@ -1,8 +1,0 @@
-.news-bar {
-  display: flex;
-  padding: 12px 120px;
-  flex-direction: column;
-  align-items: center;
-  gap: 60px;
-  align-self: stretch;
-}

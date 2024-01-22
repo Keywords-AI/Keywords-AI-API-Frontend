@@ -1,7 +1,0 @@
-.list-display .grid-col {
-    display: flex;
-    padding: 8px 12px 8px 0px;
-    align-items: center;
-    align-self: stretch;
-    border-bottom: 1px solid var(--gray-2, #AAA);
-}

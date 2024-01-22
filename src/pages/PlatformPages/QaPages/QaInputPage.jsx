@@ -6,6 +6,7 @@ import {
   RadioInput,
   SelectInput,
   TextInput,
+  SelectInputTest
 } from "src/components/Inputs";
 import { NavBar, PageContent, PageParagraph } from "src/components/Sections";
 import { useForm } from "react-hook-form";
@@ -68,6 +69,7 @@ export const QaInputPage = () => {
             {...register("checkbox")}
             value="choice B"
           />
+          <SelectInputTest />
           <CheckBoxButton text="test" />
           <ModelPresetCard />
         </PageParagraph>
