@@ -28,7 +28,7 @@ export const processRequestLogs = (
       response: <span className="truncate">{concatMessages([log.completion_message])}</span>,
       cost: `$${log.cost.toFixed(6)}`,
       tokens: log.completion_tokens + log.prompt_tokens,
-      latency: `${log.latency.toFixed(3)} s`, // + converts string to number
+      latency: `${log.latency.toFixed(3)}s`, // + converts string to number
       tagGroup: tagGroup({
         key: log.api_key,
         model: log.model,
