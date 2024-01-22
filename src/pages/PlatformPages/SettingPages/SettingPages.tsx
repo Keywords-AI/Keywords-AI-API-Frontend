@@ -30,21 +30,16 @@ const pages: PreProcessPage[] = [
     title: "Member",
     page: <MemberPage />,
   },
-  {
-    title: "Integrations",
-    forOrgAdmin: true,
-    page: <IntegrationsPage />,
-  },
-  {
-    title: "Model Router",
-    forOrgAdmin: true,
-    page: <ModelRouterPage />,
-  },
-  {
-    title: "Alerts & Fallback",
-    forOrgAdmin: true,
-    page: <AlertsFallbackPage />,
-  },
+  // {
+  //   title: "Integrations",
+  //   forOrgAdmin: true,
+  //   page: <IntegrationsPage />,
+  // },
+  // {
+  //   title: "Model Router",
+  //   forOrgAdmin: true,
+  //   page: <ModelRouterPage />,
+  // },
   {
     title: "Plans",
     forOrgAdmin: true,
@@ -56,8 +51,13 @@ const pages: PreProcessPage[] = [
   },
 
   {
-    title: "Proxy Keys",
+    title: "API Keys",
     page: <ApiKeyPage />,
+  },
+  {
+    title: "Alerts & Fallback",
+    forOrgAdmin: true,
+    page: <AlertsFallbackPage />,
   },
 ];
 
