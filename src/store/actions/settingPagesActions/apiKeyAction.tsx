@@ -2,6 +2,7 @@ import { keywordsRequest } from "src/utilities/requests";
 import { dispatchNotification } from "src/store/actions";
 import { ApiKey, DisplayApiKey } from "src/types";
 import { getDateStr } from "src/utilities/stringProcessing";
+import { TypedDispatch } from "src/types";
 import React from "react";
 export const SET_NEW_KEY_NAME = "SET_NEW_KEY_NAME";
 export const SET_KEY_LIST = "SET_KEY_LIST";
@@ -13,15 +14,17 @@ export const UPDATE_EDITING_KEY = "UPDATE_EDITING_KEY";
 export const CLEAR_PREV_API_KEY = "CLEAR_PREV_API_KEY";
 export const SET_LOADING = "SET_LOADING";
 
-
 export const processKey = (
   key: ApiKey,
+  renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {
+    return <></>;
+  },
   actions = (key: ApiKey, active: boolean): React.ReactNode => {
     return <></>;
   },
-  Models = (models: string[]):React.ReactNode => {
+  Models = (models: string[]): React.ReactNode => {
     return <></>;
-  },
+  }
 ): DisplayApiKey => {
   const today = new Date();
   const expireDate = isNaN(new Date(key.expiry_date).getTime())
@@ -29,17 +32,18 @@ export const processKey = (
     : new Date(key.expiry_date);
   // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
 
-let status = "Active";
+  let active = true;
   if (expireDate === "Infinite") {
-    status = "Active";
+    active = true;
   } else if (expireDate < today) {
-    status = "Expired";
+    active = false;
   }
   return {
     ...key,
+    key: renderKey(key.name, key.prefix),
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
-    actions: actions(key, !key.revoked),
+    actions: actions(key, active),
     models: Models(key.preset_models),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
@@ -47,12 +51,15 @@ let status = "Active";
 
 export const processKeyList = (
   keyList: ApiKey[],
+  renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {
+    return <></>;
+  },
   actions = (key: ApiKey, active: boolean): React.ReactNode => {
     return <></>;
   },
-  Models= (models: string[]):React.ReactNode => {
+  Models = (models: string[]): React.ReactNode => {
     return <></>;
-  },
+  }
 ): DisplayApiKey[] => {
   /*
   keyList: [{
@@ -65,7 +72,7 @@ export const processKeyList = (
   */
   if (!keyList || !keyList.length) return [];
   return keyList.map((key) => {
-    return processKey(key, actions, Models);
+    return processKey(key, renderKey, actions, Models);
   });
 };
 
@@ -158,9 +165,24 @@ export const setEditingKey = (key) => {
   };
 };
 
-export const updateEditingKey = (key) => {
-  return {
-    type: UPDATE_EDITING_KEY,
-    payload: key,
+export const updateEditingKey = (keyData: ApiKey) => {
+  return (dispatch: TypedDispatch) => {
+    dispatch({
+      type: UPDATE_EDITING_KEY,
+      payload: keyData,
+    });
+    keywordsRequest({
+      path: `api/update-key/${keyData?.prefix}/`,
+      data: keyData,
+      method: "PATCH",
+    })
+      .then((data: any) => {
+        dispatch(
+          dispatchNotification({ title: "API Key updated successfully!" })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 };
