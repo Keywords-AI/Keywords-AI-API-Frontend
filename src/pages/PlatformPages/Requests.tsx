@@ -1,18 +1,43 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
-import { connect, ConnectedComponent, DispatchProp } from "react-redux";
+import {
+  connect,
+  ConnectedComponent,
+  DispatchProp,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import { RootState } from "src/types";
 import { SettingTable } from "src/components/Tables";
-import { getDashboardData } from "src/store/actions";
+import {
+  getDashboardData,
+  setDateData,
+  setDisplayBreakdown,
+  setDisplayMetric,
+  setDisplayTimeRange,
+  setDisplayType,
+} from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { TitleAuth } from "src/components/Titles";
-import { Button, Display, Down, Filter, Search } from "src/components";
+import {
+  Add,
+  Button,
+  Close,
+  Display,
+  Dots,
+  Down,
+  Export,
+  Filter,
+  Search,
+} from "src/components";
 import { TextInputSmall } from "src/components/Inputs/TextInput/TextInputSmall";
 import { SelectInput } from "src/components/Inputs";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
+import { setQueryParams } from "src/utilities/navigation";
 import { Popover } from "src/components/Dialogs";
 import { useForm } from "react-hook-form";
+import { DotsButton } from "src/components/Buttons";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.data as LogItem[],
@@ -33,6 +58,7 @@ type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
 
 const WelcomeState: FunctionComponent = () => {
   const navigate = useNavigate();
+
   return (
     <div className="flex-col flex-1 self-stretch p-lg gap-lg items-start bg-gray-1 ">
       <div className="flex-col justify-center items-center gap-md flex-1 self-stretch rounded-md shadow-window outline outline-1 outline-gray-3">
@@ -69,7 +95,100 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   }, []);
   const [inputValue, setInputValue] = useState("");
   const [showPopover, setShowPopover] = useState(false);
+  const [showFilter, setShowFilter] = useState(false);
+  // const [inputSets, setInputSets] = useState(1);
+  const [inputSets, setInputSets] = useState([0]);
   const { register, handleSubmit, watch } = useForm();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+
+  const performance_param = new URLSearchParams(location.search).get("metric");
+  const breakdown_type = new URLSearchParams(location.search).get("breakdown");
+
+  const handleTimePeriodSelection = (selectedValue) => {
+    dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
+    getDashboardData();
+  };
+
+  const handleFilter = () => {
+    return () => {
+      setShowFilter((prev) => {
+        // If we are hiding the filter (setting it to false), also reset inputSets
+        if (prev) {
+          setInputSets([0]); // Reset to initial state
+        }
+        return !prev;
+      });
+    };
+  };
+
+  // const handleAddInputSet = () => {
+  //   if (inputSets < 3) {
+  //     setInputSets(inputSets + 1);
+  //   }
+  // };
+  const handleAddInputSet = () => {
+    if (inputSets.length < 3) {
+      // Find the next unique index
+      const nextIndex = inputSets.length > 0 ? Math.max(...inputSets) + 1 : 0;
+      setInputSets([...inputSets, nextIndex]);
+    }
+  };
+  // const handleCloseInputSet = (setIndex) => {
+  //   // Create a new array without the set that needs to be closed
+  //   const updatedInputSets = Array.from({ length: inputSets })
+  //     .map((_, index) => index)
+  //     .filter(index => index !== setIndex)
+  //     .length;
+  
+  //   setInputSets(updatedInputSets);
+  // };
+
+  const handleCloseInputSet = (setIndex:any) => {
+    setInputSets(inputSets.filter(index => index !== setIndex));
+  };
+  const typeChoices = [
+    { name: "Total", value: "total" },
+    { name: "Average", value: "average" },
+  ];
+
+  const breakdownChoices = [
+    { name: "None", value: "none" },
+    {
+      name: "By model",
+      value: "by_model",
+    },
+    { name: "By key", value: "by_key" },
+    // { name: "By token type", value: "by_token_type" }, //only for total tokens
+  ];
+
+  const currentMetric = useSelector(
+    (state: RootState) => state.dashboard.displayFilter.metric
+  );
+  const currentTimeRange = useSelector(
+    (state: RootState) => state.dashboard.displayFilter.timeRange
+  );
+  const currentType = useSelector(
+    (state: RootState) => state.dashboard.displayFilter.type
+  );
+  const currentBreakdown = useSelector(
+    (state: RootState) => state.dashboard.displayFilter.breakDown
+  );
+
+  let filteredtypeChoices: any[] = [];
+  if (
+    currentMetric === "number_of_requests" ||
+    currentMetric === "error_count"
+  ) {
+    filteredtypeChoices = typeChoices.filter(
+      (choice) => choice.value !== "average"
+    );
+  } else {
+    filteredtypeChoices = typeChoices;
+  }
+
+  const filteredBreakdownChoices = breakdownChoices;
 
   if (firstTime) return <WelcomeState />;
   else
@@ -77,19 +196,40 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       <div className="flex flex-col items-start self-stretch flex-grow rounded-xs bg-gray-1">
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
           <div className="flex flex-row items-center gap-xxxs">
-            <Button variant="small" icon={Filter} text="Filter" />
+            {!showFilter && (
+              <Button
+                variant="small"
+                icon={Filter}
+                text="Filter"
+                onClick={handleFilter()}
+                // borderColor="shadow-border-dashed"
+              />
+            )}
+            {showFilter && (
+              <Button
+                variant="small"
+                icon={Close}
+                text="Clear filters"
+                onClick={handleFilter()}
+                iconPosition="right"
+              />
+            )}
           </div>
           <div className="flex flex-row gap-xxxs rounded-xs">
             <TextInputSmall
               icon={Search}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <Button variant="small" text="Today" />
+            <Button
+              variant="small"
+              text="Today"
+              onClick={() => handleTimePeriodSelection("daily")}
+            />
             <SelectInput
               headLess
               placeholder="Month"
               align="end"
-              // value={currentTimeRange}
+              value={currentTimeRange}
               icon={Down}
               padding="py-xxxs px-xxs"
               gap="gap-xxs"
@@ -99,7 +239,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                 { name: "Month", value: "monthly" },
                 { name: "Year", value: "yearly" },
               ]}
-              // handleSelected={handleTimePeriodSelection}
+              handleSelected={handleTimePeriodSelection}
             />
             <Popover
               trigger={
@@ -109,7 +249,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                   icon={Display}
                   secIcon={Down}
                   secIconPosition="right"
-                  // onClick={() => setShowPopover((prev) => !prev)}
+                  onClick={() => setShowPopover((prev) => !prev)}
                 />
               }
               open={showPopover}
@@ -132,17 +272,17 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      // onChange={(e) => {
-                      //   dispatch(
-                      //     setDisplayMetric(
-                      //       e.target.value,
-                      //       setQueryParams,
-                      //       navigate
-                      //     )
-                      //   );
-                      //   getDashboardData();
-                      // }}
-                      // value={currentMetric}
+                      onChange={(e) => {
+                        dispatch(
+                          setDisplayMetric(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
+                        );
+                        getDashboardData();
+                      }}
+                      value={currentMetric}
                       choices={[
                         {
                           name: Metrics.number_of_requests.name,
@@ -175,6 +315,9 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                       ]}
                     />
                   </div>
+                  {performance_param !== Metrics.number_of_requests.value &&
+                    performance_param !== Metrics.error_count.value &&
+                    performance_param !== Metrics.average_latency.value && (
                       <div className="flex justify-between items-center self-stretch ">
                         <span className="text-sm-regular text-gray-4">
                           Type
@@ -188,19 +331,20 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                           padding="py-xxxs px-xxs"
                           gap="gap-xxs"
                           width="min-w-[140px]"
-                          // value={currentType}
-                          // onChange={(e) =>
-                          //   dispatch(
-                          //     setDisplayType(
-                          //       e.target.value,
-                          //       setQueryParams,
-                          //       navigate
-                          //     )
-                          //   )
-                          // }
-                          // choices={filteredtypeChoices}
+                          value={currentType}
+                          onChange={(e) =>
+                            dispatch(
+                              setDisplayType(
+                                e.target.value,
+                                setQueryParams,
+                                navigate
+                              )
+                            )
+                          }
+                          choices={filteredtypeChoices}
                         />
                       </div>
+                    )}
                   <div className="flex justify-between items-center self-stretch ">
                     <span className="text-sm-regular text-gray-4">
                       Breakdown
@@ -214,26 +358,99 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
-                      // value={currentBreakdown}
-                      // onChange={(e) =>
-                      //   dispatch(
-                      //     setDisplayBreakdown(
-                      //       e.target.value,
-                      //       setQueryParams,
-                      //       navigate
-                      //     )
-                      //   )
-                      // }
-                      // choices={filteredBreakdownChoices}
+                      value={currentBreakdown}
+                      onChange={(e) =>
+                        dispatch(
+                          setDisplayBreakdown(
+                            e.target.value,
+                            setQueryParams,
+                            navigate
+                          )
+                        )
+                      }
+                      choices={filteredBreakdownChoices}
                     />
                   </div>
                 </div>
               </form>
             </Popover>
-
+          </div>
+        </div>
+        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
+          <div className="flex flex-row items-center gap-xxs rounded-xs">
+            {showFilter && (
+              <React.Fragment>
+                {inputSets.map((inputSetId) =>(
+                  <div
+                    className="flex flex-row items-center gap-[2px]"
+                    key={inputSetId}
+                  >
+                    <SelectInput
+                      headLess
+                      placeholder="Status"
+                      align="end"
+                      // value={currentTimeRange}
+                      icon={Down}
+                      padding="py-xxxs px-xxs"
+                      gap="gap-xxs"
+                      choices={[
+                        { name: "Status", value: "status" },
+                        // { name: "Week", value: "weekly" },
+                        // { name: "Month", value: "monthly" },
+                        // { name: "Year", value: "yearly" },
+                      ]}
+                      // handleSelected={handleTimePeriodSelection}
+                    />
+                    <SelectInput
+                      headLess
+                      placeholder="is"
+                      align="end"
+                      // value={currentTimeRange}
+                      icon={Down}
+                      padding="py-xxxs px-xxs"
+                      gap="gap-xxs"
+                      choices={[
+                        { name: "is", value: "is" },
+                        { name: "is not", value: "is_not" },
+                        // { name: "Month", value: "monthly" },
+                        // { name: "Year", value: "yearly" },
+                      ]}
+                      // handleSelected={handleTimePeriodSelection}
+                    />
+                    <SelectInput
+                      headLess
+                      placeholder="Error"
+                      align="end"
+                      // value={currentTimeRange}
+                      icon={Down}
+                      padding="py-xxxs px-xxs"
+                      gap="gap-xxs"
+                      choices={[
+                        { name: "Error", value: "error" },
+                        { name: "Success", value: "success" },
+                        // { name: "Month", value: "monthly" },
+                        // { name: "Year", value: "yearly" },
+                      ]}
+                      // handleSelected={handleTimePeriodSelection}
+                    />
+                    {(<DotsButton icon={Close} onClick={() => handleCloseInputSet(inputSetId)}/>)}
+                  </div>
+                ))}
+                {inputSets.length < 3 && <DotsButton icon={Add} onClick={handleAddInputSet}/>}
+              </React.Fragment>
+            )}
+          </div>
+          <div className="flex flex-row items-center gap-xxs rounded-xs ">
+            <div className="flex flex-row items-center gap-xxxs rounded-xs">
+              <span className="text-sm-regular text-gray-4">123</span>
+              <span className="text-sm-regular text-gray-4">/</span>
+              <span className="text-sm-regular text-gray-4">500</span>
+            </div>
+            <Button variant="small" icon={Export} text="Export" />
           </div>
         </div>
       </div>
+
       // <div className="flex-col flex-grow self-stretch">
       //   <SettingTable
       //     headers={[
