@@ -362,182 +362,174 @@ export const DeleteForm = connect(
 
 type EditingFromProps = {
   setEditingKey: (key: ApiKey | undefined) => {};
-  editingKey: ApiKey;
+  editingKey: ApiKey | undefined;
   updateEditingKey: (key: ApiKey) => {};
   dispatchNotification: (notification: any) => {};
 };
-const EditFormNotConnected = (
-    {
-      setEditingKey,
-      editingKey,
-      updateEditingKey,
-      dispatchNotification,
-    }: EditingFromProps,
-  ) => {
-    const [showInfo, setShowInfo] = useState(false);
-    const [currentKeyName, setCurrentKeyName] = useState(editingKey.name);
-    const [isRateLimitEnabled, setIsRateLimitEnabled] = useState(false);
-    const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
-    const [isSpendingLimitEnabled, setIsSpendingLimitEnabled] = useState(false);
-    const {
-      loading: editLoading,
-      error: editKeyError,
-      data: editKey,
-      postData,
-    } = usePost({
-      path: `api/update-key/${editingKey?.prefix}/`,
-      method: "PATCH",
-    });
-    useEffect(() => {
+const EditFormNotConnected = ({
+  setEditingKey,
+  editingKey,
+  updateEditingKey,
+}: EditingFromProps) => {
+  const [showInfo, setShowInfo] = useState(false);
+  const [currentKeyName, setCurrentKeyName] = useState(
+    editingKey?.name || "New Key"
+  );
+  const [isRateLimitEnabled, setIsRateLimitEnabled] = useState(false);
+  const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
+  const [isSpendingLimitEnabled, setIsSpendingLimitEnabled] = useState(false);
+  useEffect(() => {
+    if (editingKey) {
       setCurrentKeyName(editingKey.name);
-    }, [editingKey.name]);
-    const {
-      register,
-      handleSubmit,
-      formState: { errors },
-    } = useForm();
-    const onSubmit = (data: any) => {
-      postData(data);
-      dispatchNotification({
-        title: "Key updated",
-        message: "Your key has been updated.",
-      });
-      updateEditingKey({ ...editingKey, ...data });
-      setEditingKey(undefined);
-    };
-    const handleClose = (e: any) => {
-      setEditingKey(undefined);
-    };
+    }
+  }, [editingKey]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data: any) => {
+    if (typeof data.preset_models === "string") {
+      data.preset_models = data.preset_models.split(",");
+    } else if (typeof data.preset_models !== "object") {
+      data.preset_models = [];
+    }
+    updateEditingKey({ ...editingKey, ...data });
+    setEditingKey(undefined);
+  };
+  const handleClose = (e: any) => {
+    setEditingKey(undefined);
+  };
 
-    const handleRateLimitSwitch = (checked) => {
-      setIsRateLimitEnabled(checked);
-    };
+  const handleRateLimitSwitch = (checked) => {
+    setIsRateLimitEnabled(checked);
+  };
 
-    const handleSpendingLimitSwitch = (checked) => {
-      setIsSpendingLimitEnabled(checked);
-    };
+  const handleSpendingLimitSwitch = (checked) => {
+    setIsSpendingLimitEnabled(checked);
+  };
 
-    return (
-      <form
-        className={"flex-col gap-sm self-stretch relative"}
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <React.Fragment>
+  return (
+    <form
+      className={"flex-col gap-sm self-stretch relative"}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <React.Fragment>
+        <div className="grid gap-sm grid-cols-[1fr,160px]">
+          <TextInput
+            title={"Name"}
+            width={"w-full"}
+            {...register("name", {
+              value: currentKeyName,
+              onChange: (e) => setCurrentKeyName(e.target.value),
+            })}
+            // onKeyDown={handleEnter}
+            placeholder={"test key 1"}
+          />
+          <SelectInput
+            title={"Expiry"}
+            optionsWidth={"w-[160px]"}
+            {...register("expiry_date")}
+            // onKeyDown={handleEnter}
+            placeholder={"Key-1"}
+            //This corresponds to the 'Never' option
+            defaultValue={
+              new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+            }
+            choices={expiryOptions}
+          />
+        </div>
+        <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
+          <div className="text-gray-4 text-sm-regular w-full">Models</div>
+          {models.map((model, index) => (
+            <CheckboxInput
+              key={index}
+              text={model.name}
+              {...register("preset_models")}
+              value={model.value}
+              checked={editingKey?.preset_models.includes(model.value)}
+            />
+          ))}
+        </div>
+        <div className="flex flex-row items-center gap-xxs relative">
+          <span className="text-sm-regular text-gray-4">Has rate limit </span>
+          <IconButton
+            icon={Info}
+            onMouseEnter={() => setShowInfo(true)}
+            onMouseLeave={() => setShowInfo(false)}
+          />
+          {showInfo && (
+            <HoverPopup
+              className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
+              text="rate limit"
+            />
+          )}
+          <SwitchButton
+            onCheckedChange={handleRateLimitSwitch}
+            className="absolute -top-[2px]"
+          />
+        </div>
+        {isRateLimitEnabled && (
           <div className="grid gap-sm grid-cols-[1fr,160px]">
             <TextInput
-              title={"Name"}
+              title={"Rate limit"}
               width={"w-full"}
-              {...register("name", {
-                value: currentKeyName,
-                onChange: (e) => setCurrentKeyName(e.target.value),
-              })}
+              {...register("rate_limit")}
               // onKeyDown={handleEnter}
-              placeholder={"test key 1"}
+              placeholder={"None"}
+              type="number"
+              pseudoElementClass="special-input"
             />
             <SelectInput
-              title={"Expiry"}
+              title={"Unit"}
               optionsWidth={"w-[160px]"}
-              {...register("expiry_date")}
+              {...register("unit", {
+                value: currentUnit,
+                onChange: (e) => setCurrentUnit(e.target.value),
+              })}
               // onKeyDown={handleEnter}
-              placeholder={"Key-1"}
+              placeholder={"per minute"}
               //This corresponds to the 'Never' option
-              defaultValue={
-                new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
-              }
-              choices={expiryOptions}
+              choices={unitOptions}
             />
           </div>
-          <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
-            <div className="text-gray-4 text-sm-regular w-full">Models</div>
-            {models.map((model, index) => (
-              <CheckboxInput
-                key={index}
-                text={model.name}
-                {...register("preset_models")}
-                value={model.value}
-              />
-            ))}
-          </div>
-          <div className="flex flex-row items-center gap-xxs relative">
-            <span className="text-sm-regular text-gray-4">Has rate limit </span>
-            <IconButton
-              icon={Info}
-              onMouseEnter={() => setShowInfo(true)}
-              onMouseLeave={() => setShowInfo(false)}
-            />
-            {showInfo && (
-              <HoverPopup
-                className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
-                text="rate limit"
-              />
-            )}
-            <SwitchButton
-              onCheckedChange={handleRateLimitSwitch}
-              className="absolute -top-[2px]"
-            />
-          </div>
-          {isRateLimitEnabled && (
-            <div className="grid gap-sm grid-cols-[1fr,160px]">
-              <TextInput
-                title={"Rate limit"}
-                width={"w-full"}
-                {...register("rate_limit")}
-                // onKeyDown={handleEnter}
-                placeholder={"None"}
-                type="number"
-                pseudoElementClass="special-input"
-              />
-              <SelectInput
-                title={"Unit"}
-                optionsWidth={"w-[160px]"}
-                {...register("unit", {
-                  value: currentUnit,
-                  onChange: (e) => setCurrentUnit(e.target.value),
-                })}
-                // onKeyDown={handleEnter}
-                placeholder={"per minute"}
-                //This corresponds to the 'Never' option
-                choices={unitOptions}
-              />
-            </div>
-          )}
-          <div className="flex flex-row items-center gap-xxs relative">
-            <span className="text-sm-regular text-gray-4">
-              Has spending limit{" "}
-            </span>
-            <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
-          </div>
-          {isSpendingLimitEnabled && (
-            <div className="grid gap-sm grid-cols-1">
-              <TextInput
-                title={"Spending limit"}
-                width={"w-full"}
-                {...register("spending_limit")}
-                // onKeyDown={handleEnter}
-                placeholder={"$100"}
-                type="number"
-                defaultValue={100}
-              />
-            </div>
-          )}
-        </React.Fragment>
-
-        <div className="flex-row justify-end self-stretch">
-          <div className="flex-row gap-xs">
-            <Button
-              variant="r4-black"
-              bgColor="transparent"
-              text={"Cancel"}
-              type="button"
-              onClick={handleClose}
-            />
-            <Button variant="r4-primary" text="Save" />
-          </div>
+        )}
+        <div className="flex flex-row items-center gap-xxs relative">
+          <span className="text-sm-regular text-gray-4">
+            Has spending limit{" "}
+          </span>
+          <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
         </div>
-      </form>
-    );
-  }
+        {isSpendingLimitEnabled && (
+          <div className="grid gap-sm grid-cols-1">
+            <TextInput
+              title={"Spending limit"}
+              width={"w-full"}
+              {...register("spending_limit")}
+              // onKeyDown={handleEnter}
+              placeholder={"$100"}
+              type="number"
+              defaultValue={100}
+            />
+          </div>
+        )}
+      </React.Fragment>
 
+      <div className="flex-row justify-end self-stretch">
+        <div className="flex-row gap-xs">
+          <Button
+            variant="r4-gray-2"
+            bgColor="transparent"
+            text={"Cancel"}
+            type="button"
+            onClick={handleClose}
+          />
+          <Button variant="r4-primary" text="Save" />
+        </div>
+      </div>
+    </form>
+  );
+};
 
 export const EditForm = connect(
   mapStateToProps,
