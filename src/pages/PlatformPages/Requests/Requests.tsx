@@ -174,6 +174,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           </div>
           <div className="flex-row gap-xxxs rounded-xs items-center">
             <TextInputSmall
+              placeholder="Search prompt..."
               icon={Search}
               onChange={(e) => setInputValue(e.target.value)}
             />
