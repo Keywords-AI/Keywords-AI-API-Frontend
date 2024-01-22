@@ -16,7 +16,7 @@ import {
 } from "src/store/actions";
 import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
-import { SelectInput } from "src/components/Inputs";
+import { SelectInput, SelectInputTest } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
@@ -119,7 +119,6 @@ function DashboardNotConnected({
           )
         );
         getDashboardData();
-        
       },
     },
     {
@@ -198,18 +197,18 @@ function DashboardNotConnected({
   );
 
   const typeChoices = [
-    { name: "Total", value: "total", secText: "1", },
-    { name: "Average", value: "average", secText: "2", },
+    { name: "Total", value: "total", secText: "1" },
+    { name: "Average", value: "average", secText: "2" },
   ];
 
   const breakdownChoices = [
-    { name: "None", value: "none" , secText: "1",},
+    { name: "None", value: "none", secText: "1" },
     {
       name: "By model",
       value: "by_model",
       secText: "2",
     },
-    { name: "By key", value: "by_key", secText: "3", },
+    { name: "By key", value: "by_key", secText: "3" },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
   let filteredtypeChoices;
@@ -286,6 +285,23 @@ function DashboardNotConnected({
               text="Today"
               onClick={() => handleTimePeriodSelection("daily")}
             />
+            {/* <SelectInputTest
+              value={currentTimeRange}
+              // icon={Down} TODO: add icon
+              choices={[
+                { name: "Day", value: "daily", secText: "1" },
+                { name: "Week", value: "weekly", secText: "2" },
+                { name: "Month", value: "monthly", secText: "3" },
+                { name: "Year", value: "yearly", secText: "4" },
+              ]}
+              padding="py-xxxs px-xxs"
+              align="end"
+              gap="gap-xxs"
+              optionsWidth="w-[120px]"
+              handleSelected={(selectedValue) => {
+                console.log("testInput", selectedValue);
+              }}
+            /> */}
             <SelectInput
               headLess
               placeholder="Month"
