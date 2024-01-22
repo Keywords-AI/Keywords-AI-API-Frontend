@@ -92,7 +92,6 @@ const CreateFormNotConnected = React.forwardRef(
       apiKey,
       setShowForm = () => {},
       setNewKeyName,
-      editingTrigger,
       createApiKey,
       loading,
       organization,
@@ -103,8 +102,9 @@ const CreateFormNotConnected = React.forwardRef(
       register,
       handleSubmit,
       formState: { errors },
+      watch
     } = useForm();
-    const onSubmit = (data: any) => {
+    const onSubmit = (data) => {
       if (!data.name) {
         data.name = "New Key";
       }
@@ -318,7 +318,7 @@ export const DeleteForm = connect(
 const EditFormNotConnected = React.forwardRef(
   (
     { setEditingKey, editingKey, updateEditingKey, dispatchNotification },
-    ref
+    ref: React.ForwardedRef<any>
   ) => {
     const [newName, setNewName] = React.useState(editingKey?.name);
     const [defaultTime, setDefaultTime] = React.useState(

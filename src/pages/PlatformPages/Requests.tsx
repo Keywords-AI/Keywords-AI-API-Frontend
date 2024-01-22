@@ -591,8 +591,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <Button variant="small" icon={Export} text="Export" />
           </div>
         </div>
+        <div className="flex-row flex-grow self-stretch">
         <RequestLogTable />
         <SidePanel logItem={requestLogs[0]} />
+        </div>
       </div>
     );
 };
