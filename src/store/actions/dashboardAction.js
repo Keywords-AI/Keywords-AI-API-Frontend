@@ -32,18 +32,11 @@ export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
 export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
-export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
-export const setModelColors = (data) => {
-  return {
-    type: SET_MODEL_COLORS,
-    payload: data,
-  };
-};
-export const setTimeFrameOffset = (offsetType, currTime, offset, navigate) => {
+export const setTimeFrameOffset = (offsetType, offset, navigate) => {
   // setQueryParams({ timeFrameOffset: offset }, navigate);
   return {
     type: SET_TIME_FRAME_OFFSET,
-    payload: { offsetType, currTime, offset },
+    payload: { offsetType, offset },
   };
 };
 export const SET_P50_DATA = "SET_P50_DATA";
