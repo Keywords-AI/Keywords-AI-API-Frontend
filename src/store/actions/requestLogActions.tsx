@@ -21,7 +21,6 @@ export const processRequestLogs = (
   }) => React.ReactNode
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
-    console.log(log.api_key);
     return {
       time: formatISOToReadableDate(log.timestamp),
       prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
@@ -32,7 +31,7 @@ export const processRequestLogs = (
       tagGroup: tagGroup({
         key: log.api_key,
         model: log.model,
-        status: log.failed? "failed" : "success",
+        status: log.failed? "Error" : "Success",
       })
     };
   });
@@ -50,6 +49,7 @@ export const getRequestLogs = () => {
     keywordsRequest({
       path: "api/request-logs",
     }).then((data) => {
+      console.log(data);
       dispatch(setRequestLogs(data));
     });
   };
