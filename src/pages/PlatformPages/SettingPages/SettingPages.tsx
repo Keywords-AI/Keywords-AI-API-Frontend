@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { PreProcessPage, Page } from "src/types";
 import SettingsPage from "./SettingsPage";
-import ApiKeyPage from "./ApiKeyPage";
+import ApiKeyPage from "./ApiKeyPage/ApiKeyPage";
 import { MemberPage } from "./MemberPage";
 import { BillingPage } from "./BillingPage";
 import { Building } from "src/components/Icons";

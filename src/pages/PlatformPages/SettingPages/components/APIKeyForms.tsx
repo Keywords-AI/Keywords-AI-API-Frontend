@@ -17,7 +17,7 @@ import {
   updateEditingKey,
   dispatchNotification,
 } from "src/store/actions";
-import { Icon } from "@radix-ui/react-select";
+import { ApiKey } from "src/types";
 import { Info } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
@@ -90,17 +90,23 @@ const unitOptions = [
   },
 ];
 
+interface CreateProps {
+  apiKey?: ApiKey;
+  setShowForm?: (show: boolean) => {};
+  setNewKeyName?: (name: string) => {};
+  createApiKey?: (data: any) => {};
+  loading?: boolean;
+}
+
 const CreateFormNotConnected = React.forwardRef(
   (
     {
       apiKey,
-      setShowForm = () => {},
+      setShowForm = (show: boolean) => {},
       setNewKeyName,
       createApiKey,
       loading,
-      organization,
-    },
-    ref
+    }: CreateProps
   ) => {
     const {
       register,
