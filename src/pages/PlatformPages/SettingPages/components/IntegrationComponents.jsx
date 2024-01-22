@@ -39,7 +39,7 @@ export const vendors = {
       { name: "gpt-4-1106-preview" },
     ],
     apiPageAddress: "https://platform.openai.com/api-keys",
-    companyLogo: <OpenAI />,
+    companyLogo: <OpenAI size="md" />,
   },
   Anthropic: {
     models: [
@@ -49,21 +49,21 @@ export const vendors = {
       { name: "claude-2" },
     ],
     apiPageAddress: "https://console.anthropic.com/account/keys",
-    companyLogo: <Anthropic />,
+    companyLogo: <Anthropic size="md" />,
   },
   "AI21 Labs": {
     models: [{ name: "j2-light" }, { name: "j2-mid" }, { name: "j2-ultra" }],
-    companyLogo: <Labs />,
+    companyLogo: <Labs size="md" />,
     apiPageAddress: "https://www.aicontentlabs.com/settings/api-keys",
   },
   Cohere: {
     models: [{ name: "command-nightly" }],
-    companyLogo: <Cohere />,
+    companyLogo: <Cohere size="md" />,
     apiPageAddress: "https://dashboard.cohere.com/api-keys",
   },
   Google: {
     models: [{ name: "chat-bison" }],
-    companyLogo: <Google />,
+    companyLogo: <Google size="md" />,
     apiPageAddress: "https://ai.google.dev/docs",
   },
 };
@@ -179,19 +179,6 @@ const IntegrationCardNotConnected = ({
         className="flex-col self-stretch gap-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* <fieldset className="flex flex-col items-start self-stretch gap-xxs">
-          <span className="text-sm-regular text-gray-4">Available models</span>
-          <div className="flex flex-wrap self-stretch gap-xs">
-            {availableModels.map((model, index) => (
-              <CheckBoxButton
-                {...register("activated_models")}
-                key={index}
-                text={model}
-                checked={activatedModels.includes(model)}
-              />
-            ))}
-          </div>
-        </fieldset> */}
         <TextInput
           type={apiKey ? "text" : "password"}
           {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
@@ -300,7 +287,7 @@ export const TitleCard = ({
             icon={Ellipse}
             iconProps={{ active }}
           />
-          {companyLogo}
+          {React.cloneElement(companyLogo, {size: "lg"})}
         </div>
       </div>
       <div className="flex flex-col items-start">

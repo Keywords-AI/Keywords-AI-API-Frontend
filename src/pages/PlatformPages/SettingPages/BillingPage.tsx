@@ -3,7 +3,11 @@ import { SettingTable } from "src/components/Tables";
 import { Button } from "src/components/Buttons";
 import { Search } from "src/components/Icons";
 import { PageContent, PageParagraph } from "src/components/Sections";
-import { processBillingList, processBillingItem, processSubscription } from "src/utilities/objectProcessing";
+import {
+  processBillingList,
+  processBillingItem,
+  processSubscription,
+} from "src/utilities/objectProcessing";
 import { CanelPlanForm } from "./components/BillingComponents";
 import { Modal } from "src/components/Dialogs";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +15,8 @@ import { Divider } from "../../../components/Sections/Divider";
 import { Billing, RootState } from "src/types";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 
-export const viewBillTrigger = (item: any) => { // The complete stripe Invoice object
+export const viewBillTrigger = (item: any) => {
+  // The complete stripe Invoice object
   return (
     <>
       <Button
@@ -28,12 +33,17 @@ export const viewBillTrigger = (item: any) => { // The complete stripe Invoice o
 export const BillingPage = () => {
   // Fetching action is handled in PanelNavigation.jsx
   const billings = useTypedSelector((state) => state.billings.billings);
-  const currentBilling = useTypedSelector((state) => state.billings.currentBilling);
-  const currentSubscription = useTypedSelector((state) => state.billings.currentSubscription);
+  const currentBilling = useTypedSelector(
+    (state) => state.billings.currentBilling
+  );
+  const currentSubscription = useTypedSelector(
+    (state) => state.billings.currentSubscription
+  );
   const user = useTypedSelector((state) => state.user);
   const dispatch = useTypedDispatch();
   const [bilingData, setBillingData] = React.useState<Billing[]>([]);
-  const [currentBillingData, setCurrentBillingData] = React.useState<Billing>(null); // [currentBilling, setCurrentBilling
+  const [currentBillingData, setCurrentBillingData] =
+    React.useState<Billing>(null); // [currentBilling, setCurrentBilling
   const [canceling, setCanceling] = React.useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -41,7 +51,9 @@ export const BillingPage = () => {
       setBillingData(processBillingList(billings, viewBillTrigger));
     }
     if (currentBilling) {
-      setCurrentBillingData(processBillingItem(currentBilling, viewBillTrigger));
+      setCurrentBillingData(
+        processBillingItem(currentBilling, viewBillTrigger)
+      );
     }
   }, [billings, currentBilling]);
 
@@ -53,29 +65,38 @@ export const BillingPage = () => {
       <PageParagraph
         heading="Current plan"
         subheading={
-          <div className="flex-col items-start gap-xxs"> 
+          <div className="flex-col items-start gap-xxs">
             <p>{`${currentSubscription?.name} ${currentSubscription?.interval}`}</p>
-            <p>{`${currentSubscription?.amount} per ${currentSubscription?.interval.toLowerCase()} - renews on ${currentSubscription?.renewal_date}`}</p>
+            <p>{`${
+              currentSubscription?.amount
+            } per ${currentSubscription?.interval.toLowerCase()} - renews on ${
+              currentSubscription?.renewal_date
+            }`}</p>
           </div>
         }
       >
-
-        {user.is_organization_admin && <Button
-          variant="r4-gray2"
-          text="Update plan"
-          onClick={() => navigate("/platform/api/plans")}
-        />}
+        {user.is_organization_admin && (
+          <Button
+            variant="r4-primary"
+            text="Update plan"
+            onClick={() => navigate("/platform/api/plans")}
+          />
+        )}
       </PageParagraph>
       <Divider />
       <PageParagraph heading="Billing details">
         <div className="flex-col items-start gap-xxs">
           <div className="flex items-center gap-md">
             <p className="text-sm-md text-gray-5 w-[20px]">Name</p>
-            <p className="text-sm-regular text-gray-4">{currentBillingData?.name}</p>
+            <p className="text-sm-regular text-gray-4">
+              {currentBillingData?.name}
+            </p>
           </div>
           <div className="flex items-center gap-md">
             <p className="text-sm-md text-gray-5 w-[20px]">Email</p>
-            <p className="text-sm-regular text-gray-4">{currentBillingData?.email}</p>
+            <p className="text-sm-regular text-gray-4">
+              {currentBillingData?.email}
+            </p>
           </div>
         </div>
         {/* <Button
@@ -94,10 +115,7 @@ export const BillingPage = () => {
         }
       >
         {bilingData?.length > 0 && (
-          <SettingTable
-            variant={"billings"}
-            rows={bilingData}
-          />
+          <SettingTable variant={"billings"} rows={bilingData} />
         )}
         {false && (
           <Modal

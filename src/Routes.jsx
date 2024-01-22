@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
-import { Requests } from "./pages/PlatformPages/Requests";
+import { Requests } from "./pages/PlatformPages/Requests/Requests";
 
 const mapStateToProps = (state) => {
   return {

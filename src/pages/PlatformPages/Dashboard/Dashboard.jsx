@@ -12,8 +12,9 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
+  setModelColors,
 } from "src/store/actions";
-import { useNavigate, useLocation, Form } from "react-router-dom";
+import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
 import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
@@ -22,7 +23,7 @@ import { Popover } from "src/components/Dialogs";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
-import { aggregateModelData } from "src/utilities/objectProcessing";
+import { WelcomeState } from "src/components/Sections";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -40,33 +41,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
-};
-
-const WelcomeState = () => {
-  const navigate = useNavigate();
-  return (
-    <div className="flex-col flex-1 self-stretch p-lg gap-lg items-start bg-gray-1 ">
-      <div className="flex-col justify-center items-center gap-md flex-1 self-stretch rounded-md shadow-window outline outline-1 outline-gray-3">
-        <TitleAuth
-          title="Welcome to Keywords AI!"
-          subtitle={"Send your first API call to view your dashboard."}
-          textAlign="text-center"
-        />
-        <div className="flex justify-center items-center gap-xs">
-          <Button
-            variant="r4-primary"
-            text="Get API keys"
-            onClick={() => navigate("/platform/api")}
-          />
-          <Button
-            variant="r4-black"
-            text="View docs"
-            onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
-          />
-        </div>
-      </div>
-    </div>
-  );
+  setModelColors,
 };
 
 function DashboardNotConnected({
@@ -81,6 +56,7 @@ function DashboardNotConnected({
   firstTime,
   organization,
   modelData,
+  setModelColors,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -93,9 +69,20 @@ function DashboardNotConnected({
 
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
+  const sortedModel = modelData
+    .sort((a, b) => b[performance_param] - a[performance_param])
+    .map((model, index) => (model.model == "" ? "unknown model" : model.model))
+    .filter((name, index, self) => self.indexOf(name) === index);
 
   useEffect(() => {
     getDashboardData();
+
+    setModelColors(
+      sortedModel.reduce((acc, key, index) => {
+        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        return acc;
+      }, {})
+    );
   }, []);
 
   const handleOpenPanel = () => {
@@ -105,6 +92,12 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
+    setModelColors(
+      sortedModel.reduce((acc, key, index) => {
+        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
+        return acc;
+      }, {})
+    );
   };
 
   const handleCardClick = (metricKey) => {
@@ -126,6 +119,7 @@ function DashboardNotConnected({
           )
         );
         getDashboardData();
+        
       },
     },
     {
@@ -204,17 +198,18 @@ function DashboardNotConnected({
   );
 
   const typeChoices = [
-    { name: "Total", value: "total" },
-    { name: "Average", value: "average" },
+    { name: "Total", value: "total", secText: "1", },
+    { name: "Average", value: "average", secText: "2", },
   ];
 
   const breakdownChoices = [
-    { name: "None", value: "none" },
+    { name: "None", value: "none" , secText: "1",},
     {
       name: "By model",
       value: "by_model",
+      secText: "2",
     },
-    { name: "By key", value: "by_key" },
+    { name: "By key", value: "by_key", secText: "3", },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
   let filteredtypeChoices;
@@ -265,28 +260,24 @@ function DashboardNotConnected({
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           {
             <div>
-              {breakdown_type === "by_model" &&
+              {breakdown_type === "by_model" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
-                  {modelData
-                    .sort((a, b) => b[currentMetric] - a[currentMetric])
-                    .map((model, index) => model.model)
-                    .filter((name, index, self) => self.indexOf(name) === index)
-                    .map((name, index) => (
-                      <div className="flex items-center gap-xxs" key={index}>
-                        <div
-                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                          style={{
-                            backgroundColor:
-                              colorTagsClasses[index % colorTagsClasses.length],
-                          }}
-                        ></div>
-                        <span className="caption text-gray-4">
-                          {name || "unknown model"}
-                        </span>
-                      </div>
-                    ))}
+                  {sortedModel.map((name, index) => (
+                    <div className="flex items-center gap-xxs" key={index}>
+                      <div
+                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                        style={{
+                          backgroundColor:
+                            colorTagsClasses[index % colorTagsClasses.length],
+                        }}
+                      ></div>
+                      <span className="caption text-gray-4">
+                        {name || "unknown model"}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              }
+              )}
             </div>
           }
           <div className="flex items-center gap-xxs">
@@ -303,11 +294,12 @@ function DashboardNotConnected({
               icon={Down}
               padding="py-xxxs px-xxs"
               gap="gap-xxs"
+              optionsWidth="w-[120px]"
               choices={[
-                { name: "Day", value: "daily" },
-                { name: "Week", value: "weekly" },
-                { name: "Month", value: "monthly" },
-                { name: "Year", value: "yearly" },
+                { name: "Day", value: "daily", secText: "1" },
+                { name: "Week", value: "weekly", secText: "2" },
+                { name: "Month", value: "monthly", secText: "3" },
+                { name: "Year", value: "yearly", secText: "4" },
               ]}
               handleSelected={handleTimePeriodSelection}
             />
@@ -342,6 +334,8 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
+                      alignOffset={-40}
+                      optionsWidth="w-[180px]"
                       onChange={(e) => {
                         dispatch(
                           setDisplayMetric(
@@ -357,30 +351,44 @@ function DashboardNotConnected({
                         {
                           name: Metrics.number_of_requests.name,
                           value: Metrics.number_of_requests.value,
+                          icon: Metrics.number_of_requests.icon,
+                          secText: "1",
                         },
                         {
                           name: Metrics.error_count.name,
                           value: Metrics.error_count.value,
+                          icon: Metrics.error_count.icon,
+                          secText: "2",
                         },
                         {
                           name: Metrics.average_latency.name,
                           value: Metrics.average_latency.value,
-                        },
-                        {
-                          name: Metrics.total_cost.name,
-                          value: Metrics.total_cost.value,
-                        },
-                        {
-                          name: Metrics.total_tokens.name,
-                          value: Metrics.total_tokens.value,
-                        },
-                        {
-                          name: Metrics.total_completion_tokens.name,
-                          value: Metrics.total_completion_tokens.value,
+                          icon: Metrics.average_latency.icon,
+                          secText: "3",
                         },
                         {
                           name: Metrics.total_prompt_tokens.name,
                           value: Metrics.total_prompt_tokens.value,
+                          icon: Metrics.total_prompt_tokens.icon,
+                          secText: "4",
+                        },
+                        {
+                          name: Metrics.total_completion_tokens.name,
+                          value: Metrics.total_completion_tokens.value,
+                          icon: Metrics.total_completion_tokens.icon,
+                          secText: "5",
+                        },
+                        {
+                          name: Metrics.total_tokens.name,
+                          value: Metrics.total_tokens.value,
+                          icon: Metrics.total_tokens.icon,
+                          secText: "6",
+                        },
+                        {
+                          name: Metrics.total_cost.name,
+                          value: Metrics.total_cost.value,
+                          icon: Metrics.total_cost.icon,
+                          secText: "7",
                         },
                       ]}
                     />
@@ -397,10 +405,12 @@ function DashboardNotConnected({
                           headLess
                           placeholder="Total"
                           align="start"
+                          alignOffset={-40}
                           icon={Down}
                           padding="py-xxxs px-xxs"
                           gap="gap-xxs"
                           width="min-w-[140px]"
+                          optionsWidth="w-[180px]"
                           value={currentType}
                           onChange={(e) =>
                             dispatch(
@@ -428,6 +438,8 @@ function DashboardNotConnected({
                       padding="py-xxxs px-xxs"
                       gap="gap-xxs"
                       width="min-w-[140px]"
+                      optionsWidth="w-[180px]"
+                      alignOffset={-40}
                       value={currentBreakdown}
                       onChange={(e) =>
                         dispatch(

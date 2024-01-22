@@ -15,10 +15,11 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
-}
+};
 
 export type DisplayLogItem = {
-    time: string;
+    id: number;
+    time: React.ReactNode;
     prompt: React.ReactNode;
     response: React.ReactNode;
     cost: string;

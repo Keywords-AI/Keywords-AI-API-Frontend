@@ -7,7 +7,8 @@ import { Button } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
-import { HoverPopup } from "src/components/Cards";
+import { Divider } from "src/components/Sections";
+
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -90,15 +91,16 @@ export const SettingPage = ({
           <Button type="submit" text="Update" variant="r4-primary" />
         </form>
       </PageParagraph>
-      <PageParagraph
-                heading="Delete organization"
-                subheading="If you want to permanently delete this organization and all of its data, you can do so below."
-            >
-                <Button
-                    text="Delete this organization"
-                    variant="r4-gray2"
-                />
-            </PageParagraph>
+      {/* <Divider /> */}
+      {/* <PageParagraph
+        heading="Delete organization"
+        subheading="If you want to permanently delete this organization and all of its data, you can do so below."
+      >
+        <Button
+          text="Delete this organization"
+          variant="r4-gray2"
+        />
+      </PageParagraph> */}
     </PageContent>
   );
 };

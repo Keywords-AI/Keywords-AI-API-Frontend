@@ -12,6 +12,7 @@ export const getVendors = () => {
       path: "vendor_integration/vendors",
     })
       .then((data) => {
+        console.log("data", data);
         dispatch({
           type: GET_VENDORS,
           payload: data,

@@ -2,7 +2,13 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { SettingTable } from "src/components/Tables";
 import { Button, IconButton } from "src/components/Buttons";
-import { CreateForm, EditForm, DeleteForm, APIKeyActions } from "./components";
+import {
+  CreateForm,
+  EditForm,
+  DeleteForm,
+  APIKeyActions,
+  IntegrationModal,
+} from "./components";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { Modal } from "src/components/Dialogs";
 import {
@@ -13,10 +19,12 @@ import {
 } from "src/store/actions";
 import { processKeyList } from "src/utilities/objectProcessing";
 import { RootState } from "src/types";
+import { Divider } from "src/components/Sections";
 
 const mapStateToProps = (state: RootState) => ({
   user: state.user,
   apiKey: state.apiKey,
+  vendors: state.integration.vendors,
 });
 
 const mapDispatchToProps = {
@@ -31,6 +39,7 @@ export const ApiKeyPage = ({
   setEditingKey,
   setDeletingKey,
   clearPrevApiKey,
+  vendors,
 }) => {
   const [openCreate, setOpenCreate] = React.useState(false);
   const editingTrigger = (key) => {
@@ -65,6 +74,13 @@ export const ApiKeyPage = ({
       processKeyList(apiKey.keyList, editingTrigger, renderStatus) || []
     );
   }, [apiKey.keyList]);
+  const orderedVendors = [
+    "OpenAI",
+    "Anthropic",
+    "Cohere",
+    "AI21 Labs",
+    "Google",
+  ];
   return (
     <PageContent
       title="API Keys"
@@ -130,6 +146,25 @@ export const ApiKeyPage = ({
           setDeletingKey={setDeletingKey}
         />
       </Modal>
+      <Divider />
+      <PageParagraph
+        heading="LLM provider keys"
+        subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API."
+      >
+        <div className="flex-col items-start content-start gap-xxs self-stretch flex-1  ">
+          {orderedVendors.map((vendorName, index) => {
+            const currVendors = vendors || [];
+            const vendor = currVendors.find(
+              (vendor) => vendor.name === vendorName
+            );
+            if (vendor) {
+              return <IntegrationModal key={index} vendor={vendor} />;
+            }
+          })}
+        </div>
+
+        {/* <Button variant="r4-primary" text="Request model" onClick={() => { setOpenRequest(!openRequest); }} /> to be built later, not part of next release */}
+      </PageParagraph>
     </PageContent>
   );
 };
