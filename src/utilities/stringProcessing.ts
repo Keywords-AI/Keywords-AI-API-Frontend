@@ -38,6 +38,30 @@ export const getDateStr = (date: number | undefined | null, lastUsed: boolean = 
   }
 };
 
+
+export function formatISOToReadableDate(isoDateString: string): string {
+  /**
+   * This function takes an ISO date string and returns a formatted date string
+   */
+  // Create a date object using the ISO string
+  const date = new Date(isoDateString);
+
+  // Use Intl.DateTimeFormat to format the date
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'short', // abbreviated month
+    day: '2-digit', // two-digit day
+    hour: 'numeric', // numeric hour
+    minute: '2-digit', // two-digit minute
+    hour12: true // 12-hour time with AM/PM
+  };
+
+  // Create a formatter
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+
+  // Format the date
+  return formatter.format(date);
+}
+
 export const enumErrors = (
   response,
   setErrors = (error) => console.log(error)

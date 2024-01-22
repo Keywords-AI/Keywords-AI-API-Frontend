@@ -271,6 +271,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
+        console.log("getData", data)
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(
