@@ -194,53 +194,32 @@ export default function dashboardReducer(state = initState, action) {
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
     case SET_TIME_FRAME_OFFSET:
-      const { offsetType, currTime, offset } = action.payload;
-      console.log(offsetType, currTime, offset);
+      const { offsetType, offset } = action.payload;
+      let updatedTimeFrame;
+      const currTime = state.timeFrame;
       switch (offsetType) {
         case "yearly":
-          let newYear = new Date(currTime).setFullYear(
-            new Date(currTime).getFullYear() + offset
-          );
-
-          newYear = new Date(newYear).toISOString();
-          return {
-            ...state,
-            timeFrame: newYear,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+          break;
         case "monthly":
-          let newMonth = new Date(currTime).setMonth(
-            new Date(currTime).getMonth() + offset
-          );
-          newMonth = new Date(newMonth).toISOString();
-          return {
-            ...state,
-            timeFrame: newMonth,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
+          break;
         case "weekly":
-          let newWeek = new Date(currTime).setDate(
-            new Date(currTime).getDate() + offset * 7
-          );
-          newWeek = new Date(newWeek).toISOString();
-
-          return {
-            ...state,
-            timeFrame: newWeek,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+          break;
         default:
-          let newDate = new Date(currTime).setDate(
-            new Date(currTime).getDate() + offset
-          );
-          newDate = new Date(newDate).toISOString();
-
-          return {
-            ...state,
-            timeFrame: newDate,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
+
+      return {
+        ...state,
+        timeFrame: updatedTimeFrame.toISOString(),
+        timeOffset: state.timeOffset + offset,
+      };
 
     default:
       return state;
