@@ -1,4 +1,4 @@
-import { OpenAI, Anthropic, Google, Labs, Cohere } from "src/components/Icons";
+import { OpenAI, Anthropic, Google, Labs, Cohere, Quality, Warning, Speed, Tokens, Cost } from "src/components/Icons";
 
 const colors = [
   "var(--primary)",
@@ -126,8 +126,8 @@ export const models = [
 export const colorTagsClasses =   [
   "#F55656",
   "#FFB340",
-  "#FFD426",
   "#31DE4B",
+  "#FFD426",
   "#66D4CF",
   "#5DE6FF",
   "#DA8FFF",
@@ -139,14 +139,15 @@ export const randomColor = () => {
 };
 
 export const Metrics = {
-  number_of_requests: { name: "Request", value: "number_of_requests" },
-  average_latency: { name: "Latency", value: "average_latency" },
-  total_prompt_tokens: { name: "Prompt tokens", value: "total_prompt_tokens" },
+  number_of_requests: { name: "Request", value: "number_of_requests", icon: Quality },
+  average_latency: { name: "Latency", value: "average_latency", icon: Speed },
+  total_prompt_tokens: { name: "Prompt tokens", value: "total_prompt_tokens", icon:Tokens },
   total_completion_tokens: {
     name: "Output tokens",
     value: "total_completion_tokens",
+    icon: Tokens,
   },
-  total_tokens: { name: "Total tokens", value: "total_tokens" },
-  total_cost: { name: "Total cost", value: "total_cost" },
-  error_count: { name: "Errors", value: "error_count" },
+  total_tokens: { name: "Total tokens", value: "total_tokens", icon: Tokens },
+  total_cost: { name: "Total cost", value: "total_cost", icon: Cost },
+  error_count: { name: "Errors", value: "error_count", icon: Warning },
 };
