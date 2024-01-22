@@ -1,2 +1,2 @@
 export {Playground} from './Playground';
-export {Requests} from './Requests';
+export {Requests} from './Requests/Requests';

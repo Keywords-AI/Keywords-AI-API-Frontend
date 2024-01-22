@@ -1,16 +1,8 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
-import {
-  connect,
-  ConnectedComponent,
-  DispatchProp,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/types";
-import { SettingTable } from "src/components/Tables";
 import {
   getDashboardData,
-  setDateData,
   setDisplayBreakdown,
   setDisplayMetric,
   setDisplayTimeRange,
@@ -19,7 +11,6 @@ import {
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TitleAuth } from "src/components/Titles";
 import {
   Add,
   Button,
@@ -33,6 +24,7 @@ import {
   Filter,
   Search,
 } from "src/components";
+import { SideBar, SideBarActive } from "src/components/Icons";
 import { TextInputSmall } from "src/components/Inputs/TextInput/TextInputSmall";
 import { SelectInput } from "src/components/Inputs";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
@@ -40,7 +32,9 @@ import { setQueryParams } from "src/utilities/navigation";
 import { Popover } from "src/components/Dialogs";
 import { useForm } from "react-hook-form";
 import { RequestLogTable } from "src/components/Tables";
-import { CopyButton, DotsButton } from "src/components/Buttons";
+import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
+import { WelcomeState } from "src/components/Sections";
+import { SidePanel } from "./SidePanel";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
@@ -58,34 +52,6 @@ interface Actions {
 }
 
 type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
-
-const WelcomeState: FunctionComponent = () => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="flex-col flex-1 self-stretch p-lg gap-lg items-start bg-gray-1 ">
-      <div className="flex-col justify-center items-center gap-md flex-1 self-stretch rounded-md shadow-window outline outline-1 outline-gray-3">
-        <TitleAuth
-          title="Welcome to Keywords AI!"
-          subtitle={"Send your first API call to view your requests log."}
-          textAlign="text-center"
-        />
-        <div className="flex justify-center items-center gap-xs">
-          <Button
-            variant="r4-primary"
-            text="Get API keys"
-            onClick={() => navigate("/platform/api")}
-          />
-          <Button
-            variant="r4-black"
-            text="View docs"
-            onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   requestLogs,
@@ -108,7 +74,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
 
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
-
+  const [open, setOpen] = useState(false);
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
@@ -125,12 +91,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       });
     };
   };
-
-  // const handleAddInputSet = () => {
-  //   if (inputSets < 3) {
-  //     setInputSets(inputSets + 1);
-  //   }
-  // };
   const handleAddInputSet = () => {
     if (inputSets.length < 3) {
       // Find the next unique index
@@ -138,15 +98,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       setInputSets([...inputSets, nextIndex]);
     }
   };
-  // const handleCloseInputSet = (setIndex) => {
-  //   // Create a new array without the set that needs to be closed
-  //   const updatedInputSets = Array.from({ length: inputSets })
-  //     .map((_, index) => index)
-  //     .filter(index => index !== setIndex)
-  //     .length;
-
-  //   setInputSets(updatedInputSets);
-  // };
 
   const handleCloseInputSet = (setIndex: any) => {
     setInputSets(inputSets.filter((index) => index !== setIndex));
@@ -192,144 +143,15 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   }
 
   const filteredBreakdownChoices = breakdownChoices;
-  const SidePanel = ({
-    LogItem = {
-      timestamp: Date.now(),
-      cost: 0.2134,
-      latency: 3.36,
-      status: "Success",
-      completion_tokens: 4220,
-      prompt_tokens: 2312,
-      model: "gpt-4",
-      id: "sample-id",
-      completion_message: "Sample completion message",
-      prompt_messages: [
-        {
-          role: "user",
-          content: "This is a prompt message",
-        },
-        {
-          role: "ai",
-          content: "This is a response message",
-        },
-      ],
-      error_message: null,
-      organization_key: "production",
-      failed: false,
-      category: "sample-category",
-    },
-  }) => {
-    const {
-      timestamp = null,
-      cost,
-      latency,
-      status,
-      completion_tokens,
-      prompt_tokens,
-      model,
-      id,
-      completion_message,
-      prompt_messages,
-      error_message,
-      organization_key,
-      failed,
-      category,
-    } = LogItem;
-
-    const displayObj = {
-      "Created at": (
-        <span className="text-sm-regular text-gray-4">
-          {new Date(timestamp || "Aug 25, 8:03 PM").toLocaleString("en-US", {
-            month: "short",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })}
-        </span>
-      ),
-      Status: status || "Success",
-      "API key": (
-        <span className="text-sm-regular text-gray-4">
-          {organization_key || "production"}
-        </span>
-      ),
-      Model: (
-        <span className="text-sm-regular text-gray-4">{model || "gpt-4"}</span>
-      ),
-      "Prompt tokens": (
-        <span className="text-sm-regular text-gray-4">
-          {prompt_tokens || "2312"}
-        </span>
-      ),
-      "Completion tokens": (
-        <span className="text-sm-regular text-gray-4">
-          {completion_tokens || "4220"}
-        </span>
-      ),
-      "Total tokens": (
-        <span className="text-sm-regular text-gray-4">
-          {prompt_tokens + completion_tokens || "6532"}
-        </span>
-      ),
-      Cost: (
-        <span className="text-sm-regular text-gray-4">
-          {"$" + cost || "0.2134"}
-        </span>
-      ),
-      Latency: (
-        <span className="text-sm-regular text-gray-4">
-          {latency || "3.360" + "s"}
-        </span>
-      ),
-    };
-    return (
-      <div className="flex-col w-[400px] items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1">
-        <div className="flex px-lg py-xxs justify-between items-center self-stretch shadow-border-b shadow-gray-2">
-          <p className="text-sm-md text-gray-4">Log</p>
-          <CopyButton text={JSON.stringify(LogItem)} />
-        </div>
-        <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
-          {Object.keys(displayObj).map((key, index) => {
-            return (
-              <div
-                className="flex h-[24px] justify-between items-center self-stretch"
-                key={index}
-              >
-                <span className="text-sm-md text-gray-5">{key}</span>
-                {displayObj[key]}
-              </div>
-            );
-          })}
-        </div>
-        <Divider />
-        <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-          {prompt_messages?.map((message, index) => (
-            <div
-              key={index}
-              className="flex-col items-start gap-xxs self-stretch"
-            >
-              <div className="flex justify-between items-center self-stretch">
-                <p className="text-sm-md text-gray-5">
-                  {message.role === "user" ? "Prompt" : "Response"}
-                </p>
-                <CopyButton text={message.content} />
-              </div>
-              <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-                {message.content}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
 
   if (firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex flex-col items-start self-stretch flex-grow rounded-xs bg-gray-1">
-        <div aria-label="" className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
+      <div className="flex-col items-start self-stretch h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+        <div
+          aria-label=""
+          className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
+        >
           <div className="flex flex-row items-center gap-xxxs">
             {!showFilter && (
               <Button
@@ -350,7 +172,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               />
             )}
           </div>
-          <div className="flex flex-row gap-xxxs rounded-xs">
+          <div className="flex-row gap-xxxs rounded-xs items-center">
             <TextInputSmall
               icon={Search}
               onChange={(e) => setInputValue(e.target.value)}
@@ -511,7 +333,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             </Popover>
           </div>
         </div>
-        <div className="flex bg-red flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2">
+        <div
+          aria-label="filter-display"
+          className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
+        >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             {showFilter && (
               <React.Fragment>
@@ -589,11 +414,28 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               <span className="text-sm-regular text-gray-4">500</span>
             </div>
             <Button variant="small" icon={Export} text="Export" />
+            <DotsButton
+              icon={open ? SideBarActive : SideBar}
+              onClick={() => setOpen(!open)}
+            />
           </div>
         </div>
-        <div className="flex-row flex-grow self-stretch">
-        <RequestLogTable />
-        <SidePanel logItem={requestLogs[0]} />
+        <div
+          aria-label="table"
+          className="flex-row flex-grow self-stretch items-start overflow-hidden"
+        >
+          <div className="flex-col flex-grow max-h-full items-start overflow-auto">
+            <RequestLogTable />
+            <div className="flex-row py-lg justify-center items-center w-full">
+              <div className="flex-row gap-sm items-center">
+                <span className="text-sm-md">165 entries hidden by filter</span>
+                <Button variant="small" text="Clear filters" />
+              </div>
+            </div>
+          </div>
+          <div className="flex-col items-start h-full overflow-auto">
+            <SidePanel logItem={requestLogs?.[0]} open={open} />
+          </div>
         </div>
       </div>
     );
