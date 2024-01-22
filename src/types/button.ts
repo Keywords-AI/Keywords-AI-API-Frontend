@@ -5,6 +5,7 @@ export type ButtonProps = {
   hover?: boolean;
   variant?:variantType;
   text?: string;
+  secText?: string;
   type?: "button" | "submit" | "reset" | undefined;
   icon?: React.ElementType;
   secIcon?: React.ElementType;

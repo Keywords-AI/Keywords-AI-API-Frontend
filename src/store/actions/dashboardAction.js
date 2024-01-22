@@ -1,5 +1,7 @@
+import { get } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics } from "src/utilities/constants";
+import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
@@ -29,26 +31,22 @@ export const SET_DISPLAY_TYPE = "SET_DISPLAY_TYPE";
 export const SET_DISPLAY_BREAKDOWN = "SET_DISPLAY_BREAKDOWN";
 export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
-export const SET_NEXT_TIME_FRAME = "SET_NEXT_TIME_FRAME";
-export const SET_PREVIOUS_TIME_FRAME = "SET_PREVIOUS_TIME_FRAME";
-export const setNextTimeRange = (
-  currentTimeFrameOffset,
-  setParam,
-  navigate
-) => {
-  setParam({ timeFrameOffset: currentTimeFrameOffset + 1 }, navigate);
+export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
+export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
+export const setModelColors = (data) => {
   return {
-    type: SET_NEXT_TIME_FRAME,
-    payload: currentTimeFrameOffset + 1,
+    type: SET_MODEL_COLORS,
+    payload: data,
   };
 };
-export const setPrevTimeRange = (currentTimeFrameOffset, setParam, navigate) => {
-  setParam({ timeFrameOffset: currentTimeFrameOffset - 1 }, navigate);
+export const setTimeFrameOffset = (offsetType, currTime, offset, navigate) => {
+  // setQueryParams({ timeFrameOffset: offset }, navigate);
   return {
-    type: SET_PREVIOUS_TIME_FRAME,
-    payload: currentTimeFrameOffset - 1,
+    type: SET_TIME_FRAME_OFFSET,
+    payload: { offsetType, offset },
   };
-};export const SET_P50_DATA = "SET_P50_DATA";
+};
+export const SET_P50_DATA = "SET_P50_DATA";
 export const SET_P90_DATA = "SET_P90_DATA";
 export const SET_P95_DATA = "SET_P95_DATA";
 export const SET_P99_DATA = "SET_P99_DATA";
@@ -218,7 +216,7 @@ export const setErrorData = (data) => {
   };
 };
 
-export const setP50Data = (data) => { 
+export const setP50Data = (data) => {
   return {
     type: SET_P50_DATA,
     payload: data,
@@ -233,7 +231,7 @@ export const setP90Data = (data) => {
 };
 
 export const setP95Data = (data) => {
-  return { 
+  return {
     type: SET_P95_DATA,
     payload: data,
   };
@@ -249,16 +247,19 @@ export const setP99Data = (data) => {
 export const getDashboardData = (
   overrideParams // search string
 ) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
+    // const timeFrame = getState().dashboard.timeFrame;
+    const timeOffset = getState().dashboard.timeOffset;
+    params.set("timezone_offset", timeOffset);
+    // console.log("timeFrame", timeFrame);
     const currDate = new Date();
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    // Yes, Fuck JS. They don't provide native formatter to convert to YYYY-mm-dd
-
+    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -270,7 +271,7 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
-        console.log(data);
+        console.log("getData", data)
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(
@@ -278,7 +279,6 @@ export const getDashboardData = (
           true,
           params.get("summary_type")
         );
-        console.log("hreere", data);
         const by_key = getgroupByData(
           data.raw_data,
           false,
@@ -290,7 +290,6 @@ export const getDashboardData = (
           data?.data,
           params.get("summary_type")
         );
-
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -358,7 +357,6 @@ export const getDashboardData = (
         );
 
         dispatch(setModelData(data?.data_by_model));
-        console.log("data?.data_by_key", data?.data_by_key);
         dispatch(setApiData(data?.data_by_key));
         dispatch(setAvgModelData(data?.data_avg_by_model));
         dispatch(setAvgApiData(data?.data_avg_by_key));

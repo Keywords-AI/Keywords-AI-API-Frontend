@@ -26,6 +26,8 @@ import {
   SET_P90_DATA,
   SET_P95_DATA,
   SET_P99_DATA,
+  SET_TIME_FRAME_OFFSET,
+  SET_MODEL_COLORS,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -43,6 +45,8 @@ const loadFilter = () => {
     timeRange: timeRange || "daily",
   };
 };
+
+const currDate = new Date();
 
 const initState = {
   data: [
@@ -111,10 +115,15 @@ const initState = {
   avgApiData: [],
   displayFilter: loadFilter(),
   groupByData: {},
-  p50Data:[],
-  p90Data:[],
-  p95Data:[],
-  p99Data:[],
+  p50Data: [],
+  p90Data: [],
+  p95Data: [],
+  p99Data: [],
+  timeFrame: new Date(
+    currDate - currDate.getTimezoneOffset() * 60 * 1000
+  ).toISOString(),
+  timeOffset: 0,
+  modelColors: {},
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -178,7 +187,7 @@ export default function dashboardReducer(state = initState, action) {
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
 
-    case SET_P50_DATA:  
+    case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
       return { ...state, p90Data: action.payload };
@@ -186,6 +195,36 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, p95Data: action.payload };
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
+    case SET_TIME_FRAME_OFFSET:
+      const { offsetType, offset } = action.payload;
+      let updatedTimeFrame;
+      const currTime = state.timeFrame;
+      switch (offsetType) {
+        case "yearly":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+          break;
+        case "monthly":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
+          break;
+        case "weekly":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+          break;
+        default:
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
+      }
+    case SET_MODEL_COLORS:
+      return { ...state, modelColors: action.payload };
+
+      return {
+        ...state,
+        timeFrame: updatedTimeFrame.toISOString(),
+        timeOffset: state.timeOffset + offset,
+      };
+
     default:
       return state;
   }

@@ -1,37 +1,33 @@
 import React, { useEffect } from "react";
 import { Divider, PageContent } from "src/components/Sections";
-import { Button, SwitchButton } from "src/components/Buttons";
+import { Button, IconButton, SwitchButton } from "src/components/Buttons";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
 import {
   toggleFallback,
   updateOrganization,
   toggleSystemFallback,
+  updateUser,
 } from "src/store/actions";
 import { RootState } from "src/types";
 import { useForm } from "react-hook-form";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-
+import { Redirect } from "src/components";
 
 export const AlertsFallbackPage = () => {
-  const {
-    isFallbackEnabled,
-    fallbackModels,
-    systemFallbackEnabled
-  } = useTypedSelector((state: RootState) => ({
-    isFallbackEnabled: state.organization?.fallback_model_enabled,
-    fallbackModels: state.organization?.fallback_models,
-    systemFallbackEnabled: state.organization?.system_fallback_enabled,
-  }));
+  const { isFallbackEnabled, fallbackModels, systemFallbackEnabled } =
+    useTypedSelector((state: RootState) => ({
+      isFallbackEnabled: state.organization?.fallback_model_enabled,
+      fallbackModels: state.organization?.fallback_models,
+      systemFallbackEnabled: state.organization?.system_fallback_enabled,
+    }));
 
   const dispatch = useTypedDispatch();
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
 
-  const [systemEnable, setSystemEnable] = React.useState(
-    systemFallbackEnabled
-  );
+  const [systemEnable, setSystemEnable] = React.useState(systemFallbackEnabled);
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
     setSystemEnable(systemFallbackEnabled);
@@ -42,22 +38,44 @@ export const AlertsFallbackPage = () => {
     watch,
     formState: { errors },
   } = useForm();
+
   const model1 = watch("fall_back_model_1");
   const model2 = watch("fall_back_model_2");
   const model3 = watch("fall_back_model_3");
 
-  const filteredModelsForModel1 = models.filter(
-    (model) => model.value !== model2 && model.value !== model3
-  );
-  const filteredModelsForModel2 = models.filter(
-    (model) => model.value !== model1 && model.value !== model3
-  );
-  const filteredModelsForModel3 = models.filter(
-    (model) => model.value !== model1 && model.value !== model2
-  );
+  const filteredModelsForModel1 = [
+    {
+      name: "Please select a model",
+      value: "",
+    },
+    ...models.filter(
+      (model) => model.value !== model2 && model.value !== model3
+    ),
+  ];
+  const filteredModelsForModel2 = [
+    {
+      name: "Please select a model",
+      value: "",
+    },
+    ...models.filter(
+      (model) => model.value !== model1 && model.value !== model3
+    ),
+  ];
+  const filteredModelsForModel3 = [
+    {
+      name: "Please select a model",
+      value: "",
+    },
+    ...models.filter(
+      (model) => model.value !== model1 && model.value !== model2
+    ),
+  ];
 
   const handleToggle = () => {
     setFallbackEnabled(!fallbackEnabled);
+    dispatch(
+      updateOrganization({ fallback_model_enabled: !isFallbackEnabled })
+    );
   };
   const onSubmit = (data: any) => {
     const fallback_models: any[] = [];
@@ -67,11 +85,18 @@ export const AlertsFallbackPage = () => {
       }
     });
 
-    dispatch(updateOrganization({ fallback_models, fallback_model_enabled: fallbackEnabled }));
+    dispatch(
+      updateOrganization({
+        fallback_models,
+        fallback_model_enabled: fallbackEnabled,
+      })
+    );
   };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
-    dispatch(updateOrganization({ system_fallback_enabled: !systemFallbackEnabled }));
+    dispatch(
+      updateOrganization({ system_fallback_enabled: !systemFallbackEnabled })
+    );
   };
   return (
     <PageContent
@@ -84,10 +109,12 @@ export const AlertsFallbackPage = () => {
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          {/* <SwitchButton/> */}
-          <span className="text-sm-regular text-gray-4 whitespace-nowrap">
-            Coming soon
-          </span>
+          <IconButton
+            icon={Redirect}
+            onClick={() =>
+              window.open("https://status.keywordsai.co", "_blank")
+            }
+          />
         </div>
       </div>
       <Divider />
@@ -98,11 +125,11 @@ export const AlertsFallbackPage = () => {
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading
             title="Model fallback"
-            subtitle="Enable model fallback to boost your product’s uptime. Automatically fallback to the backup models when the preferred model is not responding."
+            subtitle="Enable model fallback to boost your uptime. Automatically fallback to the backup models when the preferred model is not responding."
           />
           <div className="flex flex-row items-start justify-center pt-[3px]">
             <SwitchButton
-              checked={fallbackEnabled}
+              checked={isFallbackEnabled || false}
               onCheckedChange={handleToggle}
               {...register("enable_fallback")}
             />
@@ -144,7 +171,7 @@ export const AlertsFallbackPage = () => {
         )}
       </form>
       <Divider />
-      {fallbackEnabled &&
+      {fallbackEnabled && (
         <div className="flex flex-row items-start justify-between self-stretch w-full gap-md">
           <TitleStaticSubheading
             title="Safety net"
@@ -157,7 +184,7 @@ export const AlertsFallbackPage = () => {
             />
           </div>
         </div>
-      }
+      )}
     </PageContent>
   );
-}
+};
