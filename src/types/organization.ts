@@ -21,4 +21,5 @@ export type Organization = {
     fallback_model_enabled: boolean;
     fallback_models: string[];
     system_fallback_enabled: boolean;
+    api_key_limit: number;
 } | null;

@@ -65,53 +65,6 @@ export function timeSkip(currentTime: string, deltaTime: any) {
   return newTime;
 }
 
-export const processKey = (
-  key: any,
-  actions = (key: any): ReactElement => { return <></> },
-  renderStatus = (status: any): ReactElement => { return <></> }
-) => {
-  const today = new Date();
-  const expireDate = isNaN(new Date(key.expire_date).getTime())
-    ? "Infinite"
-    : new Date(key.expire_date);
-  // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
-
-  let status = "Active";
-  if (expireDate === "Infinite") {
-    status = "Active";
-  } else if (expireDate < today) {
-    status = "Expired";
-  }
-  return {
-    ...key,
-    created: getDateStr(key.created),
-    last_used: getDateStr(key.last_used),
-    Status: renderStatus(status),
-    actions: actions(key),
-    mod_prefix: key.prefix.slice(0, 3) + "...",
-  };
-};
-
-export const processKeyList = (
-  keyList: any[],
-  actions = (key: any): ReactElement => { return <></> },
-  renderStatus = (status: any): ReactElement => { return <></> }
-) => {
-  /*
-  keyList: [{
-    prefix: 1,
-    name: "key1",
-    created: "2020-01-01T00:00:00.000Z",
-    last_used: "2020-01-01T00:00:00.000Z",
-  }]
-  actions: callback function (prefix) => { some actions with the prefix }
-  */
-  if (!keyList || !keyList.length) return [];
-  return keyList.map((key) => {
-    return processKey(key, actions, renderStatus);
-  });
-};
-
 export const processSubscription = (subscription: StripeSubscription): Subscription => {
   return {
     name: capitalize(subscription?.items.data[0].plan.nickname ?? "none"),
