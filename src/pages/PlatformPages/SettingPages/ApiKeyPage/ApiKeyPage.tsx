@@ -43,7 +43,7 @@ interface ApiKeyPageProps {
   clearPrevApiKey: any;
   vendors: any;
   apiKeyLimit: number;
-};
+}
 
 export const ApiKeyPage = ({
   apiKey,
@@ -53,21 +53,25 @@ export const ApiKeyPage = ({
   vendors,
   apiKeyLimit,
 }: ApiKeyPageProps) => {
-
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const editingTrigger = (key: ApiKey, active: boolean) => {
     return (
-        <div className="flex-row w-full justify-end">
-          <StateTag
-            text={active ? "Active" : "Expired"}
-            ok={active}
-          />
-          <APIKeyActions
-            modifyingKey={key}
-            setEditingKey={setEditingKey}
-            setDeletingKey={setDeletingKey}
-          />
-        </div>
+      <div className="flex-row w-full justify-end">
+        <StateTag text={active ? "Active" : "Expired"} ok={active} />
+        <APIKeyActions
+          modifyingKey={key}
+          setEditingKey={setEditingKey}
+          setDeletingKey={setDeletingKey}
+        />
+      </div>
+    );
+  };
+  const renderKey = (keyName: string, keyPrefix: string) => {
+    return (
+      <div className="flex-col items-start gap-xxxs">
+        <span className="text-sm-md text-gray-5">{keyName}</span>
+        <span className="caption text-gray-4">{keyPrefix}</span>
+      </div>
     );
   };
   const handleGenerateNewKey = () => {
@@ -75,11 +79,11 @@ export const ApiKeyPage = ({
     clearPrevApiKey();
   };
   const [prevKey, setPrevKey] = React.useState<DisplayApiKey[]>(
-    processKeyList(apiKey.keyList, editingTrigger, ModelTags) || []
+    processKeyList(apiKey.keyList, renderKey, editingTrigger, ModelTags) || []
   );
   useEffect(() => {
     setPrevKey(
-      processKeyList(apiKey.keyList, editingTrigger, ModelTags) || []
+      processKeyList(apiKey.keyList, renderKey, editingTrigger, ModelTags) || []
     );
   }, [apiKey.keyList]);
   const orderedVendors = [
@@ -108,7 +112,7 @@ export const ApiKeyPage = ({
               "Models",
               `${apiKey.keyList?.length}/${apiKeyLimit}`,
             ]}
-            columnNames={["name", "last_used", "models", "actions"]}
+            columnNames={["key", "last_used", "models", "actions"]}
           />
         )}
         <Button

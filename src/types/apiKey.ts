@@ -60,22 +60,12 @@ export type ApiKey = {
 
 export type DisplayApiKey = {
     id: string;
-    api_key: string;
-    prefix: string;
-    hashed_key: string;
+    key: React.ReactNode;
     created: string;
     name: string;
     revoked: boolean;
-    expiry_date: string;
-    key_usage: number;
-    max_usage: number;
     last_used: string;
-    plan_name: string;
-    non_deletable: boolean;
     models: React.ReactNode;
-    rate_limit: number;
-    spending_limit: number;
-    user: number;
     organization: number;
     actions: React.ReactNode;
     mod_prefix: string;

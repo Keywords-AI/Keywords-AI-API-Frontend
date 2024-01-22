@@ -16,6 +16,7 @@ export const SET_LOADING = "SET_LOADING";
 
 export const processKey = (
   key: ApiKey,
+  renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {return <></>;},
   actions = (key: ApiKey, active: boolean): React.ReactNode => {
     return <></>;
   },
@@ -29,17 +30,18 @@ export const processKey = (
     : new Date(key.expiry_date);
   // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
 
-let status = "Active";
+  let active = true;
   if (expireDate === "Infinite") {
-    status = "Active";
+    active = true;
   } else if (expireDate < today) {
-    status = "Expired";
+    active = false;
   }
   return {
     ...key,
+    key: renderKey(key.name, key.prefix),
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
-    actions: actions(key, !key.revoked),
+    actions: actions(key, active),
     models: Models(key.preset_models),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
@@ -47,6 +49,7 @@ let status = "Active";
 
 export const processKeyList = (
   keyList: ApiKey[],
+  renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {return <></>;},
   actions = (key: ApiKey, active: boolean): React.ReactNode => {
     return <></>;
   },
@@ -65,7 +68,7 @@ export const processKeyList = (
   */
   if (!keyList || !keyList.length) return [];
   return keyList.map((key) => {
-    return processKey(key, actions, Models);
+    return processKey(key, renderKey, actions, Models);
   });
 };
 
