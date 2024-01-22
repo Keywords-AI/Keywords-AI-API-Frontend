@@ -190,7 +190,7 @@ const IntegrationCardNotConnected = ({
                 API key{" "}
                 <IconButton
                   icon={Info}
-                  onMouseEnter={() => setShowInfo(true)}
+                  onClick={() => setShowInfo(true)}
                   onMouseLeave={() =>
                     setTimeout(() => setShowInfo(false), 5000)
                   }
