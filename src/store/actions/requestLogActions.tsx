@@ -7,6 +7,7 @@ import React from "react";
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
+export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 
 const concatMessages = (messages: ChatMessage[]): string => {
     return messages.map((message) => message.content).join(" ");
@@ -23,7 +24,7 @@ export const processRequestLogs = (
   return requestLogs.map((log) => {
     return {
       id: log.id,
-      time: formatISOToReadableDate(log.timestamp),
+      time: <span className="text-gray-4">{formatISOToReadableDate(log.timestamp)}</span>,
       prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
       response: <span className="truncate">{concatMessages([log.completion_message])}</span>,
       cost: `$${log.cost.toFixed(6)}`,
@@ -36,6 +37,13 @@ export const processRequestLogs = (
       })
     };
   });
+};
+
+export const setSidePanelOpen = (open: boolean) => {
+  return {
+    type: SET_SIDE_PANEL_OPEN,
+    payload: open,
+  };
 };
 
 export const setRequestLogs = (requestLogs: LogItem[]) => {

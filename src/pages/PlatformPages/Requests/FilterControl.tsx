@@ -1,22 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { TextInputSmall, SelectInput } from "src/components/Inputs";
 import { Popover } from "src/components/Dialogs";
 import { Search, Down, Display } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import { setDisplayTimeRange, getDashboardData } from "src/store/actions";
+import { setDisplayTimeRange, getDashboardData, setDisplayMetric, setDisplayType, setDisplayBreakdown } from "src/store/actions";
 import { setQueryParams } from "src/utilities/navigation";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { RootState } from "src/types";
+import { Metrics } from "src/utilities/constants";
+import { useForm } from "react-hook-form";
+
+const typeChoices = [
+  { name: "Total", value: "total" },
+  { name: "Average", value: "average" },
+];
+
+const breakdownChoices = [
+  { name: "None", value: "none" },
+  {
+    name: "By model",
+    value: "by_model",
+  },
+  { name: "By key", value: "by_key" },
+  // { name: "By token type", value: "by_token_type" }, //only for total tokens
+];
 
 export default function FilterControl() {
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const performance_param = new URLSearchParams(location.search).get("metric");
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
   };
+  const currentMetric = useTypedSelector(
+    (state: RootState) => state.dashboard.displayFilter.metric
+  );
+  const currentTimeRange = useTypedSelector(
+    (state: RootState) => state.dashboard.displayFilter.timeRange
+  );
+  const currentType = useTypedSelector(
+    (state: RootState) => state.dashboard.displayFilter.type
+  );
+  const currentBreakdown = useTypedSelector(
+    (state: RootState) => state.dashboard.displayFilter.breakDown
+  );
+
+  let filteredtypeChoices: any[] = [];
+  if (
+    currentMetric === "number_of_requests" ||
+    currentMetric === "error_count"
+  ) {
+    filteredtypeChoices = typeChoices.filter(
+      (choice) => choice.value !== "average"
+    );
+  } else {
+    filteredtypeChoices = typeChoices;
+  }
+
+  const filteredBreakdownChoices = breakdownChoices;
+
+  const { register, handleSubmit, watch } = useForm();
+  const [showPopover, setShowPopover] = useState(false);
   return (
-    <div className="flex-row gap-xxxs rounded-xs items-center">
+    <div className="flex-row gap-xxs rounded-xs items-center">
       <TextInputSmall
         placeholder="Search prompt..."
         icon={Search}
@@ -164,6 +213,7 @@ export default function FilterControl() {
           </div>
         </form>
       </Popover>
+
     </div>
   );
 }

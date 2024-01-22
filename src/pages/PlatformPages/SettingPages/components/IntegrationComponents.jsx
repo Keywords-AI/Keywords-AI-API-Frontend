@@ -179,19 +179,6 @@ const IntegrationCardNotConnected = ({
         className="flex-col self-stretch gap-sm"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* <fieldset className="flex flex-col items-start self-stretch gap-xxs">
-          <span className="text-sm-regular text-gray-4">Available models</span>
-          <div className="flex flex-wrap self-stretch gap-xs">
-            {availableModels.map((model, index) => (
-              <CheckBoxButton
-                {...register("activated_models")}
-                key={index}
-                text={model}
-                checked={activatedModels.includes(model)}
-              />
-            ))}
-          </div>
-        </fieldset> */}
         <TextInput
           type={apiKey ? "text" : "password"}
           {...register(apiKey ? "api_key_display" : "api_key", { onChange })}
@@ -300,7 +287,7 @@ export const TitleCard = ({
             icon={Ellipse}
             iconProps={{ active }}
           />
-          {companyLogo}
+          {React.cloneElement(companyLogo, {size: "lg"})}
         </div>
       </div>
       <div className="flex flex-col items-start">

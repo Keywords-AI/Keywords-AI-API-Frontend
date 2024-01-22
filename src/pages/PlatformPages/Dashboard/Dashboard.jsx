@@ -23,7 +23,7 @@ import { Popover } from "src/components/Dialogs";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
-import { aggregateModelData } from "src/utilities/objectProcessing";
+import { WelcomeState } from "src/components/Sections";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -42,33 +42,6 @@ const mapDispatchToProps = {
   getDashboardData,
   setDateData,
   setModelColors,
-};
-
-const WelcomeState = () => {
-  const navigate = useNavigate();
-  return (
-    <div className="flex-col flex-1 self-stretch p-lg gap-lg items-start bg-gray-1 ">
-      <div className="flex-col justify-center items-center gap-md flex-1 self-stretch rounded-md shadow-window outline outline-1 outline-gray-3">
-        <TitleAuth
-          title="Welcome to Keywords AI!"
-          subtitle={"Send your first API call to view your dashboard."}
-          textAlign="text-center"
-        />
-        <div className="flex justify-center items-center gap-xs">
-          <Button
-            variant="r4-primary"
-            text="Get API keys"
-            onClick={() => navigate("/platform/api")}
-          />
-          <Button
-            variant="r4-black"
-            text="View docs"
-            onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
-          />
-        </div>
-      </div>
-    </div>
-  );
 };
 
 function DashboardNotConnected({

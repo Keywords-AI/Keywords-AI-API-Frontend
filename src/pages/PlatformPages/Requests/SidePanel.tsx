@@ -5,6 +5,7 @@ import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag } from "src/components/Misc";
 import { Copy } from "src/components";
+import { models } from "src/utilities/constants";
 
 interface SidePanelProps {
   open: boolean;
@@ -65,10 +66,18 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       </span>
     ),
   };
+  const getMessageType = (role: string) => {
+    if (role === "system") {
+      return "System";
+    } else if (role === "user") {
+      return "User";
+    }
+    return "Response";
+  }
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1",
+        "flex-col items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
@@ -103,7 +112,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">
-                {message.role === "user" ? "Prompt" : "Response"}
+                {getMessageType(message.role)}
               </p>
               <DotsButton
                 icon={Copy}

@@ -113,10 +113,10 @@ const CreateFormNotConnected = React.forwardRef(
         data.name = "New Key";
       }
       setNewKeyName(data.name);
-      data.preset_models = data.preset_models
-        .split(",")
-        .filter((model) => model !== "");
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
+      if (typeof data.rate_limit !== "number") {
+        data.rate_limit = 100;
+      }
       createApiKey(data);
     };
     const handleClose = (e: any) => {

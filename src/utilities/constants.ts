@@ -24,25 +24,25 @@ const colors = [
 
 export const models = [
   {
-    name: "OpenAI - GPT-3.5-turbo",
+    name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
     brand: "openai",
     icon: OpenAI,
   },
   // {
-  //   name: "OpenAI - GPT-4-32k",
+  //   name: "GPT-4-32k",
   //   value: "gpt-4-32k",
   //   brand: "openai",
   //   icon: OpenAI,
   // },
   {
-    name: "OpenAI - GPT-4",
+    name: "GPT-4",
     value: "gpt-4",
     brand: "openai",
     icon: OpenAI,
   },
   {
-    name: "OpenAI - GPT-4-1106-preview",
+    name: "GPT-4-1106-preview",
     value: "gpt-4-1106-preview",
     brand: "openai",
     icon: OpenAI,
@@ -86,7 +86,7 @@ export const models = [
   // },
 
   {
-    name: "OpenAI - GPT-3.5-turbo-16k",
+    name: "GPT-3.5-turbo-16k",
     value: "gpt-3.5-turbo-16k",
     brand: "openai",
     icon: OpenAI,

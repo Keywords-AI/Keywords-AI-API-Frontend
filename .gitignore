@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 .env
 .firebase/
-src/branch_env.ts
+src/branch_env.*

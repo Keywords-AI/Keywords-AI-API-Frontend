@@ -19,6 +19,7 @@ import {
 } from "src/store/actions";
 import { processKeyList } from "src/utilities/objectProcessing";
 import { RootState } from "src/types";
+import { Divider } from "src/components/Sections";
 
 const mapStateToProps = (state: RootState) => ({
   user: state.user,
@@ -145,12 +146,12 @@ export const ApiKeyPage = ({
           setDeletingKey={setDeletingKey}
         />
       </Modal>
-
+      <Divider />
       <PageParagraph
-        heading="LLM providers keys"
+        heading="LLM provider keys"
         subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API."
       >
-        <div className="flex-col items-start content-start gap-sm self-stretch flex-1  ">
+        <div className="flex-col items-start content-start gap-xxs self-stretch flex-1  ">
           {orderedVendors.map((vendorName, index) => {
             const currVendors = vendors || [];
             const vendor = currVendors.find(

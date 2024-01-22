@@ -19,7 +19,7 @@ export type LogItem = {
 
 export type DisplayLogItem = {
     id: number;
-    time: string;
+    time: React.ReactNode;
     prompt: React.ReactNode;
     response: React.ReactNode;
     cost: string;
