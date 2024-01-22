@@ -24,7 +24,9 @@ import {
   Add,
   Button,
   Close,
+  Copy,
   Display,
+  Divider,
   Dots,
   Down,
   Export,
@@ -37,8 +39,8 @@ import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { setQueryParams } from "src/utilities/navigation";
 import { Popover } from "src/components/Dialogs";
 import { useForm } from "react-hook-form";
-import { DotsButton } from "src/components/Buttons";
 import { RequestLogTable } from "src/components/Tables";
+import { CopyButton, DotsButton } from "src/components/Buttons";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
@@ -142,12 +144,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   //     .map((_, index) => index)
   //     .filter(index => index !== setIndex)
   //     .length;
-  
+
   //   setInputSets(updatedInputSets);
   // };
 
-  const handleCloseInputSet = (setIndex:any) => {
-    setInputSets(inputSets.filter(index => index !== setIndex));
+  const handleCloseInputSet = (setIndex: any) => {
+    setInputSets(inputSets.filter((index) => index !== setIndex));
   };
   const typeChoices = [
     { name: "Total", value: "total" },
@@ -190,6 +192,138 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   }
 
   const filteredBreakdownChoices = breakdownChoices;
+  const SidePanel = ({
+    LogItem = {
+      timestamp: Date.now(),
+      cost: 0.2134,
+      latency: 3.36,
+      status: "Success",
+      completion_tokens: 4220,
+      prompt_tokens: 2312,
+      model: "gpt-4",
+      id: "sample-id",
+      completion_message: "Sample completion message",
+      prompt_messages: [
+        {
+          role: "user",
+          content: "This is a prompt message",
+        },
+        {
+          role: "ai",
+          content: "This is a response message",
+        },
+      ],
+      error_message: null,
+      organization_key: "production",
+      failed: false,
+      category: "sample-category",
+    },
+  }) => {
+    const {
+      timestamp = null,
+      cost,
+      latency,
+      status,
+      completion_tokens,
+      prompt_tokens,
+      model,
+      id,
+      completion_message,
+      prompt_messages,
+      error_message,
+      organization_key,
+      failed,
+      category,
+    } = LogItem;
+
+    const displayObj = {
+      "Created at": (
+        <span className="text-sm-regular text-gray-4">
+          {new Date(timestamp || "Aug 25, 8:03 PM").toLocaleString("en-US", {
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </span>
+      ),
+      Status: status || "Success",
+      "API key": (
+        <span className="text-sm-regular text-gray-4">
+          {organization_key || "production"}
+        </span>
+      ),
+      Model: (
+        <span className="text-sm-regular text-gray-4">{model || "gpt-4"}</span>
+      ),
+      "Prompt tokens": (
+        <span className="text-sm-regular text-gray-4">
+          {prompt_tokens || "2312"}
+        </span>
+      ),
+      "Completion tokens": (
+        <span className="text-sm-regular text-gray-4">
+          {completion_tokens || "4220"}
+        </span>
+      ),
+      "Total tokens": (
+        <span className="text-sm-regular text-gray-4">
+          {prompt_tokens + completion_tokens || "6532"}
+        </span>
+      ),
+      Cost: (
+        <span className="text-sm-regular text-gray-4">
+          {"$" + cost || "0.2134"}
+        </span>
+      ),
+      Latency: (
+        <span className="text-sm-regular text-gray-4">
+          {latency || "3.360" + "s"}
+        </span>
+      ),
+    };
+    return (
+      <div className="flex-col w-[400px] items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1">
+        <div className="flex px-lg py-xxs justify-between items-center self-stretch shadow-border-b shadow-gray-2">
+          <p className="text-sm-md text-gray-4">Log</p>
+          <CopyButton text={JSON.stringify(LogItem)} />
+        </div>
+        <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+          {Object.keys(displayObj).map((key, index) => {
+            return (
+              <div
+                className="flex h-[24px] justify-between items-center self-stretch"
+                key={index}
+              >
+                <span className="text-sm-md text-gray-5">{key}</span>
+                {displayObj[key]}
+              </div>
+            );
+          })}
+        </div>
+        <Divider />
+        <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
+          {prompt_messages?.map((message, index) => (
+            <div
+              key={index}
+              className="flex-col items-start gap-xxs self-stretch"
+            >
+              <div className="flex justify-between items-center self-stretch">
+                <p className="text-sm-md text-gray-5">
+                  {message.role === "user" ? "Prompt" : "Response"}
+                </p>
+                <CopyButton text={message.content} />
+              </div>
+              <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
+                {message.content}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   if (firstTime) return <WelcomeState />;
   else
@@ -381,7 +515,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             {showFilter && (
               <React.Fragment>
-                {inputSets.map((inputSetId) =>(
+                {inputSets.map((inputSetId) => (
                   <div
                     className="flex flex-row items-center gap-[2px]"
                     key={inputSetId}
@@ -434,10 +568,17 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                       ]}
                       // handleSelected={handleTimePeriodSelection}
                     />
-                    {(<DotsButton icon={Close} onClick={() => handleCloseInputSet(inputSetId)}/>)}
+                    {
+                      <DotsButton
+                        icon={Close}
+                        onClick={() => handleCloseInputSet(inputSetId)}
+                      />
+                    }
                   </div>
                 ))}
-                {inputSets.length < 3 && <DotsButton icon={Add} onClick={handleAddInputSet}/>}
+                {inputSets.length < 3 && (
+                  <DotsButton icon={Add} onClick={handleAddInputSet} />
+                )}
               </React.Fragment>
             )}
           </div>
@@ -451,6 +592,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           </div>
         </div>
         <RequestLogTable />
+        <SidePanel logItem={requestLogs[0]} />
       </div>
     );
 };
