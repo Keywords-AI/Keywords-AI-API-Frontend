@@ -14,7 +14,17 @@ export const APPEND_MESSAGE = "APPEND_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
 export const SET_CURRENT_BRAND = "SET_CURRENT_BRAND";
+export const TOGGLE_LEFT_PANEL = "TOGGLE_LEFT_PANEL";
+export const TOGGLE_RIGHT_PANEL = "TOGGLE_RIGHT_PANEL";
+
 // Action Creator
+export const toggleLeftPanel = () => ({
+  type: TOGGLE_LEFT_PANEL,
+});
+export const toggleRightPanel = () => ({
+  type: TOGGLE_RIGHT_PANEL,
+});
+
 export const setMessages = (messages) => ({
   type: SET_MESSAGES,
   payload: messages,
@@ -86,39 +96,42 @@ export const streamPlaygroundResponse = () => {
     const currentModel = playground.currentModel;
     const messages = playground.messages;
     const systemPrompt = playground.prompt;
-    try {
-      await sendStreamingTextThunk({
-        params: {
-          messages: messages,
-          stream: true,
-          model: currentModel,
-          optimize: playground.modelOptions.optimize,
-          creativity: playground.modelOptions.creativity,
-          max_tokens: playground.modelOptions.maxTokens, // python style snake case
-        },
-        prompt: systemPrompt,
-        callback: () => {
-          const currentModel = getState().playground.currentModel;
-          const streamingText = getState().streamingText.streamingText;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          const lastuserMessageIdx = getState().playground.messages.length - 1;
-          dispatch(appendMessage(newMessage));
-          const cache = {
-            answer: streamingText,
-            index: lastuserMessageIdx,
-          };
-          dispatch(setCacheAnswer(currentModel, cache));
-          dispatch(appendMessage({ role: "user", content: "" }));
-        },
-        dispatch: dispatch,
-        getState: getState,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    currentModel.forEach(async (model) => {
+      try {
+        await sendStreamingTextThunk({
+          params: {
+            messages: messages,
+            stream: true,
+            model: model,
+            optimize: playground.modelOptions.optimize,
+            creativity: playground.modelOptions.creativity,
+            max_tokens: playground.modelOptions.maxTokens, // python style snake case
+          },
+          prompt: systemPrompt,
+          callback: () => {
+            const currentModel = getState().playground.currentModel;
+            const streamingText = getState().streamingText.streamingText;
+            const newMessage = {
+              role: model,
+              content: streamingText,
+            };
+            // const lastuserMessageIdx =
+            //   getState().playground.messages.length - 1;
+            // dispatch(appendMessage(newMessage));
+            // const cache = {
+            //   answer: streamingText,
+            //   index: lastuserMessageIdx,
+            // };
+            // dispatch(setCacheAnswer(currentModel, cache));
+            dispatch(appendMessage({ role: "user", content: "" }));
+          },
+          dispatch: dispatch,
+          getState: getState,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    });
   };
 };
 
