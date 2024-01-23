@@ -8,7 +8,6 @@ import {
   Subscription,
   StripeSubscription,
 } from "src/types";
-<<<<<<< HEAD
 
 export const checkBoxFieldToList = (
   field: boolean | string | string[]
@@ -21,9 +20,7 @@ export const checkBoxFieldToList = (
     return field;
   }
 };
-=======
 import { colorTagsClasses } from "./constants";
->>>>>>> origin/hendrix-temp
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
