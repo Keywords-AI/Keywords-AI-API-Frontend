@@ -33,6 +33,11 @@ export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
 export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
+export const SET_SENTIMENT_SUMMARY_DATA = "SET_SENTIMENT_SUMMARY_DATA";
+export const SET_SENTIMENT_DATA = "SET_SENTIMENT_DATA";
+
+
+
 export const setModelColors = (data) => {
   return {
     type: SET_MODEL_COLORS,
@@ -243,6 +248,22 @@ export const setP99Data = (data) => {
     payload: data,
   };
 };
+
+export const setSentimentSummaryData = (data) => {
+  return {
+    type: SET_SENTIMENT_SUMMARY_DATA,
+    payload: data,
+  };
+};
+
+export const setSentimentData = (data) => {
+  return {
+    type: SET_SENTIMENT_DATA,
+    payload: data,
+  };
+};
+
+
 
 export const getDashboardData = (
   overrideParams // search string

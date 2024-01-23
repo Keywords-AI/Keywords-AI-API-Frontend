@@ -3,7 +3,7 @@ import MetricCard from "src/components/Cards/MetricCard";
 import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
-import { DashboardChart } from "src/components/Display";
+import { DashboardChart, SentimentChart } from "src/components/Display";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
   getDashboardData,
@@ -97,7 +97,6 @@ function DashboardNotConnected({
   //   );
   // }, [modelData]);
 
-
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
   };
@@ -133,7 +132,6 @@ function DashboardNotConnected({
           )
         );
         getDashboardData();
-        
       },
     },
     {
@@ -212,18 +210,18 @@ function DashboardNotConnected({
   );
 
   const typeChoices = [
-    { name: "Total", value: "total", secText: "1", },
-    { name: "Average", value: "average", secText: "2", },
+    { name: "Total", value: "total", secText: "1" },
+    { name: "Average", value: "average", secText: "2" },
   ];
 
   const breakdownChoices = [
-    { name: "None", value: "none" , secText: "1",},
+    { name: "None", value: "none", secText: "1" },
     {
       name: "By model",
       value: "by_model",
       secText: "2",
     },
-    { name: "By key", value: "by_key", secText: "3", },
+    { name: "By key", value: "by_key", secText: "3" },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
   let filteredtypeChoices;
@@ -304,7 +302,9 @@ function DashboardNotConnected({
           </div>
         </div>
         <div className="flex flex-row h-full">
-          <DashboardChart />
+          <div className="flex flex-col w-full h-full">
+            <DashboardChart />
+          </div>
           {isPanel && <PanelGraph />}
         </div>
       </div>
