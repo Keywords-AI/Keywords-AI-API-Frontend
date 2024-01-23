@@ -32,6 +32,7 @@ import { AUTH_ENABLED } from "src/env";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 import { Requests } from "./pages/PlatformPages/Requests/Requests";
+import { Sentiment } from "./pages/PlatformPages/Sentiment";
 
 const mapStateToProps = (state) => {
   return {
@@ -99,6 +100,11 @@ const Routes = ({ getUser, user, organization }) => {
           path: "dashboard",
           element: <Dashboard />,
         },
+        {
+          path: "sentiment",
+          element: <Sentiment />,
+        },
+
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,

@@ -8,18 +8,14 @@ export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
+export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
 
 const concatMessages = (messages: ChatMessage[]): string => {
     return messages.map((message) => message.content).join(" ");
 };
 
 export const processRequestLogs = (
-  requestLogs: LogItem[],
-  tagGroup: (params: {
-    key: string;
-    model: string;
-    failed: boolean;
-  }) => React.ReactNode
+  requestLogs: LogItem[]
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
     return {
@@ -27,17 +23,25 @@ export const processRequestLogs = (
       time: <span className="text-gray-4">{formatISOToReadableDate(log.timestamp)}</span>,
       prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
       response: <span className="truncate">{concatMessages([log.completion_message])}</span>,
+      promptTokens: log.prompt_tokens,
+      outputTokens: log.completion_tokens,
       cost: `$${log.cost.toFixed(6)}`,
-      tokens: log.completion_tokens + log.prompt_tokens,
+      allTokens: log.completion_tokens + log.prompt_tokens,
       latency: `${log.latency.toFixed(3)}s`, // + converts string to number
-      tagGroup: tagGroup({
-        key: log.api_key,
-        model: log.model,
-        failed: log.failed,
-      })
+      apiKey: log.api_key,
+      model: log.model,
+      failed: log.failed
     };
   });
 };
+
+export const setDisplayColumns = (columns: string[]) => {
+  return {
+    type: SET_DISPLAY_COLUMNS,
+    payload: columns,
+  };
+};
+
 
 export const setSidePanelOpen = (open: boolean) => {
   return {
@@ -63,10 +67,10 @@ export const setSelectedRequest = (id: number | undefined) => {
 
 export const getRequestLogs = () => {
   return (dispatch: TypedDispatch) => {
+    const params = new URLSearchParams(window.location.search);
     keywordsRequest({
-      path: "api/request-logs",
+      path: `api/request-logs?${params.toString()}`,
     }).then((data) => {
-      console.log(data);
       dispatch(setRequestLogs(data));
     });
   };

@@ -105,7 +105,7 @@ const CreateFormNotConnected = React.forwardRef(
     setNewKeyName,
     createApiKey,
     loading,
-  }: CreateProps) => {
+  }: CreateProps, ref) => {
     const {
       register,
       handleSubmit,

@@ -104,3 +104,4 @@ export const retrievePlanName = (context) => {
 export const firstNameInitial = (firstName) => {
   return firstName.charAt(0).toUpperCase();
 };
+
