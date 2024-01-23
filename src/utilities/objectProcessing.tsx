@@ -1,8 +1,14 @@
 import { AnyNode } from "postcss";
 import { getDateStr, textToLink, capitalize } from "./stringProcessing";
-import { Page } from "src/types"
+import { Page } from "src/types";
 import React, { ReactElement } from "react";
-import { Billing, StripeBillingItem, Subscription, StripeSubscription } from "src/types";
+import {
+  Billing,
+  StripeBillingItem,
+  Subscription,
+  StripeSubscription,
+} from "src/types";
+import { colorTagsClasses } from "./constants";
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -34,7 +40,7 @@ export const digitToYear = (digit) => {
   const now = new Date();
   let year = digit !== undefined ? digit : now.getFullYear();
   return year;
-}
+};
 
 export function formatDate(date) {
   var dd = date.getDate();
@@ -67,8 +73,12 @@ export function timeSkip(currentTime: string, deltaTime: any) {
 
 export const processKey = (
   key: any,
-  actions = (key: any): ReactElement => { return <></> },
-  renderStatus = (status: any): ReactElement => { return <></> }
+  actions = (key: any): ReactElement => {
+    return <></>;
+  },
+  renderStatus = (status: any): ReactElement => {
+    return <></>;
+  }
 ) => {
   const today = new Date();
   const expireDate = isNaN(new Date(key.expire_date).getTime())
@@ -94,8 +104,12 @@ export const processKey = (
 
 export const processKeyList = (
   keyList: any[],
-  actions = (key: any): ReactElement => { return <></> },
-  renderStatus = (status: any): ReactElement => { return <></> }
+  actions = (key: any): ReactElement => {
+    return <></>;
+  },
+  renderStatus = (status: any): ReactElement => {
+    return <></>;
+  }
 ) => {
   /*
   keyList: [{
@@ -112,16 +126,23 @@ export const processKeyList = (
   });
 };
 
-export const processSubscription = (subscription: StripeSubscription): Subscription => {
+export const processSubscription = (
+  subscription: StripeSubscription
+): Subscription => {
   return {
     name: capitalize(subscription?.items.data[0].plan.nickname ?? "none"),
     renewal_date: getDateStr(subscription?.current_period_end, false, true),
     amount: `$${(subscription?.items.data[0].plan.amount ?? 0) / 100}`,
     interval: capitalize(subscription?.items.data[0].plan.interval ?? ""),
   };
-}
+};
 
-export const processBillingItem = (billingItem: StripeBillingItem, actions = (item: any): React.ReactNode => { return <></> }): Billing => {
+export const processBillingItem = (
+  billingItem: StripeBillingItem,
+  actions = (item: any): React.ReactNode => {
+    return <></>;
+  }
+): Billing => {
   return {
     name: billingItem?.customer_name,
     email: billingItem?.customer_email,
@@ -132,7 +153,12 @@ export const processBillingItem = (billingItem: StripeBillingItem, actions = (it
   } as Billing;
 };
 
-export const processBillingList = (billingList: StripeBillingItem[], actions = (item: any): React.ReactNode => { return <></> }): Billing[] => {
+export const processBillingList = (
+  billingList: StripeBillingItem[],
+  actions = (item: any): React.ReactNode => {
+    return <></>;
+  }
+): Billing[] => {
   if (billingList && billingList?.length > 0) {
     return billingList.map((item): Billing => {
       return processBillingItem(item, actions);
@@ -190,7 +216,10 @@ export const sliceChartData = (data, dataKeyX, dataKeyY) => {
   }
 };
 
-export const handleSerializerErrors = (errors: any, callback = (errorString: string) => { }) => {
+export const handleSerializerErrors = (
+  errors: any,
+  callback = (errorString: string) => {}
+) => {
   // errors: {key: [error1, error2], key2: [error1, error2]}
   Object.keys(errors).forEach((key) => {
     errors[key].forEach((error: any) => {
@@ -253,15 +282,22 @@ interface DataItem {
   [key: string]: any;
 }
 
-export const addMissingDate = (data: DataItem[], dateGroup: string): DataItem[] => {
-  if(!data) return [];
+export const addMissingDate = (
+  data: DataItem[],
+  dateGroup: string
+): DataItem[] => {
+  if (!data) return [];
   const newDataArray: DataItem[] = [];
-  const formatTimeUnit = (unit: number): string => unit.toString().padStart(2, "0");
+  const formatTimeUnit = (unit: number): string =>
+    unit.toString().padStart(2, "0");
   const localeUtc = (dateStr: string): Date => {
     const date = new Date(dateStr);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
   };
-  const keys = data?.length > 0 ? Object.keys(data[0]).filter((key) => key !== "name") : [];
+  const keys =
+    data?.length > 0
+      ? Object.keys(data[0]).filter((key) => key !== "name")
+      : [];
   const defaultFields = keys.reduce((acc, key) => {
     acc[key] = 0;
     return acc;
@@ -271,12 +307,9 @@ export const addMissingDate = (data: DataItem[], dateGroup: string): DataItem[] 
     for (let hour = 0; hour < 24; hour++) {
       const found = data.find((d) => {
         return d.name.split(":")[0] === hour.toString();
-       
       });
       newDataArray.push(
-        found
-          ? { ...found }
-          : { name: hour + ":00", ...defaultFields }
+        found ? { ...found } : { name: hour + ":00", ...defaultFields }
       );
     }
   };
@@ -345,4 +378,17 @@ export const addMissingDate = (data: DataItem[], dateGroup: string): DataItem[] 
       break;
   }
   return newDataArray;
+};
+
+export const getColorMap = (data, currentMetric, isModel) => {
+  const sortedData = data.sort((a, b) => {
+    return b[currentMetric] - a[currentMetric];
+  });
+  const key = isModel ? "model" : "organization_key__name";
+  let colorMap = {};
+  sortedData.forEach((item, index) => {
+    colorMap[item[key] || "unknown model"] =
+      colorTagsClasses[index % colorTagsClasses.length];
+  });
+  return colorMap;
 };

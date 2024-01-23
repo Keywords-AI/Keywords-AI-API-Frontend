@@ -1,8 +1,12 @@
-import { get } from "react-hook-form";
+import { get, set } from "react-hook-form";
 import { keywordsFetch } from "src/services/apiConfig";
-import { Metrics } from "src/utilities/constants";
+import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { getQueryParam, setQueryParams } from "src/utilities/navigation";
-import { sliceChartData, formatDate } from "src/utilities/objectProcessing";
+import {
+  sliceChartData,
+  formatDate,
+  getColorMap,
+} from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
@@ -33,12 +37,22 @@ export const SET_DISPLAY_TIME_RANGE = "SET_DISPLAY_TIME_RANGE";
 export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
 export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
+export const SET_KEY_COLORS = "SET_KEY_COLORS";
+
+export const setKeyColors = (data) => {
+  return {
+    type: SET_KEY_COLORS,
+    payload: data,
+  };
+};
+
 export const setModelColors = (data) => {
   return {
     type: SET_MODEL_COLORS,
     payload: data,
   };
 };
+
 export const setTimeFrameOffset = (offsetType, currTime, offset, navigate) => {
   // setQueryParams({ timeFrameOffset: offset }, navigate);
   return {
@@ -248,6 +262,7 @@ export const getDashboardData = (
   overrideParams // search string
 ) => {
   return (dispatch, getState) => {
+    console.log("execute");
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
@@ -259,7 +274,6 @@ export const getDashboardData = (
     const currDate = new Date();
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -271,7 +285,6 @@ export const getDashboardData = (
         }
       })
       .then((data) => {
-        console.log("getData", data)
         dispatch(setDashboardData(data));
 
         const by_model = getgroupByData(
@@ -284,8 +297,9 @@ export const getDashboardData = (
           false,
           params.get("summary_type")
         );
+        const groupByData = { by_model, by_key };
 
-        dispatch(setGroupByData({ by_model, by_key }));
+        dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type")
@@ -358,6 +372,18 @@ export const getDashboardData = (
 
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
+        const modelData = getState().dashboard.data_by_model;
+        const keyData = getState().dashboard.data_by_key;
+        const modelColor = getColorMap(
+          [...modelData],
+          params.get("metric"),
+          true
+        );
+        const keyColor = getColorMap([...keyData], params.get("metric"), false);
+
+        dispatch(setModelColors(modelColor));
+        dispatch(setKeyColors(keyColor));
+
         dispatch(setAvgModelData(data?.data_avg_by_model));
         dispatch(setAvgApiData(data?.data_avg_by_key));
         dispatch(setP50Data(data?.summary.latency_p_50));
@@ -587,6 +613,7 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     });
     byModel[key] = updatedItem;
   });
+
   return Object.keys(byModel)
     .map((key) => {
       let time;
