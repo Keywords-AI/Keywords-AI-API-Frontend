@@ -15,7 +15,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
-  console.log("shabishabi",logItem);
+  const completeInteraction = logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
     "Created at": (
       <span className="text-sm-regular text-gray-4">
@@ -78,7 +78,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 shadow-gray-2 bg-gray-1 overflow-x-hidden",
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0", 
+        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
@@ -106,7 +107,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       </div>
       <Divider />
       <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-        {logItem?.prompt_messages?.map((message, index) => (
+        {completeInteraction.map((message, index) => (
           <div
             key={index}
             className="flex-col items-start gap-xxs self-stretch"
