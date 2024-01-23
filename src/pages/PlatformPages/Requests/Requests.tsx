@@ -19,7 +19,7 @@ import FilterControl from "./FilterControl";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
-  firstTime: !state.organization?.has_api_call ?? false,
+  firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
 });

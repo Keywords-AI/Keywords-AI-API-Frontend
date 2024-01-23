@@ -7,7 +7,7 @@ export const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-export const getDateStr = (date: number | undefined | null, lastUsed: boolean = false, inSeconds: boolean = false): string => {
+export const getDateStr = (date: number | string | undefined | null, lastUsed: boolean = false, inSeconds: boolean = false): string => {
   if (!date) {
     if (lastUsed) {
       return "Never";
@@ -17,7 +17,9 @@ export const getDateStr = (date: number | undefined | null, lastUsed: boolean = 
   }
 
   let checkedDate: number;
-  if (inSeconds) {
+  if (typeof date === "string") {
+    checkedDate = new Date(date).getTime();
+  } else if (inSeconds) {
     checkedDate = date * 1000;
   } else {
     checkedDate = date;
