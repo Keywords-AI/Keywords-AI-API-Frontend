@@ -72,25 +72,7 @@ function DashboardNotConnected({
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
   useEffect(() => {
     getDashboardData();
-
-    setModelColors(
-      sortedModel.reduce((acc, key, index) => {
-        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-        // console.log("acc", acc);
-        return acc;
-      }, {})
-    );
-  }, []);
-
-  // useEffect(() => {
-  //   setModelColors(
-  //     sortedModel.reduce((acc, key, index) => {
-  //       acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-  //       // console.log("acc", acc);
-  //       return acc;
-  //     }, {})
-  //   );
-  // }, [modelData]);
+  }, [firstName, performance_param, breakdown_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
