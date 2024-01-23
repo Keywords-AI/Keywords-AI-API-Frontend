@@ -98,27 +98,30 @@ export const sendStreamingTextThunk = async ({
       }
       chunks.forEach((chunk, index) => {
         if (!chunk || chunk === "") return;
+        try {
+          const parsedChunk = JSON.parse(chunk);
+          if (parsedChunk.evaluation) {
+            const { completion_tokens, cost, latency, scores } =
+              parsedChunk.evaluation;
+            dispatch(
+              setOutputs({
+                tokens: completion_tokens,
+                cost,
+                latency,
+                score: scores,
+              })
+            );
+          } else if (parsedChunk.choices?.[0]?.delta.content) {
+            const messageChunk = parsedChunk.choices[0].delta.content;
+            dispatch(sendStreamingTextPartial(messageChunk));
+          }
 
-        const parsedChunk = JSON.parse(chunk);
-        if (parsedChunk.evaluation) {
-          const { completion_tokens, cost, latency, scores } =
-            parsedChunk.evaluation;
-          dispatch(
-            setOutputs({
-              tokens: completion_tokens,
-              cost,
-              latency,
-              score: scores,
-            })
-          );
-        } else if (parsedChunk.choices?.[0]?.delta.content) {
-          const messageChunk = parsedChunk.choices[0].delta.content;
-          dispatch(sendStreamingTextPartial(messageChunk));
-        }
-
-        // Clear dataString after the last chunk has been processed
-        if (index === chunks.length - 1) {
-          dataString = "";
+          // Clear dataString after the last chunk has been processed
+          if (index === chunks.length - 1) {
+            dataString = "";
+          }
+        } catch {
+          console.log("error");
         }
       });
     }
@@ -130,7 +133,7 @@ export const sendStreamingTextThunk = async ({
       ? error.response.data
       : "An error occurred";
     dispatch(sendStreamingTextFailure(errorMessage));
-    console.log(error)
+    console.log(error);
     if (error.message) {
       dispatch(dispatchNotification({ type: "error", title: error.message }));
     }
