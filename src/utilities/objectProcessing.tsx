@@ -8,6 +8,7 @@ import {
   Subscription,
   StripeSubscription,
 } from "src/types";
+<<<<<<< HEAD
 
 export const checkBoxFieldToList = (
   field: boolean | string | string[]
@@ -20,6 +21,9 @@ export const checkBoxFieldToList = (
     return field;
   }
 };
+=======
+import { colorTagsClasses } from "./constants";
+>>>>>>> origin/hendrix-temp
 
 export const digitToMonth = (digit, year) => {
   // let month = digit;
@@ -334,4 +338,17 @@ export const addMissingDate = (
       break;
   }
   return newDataArray;
+};
+
+export const getColorMap = (data, currentMetric, isModel) => {
+  const sortedData = data.sort((a, b) => {
+    return b[currentMetric] - a[currentMetric];
+  });
+  const key = isModel ? "model" : "organization_key__name";
+  let colorMap = {};
+  sortedData.forEach((item, index) => {
+    colorMap[item[key] || "unknown model"] =
+      colorTagsClasses[index % colorTagsClasses.length];
+  });
+  return colorMap;
 };

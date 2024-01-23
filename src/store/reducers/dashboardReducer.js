@@ -28,6 +28,7 @@ import {
   SET_P99_DATA,
   SET_TIME_FRAME_OFFSET,
   SET_MODEL_COLORS,
+  SET_KEY_COLORS,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -124,6 +125,7 @@ const initState = {
   ).toISOString(),
   timeOffset: 0,
   modelColors: {},
+  keyColors: {},
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -186,7 +188,10 @@ export default function dashboardReducer(state = initState, action) {
       };
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
-
+    case SET_MODEL_COLORS:
+      return { ...state, modelColors: {...action.payload} };
+    case SET_KEY_COLORS:
+      return { ...state, keyColors: {...action.payload} };
     case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
@@ -216,14 +221,6 @@ export default function dashboardReducer(state = initState, action) {
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
-    case SET_MODEL_COLORS:
-      return { ...state, modelColors: action.payload };
-
-      return {
-        ...state,
-        timeFrame: updatedTimeFrame.toISOString(),
-        timeOffset: state.timeOffset + offset,
-      };
 
     default:
       return state;

@@ -12,7 +12,6 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
-  setModelColors,
 } from "src/store/actions";
 import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
@@ -37,11 +36,12 @@ const mapStateToProps = (state) => ({
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
   modelData: state.dashboard.modelData,
+  modelColors: state.dashboard.modelColors,
+  keyColors: state.dashboard.keyColors,
 });
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
-  setModelColors,
 };
 
 function DashboardNotConnected({
@@ -56,7 +56,8 @@ function DashboardNotConnected({
   firstTime,
   organization,
   modelData,
-  setModelColors,
+  modelColors,
+  keyColors,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,24 +67,11 @@ function DashboardNotConnected({
   const [isPanel, setIsPanel] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const useKeyboardShortcut = (shortcutKeys, callback) => {};
-
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
-  const sortedModel = modelData
-    .sort((a, b) => b[performance_param] - a[performance_param])
-    .map((model, index) => (model.model == "" ? "unknown model" : model.model))
-    .filter((name, index, self) => self.indexOf(name) === index);
-
   useEffect(() => {
     getDashboardData();
-
-    setModelColors(
-      sortedModel.reduce((acc, key, index) => {
-        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-        return acc;
-      }, {})
-    );
-  }, []);
+  }, [firstName, performance_param, breakdown_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -92,17 +80,15 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
-    setModelColors(
-      sortedModel.reduce((acc, key, index) => {
-        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-        return acc;
-      }, {})
-    );
   };
 
   const handleCardClick = (metricKey) => {
     setActiveCard(activeCard === metricKey ? null : metricKey);
   };
+  let colorData = [];
+  if (breakdown_type !== "none") {
+    colorData = breakdown_type === "by_model" ? modelColors : keyColors;
+  }
 
   const metrics = [
     {
@@ -118,8 +104,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
-        
       },
     },
     {
@@ -136,7 +120,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -152,7 +135,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -168,7 +150,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -180,10 +161,10 @@ function DashboardNotConnected({
         dispatch(
           setDisplayMetric(Metrics.total_cost.value, setQueryParams, navigate)
         );
-        getDashboardData();
       },
     },
   ];
+
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -198,18 +179,18 @@ function DashboardNotConnected({
   );
 
   const typeChoices = [
-    { name: "Total", value: "total", secText: "1", },
-    { name: "Average", value: "average", secText: "2", },
+    { name: "Total", value: "total", secText: "1" },
+    { name: "Average", value: "average", secText: "2" },
   ];
 
   const breakdownChoices = [
-    { name: "None", value: "none" , secText: "1",},
+    { name: "None", value: "none", secText: "1" },
     {
       name: "By model",
       value: "by_model",
       secText: "2",
     },
-    { name: "By key", value: "by_key", secText: "3", },
+    { name: "By key", value: "by_key", secText: "3" },
     // { name: "By token type", value: "by_token_type" }, //only for total tokens
   ];
   let filteredtypeChoices;
@@ -260,22 +241,23 @@ function DashboardNotConnected({
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           {
             <div>
-              {breakdown_type === "by_model" && (
+              {breakdown_type !== "none" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
-                  {sortedModel.map((name, index) => (
-                    <div className="flex items-center gap-xxs" key={index}>
-                      <div
-                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                        style={{
-                          backgroundColor:
-                            colorTagsClasses[index % colorTagsClasses.length],
-                        }}
-                      ></div>
-                      <span className="caption text-gray-4">
-                        {name || "unknown model"}
-                      </span>
-                    </div>
-                  ))}
+                  {colorData &&
+                    Object.keys(colorData).map((name, index) => (
+                      <div className="flex items-center gap-xxs" key={index}>
+                        <div
+                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                          style={{
+                            backgroundColor:
+                              colorTagsClasses[index % colorTagsClasses.length],
+                          }}
+                        ></div>
+                        <span className="caption text-gray-4">
+                          {name || "unknown model"}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               )}
             </div>
