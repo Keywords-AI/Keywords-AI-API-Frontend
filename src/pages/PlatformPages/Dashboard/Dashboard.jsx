@@ -15,7 +15,6 @@ import {
 } from "src/store/actions";
 import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
-import { SelectInput } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
