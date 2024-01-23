@@ -5,6 +5,10 @@ import { PayloadAction } from "@reduxjs/toolkit";
 const initialState: User = {
   id: null,
   is_organization_admin: false,
+  sort_by: "",
+  display_properties: [],
+  time_range_types: [],
+  time_range_type: "",
   organization_role: {
     id: null,
     access_level: 0,

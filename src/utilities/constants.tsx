@@ -1,4 +1,18 @@
-import { OpenAI, Anthropic, Google, Labs, Cohere, Quality, Warning, Speed, Tokens, Cost } from "src/components/Icons";
+import {
+  OpenAI,
+  Anthropic,
+  Google,
+  Labs,
+  Cohere,
+  Quality,
+  Warning,
+  Speed,
+  Tokens,
+  Cost,
+} from "src/components/Icons";
+import { LogItemColumn, LogColumnKey, LogItem, LogItemTag } from "src/types";
+import { ModelTag, StatusTag } from "src/components/Misc";
+import React from "react";
 
 const colors = [
   "var(--primary)",
@@ -123,7 +137,7 @@ export const models = [
   },
 ];
 
-export const colorTagsClasses =   [
+export const colorTagsClasses = [
   "#F55656",
   "#FFB340",
   "#31DE4B",
@@ -139,15 +153,85 @@ export const randomColor = () => {
 };
 
 export const Metrics = {
-  number_of_requests: { name: "Request", value: "number_of_requests", icon: Quality },
+  number_of_requests: {
+    name: "Request",
+    value: "number_of_requests",
+    icon: Quality,
+  },
   average_latency: { name: "Latency", value: "average_latency", icon: Speed },
-  total_prompt_tokens: { name: "Prompt tokens", value: "total_prompt_tokens", icon:Tokens },
+  total_prompt_tokens: {
+    name: "Prompt tokens",
+    value: "total_prompt_tokens",
+    icon: Tokens,
+  },
   total_completion_tokens: {
     name: "Output tokens",
     value: "total_completion_tokens",
     icon: Tokens,
   },
-  total_tokens: { name: "Total tokens", value: "total_tokens", icon: Tokens },
+  total_tokens: { name: "All tokens", value: "total_tokens", icon: Tokens },
   total_cost: { name: "Total cost", value: "total_cost", icon: Cost },
   error_count: { name: "Errors", value: "error_count", icon: Warning },
 };
+
+export const dummyLogItem: LogItem = {
+  id: -1,
+  timestamp: "",
+  cost: -1,
+  latency: 0,
+  completion_tokens: 0,
+  prompt_tokens: 0,
+  model: "",
+  completion_message: { role: "", content: "" },
+  prompt_messages: [],
+  error_message: "",
+  failed: false,
+  category: "",
+  api_key: "",
+};
+
+export const requestLogColumns: LogItemColumn[] = [
+  { name: "Time", retrievalKey: "time", width: "120px" },
+  { name: "Prompt", retrievalKey: "prompt", width: "160px" },
+  { name: "Response", retrievalKey: "response", width: "160px" },
+  { name: "Cost", retrievalKey: "cost", width: "80px" },
+  { name: "Prompt tokens", retrievalKey: "promptTokens", width: "120px" },
+  { name: "Output tokens", retrievalKey: "outputTokens", width: "120px" },
+  { name: "All tokens", retrievalKey: "allTokens", width: "80px" },
+  { name: "Latency", retrievalKey: "latency", width: "80px" },
+];
+
+export const requestLogTagColumns: LogItemTag[] = [
+  {
+    name: "API key",
+    retrievalKey: "apiKey",
+    rawDataKey: "api_key",
+    renderFunction: (key: string) => (
+      <span className="caption text-gray-4 mr-xxxs">{key}</span>
+    ),
+  },
+  {
+    name: "Model",
+    retrievalKey: "model",
+    rawDataKey: "model",
+    renderFunction: (model: string) => <ModelTag model={model} />,
+  },
+  {
+    name: "Status",
+    retrievalKey: "status",
+    rawDataKey: "status",
+    renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
+  },
+];
+
+export const defaultRequestLogColumns: LogColumnKey[] = [
+  "time",
+  "prompt",
+  "response",
+  "cost",
+  "latency",
+  "allTokens",
+  "apiKey",
+  "model",
+  "status",
+];

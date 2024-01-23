@@ -68,50 +68,6 @@ export const vendors = {
   },
 };
 
-export const CheckBoxButton = React.forwardRef(
-  (
-    {
-      name,
-      register = () => {},
-      validationSchema,
-      text,
-      onChange = () => {},
-      checked = false,
-    },
-    ref
-  ) => {
-    const checkBoxRef = useForwardRef(ref);
-    const [isChecked, setIsChecked] = React.useState(checked);
-    const handleChange = (e) => {
-      onChange(e);
-      setIsChecked(e.target.checked);
-    };
-    const handleClick = () => {
-      checkBoxRef.current.click();
-    };
-    return (
-      <Button
-        type={"button"}
-        variant={"r4-black"}
-        active={isChecked}
-        onClick={handleClick}
-      >
-        <span>{text}</span>
-        <input
-          {...register(name, validationSchema)}
-          name={name}
-          ref={checkBoxRef}
-          type={"checkbox"}
-          value={text}
-          hidden
-          checked={isChecked}
-          onChange={handleChange}
-        />
-      </Button>
-    );
-  }
-);
-
 const IntegrationCardNotConnected = ({
   user,
   apiKey,

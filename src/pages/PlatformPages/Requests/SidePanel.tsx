@@ -77,7 +77,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1 overflow-x-hidden",
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
