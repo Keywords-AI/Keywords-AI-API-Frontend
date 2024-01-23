@@ -101,7 +101,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   if (firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex-col items-start self-stretch h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+      <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
@@ -247,9 +247,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               </div>
             )}
           </div>
-          <div className="flex-col items-start h-full overflow-auto">
-            <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
-          </div>
+          <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
         </div>
       </div>
     );
