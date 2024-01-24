@@ -13,6 +13,7 @@ import {
   TOGGLE_LEFT_PANEL,
   TOGGLE_RIGHT_PANEL,
   SET_SELECTED_LOGS,
+  SET_MESSAGE_BY_INDEX,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -23,7 +24,7 @@ const initialState = {
   ],
   firstTime: true,
   prompt: "",
-  currentModels: [],
+  currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
     optimize: "speed",
@@ -56,6 +57,16 @@ const playgroundReducer = (state = initialState, action) => {
         messages: [
           ...state.messages.slice(0, -1),
           { ...state.messages.slice(-1)[0], ...action.payload },
+        ],
+      };
+    case SET_MESSAGE_BY_INDEX:
+      const { index, content } = action.payload;
+      return {
+        ...state,
+        messages: [
+          ...state.messages.slice(0, index),
+          { ... content },
+          ...state.messages.slice(index + 1),
         ],
       };
     case SET_PROMPT:

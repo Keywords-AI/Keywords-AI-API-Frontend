@@ -76,7 +76,7 @@ const streamingTextReducer = (state = initialState, action) => {
         if (index === 0) {
           return {
             ...item,
-            streamingText: item.streamingText + payload.text,
+            streamingText: item.streamingText + payload,
           };
         }
         return item;
@@ -86,7 +86,7 @@ const streamingTextReducer = (state = initialState, action) => {
         if (index === 1) {
           return {
             ...item,
-            streamingText: item.streamingText + payload.text,
+            streamingText: item.streamingText + payload,
           };
         }
         return item;

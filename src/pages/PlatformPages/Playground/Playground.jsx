@@ -5,6 +5,7 @@ import { Copy, Pencil } from "src/components";
 import { TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { setSelectedLogs } from "src/store/actions";
+import { StreamingMessage } from "./components/PlaygroundMessage";
 
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
@@ -64,10 +65,11 @@ connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 const MessageLists = () => {
   const messages = useTypedSelector((state) => state.playground.messages);
   return (
-    <div className="flex-col items-start gap-xxs flex-1">
+    <div className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-auto pr-xxs">
       {messages.map((message, index) => {
         return <PlaygroundMessage key={index} id={index} {...message} />;
       })}
+      <StreamingMessage />
     </div>
   );
 };
