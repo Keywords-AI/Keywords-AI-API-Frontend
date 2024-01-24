@@ -108,7 +108,7 @@ const CreateFormNotConnected = React.forwardRef(
       setNewKeyName,
       createApiKey,
       loading,
-      dispatchNotification
+      dispatchNotification,
     }: CreateProps,
     ref
   ) => {
@@ -384,7 +384,7 @@ const EditFormNotConnected = ({
   setEditingKey,
   editingKey,
   updateEditingKey,
-  dispatchNotification
+  dispatchNotification,
 }: EditingFromProps) => {
   const [showInfo, setShowInfo] = useState(false);
   const [currentKeyName, setCurrentKeyName] = useState(
@@ -396,6 +396,12 @@ const EditFormNotConnected = ({
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
+      const spendingLimit = editingKey?.spending_limit;
+      const rateLimit = editingKey?.rate_limit;
+      setIsRateLimitEnabled(rateLimit !== null && rateLimit !== undefined);
+      setIsSpendingLimitEnabled(
+        spendingLimit !== null && spendingLimit !== undefined
+      );
     }
   }, [editingKey]);
   const {
@@ -483,6 +489,7 @@ const EditFormNotConnected = ({
             />
           )}
           <SwitchButton
+            checked={isRateLimitEnabled}
             onCheckedChange={handleRateLimitSwitch}
             className="absolute -top-[2px]"
           />
@@ -495,6 +502,7 @@ const EditFormNotConnected = ({
               {...register("rate_limit")}
               // onKeyDown={handleEnter}
               placeholder={"None"}
+              defaultValue={editingKey?.rate_limit}
               type="number"
               pseudoElementClass="special-input"
             />
@@ -516,14 +524,19 @@ const EditFormNotConnected = ({
           <span className="text-sm-regular text-gray-4">
             Has spending limit{" "}
           </span>
-          <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
+          <SwitchButton
+            onCheckedChange={handleSpendingLimitSwitch}
+            checked={isSpendingLimitEnabled}
+          />
         </div>
         {isSpendingLimitEnabled && (
           <div className="grid gap-sm grid-cols-1">
             <TextInput
               title={"Spending limit"}
               width={"w-full"}
-              {...register("spending_limit")}
+              {...register("spending_limit", {
+                value: editingKey?.spending_limit,
+              })}
               // onKeyDown={handleEnter}
               placeholder={"$100"}
               type="number"

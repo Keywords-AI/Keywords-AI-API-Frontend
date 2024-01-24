@@ -67,7 +67,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
         },
@@ -99,7 +99,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([
@@ -146,7 +146,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -154,7 +154,7 @@ export const PlansPage = connect(
       },
       buttonParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://zcal.co/keywords-ai", "_blank");
@@ -173,7 +173,7 @@ export const PlansPage = connect(
     } else if (index === currIndex) {
       return {
         buttonText: "Current plan",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {},
       };
     } else {
