@@ -27,6 +27,10 @@ import {
   SET_P95_DATA,
   SET_P99_DATA,
   SET_TIME_FRAME_OFFSET,
+  SET_MODEL_COLORS,
+  SET_KEY_COLORS,
+  SET_SENTIMENT_SUMMARY_DATA,
+  SET_SENTIMENT_DATA,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -122,6 +126,60 @@ const initState = {
     currDate - currDate.getTimezoneOffset() * 60 * 1000
   ).toISOString(),
   timeOffset: 0,
+  modelColors: {},
+  keyColors: {},
+  sentimentSummaryData: [
+    {
+      sentiment: "positive",
+      value: 5454,
+    },
+    {
+      sentiment: "negative",
+      value: 1087,
+    },
+    {
+      sentiment: "neutral",
+      value: 3589,
+    },
+  ],
+  sentimentData: [
+    {
+      date_group: "2024-01-10 00:00:00+00:0",
+      positive: 500,
+      negative: 200,
+      neutral: 300,
+    },
+    {
+      date_group: "2024-01-11 00:00:00+00:0",
+      positive: 400,
+      negative: 100,
+      neutral: 200,
+    },
+    {
+      date_group: "2024-01-12 00:00:00+00:0",
+      positive: 300,
+      negative: 300,
+      neutral: 100,
+    },
+    {
+      date_group: "2024-01-13 00:00:00+00:0",
+      positive: 200,
+      negative: 400,
+      neutral: 400,
+    },
+    {
+      date_group: "2024-01-14 00:00:00+00:0",
+      positive: 100,
+      negative: 500,
+      neutral: 500,
+    },
+    {
+      date_group: "2024-01-15 00:00:00+00:0",
+      positive: 0,
+      negative: 600,
+      neutral: 600,
+    },
+  ],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -162,6 +220,10 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, apiData: action.payload };
     case SET_AVG_API_DATA:
       return { ...state, avgApiData: action.payload };
+    case SET_SENTIMENT_SUMMARY_DATA:
+      return { ...state, sentimentSummaryData: action.payload };
+    case SET_SENTIMENT_DATA:
+      return { ...state, sentimentData: action.payload };
     case SET_DISPLAY_METRIC:
       return {
         ...state,
@@ -184,7 +246,10 @@ export default function dashboardReducer(state = initState, action) {
       };
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
-
+    case SET_MODEL_COLORS:
+      return { ...state, modelColors: {...action.payload} };
+    case SET_KEY_COLORS:
+      return { ...state, keyColors: {...action.payload} };
     case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
@@ -194,52 +259,25 @@ export default function dashboardReducer(state = initState, action) {
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
     case SET_TIME_FRAME_OFFSET:
-      const { offsetType, currTime, offset } = action.payload;
-      console.log(offsetType, currTime, offset);
+      const { offsetType, offset } = action.payload;
+      let updatedTimeFrame;
+      const currTime = state.timeFrame;
       switch (offsetType) {
         case "yearly":
-          let newYear = new Date(currTime).setFullYear(
-            new Date(currTime).getFullYear() + offset
-          );
-
-          newYear = new Date(newYear).toISOString();
-          return {
-            ...state,
-            timeFrame: newYear,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+          break;
         case "monthly":
-          let newMonth = new Date(currTime).setMonth(
-            new Date(currTime).getMonth() + offset
-          );
-          newMonth = new Date(newMonth).toISOString();
-          return {
-            ...state,
-            timeFrame: newMonth,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
+          break;
         case "weekly":
-          let newWeek = new Date(currTime).setDate(
-            new Date(currTime).getDate() + offset * 7
-          );
-          newWeek = new Date(newWeek).toISOString();
-
-          return {
-            ...state,
-            timeFrame: newWeek,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+          break;
         default:
-          let newDate = new Date(currTime).setDate(
-            new Date(currTime).getDate() + offset
-          );
-          newDate = new Date(newDate).toISOString();
-
-          return {
-            ...state,
-            timeFrame: newDate,
-            timeOffset: state.timeOffset + offset,
-          };
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
 
     default:

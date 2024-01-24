@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "src/components/Buttons/Button/Button";
-import { Copy, Tick, Regenerate, ChatLogo, ChatAvatar } from "./icons";
+import { Copy, Tick, Regenerate, ChatAvatar } from "./icons";
+import { Logo } from "src/components/Icons";
 import { ChatbotReactMarkdown } from "src/components/Misc";
 import cn from "src/utilities/classMerge";
 
@@ -28,7 +29,7 @@ export default function ChatMessage({ message }) {
       }
     >
       <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
-        {message?.role === "user" ? <ChatAvatar /> : <ChatLogo />}
+        {message?.role === "user" ? <ChatAvatar /> : <Logo />}
         <div>
           
             <ChatbotReactMarkdown content={message?.content} /> 

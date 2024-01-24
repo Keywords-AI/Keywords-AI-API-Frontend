@@ -69,7 +69,9 @@ export const QaInputPage = () => {
             {...register("checkbox")}
             value="choice B"
           />
-          <SelectInputTest />
+          <SelectInputTest
+            {...register("select_test")}
+          />
           <CheckBoxButton text="test" />
           <ModelPresetCard />
         </PageParagraph>

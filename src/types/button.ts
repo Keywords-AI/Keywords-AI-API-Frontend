@@ -1,10 +1,11 @@
-export type variantType = "primary" | "header" | "secondary" | "secondary-gray" | "secondary-black" | "beta" | "r4-white" | "r4-primary" | "r4-red" | "r4-black" | "r4-gray2" | "text" | "small" | "r18-white" | "r18-black" | "panel" | "careers" | "chat" | "icon" | "footer";
+export type variantType = "primary" | "header" | "secondary" | "secondary-gray" | "secondary-black" | "beta" | "r4-white" | "r4-primary" | "r4-red" | "r4-black" | "r4-gray-2" | "text" | "small" | "r18-white" | "r18-black" | "panel" | "careers" | "chat" | "icon" | "footer";
 
 export type ButtonProps = {
   active?: boolean;
   hover?: boolean;
   variant?:variantType;
   text?: string;
+  secText?: string;
   type?: "button" | "submit" | "reset" | undefined;
   icon?: React.ElementType;
   secIcon?: React.ElementType;

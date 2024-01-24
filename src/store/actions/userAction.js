@@ -18,6 +18,7 @@ import {
   // Action Types
 } from "src/store/actions";
 import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env";
+import { keywordsRequest } from "src/utilities/requests";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
@@ -56,7 +57,7 @@ export const getUser = () => {
           dispatch(setCustomPromptFile(data.current_file));
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
-      } else if (res.status === 401 && res.status == 403) {
+        } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
         } else {
@@ -67,62 +68,19 @@ export const getUser = () => {
   };
 };
 
-export const updateUser = (data = {}, callback = () => {}) => {
+export const updateUser = (data = {}, callback = () => {}, mute=false) => {
   // Check redux devtools for the data structure
   return (dispatch) => {
     dispatch({ type: UPDATE_USER, payload: data });
-    fetch(`${apiConfig.apiURL}auth/users/me/`, {
+    keywordsRequest({
+      path: "auth/users/me/",
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      body: JSON.stringify(data),
+      data,
+      dispatch,
     })
-      .then(async (res) => {
-        if (res.ok) {
-          const data = await res.json();
-          dispatch(
-            dispatchNotification({
-              title: "Successfully updated user information",
-            })
-          );
-          // Set the organizaiton of the user
-          dispatch(setOrg(data.organization));
-          // Set the free credits under usage state of the user
-          dispatch(
-            setFreeCredits({
-              creditsRemaining: data.free_trial_remaining,
-              creditsTotal: data.free_free_trial_total || 40000,
-              creditsExpired: data.free_trial_expired,
-            })
-          );
-          // ---------Chatbot Actions---------
-          // Set user's custom prompt for chatbot
-          dispatch(setCustomPrompt(data.system_prompt));
-          dispatch(setEnableCustomPrompt(data.system_prompt_active));
-          dispatch(setCustomPromptFile(data.current_file));
-          dispatch(getConversation(data.last_conversation));
-          // ---------End Chatbot Actions---------
-        } else if (res.status === 401 && res.status == 403) {
-          const data = await res.json();
-          dispatch({ type: SET_USER, payload: {} });
-        } else {
-          const data = await res.json();
-          if (data.detail) {
-            dispatchNotification({
-              title: "Error setting user information",
-              message: data.detail,
-            });
-          } else {
-            handleSerializerErrors(data, (err) => {
-              dispatchNotification({
-                title: "Error setting user information",
-                message: err,
-              });
-            });
-          }
+      .then((responseJson) => {
+        if (!mute) {
+          dispatchNotification({ title: "User updated successfully" });
         }
       })
       .catch((error) => console.log(error.message));
