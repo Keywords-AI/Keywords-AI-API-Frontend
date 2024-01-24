@@ -75,6 +75,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   }
+  console.log("eorrrorr", logItem);
   return (
     <div
       className={cn(
@@ -110,7 +111,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {completeInteraction.map((message, index) => (
           <div
             key={index}
-            className="flex-col items-start gap-xxs self-stretch"
+            className="flex-col items-start gap-xxxxs self-stretch"
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">

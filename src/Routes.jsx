@@ -120,6 +120,10 @@ const Routes = ({ getUser, user, organization }) => {
           path: "login",
           element: <LogIn />,
         },
+        {
+          path: "signup",
+          element: <SignUp />,
+        },
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
           path: "onboarding",
@@ -155,10 +159,7 @@ const Routes = ({ getUser, user, organization }) => {
         <FullScreenLayout />
       ),
       children: [
-        {
-          path: "signup",
-          element: <SignUp />,
-        },
+
         {
           path: "unauthenticated",
           element: <Unauthenticated />,

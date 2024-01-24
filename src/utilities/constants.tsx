@@ -218,7 +218,7 @@ export const requestLogTagColumns: LogItemTag[] = [
   },
   {
     name: "Status",
-    retrievalKey: "status",
+    retrievalKey: "failed",
     rawDataKey: "status",
     renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
   },
@@ -233,5 +233,5 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "allTokens",
   "apiKey",
   "model",
-  "status",
+  "failed",
 ];
