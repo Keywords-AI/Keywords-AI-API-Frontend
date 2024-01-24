@@ -250,12 +250,21 @@ export function StreamingMessage() {
                       className="text-sm-regular text-gray-5  "
                       components={{
                         pre: ({ node, children, ...props }) => (
-                          <pre className="clear-both" {...props}>
+                          <pre className="clear-both break-words" {...props}>
                             ```{children}```
                           </pre>
                         ),
+                        code: ({ node, ...props }) => (
+                          <code
+                            {...props}
+                            className=" whitespace-pre-wrap break-words"
+                          />
+                        ),
                         p: ({ node, ...props }) => (
-                          <p {...props} className="whitespace-pre-line my-2" />
+                          <p
+                            {...props}
+                            className="whitespace-pre-line my-2 break-words"
+                          />
                         ),
                         ol: ({ node, ...props }) => (
                           <ol
