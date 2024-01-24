@@ -15,6 +15,11 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
+    sentiment_analysis: {
+        sentiment_score: number,
+        // sentiment_magnitude: mag,
+        language: string,
+    }
 };
 
 export type DisplayLogItem = {
