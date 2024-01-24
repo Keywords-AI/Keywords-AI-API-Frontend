@@ -12,6 +12,7 @@ import {
   SET_CURRENT_BRAND,
   TOGGLE_LEFT_PANEL,
   TOGGLE_RIGHT_PANEL,
+  SET_SELECTED_LOGS,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -37,6 +38,7 @@ const initialState = {
   },
   isLeftPanelOpen: false,
   isRightPanelOpen: false,
+  selectedLogs: "",
 };
 
 // Reducer
@@ -79,6 +81,8 @@ const playgroundReducer = (state = initialState, action) => {
           [action.key]: action.payload,
         },
       };
+    case SET_SELECTED_LOGS:
+      return { ...state, selectedLogs: action.payload };
     case TOGGLE_LEFT_PANEL:
       return { ...state, isLeftPanelOpen: !state.isLeftPanelOpen };
     case TOGGLE_RIGHT_PANEL:

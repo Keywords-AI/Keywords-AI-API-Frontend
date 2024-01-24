@@ -16,6 +16,7 @@ export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
 export const SET_CURRENT_BRAND = "SET_CURRENT_BRAND";
 export const TOGGLE_LEFT_PANEL = "TOGGLE_LEFT_PANEL";
 export const TOGGLE_RIGHT_PANEL = "TOGGLE_RIGHT_PANEL";
+export const SET_SELECTED_LOGS = "SET_SELECTED_LOGS";
 
 // Action Creator
 export const toggleLeftPanel = () => ({
@@ -83,6 +84,11 @@ export const setOutputs = (outputs) => {
     });
   };
 };
+
+export const setSelectedLogs = (selectedLogs) => ({
+  type: SET_SELECTED_LOGS,
+  payload: selectedLogs,
+});
 
 export const setCacheAnswer = (key, cacheAnswers) => ({
   type: SET_CACHE_ANSWER,

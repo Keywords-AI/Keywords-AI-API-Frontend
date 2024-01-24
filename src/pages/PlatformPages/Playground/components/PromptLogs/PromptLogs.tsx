@@ -1,89 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ScrollContainer from "src/components/Display/ScrollContainer";
 import cn from "src/utilities/classMerge";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { LogItem } from "src/types";
+import { RootState } from "src/types";
+import {
+  setSelectedLogs,
+  setPrompt,
+  getRequestLogs
+} from "src/store/actions";
 
 export interface PromptLogsProps {
   prop?: string;
+  requestLogs: LogItem[]; // Add the requestLogs property
 }
 
-export function PromptLogs({ prop = "default value" }: PromptLogsProps) {
+const mapStateToProps = (state:RootState) => ({
+  requestLogs: state.requestLogs.logs as LogItem[],
+});
+
+const mapDispatchToProps = {
+  setPrompt,
+  getRequestLogs,
+};
+
+function PromptLogsNotConnected({ prop = "default value", requestLogs }: PromptLogsProps) {
   const [selectedLog, setSelectedLog] = useState<number>(-1);
-  const Logs = [
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-    {
-      prompt:
-        "Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see Compose an engaging travel blog post about a recent trip to Hawaii, highlighting cultural experiences and must-see",
-      timeframe: new Date().toISOString(),
-    },
-  ];
+  useEffect(() => {
+    getRequestLogs();
+  }, []);
+
+  console.log("hello hello", requestLogs);
+  const handleClick = (index: number, prompt:string) => {
+    setSelectedLog(index);
+    setPrompt(prompt);
+  };
   return (
     <div className="flex-col w-[240px] items-start self-stretch shadow-border-r shadow-gray-2 overflow-auto h-full">
-      {Logs.map((log, index) => (
-        <LogItem
-          key={index}
-          prompt={log.prompt}
-          timeframe={log.timeframe}
-          isSelected={selectedLog === index}
-          onClick={() => setSelectedLog(index)}
-        />
-      ))}
+      {requestLogs.map((requestLog, index) => {
+        let content;
+        requestLog?.prompt_messages?.map((message, index) => {
+          if (message.role === "system") {
+            content = message.content;
+          }
+        });
+        return (
+          <LogItem
+            key={index}
+            prompt={content}
+            timeframe={requestLog?.timestamp}
+            isSelected={selectedLog === index}
+            onClick={() => handleClick(index, content)}
+          />
+        );
+      })}
     </div>
   );
-}
+  }
 
 const LogItem = ({
   prompt,
@@ -133,3 +106,9 @@ const LogItem = ({
     </div>
   );
 };
+
+
+export const PromptLogs = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PromptLogsNotConnected);
