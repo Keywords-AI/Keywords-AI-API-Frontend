@@ -499,9 +499,10 @@ const EditFormNotConnected = ({
             <TextInput
               title={"Rate limit"}
               width={"w-full"}
-              {...(register("rate_limit"), { value: editingKey?.rate_limit })}
+              {...register("rate_limit")}
               // onKeyDown={handleEnter}
               placeholder={"None"}
+              defaultValue={editingKey?.rate_limit}
               type="number"
               pseudoElementClass="special-input"
             />
