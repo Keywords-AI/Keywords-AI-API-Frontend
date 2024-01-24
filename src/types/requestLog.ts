@@ -32,7 +32,7 @@ latency: string;
     failed: boolean;
 }
 export type LogColumnKey = "time" | "prompt" | "response" | "cost" | "promptTokens" 
-| "outputTokens" | "allTokens" | "latency" | "tagGroup"| "apiKey" | "model" | "status" | "sentiment";
+| "outputTokens" | "allTokens" | "latency" | "tagGroup"| "apiKey" | "model" | "failed" | "sentiment"; //not status, should be failed
 
 export type LogTagKey = "api_key" | "model" | "status" | "sentiment";
 

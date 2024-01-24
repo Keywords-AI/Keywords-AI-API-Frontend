@@ -75,6 +75,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   }
+  console.log("eorrrorr", logItem);
   return (
     <div
       className={cn(
