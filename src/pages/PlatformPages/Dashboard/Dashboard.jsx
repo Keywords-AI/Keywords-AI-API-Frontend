@@ -240,9 +240,9 @@ function DashboardNotConnected({
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
-          {
+          
             <div>
-              {breakdown_type !== "none" && (
+              {isPanel && breakdown_type !== "none" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
                   {colorData &&
                     Object.keys(colorData).map((name, index) => (
@@ -262,7 +262,6 @@ function DashboardNotConnected({
                 </div>
               )}
             </div>
-          }
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
