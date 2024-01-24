@@ -15,6 +15,11 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
+    sentiment_analysis: {
+        sentiment_score: number,
+        // sentiment_magnitude: mag,
+        language: string,
+    }
 };
 
 export type DisplayLogItem = {
@@ -32,7 +37,7 @@ latency: string;
     failed: boolean;
 }
 export type LogColumnKey = "time" | "prompt" | "response" | "cost" | "promptTokens" 
-| "outputTokens" | "allTokens" | "latency" | "tagGroup"| "apiKey" | "model" | "status" | "sentiment";
+| "outputTokens" | "allTokens" | "latency" | "tagGroup"| "apiKey" | "model" | "failed" | "sentiment"; //not status, should be failed
 
 export type LogTagKey = "api_key" | "model" | "status" | "sentiment";
 

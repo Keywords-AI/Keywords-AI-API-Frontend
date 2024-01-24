@@ -15,6 +15,7 @@ import {
 } from "src/store/actions";
 import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
+import { SelectInput, SelectInputTest } from "src/components/Inputs";
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
@@ -240,9 +241,9 @@ function DashboardNotConnected({
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
-          {
+          
             <div>
-              {breakdown_type !== "none" && (
+              {isPanel && breakdown_type !== "none" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
                   {colorData &&
                     Object.keys(colorData).map((name, index) => (
@@ -262,7 +263,6 @@ function DashboardNotConnected({
                 </div>
               )}
             </div>
-          }
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>

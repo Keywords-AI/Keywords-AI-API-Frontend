@@ -22,6 +22,7 @@ import { Info } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
 import { models } from "src/utilities/constants";
+import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -95,17 +96,22 @@ interface CreateProps {
   setShowForm?: (show: boolean) => {};
   setNewKeyName?: (name: string) => {};
   createApiKey?: (data: any) => {};
+  dispatchNotification?: (notification: any) => {};
   loading?: boolean;
 }
 
 const CreateFormNotConnected = React.forwardRef(
-  ({
-    apiKey,
-    setShowForm = (show: boolean) => {},
-    setNewKeyName,
-    createApiKey,
-    loading,
-  }: CreateProps, ref) => {
+  (
+    {
+      apiKey,
+      setShowForm = (show: boolean) => {},
+      setNewKeyName,
+      createApiKey,
+      loading,
+      dispatchNotification
+    }: CreateProps,
+    ref
+  ) => {
     const {
       register,
       handleSubmit,
@@ -120,6 +126,14 @@ const CreateFormNotConnected = React.forwardRef(
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
         data.rate_limit = 100;
+      }
+      data.preset_models = checkBoxFieldToList(data.preset_models);
+      if (data.preset_models.length === 0) {
+        dispatchNotification({
+          type: "error",
+          title: "Please select at least one model",
+        });
+        return;
       }
       createApiKey(data);
     };
@@ -147,7 +161,7 @@ const CreateFormNotConnected = React.forwardRef(
         className={"flex-col gap-sm self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        {!apiKey.apiKey ? (
+        {!apiKey?.apiKey ? (
           !loading ? (
             <React.Fragment>
               <div className="grid gap-sm grid-cols-[1fr,160px]">
@@ -370,6 +384,7 @@ const EditFormNotConnected = ({
   setEditingKey,
   editingKey,
   updateEditingKey,
+  dispatchNotification
 }: EditingFromProps) => {
   const [showInfo, setShowInfo] = useState(false);
   const [currentKeyName, setCurrentKeyName] = useState(
@@ -389,10 +404,13 @@ const EditFormNotConnected = ({
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    if (typeof data.preset_models === "string") {
-      data.preset_models = data.preset_models.split(",");
-    } else if (typeof data.preset_models !== "object") {
-      data.preset_models = [];
+    data.preset_models = checkBoxFieldToList(data.preset_models);
+    if (data.preset_models.length === 0) {
+      dispatchNotification({
+        type: "error",
+        title: "Please select at least one model",
+      });
+      return;
     }
     updateEditingKey({ ...editingKey, ...data });
     setEditingKey(undefined);

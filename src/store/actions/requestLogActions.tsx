@@ -10,8 +10,11 @@ export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
 
-const concatMessages = (messages: ChatMessage[]): string => {
-    return messages.map((message) => message.content).join(" ");
+const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): string => {
+  if (messages) {
+    return messages.map((message) => message?.content).join(" ");
+  }
+  return "";
 };
 
 export const processRequestLogs = (
