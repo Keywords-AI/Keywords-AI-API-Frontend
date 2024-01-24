@@ -4,7 +4,8 @@ import { RootState } from "src/types";
 import {
   getDashboardData,
   setSidePanelOpen,
-  setSelectedRequest
+  setSelectedRequest,
+  updateUser,
 } from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
@@ -16,10 +17,14 @@ import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
 import { SidePanel } from "./SidePanel";
 import FilterControl from "./FilterControl";
+import { FilterActions } from "./FilterActions";
+import { setQueryParams } from "src/utilities/navigation";
+import { useNavigate, useLocation } from "react-router-dom";
+import { get, set, useForm } from "react-hook-form";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
-  firstTime: !state.organization?.has_api_call ?? false,
+  firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
 });
@@ -28,7 +33,7 @@ const mapDispatchToProps = {
   getDashboardData,
   getRequestLogs,
   setSidePanelOpen,
-  setSelectedRequest
+  setSelectedRequest,
 };
 
 interface Actions {
@@ -47,15 +52,17 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   sidePanelOpen,
   setSidePanelOpen,
   selectedRequest,
-  setSelectedRequest
+  setSelectedRequest,
 }) => {
   useEffect(() => {
     getRequestLogs();
   }, []);
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
   const [showFilter, setShowFilter] = useState(false);
   // const [inputSets, setInputSets] = useState(1);
   const [inputSets, setInputSets] = useState([0]);
-
+  const navigate = useNavigate();
   const handleFilter = () => {
     return () => {
       setShowFilter((prev) => {
@@ -68,35 +75,47 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     };
   };
   const handleAddInputSet = () => {
-    if (inputSets.length < 3) {
-      // Find the next unique index
-      const nextIndex = inputSets.length > 0 ? Math.max(...inputSets) + 1 : 0;
-      setInputSets([...inputSets, nextIndex]);
-    }
+    // Find the next unique index
+    const nextIndex = inputSets.length > 0 ? Math.max(...inputSets) + 1 : 0;
+    setInputSets([...inputSets, nextIndex]);
   };
 
   const handleCloseInputSet = (setIndex: any) => {
     setInputSets(inputSets.filter((index) => index !== setIndex));
   };
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [editing, setEditing] = useState(false);
+  const onSubmit = (data: any) => {
+    const value = data.value === "true";
+    const negation = data.operator === "!";
+    const failed = negation ? !value : value;
+    setQueryParams({ failed }, navigate);
+    getRequestLogs();
+    setEditing(false);
+  };
+  useEffect(() => {}, [params]);
   if (firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex-col items-start self-stretch h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+      <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {!showFilter && (
+            {/* {!showFilter && (
               <Button
                 variant="small"
                 icon={Filter}
                 text="Filter"
                 onClick={handleFilter()}
-                // borderColor="shadow-border-dashed"
+                iconPosition="left"
               />
-            )}
+            )} */}
             {showFilter && (
               <Button
                 variant="small"
@@ -114,74 +133,74 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
-            {showFilter && (
-              <React.Fragment>
-                {inputSets.map((inputSetId) => (
-                  <div
-                    className="flex flex-row items-center gap-[2px]"
-                    key={inputSetId}
-                  >
-                    <SelectInput
-                      headLess
-                      placeholder="Status"
-                      align="end"
-                      // value={currentTimeRange}
-                      icon={Down}
-                      padding="py-xxxs px-xxs"
-                      gap="gap-xxs"
-                      choices={[
-                        { name: "Status", value: "status" },
-                        // { name: "Week", value: "weekly" },
-                        // { name: "Month", value: "monthly" },
-                        // { name: "Year", value: "yearly" },
-                      ]}
-                      // handleSelected={handleTimePeriodSelection}
+            <React.Fragment>
+              {/* {params.get("failed") && (
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="flex flex-row items-center gap-[2px]"
+                >
+                  <SelectInput
+                    headLess
+                    defaultValue={"failed"}
+                    {...register("metric")}
+                    align="end"
+                    // value={currentTimeRange}
+                    icon={Down}
+                    padding="py-xxxs px-xxs"
+                    gap="gap-xxs"
+                    choices={[{ name: "Status", value: "failed" }]}
+                    // handleSelected={handleTimePeriodSelection}
+                    onChange={() => setEditing(true)}
+                  />
+                  <SelectInput
+                    headLess
+                    placeholder="is"
+                    align="end"
+                    {...register("operator")}
+                    // value={currentTimeRange}
+                    icon={Down}
+                    padding="py-xxxs px-xxs"
+                    gap="gap-xxs"
+                    choices={[
+                      { name: "is", value: "" },
+                      { name: "is not", value: "!" },
+                    ]}
+                    onChange={() => setEditing(true)}
+                  />
+                  <SelectInput
+                    headLess
+                    placeholder="Error"
+                    align="end"
+                    {...register("value")}
+                    defaultValue="false"
+                    // value={currentTimeRange}
+                    icon={Down}
+                    padding="py-xxxs px-xxs"
+                    gap="gap-xxs"
+                    choices={[
+                      { name: "Error", value: "true" }, // Yep, "truly" failed
+                      { name: "Success", value: "false" },
+                    ]}
+                    onChange={() => setEditing(true)}
+                  />
+                  {
+                    <DotsButton
+                      icon={Close}
+                      onClick={() => handleCloseInputSet(inputSetId)}
                     />
-                    <SelectInput
-                      headLess
-                      placeholder="is"
-                      align="end"
-                      // value={currentTimeRange}
-                      icon={Down}
-                      padding="py-xxxs px-xxs"
-                      gap="gap-xxs"
-                      choices={[
-                        { name: "is", value: "is" },
-                        { name: "is not", value: "is_not" },
-                        // { name: "Month", value: "monthly" },
-                        // { name: "Year", value: "yearly" },
-                      ]}
-                      // handleSelected={handleTimePeriodSelection}
-                    />
-                    <SelectInput
-                      headLess
-                      placeholder="Error"
-                      align="end"
-                      // value={currentTimeRange}
-                      icon={Down}
-                      padding="py-xxxs px-xxs"
-                      gap="gap-xxs"
-                      choices={[
-                        { name: "Error", value: "error" },
-                        { name: "Success", value: "success" },
-                        // { name: "Month", value: "monthly" },
-                        // { name: "Year", value: "yearly" },
-                      ]}
-                      // handleSelected={handleTimePeriodSelection}
-                    />
-                    {
-                      <DotsButton
-                        icon={Close}
-                        onClick={() => handleCloseInputSet(inputSetId)}
-                      />
-                    }
-                  </div>
-                ))}
-                {inputSets.length < 3 && (
-                  <DotsButton icon={Add} onClick={handleAddInputSet} />
-                )}
-              </React.Fragment>
-            )}
+                  }
+                  {editing && (
+                    <Button variant="small" text={"Apply"} />
+                  )}
+                </form>
+              )} */}
+              {/* {inputSets.length < 3 && (
+                <DotsButton icon={Add} onClick={handleAddInputSet} />
+              )} */}
+            </React.Fragment>
+            <span className={"caption text-gray-4"}>
+              Many more filtering options coming soon! - Raymond 1/23
+            </span>
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs">
@@ -228,9 +247,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               </div>
             )}
           </div>
-          <div className="flex-col items-start h-full overflow-auto">
-            <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
-          </div>
+          <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
         </div>
       </div>
     );

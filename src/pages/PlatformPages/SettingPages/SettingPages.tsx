@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { PreProcessPage, Page } from "src/types";
 import SettingsPage from "./SettingsPage";
-import ApiKeyPage from "./ApiKeyPage";
+import ApiKeyPage from "./ApiKeyPage/ApiKeyPage";
 import { MemberPage } from "./MemberPage";
 import { BillingPage } from "./BillingPage";
 import { Building } from "src/components/Icons";
@@ -13,7 +13,7 @@ import { UserSettings } from "./UserSettingsPage";
 import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
-
+import Modelspage from "./Modelspage";
 
 const pages: PreProcessPage[] = [
   {
@@ -58,6 +58,10 @@ const pages: PreProcessPage[] = [
     title: "Alerts & Fallback",
     forOrgAdmin: true,
     page: <AlertsFallbackPage />,
+  },
+  {
+    title: "Models",
+    page: <Modelspage />,
   },
 ];
 

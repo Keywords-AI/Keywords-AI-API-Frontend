@@ -3,7 +3,7 @@ import MetricCard from "src/components/Cards/MetricCard";
 import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
-import { DashboardChart } from "src/components/Display";
+import { DashboardChart, SentimentChart } from "src/components/Display";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
   getDashboardData,
@@ -12,11 +12,13 @@ import {
   setDisplayMetric,
   setDisplayTimeRange,
   setDisplayType,
-  setModelColors,
 } from "src/store/actions";
 import { useNavigate, useLocation, Form, useParams } from "react-router-dom";
 import { Button } from "src/components";
+<<<<<<< HEAD
 import { SelectInput, SelectInputTest } from "src/components/Inputs";
+=======
+>>>>>>> main
 import { DotsButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 import { Popover } from "src/components/Dialogs";
@@ -24,6 +26,7 @@ import { Metrics, colorTagsClasses } from "src/utilities/constants";
 import { PanelGraph } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
+import DashboardFilter from "./DashboardFilter";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -37,11 +40,12 @@ const mapStateToProps = (state) => ({
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
   modelData: state.dashboard.modelData,
+  modelColors: state.dashboard.modelColors,
+  keyColors: state.dashboard.keyColors,
 });
 const mapDispatchToProps = {
   getDashboardData,
   setDateData,
-  setModelColors,
 };
 
 function DashboardNotConnected({
@@ -56,7 +60,8 @@ function DashboardNotConnected({
   firstTime,
   organization,
   modelData,
-  setModelColors,
+  modelColors,
+  keyColors,
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -66,24 +71,11 @@ function DashboardNotConnected({
   const [isPanel, setIsPanel] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const useKeyboardShortcut = (shortcutKeys, callback) => {};
-
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type = new URLSearchParams(location.search).get("breakdown");
-  const sortedModel = modelData
-    .sort((a, b) => b[performance_param] - a[performance_param])
-    .map((model, index) => (model.model == "" ? "unknown model" : model.model))
-    .filter((name, index, self) => self.indexOf(name) === index);
-
   useEffect(() => {
     getDashboardData();
-
-    setModelColors(
-      sortedModel.reduce((acc, key, index) => {
-        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-        return acc;
-      }, {})
-    );
-  }, []);
+  }, [firstName, performance_param, breakdown_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -92,17 +84,15 @@ function DashboardNotConnected({
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     getDashboardData();
-    setModelColors(
-      sortedModel.reduce((acc, key, index) => {
-        acc[key] = colorTagsClasses[index % colorTagsClasses.length];
-        return acc;
-      }, {})
-    );
   };
 
   const handleCardClick = (metricKey) => {
     setActiveCard(activeCard === metricKey ? null : metricKey);
   };
+  let colorData = [];
+  if (breakdown_type !== "none") {
+    colorData = breakdown_type === "by_model" ? modelColors : keyColors;
+  }
 
   const metrics = [
     {
@@ -135,7 +125,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -151,7 +140,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -167,7 +155,6 @@ function DashboardNotConnected({
             navigate
           )
         );
-        getDashboardData();
       },
     },
     {
@@ -179,10 +166,10 @@ function DashboardNotConnected({
         dispatch(
           setDisplayMetric(Metrics.total_cost.value, setQueryParams, navigate)
         );
-        getDashboardData();
       },
     },
   ];
+
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -257,29 +244,30 @@ function DashboardNotConnected({
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
-          {
+          
             <div>
-              {breakdown_type === "by_model" && (
+              {isPanel && breakdown_type !== "none" && (
                 <div className="flex items-center content-center gap-xs flex-wrap">
-                  {sortedModel.map((name, index) => (
-                    <div className="flex items-center gap-xxs" key={index}>
-                      <div
-                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                        style={{
-                          backgroundColor:
-                            colorTagsClasses[index % colorTagsClasses.length],
-                        }}
-                      ></div>
-                      <span className="caption text-gray-4">
-                        {name || "unknown model"}
-                      </span>
-                    </div>
-                  ))}
+                  {colorData &&
+                    Object.keys(colorData).map((name, index) => (
+                      <div className="flex items-center gap-xxs" key={index}>
+                        <div
+                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                          style={{
+                            backgroundColor:
+                              colorTagsClasses[index % colorTagsClasses.length],
+                          }}
+                        ></div>
+                        <span className="caption text-gray-4">
+                          {name || "unknown model"}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               )}
             </div>
-          }
           <div className="flex items-center gap-xxs">
+<<<<<<< HEAD
             <Button
               variant="small"
               text="Today"
@@ -473,6 +461,9 @@ function DashboardNotConnected({
               </form>
             </Popover>
 
+=======
+            <DashboardFilter />
+>>>>>>> main
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
@@ -481,7 +472,9 @@ function DashboardNotConnected({
           </div>
         </div>
         <div className="flex flex-row h-full">
-          <DashboardChart />
+          <div className="flex flex-col w-full h-full">
+            <DashboardChart />
+          </div>
           {isPanel && <PanelGraph />}
         </div>
       </div>

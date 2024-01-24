@@ -3,7 +3,7 @@ import { CopyButton, DotsButton } from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
-import { ModelTag, StatusTag } from "src/components/Misc";
+import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
 import { Copy } from "src/components";
 import { models } from "src/utilities/constants";
 
@@ -15,6 +15,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
+  const completeInteraction = logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
     "Created at": (
       <span className="text-sm-regular text-gray-4">
@@ -30,29 +31,28 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag(logItem?.failed || false),
+    Status: StatusTag({failed:logItem?.failed || false}),
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "production"}
       </span>
     ),
-    Model: ModelTag(logItem?.model || "unknown"),
+    Model: ModelTag({ model: logItem?.model || "unknown" }),
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens || "2312"}
+        {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
       </span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens || "4220"}
+        {logItem?.completion_tokens?.toLocaleString() || "4,220"}
       </span>
     ),
     "Total tokens": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.prompt_tokens &&
+        {((logItem?.prompt_tokens &&
           logItem?.prompt_tokens &&
-          logItem?.prompt_tokens + logItem?.completion_tokens) ||
-          "6532"}
+          logItem?.prompt_tokens + logItem?.completion_tokens) || "6,532").toLocaleString()}
       </span>
     ),
     Cost: (
@@ -65,6 +65,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {(logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
+    Sentiment: SentimentTag({sentiment: logItem?.sentiment || 2, text: logItem?.sentiment || ""}),
   };
   const getMessageType = (role: string) => {
     if (role === "system") {
@@ -74,10 +75,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   }
+  console.log("eorrrorr", logItem);
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l shadow-gray-2 bg-gray-1 overflow-x-hidden",
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0", 
+        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
@@ -105,10 +108,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       </div>
       <Divider />
       <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-        {logItem?.prompt_messages?.map((message, index) => (
+        {completeInteraction.map((message, index) => (
           <div
             key={index}
-            className="flex-col items-start gap-xxs self-stretch"
+            className="flex-col items-start gap-xxxxs self-stretch"
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">

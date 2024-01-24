@@ -28,6 +28,9 @@ import {
   SET_P99_DATA,
   SET_TIME_FRAME_OFFSET,
   SET_MODEL_COLORS,
+  SET_KEY_COLORS,
+  SET_SENTIMENT_SUMMARY_DATA,
+  SET_SENTIMENT_DATA,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -124,6 +127,59 @@ const initState = {
   ).toISOString(),
   timeOffset: 0,
   modelColors: {},
+  keyColors: {},
+  sentimentSummaryData: [
+    {
+      sentiment: "positive",
+      value: 5454,
+    },
+    {
+      sentiment: "negative",
+      value: 1087,
+    },
+    {
+      sentiment: "neutral",
+      value: 3589,
+    },
+  ],
+  sentimentData: [
+    {
+      date_group: "2024-01-10 00:00:00+00:0",
+      positive: 500,
+      negative: 200,
+      neutral: 300,
+    },
+    {
+      date_group: "2024-01-11 00:00:00+00:0",
+      positive: 400,
+      negative: 100,
+      neutral: 200,
+    },
+    {
+      date_group: "2024-01-12 00:00:00+00:0",
+      positive: 300,
+      negative: 300,
+      neutral: 100,
+    },
+    {
+      date_group: "2024-01-13 00:00:00+00:0",
+      positive: 200,
+      negative: 400,
+      neutral: 400,
+    },
+    {
+      date_group: "2024-01-14 00:00:00+00:0",
+      positive: 100,
+      negative: 500,
+      neutral: 500,
+    },
+    {
+      date_group: "2024-01-15 00:00:00+00:0",
+      positive: 0,
+      negative: 600,
+      neutral: 600,
+    },
+  ],
 };
 
 export default function dashboardReducer(state = initState, action) {
@@ -164,6 +220,10 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, apiData: action.payload };
     case SET_AVG_API_DATA:
       return { ...state, avgApiData: action.payload };
+    case SET_SENTIMENT_SUMMARY_DATA:
+      return { ...state, sentimentSummaryData: action.payload };
+    case SET_SENTIMENT_DATA:
+      return { ...state, sentimentData: action.payload };
     case SET_DISPLAY_METRIC:
       return {
         ...state,
@@ -186,7 +246,10 @@ export default function dashboardReducer(state = initState, action) {
       };
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
-
+    case SET_MODEL_COLORS:
+      return { ...state, modelColors: {...action.payload} };
+    case SET_KEY_COLORS:
+      return { ...state, keyColors: {...action.payload} };
     case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
@@ -216,14 +279,6 @@ export default function dashboardReducer(state = initState, action) {
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
-    case SET_MODEL_COLORS:
-      return { ...state, modelColors: action.payload };
-
-      return {
-        ...state,
-        timeFrame: updatedTimeFrame.toISOString(),
-        timeOffset: state.timeOffset + offset,
-      };
 
     default:
       return state;
