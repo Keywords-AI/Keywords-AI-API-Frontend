@@ -147,7 +147,7 @@ const CreateFormNotConnected = React.forwardRef(
         className={"flex-col gap-sm self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        {!apiKey.apiKey ? (
+        {!apiKey?.apiKey ? (
           !loading ? (
             <React.Fragment>
               <div className="grid gap-sm grid-cols-[1fr,160px]">
