@@ -15,7 +15,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
-  console.log("logItem", logItem);
   const completeInteraction =
     logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
