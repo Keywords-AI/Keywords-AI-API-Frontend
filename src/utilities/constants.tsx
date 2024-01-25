@@ -195,10 +195,10 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "80px" },
+  { name: "Latency", retrievalKey: "latency", width: "80px" },
   { name: "Prompt tokens", retrievalKey: "promptTokens", width: "120px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "120px" },
   { name: "All tokens", retrievalKey: "allTokens", width: "80px" },
-  { name: "Latency", retrievalKey: "latency", width: "80px" },
 ];
 
 export const requestLogTagColumns: LogItemTag[] = [
@@ -222,6 +222,12 @@ export const requestLogTagColumns: LogItemTag[] = [
     rawDataKey: "status",
     renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
   },
+  {
+    name: "sentiment",
+    retrievalKey: "failed",
+    rawDataKey: "status",
+    renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
+  }
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [
