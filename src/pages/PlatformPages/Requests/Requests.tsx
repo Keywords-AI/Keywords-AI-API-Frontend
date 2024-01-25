@@ -107,7 +107,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {/* {!showFilter && (
+            {!showFilter && (
               <Button
                 variant="small"
                 icon={Filter}
@@ -115,7 +115,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                 onClick={handleFilter()}
                 iconPosition="left"
               />
-            )} */}
+            )}
             {showFilter && (
               <Button
                 variant="small"
@@ -134,7 +134,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             <React.Fragment>
-              {/* {params.get("failed") && (
+              {params.get("failed") && (
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="flex flex-row items-center gap-[2px]"
@@ -193,10 +193,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                     <Button variant="small" text={"Apply"} />
                   )}
                 </form>
-              )} */}
-              {/* {inputSets.length < 3 && (
+              )}
+              {inputSets.length < 3 && (
                 <DotsButton icon={Add} onClick={handleAddInputSet} />
-              )} */}
+              )}
             </React.Fragment>
             <span className={"caption text-gray-4"}>
               Many more filtering options coming soon! - Raymond 1/23

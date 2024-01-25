@@ -1,5 +1,6 @@
 import React from "react";
 import { ChatMessage } from "./chatMessage";
+import { Choice, SelectInputProps } from "./input";
 
 export type LogItem = {
     id: number;
@@ -53,4 +54,21 @@ export type LogItemTag = {
     retrievalKey: LogColumnKey;
     renderFunction: (columnValue: any) => React.ReactNode;
 };
+
+export type FilterType = LogColumnKey | LogTagKey;
+
+export type RequestFilter = {
+    [Key in FilterType]?: {
+        metricSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
+        operationSelection: React.ReactNode; // <SelectInput {...params} />
+        changeField: React.ReactNode; // any keywords input field, for example <TextInput {...params} />
+    };
+};
+// export const RequestFilters: RequestFilterType = {
+//     failed: {
+//       metricSelection: <SelectInput />, // <SelectInput {...params} />
+//       operationSelection: <SelectInput />, // <SelectInput {...params} />
+//       changeFiled: <SelectInput /> // <AnyInputElement {...params} />
+//     }
+//   }
 

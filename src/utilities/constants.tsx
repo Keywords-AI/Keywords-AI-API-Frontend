@@ -10,8 +10,11 @@ import {
   Tokens,
   Cost,
 } from "src/components/Icons";
-import { LogItemColumn, LogColumnKey, LogItem, LogItemTag } from "src/types";
+import { LogItemColumn, LogColumnKey, LogItem, LogItemTag,
+RequestFilter,
+} from "src/types";
 import { ModelTag, StatusTag } from "src/components/Misc";
+import { SelectInput } from "src/components/Inputs";
 import React from "react";
 
 const colors = [
