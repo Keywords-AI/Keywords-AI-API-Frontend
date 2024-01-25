@@ -23,6 +23,10 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
+    if (data.invitation_code !== "keywordsai_ycw24") {
+      alert("Invitation code is invalid");
+      return;
+    }
     signup(data);
   };
   // Keywords666
@@ -47,6 +51,7 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
             </div>
             <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, })} />
             <TextInput title="Password" type="password" required placeholder="" {...register("password")} />
+            <TextInput title="Invitation Code" type="password" required placeholder="" {...register("invitation_code")} />
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
