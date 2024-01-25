@@ -1,10 +1,10 @@
-import { useTypedSelector } from "src/store/store";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { PlaygroundMessage, PromptLogs, TopBar } from "./components";
 import { DotsButton } from "src/components/Buttons";
 import { Copy, Pencil } from "src/components";
 import { TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { setSelectedLogs } from "src/store/actions";
+import { setPrompt, setSelectedLogs } from "src/store/actions";
 import { StreamingMessage } from "./components/PlaygroundMessage";
 
 export default function Playground() {
@@ -33,20 +33,15 @@ const Main = () => {
     </div>
   );
 };
-const mapStateToProps = (state) => ({
-
-});
-const mapDispatchToProps = {
-
-};
+const mapStateToProps = (state) => ({});
+const mapDispatchToProps = {};
 
 const PromptInput = (selectedLogs) => {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
   );
-  const prompt = useTypedSelector(
-    (state) => state.playground.prompt
-  );
+  const prompt = useTypedSelector((state) => state.playground.prompt);
+  const dispatch = useTypedDispatch();
   return (
     <div className="flex w-[320px] flex-col gap-xxxs self-stretch">
       <div className="flex justify-between items-center self-stretch">
@@ -56,7 +51,10 @@ const PromptInput = (selectedLogs) => {
           <DotsButton icon={Copy} />
         </div>
       </div>
-      <TextAreaInput  value={prompt}/>
+      <TextAreaInput
+        value={prompt}
+        onChange={(e) => dispatch(setPrompt(e.target.value))}
+      />
     </div>
   );
 };
