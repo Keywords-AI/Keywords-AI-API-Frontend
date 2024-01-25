@@ -6,6 +6,7 @@ import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
 import { Copy } from "src/components";
 import { models } from "src/utilities/constants";
+import React from "react";
 
 interface SidePanelProps {
   open: boolean;
@@ -72,7 +73,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Sentiment: (
       <SentimentTag
         sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
-        text={logItem?.sentiment_analysis.language || ""}
+        text={logItem?.sentiment_analysis?.language || ""}
       />
     ),
   };
@@ -84,7 +85,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   };
-  console.log("eorrrorr", logItem);
   return (
     <div
       className={cn(
@@ -116,11 +116,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         })}
       </div>
       <Divider />
-      <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-        {completeInteraction.map((message, index) => (
+      {completeInteraction.map((message, index) => (
+        <React.Fragment key={index}>
           <div
             key={index}
-            className="flex-col items-start gap-xxxxs self-stretch"
+            className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">
@@ -137,8 +137,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               {message.content}
             </div>
           </div>
-        ))}
-      </div>
+          <Divider />
+        </React.Fragment >
+      ))}
     </div>
   );
 };

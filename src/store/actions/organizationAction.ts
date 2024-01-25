@@ -6,6 +6,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { TypedDispatch } from "src/types";
+import { getUser } from "./userAction";
 
 export const SET_ORGANIZATION = "SET_ORGANIZATION";
 export const CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
@@ -56,6 +57,7 @@ export const createOrganization = (organization, callback = () => { }) => {
           dispatch(
             dispatchNotification({ type: "error", title: responseJson.detail })
           );
+          dispatch(getUser())
           callback(); // Perform the action anyway
         } else {
           const errors = await res.json();

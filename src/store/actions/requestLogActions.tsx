@@ -17,6 +17,13 @@ const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): stri
   return "";
 };
 
+export const setFilter = (filter: string) => {
+  return {
+    type: SET_REQUEST_LOGS,
+    payload: filter,
+  };
+}
+
 export const processRequestLogs = (
   requestLogs: LogItem[]
 ): DisplayLogItem[] => {
@@ -33,7 +40,8 @@ export const processRequestLogs = (
       latency: `${log.latency.toFixed(3)}s`, // + converts string to number
       apiKey: log.api_key,
       model: log.model,
-      failed: log.failed
+      failed: log.failed,
+      sentimentAnalysis: log.sentiment_analysis,
     };
   });
 };

@@ -69,7 +69,7 @@ const ModelsTable = ({
               text={item.moderation}
               textColor={item.moderation == "Filtered" ?"text-success" : "text-error"}
               backgroundColor={
-                item.moderation == "Filtered" ? "bg-success/10" : "bg-error/10"
+                item.moderation == "Filtered" ? "bg-success/10" : ""
               }
               border=""
             />
@@ -146,7 +146,7 @@ export default function Modelspage() {
             completionCost: "$0.00252",
             context: "100K",
             ratelimit: "-",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "j2-ultra",
@@ -155,7 +155,7 @@ export default function Modelspage() {
             completionCost: "$0.01575",
             context: "8K",
             ratelimit: "180 RPM",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "j2-mid",
@@ -164,7 +164,7 @@ export default function Modelspage() {
             completionCost: "$0.0105",
             context: "8K",
             ratelimit: "480 RPM",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "j2-light",
@@ -173,7 +173,7 @@ export default function Modelspage() {
             completionCost: "$0.00315",
             context: "8K",
             ratelimit: "480 RPM",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "command",
@@ -182,7 +182,7 @@ export default function Modelspage() {
             completionCost: "$0.0021",
             context: "4K",
             ratelimit: "10K RPM",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "command-light",
@@ -191,7 +191,7 @@ export default function Modelspage() {
             completionCost: "$0.00063",
             context: "4K",
             ratelimit: "10K RPM",
-            moderation: "Filtered",
+            moderation: "",
           },
           {
             name: "text-bison-32k",
