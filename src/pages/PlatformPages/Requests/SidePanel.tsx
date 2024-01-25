@@ -69,12 +69,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {(logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
-    // Sentiment: (
-    //   <SentimentTag
-    //     sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
-    //     text={logItem?.sentiment_analysis.language || ""}
-    //   />
-    // ),
+    Sentiment: (
+      <SentimentTag
+        sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
+        text={logItem?.sentiment_analysis?.language || ""}
+      />
+    ),
   };
   const getMessageType = (role: string) => {
     if (role === "system") {
