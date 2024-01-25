@@ -17,6 +17,13 @@ const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): stri
   return "";
 };
 
+export const setFilter = (filter: string) => {
+  return {
+    type: SET_REQUEST_LOGS,
+    payload: filter,
+  };
+}
+
 export const processRequestLogs = (
   requestLogs: LogItem[]
 ): DisplayLogItem[] => {
