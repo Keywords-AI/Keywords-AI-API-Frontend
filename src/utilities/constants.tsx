@@ -194,11 +194,11 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Time", retrievalKey: "time", width: "120px" },
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
-  { name: "Cost", retrievalKey: "cost", width: "80px" },
-  { name: "Latency", retrievalKey: "latency", width: "80px" },
+  { name: "Cost", retrievalKey: "cost", width: "76px" },
+  { name: "Latency", retrievalKey: "latency", width: "64px" },
   { name: "Prompt tokens", retrievalKey: "promptTokens", width: "120px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "120px" },
-  { name: "All tokens", retrievalKey: "allTokens", width: "80px" },
+  { name: "All tokens", retrievalKey: "allTokens", width: "72px" },
 ];
 
 export const requestLogTagColumns: LogItemTag[] = [
