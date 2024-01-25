@@ -33,7 +33,8 @@ export const processRequestLogs = (
       latency: `${log.latency.toFixed(3)}s`, // + converts string to number
       apiKey: log.api_key,
       model: log.model,
-      failed: log.failed
+      failed: log.failed,
+      sentimentAnalysis: log.sentiment_analysis,
     };
   });
 };
