@@ -318,7 +318,7 @@ export const getDashboardData = (
           params.get("summary_type")
         );
         const groupByData = { by_model, by_key };
-
+        // console.log("there there", data?.data);
         dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
@@ -425,6 +425,7 @@ export const fillMissingDate = (data, dateGroup) => {
   };
   const handleDailyCase = () => {
     const now = new Date();
+
     // BE gives UTC strings, Date() converts to local timezone
     // The hours are accurate, but the date is not
     for (let hour = 0; hour < 24; hour++) {
@@ -432,7 +433,7 @@ export const fillMissingDate = (data, dateGroup) => {
       const found = data.find((d) => {
         const date = new Date(d.date_group);
         const foundDate =
-          date.getHours() === hour && date.getDate() === now.getDate();
+          date.getHours() === hour && date.getDate() === now.getDate(); //@raymond 
         return foundDate;
       });
       newDataArray.push(

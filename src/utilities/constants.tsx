@@ -228,7 +228,7 @@ export const requestLogTagColumns: LogItemTag[] = [
     renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
   },
   {
-    name: "sentiment",
+    name: "Sentiment",
     retrievalKey: "sentimentAnalysis",
     renderFunction: (sentimental_analysis: any) => (
       <SentimentTag sentiment_score={sentimental_analysis?.sentiment_score} showScore={false}/>
