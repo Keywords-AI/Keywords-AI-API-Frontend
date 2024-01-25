@@ -69,12 +69,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {(logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
-    Sentiment: (
-      <SentimentTag
-        sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
-        text={logItem?.sentiment_analysis.language || ""}
-      />
-    ),
+    // Sentiment: (
+    //   <SentimentTag
+    //     sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
+    //     text={logItem?.sentiment_analysis.language || ""}
+    //   />
+    // ),
   };
   const getMessageType = (role: string) => {
     if (role === "system") {
@@ -84,7 +84,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   };
-  console.log("eorrrorr", logItem);
   return (
     <div
       className={cn(
@@ -116,11 +115,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         })}
       </div>
       <Divider />
-      <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
+      <div className="flex-col items-start gap-xs self-stretch pt-sm px-lg pb-[24px]">
         {completeInteraction.map((message, index) => (
           <div
             key={index}
-            className="flex-col items-start gap-xxxxs self-stretch"
+            className="flex-col items-start gap-xxxs self-stretch"
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">
