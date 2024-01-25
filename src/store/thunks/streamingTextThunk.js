@@ -56,7 +56,7 @@ export const sendStreamingTextThunk = async ({
       if (item.role == "user") {
         return {
           role: "user",
-          content: item.userContent,
+          content: item.user_content,
         };
       }
       return {
@@ -65,7 +65,6 @@ export const sendStreamingTextThunk = async ({
       };
     }),
   ];
-  console.log(messages);
   const body = JSON.stringify({
     ...params,
     messages,
