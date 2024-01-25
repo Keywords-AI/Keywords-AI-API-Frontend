@@ -60,8 +60,8 @@ export type FilterType = LogColumnKey | LogTagKey;
 export type RequestFilter = {
     [Key in FilterType]?: {
         metricSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
-        operationSelection: React.ReactNode; // <SelectInput {...params} />
-        changeField: React.ReactNode; // any keywords input field, for example <TextInput {...params} />
+        operationSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
+        changeField: (register: any)=>React.ReactNode; // any keywords input field, for example <TextInput {...params} />
     };
 };
 // export const RequestFilters: RequestFilterType = {
