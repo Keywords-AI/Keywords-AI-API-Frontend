@@ -14,7 +14,23 @@ export const APPEND_MESSAGE = "APPEND_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 export const SET_LAST_MESSAGE = "SET_LAST_MESSAGE";
 export const SET_CURRENT_BRAND = "SET_CURRENT_BRAND";
+export const TOGGLE_LEFT_PANEL = "TOGGLE_LEFT_PANEL";
+export const TOGGLE_RIGHT_PANEL = "TOGGLE_RIGHT_PANEL";
+export const SET_SELECTED_LOGS = "SET_SELECTED_LOGS";
+export const SET_MESSAGE_BY_INDEX = "SET_MESSAGE_BY_INDEX";
+
 // Action Creator
+export const setMessageByIndex = (payload) => ({
+  type: SET_MESSAGE_BY_INDEX,
+  payload: payload,
+});
+export const toggleLeftPanel = () => ({
+  type: TOGGLE_LEFT_PANEL,
+});
+export const toggleRightPanel = () => ({
+  type: TOGGLE_RIGHT_PANEL,
+});
+
 export const setMessages = (messages) => ({
   type: SET_MESSAGES,
   payload: messages,
@@ -66,13 +82,18 @@ export const setOutputs = (outputs) => {
     // Extract just the model names from the sorted array
     const sortedModels = modelsWithScores.map(([model, _score]) => model);
     const currentModel = getState().playground.currentModel;
-    dispatch(setCurrentModel(currentModel || sortedModels[0]));
+    // dispatch(setCurrentModel(currentModel || sortedModels[0]));
     dispatch({
       type: SET_OUTPUTS,
       payload: outputs,
     });
   };
 };
+
+export const setSelectedLogs = (selectedLogs) => ({
+  type: SET_SELECTED_LOGS,
+  payload: selectedLogs,
+});
 
 export const setCacheAnswer = (key, cacheAnswers) => ({
   type: SET_CACHE_ANSWER,
@@ -83,42 +104,103 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = () => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const currentModel = playground.currentModel;
+    const currentModels = playground.currentModels;
     const messages = playground.messages;
     const systemPrompt = playground.prompt;
-    try {
-      await sendStreamingTextThunk({
-        params: {
-          messages: messages,
-          stream: true,
-          model: currentModel,
-          optimize: playground.modelOptions.optimize,
-          creativity: playground.modelOptions.creativity,
-          max_tokens: playground.modelOptions.maxTokens, // python style snake case
-        },
-        prompt: systemPrompt,
-        callback: () => {
-          const currentModel = getState().playground.currentModel;
-          const streamingText = getState().streamingText.streamingText;
-          const newMessage = {
-            role: currentModel,
-            content: streamingText,
-          };
-          const lastuserMessageIdx = getState().playground.messages.length - 1;
-          dispatch(appendMessage(newMessage));
-          const cache = {
-            answer: streamingText,
-            index: lastuserMessageIdx,
-          };
-          dispatch(setCacheAnswer(currentModel, cache));
-          dispatch(appendMessage({ role: "user", content: "" }));
-        },
-        dispatch: dispatch,
-        getState: getState,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(
+      appendMessage({
+        id: messages.legnth,
+        role: "assistant",
+        responses: [null, null],
+        hidden: true,
+      })
+    );
+    Promise.all(
+      currentModels.map(async (model, channel) => {
+        try {
+          await sendStreamingTextThunk({
+            channel: channel,
+            params: {
+              messages: messages,
+              stream: true,
+              model: model,
+              optimize: playground.modelOptions.optimize,
+              creativity: playground.modelOptions.creativity,
+              max_tokens: playground.modelOptions.maxTokens, // python style snake case
+            },
+            prompt: systemPrompt,
+            callback: () => {
+              const streamingText =
+                getState().streamingText[channel].streamingText;
+
+              const id = getState().playground.messages.length - 1;
+              const lastMessage = getState().playground.messages.slice(-1)[0];
+              const newResponse = {
+                model: model,
+                content: streamingText,
+                complete: true,
+              };
+              if (channel == 0) {
+                const complete =
+                  lastMessage.responses[1] != null &&
+                  lastMessage.responses[1].complete == true;
+                dispatch(
+                  setLastMessage({
+                    id: id,
+                    hidden: complete ? false : true,
+                    role: "assistant",
+                    responses: [newResponse, lastMessage.responses[1]],
+                  })
+                );
+                if (complete) {
+                  dispatch(
+                    appendMessage({
+                      id: id + 1,
+                      role: "user",
+                      userContent: "",
+                    })
+                  );
+                }
+              } else if (channel == 1) {
+                const complete =
+                  lastMessage.responses[0] != null &&
+                  lastMessage.responses[0].complete == true;
+                dispatch(
+                  setLastMessage({
+                    id: id,
+                    hidden: complete ? false : true,
+                    role: "assistant",
+                    responses: [lastMessage.responses[0], newResponse],
+                  })
+                );
+                if (complete) {
+                  dispatch(
+                    appendMessage({
+                      id: id + 1,
+                      role: "user",
+                      userContent: "",
+                    })
+                  );
+                }
+              }
+
+              // const lastuserMessageIdx =
+              //   getState().playground.messages.length - 1;
+              // dispatch(appendMessage(newMessage));
+              // const cache = {
+              //   answer: streamingText,
+              //   index: lastuserMessageIdx,
+              // };
+              // dispatch(setCacheAnswer(currentModel, cache));
+            },
+            dispatch: dispatch,
+            getState: getState,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
   };
 };
 

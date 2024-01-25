@@ -5,6 +5,10 @@ import {
   sendStreamingTextFailure,
   sendStreamingTextSuccess,
   sendStreamingTextPartial,
+  sendStreamingText2Request,
+  sendStreamingText2Success,
+  sendStreamingText2Partial,
+  sendStreamingText2Failure,
 } from "../actions/streamingTextAction";
 // import store from "../store";
 import { setOutputs } from "../actions/playgroundAction";
@@ -23,6 +27,7 @@ import { dispatchNotification } from "src/store/actions";
  * @returns {Promise<void>} - A promise that resolves when the streaming text is sent successfully or rejects with an error.
  */
 export const sendStreamingTextThunk = async ({
+  channel,
   params,
   host = apiConfig.apiURL,
   path = "api/playground/ask/",
@@ -39,13 +44,28 @@ export const sendStreamingTextThunk = async ({
     "X-CSRFToken": getCookie("csrftoken"),
     Authorization: `Bearer ${retrieveAccessToken()}`,
   };
-  dispatch(sendStreamingTextRequest());
+  if (channel == 0) {
+    dispatch(sendStreamingTextRequest());
+  } else if (channel == 1) {
+    dispatch(sendStreamingText2Request());
+  }
+
   const messages = [
     { role: "system", content: prompt || "You are a helpful assistant." },
-    ...params.messages.map((item) =>
-      item.role !== "user" ? { ...item, role: "assistant" } : item
-    ),
+    ...params.messages.map((item) => {
+      if (item.role == "user") {
+        return {
+          role: "user",
+          content: item.userContent,
+        };
+      }
+      return {
+        role: "assistant",
+        content: item.responses[channel].content,
+      };
+    }),
   ];
+  console.log(messages);
   const body = JSON.stringify({
     ...params,
     messages,
@@ -81,7 +101,12 @@ export const sendStreamingTextThunk = async ({
       ]);
       if (done) {
         reader.cancel();
-        dispatch(sendStreamingTextSuccess());
+        if (channel == 0) {
+          dispatch(sendStreamingTextSuccess());
+        } else if (channel == 1) {
+          dispatch(sendStreamingText2Success());
+        }
+
         if (callback && typeof callback === "function") {
           callback();
         }
@@ -93,7 +118,7 @@ export const sendStreamingTextThunk = async ({
       dataString = decoder.decode(value);
 
       const chunks = dataString.split("---");
-      if (getState().streamingText.abort) {
+      if (getState().streamingText[channel].abort) {
         throw new Error("Aborted");
       }
       chunks.forEach((chunk, index) => {
@@ -116,12 +141,30 @@ export const sendStreamingTextThunk = async ({
             dispatch(sendStreamingTextPartial(messageChunk));
           }
 
-          // Clear dataString after the last chunk has been processed
-          if (index === chunks.length - 1) {
-            dataString = "";
+        if (parsedChunk.evaluation) {
+          const { completion_tokens, cost, latency, scores } =
+            parsedChunk.evaluation;
+          // TODO: Output to the correct channel
+          dispatch(
+            setOutputs({
+              tokens: completion_tokens,
+              cost,
+              latency,
+              score: scores,
+            })
+          );
+        } else if (parsedChunk.choices?.[0]?.delta.content) {
+          const messageChunk = parsedChunk.choices[0].delta.content;
+          if (channel == 0) {
+            dispatch(sendStreamingTextPartial(messageChunk));
+          } else if (channel == 1) {
+            dispatch(sendStreamingText2Partial(messageChunk));
           }
-        } catch {
-          console.log("error");
+        }
+
+        // Clear dataString after the last chunk has been processed
+        if (index === chunks.length - 1) {
+          dataString = "";
         }
       });
     }
@@ -132,7 +175,12 @@ export const sendStreamingTextThunk = async ({
     const errorMessage = error.response
       ? error.response.data
       : "An error occurred";
-    dispatch(sendStreamingTextFailure(errorMessage));
+
+    if (channel == 0) {
+      dispatch(sendStreamingTextFailure(errorMessage));
+    } else if (channel == 1) {
+      dispatch(sendStreamingText2Failure(errorMessage));
+    }
     console.log(error);
     if (error.message) {
       dispatch(dispatchNotification({ type: "error", title: error.message }));
