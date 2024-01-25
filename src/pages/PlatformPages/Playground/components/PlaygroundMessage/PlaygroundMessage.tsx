@@ -24,7 +24,7 @@ export interface Reponse {
 export interface PlaygroundMessageProps {
   id: string;
   role: string;
-  userContent?: string;
+  user_content?: string;
   responses?: Reponse[];
   isActive: boolean;
   hidden: boolean;
@@ -33,7 +33,7 @@ export interface PlaygroundMessageProps {
 export function PlaygroundMessage({
   id,
   role,
-  userContent,
+  user_content,
   responses,
   isActive,
   hidden,
@@ -59,7 +59,7 @@ export function PlaygroundMessage({
   };
 
   if (isUser) {
-    const [messageValue, setMessageValue] = useState(userContent || "");
+    const [messageValue, setMessageValue] = useState(user_content || "");
     const handleChange = (e) => {
       setMessageValue(e.target.value); // This sets what is displayed in the input box
       dispatch(
@@ -68,7 +68,7 @@ export function PlaygroundMessage({
           content: {
             id: id,
             role: "user",
-            userContent: e.target.value,
+            user_content: e.target.value,
             responses: null,
             isActive: true,
           },
@@ -79,7 +79,7 @@ export function PlaygroundMessage({
       <>
         <MessageHeader
           title={<div className="text-sm-md text-gray-4">User</div>}
-          content={userContent || ""}
+          content={user_content || ""}
         />
         <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
           <EditableBox

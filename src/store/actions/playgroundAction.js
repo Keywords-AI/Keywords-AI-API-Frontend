@@ -157,7 +157,7 @@ export const streamPlaygroundResponse = () => {
                     appendMessage({
                       id: id + 1,
                       role: "user",
-                      userContent: "",
+                      user_content: "",
                     })
                   );
                 }
@@ -178,7 +178,7 @@ export const streamPlaygroundResponse = () => {
                     appendMessage({
                       id: id + 1,
                       role: "user",
-                      userContent: "",
+                      user_content: "",
                     })
                   );
                 }
@@ -220,10 +220,10 @@ export const stopResponding = () => {
     dispatch(
       appendMessage({
         role: currentModel,
-        content: streamingText,
+        user_content: streamingText,
       })
     );
     dispatch(abortStreamingTextRequest());
-    dispatch(appendMessage({ role: "user", content: "" }));
+    dispatch(appendMessage({ role: "user", user_content: "" }));
   };
 };

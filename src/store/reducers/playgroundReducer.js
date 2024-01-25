@@ -19,7 +19,7 @@ const initialState = {
   messages: [
     {
       role: "user",
-      content: "",
+      user_content: "",
     },
   ],
   firstTime: true,
