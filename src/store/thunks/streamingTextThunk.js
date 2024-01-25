@@ -123,24 +123,8 @@ export const sendStreamingTextThunk = async ({
       }
       chunks.forEach((chunk, index) => {
         if (!chunk || chunk === "") return;
-        try {
-          const parsedChunk = JSON.parse(chunk);
-          if (parsedChunk.evaluation) {
-            const { completion_tokens, cost, latency, scores } =
-              parsedChunk.evaluation;
-            dispatch(
-              setOutputs({
-                tokens: completion_tokens,
-                cost,
-                latency,
-                score: scores,
-              })
-            );
-          } else if (parsedChunk.choices?.[0]?.delta.content) {
-            const messageChunk = parsedChunk.choices[0].delta.content;
-            dispatch(sendStreamingTextPartial(messageChunk));
-          }
 
+        const parsedChunk = JSON.parse(chunk);
         if (parsedChunk.evaluation) {
           const { completion_tokens, cost, latency, scores } =
             parsedChunk.evaluation;
