@@ -4,6 +4,7 @@ import { Popover } from "src/components/Dialogs";
 import { Search, Down, Display } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
+
 import {
   setDisplayTimeRange,
   getDashboardData,
@@ -36,6 +37,7 @@ export default function DashboardFilter() {
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
   const performance_param = new URLSearchParams(location.search).get("metric");
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
@@ -67,7 +69,7 @@ export default function DashboardFilter() {
   }
 
   const filteredBreakdownChoices = breakdownChoices;
-
+  
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   return (
