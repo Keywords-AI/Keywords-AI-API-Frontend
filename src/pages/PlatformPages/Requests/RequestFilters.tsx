@@ -44,20 +44,20 @@ export const RequestFilters: RequestFilter = {
         onChange={() => setEditing(true)}
       />
     ), // <SelectInput {...params} />
-    changeField: (register) => (
+    changeField: (register, choice) => (
       <SelectInput
         headLess
-        placeholder="Error"
+        // placeholder="Error"
         align="end"
         {...register("value")}
-        defaultValue="false"
+        defaultValue={choice}
         // value={currentTimeRange}
         icon={Down}
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         choices={[
-          { name: "Error", value: "true" }, // Yep, "truly" failed
-          { name: "Success", value: "false" },
+          { name: "error", value: "true" }, // Yep, "truly" failed
+          { name: "success", value: "false" },
         ]}
         onChange={() => setEditing(true)}
       />
@@ -171,7 +171,7 @@ export const RequestFilters: RequestFilter = {
   //   },
 };
 
-export const Filters = ({ metric }: { metric: FilterType }) => {
+export const Filters = ({ metric }: { metric: FilterType }, {secFilter} : {secFilter: string}) => {
   const {
     register,
     handleSubmit,
@@ -189,7 +189,7 @@ export const Filters = ({ metric }: { metric: FilterType }) => {
     getRequestLogs();
     setEditing(false);
   };
-
+  console.log("hihihiihihihi",metric);
   const currentFilter = RequestFilters[metric];
   return (
     <div>
@@ -199,7 +199,7 @@ export const Filters = ({ metric }: { metric: FilterType }) => {
       >
         {currentFilter?.metricSelection(register)}
         {currentFilter?.operationSelection(register)}
-        {currentFilter?.changeField(register)}
+        {currentFilter?.changeField(register, secFilter)}
         {
           <DotsButton
             icon={Close}

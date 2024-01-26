@@ -9,6 +9,9 @@ export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
+export const SET_FILTER_OPEN = "SET_FILTER_OPEN";
+export const SET_SECOND_FILTER = "SET_SECOND_FILTER";
+export const SET_FILTER = "SET_FILTER";
 
 const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): string => {
   if (messages) {
@@ -19,7 +22,7 @@ const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): stri
 
 export const setFilter = (filter: string) => {
   return {
-    type: SET_REQUEST_LOGS,
+    type: SET_FILTER,
     payload: filter,
   };
 }
@@ -86,3 +89,17 @@ export const getRequestLogs = () => {
     });
   };
 };
+
+export const setFilterOpen = (open: boolean) => {
+  return {
+    type: SET_FILTER_OPEN,
+    payload: open,
+  };
+}
+
+export const setSecondFilter = (filter: string) => {
+  return {
+    type: SET_SECOND_FILTER,
+    payload: filter,
+  };
+}
