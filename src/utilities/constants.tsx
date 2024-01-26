@@ -113,12 +113,12 @@ export const models = [
     brand: "openai",
     icon: OpenAI,
   },
-  {
-    name: "Chat Bison",
-    value: "chat-bison",
-    brand: "google",
-    icon: Google,
-  },
+  // {
+  //   name: "Chat Bison",
+  //   value: "chat-bison",
+  //   brand: "google",
+  //   icon: Google,
+  // },
   {
     name: "J2 Light",
     value: "j2-light",

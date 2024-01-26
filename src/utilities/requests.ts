@@ -2,7 +2,7 @@
 import apiConfig from "src/services/apiConfig"; // Adjust this import according to your project setup
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { handleApiResponseErrors } from "src/store/actions";
-import { TypedDispatch } from "src/types";
+import { TypedDispatch, ChatMessage } from "src/types";
 
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
@@ -69,4 +69,75 @@ export const keywordsRequest = async ({
   } catch (error: Error | any) {
     throw error;
   }
+};
+
+export type StreamingParams = {
+  host?: string;
+  path?: string;
+  data: {
+    messages: ChatMessage[];
+    model: string;
+    stream: boolean;
+    logprobs?: boolean;
+  };
+  apiKey: string;
+  callbackFunction: (line: string) => void;
+  dispatch?: TypedDispatch | undefined;
+};
+
+export const keywordsStream = ({
+  path = "api/generate/",
+  host = apiConfig.apiURL, // Ensure apiConfig is defined and imported
+  data,
+  callbackFunction,
+  apiKey,
+  dispatch,
+}: StreamingParams) => {
+  // fetch("http://localhost:8000/api/generate/", {
+  fetch(`${host}${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Api-Key ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  }).then(async (stream: any) => {
+    if (!stream.ok) {
+      const errors = await stream.json();
+      if (dispatch && typeof dispatch === "function") {
+        dispatch(handleApiResponseErrors(errors, stream.status));
+      }
+      throw new Error("Stream response error");
+    }
+    const reader = stream?.body.getReader();
+    const decoder = new TextDecoder();
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    // Start reading the stream
+    (async () => {
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done || signal.aborted) {
+            console.log("Stream complete");
+            break;
+          }
+          const message = decoder.decode(value);
+          // Splitting the returned text chunck with the delimiter
+          for (const line of message.split("---")) {
+            // Line is a JSON string
+            if (callbackFunction && typeof callbackFunction === "function") {
+              callbackFunction(line);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Stream error:", e);
+      }
+    })();
+    // Return a function to abort the stream from outside
+    return () => {
+      abortController.abort();
+    };
+  });
 };
