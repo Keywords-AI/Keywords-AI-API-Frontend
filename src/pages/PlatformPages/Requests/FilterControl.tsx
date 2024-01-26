@@ -64,8 +64,8 @@ export default function FilterControl() {
 
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      {/* <form onSubmit={handleSubmit(onSubmit)}>
-        <TextInputSmall
+      <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <TextInputSmall
           placeholder="Search prompt..."
           icon={Search}
           {...register("prompt", {
@@ -73,8 +73,8 @@ export default function FilterControl() {
             onChange: (e) => setSearchText(e.target.value),
           })}
           value={searchText}
-        />
-      </form> */}
+        /> */}
+      </form>
       <Button
         variant="small"
         text="Today"

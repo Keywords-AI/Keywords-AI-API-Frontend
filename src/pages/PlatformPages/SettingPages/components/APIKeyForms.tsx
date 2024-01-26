@@ -22,6 +22,7 @@ import { Info } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
 import { models } from "src/utilities/constants";
+import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -95,17 +96,22 @@ interface CreateProps {
   setShowForm?: (show: boolean) => {};
   setNewKeyName?: (name: string) => {};
   createApiKey?: (data: any) => {};
+  dispatchNotification?: (notification: any) => {};
   loading?: boolean;
 }
 
 const CreateFormNotConnected = React.forwardRef(
-  ({
-    apiKey,
-    setShowForm = (show: boolean) => {},
-    setNewKeyName,
-    createApiKey,
-    loading,
-  }: CreateProps, ref) => {
+  (
+    {
+      apiKey,
+      setShowForm = (show: boolean) => {},
+      setNewKeyName,
+      createApiKey,
+      loading,
+      dispatchNotification,
+    }: CreateProps,
+    ref
+  ) => {
     const {
       register,
       handleSubmit,
@@ -120,6 +126,14 @@ const CreateFormNotConnected = React.forwardRef(
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
         data.rate_limit = 100;
+      }
+      data.preset_models = checkBoxFieldToList(data.preset_models);
+      if (data.preset_models.length === 0) {
+        dispatchNotification({
+          type: "error",
+          title: "Please select at least one model",
+        });
+        return;
       }
       createApiKey(data);
     };
@@ -147,7 +161,7 @@ const CreateFormNotConnected = React.forwardRef(
         className={"flex-col gap-sm self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        {!apiKey.apiKey ? (
+        {!apiKey?.apiKey ? (
           !loading ? (
             <React.Fragment>
               <div className="grid gap-sm grid-cols-[1fr,160px]">
@@ -370,6 +384,7 @@ const EditFormNotConnected = ({
   setEditingKey,
   editingKey,
   updateEditingKey,
+  dispatchNotification,
 }: EditingFromProps) => {
   const [showInfo, setShowInfo] = useState(false);
   const [currentKeyName, setCurrentKeyName] = useState(
@@ -381,6 +396,12 @@ const EditFormNotConnected = ({
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
+      const spendingLimit = editingKey?.spending_limit;
+      const rateLimit = editingKey?.rate_limit;
+      setIsRateLimitEnabled(rateLimit !== null && rateLimit !== undefined);
+      setIsSpendingLimitEnabled(
+        spendingLimit !== null && spendingLimit !== undefined
+      );
     }
   }, [editingKey]);
   const {
@@ -389,10 +410,13 @@ const EditFormNotConnected = ({
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    if (typeof data.preset_models === "string") {
-      data.preset_models = data.preset_models.split(",");
-    } else if (typeof data.preset_models !== "object") {
-      data.preset_models = [];
+    data.preset_models = checkBoxFieldToList(data.preset_models);
+    if (data.preset_models.length === 0) {
+      dispatchNotification({
+        type: "error",
+        title: "Please select at least one model",
+      });
+      return;
     }
     updateEditingKey({ ...editingKey, ...data });
     setEditingKey(undefined);
@@ -465,6 +489,7 @@ const EditFormNotConnected = ({
             />
           )}
           <SwitchButton
+            checked={isRateLimitEnabled}
             onCheckedChange={handleRateLimitSwitch}
             className="absolute -top-[2px]"
           />
@@ -477,6 +502,7 @@ const EditFormNotConnected = ({
               {...register("rate_limit")}
               // onKeyDown={handleEnter}
               placeholder={"None"}
+              defaultValue={editingKey?.rate_limit}
               type="number"
               pseudoElementClass="special-input"
             />
@@ -498,14 +524,19 @@ const EditFormNotConnected = ({
           <span className="text-sm-regular text-gray-4">
             Has spending limit{" "}
           </span>
-          <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
+          <SwitchButton
+            onCheckedChange={handleSpendingLimitSwitch}
+            checked={isSpendingLimitEnabled}
+          />
         </div>
         {isSpendingLimitEnabled && (
           <div className="grid gap-sm grid-cols-1">
             <TextInput
               title={"Spending limit"}
               width={"w-full"}
-              {...register("spending_limit")}
+              {...register("spending_limit", {
+                value: editingKey?.spending_limit,
+              })}
               // onKeyDown={handleEnter}
               placeholder={"$100"}
               type="number"

@@ -175,6 +175,7 @@ export const updateEditingKey = (keyData: ApiKey) => {
       path: `api/update-key/${keyData?.prefix}/`,
       data: keyData,
       method: "PATCH",
+      dispatch
     })
       .then((data: any) => {
         dispatch(

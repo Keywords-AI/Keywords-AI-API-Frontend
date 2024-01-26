@@ -39,7 +39,7 @@ export default function DashboardFilter() {
   const performance_param = new URLSearchParams(location.search).get("metric");
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
-    getDashboardData();
+    dispatch(getDashboardData());
   };
   const currentMetric = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.metric

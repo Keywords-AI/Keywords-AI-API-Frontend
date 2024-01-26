@@ -8,31 +8,35 @@ import {
   STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-  STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY
+  STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
+import { useTypedSelector } from "src/store/store";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
 });
 
 const mapDispatchToProps = {
-  createPaymentSession
+  createPaymentSession,
 };
 
 const Subheading = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ userCount = 3, price = 29, newMonth = "January 11, 2024" }) => {
+)(({ userCount = 4, price = 29, newMonth = "January 11, 2024" }) => {
+  const { name, renewal_date, amount, interval } = useTypedSelector(
+    (state) => state.billings?.currentSubscription || {}
+  );
   return (
     <div>
-      {"You’re currently on the Team Monthly plan. Your organization of "}
+      {`You’re currently on the ${name} ${interval} plan. Your organization of `}
       <span className="text-gray-5">{userCount}</span>
 
       {" users costs "}
-      <span className="text-gray-5">${price} </span>
+      <span className="text-gray-5">{amount} </span>
       {" per month, and will renew on "}
-      <span className="text-gray-5">{newMonth}</span>
+      <span className="text-gray-5">{renewal_date}</span>
     </div>
   );
 });
@@ -40,11 +44,7 @@ const Subheading = connect(
 export const PlansPage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({
-  organization,
-  createPaymentSession
-
-}) => {
+)(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
   const cards = [
@@ -67,7 +67,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
         },
@@ -99,12 +99,18 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
-            createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]);
+            createPaymentSession([
+              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+            ]);
           } else {
-            createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]);
+            createPaymentSession([
+              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+            ]);
           }
         },
       },
@@ -113,9 +119,15 @@ export const PlansPage = connect(
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
-            createPaymentSession([STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY]);
+            createPaymentSession([
+              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+            ]);
           } else {
-            createPaymentSession([STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY, STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY]);
+            createPaymentSession([
+              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+            ]);
           }
         },
       },
@@ -134,7 +146,7 @@ export const PlansPage = connect(
       ],
       downgradeParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -142,7 +154,7 @@ export const PlansPage = connect(
       },
       buttonParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://zcal.co/keywords-ai", "_blank");
@@ -151,7 +163,9 @@ export const PlansPage = connect(
     },
   ];
   const currIndex = cards.indexOf(
-    cards.find((card) => card.plan === organization?.organization_subscription?.plan)
+    cards.find(
+      (card) => card.plan === organization?.organization_subscription?.plan
+    )
   );
   const displayParams = (index, downgradeParams, buttonParams) => {
     if (index < currIndex) {
@@ -159,8 +173,8 @@ export const PlansPage = connect(
     } else if (index === currIndex) {
       return {
         buttonText: "Current plan",
-        buttonVariant: "r4-gray2",
-        buttonOnClick: () => { },
+        buttonVariant: "r4-gray-2",
+        buttonOnClick: () => {},
       };
     } else {
       return buttonParams;
@@ -191,10 +205,7 @@ export const PlansPage = connect(
           />
           <div>
             <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary">
-              {" "}
-              (35% off){" "}
-            </span>
+            <span className="text-sm-md text-primary"> (35% off) </span>
           </div>
         </div>
         <div className="flex flex-row gap-sm self-stretch">

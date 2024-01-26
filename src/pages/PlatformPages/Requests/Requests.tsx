@@ -60,6 +60,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const [showFilter, setShowFilter] = useState(false);
+  const [filter, setFilter] = useState("");
   // const [inputSets, setInputSets] = useState(1);
   const [inputSets, setInputSets] = useState([0]);
   const navigate = useNavigate();
@@ -98,23 +99,29 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     setEditing(false);
   };
   useEffect(() => {}, [params]);
+  const handleSlectedFilter = (value: string) => {
+    setFilter(value);
+    setShowFilter((prev) => {
+      // If we are hiding the filter (setting it to false), also reset inputSets
+      if (prev) {
+        setInputSets([0]); // Reset to initial state
+      }
+      return !prev;
+    });
+
+  };
   if (firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex-col items-start self-stretch h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+      <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
             {/* {!showFilter && (
-              <Button
-                variant="small"
-                icon={Filter}
-                text="Filter"
-                onClick={handleFilter()}
-                iconPosition="left"
-              />
+              // 
+              <FilterActions />
             )} */}
             {showFilter && (
               <Button
@@ -134,12 +141,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             <React.Fragment>
-              {/* {params.get("failed") && (
+              {params.get("failed") && (
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   className="flex flex-row items-center gap-[2px]"
                 >
-                  <SelectInput
+                  {/* <SelectInput
                     headLess
                     defaultValue={"failed"}
                     {...register("metric")}
@@ -189,14 +196,13 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                       onClick={() => handleCloseInputSet(inputSetId)}
                     />
                   }
-                  {editing && (
-                    <Button variant="small" text={"Apply"} />
-                  )}
+                  {editing && <Button variant="small" text={"Apply"} />} */}
+                  {/* <Filter metric={filter} /> */}
                 </form>
-              )} */}
-              {/* {inputSets.length < 3 && (
+              )}
+              {inputSets.length < 3 && (
                 <DotsButton icon={Add} onClick={handleAddInputSet} />
-              )} */}
+              )}
             </React.Fragment>
             <span className={"caption text-gray-4"}>
               Many more filtering options coming soon! - Raymond 1/23
@@ -247,9 +253,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               </div>
             )}
           </div>
-          <div className="flex-col items-start h-full overflow-auto">
-            <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
-          </div>
+          <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
         </div>
       </div>
     );
