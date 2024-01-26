@@ -88,6 +88,7 @@ export default function DashboardFilter() {
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         optionsWidth="w-[120px]"
+        useShortCut
         choices={[
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
@@ -122,6 +123,7 @@ export default function DashboardFilter() {
                 {...register("metric")}
                 headLess
                 placeholder="Request"
+                useShortCut
                 align="start"
                 icon={Down}
                 padding="py-xxxs px-xxs"

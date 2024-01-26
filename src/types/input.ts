@@ -39,4 +39,5 @@ export interface SelectInputProps {
   textColor?: string;
   trigger?: React.FC<any>;
   triggerProps?: object;
+  useShortCut?: boolean;
 }
