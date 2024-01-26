@@ -69,7 +69,8 @@ function DashboardNotConnected({
   const [activeCard, setActiveCard] = useState(null);
   const useKeyboardShortcut = (shortcutKeys, callback) => {};
   const performance_param = new URLSearchParams(location.search).get("metric");
-  const breakdown_type = new URLSearchParams(location.search).get("breakdown");
+  const breakdown_type =
+    new URLSearchParams(location.search).get("breakdown") || "none";
   useEffect(() => {
     getDashboardData();
   }, [firstName, performance_param, breakdown_type]);

@@ -4,17 +4,13 @@ export const SEND_STREAMINGTEXT_SUCCESS = "SEND_STREAMINGTEXT_SUCCESS";
 export const SEND_STREAMINGTEXT_FAILURE = "SEND_STREAMINGTEXT_FAILURE";
 export const SEND_STREAMINGTEXT_PARTIAL = "SEND_STREAMINGTEXT_PARTIAL";
 export const ABORT_STREAMINGTEXT_REQUEST = "ABORT_STREAMINGTEXT_REQUEST";
-// export const SEND_STREAMINGTEXT = "SEND_STREAMINGTEXT";
 
-// export const sendStreamingText = (streamingText, host, path, callback) => ({
-//   type: SEND_STREAMINGTEXT,
-//   payload: sendStreamingTextThunk(
-//     streamingText,
-//     host,
-//     path,
-//     callback
-//   )(dispatch, getState),
-// });
+export const SEND_STREAMINGTEXT2_REQUEST = "SEND_STREAMINGTEXT2_REQUEST";
+export const SEND_STREAMINGTEXT2_SUCCESS = "SEND_STREAMINGTEXT2_SUCCESS";
+export const SEND_STREAMINGTEXT2_FAILURE = "SEND_STREAMINGTEXT2_FAILURE";
+export const SEND_STREAMINGTEXT2_PARTIAL = "SEND_STREAMINGTEXT2_PARTIAL";
+export const ABORT_STREAMINGTEXT2_REQUEST = "ABORT_STREAMINGTEXT2_REQUEST";
+
 export const sendStreamingTextRequest = () => ({
   type: SEND_STREAMINGTEXT_REQUEST,
 });
@@ -37,4 +33,28 @@ export const sendStreamingTextFailure = (error) => ({
 
 export const abortStreamingTextRequest = () => ({
   type: ABORT_STREAMINGTEXT_REQUEST,
+});
+
+export const sendStreamingText2Request = () => ({
+  type: SEND_STREAMINGTEXT2_REQUEST,
+});
+
+export const sendStreamingText2Success = () => ({
+  type: SEND_STREAMINGTEXT2_SUCCESS,
+});
+
+export const sendStreamingText2Partial = (partialData) => {
+  return {
+    type: SEND_STREAMINGTEXT2_PARTIAL,
+    payload: partialData,
+  };
+};
+
+export const sendStreamingText2Failure = (error) => ({
+  type: SEND_STREAMINGTEXT2_FAILURE,
+  payload: error,
+});
+
+export const abortStreamingText2Request = () => ({
+  type: ABORT_STREAMINGTEXT2_REQUEST,
 });

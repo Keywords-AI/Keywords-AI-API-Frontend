@@ -10,8 +10,16 @@ import {
   Tokens,
   Cost,
 } from "src/components/Icons";
-import { LogItemColumn, LogColumnKey, LogItem, LogItemTag } from "src/types";
+import {
+  LogItemColumn,
+  LogColumnKey,
+  LogItem,
+  LogItemTag,
+  RequestFilter,
+} from "src/types";
 import { ModelTag, StatusTag } from "src/components/Misc";
+import { SelectInput } from "src/components/Inputs";
+import { SentimentTag } from "src/components/Misc";
 import React from "react";
 
 const colors = [
@@ -105,12 +113,12 @@ export const models = [
     brand: "openai",
     icon: OpenAI,
   },
-  {
-    name: "Chat Bison",
-    value: "chat-bison",
-    brand: "google",
-    icon: Google,
-  },
+  // {
+  //   name: "Chat Bison",
+  //   value: "chat-bison",
+  //   brand: "google",
+  //   icon: Google,
+  // },
   {
     name: "J2 Light",
     value: "j2-light",
@@ -194,18 +202,17 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Time", retrievalKey: "time", width: "120px" },
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
-  { name: "Cost", retrievalKey: "cost", width: "80px" },
-  { name: "Latency", retrievalKey: "latency", width: "80px" },
+  { name: "Cost", retrievalKey: "cost", width: "76px" },
+  { name: "Latency", retrievalKey: "latency", width: "64px" },
   { name: "Prompt tokens", retrievalKey: "promptTokens", width: "120px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "120px" },
-  { name: "All tokens", retrievalKey: "allTokens", width: "80px" },
+  { name: "All tokens", retrievalKey: "allTokens", width: "72px" },
 ];
 
 export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "API key",
     retrievalKey: "apiKey",
-    rawDataKey: "api_key",
     renderFunction: (key: string) => (
       <span className="caption text-gray-4 mr-xxxs">{key}</span>
     ),
@@ -213,21 +220,20 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Model",
     retrievalKey: "model",
-    rawDataKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
   },
   {
     name: "Status",
     retrievalKey: "failed",
-    rawDataKey: "status",
     renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
   },
   {
-    name: "sentiment",
-    retrievalKey: "failed",
-    rawDataKey: "status",
-    renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
-  }
+    name: "Sentiment",
+    retrievalKey: "sentimentAnalysis",
+    renderFunction: (sentimental_analysis: any) => (
+      <SentimentTag sentiment_score={sentimental_analysis?.sentiment_score} showScore={false}/>
+    ),
+  },
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [

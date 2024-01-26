@@ -1,6 +1,6 @@
 import userReducer from "./userReducer";
 import playgroundReducer from "./playgroundReducer";
-import streamingTextReducer from "./streamingTextReducer";
+import  streamingTextReducer  from "./streamingTextReducer";
 import apiKeyReducer from "./settingPagesReducer/apiKeyReducer";
 import organizationReducer from "./organizationReducer";
 import billingsReducer from "./settingPagesReducer/billingsReducer";

@@ -4,6 +4,7 @@ import {QaButtonPage} from "./QaButtonPage"
 import {QaInputPage} from "./QaInputPage"
 import { QaMiscPage } from './QaMisc';
 import { QaTablePage } from './QaTablePage';
+import TestPage from "src/pages/PlatformPages/TestPage/TestPage";
 
 const pages = [
   {
@@ -31,6 +32,11 @@ const pages = [
     title: "Table",
     forAdmin: true,
     page: <QaTablePage/>,
+  },
+  {
+    title: "Test",
+    forAdmin: true,
+    page: <TestPage/>,
   },
 ];
 

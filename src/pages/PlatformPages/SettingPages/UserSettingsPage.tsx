@@ -1,5 +1,4 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
 import { Button, Divider } from "src/components";
 import { SwitchButton } from "src/components/Buttons";
 import { TextInput } from "src/components/Inputs";
@@ -7,45 +6,38 @@ import { PageContent, PageParagraph } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { setTheme } from "src/store/actions/themeAction";
 import { useForm } from "react-hook-form";
-import { connect } from "react-redux";
-import { updateUser } from "src/store/actions";
+import { updateUser, dispatchNotification } from "src/store/actions";
+import { RootState } from "src/types";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
-const mapStateToProps = (state) => ({
-  user: state.user,
-});
-const mapDispatchToProps = {
-  updateUser,
-};
-
-export const UserSettings = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(({ user, updateUser }) => {
-  const theme = useSelector((state) => state.theme.theme);
-  const [firstName, setFirstName] = React.useState(user.first_name || "");
-  const [lastName, setLastName] = React.useState(user.last_name || "");
-  React.useEffect(() => {
-    if (user.first_name) setFirstName(user.first_name);
-    if (user.last_name) setLastName(user.last_name);
-  }, [user]);
-  const distpatch = useDispatch();
+export const UserSettings = () => {
+  const dispatch = useTypedDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const theme = useTypedSelector((state: RootState) => state.theme.theme);
+  const user = useTypedSelector((state: RootState) => state.user);
+  const [firstName, setFirstName] = React.useState(user.first_name || "");
+  const [lastName, setLastName] = React.useState(user.last_name || "");
+  React.useEffect(() => {
+    setFirstName(user.first_name);
+    setLastName(user.last_name);
+  }, [user]);
   const handleSwitchCheckedChange = (checked) => {
-    distpatch(setTheme(checked ? "dark" : "light"));
+    dispatch(setTheme(checked ? "dark" : "light"));
   };
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     if (
-      data.first_name === "" ||
-      data.last_name === "" ||
-      (data.first_name === user.first_name && data.last_name === user.last_name)
+      firstName === "" ||
+      lastName === "" ||
+      (lastName === user.first_name && lastName === user.last_name)
     ) {
       return;
     }
-    updateUser(data);
+    console.log(data);
+    dispatch(updateUser({ first_name: firstName, last_name: lastName }));
   };
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -53,6 +45,7 @@ export const UserSettings = connect(
   const handleLastNameChange = (event) => {
     setLastName(event.target.value);
   };
+
   return (
     <PageContent title="User Settings" subtitle="Manage your user profile.">
       <PageParagraph heading="Profile">
@@ -73,6 +66,7 @@ export const UserSettings = connect(
               value={firstName}
               {...register("first_name", {
                 minLength: 1,
+                value: firstName,
                 onChange: handleFirstNameChange,
               })}
             />
@@ -82,6 +76,7 @@ export const UserSettings = connect(
               value={lastName}
               {...register("last_name", {
                 minLength: 1,
+                value: lastName,
                 onChange: handleLastNameChange,
               })}
             />
@@ -102,4 +97,4 @@ export const UserSettings = connect(
       </div>
     </PageContent>
   );
-});
+};
