@@ -1,12 +1,12 @@
 import { LogItem } from "src/types";
-import { CopyButton, DotsButton } from "src/components/Buttons";
+import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
-import { Copy } from "src/components";
+import { Copy, IconPlayground } from "src/components";
 import { models } from "src/utilities/constants";
-import React from "react";
+import React, { useState }from "react";
 
 interface SidePanelProps {
   open: boolean;
@@ -85,6 +85,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   };
+  const [displayMetrics, setDisplayMetrics] = useState(true);
   return (
     <div
       className={cn(
@@ -94,27 +95,53 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       )}
     >
       <div className="flex px-lg py-xxs justify-between items-center self-stretch shadow-border-b shadow-gray-2">
-        <p className="text-sm-md text-gray-4">Log</p>
-        <DotsButton
-          icon={Copy}
-          onClick={() => {
-            navigator.clipboard.writeText(JSON.stringify(logItem));
-          }}
-        />
+        <div className="flex items-center gap-sm">
+          <Button
+            variant="text"
+            text="Metrics"
+            active={displayMetrics}
+            onClick={() => setDisplayMetrics(true)}
+          />
+          <Button
+            variant="text"
+            text="Log"
+            active={!displayMetrics}
+            onClick={() => setDisplayMetrics(false)}
+          />
+        </div>
+
+        <div className="flex items-center">
+          {!displayMetrics && (
+            <DotsButton
+              icon={IconPlayground}
+              onClick={() => {
+                navigator.clipboard.writeText(JSON.stringify(logItem));
+              }}
+            />
+          )}
+          <DotsButton
+            icon={Copy}
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(logItem));
+            }}
+          />
+        </div>
       </div>
-      <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
-        {Object.keys(displayObj).map((key, index) => {
-          return (
-            <div
-              className="flex h-[24px] justify-between items-center self-stretch"
-              key={index}
-            >
-              <span className="text-sm-md text-gray-5">{key}</span>
-              {displayObj[key]}
-            </div>
-          );
-        })}
-      </div>
+      {displayMetrics && (
+        <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+          {Object.keys(displayObj).map((key, index) => {
+            return (
+              <div
+                className="flex h-[24px] justify-between items-center self-stretch"
+                key={index}
+              >
+                <span className="text-sm-md text-gray-5">{key}</span>
+                {displayObj[key]}
+              </div>
+            );
+          })}
+        </div>
+      )}
       <Divider />
       {completeInteraction.map((message, index) => (
         <React.Fragment key={index}>

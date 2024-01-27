@@ -57,31 +57,17 @@ const normalizeMessages = (messages) => {
 function Chatbot({
   streaming,
   streamingText,
-  errorMessage,
   getConversations,
   chatbot,
 }) {
   const conversation = chatbot?.conversation;
-  const [inputText, setInputText] = useState("");
-  const [abortController, setAbortController] = useState(null);
-  const generateRef = useRef(null);
+  const generateRef = useRef("");
   const [activeConversation, setActiveConversation] = useState(null);
-  const [promptPopup, setPromptPopup] = useState(false);
   const fileUploadRef = useRef(null);
   const [chatError, setChatError] = useState(null);
   const { conversationBoxRef, generatingText, setGeneratingText } =
     useAutoScroll();
   const conversationRef = useRef(conversation);
-
-  const handleError = (error) => {
-    console.log("error", error);
-    setChatError(error);
-  };
-  const { loading, error, response, postData } = useStream(
-    `api/playground/chatbot/`,
-    "POST",
-    handleError
-  );
 
   useEffect(() => {
     generateRef.current = generatingText;
@@ -91,13 +77,6 @@ function Chatbot({
     getConversations();
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      setNotStreaming();
-      errorMessage(error);
-      console.log("error", error);
-    }
-  }, [error]);
 
   useEffect(() => {
     if (conversation?.id && conversation?.id !== -1) {
