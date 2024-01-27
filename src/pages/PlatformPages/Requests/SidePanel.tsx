@@ -1,11 +1,12 @@
 import { LogItem } from "src/types";
-import { CopyButton, DotsButton } from "src/components/Buttons";
+import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
-import { Copy } from "src/components";
+import { Copy, IconPlayground } from "src/components";
 import { models } from "src/utilities/constants";
+import React, { useState }from "react";
 
 interface SidePanelProps {
   open: boolean;
@@ -15,7 +16,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
-  const completeInteraction = logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
+  const completeInteraction =
+    logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
     "Created at": (
       <span className="text-sm-regular text-gray-4">
@@ -31,7 +33,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag({failed:logItem?.failed || false}),
+    Status: StatusTag({ failed: logItem?.failed || false }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "production"}
@@ -50,9 +52,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     "Total tokens": (
       <span className="text-sm-regular text-gray-4">
-        {((logItem?.prompt_tokens &&
-          logItem?.prompt_tokens &&
-          logItem?.prompt_tokens + logItem?.completion_tokens) || "6,532").toLocaleString()}
+        {(
+          (logItem?.prompt_tokens &&
+            logItem?.prompt_tokens &&
+            logItem?.prompt_tokens + logItem?.completion_tokens) ||
+          "6,532"
+        ).toLocaleString()}
       </span>
     ),
     Cost: (
@@ -65,7 +70,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {(logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
-    Sentiment: SentimentTag({sentiment: logItem?.sentiment || 2, text: logItem?.sentiment || ""}),
+    Sentiment: (
+      <SentimentTag
+        sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
+        text={logItem?.sentiment_analysis?.language || ""}
+      />
+    ),
   };
   const getMessageType = (role: string) => {
     if (role === "system") {
@@ -74,43 +84,70 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       return "User";
     }
     return "Response";
-  }
+  };
+  const [displayMetrics, setDisplayMetrics] = useState(true);
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0", 
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0",
         "shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
       <div className="flex px-lg py-xxs justify-between items-center self-stretch shadow-border-b shadow-gray-2">
-        <p className="text-sm-md text-gray-4">Log</p>
-        <DotsButton
-          icon={Copy}
-          onClick={() => {
-            navigator.clipboard.writeText(JSON.stringify(logItem));
-          }}
-        />
+        <div className="flex items-center gap-sm">
+          <Button
+            variant="text"
+            text="Metrics"
+            active={displayMetrics}
+            onClick={() => setDisplayMetrics(true)}
+          />
+          <Button
+            variant="text"
+            text="Log"
+            active={!displayMetrics}
+            onClick={() => setDisplayMetrics(false)}
+          />
+        </div>
+
+        <div className="flex items-center">
+          {!displayMetrics && (
+            <DotsButton
+              icon={IconPlayground}
+              onClick={() => {
+                navigator.clipboard.writeText(JSON.stringify(logItem));
+              }}
+            />
+          )}
+          <DotsButton
+            icon={Copy}
+            onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(logItem));
+            }}
+          />
+        </div>
       </div>
-      <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
-        {Object.keys(displayObj).map((key, index) => {
-          return (
-            <div
-              className="flex h-[24px] justify-between items-center self-stretch"
-              key={index}
-            >
-              <span className="text-sm-md text-gray-5">{key}</span>
-              {displayObj[key]}
-            </div>
-          );
-        })}
-      </div>
+      {displayMetrics && (
+        <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+          {Object.keys(displayObj).map((key, index) => {
+            return (
+              <div
+                className="flex h-[24px] justify-between items-center self-stretch"
+                key={index}
+              >
+                <span className="text-sm-md text-gray-5">{key}</span>
+                {displayObj[key]}
+              </div>
+            );
+          })}
+        </div>
+      )}
       <Divider />
-      <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[24px]">
-        {completeInteraction.map((message, index) => (
+      {completeInteraction.map((message, index) => (
+        <React.Fragment key={index}>
           <div
             key={index}
-            className="flex-col items-start gap-xxs self-stretch"
+            className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
           >
             <div className="flex justify-between items-center self-stretch">
               <p className="text-sm-md text-gray-5">
@@ -127,8 +164,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               {message.content}
             </div>
           </div>
-        ))}
-      </div>
+          <Divider />
+        </React.Fragment >
+      ))}
     </div>
   );
 };

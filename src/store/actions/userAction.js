@@ -80,7 +80,7 @@ export const updateUser = (data = {}, callback = () => {}, mute=false) => {
     })
       .then((responseJson) => {
         if (!mute) {
-          dispatchNotification({ title: "User updated successfully" });
+          dispatch(dispatchNotification({ title: "User updated successfully" }));
         }
       })
       .catch((error) => console.log(error.message));

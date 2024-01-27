@@ -10,17 +10,21 @@ import {
   REMOVE_LAST_MESSAGE,
   SET_LAST_MESSAGE,
   SET_CURRENT_BRAND,
+  TOGGLE_LEFT_PANEL,
+  TOGGLE_RIGHT_PANEL,
+  SET_SELECTED_LOGS,
+  SET_MESSAGE_BY_INDEX,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
     {
       role: "user",
-      content: "",
+      user_content: "",
     },
   ],
   firstTime: true,
   prompt: "",
-  currentModel: "",
+  currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
     optimize: "speed",
@@ -33,6 +37,9 @@ const initialState = {
     latency: 0.8,
     tokens: 4386,
   },
+  isLeftPanelOpen: false,
+  isRightPanelOpen: false,
+  selectedLogs: "",
 };
 
 // Reducer
@@ -52,10 +59,20 @@ const playgroundReducer = (state = initialState, action) => {
           { ...state.messages.slice(-1)[0], ...action.payload },
         ],
       };
+    case SET_MESSAGE_BY_INDEX:
+      const { index, content } = action.payload;
+      return {
+        ...state,
+        messages: [
+          ...state.messages.slice(0, index),
+          { ... content },
+          ...state.messages.slice(index + 1),
+        ],
+      };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };
     case SET_CURRENT_MODEL:
-      return { ...state, currentModel: action.payload };
+      return { ...state, currentModels: action.payload };
     case SET_CURRENT_BRAND:
       return { ...state, currentBrand: action.payload };
     case SET_MODEL_OPTIONS:
@@ -75,6 +92,12 @@ const playgroundReducer = (state = initialState, action) => {
           [action.key]: action.payload,
         },
       };
+    case SET_SELECTED_LOGS:
+      return { ...state, selectedLogs: action.payload };
+    case TOGGLE_LEFT_PANEL:
+      return { ...state, isLeftPanelOpen: !state.isLeftPanelOpen };
+    case TOGGLE_RIGHT_PANEL:
+      return { ...state, isRightPanelOpen: !state.isRightPanelOpen };
     default:
       return state;
   }
