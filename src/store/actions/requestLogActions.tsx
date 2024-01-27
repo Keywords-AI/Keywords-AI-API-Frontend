@@ -1,9 +1,7 @@
 import { keywordsRequest } from "src/utilities/requests";
-import { TypedDispatch, ChatMessage } from "src/types";
+import { TypedDispatch, ChatMessage, FilterOptions } from "src/types";
 import { LogItem, DisplayLogItem } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
-import React from "react";
-import { createDropdownMenuScope } from "@radix-ui/react-dropdown-menu";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -19,6 +17,8 @@ export const SET_PAGINATION = "SET_PAGINATION";
 export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
 export const SET_API_KEY = "SET_API_KEY";
 export const SET_MODEL = "SET_MODEL";
+export const SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS";
+export const ADD_FILTER = "ADD_FILTER";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -49,6 +49,13 @@ export const setCurrentFilter = (filter: any) => {
     payload: filter,
   };
 };
+
+export const addFilter = (filter: any) => {
+  return {
+    type: ADD_FILTER,
+    payload: filter,
+  }
+}
 
 
 export const processRequestLogs = (
@@ -140,12 +147,12 @@ export const getRequestLogs = (postData?: any) => {
     }).then((data) => {
       const results = data.results;
       const keys = data.aggregation_data;
-      console.log(data)
+      console.log(data);
       dispatch(setPagination(data.count, data.previous, data.next));
+      dispatch(setFilterOptions(data.filters_data));
       dispatch(setRequestLogs(results));
       dispatch(setApiKey(keys.key_list));
       dispatch(setModel(keys.model_list));
-      console.log("models", keys.model_list);
     });
   };
 };
@@ -163,6 +170,13 @@ export const setModel = (model: any[]) => {
     payload: model,
   };
 }
+
+export const setFilterOptions = (filters: FilterOptions) => {
+  return {
+    type: SET_FILTER_OPTIONS,
+    payload: filters,
+  };
+};
 
 export const setFilterOpen = (open: boolean) => {
   return {

@@ -74,6 +74,15 @@ export type RequestFilter = {
 //     }
 //   }
 
+export type FilterOptions = {
+    [Key in keyof LogItem]?: {
+        display_name: string;
+        metric: keyof LogItem;
+        operation: string;
+        value: string | boolean | number;
+        value_choices: Choice[];
+    }   
+};
 
 
 export type FilterParams = {

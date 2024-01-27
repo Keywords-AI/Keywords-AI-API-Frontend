@@ -31,7 +31,6 @@ const mapStateToProps = (state: RootState) => ({
   firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
-  filterOpen: state.requestLogs.filterOpen,
   firstFilter: state.requestLogs.firstFilter,
   secondFilter: state.requestLogs.secondFilter,
   filters: state.requestLogs.filters,
@@ -61,7 +60,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   getRequestLogs,
   firstTime,
   sidePanelOpen,
-  filterOpen,
   setSidePanelOpen,
   selectedRequest,
   setSelectedRequest,
@@ -82,7 +80,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const navigate = useNavigate();
   const handleFilter = () => {
     return () => {
-      setFilters([])
+      setFilters([]);
       setFilterOpen(false);
     };
   };
@@ -110,16 +108,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     setEditing(false);
   };
   useEffect(() => {}, [params]);
-  // const handleSlectedFilter = (value: string) => {
-  //   setFilter(value);
-  //   setShowFilter((prev) => {
-  //     // If we are hiding the filter (setting it to false), also reset inputSets
-  //     if (prev) {
-  //       setInputSets([0]); // Reset to initial state
-  //     }
-  //     return !prev;
-  //   });
-  // };
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -129,13 +117,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filterOpen === false && (
+            {filters.length > 0 === false && (
               //
-              <FilterActions type="filter"/>
+              <FilterActions type="filter" />
             )}
-            {filterOpen && (
+            {filters.length > 0 && (
               <React.Fragment>
-
                 <Button
                   variant="small"
                   icon={Close}
@@ -154,13 +141,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             <React.Fragment>
-              {filterOpen && (
-
-                <Filters metric={firstFilter} secFilter={secondFilter} />
-              )}
-              {filterOpen &&  (
-                <FilterActions type="apply"/>
-              )}
+              <div className="flex-row gap-xxxs items-center">
+                <Filters />
+              </div>
+              {filters.length > 0 && <FilterActions type="apply" />}
             </React.Fragment>
             <span className={"caption text-gray-4"}>
               Many more filtering options coming soon! - Raymond 1/23
@@ -197,7 +181,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           aria-label="table"
           className="flex-row flex-grow self-stretch items-start overflow-hidden"
         >
-          <div aria-label="scroll-control" className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg">
+          <div
+            aria-label="scroll-control"
+            className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
+          >
             <RequestLogTable />
             {showFilter && (
               <div className="flex-row py-lg justify-center items-center w-full">

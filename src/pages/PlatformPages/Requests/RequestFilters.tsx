@@ -5,8 +5,6 @@ import { SelectInput, TextInputSmall } from "src/components/Inputs";
 import { RequestFilter, FilterType } from "src/types";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { RootState } from "src/types";
-import { setQueryParams } from "src/utilities/navigation";
-import { useNavigate } from "react-router-dom";
 import {
   getRequestLogs,
   setFilters,
@@ -197,43 +195,28 @@ export const RequestFilters: RequestFilter = {
     ),
     changeField: (register) => {
       return (
-      //   <TextInputSmall
-      //   placeholder="Search prompt..."
-      //   {...register("prompt", {
-      //     value: searchText,
-      //     onChange: (e) => setSearchText(e.target.value),
-      //   })}
-      //   value={searchText}
-      // />
-      ""
+        //   <TextInputSmall
+        //   placeholder="Search prompt..."
+        //   {...register("prompt", {
+        //     value: searchText,
+        //     onChange: (e) => setSearchText(e.target.value),
+        //   })}
+        //   value={searchText}
+        // />
+        ""
       );
     },
   },
 };
 
-export const Filters = ({
-  metric,
-  secFilter,
-}: {
-  metric: FilterType;
-  secFilter?: string;
-}) => {
+export const Filters = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  // const [filters, setLocalFilters] = useState<
-  //   { metric: any; negation: boolean; value: any; id: string }[]
-  // >([]);
-  const [editing, setEditing] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useTypedDispatch();
-  dispatch(getRequestLogs());
   const filters = useTypedSelector((state) => state.requestLogs.filters);
-  const filterOpen = useTypedSelector(
-    (state: RootState) => state.requestLogs.filterOpen
-  );
   const currentFilter = useTypedSelector(
     (state: RootState) => state.requestLogs.currentFilter
   );
@@ -242,7 +225,6 @@ export const Filters = ({
     (state: RootState) => state.requestLogs.models
   );
 
-  let randomId;
   const onSubmit = (data: any) => {
     const negation = data.operator === "!";
     const filterData = {
@@ -260,13 +242,11 @@ export const Filters = ({
     if (filters.length === 1) {
       dispatch(setFilters([]));
       dispatch(setFilterOpen(false));
-      console.log("here", filters.length);
     }
   };
-  // const currentFilter = RequestFilters[metric];
-  console.log("keyws", keys);
+
   return (
-    <div>
+    <React.Fragment>
       {filters.map((filter, index) => (
         <form
           key={filter.id}
@@ -276,23 +256,23 @@ export const Filters = ({
           {RequestFilters[filter.metric]?.metricSelection(register)}
           {RequestFilters[filter.metric]?.operationSelection(register)}
           {filter.metric === "failed" &&
-            RequestFilters[filter.metric]?.changeField(register, secFilter)}
+            RequestFilters[filter.metric]?.changeField(register, filter.value)}
           {filter.metric === "apiKey" &&
             RequestFilters[filter.metric]?.changeField({
               register,
-              choice: secFilter,
+              choice: filter.value,
               choices: keys,
             })}
           {filter.metric === "model" &&
             RequestFilters[filter.metric]?.changeField({
               register,
-              choice: secFilter,
+              choice: filter.value,
               choices: models,
             })}
           {filter.metric === "prompt"}
           {<DotsButton icon={Close} onClick={() => handleClose(filter.id)} />}
         </form>
       ))}
-    </div>
+    </React.Fragment>
   );
 };
