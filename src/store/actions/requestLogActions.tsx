@@ -9,8 +9,11 @@ export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
+export const SET_PAGE_URLS = "SET_PAGE_URLS";
 
-const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): string => {
+const concatMessages = (
+  messages: ChatMessage[] | undefined[] | undefined
+): string => {
   if (messages) {
     return messages.map((message) => message?.content).join(" ");
   }
@@ -22,7 +25,7 @@ export const setFilter = (filter: string) => {
     type: SET_REQUEST_LOGS,
     payload: filter,
   };
-}
+};
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
@@ -30,9 +33,19 @@ export const processRequestLogs = (
   return requestLogs.map((log) => {
     return {
       id: log.id,
-      time: <span className="text-gray-4">{formatISOToReadableDate(log.timestamp)}</span>,
-      prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
-      response: <span className="truncate">{concatMessages([log.completion_message])}</span>,
+      time: (
+        <span className="text-gray-4">
+          {formatISOToReadableDate(log.timestamp)}
+        </span>
+      ),
+      prompt: (
+        <span className="truncate">{concatMessages(log.prompt_messages)}</span>
+      ),
+      response: (
+        <span className="truncate">
+          {concatMessages([log.completion_message])}
+        </span>
+      ),
       promptTokens: log.prompt_tokens,
       outputTokens: log.completion_tokens,
       cost: `$${log.cost.toFixed(6)}`,
@@ -53,11 +66,20 @@ export const setDisplayColumns = (columns: string[]) => {
   };
 };
 
-
 export const setSidePanelOpen = (open: boolean) => {
   return {
     type: SET_SIDE_PANEL_OPEN,
     payload: open,
+  };
+};
+
+export const setPageUrls = (
+  lastPageUrl: string,
+  nextPageUrl: string,
+) => {
+  return {
+    type: SET_PAGE_URLS,
+    payload: { lastPageUrl, nextPageUrl },
   };
 };
 
@@ -82,7 +104,14 @@ export const getRequestLogs = () => {
     keywordsRequest({
       path: `api/request-logs?${params.toString()}`,
     }).then((data) => {
-      dispatch(setRequestLogs(data));
+      const results = data.results;
+      dispatch(
+        setPageUrls(
+          data.next,
+          data.previous
+        )
+      );
+      dispatch(setRequestLogs(results));
     });
   };
 };

@@ -285,10 +285,10 @@ export const getDashboardData = (
       params = new URLSearchParams(overrideParams);
     }
     // const timeFrame = getState().dashboard.timeFrame;
-    const timeOffset = getState().dashboard.timeOffset;
-    params.set("timezone_offset", timeOffset);
-    // console.log("timeFrame", timeFrame);
+    
     const currDate = new Date();
+    const timeOffset = currDate.getTimezoneOffset() / 60;
+    params.set("timezone_offset", timeOffset);
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     keywordsFetch({
