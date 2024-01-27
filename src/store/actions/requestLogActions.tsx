@@ -3,6 +3,7 @@ import { TypedDispatch, ChatMessage } from "src/types";
 import { LogItem, DisplayLogItem } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import React from "react";
+import { createDropdownMenuScope } from "@radix-ui/react-dropdown-menu";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -96,7 +97,6 @@ export const setSidePanelOpen = (open: boolean) => {
   };
 };
 
-
 export const setRequestLogs = (requestLogs: LogItem[]) => {
   return {
     type: SET_REQUEST_LOGS,
@@ -107,7 +107,7 @@ export const setRequestLogs = (requestLogs: LogItem[]) => {
 export const setPagination = (
   count: number,
   lastPageUrl: string,
-  nextPageUrl: string,
+  nextPageUrl: string
 ) => {
   return {
     type: SET_PAGINATION,
@@ -120,8 +120,7 @@ export const setPageNumber = (page: number) => {
     type: SET_PAGINATION,
     payload: page,
   };
-}
-
+};
 
 export const setSelectedRequest = (id: number | undefined) => {
   console.log(id);
@@ -131,21 +130,18 @@ export const setSelectedRequest = (id: number | undefined) => {
   };
 };
 
-export const getRequestLogs = () => {
+export const getRequestLogs = (postData?: any) => {
   return (dispatch: TypedDispatch) => {
     const params = new URLSearchParams(window.location.search);
     keywordsRequest({
-      path: `api/request-logs?${params.toString()}`,
+      path: `api/request-logs${postData? "/":""}?${params.toString()}`,
+      method: postData? "POST" : "GET",
+      data: postData,
     }).then((data) => {
       const results = data.results;
       const keys = data.aggregation_data;
-      dispatch(
-        setPagination(
-          data.count,
-          data.next,
-          data.previous
-        )
-      );
+      console.log(data)
+      dispatch(setPagination(data.count, data.previous, data.next));
       dispatch(setRequestLogs(results));
       dispatch(setApiKey(keys.key_list));
       dispatch(setModel(keys.model_list));
