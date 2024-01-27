@@ -85,10 +85,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   };
-<<<<<<< HEAD
   const [displayMetrics, setDisplayMetrics] = useState(true);
-=======
->>>>>>> main
   return (
     <div
       className={cn(
@@ -146,33 +143,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         </div>
       )}
       <Divider />
-<<<<<<< HEAD
-      {!displayMetrics && (
-        <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[[24px]">
-          {completeInteraction.map((message, index) => (
-            <div
-              key={index}
-              className="flex-col items-start gap-xxxxs self-stretch"
-            >
-              <div className="flex justify-between items-center self-stretch">
-                <p className="text-sm-md text-gray-5">
-                  {getMessageType(message.role)}
-                </p>
-                <DotsButton
-                  icon={Copy}
-                  onClick={() => {
-                    navigator.clipboard.writeText(message.content);
-                  }}
-                />
-              </div>
-              <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-                {message.content}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-=======
       {completeInteraction.map((message, index) => (
         <React.Fragment key={index}>
           <div
@@ -197,7 +167,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           <Divider />
         </React.Fragment >
       ))}
->>>>>>> main
     </div>
   );
 };
