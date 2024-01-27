@@ -15,6 +15,7 @@ import {
   streamPlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import cn from "src/utilities/classMerge";
 
 export interface Reponse {
   model: string;
@@ -114,7 +115,10 @@ export function PlaygroundMessage({
           return (
             <div
               key={index}
-              className="flex-col items-start gap-xxxs self-stretch w-1/2"
+              className={cn(
+                "flex-col items-start gap-xxxs self-stretch",
+                responses.length > 1 ? "w-1/2" : "w-full"
+              )}
             >
               <MessageHeader
                 title={

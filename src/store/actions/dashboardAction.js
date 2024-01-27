@@ -280,7 +280,6 @@ export const getDashboardData = (
   overrideParams // search string
 ) => {
   return (dispatch, getState) => {
-    console.log("execute");
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
@@ -316,7 +315,6 @@ export const getDashboardData = (
           params.get("summary_type")
         );
         const groupByData = { by_model, by_key };
-        // console.log("there there", data?.data);
         dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
