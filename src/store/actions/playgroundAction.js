@@ -227,3 +227,35 @@ export const stopResponding = () => {
     dispatch(appendMessage({ role: "user", user_content: "" }));
   };
 };
+
+export const RestorePlaygroundState = (logItem, callback) => {
+  return (dispatch, getState) => {
+    const [prompt, ...messages] = logItem.prompt_messages;
+    const systemPrompt =
+      prompt.role === "system" ? logItem.prompt_messages[0].content : "";
+    const userMessages = (
+      systemPrompt == "" ? logItem.prompt_messages : messages
+    ).map((item, index) => {
+      return {
+        id: index,
+        role: "user",
+        user_content: item.content,
+        responses: null,
+      };
+    });
+    const assisantRespons = {
+      id: userMessages.length,
+      role: "assistant",
+      responses: [
+        {
+          model: logItem.model,
+          content: logItem.completion_message.content,
+          complete: true,
+        },
+      ],
+    };
+    dispatch(setPrompt(systemPrompt));
+    dispatch(setMessages([...userMessages, assisantRespons]));
+    callback();
+  };
+};

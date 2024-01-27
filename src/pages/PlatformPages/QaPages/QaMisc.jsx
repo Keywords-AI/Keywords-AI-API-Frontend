@@ -12,8 +12,7 @@ import { useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
 import ModelPresetCard from "src/components/Cards/ModelPresetCard";
 import { CodeViewer } from "src/components/CodeViewer";
-
-
+import { Paginator } from "src/pages/PlatformPages/Requests/Paginator";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 
 const data = [
@@ -39,22 +38,23 @@ export const QaMiscPage = () => {
         <CodeViewer />
       </PageParagraph>
       <PageParagraph>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-          <Pie
-            dataKey="value"
-            startAngle={180}
-            endAngle={0}
-            data={data}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            fill="#8884d8"
-            label
-          />
-        </PieChart>
-      </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart width={400} height={400}>
+            <Pie
+              dataKey="value"
+              startAngle={180}
+              endAngle={0}
+              data={data}
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              fill="#8884d8"
+              label
+            />
+          </PieChart>
+        </ResponsiveContainer>
       </PageParagraph>
+      <Paginator />
     </PageContent>
   );
 };
