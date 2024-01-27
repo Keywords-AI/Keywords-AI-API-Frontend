@@ -24,6 +24,7 @@ import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
 import { get, set, useForm } from "react-hook-form";
 import { Filters } from "./RequestFilters";
+import { Paginator } from "./Paginator";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
@@ -252,7 +253,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           aria-label="table"
           className="flex-row flex-grow self-stretch items-start overflow-hidden"
         >
-          <div className="flex-col flex-grow max-h-full items-start overflow-auto">
+          <div aria-label="scroll-control" className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg">
             <RequestLogTable />
             {showFilter && (
               <div className="flex-row py-lg justify-center items-center w-full">
@@ -261,10 +262,13 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                     {requestLogs.length - requestLogs.length} entries hidden by
                     filter
                   </span>
-                  <Button variant="small" text="Clear filters" />
+                  <Button variant="small" text="Clear filters mt-auto" />
                 </div>
               </div>
             )}
+            <div className="relative left-lg">
+              <Paginator />
+            </div>
           </div>
           <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
         </div>

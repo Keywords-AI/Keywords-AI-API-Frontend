@@ -8,6 +8,7 @@ import {
   getColorMap,
 } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
+import _ from 'lodash';
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -39,6 +40,7 @@ export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 
+
 export const setKeyColors = (data) => {
   return {
     type: SET_KEY_COLORS,
@@ -47,8 +49,6 @@ export const setKeyColors = (data) => {
 };
 export const SET_SENTIMENT_SUMMARY_DATA = "SET_SENTIMENT_SUMMARY_DATA";
 export const SET_SENTIMENT_DATA = "SET_SENTIMENT_DATA";
-
-
 
 export const setModelColors = (data) => {
   return {
@@ -276,22 +276,19 @@ export const setSentimentData = (data) => {
   };
 };
 
-
-
 export const getDashboardData = (
   overrideParams // search string
 ) => {
   return (dispatch, getState) => {
-    console.log("execute");
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
     // const timeFrame = getState().dashboard.timeFrame;
-    const timeOffset = getState().dashboard.timeOffset;
-    params.set("timezone_offset", timeOffset);
-    // console.log("timeFrame", timeFrame);
+    
     const currDate = new Date();
+    const timeOffset = currDate.getTimezoneOffset() / 60;
+    params.set("timezone_offset", timeOffset);
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     keywordsFetch({
@@ -318,7 +315,6 @@ export const getDashboardData = (
           params.get("summary_type")
         );
         const groupByData = { by_model, by_key };
-        // console.log("there there", data?.data);
         dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
@@ -411,7 +407,9 @@ export const getDashboardData = (
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log("error", error);
+      });
   };
 };
 
@@ -591,14 +589,14 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     }
     return { ...item, date_group: newDateGroup };
   });
-  const by_date_group = Object.groupBy(data, ({ date_group }) => date_group);
+  const by_date_group = _.groupBy(data, ({ date_group }) => date_group);
   const byModel = {};
   // Group data by model or api_key
   const groupByCallback = isbyModel
     ? ({ model }) => (model == "" ? "unknown model" : model)
     : ({ api_key }) => api_key;
   Object.keys(by_date_group).forEach((key) => {
-    const updatedItem = Object.groupBy(by_date_group[key], groupByCallback);
+    const updatedItem = _.groupBy(by_date_group[key], groupByCallback);
     Object.keys(updatedItem).forEach((key) => {
       // Aggregate the data for each model
       // let request = updatedItem[key].length()

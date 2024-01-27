@@ -14,6 +14,8 @@ export const SET_SECOND_FILTER = "SET_SECOND_FILTER";
 export const SET_FIRST_FILTER = "SET_FIRST_FILTER";
 export const SET_FILTERS = "SET_FILTERS";
 // export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
+export const SET_PAGINATION = "SET_PAGINATION";
+export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -91,12 +93,32 @@ export const setSidePanelOpen = (open: boolean) => {
   };
 };
 
+
 export const setRequestLogs = (requestLogs: LogItem[]) => {
   return {
     type: SET_REQUEST_LOGS,
     payload: requestLogs,
   };
 };
+
+export const setPagination = (
+  count: number,
+  lastPageUrl: string,
+  nextPageUrl: string,
+) => {
+  return {
+    type: SET_PAGINATION,
+    payload: { count, lastPageUrl, nextPageUrl },
+  };
+};
+
+export const setPageNumber = (page: number) => {
+  return {
+    type: SET_PAGINATION,
+    payload: page,
+  };
+}
+
 
 export const setSelectedRequest = (id: number | undefined) => {
   console.log(id);
@@ -112,7 +134,15 @@ export const getRequestLogs = () => {
     keywordsRequest({
       path: `api/request-logs?${params.toString()}`,
     }).then((data) => {
-      dispatch(setRequestLogs(data));
+      const results = data.results;
+      dispatch(
+        setPagination(
+          data.count,
+          data.next,
+          data.previous
+        )
+      );
+      dispatch(setRequestLogs(results));
     });
   };
 };
