@@ -1,12 +1,14 @@
 import { LogItem } from "src/types";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
-import { useTypedSelector } from "src/store/store";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
 import { Copy, IconPlayground } from "src/components";
 import { models } from "src/utilities/constants";
-import React, { useState }from "react";
+import React, { useState } from "react";
+import { RestorePlaygroundState } from "src/store/actions";
+import { useNavigate } from "react-router-dom";
 
 interface SidePanelProps {
   open: boolean;
@@ -16,6 +18,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
+  const dispatch = useTypedDispatch();
+  const navigate = useNavigate();
   const completeInteraction =
     logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
@@ -115,7 +119,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             <DotsButton
               icon={IconPlayground}
               onClick={() => {
-                navigator.clipboard.writeText(JSON.stringify(logItem));
+                dispatch(
+                  RestorePlaygroundState(
+                    logItem,
+                    navigate("/platform/playground")
+                  )
+                );
               }}
             />
           )}
