@@ -3,7 +3,8 @@ import {
   SET_REQUEST_LOGS,
   SET_SELECTED_REQUEST,
   SET_SIDE_PANEL_OPEN,
-  SET_DISPLAY_COLUMNS
+  SET_DISPLAY_COLUMNS,
+  SET_PAGE_URLS,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -12,6 +13,9 @@ import { defaultRequestLogColumns } from "src/utilities/constants";
 
 type StateType = {
   logs: LogItem[];
+  currentPage: number;
+  nextPageUrl: string | null;
+  lastPageUrl: string | null;
   selectedRequest: LogItem | undefined;
   sidePanelOpen: boolean;
   displayColumns: LogColumnKey[];
@@ -19,6 +23,9 @@ type StateType = {
 
 const initState: StateType = {
   logs: [],
+  currentPage: 1,
+  nextPageUrl: null,
+  lastPageUrl: null,
   selectedRequest: undefined,
   sidePanelOpen: false,
   displayColumns: defaultRequestLogColumns,
@@ -53,6 +60,12 @@ export default function requestLogReducer(
       return {
         ...state,
         displayColumns: action.payload,
+      };
+    case SET_PAGE_URLS:
+      return {
+        ...state,
+        nextPageUrl: action.payload.nextPageUrl,
+        lastPageUrl: action.payload.lastPageUrl,
       };
     default:
       return state;
