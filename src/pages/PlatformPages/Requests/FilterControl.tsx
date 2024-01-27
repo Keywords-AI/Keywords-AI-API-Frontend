@@ -66,7 +66,6 @@ export default function FilterControl() {
     setSearchText("");
     dispatch(getRequestLogs());
     const randomId = Math.random().toString(36).substring(2, 15);
-    Filters({ metric: "prompt" });
     const filterData = {
       metric: "prompt",
       negation: false,
@@ -76,6 +75,7 @@ export default function FilterControl() {
     dispatch(setCurrentFilter(filterData));
     const updatedFilters = [...filters, filterData];
     dispatch(setFilters(updatedFilters));
+    <Filters metric="prompt"/>
   };
 
   return (

@@ -197,15 +197,14 @@ export const RequestFilters: RequestFilter = {
     ),
     changeField: (register) => {
       return (
-      //   <TextInputSmall
-      //   placeholder="Search prompt..."
-      //   {...register("prompt", {
-      //     value: searchText,
-      //     onChange: (e) => setSearchText(e.target.value),
-      //   })}
-      //   value={searchText}
-      // />
-      ""
+        <TextInputSmall
+        placeholder="Search prompt..."
+        {...register("prompt", {
+          value: searchText,
+          onChange: (e) => setSearchText(e.target.value),
+        })}
+        value={searchText}
+      />
       );
     },
   },
@@ -289,7 +288,7 @@ export const Filters = ({
               choice: secFilter,
               choices: models,
             })}
-          {filter.metric === "prompt"}
+          {filter.metric === "prompt" && RequestFilters[filter.metric]?.changeField(register)}
           {<DotsButton icon={Close} onClick={() => handleClose(filter.id)} />}
         </form>
       ))}
