@@ -154,7 +154,24 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       <Divider />
       {!displayMetrics && (
         <div className="flex-col items-start gap-xs self-stretch py-sm px-lg pb-[[24px]">
-          {completeInteraction.map((message, index) => (
+          <div className="flex-col items-start gap-xxxxs self-stretch">
+            <div className="flex justify-between items-center self-stretch">
+              <p className="text-sm-md text-gray-5">
+                {getMessageType(completeInteraction[0].role)}
+              </p>
+              <DotsButton
+                icon={Copy}
+                onClick={() => {
+                  navigator.clipboard.writeText(completeInteraction[0].content);
+                }}
+              />
+            </div>
+            <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
+              {completeInteraction[0].content}
+            </div>
+          </div>
+          <Divider />
+          {completeInteraction.slice(1).map((message, index) => (
             <div
               key={index}
               className="flex-col items-start gap-xxxxs self-stretch"
