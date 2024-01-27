@@ -7,6 +7,7 @@ import {
   setSelectedRequest,
   updateUser,
   setFilterOpen,
+  setFilters,
 } from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
@@ -32,6 +33,7 @@ const mapStateToProps = (state: RootState) => ({
   filterOpen: state.requestLogs.filterOpen,
   firstFilter: state.requestLogs.firstFilter,
   secondFilter: state.requestLogs.secondFilter,
+  filters: state.requestLogs.filters,
 });
 
 const mapDispatchToProps = {
@@ -40,6 +42,7 @@ const mapDispatchToProps = {
   setSidePanelOpen,
   setSelectedRequest,
   setFilterOpen,
+  setFilters,
 };
 
 interface Actions {
@@ -64,6 +67,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   setFilterOpen,
   firstFilter,
   secondFilter,
+  filters,
 }) => {
   useEffect(() => {
     getRequestLogs();
@@ -77,10 +81,11 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const navigate = useNavigate();
   const handleFilter = () => {
     return () => {
+      setFilters([])
       setFilterOpen(false);
     };
   };
-
+  console.log("bugbug", secondFilter)
   const handleAddInputSet = () => {
     // Find the next unique index
     const nextIndex = inputSets.length > 0 ? Math.max(...inputSets) + 1 : 0;
@@ -126,7 +131,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           <div className="flex flex-row items-center gap-xxxs">
             {filterOpen === false && (
               //
-              <FilterActions />
+              <FilterActions type="filter"/>
             )}
             {filterOpen && (
               <React.Fragment>
@@ -209,7 +214,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                 <Filters metric={firstFilter} secFilter={secondFilter} />
               )}
               {inputSets.length < 3 && (
-                <DotsButton icon={Add} onClick={handleAddInputSet} />
+                <FilterActions type="apply"/>
               )}
             </React.Fragment>
             <span className={"caption text-gray-4"}>

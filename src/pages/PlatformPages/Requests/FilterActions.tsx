@@ -1,25 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DropDownMenu } from "src/components";
-import { Button } from "src/components/Buttons";
-import { Filter } from "src/components/Icons";
+import { Button, DotsButton } from "src/components/Buttons";
+import { Add, Filter } from "src/components/Icons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { RootState } from "src/types";
-import { setFilterOpen, setFilter, setSecondFilter } from "src/store/actions";
+import {
+  setFilterOpen,
+  setFirstFilter,
+  setSecondFilter,
+} from "src/store/actions";
+import { set } from "react-hook-form";
 
-export function FilterActions() {
+export function FilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
   const [secondStep, setSecondStep] = useState<boolean | undefined>(false);
+  const [filterType, setFilterType] = useState<boolean>(false);
+  const filters = useTypedSelector((state: RootState) => state.requestLogs.filters);
+  const dispatch = useTypedDispatch();
+
+
+  useEffect(() => {
+    if (type === "filter") {
+      setFilterType(true);
+    } else {
+      setFilterType(false);
+    }
+  }, [type]);
+
   const filterOpen = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOpen
   );
-  const dispatch = useTypedDispatch();
+
   const Items = () => {
     return (
       <>
         <Button
           variant="panel"
           text="Status"
-            onClick={() => handleFirstClick("Status")}
+          onClick={() => handleFirstClick("Status")}
         />
         <Button
           variant="panel"
@@ -53,34 +71,65 @@ export function FilterActions() {
   };
 
   const handleFirstClick = (data: string) => {
+    const randomId = Math.random().toString(36).substring(2, 15);
     setSecondStep(true);
     if (data == "Status") {
-      dispatch(setFilter("failed"));
+      dispatch(setFirstFilter("failed"));
+      const filterData = {
+        metric: "failed",
+        negation: false,
+        value: "",
+        id:""
+      };
     } else if (data == "Prompt") {
-      dispatch(setFilter("prompt"));
+      dispatch(setFirstFilter("prompt"));
+      const filterData = {
+        metric: "prompt",
+        negation: false,
+        value: "",
+        id:""
+      };
     }
   };
 
   const handleSecondClick = (data: string) => {
-    console.log("bugbug",data);
     dispatch(setSecondFilter(data));
     dispatch(setFilterOpen(true));
   };
 
+  const handleApply = () => {};
+
   return (
-    <DropDownMenu
-      open={start}
-      setOpen={setStart}
-      trigger={
-        <Button
-          variant="small"
-          icon={Filter}
-          text="Filter"
-          // borderColor="shadow-border-dashed"
+    <React.Fragment>
+      {filterType && (
+        <DropDownMenu
+          open={start}
+          setOpen={setStart}
+          trigger={
+            <Button
+              variant="small"
+              icon={Filter}
+              text="Filter"
+              // borderColor="shadow-border-dashed"
+            />
+          }
+          align="start"
+          items={secondStep ? <ItemsSecond /> : <Items />}
         />
-      }
-      align="start"
-      items={secondStep ? <ItemsSecond /> : <Items />}
-    />
+      )}
+      {!filterType && (
+        <DropDownMenu
+          open={start}
+          setOpen={setStart}
+          trigger={
+            <DotsButton
+              icon={Add}
+            />
+          }
+          align="start"
+          items={secondStep ? <ItemsSecond /> : <Items />}
+        />
+      )}
+    </React.Fragment>
   );
 }

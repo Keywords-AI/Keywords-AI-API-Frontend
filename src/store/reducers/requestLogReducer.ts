@@ -5,8 +5,10 @@ import {
   SET_SIDE_PANEL_OPEN,
   SET_DISPLAY_COLUMNS,
   SET_FILTER_OPEN,
-  SET_FILTER,
+  SET_FIRST_FILTER ,
   SET_SECOND_FILTER,
+  SET_FILTERS,
+  // SET_CURRENT_FILTER
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -21,6 +23,8 @@ type StateType = {
   filterOpen: boolean;
   firstFilter: LogColumnKey | undefined;
   secondFilter: string | undefined;
+  filters: any[];
+  currentFilter: any;
 };
 
 const initState: StateType = {
@@ -31,7 +35,10 @@ const initState: StateType = {
   firstFilter: undefined,
   secondFilter: undefined,
   filterOpen: false,
+  filters: [],
+  currentFilter: {}
 };
+
 
 export default function requestLogReducer(
   state = initState,
@@ -68,7 +75,7 @@ export default function requestLogReducer(
         ...state,
         filterOpen: action.payload,
       };
-    case SET_FILTER:
+    case SET_FIRST_FILTER:
       return {
         ...state,
         firstFilter: action.payload,
@@ -77,6 +84,16 @@ export default function requestLogReducer(
       return {
         ...state,
         secondFilter: action.payload,
+      };
+    // case SET_CURRENT_FILTER:
+    //   return {
+    //     ...state,
+    //     currentFilter: action.payload,
+    //   };
+    case SET_FILTERS:
+      return {
+        ...state,
+        filters: action.payload,
       };
     default:
       return state;

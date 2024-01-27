@@ -11,21 +11,39 @@ export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
 export const SET_FILTER_OPEN = "SET_FILTER_OPEN";
 export const SET_SECOND_FILTER = "SET_SECOND_FILTER";
-export const SET_FILTER = "SET_FILTER";
+export const SET_FIRST_FILTER = "SET_FIRST_FILTER";
+export const SET_FILTERS = "SET_FILTERS";
+// export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 
-const concatMessages = (messages: ChatMessage[] | undefined[] | undefined): string => {
+const concatMessages = (
+  messages: ChatMessage[] | undefined[] | undefined
+): string => {
   if (messages) {
     return messages.map((message) => message?.content).join(" ");
   }
   return "";
 };
 
-export const setFilter = (filter: string) => {
+export const setFirstFilter = (filter: string) => {
   return {
-    type: SET_FILTER,
+    type: SET_FIRST_FILTER,
     payload: filter,
   };
-}
+};
+
+export const setFilters = (filter: any) => {
+  return {
+    type: SET_FILTERS,
+    payload: filter,
+  };
+};
+
+// export const setCurrentFilter = (filter: any) => {
+//   return {
+//     type: SET_CURRENT_FILTER,
+//     payload: filter,
+//   };
+// };
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
@@ -33,9 +51,19 @@ export const processRequestLogs = (
   return requestLogs.map((log) => {
     return {
       id: log.id,
-      time: <span className="text-gray-4">{formatISOToReadableDate(log.timestamp)}</span>,
-      prompt: <span className="truncate">{concatMessages(log.prompt_messages)}</span>,
-      response: <span className="truncate">{concatMessages([log.completion_message])}</span>,
+      time: (
+        <span className="text-gray-4">
+          {formatISOToReadableDate(log.timestamp)}
+        </span>
+      ),
+      prompt: (
+        <span className="truncate">{concatMessages(log.prompt_messages)}</span>
+      ),
+      response: (
+        <span className="truncate">
+          {concatMessages([log.completion_message])}
+        </span>
+      ),
       promptTokens: log.prompt_tokens,
       outputTokens: log.completion_tokens,
       cost: `$${log.cost.toFixed(6)}`,
@@ -55,7 +83,6 @@ export const setDisplayColumns = (columns: string[]) => {
     payload: columns,
   };
 };
-
 
 export const setSidePanelOpen = (open: boolean) => {
   return {
@@ -95,11 +122,11 @@ export const setFilterOpen = (open: boolean) => {
     type: SET_FILTER_OPEN,
     payload: open,
   };
-}
+};
 
 export const setSecondFilter = (filter: string) => {
   return {
     type: SET_SECOND_FILTER,
     payload: filter,
   };
-}
+};

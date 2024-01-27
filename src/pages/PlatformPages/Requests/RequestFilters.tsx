@@ -7,7 +7,7 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { RootState } from "src/types";
 import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate } from "react-router-dom";
-import { getRequestLogs } from "src/store/actions";
+import { getRequestLogs, setFilters } from "src/store/actions";
 import { DotsButton } from "src/components/Buttons";
 
 export const RequestFilters: RequestFilter = {
@@ -171,42 +171,72 @@ export const RequestFilters: RequestFilter = {
   //   },
 };
 
-export const Filters = ({ metric }: { metric: FilterType }, {secFilter} : {secFilter: string}) => {
+export const Filters = ({
+  metric,
+  secFilter,
+}: {
+  metric: FilterType;
+  secFilter: string;
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  // const [filters, setLocalFilters] = useState<
+  //   { metric: any; negation: boolean; value: any; id: string }[]
+  // >([]);
+  const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
   dispatch(getRequestLogs());
-  const [editing, setEditing] = useState(false);
+  const filters = useTypedSelector((state) => state.requestLogs.filters);
+  let randomId;
   const onSubmit = (data: any) => {
-    const value = data.value === "true";
     const negation = data.operator === "!";
-    const failed = negation ? !value : value;
-    setQueryParams({ failed }, navigate);
+    randomId = Math.random().toString(36).substring(2, 15);
+    const filterData = {
+      metric: data.metric,
+      negation: negation,
+      value: data.value,
+      id: randomId,
+    };
+    // setQueryParams({ failed }, navigate);
     getRequestLogs();
-    setEditing(false);
+    // setLocalFilters([...filters, filterData]);
+    dispatch(setFilters([...filters, filterData]));
+    // setEditing(false);
   };
-  console.log("hihihiihihihi",metric);
+  const handleClose = (id: string) => {
+    // setLocalFilters(updatedFilters); // Update local state
+    dispatch(setFilters(filters.filter((filter) => filter.id !== id)));
+  };
   const currentFilter = RequestFilters[metric];
   return (
     <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-row items-center gap-[2px]"
-      >
-        {currentFilter?.metricSelection(register)}
-        {currentFilter?.operationSelection(register)}
-        {currentFilter?.changeField(register, secFilter)}
-        {
-          <DotsButton
-            icon={Close}
-            onClick={() => handleCloseInputSet(inputSetId)}
-          />
-        }
-      </form>
+      {filters.map((filter, index) => (
+        <form
+          key={filter.id}
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-row items-center gap-[2px]"
+        >
+          {RequestFilters[filter.metric]?.metricSelection(register)}
+          {RequestFilters[filter.metric]?.operationSelection(register)}
+          {RequestFilters[filter.metric]?.changeField(register, secFilter)}
+          {<DotsButton icon={Close} onClick={() => handleClose(filter.id)} />}
+        </form>
+      ))}
+      {filters.length === 0 && (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-row items-center gap-[2px]"
+        >
+          {currentFilter?.metricSelection(register)}
+          {currentFilter?.operationSelection(register)}
+          {currentFilter?.changeField(register, secFilter)}
+          {<DotsButton icon={Close} onClick={() => handleClose(randomId)} />}
+        </form>
+      )}
     </div>
   );
 };
