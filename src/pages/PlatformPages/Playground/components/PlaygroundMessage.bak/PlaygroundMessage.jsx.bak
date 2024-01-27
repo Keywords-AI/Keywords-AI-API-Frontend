@@ -1,0 +1,174 @@
+import { Button, EditableBox, ModelIcon, Userpg } from "src/components";
+import { EnterKey } from "src/components/Icons/iconsDS";
+import { useDispatch, useSelector } from "react-redux";
+import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import React from "react";
+import {
+  setMessages,
+  streamPlaygroundResponse,
+} from "src/store/actions/playgroundAction";
+import cn from "src/utilities/classMerge";
+import Markdown from "react-markdown";
+
+export function PlaygroundMessage({ role, content, messageIndex }) {
+  const dispatch = useDispatch();
+  const messages = useSelector((state) => state.playground.messages);
+  const systemPrompt = useSelector((state) => state.playground.prompt);
+  const streaming = useSelector((state) => state.streamingText.isLoading);
+  const currentBrand = useSelector((state) => state.playground.currentBrand);
+  const textAreaRef = React.useRef(null);
+
+  const [textContent, setTextContent] = React.useState(content);
+  const [isFocused, setIsFocused] = React.useState(
+    role === "user" && messageIndex != 0 ? true : false
+  );
+  const currentModel = useSelector((state) => state.playground.currentModel);
+
+  const isUser = role === "user";
+  // Update when there is streaming
+  React.useEffect(() => {
+    setTextContent(content);
+  }, [content]);
+
+  const handleBlur = (event) => {
+    // Check if the new focus target is not a descendant of the parent
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setIsFocused(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setTextContent(e.target.value); // This sets what is displayed in the input box
+    dispatch(
+      setMessages(
+        messages.map((message, index) => {
+          if (index === messageIndex) {
+            return { ...message, content: e.target.value };
+          }
+          return message;
+        })
+      )
+    );
+  };
+
+  const handleSend = async (event) => {
+    event.stopPropagation();
+    if (streaming || textContent.length < 1) return;
+    setIsFocused(false);
+    dispatch(streamPlaygroundResponse(messageIndex));
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleSend(event);
+    }
+  };
+  const [isHover, setIsHover] = React.useState(false);
+  return (
+    <div
+      onMouseEnter={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+      className={cn(
+        "flex-col px-xs py-xxs items-start gap-xxs self-stretch rounded-sm bg-gray-2",
+        messageIndex === messages.length - 1 && !streaming && isFocused
+          ? "shadow-input-active"
+          : "shadow-input-default",
+        isUser && messageIndex === messages.length - 1 && "hover:cursor-pointer"
+      )}
+      onClick={() => {
+        setIsFocused(true);
+      }}
+      onFocus={() => {
+        setIsFocused(true);
+      }}
+      tabIndex="0"
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+    >
+      <div
+        className={cn(
+          "flex items-center gap-xxs px-xxs py-xxxs rounded-sm ",
+          isUser ? "bg-gray-2" : "bg-gray-3"
+        )}
+      >
+        {isUser ? (
+          <>
+            <Userpg active />
+            <p className="text-sm-md text-gray-5">User</p>
+          </>
+        ) : (
+          <>
+            {React.createElement(ModelIcon(currentBrand), { size: "md" })}
+            <p className="text-sm-md text-gray-5">{role}</p>
+          </>
+        )}
+      </div>
+      {isUser ? (
+        messageIndex === messages.length - 1 ? (
+          <EditableBox
+            ref={textAreaRef}
+            focus={isFocused}
+            placeholder={isUser ? "Enter a message..." : "Generating..."}
+            value={textContent}
+            onChange={handleChange}
+            streaming={streaming}
+          />
+        ) : (
+          <div className=" h-full flex-col  text-sm-regular text-gray-5 bg-red-500 text-wrap">
+            {textContent || <span className="text-gray-4">Generating...</span>}
+          </div>
+        )
+      ) : (
+        <div className="w-full h-full flex-col self-stretch flex-grow text-sm-regular text-gray-5 ">
+          {textContent ? (
+            <>
+              <Markdown
+                children={textContent}
+                className="text-sm-regular text-gray-5  "
+                components={{
+                  pre: ({ node, children, ...props }) => (
+                    <pre className="clear-both" {...props}>
+                      ```{children}```
+                    </pre>
+                  ),
+                  p: ({ node, ...props }) => (
+                    <p {...props} className="whitespace-pre-line my-2" />
+                  ),
+                  ol: ({ node, ...props }) => (
+                    <ol
+                      {...props}
+                      className="list-inside list-decimal space-y-2 ml-1"
+                    />
+                  ),
+                  ul: ({ node, ...props }) => (
+                    <ul
+                      {...props}
+                      className="list-inside list-disc space-y-2 ml-1"
+                    />
+                  ),
+                }}
+              />
+            </>
+          ) : (
+            <span className="text-gray-4">Generating...</span>
+          )}
+        </div>
+      )}
+      {isFocused && isUser && messageIndex === messages.length - 1 && (
+        <div className="flex justify-end gap-xxs self-stretch">
+          <Button
+            variant="small"
+            text="Send message"
+            icon={EnterKey}
+            iconSize="md"
+            iconPosition="right"
+            onClick={handleSend}
+            disabled={streaming}
+            iconHoverFill="fill-gray-5"
+          />
+        </div>
+      )}
+    </div>
+  );
+}
