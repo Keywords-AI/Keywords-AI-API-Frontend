@@ -14,7 +14,7 @@ export interface SelectInputProps {
   choices?: Choice[];
   handleSelected?: (value: string|number) => void;
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: string | number;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
   required?: boolean;

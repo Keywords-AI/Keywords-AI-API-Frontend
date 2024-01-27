@@ -4,7 +4,8 @@ import {
   SET_SELECTED_REQUEST,
   SET_SIDE_PANEL_OPEN,
   SET_DISPLAY_COLUMNS,
-  SET_PAGE_URLS,
+  SET_PAGINATION,
+  SET_PAGE_NUMBER,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -13,6 +14,7 @@ import { defaultRequestLogColumns } from "src/utilities/constants";
 
 type StateType = {
   logs: LogItem[];
+  count: number;
   currentPage: number;
   nextPageUrl: string | null;
   lastPageUrl: string | null;
@@ -23,6 +25,7 @@ type StateType = {
 
 const initState: StateType = {
   logs: [],
+  count: 0,
   currentPage: 1,
   nextPageUrl: null,
   lastPageUrl: null,
@@ -61,11 +64,17 @@ export default function requestLogReducer(
         ...state,
         displayColumns: action.payload,
       };
-    case SET_PAGE_URLS:
+    case SET_PAGINATION:
       return {
         ...state,
+        count: action.payload.count,
         nextPageUrl: action.payload.nextPageUrl,
         lastPageUrl: action.payload.lastPageUrl,
+      };
+    case SET_PAGE_NUMBER:
+      return {
+        ...state,
+        currentPage: action.payload,
       };
     default:
       return state;

@@ -76,8 +76,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     Sentiment: (
       <SentimentTag
-        sentiment_score={logItem?.sentiment_analysis?.sentiment_score}
-        text={logItem?.sentiment_analysis?.language || ""}
+        sentiment_score={logItem?.sentiment_analysis?.sentiment_score || 0}
       />
     ),
   };

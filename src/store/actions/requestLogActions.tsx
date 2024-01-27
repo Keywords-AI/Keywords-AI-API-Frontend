@@ -9,7 +9,8 @@ export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
-export const SET_PAGE_URLS = "SET_PAGE_URLS";
+export const SET_PAGINATION = "SET_PAGINATION";
+export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -73,15 +74,6 @@ export const setSidePanelOpen = (open: boolean) => {
   };
 };
 
-export const setPageUrls = (
-  lastPageUrl: string,
-  nextPageUrl: string,
-) => {
-  return {
-    type: SET_PAGE_URLS,
-    payload: { lastPageUrl, nextPageUrl },
-  };
-};
 
 export const setRequestLogs = (requestLogs: LogItem[]) => {
   return {
@@ -89,6 +81,25 @@ export const setRequestLogs = (requestLogs: LogItem[]) => {
     payload: requestLogs,
   };
 };
+
+export const setPagination = (
+  count: number,
+  lastPageUrl: string,
+  nextPageUrl: string,
+) => {
+  return {
+    type: SET_PAGINATION,
+    payload: { count, lastPageUrl, nextPageUrl },
+  };
+};
+
+export const setPageNumber = (page: number) => {
+  return {
+    type: SET_PAGINATION,
+    payload: page,
+  };
+}
+
 
 export const setSelectedRequest = (id: number | undefined) => {
   console.log(id);
@@ -106,7 +117,8 @@ export const getRequestLogs = () => {
     }).then((data) => {
       const results = data.results;
       dispatch(
-        setPageUrls(
+        setPagination(
+          data.count,
           data.next,
           data.previous
         )
