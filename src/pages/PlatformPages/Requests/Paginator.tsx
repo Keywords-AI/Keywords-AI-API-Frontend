@@ -34,7 +34,7 @@ export const Paginator = () => {
     if (nextPageUrl) {
       const params = new URLSearchParams(nextPageUrl.split("?")[1]);
       setQueryParams({ page: params.get("page") ?? "1" }, navigate);
-      dispatch(getRequestLogs());
+      dispatch(getRequestLogs({ data: "hello"}));
     }
   };
   const hanlePreviousPage = () => {
@@ -69,8 +69,8 @@ export const Paginator = () => {
           {startRowNumber} - {endRowNumber} {count > 1 ? "row" : "rows"}
         </span>
         <div className="flex-row">
-          <DotsButton icon={Left} onClick={hanleNextPage} />
-          <DotsButton icon={Right} onClick={hanlePreviousPage} />
+          <DotsButton icon={Left} onClick={hanlePreviousPage} disabled={lastPageUrl? false:true} iconFill={lastPageUrl? undefined:"fill-gray-2"} />
+          <DotsButton icon={Right} onClick={hanleNextPage} disabled={nextPageUrl? false:true} iconFill={nextPageUrl? undefined:"fill-gray-2"}/>
         </div>
       </div>
     </div>

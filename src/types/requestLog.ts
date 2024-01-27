@@ -16,6 +16,7 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
+    organization_key__name: string;
     sentiment_analysis: {
         sentiment_score: number,
         // sentiment_magnitude: mag,
@@ -71,4 +72,13 @@ export type RequestFilter = {
 //       changeFiled: <SelectInput /> // <AnyInputElement {...params} />
 //     }
 //   }
+
+
+
+export type FilterParams = {
+    [K in keyof LogItem]?: {
+        operator: string;
+        value: string | boolean | number;
+    };
+};
 
