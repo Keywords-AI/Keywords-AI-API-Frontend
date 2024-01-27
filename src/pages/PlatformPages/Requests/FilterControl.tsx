@@ -8,12 +8,15 @@ import {
   setDisplayTimeRange,
   getDashboardData,
   getRequestLogs,
+  setCurrentFilter,
+  setFilters,
 } from "src/store/actions";
 import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RootState } from "src/types";
 import { get, useForm } from "react-hook-form";
 import { FilterPanel } from "./FilterPanel";
+import { Filters } from "./RequestFilters";
 
 const typeChoices = [
   { name: "Total", value: "total" },
@@ -40,7 +43,9 @@ export default function FilterControl() {
   const currentMetric = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.metric
   );
-
+  const filters = useTypedSelector(
+    (state: RootState) => state.requestLogs.filters
+  );
   let filteredtypeChoices: any[] = [];
   if (
     currentMetric === "number_of_requests" ||
@@ -60,12 +65,23 @@ export default function FilterControl() {
     setQueryParams({ prompt }, navigate);
     setSearchText("");
     dispatch(getRequestLogs());
+    const randomId = Math.random().toString(36).substring(2, 15);
+    Filters({ metric: "prompt" });
+    const filterData = {
+      metric: "prompt",
+      negation: false,
+      value: "",
+      id: randomId,
+    };
+    dispatch(setCurrentFilter(filterData));
+    const updatedFilters = [...filters, filterData];
+    dispatch(setFilters(updatedFilters));
   };
 
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <form onSubmit={handleSubmit(onSubmit)}>
-        {/* <TextInputSmall
+        <TextInputSmall
           placeholder="Search prompt..."
           icon={Search}
           {...register("prompt", {
@@ -73,7 +89,7 @@ export default function FilterControl() {
             onChange: (e) => setSearchText(e.target.value),
           })}
           value={searchText}
-        /> */}
+        />
       </form>
       <Button
         variant="small"

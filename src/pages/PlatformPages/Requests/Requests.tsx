@@ -6,6 +6,8 @@ import {
   setSidePanelOpen,
   setSelectedRequest,
   updateUser,
+  setFilterOpen,
+  setFilters,
 } from "src/store/actions";
 import { getRequestLogs } from "src/store/actions";
 import { LogItem } from "src/types";
@@ -20,7 +22,8 @@ import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
 import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { get, set, useForm } from "react-hook-form";
+import { Filters } from "./RequestFilters";
 import { Paginator } from "./Paginator";
 
 const mapStateToProps = (state: RootState) => ({
@@ -28,6 +31,10 @@ const mapStateToProps = (state: RootState) => ({
   firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
+  filterOpen: state.requestLogs.filterOpen,
+  firstFilter: state.requestLogs.firstFilter,
+  secondFilter: state.requestLogs.secondFilter,
+  filters: state.requestLogs.filters,
 });
 
 const mapDispatchToProps = {
@@ -35,6 +42,8 @@ const mapDispatchToProps = {
   getRequestLogs,
   setSidePanelOpen,
   setSelectedRequest,
+  setFilterOpen,
+  setFilters,
 };
 
 interface Actions {
@@ -42,6 +51,7 @@ interface Actions {
   getRequestLogs: () => void;
   setSidePanelOpen: (open: boolean) => void;
   setSelectedRequest: (id: number) => void;
+  setFilterOpen: (open: boolean) => void;
 }
 
 type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
@@ -51,9 +61,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   getRequestLogs,
   firstTime,
   sidePanelOpen,
+  filterOpen,
   setSidePanelOpen,
   selectedRequest,
   setSelectedRequest,
+  setFilterOpen,
+  firstFilter,
+  secondFilter,
+  filters,
 }) => {
   useEffect(() => {
     getRequestLogs();
@@ -67,13 +82,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const navigate = useNavigate();
   const handleFilter = () => {
     return () => {
-      setShowFilter((prev) => {
-        // If we are hiding the filter (setting it to false), also reset inputSets
-        if (prev) {
-          setInputSets([0]); // Reset to initial state
-        }
-        return !prev;
-      });
+      setFilters([])
+      setFilterOpen(false);
     };
   };
   const handleAddInputSet = () => {
@@ -100,16 +110,16 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     setEditing(false);
   };
   useEffect(() => {}, [params]);
-  const handleSlectedFilter = (value: string) => {
-    setFilter(value);
-    setShowFilter((prev) => {
-      // If we are hiding the filter (setting it to false), also reset inputSets
-      if (prev) {
-        setInputSets([0]); // Reset to initial state
-      }
-      return !prev;
-    });
-  };
+  // const handleSlectedFilter = (value: string) => {
+  //   setFilter(value);
+  //   setShowFilter((prev) => {
+  //     // If we are hiding the filter (setting it to false), also reset inputSets
+  //     if (prev) {
+  //       setInputSets([0]); // Reset to initial state
+  //     }
+  //     return !prev;
+  //   });
+  // };
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -119,18 +129,21 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {/* {!showFilter && (
-              // 
-              <FilterActions />
-            )} */}
-            {showFilter && (
-              <Button
-                variant="small"
-                icon={Close}
-                text="Clear filters"
-                onClick={handleFilter()}
-                iconPosition="right"
-              />
+            {filterOpen === false && (
+              //
+              <FilterActions type="filter"/>
+            )}
+            {filterOpen && (
+              <React.Fragment>
+
+                <Button
+                  variant="small"
+                  icon={Close}
+                  text="Clear filters"
+                  onClick={handleFilter()}
+                  iconPosition="right"
+                />
+              </React.Fragment>
             )}
           </div>
           <FilterControl />
@@ -141,67 +154,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             <React.Fragment>
-              {params.get("failed") && (
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="flex flex-row items-center gap-[2px]"
-                >
-                  {/* <SelectInput
-                    headLess
-                    defaultValue={"failed"}
-                    {...register("metric")}
-                    align="end"
-                    // value={currentTimeRange}
-                    icon={Down}
-                    padding="py-xxxs px-xxs"
-                    gap="gap-xxs"
-                    choices={[{ name: "Status", value: "failed" }]}
-                    // handleSelected={handleTimePeriodSelection}
-                    onChange={() => setEditing(true)}
-                  />
-                  <SelectInput
-                    headLess
-                    placeholder="is"
-                    align="end"
-                    {...register("operator")}
-                    // value={currentTimeRange}
-                    icon={Down}
-                    padding="py-xxxs px-xxs"
-                    gap="gap-xxs"
-                    choices={[
-                      { name: "is", value: "" },
-                      { name: "is not", value: "!" },
-                    ]}
-                    onChange={() => setEditing(true)}
-                  />
-                  <SelectInput
-                    headLess
-                    placeholder="Error"
-                    align="end"
-                    {...register("value")}
-                    defaultValue="false"
-                    // value={currentTimeRange}
-                    icon={Down}
-                    padding="py-xxxs px-xxs"
-                    gap="gap-xxs"
-                    choices={[
-                      { name: "Error", value: "true" }, // Yep, "truly" failed
-                      { name: "Success", value: "false" },
-                    ]}
-                    onChange={() => setEditing(true)}
-                  />
-                  {
-                    <DotsButton
-                      icon={Close}
-                      onClick={() => handleCloseInputSet(inputSetId)}
-                    />
-                  }
-                  {editing && <Button variant="small" text={"Apply"} />} */}
-                  {/* <Filter metric={filter} /> */}
-                </form>
+              {filterOpen && (
+
+                <Filters metric={firstFilter} secFilter={secondFilter} />
               )}
-              {inputSets.length < 3 && (
-                <DotsButton icon={Add} onClick={handleAddInputSet} />
+              {filterOpen &&  (
+                <FilterActions type="apply"/>
               )}
             </React.Fragment>
             <span className={"caption text-gray-4"}>

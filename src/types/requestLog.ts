@@ -16,6 +16,7 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
+    aggregation_data: any;
     organization_key__name: string;
     sentiment_analysis: {
         sentiment_score: number,
@@ -62,7 +63,7 @@ export type RequestFilter = {
     [Key in FilterType]?: {
         metricSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
         operationSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
-        changeField: (register: any)=>React.ReactNode; // any keywords input field, for example <TextInput {...params} />
+        changeField: ({register, choice, choices}:{register: any, choice: string, choices?: any[]})=>React.ReactNode; // any keywords input field, for example <TextInput {...params} />
     };
 };
 // export const RequestFilters: RequestFilterType = {

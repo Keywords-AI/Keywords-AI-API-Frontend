@@ -4,8 +4,15 @@ import {
   SET_SELECTED_REQUEST,
   SET_SIDE_PANEL_OPEN,
   SET_DISPLAY_COLUMNS,
+  SET_FILTER_OPEN,
+  SET_FIRST_FILTER ,
+  SET_SECOND_FILTER,
+  SET_FILTERS,
+  SET_CURRENT_FILTER,
   SET_PAGINATION,
   SET_PAGE_NUMBER,
+  SET_API_KEY,
+  SET_MODEL,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -21,6 +28,13 @@ type StateType = {
   selectedRequest: LogItem | undefined;
   sidePanelOpen: boolean;
   displayColumns: LogColumnKey[];
+  filterOpen: boolean;
+  firstFilter: LogColumnKey | undefined;
+  secondFilter: string | undefined;
+  filters: any[];
+  currentFilter: any;
+  keys: any[];
+  models: any[];
 };
 
 const initState: StateType = {
@@ -32,7 +46,15 @@ const initState: StateType = {
   selectedRequest: undefined,
   sidePanelOpen: false,
   displayColumns: defaultRequestLogColumns,
+  firstFilter: undefined,
+  secondFilter: undefined,
+  filterOpen: false,
+  filters: [],
+  currentFilter: {},
+  keys: [],
+  models: [],
 };
+
 
 export default function requestLogReducer(
   state = initState,
@@ -63,6 +85,48 @@ export default function requestLogReducer(
       return {
         ...state,
         displayColumns: action.payload,
+      };
+    case SET_FILTER_OPEN:
+      return {
+        ...state,
+        filterOpen: action.payload,
+      };
+    case SET_FIRST_FILTER:
+      return {
+        ...state,
+        firstFilter: action.payload,
+      };
+    case SET_SECOND_FILTER:
+      return {
+        ...state,
+        secondFilter: action.payload,
+      };
+    case SET_CURRENT_FILTER:
+      const filters = state.filters.map((filter)=> {
+        if (filter.id === action.payload.id) {
+          filter = action.payload;
+        }
+        return filter;
+      })
+      return {
+        ...state,
+        currentFilter: action.payload,
+        filters: filters
+      };
+    case SET_FILTERS:
+      return {
+        ...state,
+        filters: action.payload,
+      };
+    case SET_API_KEY:
+      return {
+        ...state,
+        keys: action.payload,
+      };
+    case SET_MODEL:
+      return {
+        ...state,
+        models: action.payload,
       };
     case SET_PAGINATION:
       return {

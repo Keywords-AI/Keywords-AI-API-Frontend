@@ -10,8 +10,15 @@ export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
+export const SET_FILTER_OPEN = "SET_FILTER_OPEN";
+export const SET_SECOND_FILTER = "SET_SECOND_FILTER";
+export const SET_FIRST_FILTER = "SET_FIRST_FILTER";
+export const SET_FILTERS = "SET_FILTERS";
+export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 export const SET_PAGINATION = "SET_PAGINATION";
 export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
+export const SET_API_KEY = "SET_API_KEY";
+export const SET_MODEL = "SET_MODEL";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -22,12 +29,27 @@ const concatMessages = (
   return "";
 };
 
-export const setFilter = (filter: string) => {
+export const setFirstFilter = (filter: string) => {
   return {
-    type: SET_REQUEST_LOGS,
+    type: SET_FIRST_FILTER,
     payload: filter,
   };
 };
+
+export const setFilters = (filter: any) => {
+  return {
+    type: SET_FILTERS,
+    payload: filter,
+  };
+};
+
+export const setCurrentFilter = (filter: any) => {
+  return {
+    type: SET_CURRENT_FILTER,
+    payload: filter,
+  };
+};
+
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
@@ -117,9 +139,41 @@ export const getRequestLogs = (postData?: any) => {
       data: postData,
     }).then((data) => {
       const results = data.results;
+      const keys = data.aggregation_data;
       console.log(data)
       dispatch(setPagination(data.count, data.previous, data.next));
       dispatch(setRequestLogs(results));
+      dispatch(setApiKey(keys.key_list));
+      dispatch(setModel(keys.model_list));
+      console.log("models", keys.model_list);
     });
+  };
+};
+
+export const setApiKey = (apiKey: any[]) => {
+  return {
+    type: SET_API_KEY,
+    payload: apiKey,
+  };
+}
+
+export const setModel = (model: any[]) => {
+  return {
+    type: SET_MODEL,
+    payload: model,
+  };
+}
+
+export const setFilterOpen = (open: boolean) => {
+  return {
+    type: SET_FILTER_OPEN,
+    payload: open,
+  };
+};
+
+export const setSecondFilter = (filter: string) => {
+  return {
+    type: SET_SECOND_FILTER,
+    payload: filter,
   };
 };
