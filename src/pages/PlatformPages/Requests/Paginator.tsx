@@ -34,7 +34,7 @@ export const Paginator = () => {
     if (nextPageUrl) {
       const params = new URLSearchParams(nextPageUrl.split("?")[1]);
       setQueryParams({ page: params.get("page") ?? "1" }, navigate);
-      dispatch(getRequestLogs({ data: "hello"}));
+      dispatch(getRequestLogs());
     }
   };
   const hanlePreviousPage = () => {
