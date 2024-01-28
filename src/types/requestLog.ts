@@ -16,6 +16,8 @@ export type LogItem = {
     failed: boolean;
     category: string;
     api_key: string;
+    aggregation_data: any;
+    organization_key__name: string;
     sentiment_analysis: {
         sentiment_score: number,
         // sentiment_magnitude: mag,
@@ -61,7 +63,7 @@ export type RequestFilter = {
     [Key in FilterType]?: {
         metricSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
         operationSelection: (register: any)=>React.ReactNode; // <SelectInput {...params} />
-        changeField: (register: any)=>React.ReactNode; // any keywords input field, for example <TextInput {...params} />
+        changeField: ({register, choice, choices}:{register: any, choice: string, choices?: any[]})=>React.ReactNode; // any keywords input field, for example <TextInput {...params} />
     };
 };
 // export const RequestFilters: RequestFilterType = {
@@ -71,4 +73,22 @@ export type RequestFilter = {
 //       changeFiled: <SelectInput /> // <AnyInputElement {...params} />
 //     }
 //   }
+
+export type FilterOptions = {
+    [Key in keyof LogItem]?: {
+        display_name: string;
+        metric: keyof LogItem;
+        operation: string;
+        value: string | boolean | number;
+        value_choices: Choice[];
+    }   
+};
+
+
+export type FilterParams = {
+    [K in keyof LogItem]?: {
+        operator: string;
+        value: string | boolean | number;
+    };
+};
 

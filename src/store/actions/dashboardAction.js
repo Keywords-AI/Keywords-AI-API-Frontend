@@ -431,7 +431,7 @@ export const fillMissingDate = (data, dateGroup) => {
       const found = data.find((d) => {
         const date = new Date(d.date_group);
         const foundDate =
-          date.getHours() === hour && date.getDate() === now.getDate(); //@raymond 
+          date.getHours() === hour && date.getDate() === now.getDate(); //@ruifeng
         return foundDate;
       });
       newDataArray.push(

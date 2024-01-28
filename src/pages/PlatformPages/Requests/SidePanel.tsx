@@ -88,33 +88,34 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
     return "Response";
   };
-  const [displayMetrics, setDisplayMetrics] = useState(true);
+  const [displayLog, setDisplayLog] = useState(false);
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0",
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 relative",
         "shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
     >
-      <div className="flex px-lg py-xxs justify-between items-center self-stretch shadow-border-b shadow-gray-2">
+      <div className="flex px-lg py-xxs justify-between w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1">
         <div className="flex items-center gap-sm">
           <Button
             variant="text"
             text="Metrics"
-            active={displayMetrics}
-            onClick={() => setDisplayMetrics(true)}
+            active={!displayLog}
+            onClick={() => setDisplayLog(false)}
+            padding="py-0"
           />
           <Button
             variant="text"
             text="Log"
-            active={!displayMetrics}
-            onClick={() => setDisplayMetrics(false)}
+            active={displayLog}
+            onClick={() => setDisplayLog(true)}
+            padding="py-0"
           />
         </div>
-
         <div className="flex items-center">
-          {!displayMetrics && (
+          {displayLog && (
             <DotsButton
               icon={IconPlayground}
               onClick={() => {
@@ -135,46 +136,46 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           />
         </div>
       </div>
-      {displayMetrics && (
-        <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
-          {Object.keys(displayObj).map((key, index) => {
-            return (
-              <div
-                className="flex h-[24px] justify-between items-center self-stretch"
-                key={index}
-              >
-                <span className="text-sm-md text-gray-5">{key}</span>
-                {displayObj[key]}
-              </div>
-            );
-          })}
-        </div>
-      )}
-      <Divider />
-      {completeInteraction.map((message, index) => (
-        <React.Fragment key={index}>
-          <div
-            key={index}
-            className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
-          >
-            <div className="flex justify-between items-center self-stretch">
-              <p className="text-sm-md text-gray-5">
-                {getMessageType(message.role)}
-              </p>
-              <DotsButton
-                icon={Copy}
-                onClick={() => {
-                  navigator.clipboard.writeText(message.content);
-                }}
-              />
-            </div>
-            <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-              {message.content}
-            </div>
+      <div className="flex-col items-start self-stretch mt-[44px]">
+        {!displayLog && (
+          <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+            {Object.keys(displayObj).map((key, index) => {
+              return (
+                <div
+                  className="flex h-[24px] justify-between items-center self-stretch"
+                  key={index}
+                >
+                  <span className="text-sm-md text-gray-5">{key}</span>
+                  {displayObj[key]}
+                </div>
+              );
+            })}
           </div>
-          <Divider />
-        </React.Fragment >
-      ))}
+        )}
+        {displayLog && completeInteraction.map((message, index) => (
+          <React.Fragment key={index}>
+            <div
+              key={index}
+              className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
+            >
+              <div className="flex justify-between items-center self-stretch">
+                <p className="text-sm-md text-gray-5">
+                  {getMessageType(message.role)}
+                </p>
+                <DotsButton
+                  icon={Copy}
+                  onClick={() => {
+                    navigator.clipboard.writeText(message.content);
+                  }}
+                />
+              </div>
+              <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
+                {message.content}
+              </div>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 };
