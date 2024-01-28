@@ -97,7 +97,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         open ? "w-[400px]" : "w-0"
       )}
     >
-      <div className="flex px-lg py-xxs justify-between w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1">
+      <div className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1">
         <div className="flex items-center gap-sm">
           <Button
             variant="text"
@@ -114,7 +114,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             padding="py-0"
           />
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           {displayLog && (
             <DotsButton
               icon={IconPlayground}
@@ -134,11 +134,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               navigator.clipboard.writeText(JSON.stringify(logItem));
             }}
           />
-        </div>
+        </div> */}
       </div>
       <div className="flex-col items-start self-stretch mt-[44px]">
         {!displayLog && (
-          <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+          <div className="flex-col pt-sm py-md px-lg items-start gap-xs self-stretch">
             {Object.keys(displayObj).map((key, index) => {
               return (
                 <div

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ScrollContainer from "src/components/Display/ScrollContainer";
 import cn from "src/utilities/classMerge";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { LogItem } from "src/types";
@@ -31,7 +30,6 @@ function PromptLogsNotConnected({
   useEffect(() => {
     getRequestLogs();
   }, []);
-
   const handleClick = (index: number, prompt: string) => {
     setSelectedLog(index);
     setPrompt(prompt);
