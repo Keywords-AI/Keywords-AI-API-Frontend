@@ -78,7 +78,7 @@ export const RequestFilters: RequestFiltersType = {
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
           choices={choices}
-          // onChange={onChange}
+          onChange={onChange}
         />
       );
     },
