@@ -1,9 +1,19 @@
 import { keywordsRequest } from "src/utilities/requests";
-import { TypedDispatch, ChatMessage } from "src/types";
-import { LogItem, DisplayLogItem } from "src/types";
+import {
+  TypedDispatch,
+  ChatMessage,
+  RawFilterOptions,
+  Choice,
+  FilterObject,
+} from "src/types";
+import {
+  LogItem,
+  DisplayLogItem,
+  RootState,
+  FilterParams,
+  FilterParam,
+} from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
-import React from "react";
-import { createDropdownMenuScope } from "@radix-ui/react-dropdown-menu";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -19,6 +29,10 @@ export const SET_PAGINATION = "SET_PAGINATION";
 export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
 export const SET_API_KEY = "SET_API_KEY";
 export const SET_MODEL = "SET_MODEL";
+export const SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS";
+export const ADD_FILTER = "ADD_FILTER";
+export const DELETE_FILTER = "DELETE_FILTER";
+export const UPDATE_FILTER = "UPDATE_FILTER";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -36,10 +50,13 @@ export const setFirstFilter = (filter: string) => {
   };
 };
 
-export const setFilters = (filter: any) => {
-  return {
-    type: SET_FILTERS,
-    payload: filter,
+export const setFilters = (filters: any) => {
+  return (dispatch: TypedDispatch) => {
+    dispatch({
+      type: SET_FILTERS,
+      payload: filters,
+    });
+    dispatch(applyPostFilters(filters));
   };
 };
 
@@ -50,6 +67,56 @@ export const setCurrentFilter = (filter: any) => {
   };
 };
 
+export const applyPostFilters = (filters: FilterObject[]) => {
+  return (dispatch: TypedDispatch) => {
+    const postData = filters.reduce((acc: FilterParams, filter): FilterParams => {
+      filter.metric &&
+        (acc[filter.metric] = {
+          value: filter.value,
+          operator: filter.operator,
+        });
+      return acc;
+    }, {});
+    dispatch(getRequestLogs(postData));
+  };
+};
+
+export const addFilter = (filter: FilterObject) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: ADD_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    dispatch(applyPostFilters(filters));
+  };
+};
+
+export const deleteFilter = (filterId: string) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: DELETE_FILTER,
+      payload: filterId,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    dispatch(applyPostFilters(filters));
+  }
+};
+
+export const updateFilter = (filter: any) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: UPDATE_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    console.log(filter, filters)
+    dispatch(applyPostFilters(filters));
+  };
+};
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
@@ -104,14 +171,26 @@ export const setRequestLogs = (requestLogs: LogItem[]) => {
   };
 };
 
+export const processFilterMetricOptions = (
+  filterOptions: RawFilterOptions
+): Choice[] => {
+  return Object.keys(filterOptions).map((key) => {
+    return {
+      name: filterOptions[key].display_name,
+      value: key,
+    };
+  });
+};
+
 export const setPagination = (
   count: number,
   lastPageUrl: string,
-  nextPageUrl: string
+  nextPageUrl: string,
+  totalCount: number
 ) => {
   return {
     type: SET_PAGINATION,
-    payload: { count, lastPageUrl, nextPageUrl },
+    payload: { count, lastPageUrl, nextPageUrl, totalCount },
   };
 };
 
@@ -123,7 +202,7 @@ export const setPageNumber = (page: number) => {
 };
 
 export const setSelectedRequest = (id: number | undefined) => {
-  console.log(id);
+
   return {
     type: SET_SELECTED_REQUEST,
     payload: id,
@@ -134,18 +213,18 @@ export const getRequestLogs = (postData?: any) => {
   return (dispatch: TypedDispatch) => {
     const params = new URLSearchParams(window.location.search);
     keywordsRequest({
-      path: `api/request-logs${postData? "/":""}?${params.toString()}`,
-      method: postData? "POST" : "GET",
+      path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
+      method: postData ? "POST" : "GET",
       data: postData,
     }).then((data) => {
       const results = data.results;
       const keys = data.aggregation_data;
-      console.log(data)
-      dispatch(setPagination(data.count, data.previous, data.next));
+      // console.log(data);
+      dispatch(setPagination(data.count, data.previous, data.next, data.total_count));
+      dispatch(setFilterOptions(data.filters_data));
       dispatch(setRequestLogs(results));
       dispatch(setApiKey(keys.key_list));
       dispatch(setModel(keys.model_list));
-      console.log("models", keys.model_list);
     });
   };
 };
@@ -155,14 +234,21 @@ export const setApiKey = (apiKey: any[]) => {
     type: SET_API_KEY,
     payload: apiKey,
   };
-}
+};
 
 export const setModel = (model: any[]) => {
   return {
     type: SET_MODEL,
     payload: model,
   };
-}
+};
+
+export const setFilterOptions = (filters: RawFilterOptions) => {
+  return {
+    type: SET_FILTER_OPTIONS,
+    payload: filters,
+  };
+};
 
 export const setFilterOpen = (open: boolean) => {
   return {

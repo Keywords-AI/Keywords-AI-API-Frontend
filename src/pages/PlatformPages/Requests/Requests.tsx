@@ -31,10 +31,11 @@ const mapStateToProps = (state: RootState) => ({
   firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
-  filterOpen: state.requestLogs.filterOpen,
   firstFilter: state.requestLogs.firstFilter,
   secondFilter: state.requestLogs.secondFilter,
   filters: state.requestLogs.filters,
+  count: state.requestLogs.count,
+  totalCount: state.requestLogs.totalCount,
 });
 
 const mapDispatchToProps = {
@@ -52,6 +53,7 @@ interface Actions {
   setSidePanelOpen: (open: boolean) => void;
   setSelectedRequest: (id: number) => void;
   setFilterOpen: (open: boolean) => void;
+  setFilters: (filters: any) => void;
 }
 
 type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
@@ -61,14 +63,13 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   getRequestLogs,
   firstTime,
   sidePanelOpen,
-  filterOpen,
   setSidePanelOpen,
   selectedRequest,
   setSelectedRequest,
-  setFilterOpen,
-  firstFilter,
-  secondFilter,
+  setFilters,
   filters,
+  count,
+  totalCount,
 }) => {
   useEffect(() => {
     getRequestLogs();
@@ -76,50 +77,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const [showFilter, setShowFilter] = useState(false);
-  const [filter, setFilter] = useState("");
-  // const [inputSets, setInputSets] = useState(1);
-  const [inputSets, setInputSets] = useState([0]);
-  const navigate = useNavigate();
-  const handleFilter = () => {
-    return () => {
-      setFilters([])
-      setFilterOpen(false);
-    };
-  };
-  const handleAddInputSet = () => {
-    // Find the next unique index
-    const nextIndex = inputSets.length > 0 ? Math.max(...inputSets) + 1 : 0;
-    setInputSets([...inputSets, nextIndex]);
-  };
-
-  const handleCloseInputSet = (setIndex: any) => {
-    setInputSets(inputSets.filter((index) => index !== setIndex));
-  };
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const [editing, setEditing] = useState(false);
-  const onSubmit = (data: any) => {
-    const value = data.value === "true";
-    const negation = data.operator === "!";
-    const failed = negation ? !value : value;
-    setQueryParams({ failed }, navigate);
-    getRequestLogs();
-    setEditing(false);
+  const clearFilters = () => {
+    setFilters([]);
   };
   useEffect(() => {}, [params]);
-  // const handleSlectedFilter = (value: string) => {
-  //   setFilter(value);
-  //   setShowFilter((prev) => {
-  //     // If we are hiding the filter (setting it to false), also reset inputSets
-  //     if (prev) {
-  //       setInputSets([0]); // Reset to initial state
-  //     }
-  //     return !prev;
-  //   });
-  // };
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -129,18 +90,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filterOpen === false && (
-              //
-              <FilterActions type="filter"/>
-            )}
-            {filterOpen && (
+            {filters.length > 0 === false && <FilterActions type="filter" />}
+            {filters.length > 0 && (
               <React.Fragment>
-
                 <Button
                   variant="small"
                   icon={Close}
                   text="Clear filters"
-                  onClick={handleFilter()}
+                  onClick={clearFilters}
                   iconPosition="right"
                 />
               </React.Fragment>
@@ -154,31 +111,18 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
             <React.Fragment>
-              {filterOpen && (
-
-                <Filters metric={firstFilter} secFilter={secondFilter} />
-              )}
-              {filterOpen &&  (
-                <FilterActions type="apply"/>
-              )}
+              <Filters />
+              {filters.length > 0 && <FilterActions type="add" />}
             </React.Fragment>
             <span className={"caption text-gray-4"}>
               Many more filtering options coming soon! - Raymond 1/23
             </span>
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
-            <div className="flex flex-row items-center gap-xxxs rounded-xs">
-              <span className="text-sm-regular text-gray-4">
-                {requestLogs.length}
-              </span>
-              <span className="text-sm-regular text-gray-4">/</span>
-              <span className="text-sm-regular text-gray-4">
-                {requestLogs.length}
-              </span>
+            <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
+              {count} / {totalCount}
             </div>
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            {/* <Button variant="small" icon={Export} text="Export" />
-            <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div> */}
             <DotsButton
               icon={sidePanelOpen ? SideBarActive : SideBar}
               onClick={() => {
@@ -197,16 +141,22 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           aria-label="table"
           className="flex-row flex-grow self-stretch items-start overflow-hidden"
         >
-          <div aria-label="scroll-control" className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg">
+          <div
+            aria-label="scroll-control"
+            className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
+          >
             <RequestLogTable />
-            {showFilter && (
+            {filters.length > 0 && (
               <div className="flex-row py-lg justify-center items-center w-full">
                 <div className="flex-row gap-sm items-center">
                   <span className="text-sm-md">
-                    {requestLogs.length - requestLogs.length} entries hidden by
-                    filter
+                    {totalCount - count} entries hidden by filter
                   </span>
-                  <Button variant="small" text="Clear filters mt-auto" />
+                  <Button
+                    variant="small"
+                    text="Clear filters"
+                    onClick={clearFilters}
+                  />
                 </div>
               </div>
             )}

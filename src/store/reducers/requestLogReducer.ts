@@ -5,23 +5,28 @@ import {
   SET_SIDE_PANEL_OPEN,
   SET_DISPLAY_COLUMNS,
   SET_FILTER_OPEN,
-  SET_FIRST_FILTER ,
+  SET_FIRST_FILTER,
   SET_SECOND_FILTER,
   SET_FILTERS,
-  SET_CURRENT_FILTER,
+  ADD_FILTER,
   SET_PAGINATION,
   SET_PAGE_NUMBER,
   SET_API_KEY,
   SET_MODEL,
+  SET_FILTER_OPTIONS,
+  DELETE_FILTER,
+  UPDATE_FILTER,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { LogColumnKey } from "src/types";
 import { defaultRequestLogColumns } from "src/utilities/constants";
+import { FilterObject, RawFilterOptions } from "src/types";
 
 type StateType = {
   logs: LogItem[];
   count: number;
+  totalCount: number;
   currentPage: number;
   nextPageUrl: string | null;
   lastPageUrl: string | null;
@@ -31,15 +36,17 @@ type StateType = {
   filterOpen: boolean;
   firstFilter: LogColumnKey | undefined;
   secondFilter: string | undefined;
-  filters: any[];
+  filters: FilterObject[];
   currentFilter: any;
   keys: any[];
   models: any[];
+  filterOptions: RawFilterOptions; // Passed from backend
 };
 
 const initState: StateType = {
   logs: [],
   count: 0,
+  totalCount: 0,
   currentPage: 1,
   nextPageUrl: null,
   lastPageUrl: null,
@@ -53,8 +60,8 @@ const initState: StateType = {
   currentFilter: {},
   keys: [],
   models: [],
+  filterOptions: {},
 };
-
 
 export default function requestLogReducer(
   state = initState,
@@ -101,27 +108,43 @@ export default function requestLogReducer(
         ...state,
         secondFilter: action.payload,
       };
-    case SET_CURRENT_FILTER:
-      const filters = state.filters.map((filter)=> {
-        if (filter.id === action.payload.id) {
-          filter = action.payload;
-        }
-        return filter;
-      })
-      return {
-        ...state,
-        currentFilter: action.payload,
-        filters: filters
-      };
     case SET_FILTERS:
       return {
         ...state,
         filters: action.payload,
       };
+    case ADD_FILTER:
+      console.log("action.payload", action.payload);
+      return {
+        ...state,
+        filters: [...state.filters, action.payload],
+      };
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        filters: state.filters.map((filter) => {
+          if (filter.id === action.payload.id) {
+            return action.payload;
+          }
+          return filter;
+        }),
+      };
+    case DELETE_FILTER:
+      return {
+        ...state,
+        filters: state.filters.filter(
+          (filter) => filter.id !== action.payload
+        ),
+      };
     case SET_API_KEY:
       return {
         ...state,
         keys: action.payload,
+      };
+    case SET_FILTER_OPTIONS:
+      return {
+        ...state,
+        filterOptions: action.payload,
       };
     case SET_MODEL:
       return {
@@ -131,9 +154,7 @@ export default function requestLogReducer(
     case SET_PAGINATION:
       return {
         ...state,
-        count: action.payload.count,
-        nextPageUrl: action.payload.nextPageUrl,
-        lastPageUrl: action.payload.lastPageUrl,
+        ...action.payload,
       };
     case SET_PAGE_NUMBER:
       return {
