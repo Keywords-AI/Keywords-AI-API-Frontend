@@ -18,7 +18,6 @@ import {
   RequestFilter,
 } from "src/types";
 import { ModelTag, StatusTag } from "src/components/Misc";
-import { SelectInput } from "src/components/Inputs";
 import { SentimentTag } from "src/components/Misc";
 import React from "react";
 
@@ -182,22 +181,6 @@ export const Metrics = {
   error_count: { name: "Errors", value: "error_count", icon: Warning },
 };
 
-export const dummyLogItem: LogItem = {
-  id: -1,
-  timestamp: "",
-  cost: -1,
-  latency: 0,
-  completion_tokens: 0,
-  prompt_tokens: 0,
-  model: "",
-  completion_message: { role: "", content: "" },
-  prompt_messages: [],
-  error_message: "",
-  failed: false,
-  category: "",
-  api_key: "",
-};
-
 export const requestLogColumns: LogItemColumn[] = [
   { name: "Time", retrievalKey: "time", width: "120px" },
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
@@ -214,7 +197,7 @@ export const requestLogTagColumns: LogItemTag[] = [
     name: "API key",
     retrievalKey: "apiKey",
     renderFunction: (key: string) => (
-      <span className="caption text-gray-4 mr-xxxs">{key}</span>
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">{key}</span>
     ),
   },
   {

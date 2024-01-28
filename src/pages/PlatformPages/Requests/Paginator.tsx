@@ -20,7 +20,7 @@ export const Paginator = () => {
   const { register, watch } = useForm();
   const { page_size } = watch();
   const currentPage = parseInt(params.get("page") || "1");
-  const pageSize = parseInt(page_size) || 100;
+  const pageSize = parseInt(page_size) || 25;
   const startRowNumber = (currentPage - 1) * pageSize + 1;
   const endRowNumber =
     currentPage * page_size > count ? count : currentPage * pageSize;
@@ -59,8 +59,6 @@ export const Paginator = () => {
             { name: "25", value: "25" },
             { name: "50", value: "50" },
             { name: "100", value: "100" },
-            { name: "250", value: "250" },
-            { name: "500", value: "500" },
           ]}
         />
       </div>
