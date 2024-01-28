@@ -14,16 +14,19 @@ import {
   SET_API_KEY,
   SET_MODEL,
   SET_FILTER_OPTIONS,
+  DELETE_FILTER,
+  UPDATE_FILTER,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { LogColumnKey } from "src/types";
 import { defaultRequestLogColumns } from "src/utilities/constants";
-import { FilterParams, FilterOption } from "src/types";
+import { FilterObject, RawFilterOptions } from "src/types";
 
 type StateType = {
   logs: LogItem[];
   count: number;
+  totalCount: number;
   currentPage: number;
   nextPageUrl: string | null;
   lastPageUrl: string | null;
@@ -33,16 +36,17 @@ type StateType = {
   filterOpen: boolean;
   firstFilter: LogColumnKey | undefined;
   secondFilter: string | undefined;
-  filters: any[];
+  filters: FilterObject[];
   currentFilter: any;
   keys: any[];
   models: any[];
-  filterOptions: FilterOption;
+  filterOptions: RawFilterOptions; // Passed from backend
 };
 
 const initState: StateType = {
   logs: [],
   count: 0,
+  totalCount: 0,
   currentPage: 1,
   nextPageUrl: null,
   lastPageUrl: null,
@@ -115,6 +119,23 @@ export default function requestLogReducer(
         ...state,
         filters: [...state.filters, action.payload],
       };
+    case UPDATE_FILTER:
+      return {
+        ...state,
+        filters: state.filters.map((filter) => {
+          if (filter.id === action.payload.id) {
+            return action.payload;
+          }
+          return filter;
+        }),
+      };
+    case DELETE_FILTER:
+      return {
+        ...state,
+        filters: state.filters.filter(
+          (filter) => filter.id !== action.payload
+        ),
+      };
     case SET_API_KEY:
       return {
         ...state,
@@ -133,9 +154,7 @@ export default function requestLogReducer(
     case SET_PAGINATION:
       return {
         ...state,
-        count: action.payload.count,
-        nextPageUrl: action.payload.nextPageUrl,
-        lastPageUrl: action.payload.lastPageUrl,
+        ...action.payload,
       };
     case SET_PAGE_NUMBER:
       return {

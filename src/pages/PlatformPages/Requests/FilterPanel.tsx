@@ -7,7 +7,7 @@ import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { Divider } from "src/components/Sections";
 import { RootState } from "src/types";
 import { updateUser, getRequestLogs } from "src/store/actions";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   requestLogColumns,
   requestLogTagColumns,
@@ -19,11 +19,10 @@ import { setQueryParams } from "src/utilities/navigation";
 
 export function FilterPanel() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPopover, setShowPopover] = useState(false);
   const dispatch = useTypedDispatch();
-  const currentTimeRange = useTypedSelector(
-    (state: RootState) => state.dashboard.displayFilter.timeRange
-  );
+  const currentTimeRange = new URLSearchParams(location.search).get("time_range_type") || "all";
   const showColumns = useTypedSelector(
     (state: RootState) => state.requestLogs.displayColumns
   );

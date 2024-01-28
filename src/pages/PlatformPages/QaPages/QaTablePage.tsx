@@ -33,9 +33,6 @@ export function QaTablePage() {
     return <Tag text={status} />;
   };
   const [displayedLogs, setDisplayedLogs] = useState<DisplayLogItem[]>([]);
-  useEffect(()=> {
-    dispatch(getRequestLogs());
-  });
   const tagGroup = ({key, model, status} : {key: string, model: string, status: string}) => {
     return (
       <div className="flex-row gap-xxs">
@@ -48,7 +45,7 @@ export function QaTablePage() {
     );
   };
   useEffect(() => {
-    setDisplayedLogs(processRequestLogs(requestLogs, tagGroup));
+    setDisplayedLogs(processRequestLogs(requestLogs));
   }, [requestLogs]);
   return (
     <PageContent title="QA Table" subtitle="Tables">
