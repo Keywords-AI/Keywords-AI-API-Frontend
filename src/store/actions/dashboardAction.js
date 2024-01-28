@@ -280,7 +280,6 @@ export const getDashboardData = (
   overrideParams // search string
 ) => {
   return (dispatch, getState) => {
-    console.log("execute");
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
@@ -292,7 +291,6 @@ export const getDashboardData = (
     params.set("timezone_offset", timeOffset);
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -317,7 +315,6 @@ export const getDashboardData = (
           params.get("summary_type")
         );
         const groupByData = { by_model, by_key };
-        // console.log("there there", data?.data);
         dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,

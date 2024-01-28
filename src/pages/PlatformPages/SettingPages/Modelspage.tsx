@@ -82,7 +82,7 @@ const ModelsTable = ({
 export default function Modelspage() {
   return (
     <PageContent title="Models" subtitle="">
-      <span className="text-md-md">Supported models</span>
+      <span className="text-md-medium">Supported models</span>
       <ModelsTable
         ModlItems={[
           {

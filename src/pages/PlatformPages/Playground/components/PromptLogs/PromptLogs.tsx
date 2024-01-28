@@ -4,18 +4,16 @@ import cn from "src/utilities/classMerge";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { LogItem } from "src/types";
 import { RootState } from "src/types";
-import {
-  setSelectedLogs,
-  setPrompt,
-  getRequestLogs
-} from "src/store/actions";
+import { setSelectedLogs, setPrompt, getRequestLogs } from "src/store/actions";
 
 export interface PromptLogsProps {
   prop?: string;
-  requestLogs: LogItem[]; // Add the requestLogs property
+  requestLogs: LogItem[];
+
+  getRequestLogs: any; // Add the requestLogs property
 }
 
-const mapStateToProps = (state:RootState) => ({
+const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
 });
 
@@ -24,14 +22,17 @@ const mapDispatchToProps = {
   getRequestLogs,
 };
 
-function PromptLogsNotConnected({ prop = "default value", requestLogs }: PromptLogsProps) {
+function PromptLogsNotConnected({
+  prop = "default value",
+  requestLogs,
+  getRequestLogs,
+}: PromptLogsProps) {
   const [selectedLog, setSelectedLog] = useState<number>(-1);
   useEffect(() => {
     getRequestLogs();
   }, []);
 
-  console.log("hello hello", requestLogs);
-  const handleClick = (index: number, prompt:string) => {
+  const handleClick = (index: number, prompt: string) => {
     setSelectedLog(index);
     setPrompt(prompt);
   };
@@ -56,7 +57,7 @@ function PromptLogsNotConnected({ prop = "default value", requestLogs }: PromptL
       })}
     </div>
   );
-  }
+}
 
 const LogItem = ({
   prompt,
@@ -106,7 +107,6 @@ const LogItem = ({
     </div>
   );
 };
-
 
 export const PromptLogs = connect(
   mapStateToProps,
