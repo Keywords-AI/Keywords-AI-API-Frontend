@@ -1,17 +1,19 @@
-import react from "react";
+import react, { useState } from "react";
 import { Button } from "src/components";
-import { Search } from "src/components/Icons/iconsDS";
+import { Filter, Search } from "src/components/Icons/iconsDS";
 import {
   CheckboxInput,
   RadioInput,
   SelectInput,
   TextInput,
-  SelectInputTest
+  SelectInputTest,
 } from "src/components/Inputs";
 import { NavBar, PageContent, PageParagraph } from "src/components/Sections";
 import { useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
 import ModelPresetCard from "src/components/Cards/ModelPresetCard";
+import { SearchableDropDownMenu } from "src/components/Dialogs/DropDownMenu";
+import React from "react";
 
 export const QaInputPage = () => {
   const {
@@ -21,6 +23,15 @@ export const QaInputPage = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => console.log(data);
+  const [start, setStart] = useState(false);
+  const handleDropdownOpen = (open) => {
+    console.log("opening dropdown", open);
+    setStart(open);
+  };
+  const defaultOptions = [
+    { name: "AA", value: "aa" },
+    { name: "BB", value: "bb" },
+  ];
   return (
     <PageContent title="Input Field Wall">
       <PageParagraph heading="Components"></PageParagraph>
@@ -69,11 +80,21 @@ export const QaInputPage = () => {
             {...register("checkbox")}
             value="choice B"
           />
-          <SelectInputTest
-            {...register("select_test")}
-          />
+          <SelectInputTest {...register("select_test")} />
           <CheckBoxButton text="test" />
           <ModelPresetCard />
+          <SearchableDropDownMenu
+            trigger={<Button variant="small" icon={Filter} text="Filter" className="outline-none"/>}
+            open={start}
+            setOpen={handleDropdownOpen}
+            align="start"
+            items={[
+              { name: "AA", value: "aa" },
+              { name: "cat", value: "cc" },
+              { name: "BB", value: "bb" },
+            ]}
+            // multiple={true}
+          />
         </PageParagraph>
       </form>
     </PageContent>
