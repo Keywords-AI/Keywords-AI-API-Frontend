@@ -40,20 +40,8 @@ export type DisplayLogItem = {
   failed: boolean;
   sentimentAnalysis: any;
 };
-export type LogColumnKey =
-  | "time"
-  | "prompt"
-  | "response"
-  | "cost"
-  | "promptTokens"
-  | "outputTokens"
-  | "allTokens"
-  | "latency"
-  | "tagGroup"
-  | "apiKey"
-  | "model"
-  | "failed"
-  | "sentiment"; //not status, should be failed
+
+export type LogColumnKey = keyof DisplayLogItem;
 
 export type LogTagKey = "api_key" | "model" | "status" | "sentiment";
 
