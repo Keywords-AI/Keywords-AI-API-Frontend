@@ -19,17 +19,18 @@ import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 
 const typeChoices = [
-  { name: "Total", value: "total" },
-  { name: "Average", value: "average" },
+  { name: "Total", value: "total", secText: "1" },
+  { name: "Average", value: "average", secText: "2" },
 ];
 
 const breakdownChoices = [
-  { name: "None", value: "none" },
+  { name: "None", value: "none", secText: "1" },
   {
     name: "By model",
     value: "by_model",
+    secText: "2",
   },
-  { name: "By key", value: "by_key" },
+  { name: "By key", value: "by_key", secText: "3" },
   // { name: "By token type", value: "by_token_type" }, //only for total tokens
 ];
 
@@ -55,7 +56,6 @@ export default function DashboardFilter() {
     (state: RootState) => state.dashboard.displayFilter.breakDown
   );
   useEffect(() => {
-    console.log("set");
     dispatch(setDisplayMetric(currentMetric, setQueryParams, navigate));
     dispatch(setDisplayType(currentType, setQueryParams, navigate));
     dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
@@ -202,6 +202,7 @@ export default function DashboardFilter() {
                     align="start"
                     alignOffset={-40}
                     icon={Down}
+                    useShortCut
                     padding="py-xxxs px-xxs"
                     gap="gap-xxs"
                     width="min-w-[140px]"
