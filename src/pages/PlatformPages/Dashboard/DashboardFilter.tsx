@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInputSmall, SelectInput } from "src/components/Inputs";
 import { Popover } from "src/components/Dialogs";
 import { Search, Down, Display } from "src/components/Icons";
@@ -38,7 +38,6 @@ export default function DashboardFilter() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const performance_param = new URLSearchParams(location.search).get("metric");
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     dispatch(getDashboardData());
@@ -55,6 +54,13 @@ export default function DashboardFilter() {
   const currentBreakdown = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.breakDown
   );
+  useEffect(() => {
+    console.log("set");
+    dispatch(setDisplayMetric(currentMetric, setQueryParams, navigate));
+    dispatch(setDisplayType(currentType, setQueryParams, navigate));
+    dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
+    dispatch(setDisplayTimeRange(currentTimeRange, setQueryParams, navigate));
+  }, []);
 
   let filteredtypeChoices: any[] = [];
   if (
@@ -69,7 +75,7 @@ export default function DashboardFilter() {
   }
 
   const filteredBreakdownChoices = breakdownChoices;
-  
+
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   return (
@@ -184,9 +190,9 @@ export default function DashboardFilter() {
                 ]}
               />
             </div>
-            {performance_param !== Metrics.number_of_requests.value &&
-              performance_param !== Metrics.error_count.value &&
-              performance_param !== Metrics.average_latency.value && (
+            {currentMetric !== Metrics.number_of_requests.value &&
+              currentMetric !== Metrics.error_count.value &&
+              currentMetric !== Metrics.average_latency.value && (
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4">Type</span>
                   <SelectInput
