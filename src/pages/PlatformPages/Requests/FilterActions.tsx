@@ -46,7 +46,10 @@ export function FilterActions({ type }: { type: string }) {
           (filterOptions[filterType] as RawFilterOption).value_field_type ===
             "text" && (
             <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-              <TextInput {...register("prompt")} placeholder="Prompt message keywords..." />
+              <TextInput
+                {...register("prompt")}
+                placeholder="Prompt message keywords..."
+              />
             </form>
           )}
         {filterType &&
@@ -72,7 +75,9 @@ export function FilterActions({ type }: { type: string }) {
         display_name:
           filterOptions[filterType as keyof LogItem]?.display_name ?? "failed",
         metric: filterType!,
-        operator: filterOptions[filterType as keyof LogItem]?.operator_choices[0].value as string ?? "contains",
+        operator:
+          (filterOptions[filterType as keyof LogItem]?.operator_choices[0]
+            .value as string) ?? "contains",
         value: filterValue,
         id: Math.random().toString(36).substring(2, 15),
       })
@@ -81,37 +86,22 @@ export function FilterActions({ type }: { type: string }) {
     setStart(false);
   };
   const handleDropdownOpen = (open) => {
-    console.log("opening dropdown",open);
+    console.log("opening dropdown", open);
     setStart(open);
     setFilterType(undefined);
   };
-    let trigger: React.ReactNode;
+  let trigger: React.ReactNode;
   switch (type) {
     case "create":
-      trigger = (
-        <Button
-          variant="small"
-          icon={Add}
-          text="Create"
-        />
-      );
+      trigger = <Button variant="small" icon={Add} text="Create" />;
       break;
     case "add":
       trigger = (
-        <DotsButton
-          icon={Add}
-          onClick={() => handleDropdownOpen(!start)}
-        />
+        <DotsButton icon={Add} onClick={() => handleDropdownOpen(!start)} />
       );
       break;
     default:
-      trigger = (
-        <Button
-          variant="small"
-          icon={Filter}
-          text="Filter"
-        />
-      );
+      trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
       break;
   }
 

@@ -26,6 +26,7 @@ import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "src/components/Dialogs";
 import cn from "src/utilities/classMerge";
+import { useTypedSelector } from "src/store/store";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -307,7 +308,7 @@ const CreateFormNotConnected = React.forwardRef(
           <div className="flex-row gap-xs ">
             {apiKey.apiKey ? (
               <>
-                <ViewCode apiKey={apiKey} />
+                <ViewCode apiKey={apiKey.apiKey} name={apiKey.newKey?.name} />
                 <Button
                   variant="r4-primary"
                   type="button"
@@ -575,29 +576,36 @@ export const EditForm = connect(
   mapDispatchToProps
 )(EditFormNotConnected);
 
-const ViewCode = React.forwardRef(({ apiKey }, ref) => {
-  console.log(apiKey);
-  const navigate = useNavigate();
-  return (
-    <Modal
-      ref={ref}
-      trigger={<Button variant="r4-black" text="View code" />}
-      title="View code"
-      subtitle="You can use the following code to start integrating your current prompt and settings into your application."
-      width="w-[864px]"
-    >
-      <CodeViewer />
-      <p className="text-sm-regular text-gray-4">
-        Your API key can be found{" "}
-        <a
-          onClick={() => navigate("/platform/api/api-keys")}
-          className="text-primary cursor-pointer"
-        >
-          here
-        </a>
-        . You should use environment variables or a secret management tool to
-        expose your key to your applications.
-      </p>
-    </Modal>
-  );
-});
+const ViewCode = React.forwardRef(
+  ({ apiKey, name }: { apiKey: string; name: string }, ref) => {
+    console.log(apiKey);
+    const KeyList = useTypedSelector((state) => state.apiKey.keyList);
+    const currentKey = KeyList.find((key) => key.name === name);
+    const navigate = useNavigate();
+    return (
+      <Modal
+        ref={ref}
+        trigger={<Button variant="r4-black" text="View code" />}
+        title="View code"
+        subtitle="You can use the following code to start integrating your current prompt and settings into your application."
+        width="w-[864px]"
+      >
+        <CodeViewer
+          apikey={apiKey}
+          modelName={currentKey?.preset_models || []}
+        />
+        <p className="text-sm-regular text-gray-4">
+          Your API key can be found{" "}
+          <a
+            onClick={() => navigate("/platform/api/api-keys")}
+            className="text-primary cursor-pointer"
+          >
+            here
+          </a>
+          . You should use environment variables or a secret management tool to
+          expose your key to your applications.
+        </p>
+      </Modal>
+    );
+  }
+);
