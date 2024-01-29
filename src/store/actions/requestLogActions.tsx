@@ -146,6 +146,10 @@ export const processRequestLogs = (
       model: log.model,
       failed: log.failed,
       sentimentAnalysis: log.sentiment_analysis,
+      status: {
+        failed: log.failed,
+        errorCode: log.error_code,
+      }
     };
   });
 };
