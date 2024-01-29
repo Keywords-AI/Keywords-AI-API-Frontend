@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { TextInputSmall, SelectInput } from "src/components/Inputs";
-import { Popover } from "src/components/Dialogs";
-import { Search, Down, Display } from "src/components/Icons";
+import { DropDownMenu, Popover } from "src/components/Dialogs";
+import {
+  Search,
+  Down,
+  Display,
+  EnterKey,
+  AlphanumericKey,
+} from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   setDisplayTimeRange,
   getDashboardData,
@@ -17,6 +23,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
+import Tooltip from "src/components/Misc/Tooltip";
 
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
@@ -60,6 +67,10 @@ export default function DashboardFilter() {
     dispatch(setDisplayType(currentType, setQueryParams, navigate));
     dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
     dispatch(setDisplayTimeRange(currentTimeRange, setQueryParams, navigate));
+    enableScope("dashboard");
+    return () => {
+      disableScope("dashboard");
+    };
   }, []);
 
   let filteredtypeChoices: any[] = [];
@@ -73,11 +84,38 @@ export default function DashboardFilter() {
   } else {
     filteredtypeChoices = typeChoices;
   }
-
+  const timeValueToName = {
+    daily: "Day",
+    weekly: "Week",
+    monthly: "Month",
+    yearly: "Year",
+  };
   const filteredBreakdownChoices = breakdownChoices;
 
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { enableScope, disableScope } = useHotkeysContext();
+  useHotkeys(
+    "t",
+    () => {
+      setShowPopover(false);
+      setShowDropdown((prev) => !prev);
+    },
+    {
+      scopes: "dashboard",
+    }
+  );
+  useHotkeys(
+    "d",
+    () => {
+      setShowDropdown(false);
+      setShowPopover((prev) => !prev);
+    },
+    {
+      scopes: "dashboard",
+    }
+  );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <Button
@@ -87,6 +125,26 @@ export default function DashboardFilter() {
       />
       <SelectInput
         headLess
+        trigger={() => (
+          <Tooltip
+            side="bottom"
+            sideOffset={12}
+            align="center"
+            content={
+              <>
+                <p className="caption text-gray-4">Timeline</p>
+                <AlphanumericKey value={"T"} />
+              </>
+            }
+          >
+            <Button
+              text={timeValueToName[currentTimeRange]}
+              variant="small"
+              icon={Down}
+              iconPosition="right"
+            />
+          </Tooltip>
+        )}
         placeholder="Month"
         align="end"
         value={currentTimeRange}
@@ -95,6 +153,7 @@ export default function DashboardFilter() {
         gap="gap-xxs"
         optionsWidth="w-[120px]"
         useShortCut
+        open={showDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
@@ -103,16 +162,33 @@ export default function DashboardFilter() {
         ]}
         handleSelected={handleTimePeriodSelection}
       />
+
       <Popover
         trigger={
-          <Button
-            variant="small"
-            text="Display"
-            icon={Display}
-            secIcon={Down}
-            secIconPosition="right"
-            onClick={() => setShowPopover((prev) => !prev)}
-          />
+          <div>
+            <Tooltip
+              side="bottom"
+              sideOffset={12}
+              align="center"
+              content={
+                <>
+                  <p className="caption text-gray-4">Show display options</p>
+                  <AlphanumericKey value={"D"} />
+                </>
+              }
+            >
+              <Button
+                variant="small"
+                text="Display"
+                icon={Display}
+                secIcon={Down}
+                secIconPosition="right"
+                onClick={() => {
+                  setShowPopover((prev) => !prev);
+                }}
+              />
+            </Tooltip>
+          </div>
         }
         open={showPopover}
         setOpen={setShowPopover}
