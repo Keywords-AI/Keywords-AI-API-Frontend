@@ -288,7 +288,7 @@ export const getDashboardData = (
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
-    const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
+    const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     console.log("params", params.toString());
     keywordsFetch({
