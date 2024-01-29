@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInputSmall, SelectInput } from "src/components/Inputs";
-import { Popover } from "src/components/Dialogs";
-import { Search, Down, Display } from "src/components/Icons";
+import { DropDownMenu, Popover } from "src/components/Dialogs";
+import {
+  Search,
+  Down,
+  Display,
+  EnterKey,
+  AlphanumericKey,
+} from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   setDisplayTimeRange,
   getDashboardData,
@@ -17,19 +23,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
+import Tooltip from "src/components/Misc/Tooltip";
 
 const typeChoices = [
-  { name: "Total", value: "total" },
-  { name: "Average", value: "average" },
+  { name: "Total", value: "total", secText: "1" },
+  { name: "Average", value: "average", secText: "2" },
 ];
 
 const breakdownChoices = [
-  { name: "None", value: "none" },
+  { name: "None", value: "none", secText: "1" },
   {
     name: "By model",
     value: "by_model",
+    secText: "2",
   },
-  { name: "By key", value: "by_key" },
+  { name: "By key", value: "by_key", secText: "3" },
   // { name: "By token type", value: "by_token_type" }, //only for total tokens
 ];
 
@@ -38,7 +46,6 @@ export default function DashboardFilter() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const performance_param = new URLSearchParams(location.search).get("metric");
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     dispatch(getDashboardData());
@@ -55,6 +62,16 @@ export default function DashboardFilter() {
   const currentBreakdown = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.breakDown
   );
+  useEffect(() => {
+    dispatch(setDisplayMetric(currentMetric, setQueryParams, navigate));
+    dispatch(setDisplayType(currentType, setQueryParams, navigate));
+    dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
+    dispatch(setDisplayTimeRange(currentTimeRange, setQueryParams, navigate));
+    enableScope("dashboard");
+    return () => {
+      disableScope("dashboard");
+    };
+  }, []);
 
   let filteredtypeChoices: any[] = [];
   if (
@@ -67,11 +84,38 @@ export default function DashboardFilter() {
   } else {
     filteredtypeChoices = typeChoices;
   }
-
+  const timeValueToName = {
+    daily: "Day",
+    weekly: "Week",
+    monthly: "Month",
+    yearly: "Year",
+  };
   const filteredBreakdownChoices = breakdownChoices;
-  
+
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { enableScope, disableScope } = useHotkeysContext();
+  useHotkeys(
+    "t",
+    () => {
+      setShowPopover(false);
+      setShowDropdown((prev) => !prev);
+    },
+    {
+      scopes: "dashboard",
+    }
+  );
+  useHotkeys(
+    "d",
+    () => {
+      setShowDropdown(false);
+      setShowPopover((prev) => !prev);
+    },
+    {
+      scopes: "dashboard",
+    }
+  );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <Button
@@ -81,6 +125,26 @@ export default function DashboardFilter() {
       />
       <SelectInput
         headLess
+        trigger={() => (
+          <Tooltip
+            side="bottom"
+            sideOffset={12}
+            align="center"
+            content={
+              <>
+                <p className="caption text-gray-4">Timeline</p>
+                <AlphanumericKey value={"T"} />
+              </>
+            }
+          >
+            <Button
+              text={timeValueToName[currentTimeRange]}
+              variant="small"
+              icon={Down}
+              iconPosition="right"
+            />
+          </Tooltip>
+        )}
         placeholder="Month"
         align="end"
         value={currentTimeRange}
@@ -89,6 +153,7 @@ export default function DashboardFilter() {
         gap="gap-xxs"
         optionsWidth="w-[120px]"
         useShortCut
+        open={showDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
@@ -97,16 +162,33 @@ export default function DashboardFilter() {
         ]}
         handleSelected={handleTimePeriodSelection}
       />
+
       <Popover
         trigger={
-          <Button
-            variant="small"
-            text="Display"
-            icon={Display}
-            secIcon={Down}
-            secIconPosition="right"
-            onClick={() => setShowPopover((prev) => !prev)}
-          />
+          <div>
+            <Tooltip
+              side="bottom"
+              sideOffset={12}
+              align="center"
+              content={
+                <>
+                  <p className="caption text-gray-4">Show display options</p>
+                  <AlphanumericKey value={"D"} />
+                </>
+              }
+            >
+              <Button
+                variant="small"
+                text="Display"
+                icon={Display}
+                secIcon={Down}
+                secIconPosition="right"
+                onClick={() => {
+                  setShowPopover((prev) => !prev);
+                }}
+              />
+            </Tooltip>
+          </div>
         }
         open={showPopover}
         setOpen={setShowPopover}
@@ -184,9 +266,9 @@ export default function DashboardFilter() {
                 ]}
               />
             </div>
-            {performance_param !== Metrics.number_of_requests.value &&
-              performance_param !== Metrics.error_count.value &&
-              performance_param !== Metrics.average_latency.value && (
+            {currentMetric !== Metrics.number_of_requests.value &&
+              currentMetric !== Metrics.error_count.value &&
+              currentMetric !== Metrics.average_latency.value && (
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4">Type</span>
                   <SelectInput
@@ -196,6 +278,7 @@ export default function DashboardFilter() {
                     align="start"
                     alignOffset={-40}
                     icon={Down}
+                    useShortCut
                     padding="py-xxxs px-xxs"
                     gap="gap-xxs"
                     width="min-w-[140px]"
