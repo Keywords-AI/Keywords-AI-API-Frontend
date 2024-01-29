@@ -16,7 +16,7 @@ export type LogItem = {
   failed: boolean;
   category: string;
   api_key: string;
-  ttft: number;
+  time_to_first_token: number;
   aggregation_data: any;
   organization_key__name: string;
   sentiment_analysis: {
