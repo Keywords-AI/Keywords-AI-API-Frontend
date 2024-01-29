@@ -24,6 +24,7 @@ export type LogItem = {
     // sentiment_magnitude: mag,
     language: string;
   };
+  error_code: number;
 };
 
 export type DisplayLogItem = {
@@ -39,6 +40,10 @@ export type DisplayLogItem = {
   apiKey: string;
   model: string;
   failed: boolean;
+  status: {
+    failed: boolean;
+    errorCode: number
+  }
   sentimentAnalysis: any;
 };
 

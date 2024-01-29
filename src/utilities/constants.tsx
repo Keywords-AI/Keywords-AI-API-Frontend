@@ -197,7 +197,9 @@ export const requestLogTagColumns: LogItemTag[] = [
     name: "API key",
     retrievalKey: "apiKey",
     renderFunction: (key: string) => (
-      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">{key}</span>
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
+        {key}
+      </span>
     ),
   },
   {
@@ -207,14 +209,17 @@ export const requestLogTagColumns: LogItemTag[] = [
   },
   {
     name: "Status",
-    retrievalKey: "failed",
-    renderFunction: (failed: boolean) => <StatusTag failed={failed} />,
+    retrievalKey: "status",
+    renderFunction: ({ failed, errorCode }) => <StatusTag failed={failed} errorCode={errorCode} />,
   },
   {
     name: "Sentiment",
     retrievalKey: "sentimentAnalysis",
     renderFunction: (sentimental_analysis: any) => (
-      <SentimentTag sentiment_score={sentimental_analysis?.sentiment_score} showScore={false}/>
+      <SentimentTag
+        sentiment_score={sentimental_analysis?.sentiment_score}
+        showScore={false}
+      />
     ),
   },
 ];
@@ -228,5 +233,5 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "allTokens",
   "apiKey",
   "model",
-  "failed",
+  "status",
 ];
