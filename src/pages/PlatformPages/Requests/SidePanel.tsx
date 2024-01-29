@@ -152,29 +152,30 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             })}
           </div>
         )}
-        {displayLog && completeInteraction.map((message, index) => (
-          <React.Fragment key={index}>
-            <div
-              key={index}
-              className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
-            >
-              <div className="flex justify-between items-center self-stretch">
-                <p className="text-sm-md text-gray-5">
-                  {getMessageType(message.role)}
-                </p>
-                <DotsButton
-                  icon={Copy}
-                  onClick={() => {
-                    navigator.clipboard.writeText(message.content);
-                  }}
-                />
+        {displayLog &&
+          completeInteraction.map((message, index) => (
+            <React.Fragment key={index}>
+              <div
+                key={index}
+                className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
+              >
+                <div className="flex justify-between items-center self-stretch">
+                  <p className="text-sm-md text-gray-5">
+                    {getMessageType(message.role)}
+                  </p>
+                  <DotsButton
+                    icon={Copy}
+                    onClick={() => {
+                      navigator.clipboard.writeText(message.content);
+                    }}
+                  />
+                </div>
+                <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
+                  {message.content}
+                </div>
               </div>
-              <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-                {message.content}
-              </div>
-            </div>
-          </React.Fragment>
-        ))}
+            </React.Fragment>
+          ))}
       </div>
     </div>
   );
