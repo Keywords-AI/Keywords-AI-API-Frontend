@@ -298,6 +298,7 @@ export default function DashboardFilter() {
               <SelectInput
                 {...register("breakdown")}
                 headLess
+                useShortCut
                 placeholder="None"
                 align="start"
                 icon={Down}

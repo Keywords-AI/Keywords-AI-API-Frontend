@@ -82,7 +82,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     TTFT: (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.ttft?.toFixed(2) || "-") + "s"}
+        {(logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
     ),
     Sentiment: (
@@ -160,11 +160,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     <span className="text-sm-md text-gray-5">{key}</span>
                     {key === "TTFT" && (
                       <Tooltip
-                      side="right"
-                      sideOffset={8}
+                        side="right"
+                        sideOffset={8}
                         content={
                           <>
-                            <span>Time to first generated token</span>
+                            <span className="text-gray-4 caption">
+                              Time to first generated token
+                            </span>
                           </>
                         }
                       >
@@ -181,8 +183,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           </div>
         )}
         {displayLog &&
-          completeInteraction.map((message, index) => (
-            <React.Fragment key={index}>
+          completeInteraction.map((message, index) => {
+            if (!message.content) {
+              return null;
+            }
+            return (
               <div
                 key={index}
                 className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
@@ -202,8 +207,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                   {message.content}
                 </div>
               </div>
-            </React.Fragment>
-          ))}
+            );
+          })}
       </div>
     </div>
   );
