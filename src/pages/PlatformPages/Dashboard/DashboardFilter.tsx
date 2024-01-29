@@ -128,7 +128,7 @@ export default function DashboardFilter() {
         trigger={() => (
           <Tooltip
             side="bottom"
-            sideOffset={12}
+            sideOffset={8}
             align="center"
             content={
               <>
@@ -168,7 +168,7 @@ export default function DashboardFilter() {
           <div>
             <Tooltip
               side="bottom"
-              sideOffset={12}
+              sideOffset={8}
               align="center"
               content={
                 <>

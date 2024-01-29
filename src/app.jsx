@@ -11,7 +11,7 @@ export function App() {
     <div className="bg-gray-1 h-full w-full" data-theme={theme}>
       <AuthContext.Provider value={{ user, setUser }}>
         <HotkeysProvider>
-          <TooltipProvider>
+          <TooltipProvider delayDuration={400} skipDelayDuration={200}>
             <Routes />
           </TooltipProvider>
         </HotkeysProvider>
