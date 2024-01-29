@@ -12,7 +12,7 @@ import {
   toggleLeftPanel,
   toggleRightPanel,
 } from "src/store/actions/playgroundAction";
-import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import store, { useTypedDispatch, useTypedSelector } from "src/store/store";
 
 export function TopBar() {
   const isLeftPanelOpen = useTypedSelector(
@@ -24,12 +24,13 @@ export function TopBar() {
 
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
-  const isStreaming =
-    useTypedSelector((state) => state.streamingText[0].isLoading) ||
-    useTypedSelector((state) => state.streamingText[1].isLoading);
+
   const playGroundState = useTypedSelector((state) => state.playground);
   const handleSavePlaygroundState = (e: Event) => {
     e.preventDefault();
+    const isStreaming =
+      store.getState().streamingText[0].isLoading ||
+      store.getState().streamingText[1].isLoading;
     if (isStreaming) return;
     const time_stamp = new Date().getTime();
     const messages = playGroundState.messages.map((message) => {
@@ -42,7 +43,6 @@ export function TopBar() {
       user_prompt,
       time_stamp,
     };
-    console.log("saveObj", saveObj);
   };
 
   return (

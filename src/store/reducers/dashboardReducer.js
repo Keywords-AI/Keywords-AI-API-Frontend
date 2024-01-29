@@ -247,9 +247,9 @@ export default function dashboardReducer(state = initState, action) {
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
     case SET_MODEL_COLORS:
-      return { ...state, modelColors: {...action.payload} };
+      return { ...state, modelColors: { ...action.payload } };
     case SET_KEY_COLORS:
-      return { ...state, keyColors: {...action.payload} };
+      return { ...state, keyColors: { ...action.payload } };
     case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
@@ -259,26 +259,30 @@ export default function dashboardReducer(state = initState, action) {
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
     case SET_TIME_FRAME_OFFSET:
-      const { offsetType, offset } = action.payload;
-      let updatedTimeFrame;
-      const currTime = state.timeFrame;
-      switch (offsetType) {
-        case "yearly":
-          updatedTimeFrame = new Date(currTime);
-          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
-          break;
-        case "monthly":
-          updatedTimeFrame = new Date(currTime);
-          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
-          break;
-        case "weekly":
-          updatedTimeFrame = new Date(currTime);
-          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
-          break;
-        default:
-          updatedTimeFrame = new Date(currTime);
-          updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
-      }
+      return {
+        ...state,
+        timeOffset: state.timeOffset + Number(action.payload),
+      };
+    // const { offsetType, offset } = action.payload;
+    // let updatedTimeFrame;
+    // const currTime = state.timeFrame;
+    // switch (offsetType) {
+    //   case "yearly":
+    //     updatedTimeFrame = new Date(currTime);
+    //     updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+    //     break;
+    //   case "monthly":
+    //     updatedTimeFrame = new Date(currTime);
+    //     updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
+    //     break;
+    //   case "weekly":
+    //     updatedTimeFrame = new Date(currTime);
+    //     updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+    //     break;
+    //   default:
+    //     updatedTimeFrame = new Date(currTime);
+    //     updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
+    // }
 
     default:
       return state;

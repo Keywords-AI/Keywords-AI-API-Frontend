@@ -223,7 +223,7 @@ function DashboardNotConnected({
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex flex-col w-full h-full">
+      <div className=" flex-col flex-1 self-stretch">
         <div className="grid grid-cols-6 pl-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
             <span className="text-sm-md text-gray-4">{organization?.name}</span>
@@ -272,7 +272,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row h-full">
+        <div className="flex flex-row flex-1 self-stretch ">
           <div className="flex flex-col w-full h-full">
             <DashboardChart />
           </div>

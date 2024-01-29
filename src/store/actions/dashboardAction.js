@@ -8,7 +8,7 @@ import {
   getColorMap,
 } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
-import _ from 'lodash';
+import _ from "lodash";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -40,7 +40,6 @@ export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 
-
 export const setKeyColors = (data) => {
   return {
     type: SET_KEY_COLORS,
@@ -57,11 +56,11 @@ export const setModelColors = (data) => {
   };
 };
 
-export const setTimeFrameOffset = (offsetType, currTime, offset, navigate) => {
+export const setTimeFrameOffset = (offset, navigate) => {
   // setQueryParams({ timeFrameOffset: offset }, navigate);
   return {
     type: SET_TIME_FRAME_OFFSET,
-    payload: { offsetType, offset },
+    payload: offset,
   };
 };
 export const SET_P50_DATA = "SET_P50_DATA";
@@ -285,12 +284,13 @@ export const getDashboardData = (
       params = new URLSearchParams(overrideParams);
     }
     // const timeFrame = getState().dashboard.timeFrame;
-    
+
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
     const date = new Date(currDate - currDate.getTimezoneOffset() * 60 * 1000); // Get Local Date
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
+    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })

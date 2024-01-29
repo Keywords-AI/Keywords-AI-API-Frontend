@@ -63,12 +63,22 @@ export const Paginator = () => {
         />
       </div>
       <div className="flex-row gap-xxs items-center">
-        <span className="text-sm-md text-gray-4">
+        <span className="text-sm-regular text-gray-4">
           {startRowNumber} - {endRowNumber} {count > 1 ? "row" : "rows"}
         </span>
         <div className="flex-row">
-          <DotsButton icon={Left} onClick={hanlePreviousPage} disabled={lastPageUrl? false:true} iconFill={lastPageUrl? undefined:"fill-gray-2"} />
-          <DotsButton icon={Right} onClick={hanleNextPage} disabled={nextPageUrl? false:true} iconFill={nextPageUrl? undefined:"fill-gray-2"}/>
+          <DotsButton
+            icon={Left}
+            onClick={hanlePreviousPage}
+            disabled={lastPageUrl ? false : true}
+            iconFill={lastPageUrl ? undefined : "fill-gray-2"}
+          />
+          <DotsButton
+            icon={Right}
+            onClick={hanleNextPage}
+            disabled={nextPageUrl ? false : true}
+            iconFill={nextPageUrl ? undefined : "fill-gray-2"}
+          />
         </div>
       </div>
     </div>

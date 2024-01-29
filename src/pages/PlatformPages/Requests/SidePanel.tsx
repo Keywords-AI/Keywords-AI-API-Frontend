@@ -1,14 +1,20 @@
 import { LogItem } from "src/types";
-import { Button, CopyButton, DotsButton } from "src/components/Buttons";
+import {
+  Button,
+  CopyButton,
+  DotsButton,
+  IconButton,
+} from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
-import { Copy, IconPlayground } from "src/components";
+import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useState } from "react";
 import { RestorePlaygroundState } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
+import Tooltip from "src/components/Misc/Tooltip";
 
 interface SidePanelProps {
   open: boolean;
@@ -72,6 +78,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Latency: (
       <span className="text-sm-regular text-gray-4">
         {(logItem?.latency.toFixed(3) || "-") + "s"}
+      </span>
+    ),
+    TTFT: (
+      <span className="text-sm-regular text-gray-4">
+        {(logItem?.ttft?.toFixed(2) || "-") + "s"}
       </span>
     ),
     Sentiment: (
@@ -145,7 +156,24 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                   className="flex h-[24px] justify-between items-center self-stretch"
                   key={index}
                 >
-                  <span className="text-sm-md text-gray-5">{key}</span>
+                  <div className="flex items-center gap-xxs">
+                    <span className="text-sm-md text-gray-5">{key}</span>
+                    {key === "TTFT" && (
+                      <Tooltip
+                      side="right"
+                      sideOffset={8}
+                        content={
+                          <>
+                            <span>Time to first generated token</span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <IconButton icon={Info} />
+                        </div>
+                      </Tooltip>
+                    )}
+                  </div>
                   {displayObj[key]}
                 </div>
               );

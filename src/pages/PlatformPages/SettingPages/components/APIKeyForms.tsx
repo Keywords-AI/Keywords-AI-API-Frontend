@@ -162,108 +162,107 @@ const CreateFormNotConnected = React.forwardRef(
         onSubmit={handleSubmit(onSubmit)}
       >
         {!apiKey?.apiKey ? (
-          !loading ? (
-            <React.Fragment>
+          <React.Fragment>
+            <div className="grid gap-sm grid-cols-[1fr,160px]">
+              <TextInput
+                title={"Name"}
+                width={"w-full"}
+                {...register("name", {
+                  value: currentKeyName,
+                  onChange: (e) => setCurrentKeyName(e.target.value),
+                })}
+                // onKeyDown={handleEnter}
+                placeholder={"test key 1"}
+              />
+              <SelectInput
+                title={"Expiry"}
+                optionsWidth={"w-[160px]"}
+                {...register("expiry_date")}
+                // onKeyDown={handleEnter}
+                placeholder={"Key-1"}
+                //This corresponds to the 'Never' option
+                defaultValue={
+                  new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+                }
+                choices={expiryOptions}
+              />
+            </div>
+            <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
+              <div className="text-gray-4 text-sm-regular w-full">Models</div>
+              {models.map((model, index) => (
+                <CheckboxInput
+                  key={index}
+                  text={model.name}
+                  {...register("preset_models")}
+                  value={model.value}
+                />
+              ))}
+            </div>
+            <div className="flex flex-row items-center gap-xxs relative">
+              <span className="text-sm-regular text-gray-4">
+                Has rate limit{" "}
+              </span>
+              <IconButton
+                icon={Info}
+                onMouseEnter={() => setShowInfo(true)}
+                onMouseLeave={() => setShowInfo(false)}
+              />
+              {showInfo && (
+                <HoverPopup
+                  className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
+                  text="rate limit"
+                />
+              )}
+              <SwitchButton
+                onCheckedChange={handleRateLimitSwitch}
+                className="absolute -top-[2px]"
+              />
+            </div>
+            {isRateLimitEnabled && (
               <div className="grid gap-sm grid-cols-[1fr,160px]">
                 <TextInput
-                  title={"Name"}
+                  title={"Rate limit"}
                   width={"w-full"}
-                  {...register("name", {
-                    value: currentKeyName,
-                    onChange: (e) => setCurrentKeyName(e.target.value),
-                  })}
+                  {...register("rate_limit")}
                   // onKeyDown={handleEnter}
-                  placeholder={"test key 1"}
+                  placeholder={"None"}
+                  type="number"
+                  pseudoElementClass="special-input"
                 />
                 <SelectInput
-                  title={"Expiry"}
+                  title={"Unit"}
                   optionsWidth={"w-[160px]"}
-                  {...register("expiry_date")}
+                  {...register("unit", {
+                    value: currentUnit,
+                    onChange: (e) => setCurrentUnit(e.target.value),
+                  })}
                   // onKeyDown={handleEnter}
-                  placeholder={"Key-1"}
+                  placeholder={"per minute"}
                   //This corresponds to the 'Never' option
-                  defaultValue={
-                    new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
-                  }
-                  choices={expiryOptions}
+                  choices={unitOptions}
                 />
               </div>
-              <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
-                <div className="text-gray-4 text-sm-regular w-full">Models</div>
-                {models.map((model, index) => (
-                  <CheckboxInput
-                    key={index}
-                    text={model.name}
-                    {...register("preset_models")}
-                    value={model.value}
-                  />
-                ))}
-              </div>
-              <div className="flex flex-row items-center gap-xxs relative">
-                <span className="text-sm-regular text-gray-4">
-                  Has rate limit{" "}
-                </span>
-                <IconButton
-                  icon={Info}
-                  onMouseEnter={() => setShowInfo(true)}
-                  onMouseLeave={() => setShowInfo(false)}
-                />
-                {showInfo && (
-                  <HoverPopup
-                    className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
-                    text="rate limit"
-                  />
-                )}
-                <SwitchButton
-                  onCheckedChange={handleRateLimitSwitch}
-                  className="absolute -top-[2px]"
+            )}
+            <div className="flex flex-row items-center gap-xxs relative">
+              <span className="text-sm-regular text-gray-4">
+                Has spending limit{" "}
+              </span>
+              <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
+            </div>
+            {isSpendingLimitEnabled && (
+              <div className="grid gap-sm grid-cols-1">
+                <TextInput
+                  title={"Spending limit"}
+                  width={"w-full"}
+                  {...register("spending_limit")}
+                  // onKeyDown={handleEnter}
+                  placeholder={"$100"}
+                  type="number"
+                  defaultValue={100}
                 />
               </div>
-              {isRateLimitEnabled && (
-                <div className="grid gap-sm grid-cols-[1fr,160px]">
-                  <TextInput
-                    title={"Rate limit"}
-                    width={"w-full"}
-                    {...register("rate_limit")}
-                    // onKeyDown={handleEnter}
-                    placeholder={"None"}
-                    type="number"
-                    pseudoElementClass="special-input"
-                  />
-                  <SelectInput
-                    title={"Unit"}
-                    optionsWidth={"w-[160px]"}
-                    {...register("unit", {
-                      value: currentUnit,
-                      onChange: (e) => setCurrentUnit(e.target.value),
-                    })}
-                    // onKeyDown={handleEnter}
-                    placeholder={"per minute"}
-                    //This corresponds to the 'Never' option
-                    choices={unitOptions}
-                  />
-                </div>
-              )}
-              <div className="flex flex-row items-center gap-xxs relative">
-                <span className="text-sm-regular text-gray-4">
-                  Has spending limit{" "}
-                </span>
-                <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
-              </div>
-              {isSpendingLimitEnabled && (
-                <div className="grid gap-sm grid-cols-1">
-                  <TextInput
-                    title={"Spending limit"}
-                    width={"w-full"}
-                    {...register("spending_limit")}
-                    // onKeyDown={handleEnter}
-                    placeholder={"$100"}
-                    type="number"
-                    defaultValue={100}
-                  />
-                </div>
-              )}
-              {/* <SelectInput
+            )}
+            {/* <SelectInput
                 title={"Select preset"}
                 {...register("preset_models")}
                 defaultValue={models.reduce(
@@ -289,12 +288,10 @@ const CreateFormNotConnected = React.forwardRef(
                   }),
                 ]}
               /> */}
-            </React.Fragment>
-          ) : (
-            <div className="text-sm-regular text-gray-4">
-              please wait for a quick sec
-            </div>
-          )
+            {loading && (
+              <div className="text-sm-md text-success">Creating Key...</div>
+            )}
+          </React.Fragment>
         ) : (
           <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
         )}
