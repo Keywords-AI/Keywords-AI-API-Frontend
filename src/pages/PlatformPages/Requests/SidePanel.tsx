@@ -1,14 +1,20 @@
 import { LogItem } from "src/types";
-import { Button, CopyButton, DotsButton } from "src/components/Buttons";
+import {
+  Button,
+  CopyButton,
+  DotsButton,
+  IconButton,
+} from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
-import { Copy, IconPlayground } from "src/components";
+import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useState } from "react";
 import { RestorePlaygroundState } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
+import Tooltip from "src/components/Misc/Tooltip";
 
 interface SidePanelProps {
   open: boolean;
@@ -72,6 +78,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Latency: (
       <span className="text-sm-regular text-gray-4">
         {(logItem?.latency.toFixed(3) || "-") + "s"}
+      </span>
+    ),
+    TTFT: (
+      <span className="text-sm-regular text-gray-4">
+        {(logItem?.ttft?.toFixed(2) || "-") + "s"}
       </span>
     ),
     Sentiment: (
@@ -145,36 +156,54 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                   className="flex h-[24px] justify-between items-center self-stretch"
                   key={index}
                 >
-                  <span className="text-sm-md text-gray-5">{key}</span>
+                  <div className="flex items-center gap-xxs">
+                    <span className="text-sm-md text-gray-5">{key}</span>
+                    {key === "TTFT" && (
+                      <Tooltip
+                      side="right"
+                      sideOffset={8}
+                        content={
+                          <>
+                            <span>Time to first generated token</span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <IconButton icon={Info} />
+                        </div>
+                      </Tooltip>
+                    )}
+                  </div>
                   {displayObj[key]}
                 </div>
               );
             })}
           </div>
         )}
-        {displayLog && completeInteraction.map((message, index) => (
-          <React.Fragment key={index}>
-            <div
-              key={index}
-              className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
-            >
-              <div className="flex justify-between items-center self-stretch">
-                <p className="text-sm-md text-gray-5">
-                  {getMessageType(message.role)}
-                </p>
-                <DotsButton
-                  icon={Copy}
-                  onClick={() => {
-                    navigator.clipboard.writeText(message.content);
-                  }}
-                />
+        {displayLog &&
+          completeInteraction.map((message, index) => (
+            <React.Fragment key={index}>
+              <div
+                key={index}
+                className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
+              >
+                <div className="flex justify-between items-center self-stretch">
+                  <p className="text-sm-md text-gray-5">
+                    {getMessageType(message.role)}
+                  </p>
+                  <DotsButton
+                    icon={Copy}
+                    onClick={() => {
+                      navigator.clipboard.writeText(message.content);
+                    }}
+                  />
+                </div>
+                <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
+                  {message.content}
+                </div>
               </div>
-              <div className="flex whitespace-pre-wrap break-all py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular">
-                {message.content}
-              </div>
-            </div>
-          </React.Fragment>
-        ))}
+            </React.Fragment>
+          ))}
       </div>
     </div>
   );

@@ -247,9 +247,9 @@ export default function dashboardReducer(state = initState, action) {
     case SET_GROUP_BY_DATA:
       return { ...state, groupByData: action.payload };
     case SET_MODEL_COLORS:
-      return { ...state, modelColors: {...action.payload} };
+      return { ...state, modelColors: { ...action.payload } };
     case SET_KEY_COLORS:
-      return { ...state, keyColors: {...action.payload} };
+      return { ...state, keyColors: { ...action.payload } };
     case SET_P50_DATA:
       return { ...state, p50Data: action.payload };
     case SET_P90_DATA:
@@ -259,10 +259,12 @@ export default function dashboardReducer(state = initState, action) {
     case SET_P99_DATA:
       return { ...state, p99Data: action.payload };
     case SET_TIME_FRAME_OFFSET:
-      const { offsetType, offset } = action.payload;
+      const offset = Number(action.payload);
+      console.log(offset);
+      console.log(state.displayFilter.timeRange);
       let updatedTimeFrame;
       const currTime = state.timeFrame;
-      switch (offsetType) {
+      switch (state.displayFilter.timeRange) {
         case "yearly":
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
@@ -279,6 +281,13 @@ export default function dashboardReducer(state = initState, action) {
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
+      return {
+        ...state,
+        timeOffset: state.timeOffset + Number(action.payload),
+        timeFrame: new Date(
+          updatedTimeFrame - updatedTimeFrame.getTimezoneOffset() * 60 * 1000
+        ).toISOString(),
+      };
 
     default:
       return state;

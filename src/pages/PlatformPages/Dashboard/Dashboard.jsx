@@ -223,7 +223,7 @@ function DashboardNotConnected({
   if (firstTime !== undefined && firstTime) return <WelcomeState />;
   else
     return (
-      <div className="flex flex-col w-full h-full">
+      <div className=" flex-col flex-1 self-stretch">
         <div className="grid grid-cols-6 pl-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
             <span className="text-sm-md text-gray-4">{organization?.name}</span>
@@ -242,28 +242,27 @@ function DashboardNotConnected({
           ))}
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
-          
-            <div>
-              {isPanel && breakdown_type !== "none" && (
-                <div className="flex items-center content-center gap-xs flex-wrap">
-                  {colorData &&
-                    Object.keys(colorData).map((name, index) => (
-                      <div className="flex items-center gap-xxs" key={index}>
-                        <div
-                          className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                          style={{
-                            backgroundColor:
-                              colorTagsClasses[index % colorTagsClasses.length],
-                          }}
-                        ></div>
-                        <span className="caption text-gray-4">
-                          {name || "unknown model"}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
+          <div>
+            {breakdown_type !== "none" && (
+              <div className="flex items-center content-center gap-xs flex-wrap">
+                {colorData &&
+                  Object.keys(colorData).map((name, index) => (
+                    <div className="flex items-center gap-xxs" key={index}>
+                      <div
+                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
+                        style={{
+                          backgroundColor:
+                            colorTagsClasses[index % colorTagsClasses.length],
+                        }}
+                      ></div>
+                      <span className="caption text-gray-4">
+                        {name || "unknown model"}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
@@ -273,7 +272,7 @@ function DashboardNotConnected({
             />
           </div>
         </div>
-        <div className="flex flex-row h-full">
+        <div className="flex flex-row flex-1 self-stretch ">
           <div className="flex flex-col w-full h-full">
             <DashboardChart />
           </div>
