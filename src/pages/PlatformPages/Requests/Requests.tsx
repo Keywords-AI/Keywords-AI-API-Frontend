@@ -76,7 +76,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   }, []);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const [showFilter, setShowFilter] = useState(false);
   const clearFilters = () => {
     setFilters([]);
   };
@@ -164,7 +163,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               <Paginator />
             </div>
           </div>
-          <SidePanel logItem={requestLogs?.[0]} open={sidePanelOpen} />
+          <SidePanel open={sidePanelOpen} />
         </div>
       </div>
     );
