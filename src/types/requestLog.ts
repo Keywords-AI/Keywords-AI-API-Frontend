@@ -16,6 +16,7 @@ export type LogItem = {
   failed: boolean;
   category: string;
   api_key: string;
+  ttft: number;
   aggregation_data: any;
   organization_key__name: string;
   sentiment_analysis: {
@@ -67,7 +68,7 @@ export type RequestFilter = {
     onChange,
   }: {
     register?: any;
-    value: string | number |  boolean;
+    value: string | number | boolean;
     choices?: any[];
     onChange?: (event: React.ChangeEvent<any>) => void;
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
@@ -96,11 +97,10 @@ export type RawFilterOptions = {
   [Key in keyof LogItem]?: RawFilterOption;
 };
 
-
 export type FilterParam = {
-    operator: string;
-    value: string | boolean | number;
-}
+  operator: string;
+  value: string | boolean | number;
+};
 
 export type FilterParams = {
   [K in keyof LogItem]?: FilterParam;
