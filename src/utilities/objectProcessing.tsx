@@ -9,6 +9,14 @@ import {
   StripeSubscription,
 } from "src/types";
 
+export const stringOrBoolean = (string: string): boolean | string => {
+  if (string === "true" || string === "false") {
+    return string === "true";
+  } else {
+    return string;
+  }
+}
+
 export const checkBoxFieldToList = (
   field: boolean | string | string[]
 ): string[] => {
