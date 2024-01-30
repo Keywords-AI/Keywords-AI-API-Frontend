@@ -67,16 +67,23 @@ export const setCurrentFilter = (filter: any) => {
   };
 };
 
+
 export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
-    const postData = filters.reduce((acc: FilterParams, filter): FilterParams => {
-      filter.metric &&
-        (acc[filter.metric] = {
-          value: filter.value,
-          operator: filter.operator,
-        });
-      return acc;
-    }, {});
+    const postData = filters.reduce(
+      (acc: FilterParams, filter): FilterParams => {
+        if (!(filter.value instanceof Array)) {
+          filter.value = [filter.value as string];
+        }
+        filter.metric &&
+          (acc[filter.metric] = {
+            value: filter.value,
+            operator: filter.operator,
+          });
+        return acc;
+      },
+      {}
+    );
     dispatch(getRequestLogs(postData));
   };
 };
@@ -102,7 +109,7 @@ export const deleteFilter = (filterId: string) => {
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
-  }
+  };
 };
 
 export const updateFilter = (filter: any) => {
@@ -113,7 +120,7 @@ export const updateFilter = (filter: any) => {
     });
     const state = getState();
     const filters = state.requestLogs.filters;
-    console.log(filter, filters)
+    console.log(filter, filters);
     dispatch(applyPostFilters(filters));
   };
 };
@@ -149,7 +156,7 @@ export const processRequestLogs = (
       status: {
         failed: log.failed,
         errorCode: log.error_code,
-      }
+      },
     };
   });
 };
@@ -206,7 +213,6 @@ export const setPageNumber = (page: number) => {
 };
 
 export const setSelectedRequest = (id: number | undefined) => {
-
   return {
     type: SET_SELECTED_REQUEST,
     payload: id,
@@ -224,7 +230,9 @@ export const getRequestLogs = (postData?: any) => {
       const results = data.results;
       const keys = data.aggregation_data;
       // console.log(data);
-      dispatch(setPagination(data.count, data.previous, data.next, data.total_count));
+      dispatch(
+        setPagination(data.count, data.previous, data.next, data.total_count)
+      );
       dispatch(setFilterOptions(data.filters_data));
       dispatch(setRequestLogs(results));
       dispatch(setApiKey(keys.key_list));

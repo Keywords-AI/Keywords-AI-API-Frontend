@@ -7,12 +7,13 @@ import {
   SelectInput,
   TextInput,
   SelectInputTest,
+  SelectInputMenu,
+  SelectCheckBoxMenu
 } from "src/components/Inputs";
 import { NavBar, PageContent, PageParagraph } from "src/components/Sections";
 import { useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
 import ModelPresetCard from "src/components/Cards/ModelPresetCard";
-import { SearchableDropDownMenu } from "src/components/Dialogs/DropDownMenu";
 import React from "react";
 
 export const QaInputPage = () => {
@@ -83,8 +84,8 @@ export const QaInputPage = () => {
           <SelectInputTest {...register("select_test")} />
           <CheckBoxButton text="test" />
           <ModelPresetCard />
-          <SearchableDropDownMenu
-            trigger={<Button variant="small" icon={Filter} text="Filter" className="outline-none"/>}
+          <SelectInputMenu
+            trigger={<Button variant="small" icon={Filter} text="Filter" className="outline-none" />}
             open={start}
             setOpen={handleDropdownOpen}
             align="start"
@@ -93,7 +94,18 @@ export const QaInputPage = () => {
               { name: "cat", value: "cc" },
               { name: "BB", value: "bb" },
             ]}
-            // multiple={true}
+          // multiple={true}
+          />
+          <SelectCheckBoxMenu
+            trigger={<Button variant="small" icon={Filter} text="Filter" className="outline-none" />}
+            open={start}
+            setOpen={handleDropdownOpen}
+            align="start"
+            items={[
+              { name: "AA", value: "aa" },
+              { name: "cat", value: "cc" },
+              { name: "BB", value: "bb" },
+            ]}
           />
         </PageParagraph>
       </form>

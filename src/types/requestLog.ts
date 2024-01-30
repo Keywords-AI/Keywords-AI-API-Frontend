@@ -73,14 +73,14 @@ export type RequestFilter = {
     onChange,
   }: {
     register?: any;
-    value: string | number | boolean;
+    value: string | number | boolean | string[] | number[] | boolean[];
     choices?: any[];
     onChange?: (event: React.ChangeEvent<any>) => void;
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
 export type RequestFilters = {
-  [Key in keyof LogItem]?: RequestFilter;
+  [type in "text" | "select"]?: RequestFilter;
 };
 
 export type RawFilterOption = {
@@ -93,7 +93,7 @@ export type RawFilterOption = {
 
 export type FilterObject = Partial<RawFilterOption> & {
   id: string;
-  value: string | boolean | number;
+  value: string | boolean | number | string[] | boolean[] | number[];
   operator: string;
   display_name: string;
 };
@@ -104,7 +104,7 @@ export type RawFilterOptions = {
 
 export type FilterParam = {
   operator: string;
-  value: string | boolean | number;
+  value: string[] | boolean[] | number[];
 };
 
 export type FilterParams = {
