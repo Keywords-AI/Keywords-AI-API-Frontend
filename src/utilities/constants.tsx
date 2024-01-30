@@ -187,8 +187,8 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },
   { name: "Latency", retrievalKey: "latency", width: "64px" },
-  { name: "Prompt tokens", retrievalKey: "promptTokens", width: "120px" },
-  { name: "Output tokens", retrievalKey: "outputTokens", width: "120px" },
+  { name: "Prompt tokens", retrievalKey: "promptTokens", width: "100px" },
+  { name: "Output tokens", retrievalKey: "outputTokens", width: "100px" },
   { name: "All tokens", retrievalKey: "allTokens", width: "72px" },
 ];
 
