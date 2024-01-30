@@ -334,6 +334,7 @@ export const addMissingDate = (
       handleDailyCase();
       break;
   }
+  console.log("newDataArray", newDataArray);
   return newDataArray;
 };
 
