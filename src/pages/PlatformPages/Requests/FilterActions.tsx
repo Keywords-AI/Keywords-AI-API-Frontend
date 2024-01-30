@@ -18,55 +18,6 @@ export function FilterActions({ type }: { type: string }) {
   const filterOptions = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOptions
   );
-  const { register, handleSubmit } = useForm();
-  const onSubmit = (data: any) => {
-    const prompt = data.prompt;
-    selectFilterValue(prompt);
-  };
-  // const Items = () => {
-  //   return (
-  //     <React.Fragment>
-  //       {Object.keys(filterOptions).map((key, index) => {
-  //         return (
-  //           <Button
-  //             key={index}
-  //             variant="panel"
-  //             text={filterOptions[key].display_name}
-  //             onClick={() => selectMetric(key as keyof LogItem)}
-  //           />
-  //         );
-  //       })}
-  //     </React.Fragment>
-  //   );
-  // };
-
-  // const ItemsSecond = () => {
-  //   return (
-  //     <React.Fragment>
-  //       {filterType &&
-  //         (filterOptions[filterType] as RawFilterOption).value_field_type ===
-  //           "text" && (
-  //           <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
-  //             <TextInput
-  //               {...register("prompt")}
-  //               placeholder="Prompt message keywords..."
-  //             />
-  //           </form>
-  //         )}
-  //       {filterType &&
-  //         (filterOptions[filterType] as RawFilterOption).value_choices.map(
-  //           (valueChoice, index) => (
-  //             <Button
-  //               key={index}
-  //               variant="panel"
-  //               text={valueChoice.name}
-  //               onClick={() => selectFilterValue(valueChoice.value)}
-  //             />
-  //           )
-  //         )}
-  //     </React.Fragment>
-  //   );
-  // };
 
   const firstStepItems = Object.keys(filterOptions).map(
     (key, index): Choice | undefined => {
@@ -88,11 +39,7 @@ export function FilterActions({ type }: { type: string }) {
           if (!valueChoice) return null;
           return {
             name: valueChoice.name,
-            value: valueChoice.value,
-            onClick: () => {
-              console.log("clicked", valueChoice.value);
-              selectFilterValue(valueChoice.value);
-            },
+            value: valueChoice.value
           };
         }
       )
@@ -101,7 +48,7 @@ export function FilterActions({ type }: { type: string }) {
   const selectMetric = (metric: keyof LogItem) => {
     setFilterType(metric);
   };
-  const selectFilterValue = (filterValue: any) => {
+  const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
       dispatch(
         addFilter({
@@ -118,7 +65,6 @@ export function FilterActions({ type }: { type: string }) {
     }
   };
   const handleDropdownOpen = (open) => {
-    console.log("opening dropdown", open);
     setStart(open);
     setFilterType(undefined);
   };
@@ -138,13 +84,6 @@ export function FilterActions({ type }: { type: string }) {
   }
 
   return (
-    // <DropDownMenu
-    //   open={start}
-    //   setOpen={handleDropdownOpen}
-    //   trigger={trigger}
-    //   align="start"
-    //   items={filterType ? <ItemsSecond /> : <Items />}
-    // />
     <SelectInputMenu
       trigger={trigger}
       open={start}
