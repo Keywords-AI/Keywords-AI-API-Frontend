@@ -294,7 +294,11 @@ const CreateFormNotConnected = React.forwardRef(
               /> */}
           </React.Fragment>
         ) : (
-          <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
+          <CopyInput
+            title={apiKey.newKey?.name}
+            value={apiKey.apiKey}
+            disabled
+          />
         )}
         <div
           className={cn(
@@ -303,7 +307,7 @@ const CreateFormNotConnected = React.forwardRef(
           )}
         >
           {loading && (
-            <div className="text-sm-md text-success ">Creating Key...</div>
+            <div className="text-sm-md text-primary ">Creating Key...</div>
           )}
           <div className="flex-row gap-xs ">
             {apiKey.apiKey ? (
@@ -594,7 +598,7 @@ const ViewCode = React.forwardRef(
           apikey={apiKey}
           modelName={currentKey?.preset_models || []}
         />
-        <p className="text-sm-regular text-gray-4">
+        {/* <p className="text-sm-regular text-gray-4">
           Your API key can be found{" "}
           <a
             onClick={() => navigate("/platform/api/api-keys")}
@@ -604,7 +608,7 @@ const ViewCode = React.forwardRef(
           </a>
           . You should use environment variables or a secret management tool to
           expose your key to your applications.
-        </p>
+        </p> */}
       </Modal>
     );
   }
