@@ -34,12 +34,15 @@ function PromptLogsNotConnected({
     setSelectedLog(index);
     setPrompt(prompt);
   };
+  console.log("requestLogs", requestLogs);
   return (
     <div className="flex-col w-[240px] items-start self-stretch shadow-border-r shadow-gray-2 overflow-auto h-full">
       {requestLogs.map((requestLog, index) => {
         let content;
         requestLog?.prompt_messages?.map((message, index) => {
           if (message.role === "system") {
+            content = message.content;
+          } else{
             content = message.content;
           }
         });

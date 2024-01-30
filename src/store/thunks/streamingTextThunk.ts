@@ -71,6 +71,11 @@ export const sendStreamingTextThunk = async ({
     // @Ruifeng you don't need to pass the params here. They are specific to playground only
   });
   try {
+    const headers = {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken") || "", // Ensure "X-CSRFToken" is not null
+      Authorization: `Bearer ${retrieveAccessToken()}`,
+    };
     const response = await Promise.race([
       fetch(host + path, {
         method: "POST",
