@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { RestorePlaygroundState } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
+import { get } from "react-hook-form";
 
 interface SidePanelProps {
   open: boolean;
@@ -188,27 +189,35 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               return null;
             }
             return (
-              <div
-                key={index}
-                className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
-              >
-                <div className="flex justify-between items-center self-stretch">
-                  <p className="text-sm-md text-gray-5">
-                    {getMessageType(message.role)}
-                  </p>
-                  <DotsButton
-                    icon={Copy}
-                    onClick={() => {
-                      navigator.clipboard.writeText(message.content);
-                    }}
-                  />
+              <React.Fragment key={index}>
+                <div
+                  className={cn(
+                    "flex-col items-start gap-xxxs self-stretch px-lg ",
+                    getMessageType(message.role) === "System"
+                      ? "pb-md pt-sm"
+                      : "py-xxs"
+                  )}
+                >
+                  <div className="flex justify-between items-center self-stretch">
+                    <p className="text-sm-md text-gray-5">
+                      {getMessageType(message.role)}
+                    </p>
+                    <DotsButton
+                      icon={Copy}
+                      onClick={() => {
+                        navigator.clipboard.writeText(message.content);
+                      }}
+                    />
+                  </div>
+                  <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
+                    {message.content}
+                  </div>
                 </div>
-                <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
-                  {message.content}
-                </div>
-              </div>
+                {getMessageType(message.role) === "System" && <Divider />}
+              </React.Fragment>
             );
           })}
+        <Divider />
       </div>
     </div>
   );

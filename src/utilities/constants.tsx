@@ -174,7 +174,7 @@ export const Metrics = {
 };
 
 export const requestLogColumns: LogItemColumn[] = [
-  { name: "Time", retrievalKey: "time", width: "120px" },
+  { name: "Time", retrievalKey: "time", width: "128px" },
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },

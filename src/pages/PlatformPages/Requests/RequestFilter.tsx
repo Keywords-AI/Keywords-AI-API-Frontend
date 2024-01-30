@@ -35,7 +35,7 @@ export const RequestFilters: RequestFiltersType = {
         <SelectInputMenu
           // placeholder="Error"
           align="end"
-          trigger={<Button variant="small" text={displayName} />}
+          trigger={<Button variant="small-select" text={displayName} />}
           value={values as string[]}
           items={choices}
           onChange={onChange}
@@ -68,7 +68,7 @@ export const RequestFilters: RequestFiltersType = {
       );
     },
   },
-  'datetime-local': {
+  "datetime-local": {
     changeField: ({ values, choices }) => {
       return (
         <TextInputSmall
@@ -82,30 +82,42 @@ export const RequestFilters: RequestFiltersType = {
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
+  const [operator, setOperator] = React.useState(filter.operator);
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
+
   const filterOption = filterOptions[filter.metric!];
   const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
-  console.log(filter.value_field_type);
+  console.log(RequestFilter);
   return (
     <form className="flex flex-row items-center gap-[2px]">
       <Button
         type="button"
         disabled
-        variant="small"
+        variant="small-select"
         text={filter.display_name}
       />
       <SelectInputSmall
         headLess
         align="end"
-        // value={currentTimeRange}
-        icon={Down}
+        trigger={() => (
+          <Button
+            variant="small-select"
+            text={
+              filterOption?.operator_choices?.find((choice) => {
+                return choice?.value === operator;
+              })?.name
+            }
+          />
+        )}
         defaultValue={filterOption?.operator_choices?.[0]?.value}
+        // value={filterOption?.operator_choices?.[0]?.value}
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         choices={filterOption?.operator_choices}
         onChange={(e) => {
+          setOperator(e.currentTarget.value);
           dispatch(
             updateFilter({
               ...filter,
