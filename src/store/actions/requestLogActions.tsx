@@ -128,7 +128,6 @@ export const updateFilter = (filter: any) => {
     });
     const state = getState();
     const filters = state.requestLogs.filters;
-    console.log(filter, filters);
     dispatch(applyPostFilters(filters));
   };
 };
@@ -231,14 +230,15 @@ export const filterParamsToFilterObjects = (
   filterParams: FilterParams,
   filterOptions: RawFilterOptions
 ): FilterObject[] => {
-  return Object.keys(filterParams).map((key) => {
+  return Object.keys(filterParams).map((key): FilterObject => {
     return {
       id: Math.random().toString(36).substring(2, 15),
-      metric: key,
+      metric: key as keyof LogItem,
+      value_field_type: filterOptions[key].value_field_type,
       operator: filterParams[key].operator,
       value: filterParams[key].value,
       display_name: filterOptions[key].display_name,
-    } as FilterObject;
+    };
   });
 }
 
