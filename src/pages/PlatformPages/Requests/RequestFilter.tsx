@@ -5,20 +5,20 @@ import {
   RequestFilters as RequestFiltersType,
 } from "src/types";
 import { Down } from "src/components/Icons";
-import { SelectInput, TextInputSmall } from "src/components/Inputs";
+import { SelectInput, TextInputSmall, SelectInputSmall } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
 import { deleteFilter, updateFilter } from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
+import { SelectInputMenu } from "src/components/Inputs";
 
 export const RequestFilters: RequestFiltersType = {
-  failed: {
+  select: {
     changeField: ({ register, value, choices, onChange }) => {
       return (
-        <SelectInput
-          headLess
+        <SelectInputMenu
           // placeholder="Error"
           align="end"
           {...register("value")}
@@ -26,13 +26,14 @@ export const RequestFilters: RequestFiltersType = {
           icon={Down}
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
-          choices={choices}
+          items={choices}
           onChange={onChange}
+          multiple={true}
         />
       );
     },
   },
-  prompt_messages: {
+  text: {
     changeField: ({ register, value, choices }) => {
       return (
         <TextInputSmall
@@ -42,43 +43,8 @@ export const RequestFilters: RequestFiltersType = {
           defaultValue={value as string}
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
-          width="w-[120px]"
+          width="w-[100px]"
           choices={choices}
-        />
-      );
-    },
-  },
-  model: {
-    changeField: ({ register, value, choices, onChange }) => {
-      return (
-        <SelectInput
-          headLess
-          align="end"
-          {...register("value")}
-          defaultValue={value as string}
-          icon={Down}
-          padding="py-xxxs px-xxs"
-          gap="gap-xxs"
-          choices={choices}
-          onChange={onChange}
-        />
-      );
-    },
-  },
-  organization_key__name: {
-    changeField: ({ register, value, choices, onChange }) => {
-      return (
-        <SelectInput
-          headLess
-          // placeholder="Error"
-          align="end"
-          {...register("value")}
-          defaultValue={value as string}
-          icon={Down}
-          padding="py-xxxs px-xxs"
-          gap="gap-xxs"
-          choices={choices}
-          onChange={onChange}
         />
       );
     },
@@ -87,12 +53,12 @@ export const RequestFilters: RequestFiltersType = {
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
-  const {register} = useForm(); 
+  const { register } = useForm();
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
   const filterOption = filterOptions[filter.metric!];
-  const RequestFilter = RequestFilters[filter.metric!];
+  const RequestFilter = RequestFilters[filter.value_field_type!];
 
   return (
     <form className="flex flex-row items-center gap-[2px]">
@@ -102,12 +68,12 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         variant="small"
         text={filter.display_name}
       />
-      <SelectInput
+      <SelectInputSmall
         headLess
         align="end"
         // value={currentTimeRange}
         icon={Down}
-        defaultValue={filterOption?.operator_choices?.[0].value}
+        defaultValue={filterOption?.operator_choices?.[0]?.value}
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         choices={filterOption?.operator_choices}
