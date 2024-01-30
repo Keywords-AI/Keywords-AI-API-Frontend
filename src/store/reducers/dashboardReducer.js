@@ -31,6 +31,7 @@ import {
   SET_KEY_COLORS,
   SET_SENTIMENT_SUMMARY_DATA,
   SET_SENTIMENT_DATA,
+  RESET_TIME_FRAME_OFFSET,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -49,7 +50,7 @@ const loadFilter = () => {
   };
 };
 
-const currDate = new Date();
+let currDate = new Date();
 
 const initState = {
   data: [
@@ -260,8 +261,7 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, p99Data: action.payload };
     case SET_TIME_FRAME_OFFSET:
       const offset = Number(action.payload);
-      console.log(offset);
-      console.log(state.displayFilter.timeRange);
+
       let updatedTimeFrame;
       const currTime = state.timeFrame;
       switch (state.displayFilter.timeRange) {
@@ -288,7 +288,16 @@ export default function dashboardReducer(state = initState, action) {
           updatedTimeFrame - updatedTimeFrame.getTimezoneOffset() * 60 * 1000
         ).toISOString(),
       };
+    case RESET_TIME_FRAME_OFFSET:
+      currDate = new Date();
 
+      return {
+        ...state,
+        timeOffset: 0,
+        timeFrame: new Date(
+          currDate - currDate.getTimezoneOffset() * 60 * 1000
+        ).toISOString(),
+      };
     default:
       return state;
   }
