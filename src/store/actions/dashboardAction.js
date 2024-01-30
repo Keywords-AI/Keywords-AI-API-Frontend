@@ -39,7 +39,7 @@ export const SET_GROUP_BY_DATA = "SET_GROUP_BY_DATA";
 export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
-
+export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
 export const setKeyColors = (data) => {
   return {
     type: SET_KEY_COLORS,
@@ -61,6 +61,12 @@ export const setTimeFrameOffset = (offset, navigate) => {
   return {
     type: SET_TIME_FRAME_OFFSET,
     payload: offset,
+  };
+};
+export const resetTimeFrameOffset = () => {
+  return {
+    type: RESET_TIME_FRAME_OFFSET,
+    payload: 0,
   };
 };
 export const SET_P50_DATA = "SET_P50_DATA";
@@ -283,14 +289,12 @@ export const getDashboardData = (
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
-    // const timeFrame = getState().dashboard.timeFrame;
 
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    console.log("params", params.toString());
     keywordsFetch({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -318,8 +322,10 @@ export const getDashboardData = (
         dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
-          params.get("summary_type")
+          params.get("summary_type"),
+          getState().dashboard.timeFrame
         );
+        console.log("dataList", dataList);
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -413,7 +419,7 @@ export const getDashboardData = (
   };
 };
 
-export const fillMissingDate = (data, dateGroup) => {
+export const fillMissingDate = (data, dateGroup, timeFrame) => {
   const newDataArray = [];
   const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
   // new Date creates a date object in local timezone
@@ -422,7 +428,7 @@ export const fillMissingDate = (data, dateGroup) => {
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
   };
   const handleDailyCase = () => {
-    const now = new Date();
+    const now = new Date(timeFrame);
 
     // BE gives UTC strings, Date() converts to local timezone
     // The hours are accurate, but the date is not
@@ -457,10 +463,8 @@ export const fillMissingDate = (data, dateGroup) => {
 
     case "weekly":
       for (let day = 0; day < 7; day++) {
-        const dayDate = new Date();
-        // BE gives UTC strings, Date() converts to local timezone
-        // The start and end date will be offset by the timezone
-        // So we need to know the dates in UTC.
+        const dayDate = new Date(timeFrame);
+        // Adjust the start date based on the current day of the week
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
@@ -488,7 +492,7 @@ export const fillMissingDate = (data, dateGroup) => {
       }
       break;
     case "monthly":
-      const now = new Date();
+      const now = new Date(timeFrame);
       // Get the number of days in the current month
       const daysInMonth = new Date(
         now.getFullYear(),
@@ -567,6 +571,7 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   // Group data by date_group
   data = data.map((item) => {
     let newDateGroup = new Date(item.timestamp);
+
     // timeRange = "monthly";
     if (timeRange === "yearly") {
       newDateGroup = (new Date(item.timestamp).getMonth() + 1)

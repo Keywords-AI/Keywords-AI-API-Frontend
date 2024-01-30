@@ -17,6 +17,8 @@ import {
   setDisplayMetric,
   setDisplayType,
   setDisplayBreakdown,
+  setTimeFrameOffset,
+  resetTimeFrameOffset,
 } from "src/store/actions";
 import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -121,7 +123,10 @@ export default function DashboardFilter() {
       <Button
         variant="small"
         text="Today"
-        onClick={() => handleTimePeriodSelection("daily")}
+        onClick={() => {
+          dispatch(resetTimeFrameOffset());
+          handleTimePeriodSelection("daily");
+        }}
       />
       <SelectInput
         headLess
