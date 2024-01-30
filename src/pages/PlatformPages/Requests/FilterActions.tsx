@@ -133,7 +133,7 @@ export function FilterActions({ type }: { type: string }) {
       );
       break;
     default:
-      trigger = <Button variant="small" icon={Filter} text="Filter" />;
+      trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
       break;
   }
 
