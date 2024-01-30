@@ -241,7 +241,8 @@ interface DataItem {
 
 export const addMissingDate = (
   data: DataItem[],
-  dateGroup: string
+  dateGroup: string,
+  currntTimeRange: string
 ): DataItem[] => {
   if (!data) return [];
   const newDataArray: DataItem[] = [];
@@ -276,7 +277,7 @@ export const addMissingDate = (
       break;
     case "weekly":
       for (let day = 0; day < 7; day++) {
-        const dayDate = new Date();
+        const dayDate = new Date(currntTimeRange);
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
@@ -295,7 +296,7 @@ export const addMissingDate = (
       }
       break;
     case "monthly":
-      const now = new Date();
+      const now = new Date(currntTimeRange);
       const daysInMonth = new Date(
         now.getFullYear(),
         now.getMonth() + 1,
@@ -334,7 +335,6 @@ export const addMissingDate = (
       handleDailyCase();
       break;
   }
-  console.log("newDataArray", newDataArray);
   return newDataArray;
 };
 
