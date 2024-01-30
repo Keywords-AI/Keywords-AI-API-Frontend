@@ -71,6 +71,11 @@ export const sendStreamingTextThunk = async ({
     // @Ruifeng you don't need to pass the params here. They are specific to playground only
   });
   try {
+    const headers = {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken") || "", // Ensure "X-CSRFToken" is not null
+      Authorization: `Bearer ${retrieveAccessToken()}`,
+    };
     const response = await Promise.race([
       fetch(host + path, {
         method: "POST",
@@ -98,6 +103,9 @@ export const sendStreamingTextThunk = async ({
         reader.read(),
         timeout(readTimeout),
       ]);
+      if (value === undefined) {
+        throw new Error("Backend Error");
+      }
       if (done) {
         reader.cancel();
         if (channel == 0) {
@@ -111,9 +119,7 @@ export const sendStreamingTextThunk = async ({
         }
         break;
       }
-      if (value === undefined) {
-        throw new Error("Backend Error");
-      }
+
       dataString = decoder.decode(value);
 
       const chunks = dataString.split("---");

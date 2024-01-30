@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { Divider } from "../../../components/Sections/Divider";
 import { Billing, RootState } from "src/types";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
+import { TitleStaticSubheading } from "src/components/Titles";
+import { setPanelData } from "src/store/actions";
 
 export const viewBillTrigger = (item: any) => {
   // The complete stripe Invoice object
@@ -62,6 +64,10 @@ export const BillingPage = () => {
       title="Billing"
       subtitle="Manage your billing information and invoices."
     >
+      <PageParagraph heading="Available credits">
+        <span className="text-md-medium text-gray-5">$86.99</span>
+      </PageParagraph>
+      <Divider />
       <PageParagraph
         heading="Current plan"
         subheading={
