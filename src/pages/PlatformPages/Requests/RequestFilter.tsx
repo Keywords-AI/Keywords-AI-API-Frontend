@@ -19,26 +19,24 @@ import { Button } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 
 export const RequestFilters: RequestFiltersType = {
-  select: {
-    changeField: ({ register, values, choices, onChange }) => {
+  selection: {
+    changeField: ({ values, choices, onChange }) => {
       let value = values?.[0];
-      let displayName:string;
+      let displayName: string;
       if (value === "true" || "false") value = value === "true" ? true : false;
       if (values?.length > 1) {
         displayName = values.length + " items";
       } else {
-        displayName = choices?.find((choice) => choice?.value === value)?.name || "selected value";
+        displayName =
+          choices?.find((choice) => choice?.value === value)?.name ||
+          "selected value";
       }
       return (
         <SelectInputMenu
           // placeholder="Error"
           align="end"
           trigger={<Button variant="small" text={displayName} />}
-          {...register("value")}
-          value={values}
-          icon={Down}
-          padding="py-xxxs px-xxs"
-          gap="gap-xxs"
+          value={values as string[]}
           items={choices}
           onChange={onChange}
           multiple={true}
@@ -47,60 +45,49 @@ export const RequestFilters: RequestFiltersType = {
     },
   },
   text: {
-    changeField: ({ register, values, choices }) => {
+    changeField: ({ values, choices }) => {
       return (
         <TextInputSmall
-          headLess
           disabled
-          {...register("value")}
           defaultValue={values?.[0] as string}
           padding="py-xxxs px-xxs"
-          gap="gap-xxs"
           width="w-[100px]"
-          choices={choices}
         />
       );
     },
   },
   number: {
-    changeField: ({ register, values, choices }) => {
+    changeField: ({ values, choices }) => {
       return (
         <TextInputSmall
-          headLess
           disabled
-          {...register("value")}
           defaultValue={values?.[0] as string}
           padding="py-xxxs px-xxs"
-          gap="gap-xxs"
           width="w-[100px]"
-          choices={choices}
         />
       );
     },
   },
-  datetime: {
-    changeField: ({ register, values, choices }) => {
+  'datetime-local': {
+    changeField: ({ values, choices }) => {
       return (
         <TextInputSmall
-          type="datetime"
-          bgColor="bg-error"
+          type="datetime-local"
           defaultValue={values?.[0] as string}
         />
       );
     },
   },
-
 };
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
-  const { register } = useForm();
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
   const filterOption = filterOptions[filter.metric!];
   const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
-
+  console.log(filter.value_field_type);
   return (
     <form className="flex flex-row items-center gap-[2px]">
       <Button
@@ -119,7 +106,7 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         gap="gap-xxs"
         choices={filterOption?.operator_choices}
         onChange={(e) => {
-        dispatch(
+          dispatch(
             updateFilter({
               ...filter,
               operator: e.currentTarget.value,
@@ -128,7 +115,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {RequestFilter?.changeField({
-        register,
         values: filter.value,
         choices: filterOption?.value_choices,
         onChange: (filterValues) => {

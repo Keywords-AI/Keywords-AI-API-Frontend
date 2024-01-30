@@ -68,7 +68,6 @@ export const setCurrentFilter = (filter: any) => {
   };
 };
 
-
 export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
     const postData = filters.reduce(
@@ -128,7 +127,6 @@ export const updateFilter = (filter: any) => {
     });
     const state = getState();
     const filters = state.requestLogs.filters;
-    console.log(filter, filters);
     dispatch(applyPostFilters(filters));
   };
 };
@@ -231,20 +229,20 @@ export const filterParamsToFilterObjects = (
   filterParams: FilterParams,
   filterOptions: RawFilterOptions
 ): FilterObject[] => {
-  return Object.keys(filterParams).map((key) => {
+  return Object.keys(filterParams).map((key): FilterObject => {
     return {
       id: Math.random().toString(36).substring(2, 15),
-      metric: key,
+      metric: key as keyof LogItem,
+      value_field_type: filterOptions[key].value_field_type,
       operator: filterParams[key].operator,
       value: filterParams[key].value,
       display_name: filterOptions[key].display_name,
-    } as FilterObject;
+    };
   });
-}
-
+};
 
 export const getRequestLogs = (postData?: any) => {
-  return (dispatch: TypedDispatch, getState: ()=>RootState) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
@@ -263,7 +261,13 @@ export const getRequestLogs = (postData?: any) => {
       dispatch(setModel(keys.model_list));
       const state = getState();
       const userFilters = state.user?.request_log_filters;
-      const filters = filterParamsToFilterObjects(userFilters, data.filters_data);
+      if (!userFilters) {
+        return;
+      }
+      const filters = filterParamsToFilterObjects(
+        userFilters,
+        data.filters_data
+      );
       dispatch({
         type: SET_FILTERS,
         payload: filters,

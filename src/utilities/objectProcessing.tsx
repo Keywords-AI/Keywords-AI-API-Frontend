@@ -17,6 +17,14 @@ export const stringOrBoolean = (string: string): boolean | string => {
   }
 }
 
+export const stringOrNumber = (string: string): number | string => {
+  if (!isNaN(Number(string))) {
+    return Number(string);
+  } else {
+    return string;
+  }
+}
+
 export const checkBoxFieldToList = (
   field: boolean | string | string[]
 ): string[] => {

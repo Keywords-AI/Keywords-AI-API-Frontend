@@ -79,8 +79,10 @@ export type RequestFilter = {
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
+export type FilterFileType = "text" | "selection" | "datetime-local" | "number"
+
 export type RequestFilters = {
-  [type in "text" | "select" | "datetime" | "number"]?: RequestFilter;
+  [type in FilterFileType]?: RequestFilter;
 };
 
 export type RawFilterOption = {
@@ -88,7 +90,7 @@ export type RawFilterOption = {
   metric: keyof LogItem;
   operator_choices: Choice[];
   value_choices: Choice[];
-  value_field_type: "text" | "select";
+  value_field_type: "text" | "selection" | "datetime-local" | "number";
 };
 
 export type FilterObject = Partial<RawFilterOption> & {
@@ -96,6 +98,7 @@ export type FilterObject = Partial<RawFilterOption> & {
   value: (string | boolean | number)[];
   operator: string;
   display_name: string;
+  value_field_type: "text" | "selection" | "datetime-local" | "number";
 };
 
 export type RawFilterOptions = {
