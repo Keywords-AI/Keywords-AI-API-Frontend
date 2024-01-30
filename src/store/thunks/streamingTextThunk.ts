@@ -103,6 +103,9 @@ export const sendStreamingTextThunk = async ({
         reader.read(),
         timeout(readTimeout),
       ]);
+      if (value === undefined) {
+        throw new Error("Backend Error");
+      }
       if (done) {
         reader.cancel();
         if (channel == 0) {
@@ -116,9 +119,7 @@ export const sendStreamingTextThunk = async ({
         }
         break;
       }
-      if (value === undefined) {
-        throw new Error("Backend Error");
-      }
+
       dataString = decoder.decode(value);
 
       const chunks = dataString.split("---");
