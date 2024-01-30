@@ -5,7 +5,12 @@ import {
   RequestFilters as RequestFiltersType,
 } from "src/types";
 import { Down } from "src/components/Icons";
-import { SelectInput, TextInputSmall } from "src/components/Inputs";
+import {
+  SelectInput,
+  TextInputSmall,
+  SelectInputSmall,
+  SelectInputMenu,
+} from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
 import { deleteFilter, updateFilter } from "src/store/actions";
@@ -14,85 +19,87 @@ import { Button } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
 
 export const RequestFilters: RequestFiltersType = {
-  failed: {
-    changeField: ({ register, value, choices, onChange }) => {
+  select: {
+    changeField: ({ register, values, choices, onChange }) => {
+      let value = values?.[0];
+      let displayName:string;
+      if (value === "true" || "false") value = value === "true" ? true : false;
+      if (values?.length > 1) {
+        displayName = values.length + " items";
+      } else {
+        displayName = choices?.find((choice) => choice?.value === value)?.name || "selected value";
+      }
       return (
-        <SelectInput
-          headLess
+        <SelectInputMenu
           // placeholder="Error"
           align="end"
+          trigger={<Button variant="small" text={displayName} />}
           {...register("value")}
-          defaultValue={value as string}
+          value={values}
           icon={Down}
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
-          choices={choices}
+          items={choices}
           onChange={onChange}
+          multiple={true}
         />
       );
     },
   },
-  prompt_messages: {
-    changeField: ({ register, value, choices }) => {
+  text: {
+    changeField: ({ register, values, choices }) => {
       return (
         <TextInputSmall
           headLess
           disabled
           {...register("value")}
-          defaultValue={value as string}
+          defaultValue={values?.[0] as string}
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
-          width="w-[120px]"
+          width="w-[100px]"
           choices={choices}
         />
       );
     },
   },
-  model: {
-    changeField: ({ register, value, choices, onChange }) => {
+  number: {
+    changeField: ({ register, values, choices }) => {
       return (
-        <SelectInput
+        <TextInputSmall
           headLess
-          align="end"
+          disabled
           {...register("value")}
-          defaultValue={value as string}
-          icon={Down}
+          defaultValue={values?.[0] as string}
           padding="py-xxxs px-xxs"
           gap="gap-xxs"
+          width="w-[100px]"
           choices={choices}
-          onChange={onChange}
         />
       );
     },
   },
-  organization_key__name: {
-    changeField: ({ register, value, choices, onChange }) => {
+  datetime: {
+    changeField: ({ register, values, choices }) => {
       return (
-        <SelectInput
-          headLess
-          // placeholder="Error"
-          align="end"
-          {...register("value")}
-          defaultValue={value as string}
-          icon={Down}
-          padding="py-xxxs px-xxs"
-          gap="gap-xxs"
-          choices={choices}
-          onChange={onChange}
+        <TextInputSmall
+          type="datetime"
+          bgColor="bg-error"
+          defaultValue={values?.[0] as string}
         />
       );
     },
   },
+
 };
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
-  const {register} = useForm(); 
+  const { register } = useForm();
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
   const filterOption = filterOptions[filter.metric!];
-  const RequestFilter = RequestFilters[filter.metric!];
+  const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
 
   return (
     <form className="flex flex-row items-center gap-[2px]">
@@ -102,17 +109,17 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         variant="small"
         text={filter.display_name}
       />
-      <SelectInput
+      <SelectInputSmall
         headLess
         align="end"
         // value={currentTimeRange}
         icon={Down}
-        defaultValue={filterOption?.operator_choices?.[0].value}
+        defaultValue={filterOption?.operator_choices?.[0]?.value}
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         choices={filterOption?.operator_choices}
         onChange={(e) => {
-          dispatch(
+        dispatch(
             updateFilter({
               ...filter,
               operator: e.currentTarget.value,
@@ -122,20 +129,20 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
       />
       {RequestFilter?.changeField({
         register,
-        value: filter.value,
+        values: filter.value,
         choices: filterOption?.value_choices,
-        onChange: (e) => {
-          let value = e.currentTarget.value;
-          if (
-            e.currentTarget.value === "true" ||
-            e.currentTarget.value === "false"
-          ) {
-            value = value === "true" ? true : false;
+        onChange: (filterValues) => {
+          let values: Array<string | boolean | number> = [];
+          for (var value of filterValues) {
+            if (value === "true" || value === "false") {
+              value = value === "true" ? true : false;
+            }
+            values.push(value);
           }
           dispatch(
             updateFilter({
               ...filter,
-              value,
+              value: values,
             })
           );
         },

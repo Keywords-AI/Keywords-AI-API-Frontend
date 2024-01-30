@@ -92,20 +92,12 @@ export const models = [
     brand: "anthropic",
     icon: Anthropic,
   },
-
-  // {
-  //   name: "Claude Instant 1",
-  //   value: "claude-instant-1",
-  //   brand: "anthropic",
-  //   icon: Anthropic,
-  // },
-  // {
-  //   name: "Claude Instant 1.2",
-  //   value: "claude-instant-1.2",
-  //   brand: "anthropic",
-  //   icon: Anthropic,
-  // },
-
+  {
+    name: "Claude Instant 1",
+    value: "claude-instant-1",
+    brand: "anthropic",
+    icon: Anthropic,
+  },
   {
     name: "GPT-3.5-turbo-16k",
     value: "gpt-3.5-turbo-16k",

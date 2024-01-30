@@ -16,7 +16,7 @@ export type LogItem = {
   failed: boolean;
   category: string;
   api_key: string;
-  ttft: number;
+  time_to_first_token: number;
   aggregation_data: any;
   organization_key__name: string;
   sentiment_analysis: {
@@ -68,19 +68,19 @@ export type FilterType = LogColumnKey | LogTagKey;
 export type RequestFilter = {
   changeField: ({
     register,
-    value,
+    values,
     choices,
     onChange,
   }: {
     register?: any;
-    value: string | number | boolean;
-    choices?: any[];
-    onChange?: (event: React.ChangeEvent<any>) => void;
+    values: (string | number | boolean)[];
+    choices?: Choice[];
+    onChange?: (filterValues: string[] | number[] | boolean[]) => void;
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
 export type RequestFilters = {
-  [Key in keyof LogItem]?: RequestFilter;
+  [type in "text" | "select" | "datetime" | "number"]?: RequestFilter;
 };
 
 export type RawFilterOption = {
@@ -93,7 +93,7 @@ export type RawFilterOption = {
 
 export type FilterObject = Partial<RawFilterOption> & {
   id: string;
-  value: string | boolean | number;
+  value: (string | boolean | number)[];
   operator: string;
   display_name: string;
 };
@@ -104,7 +104,7 @@ export type RawFilterOptions = {
 
 export type FilterParam = {
   operator: string;
-  value: string | boolean | number;
+  value: (string | boolean | number)[];
 };
 
 export type FilterParams = {

@@ -18,11 +18,15 @@ import {
   dispatchNotification,
 } from "src/store/actions";
 import { ApiKey } from "src/types";
-import { Info } from "src/components";
+import { CodeViewer, Info } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
 import { models } from "src/utilities/constants";
 import { checkBoxFieldToList } from "src/utilities/objectProcessing";
+import { useNavigate } from "react-router-dom";
+import { Modal } from "src/components/Dialogs";
+import cn from "src/utilities/classMerge";
+import { useTypedSelector } from "src/store/store";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -288,22 +292,30 @@ const CreateFormNotConnected = React.forwardRef(
                   }),
                 ]}
               /> */}
-            {loading && (
-              <div className="text-sm-md text-success">Creating Key...</div>
-            )}
           </React.Fragment>
         ) : (
           <CopyInput title={apiKey.newKey?.name} value={apiKey.apiKey} />
         )}
-        <div className="flex-row justify-end self-stretch">
-          <div className="flex-row gap-xs">
+        <div
+          className={cn(
+            "flex-row self-stretch items-center",
+            loading ? "justify-between" : "justify-end"
+          )}
+        >
+          {loading && (
+            <div className="text-sm-md text-success ">Creating Key...</div>
+          )}
+          <div className="flex-row gap-xs ">
             {apiKey.apiKey ? (
-              <Button
-                variant="r4-primary"
-                type="button"
-                onClick={handleClose}
-                text="Done"
-              />
+              <>
+                <ViewCode apiKey={apiKey.apiKey} name={apiKey.newKey?.name} />
+                <Button
+                  variant="r4-primary"
+                  type="button"
+                  onClick={handleClose}
+                  text="Done"
+                />
+              </>
             ) : (
               <>
                 <Button
@@ -563,3 +575,37 @@ export const EditForm = connect(
   mapStateToProps,
   mapDispatchToProps
 )(EditFormNotConnected);
+
+const ViewCode = React.forwardRef(
+  ({ apiKey, name }: { apiKey: string; name: string }, ref) => {
+    console.log(apiKey);
+    const KeyList = useTypedSelector((state) => state.apiKey.keyList);
+    const currentKey = KeyList.find((key) => key.name === name);
+    const navigate = useNavigate();
+    return (
+      <Modal
+        ref={ref}
+        trigger={<Button variant="r4-black" text="View code" />}
+        title="View code"
+        subtitle="You can use the following code to start integrating your current prompt and settings into your application."
+        width="w-[864px]"
+      >
+        <CodeViewer
+          apikey={apiKey}
+          modelName={currentKey?.preset_models || []}
+        />
+        <p className="text-sm-regular text-gray-4">
+          Your API key can be found{" "}
+          <a
+            onClick={() => navigate("/platform/api/api-keys")}
+            className="text-primary cursor-pointer"
+          >
+            here
+          </a>
+          . You should use environment variables or a secret management tool to
+          expose your key to your applications.
+        </p>
+      </Modal>
+    );
+  }
+);

@@ -35,6 +35,8 @@ const StreamingTextTest = () => {
     dispatch,
     callbackFunction: (chunk: string) => readStream(chunk),
   };
+
+
   return (
     <PageContent title={"Streaming Text Test"}>
       <Button

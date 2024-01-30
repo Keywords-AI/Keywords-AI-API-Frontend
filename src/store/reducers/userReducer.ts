@@ -60,6 +60,7 @@ const initialState: User = {
   custom_bundle: {},
   custom_subscription: {},
   profile_color: "",
+  request_log_filters: {},
 };
 
 export default function userReducer(state = initialState, action: PayloadAction<any>): User {
