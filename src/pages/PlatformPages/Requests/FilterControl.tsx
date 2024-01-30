@@ -58,6 +58,7 @@ export default function FilterControl() {
         value: prompt,
         id: randomId,
         operator: "icontains",
+        value_field_type: "text"
       })
     );
   };

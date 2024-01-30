@@ -9,6 +9,22 @@ import {
   StripeSubscription,
 } from "src/types";
 
+export const stringOrBoolean = (string: string): boolean | string => {
+  if (string === "true" || string === "false") {
+    return string === "true";
+  } else {
+    return string;
+  }
+}
+
+export const stringOrNumber = (string: string): number | string => {
+  if (!isNaN(Number(string))) {
+    return Number(string);
+  } else {
+    return string;
+  }
+}
+
 export const checkBoxFieldToList = (
   field: boolean | string | string[]
 ): string[] => {
@@ -33,7 +49,7 @@ export const digitToMonth = (digit, year) => {
   year = year !== undefined ? year : now.getFullYear();
   const monthMap = {
     0: "January",
-    1: "Febuary",
+    1: "February",
     2: "March",
     3: "April",
     4: "May",
@@ -241,7 +257,8 @@ interface DataItem {
 
 export const addMissingDate = (
   data: DataItem[],
-  dateGroup: string
+  dateGroup: string,
+  currntTimeRange: string
 ): DataItem[] => {
   if (!data) return [];
   const newDataArray: DataItem[] = [];
@@ -276,7 +293,7 @@ export const addMissingDate = (
       break;
     case "weekly":
       for (let day = 0; day < 7; day++) {
-        const dayDate = new Date();
+        const dayDate = new Date(currntTimeRange);
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
         const dateString = `${formatTimeUnit(
           dayDate.getMonth() + 1
@@ -295,7 +312,7 @@ export const addMissingDate = (
       }
       break;
     case "monthly":
-      const now = new Date();
+      const now = new Date(currntTimeRange);
       const daysInMonth = new Date(
         now.getFullYear(),
         now.getMonth() + 1,

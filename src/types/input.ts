@@ -1,13 +1,13 @@
 import { UseFormRegister } from "react-hook-form";
 
-export interface Choice {
+export type Choice = {
   name: string;
   value: string | number;
   textColor?: string;
   icon?: React.ElementType;
   secText?: string;
   onClick?: () => void;
-}
+} | null | undefined;
 
 export type InputProps = {
   value: string | number | readonly string[] | undefined; // Add value prop

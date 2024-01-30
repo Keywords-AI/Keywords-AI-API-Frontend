@@ -20,7 +20,6 @@ import { WelcomeState } from "src/components/Sections";
 import { SidePanel } from "./SidePanel";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
-import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
 import { get, set, useForm } from "react-hook-form";
 import { Filters } from "./RequestFilters";
@@ -113,9 +112,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               <Filters />
               {filters.length > 0 && <FilterActions type="add" />}
             </React.Fragment>
-            <span className={"caption text-gray-4"}>
-              Many more filtering options coming soon! - Raymond 1/23
-            </span>
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
