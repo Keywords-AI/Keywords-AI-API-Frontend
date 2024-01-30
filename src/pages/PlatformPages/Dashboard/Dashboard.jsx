@@ -95,7 +95,7 @@ function DashboardNotConnected({
   const metrics = [
     {
       title: Metrics.number_of_requests.name,
-      number: summary.number_of_requests,
+      number: summary.number_of_requests?.toLocaleString() || 0,
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
@@ -127,7 +127,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_prompt_tokens.name,
-      number: summary.total_prompt_tokens || 0,
+      number: summary.total_prompt_tokens?.toLocaleString() || 0,
       chartData: promptTokenCountData,
       dataKey: Metrics.total_prompt_tokens.value,
       onClick: () => {
@@ -142,7 +142,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_completion_tokens.name,
-      number: summary.total_completion_tokens || 0,
+      number: summary.total_completion_tokens?.toLocaleString() || 0,
       chartData: completionTokenCountData,
       dataKey: Metrics.total_completion_tokens.value,
       onClick: () => {
