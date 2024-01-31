@@ -307,25 +307,34 @@ export const getDashboardData = (
       })
       .then((data) => {
         dispatch(setDashboardData(data));
+        let by_model = [];
+        let by_key = [];
+        if (
+          params.get("breakdown") === "by_model" ||
+          params.get("breakdown") === "by_key"
+        ) {
+          by_model = getgroupByData(
+            data.raw_data,
+            true,
+            params.get("summary_type")
+          );
+          by_key = getgroupByData(
+            data.raw_data,
+            false,
+            params.get("summary_type")
+          );
+          const groupByData = {
+            by_model: by_model || [],
+            by_key: by_key || [],
+          };
+          dispatch(setGroupByData(groupByData));
+        }
 
-        const by_model = getgroupByData(
-          data.raw_data,
-          true,
-          params.get("summary_type")
-        );
-        const by_key = getgroupByData(
-          data.raw_data,
-          false,
-          params.get("summary_type")
-        );
-        const groupByData = { by_model, by_key };
-        dispatch(setGroupByData(groupByData));
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type"),
           getState().dashboard.timeFrame
         );
-        console.log("dataList", dataList);
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)

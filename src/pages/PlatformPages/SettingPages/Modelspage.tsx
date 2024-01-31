@@ -1,10 +1,153 @@
+import { Button } from "@radix-ui/react-toolbar";
 import React, { ReactElement } from "react";
-import { Anthropic, Cohere, Google, Labs, OpenAI } from "src/components";
+import {
+  Anthropic,
+  Cohere,
+  Google,
+  Labs,
+  ModelIcon,
+  OpenAI,
+} from "src/components";
 import { Tag } from "src/components/Misc";
 import { PageContent } from "src/components/Sections";
+import { models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
-import { Drawer } from "@medusajs/ui"
-import { SidePanel } from "./components/sidepanel";
+type RightDrawerContentProps = {
+  parameter?: string;
+  speed?: React.ReactElement;
+  mmlu_score?: string;
+  mt_bench_score?: string;
+  big_bench_score?: string;
+  language_support?: number;
+  streaming_support?: number;
+  prompt_pricing?: number;
+  completion_pricing?: number;
+  rate_limit?: string;
+};
+const RightDrawerContent = ({
+  parameter,
+  speed,
+  mmlu_score,
+  mt_bench_score,
+  big_bench_score,
+  language_support,
+  streaming_support,
+  prompt_pricing,
+  completion_pricing,
+  rate_limit,
+}: RightDrawerContentProps) => {
+  console.log({
+    parameter,
+    speed,
+    mmlu_score,
+    mt_bench_score,
+    big_bench_score,
+    language_support,
+    streaming_support,
+    prompt_pricing,
+    completion_pricing,
+    rate_limit,
+  });
+  const DisplayObj = [
+    {
+      label: "Parameter",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {parameter || "parameter"}
+        </span>
+      ),
+    },
+    {
+      label: "Speed",
+      value: (
+        <span className="text-sm-regular text-gray-4">{speed || "Fast"}</span>
+      ),
+    },
+    {
+      label: "Mmlu score",
+      //TODO: remove the default value for the props in tag for it to work properly
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {(mmlu_score || 4220).toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      label: "Mt bench score",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {(mt_bench_score || 4220).toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      label: "Big Bench score",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {(big_bench_score || 4220).toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      label: "Language support",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {language_support || "language support"}
+        </span>
+      ),
+    },
+    {
+      label: "Streaming support",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {streaming_support || "Yes"}
+        </span>
+      ),
+    },
+    {
+      label: "Prompt pricing",
+      value: (
+        <span className="text-sm-regular text-gray-5">
+          ${(prompt_pricing || 0.2134).toLocaleString()}
+          <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
+        </span>
+      ),
+    },
+    {
+      label: "Completion pricing",
+      value: (
+        <span className="text-sm-regular text-gray-5">
+          ${(completion_pricing || 0.2134).toLocaleString()}
+          <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
+        </span>
+      ),
+    },
+    {
+      label: "Rate limit",
+      value: (
+        <span className="text-sm-regular text-gray-4">
+          {rate_limit || "10K"} RPM
+        </span>
+      ),
+    },
+  ];
+  return (
+    <div className="flex-col px-lg py-md items-start gap-xs self-stretch">
+      {DisplayObj.map((item, index) => {
+        return (
+          <div
+            key={index}
+            className="flex h-[24px] justify-between items-center self-stretch"
+          >
+            <span className="text-sm-md text-gray-5">{item.label}</span>
+            {item.value}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 
 
 const ModelsTable = ({

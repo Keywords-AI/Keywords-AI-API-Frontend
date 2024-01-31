@@ -76,7 +76,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const clearFilters = () => {
     setFilters([]);
   };
-  useEffect(() => {}, [params]);
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -90,7 +89,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {filters.length > 0 && (
               <React.Fragment>
                 <Button
-                  variant="small"
+                  variant="small-dashed"
                   icon={Close}
                   text="Clear filters"
                   onClick={clearFilters}
@@ -146,7 +145,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                     {totalCount - count} entries hidden by filter
                   </span>
                   <Button
-                    variant="small"
+                    variant="small-dashed"
                     text="Clear filters"
                     onClick={clearFilters}
                   />

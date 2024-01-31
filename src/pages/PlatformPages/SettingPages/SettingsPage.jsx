@@ -3,12 +3,12 @@ import { connect } from "react-redux";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import usePost from "src/hooks/usePost";
 import { TextInput, CopyInput } from "src/components/Inputs";
-import { Button } from "src/components/Buttons";
+import { Button, SwitchButton } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
 import { Divider } from "src/components/Sections";
-
+import { TitleStaticSubheading } from "src/components/Titles";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -91,6 +91,15 @@ export const SettingPage = ({
           <Button type="submit" text="Update" variant="r4-primary" />
         </form>
       </PageParagraph>
+      <Divider />
+      <div className="flex items-start self-stretch justify-between">
+        <TitleStaticSubheading
+          title="Log history"
+          subtitle={"Record and save user session logs."}
+        />
+        <SwitchButton />
+      </div>
+      <Divider />
     </PageContent>
   );
 };
