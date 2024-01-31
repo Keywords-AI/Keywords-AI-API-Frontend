@@ -5,11 +5,7 @@ import { Search, Down, Display } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import {
-  setDisplayTimeRange,
-  getDashboardData,
   getRequestLogs,
-  setCurrentFilter,
-  setFilters,
   addFilter,
 } from "src/store/actions";
 import { setQueryParams } from "src/utilities/navigation";

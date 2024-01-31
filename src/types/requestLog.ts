@@ -79,12 +79,12 @@ export type RequestFilter = {
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
-export type FilterFileType = "text" | "selection" | "datetime-local" | "number"
+export type FilterFieldType = "text" | "selection" | "datetime-local" | "number"
 
 export type Operator = "gte" | "lte" | "exact" | "icontains"
 
 export type RequestFilters = {
-  [type in FilterFileType]?: RequestFilter;
+  [type in FilterFieldType]?: RequestFilter;
 };
 
 export type RawFilterOption = {
@@ -92,20 +92,22 @@ export type RawFilterOption = {
   metric: keyof LogItem;
   operator_choices: Choice[];
   value_choices: Choice[];
-  value_field_type: FilterFileType;
+  value_field_type: FilterFieldType;
 };
 
-export type FilterObject = Partial<RawFilterOption> & {
+export type FilterObject = {
   id: string;
+  metric: keyof LogItem;
   value: (string | boolean | number)[];
   operator: string;
   display_name: string;
-  value_field_type: FilterFileType;
+  value_field_type: FilterFieldType;
 };
 
-export type CurrentFilterObject = FilterObject & {
-  metric: keyof LogItem | undefined;
-};
+export type CurrentFilterObject = {
+  id: string;
+  metric?: keyof LogItem;
+} & Partial<FilterObject>;
 
 export type RawFilterOptions = {
   [Key in keyof LogItem]?: RawFilterOption;

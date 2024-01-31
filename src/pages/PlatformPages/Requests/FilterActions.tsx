@@ -10,11 +10,9 @@ import {
   Choice,
   Operator,
 } from "src/types";
-import { getRequestLogs, addFilter } from "src/store/actions";
+import { addFilter } from "src/store/actions";
 import { InputFieldFilter } from "./FilterValueField";
-import { setFilterType } from "src/store/actions";
-
-type SecondStepFields = "selection" | "text" | "number" | "datetime-local";
+import { setFilterType, setCurrentFilter } from "src/store/actions";
 
 export function FilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
@@ -23,7 +21,10 @@ export function FilterActions({ type }: { type: string }) {
     (state: RootState) => state.requestLogs.filterOptions
   );
   const filterType = useTypedSelector(
-    (state: RootState) => state.requestLogs.filterType
+    (state: RootState) => state.requestLogs.currentFilter?.metric
+  );
+  const currentFilter = useTypedSelector(
+    (state: RootState) => state.requestLogs.currentFilter
   );
   const changeFieldType =
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
@@ -39,7 +40,7 @@ export function FilterActions({ type }: { type: string }) {
     }
   );
   const secondStepItems = filterType
-    ? (filterOptions[filterType] as RawFilterOption).value_choices.map(
+    ? filterOptions[filterType]?.value_choices?.map(
         (valueChoice, index): Choice => {
           if (!valueChoice) return null;
           return {
@@ -52,31 +53,43 @@ export function FilterActions({ type }: { type: string }) {
 
   const selectMetric = (metric: keyof LogItem) => {
     dispatch(setFilterType(metric));
+    dispatch(
+      setCurrentFilter({
+        metric,
+        id: Math.random().toString(36).substring(2, 15),
+      })
+    );
   };
+
   const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
+      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue}));
+    }
+  };
+
+  const handleDropdownOpen = (open) => {
+    setStart(open);
+    if (currentFilter?.metric && currentFilter.value) {
       dispatch(
         addFilter({
           display_name:
-            filterOptions[filterType as keyof LogItem]?.display_name ??
+            filterOptions[currentFilter.metric]?.display_name ??
             "failed",
           metric: filterType!,
           operator:
-            (filterOptions[filterType as keyof LogItem]?.operator_choices?.[0]
+            (filterOptions[currentFilter.metric]?.operator_choices?.[0]
               ?.value as string) ?? "contains",
-          value: filterValue,
-          id: Math.random().toString(36).substring(2, 15),
+          value: currentFilter.value,
+          id: currentFilter.id,
           value_field_type:
-            filterOptions[filterType as keyof LogItem]?.value_field_type ??
+            filterOptions[currentFilter.metric]?.value_field_type ??
             "selection",
         })
       );
     }
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
-  const handleDropdownOpen = (open) => {
-    setStart(open);
-    dispatch(setFilterType(undefined));
-  };
+
   let trigger: React.ReactNode;
   switch (type) {
     case "create":
@@ -91,7 +104,6 @@ export function FilterActions({ type }: { type: string }) {
       trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
       break;
   }
-  console.log(filterType, changeFieldType);
   return (
     <>
       {!filterType || (filterType && changeFieldType === "selection") ? (
@@ -101,7 +113,7 @@ export function FilterActions({ type }: { type: string }) {
           setOpen={handleDropdownOpen}
           onChange={selectFilterValue}
           align="start"
-          items={filterType ? secondStepItems : firstStepItems}
+          items={filterType ? secondStepItems || [] : firstStepItems}
           multiple={filterType ? true : false}
         />
       ) : (

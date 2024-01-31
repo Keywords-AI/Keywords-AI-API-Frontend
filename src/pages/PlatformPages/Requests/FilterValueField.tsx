@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { FilterObject, RawFilterOption, Operator } from "src/types";
 import {
-  getRequestLogs,
   addFilter,
   setFilterType,
   updateFilter,
