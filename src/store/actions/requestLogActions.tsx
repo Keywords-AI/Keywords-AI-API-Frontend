@@ -120,7 +120,7 @@ export const deleteFilter = (filterId: string) => {
   };
 };
 
-export const updateFilter = (filter: any) => {
+export const updateFilter = (filter: FilterObject) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     dispatch({
       type: UPDATE_FILTER,

@@ -1,36 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { SelectInputMenu, SelectCheckBoxMenu } from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
-import { Add, Filter } from "src/components/Icons";
+import { useEffect, useState } from "react";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import {
-  RootState,
-  RawFilterOption,
-  Operator
-} from "src/types";
+import { FilterObject, RawFilterOption, Operator } from "src/types";
 import {
   getRequestLogs,
   addFilter,
   setFilterType,
+  updateFilter,
 } from "src/store/actions";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { TextInputSmall } from "src/components/Inputs";
 
 export const InputFieldFilter = ({
   filterOption,
   defaultOperator,
+  defaultValue,
 }: {
   filterOption: RawFilterOption;
   defaultOperator: Operator;
+  defaultValue?: string | number | boolean;
 }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, watch } = useForm();
   const dispatch = useTypedDispatch();
-
-  const onSubmit = (data: any) => {
+  const data = watch("value");
+  const onSubmit = () => {
     dispatch(
       addFilter({
         metric: filterOption.metric,
-        value: data.value,
+        value: [data],
         operator: defaultOperator,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
@@ -39,15 +36,90 @@ export const InputFieldFilter = ({
     );
     dispatch(setFilterType(undefined));
   };
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSubmit();
+    }
+  };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex-row items-center">
-      <TextInputSmall {...register("value")} type={filterOption.value_field_type} />
-      <Button variant="small" text="Apply" />
+    <div className="flex-row items-center">
+      <TextInputSmall
+        placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+        {...register("value")}
+        onKeyDown={onKeyDown}
+        padding="py-xxxs px-xxs"
+        type={filterOption.value_field_type}
+        defaultValue={defaultValue as string}
+      />
+      <Button variant="small" text="Apply" onClick={onSubmit} />
       <Button
         variant="small"
         text="Cancel"
+        type="button"
         onClick={() => dispatch(setFilterType(undefined))}
       />
-    </form>
+    </div>
+  );
+};
+
+export const InputFieldUpdateFilter = ({
+  filter,
+}: {
+  filter: FilterObject;
+}) => {
+  const { register } = useForm();
+  const dispatch = useTypedDispatch();
+  const [value, setValue] = useState(filter.value[0]);
+  const [changed, setChanged] = useState(false);
+  const onSubmit = () => {
+    dispatch(
+      updateFilter({
+        ...filter,
+        value: [value as string],
+      })
+    );
+    dispatch(setFilterType(undefined));
+  };
+  useEffect(() => {
+    if (filter.value[0] !== value) {
+      setChanged(true);
+    } else {
+      setChanged(false);
+    }
+  }, [value]);
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSubmit();
+    }
+  };
+  return (
+    <div className="flex-row items-center">
+      <TextInputSmall
+        {...register("value", {
+          onChange: (e) => {
+            setValue(e.target.value);
+          },
+        })}
+        padding="py-xxxs px-xxs"
+        onKeyDown={onKeyDown}
+        width="w-[120px]"
+        value={value as string}
+        type={filter.value_field_type}
+      />
+      {changed && (
+        <>
+          <Button variant="small" text="Apply" onClick={onSubmit} />
+          <Button
+            variant="small"
+            text="Cancel"
+            type="button"
+            onClick={() => {
+              setChanged(false);
+              setValue(filter.value[0]);
+            }}
+          />
+        </>
+      )}
+    </div>
   );
 };

@@ -29,16 +29,13 @@ export function FilterActions({ type }: { type: string }) {
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
   const firstStepItems = Object.keys(filterOptions).map(
     (key, index): Choice | undefined => {
-      if (filterOptions[key].value_field_type !== "text") {
-        return {
-          name: filterOptions[key].display_name,
-          value: key,
-          onClick: () => {
-            selectMetric(key as keyof LogItem);
-          },
-        };
-      }
-      return undefined;
+      return {
+        name: filterOptions[key].display_name,
+        value: key,
+        onClick: () => {
+          selectMetric(key as keyof LogItem);
+        },
+      };
     }
   );
   const secondStepItems = filterType
@@ -94,10 +91,10 @@ export function FilterActions({ type }: { type: string }) {
       trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
       break;
   }
-  console.log(filterType, changeFieldType)
+  console.log(filterType, changeFieldType);
   return (
     <>
-      {!filterType || (filterType && changeFieldType==="selection") ? (
+      {!filterType || (filterType && changeFieldType === "selection") ? (
         <SelectInputMenu
           trigger={trigger}
           open={start}

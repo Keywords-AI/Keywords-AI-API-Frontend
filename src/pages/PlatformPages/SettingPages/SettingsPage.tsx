@@ -9,6 +9,7 @@ import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
 import { Divider } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -97,7 +98,12 @@ export const SettingPage = ({
           title="Log history"
           subtitle={"Record and save user session logs."}
         />
-        <SwitchButton />
+        <SwitchButton
+          checked={!organization?.disable_log}
+          onCheckedChange={(checked)=>{
+            updateOrganization({disable_log: !checked})
+          }}
+        />
       </div>
       <Divider />
     </PageContent>

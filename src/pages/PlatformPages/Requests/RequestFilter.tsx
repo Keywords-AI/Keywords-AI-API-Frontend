@@ -8,8 +8,6 @@ import {
 } from "src/types";
 import { Down } from "src/components/Icons";
 import {
-  SelectInput,
-  TextInputSmall,
   SelectInputSmall,
   SelectInputMenu,
 } from "src/components/Inputs";
@@ -18,7 +16,7 @@ import { DotsButton } from "src/components/Buttons";
 import { deleteFilter, updateFilter } from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
-import { InputFieldFilter } from "./FilterValueField";
+import { InputFieldUpdateFilter } from "./FilterValueField";
 
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
@@ -27,12 +25,10 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
-  const [start, setStart] = React.useState<boolean|undefined>(false);
   const filterOption = filterOptions[filter.metric!];
 
-
   return (
-    <form className="flex flex-row items-center gap-[2px]">
+    <div className="flex flex-row items-center gap-[2px]">
       <Button
         type="button"
         disabled
@@ -70,19 +66,22 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
       {filterOption?.value_field_type === "selection" ? (
         <SelectInputMenu
           trigger={<Button variant="small" text={filter.display_name} />}
-          open={start}
-          setOpen={setStart}
-          onChange={()=>{}}
+          onChange={(values)=>{
+            dispatch(
+              updateFilter({
+                ...filter,
+                value: values,
+              })
+            );
+          }}
+          value={filter.value as string[]}
           align="start"
           items={filterOption?.value_choices || []}
           multiple={true}
         />
       ) : (
-        <InputFieldFilter
-          filterOption={filterOption as RawFilterOption}
-          defaultOperator={
-            filterOption?.operator_choices?.[0]?.value as Operator
-          }
+        <InputFieldUpdateFilter
+          filter={filter}
         />
       )}
       {
@@ -91,6 +90,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
           onClick={() => dispatch(deleteFilter(filter.id))}
         />
       }
-    </form>
+    </div>
   );
 };
