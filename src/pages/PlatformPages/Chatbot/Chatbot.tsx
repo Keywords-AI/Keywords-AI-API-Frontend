@@ -1,12 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { connect } from "react-redux";
-import useStream from "src/hooks/useStream";
 import {
   getConversations,
-  getConversation,
-  createConversation,
-  deleteConversation,
-  abortStreamingTextRequest,
 } from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
@@ -15,53 +9,20 @@ import useAutoScroll from "src/hooks/useAutoScroll";
 import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
 import { LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import { RootState } from "src/types";
 
-const mapStateToProps = (state) => {
-  return {
-    chatbot: state.chatbot,
-    user: state.user,
-    messages: state.messages,
-    streaming: state.streamingText.isLoading,
-    streamingText: state.streamingText.streamingText,
-    uploading: state.uploading,
-  };
-};
-
-const mapDispatchToProps = {
-  createConversation,
-  getConversations,
-  getConversation,
-  deleteConversation,
-  abortStreamingTextRequest,
-  errorMessage: (error) => {
-    return {
-      type: "CREATE_MESSAGE",
-      payload: {
-        role: "assistant",
-        content: "Error: " + error.detail,
-      },
-    };
-  },
-};
-
-const normalizeMessages = (messages) => {
-  const normalizedMessages = messages?.map((message) => {
-    return {
-      role: message?.role,
-      content: message?.content,
-    };
-  });
-  return normalizedMessages;
-};
-
-function Chatbot({
-  streaming,
-  streamingText,
-  getConversations,
-  chatbot,
-}) {
-  const conversation = chatbot?.conversation;
-  const generateRef = useRef("");
+export default function Chatbot({ chatbot }) {
+  const dispatch = useTypedDispatch();
+  const streaming = useTypedSelector(
+    (state: RootState) => state.streamingText[0].isLoading
+  );
+  const streamingText = useTypedSelector(
+    (state: RootState) => state.streamingText[0].streamingText
+  );
+  const conversation = useTypedSelector(
+    (state: RootState) => state.chatbot.conversation
+  );
   const [activeConversation, setActiveConversation] = useState(null);
   const fileUploadRef = useRef(null);
   const [chatError, setChatError] = useState(null);
@@ -70,13 +31,13 @@ function Chatbot({
   const conversationRef = useRef(conversation);
 
   useEffect(() => {
-    generateRef.current = generatingText;
-  }, [generatingText]);
+    setGeneratingText(streamingText);
+  }, [streamingText]);
+
 
   useEffect(() => {
-    getConversations();
+    dispatch(getConversations());
   }, []);
-
 
   useEffect(() => {
     if (conversation?.id && conversation?.id !== -1) {
@@ -167,5 +128,3 @@ function Chatbot({
     </div>
   );
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(Chatbot);

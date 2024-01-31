@@ -422,7 +422,7 @@ export const getDashboardData = (
 export const fillMissingDate = (data, dateGroup, timeFrame) => {
   const newDataArray = [];
   const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
-  // new Date creates a date object in local timezone
+  // localeUTC: given a UTC timestamp, return the UTC time when the local time is the same as the given timestamp
   const localeUtc = (dateStr) => {
     const date = new Date(dateStr);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);

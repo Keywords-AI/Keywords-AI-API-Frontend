@@ -31,9 +31,7 @@ export default function ChatMessage({ message }) {
       <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
         {message?.role === "user" ? <ChatAvatar /> : <Logo />}
         <div>
-          
             <ChatbotReactMarkdown content={message?.content} /> 
-
           {message?.role !== "user" ? (
             <div
               className="flex-row items-center gap-xxs self-stretch"

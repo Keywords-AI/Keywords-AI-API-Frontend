@@ -30,8 +30,6 @@ const mapStateToProps = (state: RootState) => ({
   firstTime: !state.organization?.has_api_call,
   sidePanelOpen: state.requestLogs.sidePanelOpen,
   selectedRequest: state.requestLogs.selectedRequest,
-  firstFilter: state.requestLogs.firstFilter,
-  secondFilter: state.requestLogs.secondFilter,
   filters: state.requestLogs.filters,
   count: state.requestLogs.count,
   totalCount: state.requestLogs.totalCount,

@@ -81,6 +81,8 @@ export type RequestFilter = {
 
 export type FilterFileType = "text" | "selection" | "datetime-local" | "number"
 
+export type Operator = "gte" | "lte" | "exact" | "icontains"
+
 export type RequestFilters = {
   [type in FilterFileType]?: RequestFilter;
 };
@@ -90,7 +92,7 @@ export type RawFilterOption = {
   metric: keyof LogItem;
   operator_choices: Choice[];
   value_choices: Choice[];
-  value_field_type: "text" | "selection" | "datetime-local" | "number";
+  value_field_type: FilterFileType;
 };
 
 export type FilterObject = Partial<RawFilterOption> & {
@@ -98,7 +100,11 @@ export type FilterObject = Partial<RawFilterOption> & {
   value: (string | boolean | number)[];
   operator: string;
   display_name: string;
-  value_field_type: "text" | "selection" | "datetime-local" | "number";
+  value_field_type: FilterFileType;
+};
+
+export type CurrentFilterObject = FilterObject & {
+  metric: keyof LogItem | undefined;
 };
 
 export type RawFilterOptions = {

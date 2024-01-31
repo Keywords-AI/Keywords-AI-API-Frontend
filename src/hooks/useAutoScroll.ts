@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // Custom Hook for auto scrolling
 function useAutoScroll() {
@@ -10,7 +10,7 @@ function useAutoScroll() {
   */
   const [generatingText, setGeneratingText] = useState("");
   const [conversationHeight, setConversationHeight] = useState(0);
-  const conversationBoxRef = useRef(null);
+  const conversationBoxRef = useRef<HTMLDivElement>(null);
   const [isUserAtBottom, setIsUserAtBottom] = useState(true);
 
   useEffect(() => {

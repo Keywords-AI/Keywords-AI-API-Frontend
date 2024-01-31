@@ -1,7 +1,13 @@
 import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
-import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
+import { keywordsStream, keywordsRequest } from "src/utilities/requests";
+import { ChatMessage, ConversationMessage, RootState, TypedDispatch } from "src/types";
+import {
+  SEND_STREAMINGTEXT_SUCCESS,
+  SEND_STREAMINGTEXT_PARTIAL,
+  SEND_STREAMINGTEXT_REQUEST,
+} from "./streamingTextAction";
 
 export const ERROR_MESSAGE = "ERROR_MESSAGE";
 export const SET_IS_EDITING = "SET_IS_EDITING";
@@ -162,29 +168,18 @@ export const getConversation = (id) => {
   };
 };
 
-export const createConversation = (newMessage = {}) => {
-  return (dispatch, getState) => {
-    fetch(`${apiConfig.apiURL}chatbot/conversations/`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
+export const createConversation = (newMessage?: ConversationMessage) => {
+  return (dispatch: TypedDispatch) => {
+    keywordsRequest({
       method: "POST",
+      path: "chatbot/conversations/",
+      dispatch: dispatch,
     })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else if (res.status === 401) {
-        } else {
-          throw new Error("Something went wrong");
-        }
-      })
       .then((data) => {
         data.name = "New Conversation " + data.id;
         dispatch({ type: CREATE_CONVERSATION, payload: data });
         // dispatch(nameConversation(data.id, newMessage.content));
-        if (Object.keys(newMessage).length !== 0) {
+        if (newMessage) {
           newMessage.conversation = data.id;
           dispatch(createMessage(newMessage));
         }
@@ -220,63 +215,45 @@ export const nameConversation = (id, content) => {
         }
       })
       .catch((err) => console.log(err));
-  };
+};
 }; // not used
 
-export const createMessage = (msg) => {
-  return (dispatch) => {
+export const createMessage = (msg: ConversationMessage) => {
+  return (dispatch: TypedDispatch) => {
     if (msg.conversation) {
       // Given an id, or the id is not 0
       dispatch({ type: CREATE_MESSAGE, payload: msg });
-      fetch(`${apiConfig.apiURL}chatbot/messages/`, {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-          Authorization: `Bearer ${retrieveAccessToken()}`,
-        },
+      keywordsRequest({
+        data: msg,
         method: "POST",
-        body: JSON.stringify(msg),
+        path: "chatbot/messages/",
+        dispatch: dispatch,
       })
-        .then(async (res) => {
-          if (res.ok) {
-            return await res.json();
-          } else {
-            console.log(await res.text());
-          }
-        })
-        .catch((err) => console.log(err));
     } else {
-      console.log("creating conversation");
       dispatch(createConversation(msg));
     }
   };
 };
 
-export const deleteMesage = (id) => {
-  return (dispatch) => {
-    fetch(`${apiConfig.apiURL}chatbot/messages/${id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res.ok) {
-          dispatch({ type: "DELETE_MESSAGE", id });
-        } else {
-          throw new Error("Something went wrong");
-        }
-      })
-      .catch((err) => console.log(err));
+export const readStreamChunk = (chunk: string) => {
+  return (dispatch: TypedDispatch) => {
+    try {
+      const data = JSON.parse(chunk);
+      const textBit = data.choices?.[0].delta.content;
+      if (textBit) {
+        dispatch({
+          type: SEND_STREAMINGTEXT_PARTIAL,
+          payload: textBit,
+        });
+      }
+    } catch (e) {}
   };
 };
 
-export const sendMessage = (msgText) => {
-  return async (dispatch, getState) => {
+export const sendMessage = (msgText: string) => {
+  return async (dispatch: TypedDispatch, getState: ()=>RootState) => {
     const state = getState();
-    const { isLoading: streaming } = state.streamingText;
+    const { isLoading: streaming } = state.streamingText[0];
     const systemPrompt = state.chatbot.customPrompt;
     const conversation_id = state.chatbot.conversation.id;
     dispatch(
@@ -288,40 +265,36 @@ export const sendMessage = (msgText) => {
     );
     const messages = getState().chatbot.conversation.messages; // get messages after creating and updating the state
     if (streaming) return;
-    const messagesToSend = messages.map((item) => {
+    const sessionMessages = messages.map((item) => {
       return { role: item.role, content: item.content };
     });
-    try {
-      await sendStreamingTextThunk({
-        params: {
-          messages: messagesToSend,
-          stream: true,
-        },
-        path: "api/playground/chatbot/",
-        prompt: systemPrompt,
-        callback: () => {
-          const prevMessages = getState().chatbot.conversation.messages;
-          const newMessages = [
-            ...prevMessages,
-            {
-              role: "gpt-3.5-turbo",
-              content: getState().streamingText.streamingText,
-            },
-          ];
-          dispatch(
-            createMessage({
-              conversation: getState().chatbot.conversation.id,
-              role: "gpt-3.5-turbo11",
-              content: getState().streamingText.streamingText,
-            })
-          );
-        },
-        dispatch: dispatch,
-        getState: getState,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const systemMessage = {
+      role: "system",
+      content: systemPrompt,
+    };
+    const messagesToSend = [systemMessage, ...sessionMessages];
+    dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
+    keywordsStream({
+      data: { messages: messagesToSend, stream: true },
+      dispatch: dispatch,
+      path: "api/playground/chatbot/",
+      readStreamLine: (line) => dispatch(readStreamChunk(line)),
+      streamingDoneCallback: () => {
+        const state = getState();
+        const streamingText = state.streamingText[0].streamingText;
+        const currentConversationId = state.chatbot.conversation.id;
+        dispatch({ type: SEND_STREAMINGTEXT_SUCCESS });
+        dispatch(
+          createMessage({
+            conversation: currentConversationId,
+            role: "assistant",
+            content: streamingText,
+          })
+        );
+      },
+    }).then((abortController) => {
+      console.log(abortController);
+    });
   };
 };
 

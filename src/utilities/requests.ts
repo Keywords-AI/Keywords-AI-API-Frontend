@@ -3,6 +3,7 @@ import apiConfig from "src/services/apiConfig"; // Adjust this import according 
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { handleApiResponseErrors } from "src/store/actions";
 import { TypedDispatch, ChatMessage } from "src/types";
+import { PageParagraph } from "src/components/Sections";
 
 // Define the configuration object type
 type KeywordsFetchRequestConfig = {
@@ -76,12 +77,13 @@ export type StreamingParams = {
   path?: string;
   data: {
     messages: ChatMessage[];
-    model: string;
+    model?: string;
     stream: boolean;
     logprobs?: boolean;
   };
-  apiKey: string;
-  callbackFunction: (line: string) => void;
+  apiKey?: string;
+  readStreamLine: (line: string) => void;
+  streamingDoneCallback?: () => void;
   dispatch?: TypedDispatch | undefined;
 };
 
@@ -89,7 +91,71 @@ export const keywordsStream = ({
   path = "api/generate/",
   host = apiConfig.apiURL, // Ensure apiConfig is defined and imported
   data,
-  callbackFunction,
+  readStreamLine,
+  streamingDoneCallback,
+  apiKey,
+  dispatch,
+}: StreamingParams) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  if (apiKey) {
+    headers["Authorization"] = `Api-Key ${apiKey}`;
+  } else {
+    headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
+  }
+  // fetch("http://localhost:8000/api/generate/", {
+  return fetch(`${host}${path}`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  }).then(async (stream: any) => {
+    if (!stream.ok) {
+      const errors = await stream.json();
+      if (dispatch && typeof dispatch === "function") {
+        dispatch(handleApiResponseErrors(errors, stream.status));
+      }
+      throw new Error("Stream response error");
+    }
+    const reader = stream?.body.getReader();
+    const decoder = new TextDecoder();
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+    // Start reading the stream
+    (async () => {
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done || signal.aborted) {
+            streamingDoneCallback && streamingDoneCallback();
+            break;
+          }
+          const message = decoder.decode(value);
+          // Splitting the returned text chunck with the delimiter
+          for (const line of message.split("---")) {
+            // Line is a JSON string
+            if (readStreamLine && typeof readStreamLine === "function") {
+              readStreamLine(line);
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Stream error:", e);
+      }
+    })();
+    // Return a function to abort the stream from outside
+    return () => {
+      abortController.abort();
+    };
+  });
+};
+
+export const keywordsApiStream = ({
+  path = "api/generate/",
+  host = apiConfig.apiURL, // Ensure apiConfig is defined and imported
+  data,
+  readStreamLine,
+  streamingDoneCallback,
   apiKey,
   dispatch,
 }: StreamingParams) => {

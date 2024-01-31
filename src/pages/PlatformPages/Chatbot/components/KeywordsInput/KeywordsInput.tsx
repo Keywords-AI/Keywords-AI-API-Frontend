@@ -1,39 +1,29 @@
 import React, { useEffect } from "react";
 import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs";
-import { DotsButton, IconButton } from "src/components/Buttons";
+import { Button, IconButton } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { connect } from "react-redux";
 import { sendMessage } from "src/store/actions";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { abortStreamingTextRequest } from "src/store/actions";
 
-const mapStateToProps = (state) => {
-  return {
-    systemPrompt: state.chatbot.customPrompt,
-    streaming: state.streamingText.isLoading,
-    messages: state.chatbot.conversation.messages,
-  };
-};
-
-const mapDispatchToProps = {
-  sendMessage,
-  abortStreamingTextRequest,
-};
-
-function KeywordsInput({
-  sendMessage,
-  abortStreamingTextRequest,
-  streaming,
-  handleSend = () => {},
-}) {
+export default function KeywordsInput() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  const [inputValue, setInputValue] = React.useState("");
 
+  const streamingText = useTypedSelector(
+    (state) => state.streamingText[0].streamingText
+  );
+  const streaming = useTypedSelector(
+    (state) => state.streamingText[0].isLoading
+  );
+  const systemPrompt = useTypedSelector((state) => state.chatbot.customPrompt);
+  const dispatch = useTypedDispatch();
+  const [inputValue, setInputValue] = React.useState("");
   // const onChange = (e) => {
 
   // }
@@ -44,18 +34,27 @@ function KeywordsInput({
     }
   };
   const onSubmit = async (data) => {
-    sendMessage(data.message);
-    setInputValue("");
+    if (!streaming) {
+      dispatch(sendMessage(data.message));
+      setInputValue("");
+    }
   };
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
-  const [isHovered, setIsHovered] = React.useState(false);
   return (
     <form
       className="relative flex-col w-full shadow-border rounded-sm bg-gray-2"
       onSubmit={handleSubmit(onSubmit)}
     >
       <EditableBox
-        {...register("message", { required: "This is required" })}
+        {...register("message", {
+          required: "This is required",
+          onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setInputValue(e.target.value),
+        })}
+        value={inputValue}
         className={
           "rounded-sm text-sm py-xxs px-xs " +
           (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")
@@ -63,29 +62,21 @@ function KeywordsInput({
         borderless={false}
         placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}
-        value={streaming ? "Generating..." : ""}
-        // onChange={(e) => setInputValue(e.target.value)}
       />
       {streaming ? (
         <IconButton
           icon={Terminate}
           onClick={() => {
-            abortStreamingTextRequest();
+            dispatch(abortStreamingTextRequest());
           }}
           className="absolute right-xs bottom-[11px] cursor-pointer"
         />
       ) : (
-        <button>
-          <IconButton
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            icon={Send}
-            className="absolute right-xs bottom-[11px] cursor-pointer"
-          />
-        </button>
+        <Button
+          icon={Send}
+          className="absolute right-xs bottom-[11px] cursor-pointer"
+        />
       )}
     </form>
   );
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(KeywordsInput);
