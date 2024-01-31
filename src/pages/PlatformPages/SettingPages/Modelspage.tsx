@@ -8,10 +8,10 @@ import {
   ModelIcon,
   OpenAI,
 } from "src/components";
-import { Drawer } from "src/components/Dialogs/Drawer";
 import { Tag } from "src/components/Misc";
 import { PageContent } from "src/components/Sections";
 import { models } from "src/utilities/constants";
+import cn from "src/utilities/classMerge";
 type RightDrawerContentProps = {
   parameter?: string;
   speed?: React.ReactElement;
@@ -147,6 +147,9 @@ const RightDrawerContent = ({
     </div>
   );
 };
+
+
+
 const ModelsTable = ({
   ModlItems,
 }: {
@@ -160,8 +163,24 @@ const ModelsTable = ({
     moderation: string;
   }[];
 }) => {
+  const [hoveredIndex, setHoveredIndex] = React.useState(-1);
+  const [clickedIndex, setClickedIndex] = React.useState(-1);
+
+  const isRowHighlighted = (index) => {
+    return index === hoveredIndex || index === clickedIndex;
+  };
+
+  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
+
+  const handleRowClick = (index) => {
+    setClickedIndex(index);
+    setIsSidePanelOpen(true); // Open the side panel
+  };
+  // const activated = hover;
+  const activated = hoveredIndex >= 0;
   return (
-    <div className="flex-col w-[800px] items-start bg-gray-1">
+    <div className="flex flex-row w-full">
+    <div className={cn("flex-col w-[800px] items-start bg-gray-1")}>
       <div
         aria-label="table-header"
         className="flex flex-row py-xs items-start self-stretch shadow-border-b shadow-gray-2"
@@ -185,64 +204,54 @@ const ModelsTable = ({
           Moderation
         </div>
       </div>
-      {ModlItems.map((item, index) => {
-        const details = models.find((m) => m.value === item.name);
-        return (
-          <Drawer
-            key={index}
-            trigger={
-              <div
-                className="flex min-w-[200px] py-xxs items-center self-stretch shadow-border-b shadow-gray-2 cursor-pointer"
-                key={index}
-              >
-                <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <Tag text={item.name} icon={item.icon} />
-                </div>
-                <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <span className="text-gray-5 text-sm-regular">
-                    {item.promptCost}
-                  </span>
-                  <span className=" text-gray-4 text-sm-regular">
-                    {" "}
-                    / 1K tokens
-                  </span>
-                </div>
-                <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <span className="text-gray-5 text-sm-regular">
-                    {item.completionCost}
-                  </span>
-                  <span className=" text-gray-4 text-sm-regular">
-                    {" "}
-                    / 1K tokens
-                  </span>
-                </div>
-                <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
-                  {item.context}
-                </div>
-                <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
-                  {item.ratelimit}
-                </div>
-                <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
-                  <Tag
-                    text={item.moderation}
-                    textColor={
-                      item.moderation == "Filtered"
-                        ? "text-success"
-                        : "text-error"
-                    }
-                    backgroundColor={
-                      item.moderation == "Filtered" ? "bg-success/10" : ""
-                    }
-                    border=""
-                  />
-                </div>
-              </div>
-            }
-          >
-            <RightDrawerContent {...details} />
-          </Drawer>
-        );
-      })}
+      {ModlItems.map((item, index) => (
+        <div
+        key={index}
+          className={cn(
+            "flex min-w-[200px] py-xxs items-center self-stretch shadow-border-b shadow-gray-2",
+            // index === hoveredIndex && "bg-gray-2"
+            isRowHighlighted(index) && "bg-gray-2"
+          )}
+          onMouseEnter={() => setHoveredIndex(index)}
+          onMouseLeave={() => setHoveredIndex(-1)}
+          onClick={() => handleRowClick(index)}
+        >
+          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+            <Tag text={item.name} icon={item.icon} />
+          </div>
+          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+            <span className="text-gray-5 text-sm-regular">
+              {item.promptCost}
+            </span>
+            <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
+          </div>
+          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+            <span className="text-gray-5 text-sm-regular">
+              {item.completionCost}
+            </span>
+            <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
+          </div>
+          <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
+            {item.context}
+          </div>
+          <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
+            {item.ratelimit}
+          </div>
+          <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
+            <Tag
+              text={item.moderation}
+              textColor={
+                item.moderation == "Filtered" ? "text-success" : "text-error"
+              }
+              backgroundColor={
+                item.moderation == "Filtered" ? "bg-success/10" : ""
+              }
+              border=""
+            />
+          </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 };

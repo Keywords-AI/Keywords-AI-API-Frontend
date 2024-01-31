@@ -15,6 +15,7 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
+import { get } from "react-hook-form";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -23,9 +24,9 @@ export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
 export const SET_DISPLAY_COLUMNS = "SET_DISPLAY_COLUMNS";
 export const SET_FILTER_OPEN = "SET_FILTER_OPEN";
 export const SET_SECOND_FILTER = "SET_SECOND_FILTER";
-export const SET_FIRST_FILTER = "SET_FIRST_FILTER";
+export const SET_CURRENT_FILTER_TYPE = "SET_CURRENT_FILTER_TYPE";
 export const SET_FILTERS = "SET_FILTERS";
-export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
+export const SET_FILTER_TYPE = "SET_FILTER_TYPE";
 export const SET_PAGINATION = "SET_PAGINATION";
 export const SET_PAGE_NUMBER = "SET_PAGE_NUMBER";
 export const SET_API_KEY = "SET_API_KEY";
@@ -44,10 +45,10 @@ const concatMessages = (
   return "";
 };
 
-export const setFirstFilter = (filter: string) => {
+export const setFilterType = (filterType: keyof LogItem | undefined) => {
   return {
-    type: SET_FIRST_FILTER,
-    payload: filter,
+    type: SET_FILTER_TYPE,
+    payload: filterType,
   };
 };
 
@@ -61,9 +62,9 @@ export const setFilters = (filters: FilterObject[]) => {
   };
 };
 
-export const setCurrentFilter = (filter: any) => {
+export const setCurrentFilter = (filter: FilterObject) => {
   return {
-    type: SET_CURRENT_FILTER,
+    type: SET_FILTER_TYPE,
     payload: filter,
   };
 };

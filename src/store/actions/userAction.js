@@ -9,7 +9,6 @@ import {
   updateUserSQLPrompt,
   dispatchNotification,
 } from "src/store/actions";
-import { handleSerializerErrors } from "src/utilities/objectProcessing";
 import apiConfig from "src/services/apiConfig";
 import {
   // Actions
@@ -52,6 +51,7 @@ export const getUser = () => {
           );
           // ---------Chatbot Actions---------
           // Set user's custom prompt for chatbot
+          console.log("USER ", user.system_prompt);
           dispatch(setCustomPrompt(data.system_prompt));
           dispatch(setEnableCustomPrompt(data.system_prompt_active));
           dispatch(setCustomPromptFile(data.current_file));
@@ -60,15 +60,13 @@ export const getUser = () => {
         } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
-        } else {
-          const data = await res.json();
         }
       })
       .catch((error) => console.log(error.message));
   };
 };
 
-export const updateUser = (data = {}, callback = () => {}, mute=false) => {
+export const updateUser = (data = {}, callback = () => {}, mute = false) => {
   // Check redux devtools for the data structure
   return (dispatch) => {
     dispatch({ type: UPDATE_USER, payload: data });
@@ -80,9 +78,37 @@ export const updateUser = (data = {}, callback = () => {}, mute=false) => {
     })
       .then((responseJson) => {
         if (!mute) {
-          dispatch(dispatchNotification({ title: "User updated successfully" }));
+          dispatch(
+            dispatchNotification({ title: "User updated successfully" })
+          );
         }
+        const data = responseJson;
+        // ---------Chatbot Actions---------
+        // Set user's custom prompt for chatbot
+        // dispatch(setCustomPrompt(data.system_prompt));
+        dispatch(setEnableCustomPrompt(data.system_prompt_active));
+        dispatch(setCustomPromptFile(data.current_file));
+        dispatch(getConversation(data.last_conversation));
+        // ---------End Chatbot Actions---------
       })
       .catch((error) => console.log(error.message));
+  };
+};
+
+export const updateSystemPrompt = (promptAndActive) => {
+  return (dispatch) => {
+    console.log("PROMPT ", promptAndActive);
+    dispatch(setEnableCustomPrompt(promptAndActive.enable_prompt));
+    // dispatch(setCustomPromptFile(promptAndActive.current_file));
+    keywordsRequest({
+      path: "user/update_user_system_prompt/",
+      method: "PATCH",
+      data: promptAndActive,
+      dispatch,
+    })
+      .then((responseJson) => {
+        dispatch({ type: SET_USER, payload: responseJson });
+      })
+      .catch((error) => console.log(error));
   };
 };

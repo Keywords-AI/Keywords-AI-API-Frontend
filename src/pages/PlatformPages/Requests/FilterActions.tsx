@@ -3,25 +3,27 @@ import { SelectInputMenu, SelectCheckBoxMenu } from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Add, Filter } from "src/components/Icons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import { RootState, RawFilterOption, LogItem, Choice } from "src/types";
+import {
+  RootState,
+  RawFilterOption,
+  LogItem,
+  Choice,
+  Operator,
+} from "src/types";
 import { getRequestLogs, addFilter } from "src/store/actions";
-import { RequestFilters } from "./RequestFilter";
-import { TimeFilter, TextFilter, NumberFilter } from "./FilterValueField";
+import { InputFieldFilter } from "./FilterValueField";
+import { setFilterType } from "src/store/actions";
 
 type SecondStepFields = "selection" | "text" | "number" | "datetime-local";
 
-
-
-
-
 export function FilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
-  const [filterType, setFilterType] = useState<keyof LogItem | undefined>(
-    undefined
-  );
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOptions
+  );
+  const filterType = useTypedSelector(
+    (state: RootState) => state.requestLogs.filterType
   );
   const changeFieldType =
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
@@ -52,7 +54,7 @@ export function FilterActions({ type }: { type: string }) {
     : [];
 
   const selectMetric = (metric: keyof LogItem) => {
-    setFilterType(metric);
+    dispatch(setFilterType(metric));
   };
   const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
@@ -76,7 +78,7 @@ export function FilterActions({ type }: { type: string }) {
   };
   const handleDropdownOpen = (open) => {
     setStart(open);
-    setFilterType(undefined);
+    dispatch(setFilterType(undefined));
   };
   let trigger: React.ReactNode;
   switch (type) {
@@ -92,10 +94,10 @@ export function FilterActions({ type }: { type: string }) {
       trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
       break;
   }
-
+  console.log(filterType, changeFieldType)
   return (
     <>
-      {changeFieldType === "selection" && (
+      {!filterType || (filterType && changeFieldType==="selection") ? (
         <SelectInputMenu
           trigger={trigger}
           open={start}
@@ -105,15 +107,13 @@ export function FilterActions({ type }: { type: string }) {
           items={filterType ? secondStepItems : firstStepItems}
           multiple={filterType ? true : false}
         />
-      )}
-      {changeFieldType === "datetime-local" && filterType &&(
-        <TimeFilter filterOption={filterOptions[filterType]!} />
-      )}
-      {changeFieldType === "text" && filterType &&(
-        <TextFilter filterOption={filterOptions[filterType]!} />
-      )}
-      {changeFieldType === "number" && filterType &&(
-        <NumberFilter filterOption={filterOptions[filterType]!} />
+      ) : (
+        <InputFieldFilter
+          filterOption={filterOptions[filterType]!}
+          defaultOperator={
+            filterOptions[filterType]?.operator_choices?.[0]?.value as Operator
+          }
+        />
       )}
     </>
   );

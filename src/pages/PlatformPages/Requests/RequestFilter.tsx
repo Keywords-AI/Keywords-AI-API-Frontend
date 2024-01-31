@@ -3,6 +3,8 @@ import {
   RequestFilter as RequestFilterType,
   FilterObject,
   RequestFilters as RequestFiltersType,
+  RawFilterOption,
+  Operator
 } from "src/types";
 import { Down } from "src/components/Icons";
 import {
@@ -16,7 +18,7 @@ import { DotsButton } from "src/components/Buttons";
 import { deleteFilter, updateFilter } from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
-import { useForm } from "react-hook-form";
+import { InputFieldFilter } from "./FilterValueField";
 
 export const RequestFilters: RequestFiltersType = {
   selection: {
@@ -37,7 +39,7 @@ export const RequestFilters: RequestFiltersType = {
           align="end"
           trigger={<Button variant="small-select" text={displayName} />}
           value={values as string[]}
-          items={choices}
+          items={choices || []}
           onChange={onChange}
           multiple={true}
         />
@@ -86,10 +88,18 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
+<<<<<<< HEAD
 
   const filterOption = filterOptions[filter.metric!];
   const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
   console.log(RequestFilter);
+=======
+  const [start, setStart] = React.useState<boolean|undefined>(false);
+  const filterOption = filterOptions[filter.metric!];
+  const RequestFilter = RequestFilters[filter.value_field_type ?? "selection"];
+
+
+>>>>>>> main
   return (
     <form className="flex flex-row items-center gap-[2px]">
       <Button
@@ -126,7 +136,7 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
           );
         }}
       />
-      {RequestFilter?.changeField({
+      {/* {RequestFilter?.changeField({
         values: filter.value,
         choices: filterOption?.value_choices,
         onChange: (filterValues) => {
@@ -144,7 +154,25 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
             })
           );
         },
-      })}
+      })} */}
+      {filterOption?.value_field_type === "selection" ? (
+        <SelectInputMenu
+          trigger={<Button variant="small" text={filter.display_name} />}
+          open={start}
+          setOpen={setStart}
+          onChange={()=>{}}
+          align="start"
+          items={filterOption?.value_choices || []}
+          multiple={true}
+        />
+      ) : (
+        <InputFieldFilter
+          filterOption={filterOption as RawFilterOption}
+          defaultOperator={
+            filterOption?.operator_choices?.[0]?.value as Operator
+          }
+        />
+      )}
       {
         <DotsButton
           icon={Close}
