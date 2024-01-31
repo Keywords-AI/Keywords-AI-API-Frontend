@@ -5,8 +5,7 @@ import {
   SET_SIDE_PANEL_OPEN,
   SET_DISPLAY_COLUMNS,
   SET_FILTER_OPEN,
-  SET_FIRST_FILTER,
-  SET_SECOND_FILTER,
+  SET_FILTER_TYPE,
   SET_FILTERS,
   ADD_FILTER,
   SET_PAGINATION,
@@ -34,10 +33,8 @@ type StateType = {
   sidePanelOpen: boolean;
   displayColumns: LogColumnKey[];
   filterOpen: boolean;
-  firstFilter: LogColumnKey | undefined;
-  secondFilter: string | undefined;
   filters: FilterObject[];
-  currentFilter: any;
+  filterType: keyof LogItem | undefined;
   keys: any[];
   models: any[];
   filterOptions: RawFilterOptions; // Passed from backend
@@ -53,11 +50,9 @@ const initState: StateType = {
   selectedRequest: undefined,
   sidePanelOpen: false,
   displayColumns: defaultRequestLogColumns,
-  firstFilter: undefined,
-  secondFilter: undefined,
   filterOpen: false,
+  filterType: undefined,
   filters: [],
-  currentFilter: {},
   keys: [],
   models: [],
   filterOptions: {},
@@ -98,15 +93,10 @@ export default function requestLogReducer(
         ...state,
         filterOpen: action.payload,
       };
-    case SET_FIRST_FILTER:
+    case SET_FILTER_TYPE:
       return {
         ...state,
-        firstFilter: action.payload,
-      };
-    case SET_SECOND_FILTER:
-      return {
-        ...state,
-        secondFilter: action.payload,
+        filterType: action.payload,
       };
     case SET_FILTERS:
       return {
@@ -114,7 +104,7 @@ export default function requestLogReducer(
         filters: action.payload,
       };
     case ADD_FILTER:
-      console.log("action.payload", action.payload);
+
       return {
         ...state,
         filters: [...state.filters, action.payload],
@@ -132,9 +122,7 @@ export default function requestLogReducer(
     case DELETE_FILTER:
       return {
         ...state,
-        filters: state.filters.filter(
-          (filter) => filter.id !== action.payload
-        ),
+        filters: state.filters.filter((filter) => filter.id !== action.payload),
       };
     case SET_API_KEY:
       return {

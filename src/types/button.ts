@@ -19,7 +19,8 @@ export type variantType =
   | "chat"
   | "icon"
   | "footer"
-  | "small-dashed";
+  | "small-dashed"
+  | "small-select";
 
 export type ButtonProps = {
   active?: boolean;

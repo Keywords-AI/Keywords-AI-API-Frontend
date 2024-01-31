@@ -3,11 +3,11 @@ import {
   RequestFilter as RequestFilterType,
   FilterObject,
   RequestFilters as RequestFiltersType,
+  RawFilterOption,
+  Operator
 } from "src/types";
 import { Down } from "src/components/Icons";
 import {
-  SelectInput,
-  TextInputSmall,
   SelectInputSmall,
   SelectInputMenu,
 } from "src/components/Inputs";
@@ -16,96 +16,45 @@ import { DotsButton } from "src/components/Buttons";
 import { deleteFilter, updateFilter } from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
-import { useForm } from "react-hook-form";
+import { InputFieldUpdateFilter } from "./FilterValueField";
 
-export const RequestFilters: RequestFiltersType = {
-  selection: {
-    changeField: ({ values, choices, onChange }) => {
-      let value = values?.[0];
-      let displayName: string;
-      if (value === "true" || "false") value = value === "true" ? true : false;
-      if (values?.length > 1) {
-        displayName = values.length + " items";
-      } else {
-        displayName =
-          choices?.find((choice) => choice?.value === value)?.name ||
-          "selected value";
-      }
-      return (
-        <SelectInputMenu
-          // placeholder="Error"
-          align="end"
-          trigger={<Button variant="small" text={displayName} />}
-          value={values as string[]}
-          items={choices}
-          onChange={onChange}
-          multiple={true}
-        />
-      );
-    },
-  },
-  text: {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          disabled
-          defaultValue={values?.[0] as string}
-          padding="py-xxxs px-xxs"
-          width="w-[100px]"
-        />
-      );
-    },
-  },
-  number: {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          disabled
-          defaultValue={values?.[0] as string}
-          padding="py-xxxs px-xxs"
-          width="w-[100px]"
-        />
-      );
-    },
-  },
-  'datetime-local': {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          type="datetime-local"
-          defaultValue={values?.[0] as string}
-        />
-      );
-    },
-  },
-};
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
+  const [operator, setOperator] = React.useState(filter.operator);
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
   const filterOption = filterOptions[filter.metric!];
-  const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
-  console.log(filter.value_field_type);
+
   return (
-    <form className="flex flex-row items-center gap-[2px]">
+    <div className="flex flex-row items-center gap-[2px]">
       <Button
         type="button"
         disabled
-        variant="small"
+        variant="small-select"
         text={filter.display_name}
       />
       <SelectInputSmall
         headLess
         align="end"
-        // value={currentTimeRange}
-        icon={Down}
+        trigger={() => (
+          <Button
+            variant="small-select"
+            text={
+              filterOption?.operator_choices?.find((choice) => {
+                return choice?.value === operator;
+              })?.name
+            }
+          />
+        )}
         defaultValue={filterOption?.operator_choices?.[0]?.value}
+        // value={filterOption?.operator_choices?.[0]?.value}
         padding="py-xxxs px-xxs"
         gap="gap-xxs"
         choices={filterOption?.operator_choices}
         onChange={(e) => {
+          setOperator(e.currentTarget.value);
           dispatch(
             updateFilter({
               ...filter,
@@ -114,31 +63,33 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
           );
         }}
       />
-      {RequestFilter?.changeField({
-        values: filter.value,
-        choices: filterOption?.value_choices,
-        onChange: (filterValues) => {
-          let values: Array<string | boolean | number> = [];
-          for (var value of filterValues) {
-            if (value === "true" || value === "false") {
-              value = value === "true" ? true : false;
-            }
-            values.push(value);
-          }
-          dispatch(
-            updateFilter({
-              ...filter,
-              value: values,
-            })
-          );
-        },
-      })}
+      {filterOption?.value_field_type === "selection" ? (
+        <SelectInputMenu
+          trigger={<Button variant="small" text={filter.display_name} />}
+          onChange={(values)=>{
+            dispatch(
+              updateFilter({
+                ...filter,
+                value: values,
+              })
+            );
+          }}
+          value={filter.value as string[]}
+          align="start"
+          items={filterOption?.value_choices || []}
+          multiple={true}
+        />
+      ) : (
+        <InputFieldUpdateFilter
+          filter={filter}
+        />
+      )}
       {
         <DotsButton
           icon={Close}
           onClick={() => dispatch(deleteFilter(filter.id))}
         />
       }
-    </form>
+    </div>
   );
 };

@@ -253,33 +253,6 @@ export const loadingFileUpload = () => {
   };
 };
 
-export const updateSystemPrompt = (promptAndActive) => {
-  return (dispatch) => {
-    fetch(`${apiConfig.apiURL}user/update_user_system_prompt/`, {
-      headers: {
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-        "X-CSRFToken": getCookie("csrftoken"),
-      },
-      method: "PATCH",
-      body: promptAndActive,
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          try {
-            const data = await res.json();
-            dispatch({ type: "SET_USER", payload: data });
-            dispatch({ type: "NOT_FILE_UPLOAD" });
-          } catch (error) {
-            console.log(error);
-          }
-        } else {
-          console.log(await res.text());
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-};
-
 export const updateUserSQLPrompt = (promptAndActive) => {
   return (dispatch) => {
     fetch(`${apiConfig.apiURL}user/update_user_sql_prompt/`, {
