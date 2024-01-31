@@ -11,12 +11,22 @@ import {
   ABORT_STREAMINGTEXT2_REQUEST,
 } from "../actions/streamingTextAction";
 
-const initialState = [
+type StreamingState = {
+  streamingText: string;
+  isLoading: boolean;
+  error: null | string;
+  abort: boolean;
+};
+
+const initialState: StreamingState[] = [
   { streamingText: "", isLoading: false, error: null, abort: false },
   { streamingText: "", isLoading: false, error: null, abort: false },
 ];
 
-const streamingTextReducer = (state = initialState, action) => {
+const streamingTextReducer = (
+  state = initialState,
+  action
+): StreamingState[] => {
   const { type, payload } = action;
 
   switch (type) {

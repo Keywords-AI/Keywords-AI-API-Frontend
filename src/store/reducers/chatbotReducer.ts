@@ -17,10 +17,10 @@ const initState = {
   isEditing: false,
   enableCustomPrompt: false,
   customPrompt: "",
-  customPromptFile: "",
+  customPromptFile: { name: "" },
   conversations: [],
   conversation: {
-    id: 0,
+    id: undefined,
     messages: [],
   },
 };
@@ -32,7 +32,7 @@ export default function chatbotReducer(state = initState, action) {
     case SET_CUSTOM_PROMPT:
       return { ...state, customPrompt: action.payload };
     case SET_CUSTOM_PROMPT_FILE:
-      return { ...state, customPromptFile: action.payload };
+      return { ...state, customPromptFile: { name: action.payload } };
     case SET_ENABLE_CUSTOM_PROMPT:
       return { ...state, enableCustomPrompt: action.payload };
     case SET_CONVERSATION:
@@ -78,14 +78,14 @@ export default function chatbotReducer(state = initState, action) {
           ),
         },
       };
-      case REMOVE_LAST_MESSAGE:
-        return {
-          ...state,
-          conversations: {
-            ...state.conversation,
-            messages: state.conversation.messages.slice(0, -1),
-          },
-        };  
+    case REMOVE_LAST_MESSAGE:
+      return {
+        ...state,
+        conversations: {
+          ...state.conversation,
+          messages: state.conversation.messages.slice(0, -1),
+        },
+      };
     default:
       return state;
   }
