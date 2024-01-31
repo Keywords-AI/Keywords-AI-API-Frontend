@@ -20,67 +20,6 @@ import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { InputFieldFilter } from "./FilterValueField";
 
-export const RequestFilters: RequestFiltersType = {
-  selection: {
-    changeField: ({ values, choices, onChange }) => {
-      let value = values?.[0];
-      let displayName: string;
-      if (value === "true" || "false") value = value === "true" ? true : false;
-      if (values?.length > 1) {
-        displayName = values.length + " items";
-      } else {
-        displayName =
-          choices?.find((choice) => choice?.value === value)?.name ||
-          "selected value";
-      }
-      return (
-        <SelectInputMenu
-          // placeholder="Error"
-          align="end"
-          trigger={<Button variant="small-select" text={displayName} />}
-          value={values as string[]}
-          items={choices || []}
-          onChange={onChange}
-          multiple={true}
-        />
-      );
-    },
-  },
-  text: {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          disabled
-          defaultValue={values?.[0] as string}
-          padding="py-xxxs px-xxs"
-          width="w-[100px]"
-        />
-      );
-    },
-  },
-  number: {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          disabled
-          defaultValue={values?.[0] as string}
-          padding="py-xxxs px-xxs"
-          width="w-[100px]"
-        />
-      );
-    },
-  },
-  "datetime-local": {
-    changeField: ({ values, choices }) => {
-      return (
-        <TextInputSmall
-          type="datetime-local"
-          defaultValue={values?.[0] as string}
-        />
-      );
-    },
-  },
-};
 
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
@@ -88,18 +27,10 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
-<<<<<<< HEAD
-
-  const filterOption = filterOptions[filter.metric!];
-  const RequestFilter = RequestFilters[filter.value_field_type ?? "select"];
-  console.log(RequestFilter);
-=======
   const [start, setStart] = React.useState<boolean|undefined>(false);
   const filterOption = filterOptions[filter.metric!];
-  const RequestFilter = RequestFilters[filter.value_field_type ?? "selection"];
 
 
->>>>>>> main
   return (
     <form className="flex flex-row items-center gap-[2px]">
       <Button
@@ -136,25 +67,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
           );
         }}
       />
-      {/* {RequestFilter?.changeField({
-        values: filter.value,
-        choices: filterOption?.value_choices,
-        onChange: (filterValues) => {
-          let values: Array<string | boolean | number> = [];
-          for (var value of filterValues) {
-            if (value === "true" || value === "false") {
-              value = value === "true" ? true : false;
-            }
-            values.push(value);
-          }
-          dispatch(
-            updateFilter({
-              ...filter,
-              value: values,
-            })
-          );
-        },
-      })} */}
       {filterOption?.value_field_type === "selection" ? (
         <SelectInputMenu
           trigger={<Button variant="small" text={filter.display_name} />}
