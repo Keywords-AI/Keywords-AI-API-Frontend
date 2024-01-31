@@ -111,7 +111,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.average_latency.name,
-      number: `${summary.average_latency?.toFixed(3) || 0}`,
+      number: `${summary.average_latency?.toFixed(2) || 0}`,
       chartData: latencyData,
       dataKey: Metrics.average_latency.value,
       unit: true,
