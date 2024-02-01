@@ -5,6 +5,7 @@ import {
   RawFilterOptions,
   Choice,
   FilterObject,
+  CurrentFilterObject,
 } from "src/types";
 import {
   LogItem,
@@ -35,6 +36,7 @@ export const SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS";
 export const ADD_FILTER = "ADD_FILTER";
 export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
+export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
@@ -62,9 +64,9 @@ export const setFilters = (filters: FilterObject[]) => {
   };
 };
 
-export const setCurrentFilter = (filter: FilterObject) => {
+export const setCurrentFilter = (filter: CurrentFilterObject) => {
   return {
-    type: SET_FILTER_TYPE,
+    type: SET_CURRENT_FILTER,
     payload: filter,
   };
 };
@@ -153,9 +155,13 @@ export const processRequestLogs = (
       ),
       promptTokens: log.prompt_tokens,
       outputTokens: log.completion_tokens,
-      cost: `$${log.cost.toFixed(6)}`,
-      allTokens: log.completion_tokens + log.prompt_tokens,
-      latency: `${log.latency.toFixed(3)}s`, // + converts string to number
+      cost: <span className="ml-auto">{`$${log.cost.toFixed(6)}`}</span>,
+      allTokens: (
+        <span className="ml-auto">
+          {log.completion_tokens + log.prompt_tokens}
+        </span>
+      ),
+      latency: <span className="ml-auto">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,

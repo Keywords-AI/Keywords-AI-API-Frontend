@@ -4,14 +4,7 @@ import { Popover } from "src/components/Dialogs";
 import { Search, Down, Display } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import {
-  setDisplayTimeRange,
-  getDashboardData,
-  getRequestLogs,
-  setCurrentFilter,
-  setFilters,
-  addFilter,
-} from "src/store/actions";
+import { getRequestLogs, addFilter } from "src/store/actions";
 import { setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RootState } from "src/types";
@@ -46,36 +39,42 @@ export default function FilterControl() {
     filteredtypeChoices = typeChoices;
   }
 
-  const { register, handleSubmit, watch } = useForm();
+  const { register } = useForm();
   const [searchText, setSearchText] = useState("");
-  const onSubmit = (data: any) => {
-    const prompt = data.prompt;
+  const onSubmit = (e: any) => {
     const randomId = Math.random().toString(36).substring(2, 15);
     dispatch(
       addFilter({
         display_name: "Prompt",
         metric: "prompt_messages",
-        value: prompt,
+        value: [searchText],
         id: randomId,
         operator: "icontains",
-        value_field_type: "text"
+        value_field_type: "text",
       })
     );
+    setSearchText("");
+  };
+  // Use this instead of default form submit to avoid discontinuity in redux states
+  // Error: A state mutation was detected between dispatches, in the path 'requestLogs.filters.1.value'.
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSubmit(e);
+    }
   };
 
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <TextInputSmall
-          placeholder="Search prompt..."
-          icon={Search}
-          {...register("prompt", {
-            value: searchText,
-            onChange: (e) => setSearchText(e.target.value),
-          })}
-          value={searchText}
-        />
-      </form>
+      <TextInputSmall
+        placeholder="Search prompt..."
+        icon={Search}
+        {...register("prompt", {
+          value: searchText,
+          onChange: (e) => setSearchText(e.target.value),
+        })}
+        value={searchText}
+        onKeyDown={onKeyDown}
+      />
       <Button
         variant="small"
         text="Today"
