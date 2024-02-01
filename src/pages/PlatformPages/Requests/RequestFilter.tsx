@@ -5,7 +5,9 @@ import {
   RequestFilters as RequestFiltersType,
   FilterFieldType,
   RawFilterOption,
+  Operator,
 } from "src/types";
+import { Down } from "src/components/Icons";
 import { SelectInputSmall, SelectInputMenu } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
@@ -77,11 +79,12 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
     RequestFilterValueFields[filterOption?.value_field_type || "selection"];
 
   return (
-    <div className="flex flex-row items-center gap-[2px]">
+    <div className="flex flex-row items-center gap-[1px]">
       <Button
         type="button"
         disabled
         variant="small-select"
+        borderRadius="rounded-l-sm"
         text={filter.display_name}
       />
       <SelectInputSmall
@@ -123,6 +126,9 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
       {
         <DotsButton
           icon={Close}
+          borderRadius="rounded-r-sm"
+          bgColor="bg-gray-2"
+          hoverColor="bg-gray-3"
           onClick={() => dispatch(deleteFilter(filter.id))}
         />
       }

@@ -30,9 +30,10 @@ const Subheading = connect(
   );
   return (
     <div>
-      {`You’re currently on the ${name} ${interval} plan. Your organization of `}
-      <span className="text-gray-5">{userCount}</span>
-
+      You’re currently on the{" "}
+      <span className="text-gray-5">{`${name} ${interval}`}</span> plan. Your
+      organization of
+      <span className="text-gray-5">{" " + userCount}</span>
       {" users costs "}
       <span className="text-gray-5">{amount} </span>
       {" per month, and will renew on "}

@@ -91,16 +91,16 @@ export const BillingPage = () => {
       </PageParagraph>
       <Divider />
       <PageParagraph heading="Billing details">
-        <div className="flex-col items-start gap-xxs">
-          <div className="flex items-center gap-md">
-            <p className="text-sm-md text-gray-5 w-[20px]">Name</p>
-            <p className="text-sm-regular text-gray-4">
+        <div className="flex-col items-start gap-xxs flex-1 self-stretch">
+          <div className="flex items-center gap-md  ">
+            <p className="flex text-sm-md text-gray-5 w-[40px]">Name</p>
+            <p className="flex text-sm-regular text-gray-4">
               {currentBillingData?.name}
             </p>
           </div>
-          <div className="flex items-center gap-md">
-            <p className="text-sm-md text-gray-5 w-[20px]">Email</p>
-            <p className="text-sm-regular text-gray-4">
+          <div className="flex items-center gap-md flex-1 self-stretch">
+            <p className="flex text-sm-md text-gray-5 w-[40px]">Email</p>
+            <p className="flex text-sm-regular text-gray-4">
               {currentBillingData?.email}
             </p>
           </div>

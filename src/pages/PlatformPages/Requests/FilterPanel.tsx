@@ -22,7 +22,8 @@ export function FilterPanel() {
   const location = useLocation();
   const [showPopover, setShowPopover] = useState(false);
   const dispatch = useTypedDispatch();
-  const currentTimeRange = new URLSearchParams(location.search).get("time_range_type") || "all";
+  const currentTimeRange =
+    new URLSearchParams(location.search).get("time_range_type") || "all";
   const showColumns = useTypedSelector(
     (state: RootState) => state.requestLogs.displayColumns
   );
@@ -34,6 +35,7 @@ export function FilterPanel() {
   useEffect(() => {
     if (displayProperties) {
       dispatch(setDisplayColumns(checkBoxFieldToList(displayProperties)));
+      console.log("displayProperties", displayProperties);
       dispatch(
         updateUser({ display_properties: displayProperties }, () => {}, true)
       );
@@ -53,13 +55,14 @@ export function FilterPanel() {
       }
       open={showPopover}
       setOpen={setShowPopover}
+      padding="px-sm py-xs"
       side="bottom"
       sideOffset={5}
       align="end"
       width="w-[320px]"
     >
       <div className={"flex flex-col gap-xxs items-end"}>
-        <div className="flex flex-col items-start gap-sm self-stretch">
+        <div className="flex flex-col items-start gap-xs self-stretch">
           <div className="flex flex-col items-start gap-xs self-stretch">
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Ordering</span>
@@ -81,9 +84,7 @@ export function FilterPanel() {
                   const value = e.target.value;
                   const params = new URLSearchParams(window.location.search);
                   if (value !== params.get("sort_by")) {
-                    dispatch(
-                      updateUser({ sort_by: value }, () => {}, true)
-                    );
+                    dispatch(updateUser({ sort_by: value }, () => {}, true));
                     setQueryParams({ sort_by: value }, navigate);
                     dispatch(getRequestLogs());
                   }
