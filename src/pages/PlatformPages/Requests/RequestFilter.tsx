@@ -34,20 +34,15 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
   "datetime-local": (filterToUpdate, filterOption, onChange) => {
     return <InputFieldUpdateFilter filter={filterToUpdate} />;
   },
-  selection: (filterToUpdate, filterOption) => {
+  selection: (filterToUpdate, filterOption, onChange) => {
     const [open, setOpen] = React.useState<boolean|undefined>(false);
     const dispatch = useTypedDispatch();
     const currentFilter = useTypedSelector(
       (state) => state.requestLogs.currentFilter
     );
     const handleOpen = (opening: boolean | undefined) => {
-      if (currentFilter?.value && currentFilter?.value.length > 0 && !opening) { // Close the dropdown if the filter has a value
-        dispatch(
-          updateFilter({
-            ...filterToUpdate,
-            value: currentFilter.value,
-          })
-        );
+      if (opening) {
+        dispatch(setCurrentFilter(filterToUpdate));
       }
       setOpen(opening);
     }
@@ -56,9 +51,7 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
         trigger={<Button variant="small" text={filterToUpdate.display_name} />}
         open={open}
         setOpen={handleOpen}
-        onChange={(values) => {
-          dispatch(setCurrentFilter({ ...currentFilter, value: values }));
-        }}
+        onChange={onChange}
         value={filterToUpdate.value as string[]}
         align="start"
         items={filterOption?.value_choices || []}
