@@ -71,9 +71,11 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const summary_type =
+    new URLSearchParams(location.search).get("summary_type") || "daily";
   useEffect(() => {
     getDashboardData();
-  }, [firstName, performance_param, breakdown_type]);
+  }, [firstName, performance_param, breakdown_type, summary_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
