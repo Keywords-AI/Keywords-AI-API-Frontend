@@ -6,6 +6,7 @@ import {
   addFilter,
   setFilterType,
   updateFilter,
+  setCurrentFilter
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
 import { TextInputSmall } from "src/components/Inputs";
@@ -33,7 +34,7 @@ export const InputFieldFilter = ({
         id: Math.random().toString(36).substring(2, 15),
       })
     );
-    dispatch(setFilterType(undefined));
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -55,7 +56,7 @@ export const InputFieldFilter = ({
         variant="small"
         text="Cancel"
         type="button"
-        onClick={() => dispatch(setFilterType(undefined))}
+        onClick={() => dispatch(dispatch(setCurrentFilter({ metric: undefined, id: "" })))}
       />
     </div>
   );

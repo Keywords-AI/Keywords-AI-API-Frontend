@@ -150,7 +150,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       </div>
       <div className="flex-col items-start self-stretch mt-[44px]">
         {!displayLog && (
-          <div className="flex-col pt-sm py-md px-lg items-start gap-xs self-stretch">
+          <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
             {Object.keys(displayObj).map((key, index) => {
               return (
                 <div
@@ -217,7 +217,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </React.Fragment>
             );
           })}
-        <Divider />
       </div>
     </div>
   );
