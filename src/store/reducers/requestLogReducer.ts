@@ -15,12 +15,13 @@ import {
   SET_FILTER_OPTIONS,
   DELETE_FILTER,
   UPDATE_FILTER,
+  SET_CURRENT_FILTER
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { LogColumnKey } from "src/types";
 import { defaultRequestLogColumns } from "src/utilities/constants";
-import { FilterObject, RawFilterOptions } from "src/types";
+import { FilterObject, RawFilterOptions, CurrentFilterObject } from "src/types";
 
 type StateType = {
   logs: LogItem[];
@@ -34,9 +35,10 @@ type StateType = {
   displayColumns: LogColumnKey[];
   filterOpen: boolean;
   filters: FilterObject[];
-  filterType: keyof LogItem | undefined;
   keys: any[];
   models: any[];
+  filterType: keyof LogItem | undefined;
+  currentFilter: CurrentFilterObject;
   filterOptions: RawFilterOptions; // Passed from backend
 };
 
@@ -52,6 +54,9 @@ const initState: StateType = {
   displayColumns: defaultRequestLogColumns,
   filterOpen: false,
   filterType: undefined,
+  currentFilter: {
+    id: "",
+  },
   filters: [],
   keys: [],
   models: [],
@@ -103,8 +108,12 @@ export default function requestLogReducer(
         ...state,
         filters: action.payload,
       };
+    case SET_CURRENT_FILTER:
+      return {
+        ...state,
+        currentFilter: action.payload,
+      };
     case ADD_FILTER:
-
       return {
         ...state,
         filters: [...state.filters, action.payload],
