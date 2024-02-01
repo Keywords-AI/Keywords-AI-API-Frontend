@@ -153,9 +153,13 @@ export const processRequestLogs = (
       ),
       promptTokens: log.prompt_tokens,
       outputTokens: log.completion_tokens,
-      cost: `$${log.cost.toFixed(6)}`,
-      allTokens: log.completion_tokens + log.prompt_tokens,
-      latency: `${log.latency.toFixed(3)}s`, // + converts string to number
+      cost: <span className="ml-auto">{`$${log.cost.toFixed(6)}`}</span>,
+      allTokens: (
+        <span className="ml-auto">
+          {log.completion_tokens + log.prompt_tokens}
+        </span>
+      ),
+      latency: <span className="ml-auto">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,
