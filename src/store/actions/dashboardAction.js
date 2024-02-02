@@ -289,7 +289,19 @@ export const getDashboardData = (
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
     }
-
+    if (params.get("summary_type") === null) {
+      params.set("summary_type", getState().dashboard.displayFilter.timeRange);
+    }
+    if (params.get("metric") === null) {
+      params.set("metric", getState().dashboard.displayFilter.metric);
+    }
+    if (params.get("breakdown") === null) {
+      params.set("breakdown", getState().dashboard.displayFilter.breakdown);
+    }
+    if (params.get("type") === null) {
+      params.set("type", getState().dashboard.displayFilter.type);
+    }
+    console.log("params", params.toString());
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { SelectInputMenu, SelectCheckBoxMenu } from "src/components/Inputs";
+import {
+  SelectInputMenu,
+  SelectCheckBoxMenu,
+  TextInput,
+} from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Add, Filter } from "src/components/Icons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
@@ -13,6 +17,8 @@ import {
 import { addFilter } from "src/store/actions";
 import { InputFieldFilter } from "./FilterValueField";
 import { setFilterType, setCurrentFilter } from "src/store/actions";
+import { Modal } from "src/components/Dialogs";
+import { useForm } from "react-hook-form";
 
 export function FilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
@@ -63,7 +69,7 @@ export function FilterActions({ type }: { type: string }) {
 
   const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
-      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue}));
+      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
 
@@ -73,8 +79,7 @@ export function FilterActions({ type }: { type: string }) {
       dispatch(
         addFilter({
           display_name:
-            filterOptions[currentFilter.metric]?.display_name ??
-            "failed",
+            filterOptions[currentFilter.metric]?.display_name ?? "failed",
           metric: filterType!,
           operator:
             (filterOptions[currentFilter.metric]?.operator_choices?.[0]
@@ -117,13 +122,76 @@ export function FilterActions({ type }: { type: string }) {
           multiple={filterType ? true : false}
         />
       ) : (
-        <InputFieldFilter
-          filterOption={filterOptions[filterType]!}
-          defaultOperator={
-            filterOptions[filterType]?.operator_choices?.[0]?.value as Operator
-          }
-        />
+        <>
+          <InputModal
+            filterOption={filterOptions[filterType]}
+            defaultOperator={
+              filterOptions[filterType]?.operator_choices?.[0]
+                ?.value as Operator
+            }
+          />
+          {/* <InputFieldFilter
+            filterOption={filterOptions[filterType]!}
+            defaultOperator={
+              filterOptions[filterType]?.operator_choices?.[0]
+                ?.value as Operator
+            }
+          /> */}
+        </>
       )}
     </>
   );
 }
+
+const InputModal = ({ filterOption, defaultOperator }) => {
+  const { register, handleSubmit, reset } = useForm();
+  const [open, setOpen] = useState(true);
+  const dispatch = useTypedDispatch();
+  return (
+    <Modal
+      title={`Filter by ${filterOption.display_name}`}
+      open={open}
+      setOpen={setOpen}
+      width="w-[600px]"
+    >
+      <div className="flex-col items-center gap-md self-stretch">
+        <TextInput {...register("filterValue")} />
+        <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
+          <div className="flex justify-end items-center gap-xs">
+            <Button
+              variant="r4-black"
+              text="Cancel"
+              onClick={() => {
+                reset();
+                setOpen(false);
+                dispatch(
+                  dispatch(setCurrentFilter({ metric: undefined, id: "" }))
+                );
+              }}
+            />
+            <Button
+              variant="r4-primary"
+              text="Apply"
+              onClick={() => {
+                setOpen(false);
+                handleSubmit((data) => {
+                  dispatch(
+                    addFilter({
+                      metric: filterOption.metric,
+                      value: [data.filterValue],
+                      operator: defaultOperator,
+                      value_field_type: filterOption.value_field_type,
+                      display_name: filterOption.display_name,
+                      id: Math.random().toString(36).substring(2, 15),
+                    })
+                  );
+                  dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+                })();
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+};

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { SelectInput } from "src/components/Inputs";
 import { Popover } from "src/components/Dialogs";
-import { Down, Display } from "src/components/Icons";
+import { Down, Display, AlphanumericKey } from "src/components/Icons";
 import { Button, CheckBoxButtonSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { Divider } from "src/components/Sections";
 import { RootState } from "src/types";
 import { updateUser, getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   requestLogColumns,
   requestLogTagColumns,
@@ -16,12 +17,24 @@ import { useForm } from "react-hook-form";
 import { setDisplayColumns } from "src/store/actions";
 import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 import { setQueryParams } from "src/utilities/navigation";
+import Tooltip from "src/components/Misc/Tooltip";
 
 export function FilterPanel() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showPopover, setShowPopover] = useState(false);
   const dispatch = useTypedDispatch();
+  const { enableScope, disableScope } = useHotkeysContext();
+
+  useHotkeys(
+    "d",
+    () => {
+      setShowPopover((prev) => !prev);
+    },
+    {
+      scopes: "request_log",
+    }
+  );
   const currentTimeRange =
     new URLSearchParams(location.search).get("time_range_type") || "all";
   const showColumns = useTypedSelector(
@@ -41,17 +54,37 @@ export function FilterPanel() {
       );
     }
   }, [displayProperties]);
+  useEffect(() => {
+    enableScope("request_log");
+    return () => {
+      disableScope("request_log");
+    };
+  }, []);
   return (
     <Popover
       trigger={
-        <Button
-          variant="small"
-          text="Display"
-          icon={Display}
-          secIcon={Down}
-          secIconPosition="right"
-          onClick={() => setShowPopover((prev) => !prev)}
-        />
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            content={
+              <>
+                <p className="caption text-gray-4">Show display options</p>
+                <AlphanumericKey value={"D"} />
+              </>
+            }
+          >
+            <Button
+              variant="small"
+              text="Display"
+              icon={Display}
+              secIcon={Down}
+              secIconPosition="right"
+              onClick={() => setShowPopover((prev) => !prev)}
+            />
+          </Tooltip>
+        </div>
       }
       open={showPopover}
       setOpen={setShowPopover}

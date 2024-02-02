@@ -71,6 +71,8 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const summary_type =
+    new URLSearchParams(location.search).get("summary_type") || "daily";
   useEffect(() => {
     getDashboardData();
   }, [performance_param, breakdown_type], shallowEqual);

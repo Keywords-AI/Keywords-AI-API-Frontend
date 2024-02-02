@@ -163,6 +163,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       <Tooltip
                         side="right"
                         sideOffset={8}
+                        delayDuration={1}
+                        skipDelayDuration={1}
                         content={
                           <>
                             <span className="text-gray-4 caption">
@@ -172,7 +174,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         }
                       >
                         <div>
-                          <IconButton icon={Info} />
+                          <Info />
                         </div>
                       </Tooltip>
                     )}
@@ -195,7 +197,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     "flex-col items-start gap-xxxs self-stretch px-lg ",
                     getMessageType(message.role) === "System"
                       ? "pb-md pt-sm"
-                      : "py-xxs"
+                      : "py-xxs",
+                    getMessageType(message.role) === "System"
+                      ? "shadow-border-b shadow-gray-2"
+                      : ""
                   )}
                 >
                   <div className="flex justify-between items-center self-stretch">
@@ -209,11 +214,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       }}
                     />
                   </div>
-                  <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
-                    {message.content}
+                  <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
+                    <p className="break-words overflow-auto">
+                      {message.content}
+                    </p>
                   </div>
                 </div>
-                {getMessageType(message.role) === "System" && <Divider />}
               </React.Fragment>
             );
           })}
