@@ -32,11 +32,11 @@ export type DisplayLogItem = {
   time: React.ReactNode;
   prompt: React.ReactNode;
   response: React.ReactNode;
-  cost: string;
-  latency: string;
+  cost: React.ReactNode;
+  latency: React.ReactNode;
   promptTokens: number;
   outputTokens: number;
-  allTokens: number;
+  allTokens: React.ReactNode;
   apiKey: string;
   model: string;
   failed: boolean;

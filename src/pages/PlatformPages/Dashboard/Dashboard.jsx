@@ -4,7 +4,7 @@ import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart, SentimentChart } from "src/components/Display";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   getDashboardData,
   setDateData,
@@ -73,15 +73,10 @@ function DashboardNotConnected({
     new URLSearchParams(location.search).get("breakdown") || "none";
   useEffect(() => {
     getDashboardData();
-  }, [firstName, performance_param, breakdown_type]);
+  }, [performance_param, breakdown_type], shallowEqual);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
-  };
-
-  const handleTimePeriodSelection = (selectedValue) => {
-    dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
-    getDashboardData();
   };
 
   const handleCardClick = (metricKey) => {
@@ -171,15 +166,6 @@ function DashboardNotConnected({
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
-  const currentType = useSelector(
-    (state) => state.dashboard.displayFilter.type
-  );
-  const currentBreakdown = useSelector(
-    (state) => state.dashboard.displayFilter.breakDown
-  );
-  const currentTimeRange = useSelector(
-    (state) => state.dashboard.displayFilter.timeRange
-  );
 
   const typeChoices = [
     { name: "Total", value: "total", secText: "1" },
@@ -207,17 +193,6 @@ function DashboardNotConnected({
   } else {
     filteredtypeChoices = typeChoices;
   }
-
-  // currentMetric === "number_of_requests" ||
-  //                             currentMetric === "error_count"
-  //                               ? typeChoices.filter((choice) => choice.value !== "average")
-  //                               : typeChoices;
-
-  const filteredBreakdownChoices = breakdownChoices;
-  // currentMetric === "total_tokens" ||
-  // currentMetric === "total_prompt_tokens"
-  //   ? breakdownChoices.filter((choice) => choice.value !== "by_token_type")
-  //   : breakdownChoices;
 
   // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
   if (firstTime !== undefined && firstTime) return <WelcomeState />;

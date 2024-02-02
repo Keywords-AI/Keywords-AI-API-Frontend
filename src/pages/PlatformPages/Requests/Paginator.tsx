@@ -8,6 +8,7 @@ import { getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
 import { useEffect } from "react";
+import { shallowEqual } from "react-redux";
 
 export const Paginator = () => {
   const dispatch = useTypedDispatch();
