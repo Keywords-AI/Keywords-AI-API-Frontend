@@ -275,8 +275,8 @@ export default function Modelspage() {
           {
             name: "azure-gpt-4-32k",
             icon: <OpenAI size="sm" />,
-            promptCost: "$0.0315",
-            completionCost: "$0.063",
+            promptCost: "$0.063",
+            completionCost: "$0.126",
             context: "32K",
             ratelimit: "10K RPM",
             moderation: "Filtered",
@@ -293,8 +293,8 @@ export default function Modelspage() {
           {
             name: "gpt-3.5-turbo-1106",
             icon: <OpenAI size="sm" />,
-            promptCost: "$0.00105",
-            completionCost: "$0.063",
+            promptCost: "$0.000525",
+            completionCost: "$0.0315",
             context: "32K",
             ratelimit: "10K RPM",
             moderation: "Filtered",
