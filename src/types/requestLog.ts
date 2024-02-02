@@ -15,6 +15,7 @@ export type LogItem = {
   error_message: string;
   failed: boolean;
   category: string;
+  organization_key: string; // The ID of the key
   api_key: string;
   time_to_first_token: number;
   aggregation_data: any;
@@ -36,7 +37,8 @@ export type DisplayLogItem = {
   latency: React.ReactNode;
   promptTokens: number;
   outputTokens: number;
-  allTokens: React.ReactNode;
+  allTokens: number;
+  organizationKey: string; //ID of the key
   apiKey: string;
   model: string;
   failed: boolean;
