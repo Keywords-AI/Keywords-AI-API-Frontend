@@ -307,16 +307,9 @@ export const getDashboardData = (
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    keywordsFetch({
+    keywordsRequest({
       path: `api/dashboard?${params.toString()}`,
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error");
-        } else {
-          return response.json();
-        }
-      })
       .then((data) => {
         dispatch(setDashboardData(data));
         let by_model = [];
@@ -658,21 +651,22 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     });
     byModel[key] = updatedItem;
   });
+  const returnData = Object.keys(byModel)
+  .map((key) => {
+    let time;
+    if (key.includes(":")) {
+      time = new Date();
+      time.setHours(key.split(":")[0]);
+    } else {
+      time = new Date(key);
+    }
+    return {
+      name: key,
+      timestamp: time.toString(),
+      ...byModel[key],
+    };
+  })
+  .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-  return Object.keys(byModel)
-    .map((key) => {
-      let time;
-      if (key.includes(":")) {
-        time = new Date();
-        time.setHours(key.split(":")[0]);
-      } else {
-        time = new Date(key);
-      }
-      return {
-        name: key,
-        timestamp: time.toString(),
-        ...byModel[key],
-      };
-    })
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  return returnData
 };
