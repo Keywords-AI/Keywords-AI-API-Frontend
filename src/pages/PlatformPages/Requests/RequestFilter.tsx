@@ -11,10 +11,15 @@ import { Down } from "src/components/Icons";
 import { SelectInputSmall, SelectInputMenu } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
-import { deleteFilter, setCurrentFilter, updateFilter } from "src/store/actions";
+import {
+  deleteFilter,
+  setCurrentFilter,
+  updateFilter,
+} from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { InputFieldUpdateFilter } from "./FilterValueField";
+import { current } from "@reduxjs/toolkit";
 
 type RequestFilterValueFieldType = {
   [key in FilterFieldType]: (
@@ -35,7 +40,7 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     return <InputFieldUpdateFilter filter={filterToUpdate} />;
   },
   selection: (filterToUpdate, filterOption, onChange) => {
-    const [open, setOpen] = React.useState<boolean|undefined>(false);
+    const [open, setOpen] = React.useState<boolean | undefined>(false);
     const dispatch = useTypedDispatch();
     const currentFilter = useTypedSelector(
       (state) => state.requestLogs.currentFilter
@@ -45,10 +50,18 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
         dispatch(setCurrentFilter(filterToUpdate));
       }
       setOpen(opening);
+    };
+    let displayChoice =
+      filterOption.value_choices.find((choice) => {
+        return filterToUpdate.value?.[0] === choice?.value;
+      })?.name ?? filterOption.display_name;
+    if (filterToUpdate.value && filterToUpdate.value.length > 1) {
+      displayChoice = `${filterToUpdate.value.length} items`;
     }
+
     return (
       <SelectInputMenu
-        trigger={<Button variant="small" text={filterToUpdate.display_name} />}
+        trigger={<Button variant="small" text={displayChoice as string} />}
         open={open}
         setOpen={handleOpen}
         onChange={onChange}
