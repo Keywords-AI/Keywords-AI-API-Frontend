@@ -42,9 +42,6 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
   selection: (filterToUpdate, filterOption, onChange) => {
     const [open, setOpen] = React.useState<boolean | undefined>(false);
     const dispatch = useTypedDispatch();
-    const currentFilter = useTypedSelector(
-      (state) => state.requestLogs.currentFilter
-    );
     const handleOpen = (opening: boolean | undefined) => {
       if (opening) {
         dispatch(setCurrentFilter(filterToUpdate));

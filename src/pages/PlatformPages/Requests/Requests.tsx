@@ -71,8 +71,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   useEffect(() => {
     getRequestLogs();
   }, []);
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
   const clearFilters = () => {
     setFilters([]);
   };
