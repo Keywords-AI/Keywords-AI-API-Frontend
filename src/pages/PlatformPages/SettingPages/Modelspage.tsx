@@ -5,6 +5,7 @@ import {
   Cohere,
   Google,
   Labs,
+  Mistral,
   ModelIcon,
   OpenAI,
 } from "src/components";
@@ -390,7 +391,7 @@ export default function Modelspage() {
           },
           {
             name: "mistral-tiny",
-            icon: <Google size="sm" />,
+            icon: <Mistral size="sm" />,
             promptCost: "$0.0001575",
             completionCost: "$0.000483",
             context: "32K",
@@ -399,7 +400,7 @@ export default function Modelspage() {
           },
           {
             name: "mistral-small",
-            icon: <Google size="sm" />,
+            icon: <Mistral size="sm" />,
             promptCost: "$0.000683",
             completionCost: "$0.00206",
             context: "32K",
@@ -408,7 +409,7 @@ export default function Modelspage() {
           },
           {
             name: "mistral-medium",
-            icon: <Google size="sm" />,
+            icon: <Mistral size="sm" />,
             promptCost: "$0.00287",
             completionCost: "$0.0086",
             context: "32K",

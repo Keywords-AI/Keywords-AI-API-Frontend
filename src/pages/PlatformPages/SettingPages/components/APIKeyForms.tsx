@@ -142,6 +142,7 @@ const CreateFormNotConnected = React.forwardRef(
       createApiKey(data);
     };
     const watchModelSelection = watch("preset_models");
+    console.log(watchModelSelection);
     const handleClose = (e: any) => {
       e.preventDefault();
       e.stopPropagation();
@@ -330,7 +331,7 @@ const CreateFormNotConnected = React.forwardRef(
                   type="button"
                   onClick={handleClose}
                 />
-                {watchModelSelection === undefined ? (
+                {!watchModelSelection || watchModelSelection.length < 1 ? (
                   <Button disabled variant="r4-gray-2" text="Create" />
                 ) : (
                   <Button variant="r4-primary" text="Create" />

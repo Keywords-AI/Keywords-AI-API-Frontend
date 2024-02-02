@@ -148,6 +148,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                     variant="small-dashed"
                     text="Clear filters"
                     onClick={clearFilters}
+                    iconPosition="right"
+                    icon={Close}
                   />
                 </div>
               </div>
