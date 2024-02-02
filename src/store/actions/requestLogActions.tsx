@@ -65,9 +65,11 @@ export const setFilters = (filters: FilterObject[]) => {
 };
 
 export const setCurrentFilter = (filter: CurrentFilterObject) => {
-  return {
-    type: SET_CURRENT_FILTER,
-    payload: filter,
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: SET_CURRENT_FILTER,
+      payload: filter,
+    });
   };
 };
 
@@ -155,13 +157,13 @@ export const processRequestLogs = (
       ),
       promptTokens: log.prompt_tokens,
       outputTokens: log.completion_tokens,
-      cost: <span className="ml-auto">{`$${log.cost.toFixed(6)}`}</span>,
+      cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
-        <span className="ml-auto">
+        <span className="">
           {log.completion_tokens + log.prompt_tokens}
         </span>
       ),
-      latency: <span className="ml-auto">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
+      latency: <span className="">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,
@@ -257,15 +259,12 @@ export const getRequestLogs = (postData?: any) => {
       data: postData,
     }).then((data) => {
       const results = data.results;
-      const keys = data.aggregation_data;
       // console.log(data);
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
       dispatch(setFilterOptions(data.filters_data));
       dispatch(setRequestLogs(results));
-      dispatch(setApiKey(keys.key_list));
-      dispatch(setModel(keys.model_list));
       const state = getState();
       const userFilters = state.user?.request_log_filters;
       if (!userFilters) {
@@ -275,6 +274,10 @@ export const getRequestLogs = (postData?: any) => {
         userFilters,
         data.filters_data
       );
+      const currentFilterType = state.requestLogs.currentFilter.id;
+      if (currentFilterType) { // If we are currently editing a filter, do no refresh the filters
+        return;
+      }
       dispatch({
         type: SET_FILTERS,
         payload: filters,

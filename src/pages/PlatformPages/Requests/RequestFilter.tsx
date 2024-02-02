@@ -11,10 +11,15 @@ import { Down } from "src/components/Icons";
 import { SelectInputSmall, SelectInputMenu } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
-import { deleteFilter, setCurrentFilter, updateFilter } from "src/store/actions";
+import {
+  deleteFilter,
+  setCurrentFilter,
+  updateFilter,
+} from "src/store/actions";
 import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { InputFieldUpdateFilter } from "./FilterValueField";
+import { current } from "@reduxjs/toolkit";
 
 type RequestFilterValueFieldType = {
   [key in FilterFieldType]: (
@@ -34,31 +39,32 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
   "datetime-local": (filterToUpdate, filterOption, onChange) => {
     return <InputFieldUpdateFilter filter={filterToUpdate} />;
   },
-  selection: (filterToUpdate, filterOption) => {
-    const [open, setOpen] = React.useState<boolean|undefined>(false);
+  selection: (filterToUpdate, filterOption, onChange) => {
+    const [open, setOpen] = React.useState<boolean | undefined>(false);
     const dispatch = useTypedDispatch();
     const currentFilter = useTypedSelector(
       (state) => state.requestLogs.currentFilter
     );
     const handleOpen = (opening: boolean | undefined) => {
-      if (currentFilter?.value && currentFilter?.value.length > 0 && !opening) { // Close the dropdown if the filter has a value
-        dispatch(
-          updateFilter({
-            ...filterToUpdate,
-            value: currentFilter.value,
-          })
-        );
+      if (opening) {
+        dispatch(setCurrentFilter(filterToUpdate));
       }
       setOpen(opening);
+    };
+    let displayChoice =
+      filterOption.value_choices.find((choice) => {
+        return filterToUpdate.value?.[0] === choice?.value;
+      })?.name ?? filterOption.display_name;
+    if (filterToUpdate.value && filterToUpdate.value.length > 1) {
+      displayChoice = `${filterToUpdate.value.length} items`;
     }
+
     return (
       <SelectInputMenu
-        trigger={<Button variant="small" text={filterToUpdate.display_name} />}
+        trigger={<Button variant="small" text={displayChoice as string} />}
         open={open}
         setOpen={handleOpen}
-        onChange={(values) => {
-          dispatch(setCurrentFilter({ ...currentFilter, value: values }));
-        }}
+        onChange={onChange}
         value={filterToUpdate.value as string[]}
         align="start"
         items={filterOption?.value_choices || []}
