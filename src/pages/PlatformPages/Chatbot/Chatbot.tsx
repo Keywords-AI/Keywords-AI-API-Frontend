@@ -63,7 +63,7 @@ export default function Chatbot({ chatbot }) {
             {conversation?.messages?.length > 0 ? (
               <>
                 {conversation?.messages?.map((message, index) => (
-                  <ChatMessage key={index} message={message} />
+                  <ChatMessage key={index} message={message} index={index} />
                 ))}
                 {chatError && (
                   <ChatMessage
