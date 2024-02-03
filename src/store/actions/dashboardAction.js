@@ -311,6 +311,7 @@ export const getDashboardData = (
       path: `api/dashboard?${params.toString()}`,
     })
       .then((data) => {
+        console.log(data)
         dispatch(setDashboardData(data));
         let by_model = [];
         let by_key = [];
