@@ -677,21 +677,6 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
       };
     })
     .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    .map((key) => {
-      let time;
-      if (key.includes(":")) {
-        time = new Date();
-        time.setHours(key.split(":")[0]);
-      } else {
-        time = new Date(key);
-      }
-      return {
-        name: key,
-        timestamp: time.toString(),
-        ...byModel[key],
-      };
-    })
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
   return returnData;
 };
