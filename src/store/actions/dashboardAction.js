@@ -323,6 +323,14 @@ export const getDashboardData = (
             true,
             params.get("summary_type")
           );
+          if (params.get("breakdown") === "by_model") {
+            const breakDowndata = processBreakDownData(
+              data.model_breakdown,
+              true,
+              params.get("summary_type")
+            );
+          }
+
           by_key = getgroupByData(
             data.raw_data,
             false,
@@ -652,21 +660,51 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     byModel[key] = updatedItem;
   });
   const returnData = Object.keys(byModel)
-  .map((key) => {
-    let time;
-    if (key.includes(":")) {
-      time = new Date();
-      time.setHours(key.split(":")[0]);
-    } else {
-      time = new Date(key);
-    }
-    return {
-      name: key,
-      timestamp: time.toString(),
-      ...byModel[key],
-    };
-  })
-  .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    .map((key) => {
+      let time;
+      if (key.includes(":")) {
+        time = new Date();
+        time.setHours(key.split(":")[0]);
+      } else {
+        time = new Date(key);
+      }
+      return {
+        name: key,
+        timestamp: time.toString(),
+        ...byModel[key],
+      };
+    })
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-  return returnData
+  return returnData;
+};
+
+export const processBreakDownData = (data, isModel, timeRange) => {
+  const localTimeData = data.map((item) => {
+    let newDateGroup = new Date(item.date_group);
+
+    // timeRange = "monthly";
+    if (timeRange === "yearly") {
+      newDateGroup = (new Date(item.date_group).getMonth() + 1)
+        .toString()
+        .padStart(2, "0");
+    } else if (timeRange === "monthly") {
+      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      });
+    } else if (timeRange === "weekly") {
+      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "2-digit",
+      });
+    } else {
+      newDateGroup = new Date(item.date_group).getHours() + ":00";
+    }
+    return { ...item, date_group: newDateGroup };
+  });
+  const groupByDate = _.groupBy(localTimeData, ({ date_group }) => date_group);
+  console.log("localTimeData");
 };
