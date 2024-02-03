@@ -34,6 +34,7 @@ export const Filters = () => {
 
   return (
     <div className="flex-row gap-xxxs items-center">
+      
       {filters.map((filter, index) => (
         <div
           key={filter.id}

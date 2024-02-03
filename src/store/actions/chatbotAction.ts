@@ -43,7 +43,7 @@ export const setEnableCustomPrompt = (enable) => {
     type: SET_ENABLE_CUSTOM_PROMPT,
     payload: enable,
   };
-}; // not used
+};
 
 export const setCustomPrompt = (customPrompt) => {
   if (typeof customPrompt === "object") {
@@ -53,7 +53,7 @@ export const setCustomPrompt = (customPrompt) => {
     type: SET_CUSTOM_PROMPT,
     payload: customPrompt,
   };
-}; // not used
+};
 
 export const setCustomPromptFile = (customPromptFile) => {
   return {
@@ -62,26 +62,6 @@ export const setCustomPromptFile = (customPromptFile) => {
   };
 }; // not used
 
-export const setMessages = (messages) => {
-  return {
-    type: SET_MESSAGES,
-    payload: messages,
-  };
-}; // not used
-
-export const setConversations = (conversations) => {
-  return {
-    type: SET_CONVERSATIONS,
-    payload: conversations,
-  };
-}; // not used
-
-export const setConversation = (conversation) => {
-  return {
-    type: SET_CONVERSATION,
-    payload: conversation,
-  };
-}; // not used
 
 export const deleteConversation = (id) => {
   return (dispatch, getState) => {
@@ -89,26 +69,6 @@ export const deleteConversation = (id) => {
     if (getState().chatbot.conversation?.id === id) {
       dispatch({ type: RESET_CONVERSATION });
     }
-    fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": getCookie("csrftoken"),
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res.ok) {
-          if (getState().conversation?.id === id) {
-            dispatch({ type: RESET_CONVERSATION });
-          }
-        } else if (res.status === 401) {
-        } else {
-          console.log(res.status);
-          throw new Error("Something went wrong");
-        }
-      })
-      .catch((err) => console.log(err));
   };
 };
 
@@ -220,9 +180,9 @@ export const nameConversation = (id, content) => {
 
 export const createMessage = (msg: ConversationMessage) => {
   return (dispatch: TypedDispatch) => {
+    dispatch({ type: CREATE_MESSAGE, payload: msg });
     if (msg.conversation) {
       // Given an id, or the id is not 0
-      dispatch({ type: CREATE_MESSAGE, payload: msg });
       keywordsRequest({
         data: msg,
         method: "POST",
@@ -250,19 +210,21 @@ export const readStreamChunk = (chunk: string) => {
   };
 };
 
-export const sendMessage = (msgText: string) => {
+export const sendMessage = (msgText?: string) => {
   return async (dispatch: TypedDispatch, getState: ()=>RootState) => {
     const state = getState();
     const { isLoading: streaming } = state.streamingText[0];
     const systemPrompt = state.chatbot.customPrompt;
     const conversation_id = state.chatbot.conversation.id;
-    dispatch(
-      createMessage({
-        conversation: conversation_id,
-        role: "user",
-        content: msgText,
-      })
-    );
+    if (msgText) {
+      dispatch(
+        createMessage({
+          conversation: conversation_id,
+          role: "user",
+          content: msgText,
+        })
+      );
+    }
     const messages = getState().chatbot.conversation.messages; // get messages after creating and updating the state
     if (streaming) return;
     const sessionMessages = messages.map((item) => {
@@ -270,8 +232,9 @@ export const sendMessage = (msgText: string) => {
     });
     const systemMessage = {
       role: "system",
-      content: systemPrompt,
+      content: systemPrompt || "",
     };
+    console.log("sending messages", sessionMessages);
     const messagesToSend = [systemMessage, ...sessionMessages];
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
@@ -301,8 +264,7 @@ export const sendMessage = (msgText: string) => {
 export const regenerateChatbotResponse = () => {
   return (dispatch, getState) => {
     dispatch(removeLastMessage());
-    dispatch(removeLastMessage());
-    dispatch();
+    dispatch(sendMessage());
   };
 };
 
