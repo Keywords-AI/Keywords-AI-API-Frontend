@@ -84,6 +84,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxxs">
             {filters.length > 0 === false && <FilterActions type="filter" />}
+        
             {filters.length > 0 && (
               <React.Fragment>
                 <Button
@@ -96,6 +97,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               </React.Fragment>
             )}
           </div>
+
           <FilterControl />
         </div>
         <div

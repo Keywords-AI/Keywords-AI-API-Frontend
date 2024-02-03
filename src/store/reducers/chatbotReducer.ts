@@ -48,7 +48,7 @@ export default function chatbotReducer(state = initState, action) {
     case DELETE_CONVERSATION:
       const filteredConversations = state.conversations.filter(
         (conversation) => {
-          return conversation.id !== action.payload;
+          return conversation?.id !== action.payload;
         }
       );
       return {
@@ -56,6 +56,7 @@ export default function chatbotReducer(state = initState, action) {
         conversations: filteredConversations,
       };
     case RESET_CONVERSATION:
+      console.log("RESET_CONVERSATION");
       return {
         ...state,
         conversation: initState.conversation,
@@ -74,16 +75,16 @@ export default function chatbotReducer(state = initState, action) {
         conversations: {
           ...state.conversation,
           messages: state.conversation.messages.filter(
-            (message) => message.id !== action.payload.id
+            (message) => message?.id !== action.payload.id
           ),
         },
       };
     case REMOVE_LAST_MESSAGE:
       return {
         ...state,
-        conversations: {
+        conversation: {
           ...state.conversation,
-          messages: state.conversation.messages.slice(0, -1),
+          messages: state.conversation.messages?.slice(0, -1),
         },
       };
     default:

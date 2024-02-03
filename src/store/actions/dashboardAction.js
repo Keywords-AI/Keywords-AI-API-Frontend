@@ -311,6 +311,7 @@ export const getDashboardData = (
       path: `api/dashboard?${params.toString()}`,
     })
       .then((data) => {
+        console.log(data)
         dispatch(setDashboardData(data));
         let by_model = [];
         let by_key = [];
@@ -336,6 +337,7 @@ export const getDashboardData = (
             false,
             params.get("summary_type")
           );
+          ProcessByModelData(data.data_by_model, params.get("summary_type"));
           const groupByData = {
             by_model: by_model || [],
             by_key: by_key || [],
@@ -660,6 +662,21 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
     byModel[key] = updatedItem;
   });
   const returnData = Object.keys(byModel)
+    .map((key) => {
+      let time;
+      if (key.includes(":")) {
+        time = new Date();
+        time.setHours(key.split(":")[0]);
+      } else {
+        time = new Date(key);
+      }
+      return {
+        name: key,
+        timestamp: time.toString(),
+        ...byModel[key],
+      };
+    })
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     .map((key) => {
       let time;
       if (key.includes(":")) {

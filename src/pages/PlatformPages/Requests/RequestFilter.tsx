@@ -55,10 +55,11 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     if (filterToUpdate.value && filterToUpdate.value.length > 1) {
       displayChoice = `${filterToUpdate.value.length} items`;
     }
-
     return (
       <SelectInputMenu
-        trigger={<Button variant="small" text={displayChoice as string} />}
+        trigger={
+          <Button variant="small-select" text={displayChoice as string} />
+        }
         open={open}
         setOpen={handleOpen}
         onChange={onChange}

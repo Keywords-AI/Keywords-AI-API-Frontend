@@ -26,6 +26,7 @@ export type LogItem = {
     language: string;
   };
   error_code: number;
+  cached_response: number;
 };
 
 export type DisplayLogItem = {
@@ -44,8 +45,8 @@ export type DisplayLogItem = {
   failed: boolean;
   status: {
     failed: boolean;
-    errorCode: number
-  }
+    errorCode: number;
+  };
   sentimentAnalysis: any;
 };
 
@@ -81,9 +82,13 @@ export type RequestFilter = {
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
-export type FilterFieldType = "text" | "selection" | "datetime-local" | "number"
+export type FilterFieldType =
+  | "text"
+  | "selection"
+  | "datetime-local"
+  | "number";
 
-export type Operator = "gte" | "lte" | "exact" | "icontains"
+export type Operator = "gte" | "lte" | "exact" | "icontains";
 
 export type RequestFilters = {
   [type in FilterFieldType]?: RequestFilter;

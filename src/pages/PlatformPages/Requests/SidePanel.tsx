@@ -4,18 +4,18 @@ import {
   CopyButton,
   DotsButton,
   IconButton,
+  SwitchButton,
 } from "src/components/Buttons";
 import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
-import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
+import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
 import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useState } from "react";
-import { RestorePlaygroundState } from "src/store/actions";
+import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
-import { get } from "react-hook-form";
 
 interface SidePanelProps {
   open: boolean;
@@ -27,6 +27,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   );
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
+  const [checked, setChecked] = useState(
+    logItem?.cached_response != 0 ? false : true
+  );
+  const handleCheckCacheReponse = (checked: boolean) => {
+    try {
+      dispatch(setCacheResponse(checked));
+      setChecked(checked);
+    } catch (error) {
+      console.error("Error setting cache response", error);
+    }
+  };
   const completeInteraction =
     logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
   const displayObj = {
@@ -89,6 +100,14 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Sentiment: (
       <SentimentTag
         sentiment_score={logItem?.sentiment_analysis?.sentiment_score || 0}
+      />
+    ),
+    Cached: (
+      <Tag
+        text={logItem?.cached ? "Cached" : "Not Cached"}
+        backgroundColor="bg-primary/10"
+        textColor="text-primary"
+        border=""
       />
     ),
   };
@@ -185,44 +204,54 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             })}
           </div>
         )}
-        {displayLog &&
-          completeInteraction.map((message, index) => {
-            if (!message.content) {
-              return null;
-            }
-            return (
-              <React.Fragment key={index}>
-                <div
-                  className={cn(
-                    "flex-col items-start gap-xxxs self-stretch px-lg ",
-                    getMessageType(message.role) === "System"
-                      ? "pb-md pt-sm"
-                      : "py-xxs",
-                    getMessageType(message.role) === "System"
-                      ? "shadow-border-b shadow-gray-2"
-                      : ""
-                  )}
-                >
-                  <div className="flex justify-between items-center self-stretch">
-                    <p className="text-sm-md text-gray-5">
-                      {getMessageType(message.role)}
-                    </p>
-                    <DotsButton
-                      icon={Copy}
-                      onClick={() => {
-                        navigator.clipboard.writeText(message.content);
-                      }}
-                    />
+        {displayLog && (
+          <>
+            <div className="flex py-xs px-lg justify-between items-start self-stretch">
+              <p className="text-sm-md text-gray-5">Cache response</p>
+              <SwitchButton
+                checked={checked}
+                onCheckedChange={handleCheckCacheReponse}
+              />
+            </div>
+            {completeInteraction.map((message, index) => {
+              if (!message.content) {
+                return null;
+              }
+              return (
+                <React.Fragment key={index}>
+                  <div
+                    className={cn(
+                      "flex-col items-start gap-xxxs self-stretch px-lg ",
+                      getMessageType(message.role) === "System"
+                        ? "pb-md pt-sm"
+                        : "py-xxs",
+                      getMessageType(message.role) === "System"
+                        ? "shadow-border-b shadow-gray-2"
+                        : ""
+                    )}
+                  >
+                    <div className="flex justify-between items-center self-stretch">
+                      <p className="text-sm-md text-gray-5">
+                        {getMessageType(message.role)}
+                      </p>
+                      <DotsButton
+                        icon={Copy}
+                        onClick={() => {
+                          navigator.clipboard.writeText(message.content);
+                        }}
+                      />
+                    </div>
+                    <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
+                      <p className="break-words overflow-auto">
+                        {message.content}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                    <p className="break-words overflow-auto">
-                      {message.content}
-                    </p>
-                  </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
+                </React.Fragment>
+              );
+            })}
+          </>
+        )}
       </div>
     </div>
   );

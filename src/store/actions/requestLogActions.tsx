@@ -159,9 +159,7 @@ export const processRequestLogs = (
       outputTokens: log.completion_tokens,
       cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
-        <span className="">
-          {log.completion_tokens + log.prompt_tokens}
-        </span>
+        <span className="">{log.completion_tokens + log.prompt_tokens}</span>
       ),
       latency: <span className="">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
       apiKey: log.api_key,
@@ -259,7 +257,7 @@ export const getRequestLogs = (postData?: any) => {
       data: postData,
     }).then((data) => {
       const results = data.results;
-      // console.log(data);
+      console.log(results?.[0]);
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
@@ -275,7 +273,8 @@ export const getRequestLogs = (postData?: any) => {
         data.filters_data
       );
       const currentFilterType = state.requestLogs.currentFilter.id;
-      if (currentFilterType) { // If we are currently editing a filter, do no refresh the filters
+      if (currentFilterType) {
+        // If we are currently editing a filter, do no refresh the filters
         return;
       }
       dispatch({
@@ -283,6 +282,64 @@ export const getRequestLogs = (postData?: any) => {
         payload: filters,
       });
     });
+  };
+};
+
+export const setCacheResponse = (cached: boolean) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const currentRequestLog = getState().requestLogs.selectedRequest;
+    if (!currentRequestLog) {
+      throw new Error("No request log selected");
+    }
+    const lastUserMessage = currentRequestLog.prompt_messages.findLast(
+      (message) => message.role === "user"
+    );
+    if (!lastUserMessage) {
+      throw new Error("No user message found");
+    }
+    if (cached) {
+      //
+      const body = {
+        organization_key: currentRequestLog.organization_key,
+        request_content: lastUserMessage.content,
+        response_content: currentRequestLog.completion_message.content,
+      };
+      keywordsRequest({
+        path: `api/caches/`,
+        method: "POST",
+        data: body,
+      }).then((data) => {
+        console.log(data);
+        if (!data.id) {
+          throw new Error("failed to cache");
+        }
+        const currentRequestLog = getState().requestLogs.selectedRequest;
+        if (!currentRequestLog) {
+          throw new Error("No request log selected");
+        }
+        const updatedLogs = getState().requestLogs.logs.map((log) => {
+          if (log.id === currentRequestLog.id) {
+            return {
+              ...log,
+              cached_response: data.id,
+            };
+          }
+          return log;
+        });
+        dispatch(setRequestLogs(updatedLogs));
+      });
+    } else {
+      console.log("delete cache");
+      //delete cache
+      // keywordsRequest({
+      //   path: `api/caches/`,
+      //   method: "POST",
+      //   data: body,
+      // }).then((data) => {
+      //   const results = data.results;
+      //   console.log(results);
+      // });
+    }
   };
 };
 
