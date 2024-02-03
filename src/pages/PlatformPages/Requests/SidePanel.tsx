@@ -16,7 +16,6 @@ import React, { useState } from "react";
 import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
-import { get } from "react-hook-form";
 
 interface SidePanelProps {
   open: boolean;
@@ -28,10 +27,16 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   );
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(logItem?.cached || false);
+  const [checked, setChecked] = useState(
+    logItem?.cached_response != 0 ? false : true
+  );
   const handleCheckCacheReponse = (checked: boolean) => {
-    dispatch(setCacheResponse(checked));
-    setChecked(checked);
+    try {
+      dispatch(setCacheResponse(checked));
+      setChecked(checked);
+    } catch (error) {
+      console.error("Error setting cache response", error);
+    }
   };
   const completeInteraction =
     logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];

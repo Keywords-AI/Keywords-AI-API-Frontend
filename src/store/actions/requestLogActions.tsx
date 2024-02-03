@@ -298,6 +298,7 @@ export const setCacheResponse = (cached: boolean) => {
       throw new Error("No user message found");
     }
     if (cached) {
+      //
       const body = {
         organization_key: currentRequestLog.organization_key,
         request_content: lastUserMessage.content,
@@ -308,12 +309,27 @@ export const setCacheResponse = (cached: boolean) => {
         method: "POST",
         data: body,
       }).then((data) => {
+        console.log(data);
         if (!data.id) {
           throw new Error("failed to cache");
         }
-        dispatch(setRequestLogs(getState().requestLogs.logs.map((log) => {if(log.id === currentRequestLog.id) {log.cached = true} return log})));
+        const currentRequestLog = getState().requestLogs.selectedRequest;
+        if (!currentRequestLog) {
+          throw new Error("No request log selected");
+        }
+        const updatedLogs = getState().requestLogs.logs.map((log) => {
+          if (log.id === currentRequestLog.id) {
+            return {
+              ...log,
+              cached_response: data.id,
+            };
+          }
+          return log;
+        });
+        dispatch(setRequestLogs(updatedLogs));
       });
     } else {
+      console.log("delete cache");
       //delete cache
       // keywordsRequest({
       //   path: `api/caches/`,
