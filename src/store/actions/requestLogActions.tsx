@@ -259,7 +259,7 @@ export const getRequestLogs = (postData?: any) => {
       data: postData,
     }).then((data) => {
       const results = data.results;
-      // console.log(data);
+      console.log(results?.[0]);
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
