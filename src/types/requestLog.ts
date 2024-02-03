@@ -26,6 +26,7 @@ export type LogItem = {
     language: string;
   };
   error_code: number;
+  cached: boolean;
 };
 
 export type DisplayLogItem = {

@@ -58,7 +58,9 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
 
     return (
       <SelectInputMenu
-        trigger={<Button variant="small" text={displayChoice as string} />}
+        trigger={
+          <Button variant="small-select" text={displayChoice as string} />
+        }
         open={open}
         setOpen={handleOpen}
         onChange={onChange}
