@@ -147,6 +147,21 @@ const InputModal = ({ filterOption, defaultOperator }) => {
   const { register, handleSubmit, reset } = useForm();
   const [open, setOpen] = useState(true);
   const dispatch = useTypedDispatch();
+  const onSubmit = (data) => {
+    console.log(data);
+    dispatch(
+      addFilter({
+        metric: filterOption.metric,
+        value: [data.filterValue],
+        operator: defaultOperator,
+        value_field_type: filterOption.value_field_type,
+        display_name: filterOption.display_name,
+        id: Math.random().toString(36).substring(2, 15),
+      })
+    );
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    setOpen(false);
+  };
   return (
     <Modal
       title={`Filter by ${filterOption.display_name}`}
@@ -154,8 +169,15 @@ const InputModal = ({ filterOption, defaultOperator }) => {
       setOpen={setOpen}
       width="w-[600px]"
     >
-      <div className="flex-col items-center gap-md self-stretch">
-        <TextInput {...register("filterValue")} />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex-col items-center gap-md self-stretch"
+      >
+        <TextInput
+          placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+          {...register("filterValue")}
+          type={filterOption.value_field_type}
+        />
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">
             <Button
@@ -169,29 +191,10 @@ const InputModal = ({ filterOption, defaultOperator }) => {
                 );
               }}
             />
-            <Button
-              variant="r4-primary"
-              text="Apply"
-              onClick={() => {
-                setOpen(false);
-                handleSubmit((data) => {
-                  dispatch(
-                    addFilter({
-                      metric: filterOption.metric,
-                      value: [data.filterValue],
-                      operator: defaultOperator,
-                      value_field_type: filterOption.value_field_type,
-                      display_name: filterOption.display_name,
-                      id: Math.random().toString(36).substring(2, 15),
-                    })
-                  );
-                  dispatch(setCurrentFilter({ metric: undefined, id: "" }));
-                })();
-              }}
-            />
+            <Button variant="r4-primary" text="Apply" type="submit" />
           </div>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };
