@@ -118,7 +118,7 @@ const initState = {
   apiData: [],
   avgApiData: [],
   displayFilter: loadFilter(),
-  groupByData: {},
+  groupByData: [],
   p50Data: [],
   p90Data: [],
   p95Data: [],
