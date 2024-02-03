@@ -73,6 +73,7 @@ export default function FilterControl() {
           onChange: (e) => setSearchText(e.target.value),
         })}
         value={searchText}
+        width="w-[192px]"
         onKeyDown={onKeyDown}
       />
       <Button
