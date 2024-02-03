@@ -63,8 +63,7 @@ const Routes = ({ getUser, user, organization }) => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     if (organization?.id) { // The init state of org is not empty, but the id is null
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
-      if (!onOnboradingPage && !organization.onboarded) {
-        console.log(onOnboradingPage, organization.onboarded)
+      if (!onOnboradingPage && !organization?.active_subscription) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }

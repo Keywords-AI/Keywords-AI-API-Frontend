@@ -48,9 +48,9 @@ export const OnboardingPage = () => {
   const formfields = [
     <CreateOrganization />,
     // <InviteTeam />,
-    <IdentifyUseCase />,
-    <PrioritizeObj />,
-    <OptimizeCosts />,
+    // <IdentifyUseCase />,
+    // <PrioritizeObj />,
+    // <OptimizeCosts />,
   ];
   useEffect(() => {
     if (organization?.onboarded) {
@@ -80,11 +80,11 @@ export const OnboardingPage = () => {
                 register, watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  console.log("button action", index + 1 == formfields.length);
                   dispatch(updateOrganization({ curr_onboarding_step: index + 2 }));
+                  console.log("organization", organization);
                   if (index + 1 == formfields.length) {
                     // end of forms to fill
-                    if (!organization.active_subscription) {
+                    if (!organization?.active_subscription) {
                       navigate("/onboarding/plans");
                     }
                   } else {
