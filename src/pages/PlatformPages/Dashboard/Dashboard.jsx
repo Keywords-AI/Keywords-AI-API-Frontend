@@ -24,6 +24,7 @@ import { PanelGraph } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
+import { color } from "@uiw/react-codemirror";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -73,9 +74,13 @@ function DashboardNotConnected({
     new URLSearchParams(location.search).get("breakdown") || "none";
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
-  useEffect(() => {
-    getDashboardData();
-  }, [performance_param, breakdown_type], shallowEqual);
+  useEffect(
+    () => {
+      getDashboardData();
+    },
+    [performance_param, breakdown_type],
+    shallowEqual
+  );
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -88,7 +93,6 @@ function DashboardNotConnected({
   if (breakdown_type !== "none") {
     colorData = breakdown_type === "by_model" ? modelColors : keyColors;
   }
-
   const metrics = [
     {
       title: Metrics.number_of_requests.name,
@@ -229,7 +233,7 @@ function DashboardNotConnected({
                         className={cn("w-[8px] h-[8px] rounded-[2px] ")}
                         style={{
                           backgroundColor:
-                            colorTagsClasses[index % colorTagsClasses.length],
+                            colorData[name] || "rgba(0, 0, 0, 0.1)",
                         }}
                       ></div>
                       <span className="caption text-gray-4">

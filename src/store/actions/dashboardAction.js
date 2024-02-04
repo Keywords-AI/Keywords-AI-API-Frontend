@@ -6,6 +6,7 @@ import {
   sliceChartData,
   formatDate,
   getColorMap,
+  addMissingDate,
 } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
@@ -301,7 +302,7 @@ export const getDashboardData = (
     if (params.get("type") === null) {
       params.set("type", getState().dashboard.displayFilter.type);
     }
-    console.log("params", params.toString());
+    const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
@@ -311,30 +312,29 @@ export const getDashboardData = (
       path: `api/dashboard?${params.toString()}`,
     })
       .then((data) => {
-        console.log(data)
+        const endTime = performance.now(); // End time
+
+        console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
         dispatch(setDashboardData(data));
-        let by_model = [];
-        let by_key = [];
-        if (
-          params.get("breakdown") === "by_model" ||
-          params.get("breakdown") === "by_key"
-        ) {
-          by_model = getgroupByData(
-            data.raw_data,
+
+        if (params.get("breakdown") === "by_model") {
+          const breakDowndata = processBreakDownData(
+            data.model_breakdown,
             true,
-            params.get("summary_type")
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
           );
-          by_key = getgroupByData(
-            data.raw_data,
+          dispatch(setGroupByData(breakDowndata));
+        } else if (params.get("breakdown") === "by_key") {
+          const breakDowndata = processBreakDownData(
+            data.key_breakdown,
             false,
-            params.get("summary_type")
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
           );
-          ProcessByModelData(data.data_by_model, params.get("summary_type"));
-          const groupByData = {
-            by_model: by_model || [],
-            by_key: by_key || [],
-          };
-          dispatch(setGroupByData(groupByData));
+          dispatch(setGroupByData(breakDowndata));
         }
 
         const dataList = fillMissingDate(
@@ -396,7 +396,13 @@ export const getDashboardData = (
         );
         dispatch(
           setLatencyData(
-            sliceChartData(dataList, "date_group", "average_latency")
+            sliceChartData(dataList, "date_group", [
+              "average_latency",
+              "latency_p_50",
+              "latency_p_90",
+              "latency_p_95",
+              "latency_p_99",
+            ])
           )
         );
         dispatch(
@@ -428,6 +434,8 @@ export const getDashboardData = (
         dispatch(setP90Data(data?.summary.latency_p_90));
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
+        const endTime2 = performance.now(); // End time
+        console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
       .catch((error) => {
         console.log("error", error);
@@ -673,31 +681,80 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   return returnData;
 };
 
-const ProcessByModelData = (data, timeRange) => {
-  data = data.map((item) => {
+const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+  const localTimeData = data.map((item) => {
     let newDateGroup = new Date(item.date_group);
 
-    // timeRange = "monthly";
     if (timeRange === "yearly") {
-      newDateGroup = (new Date(item.timestamp).getMonth() + 1)
+      newDateGroup = (new Date(item.date_group).getMonth() + 1)
         .toString()
         .padStart(2, "0");
     } else if (timeRange === "monthly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
+      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
         year: "2-digit",
       });
     } else if (timeRange === "weekly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
+      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
         year: "2-digit",
       });
     } else {
-      newDateGroup = new Date(item.timestamp).getHours() + ":00";
+      newDateGroup = new Date(item.date_group).getHours() + ":00";
     }
-    return { ...item, date_group: newDateGroup };
+    return {
+      ...item,
+      date_group: newDateGroup,
+      timestamp: new Date(item.date_group).toString(),
+    };
   });
-  const by_date_group = _.groupBy(data, ({ date_group }) => date_group);
+  const groupByDate = _.groupBy(localTimeData, ({ date_group }) => date_group);
+  let returnData = [];
+  Object.keys(groupByDate).forEach((key) => {
+    const date_group = key;
+    let obj = {};
+    obj.date_group = date_group;
+
+    groupByDate[key].forEach((item) => {
+      const { date_group, timestamp, ...rest } = item;
+      obj.timestamp = new Date(timestamp).toString();
+      const itemName = isModel ? rest.model : rest.organization_key__name;
+      isModel ? delete rest.model : delete rest.organization_key__name;
+      obj[itemName] = rest;
+    });
+    returnData.push(obj);
+  });
+
+  returnData = returnData.sort(
+    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+  );
+  let modelKeys = [];
+  returnData = returnData.map((item) => {
+    const { date_group, timestamp, ...models } = item;
+    const modelSection = {};
+    modelKeys.push(...Object.keys(models));
+    // console.log("modelKeys", modelKeys);
+    modelKeys = [...new Set(modelKeys)];
+    Object.keys(models).forEach((modelKey) => {
+      modelSection[modelKey] = models[modelKey][metric];
+    });
+
+    return { date_group, ...modelSection };
+  });
+  returnData = addMissingDate(returnData, timeRange, timeFrame);
+  return returnData;
+};
+
+const getBreakDownColors = (data, metric, isModel) => {
+  const sorted = data
+    .sort((a, b) => a.metric - b.metric)
+    .map((item) => (isModel ? item.model : item.organization_key__name));
+  // console.log("sorted", sorted);
+  const colorMap = {};
+  // modelKeys.forEach((key) => {
+  //   colorMap[key] = colorTagsClasses[key];
+  // });
+  return colorMap;
 };
