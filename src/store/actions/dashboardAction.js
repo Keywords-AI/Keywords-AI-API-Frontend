@@ -315,45 +315,25 @@ export const getDashboardData = (
         dispatch(setDashboardData(data));
         let by_model = [];
         let by_key = [];
-        if (
-          params.get("breakdown") === "by_model" ||
-          params.get("breakdown") === "by_key"
-        ) {
-          // by_model = getgroupByData(
-          //   data.raw_data,
-          //   true,
-          //   params.get("summary_type")
-          // );
-          if (params.get("breakdown") === "by_model") {
-            const breakDowndata = processBreakDownData(
-              data.model_breakdown,
-              true,
-              params.get("summary_type"),
-              params.get("metric"),
-              getState().dashboard.timeFrame
-            );
-            getBreakDownColors(
-              data.model_breakdown,
-              params.get("metric"),
-              true
-            );
-            dispatch(setGroupByData(breakDowndata));
-          } else if (params.get("breakdown") === "by_key") {
-            const breakDowndata = processBreakDownData(
-              data.key_breakdown,
-              false,
-              params.get("summary_type"),
-              params.get("metric"),
-              getState().dashboard.timeFrame
-            );
-            dispatch(setGroupByData(breakDowndata));
-          }
 
-          // by_key = getgroupByData(
-          //   data.raw_data,
-          //   false,
-          //   params.get("summary_type")
-          // );
+        if (params.get("breakdown") === "by_model") {
+          const breakDowndata = processBreakDownData(
+            data.model_breakdown,
+            true,
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
+          );
+          dispatch(setGroupByData(breakDowndata));
+        } else if (params.get("breakdown") === "by_key") {
+          const breakDowndata = processBreakDownData(
+            data.key_breakdown,
+            false,
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
+          );
+          dispatch(setGroupByData(breakDowndata));
         }
 
         const dataList = fillMissingDate(
@@ -415,7 +395,13 @@ export const getDashboardData = (
         );
         dispatch(
           setLatencyData(
-            sliceChartData(dataList, "date_group", "average_latency")
+            sliceChartData(dataList, "date_group", [
+              "average_latency",
+              "latency_p_50",
+              "latency_p_90",
+              "latency_p_95",
+              "latency_p_99",
+            ])
           )
         );
         dispatch(

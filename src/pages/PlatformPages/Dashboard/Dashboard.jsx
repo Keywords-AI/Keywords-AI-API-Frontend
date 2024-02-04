@@ -93,7 +93,6 @@ function DashboardNotConnected({
   if (breakdown_type !== "none") {
     colorData = breakdown_type === "by_model" ? modelColors : keyColors;
   }
-  console.log("colorData", colorData);
   const metrics = [
     {
       title: Metrics.number_of_requests.name,
