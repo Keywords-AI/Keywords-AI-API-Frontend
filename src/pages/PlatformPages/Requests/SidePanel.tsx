@@ -104,7 +104,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     Cached: (
       <Tag
-        text={logItem?.cached ? "Cached" : "Not Cached"}
+        text={logItem?.cached ? "Cached" : "No"}
         backgroundColor="bg-primary/10"
         textColor="text-primary"
         border=""
