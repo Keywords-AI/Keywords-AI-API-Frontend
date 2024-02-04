@@ -302,7 +302,7 @@ export const getDashboardData = (
     if (params.get("type") === null) {
       params.set("type", getState().dashboard.displayFilter.type);
     }
-    console.log("params", params.toString());
+    const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
@@ -312,9 +312,10 @@ export const getDashboardData = (
       path: `api/dashboard?${params.toString()}`,
     })
       .then((data) => {
+        const endTime = performance.now(); // End time
+
+        console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
         dispatch(setDashboardData(data));
-        let by_model = [];
-        let by_key = [];
 
         if (params.get("breakdown") === "by_model") {
           const breakDowndata = processBreakDownData(
@@ -433,6 +434,8 @@ export const getDashboardData = (
         dispatch(setP90Data(data?.summary.latency_p_90));
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
+        const endTime2 = performance.now(); // End time
+        console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
       .catch((error) => {
         console.log("error", error);

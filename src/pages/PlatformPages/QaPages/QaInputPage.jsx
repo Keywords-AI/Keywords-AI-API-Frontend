@@ -123,8 +123,8 @@ export const QaInputPage = () => {
             ]}
           />
         </PageParagraph>
-        <div className="w-[400px] h-[200px] bg-error">
-          <EditBox {...register("edtibaleBox")} />
+        <div className="w-[400px] h-[200px] border border-gray-5">
+          <EditBox {...register("edtibaleBox")} value="init value" />
         </div>
       </form>
     </PageContent>
