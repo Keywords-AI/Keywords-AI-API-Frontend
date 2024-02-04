@@ -5,7 +5,7 @@ import {
   TextInput,
 } from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
-import { Add, Filter } from "src/components/Icons";
+import { Add, AlphanumericKey, Filter } from "src/components/Icons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import {
   RootState,
@@ -18,7 +18,9 @@ import { addFilter } from "src/store/actions";
 import { InputFieldFilter } from "./FilterValueField";
 import { setFilterType, setCurrentFilter } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 
 export function FilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
@@ -31,6 +33,16 @@ export function FilterActions({ type }: { type: string }) {
   );
   const currentFilter = useTypedSelector(
     (state: RootState) => state.requestLogs.currentFilter
+  );
+  const { enableScope, disableScope } = useHotkeysContext();
+  useHotkeys(
+    "f",
+    () => {
+      setStart((prev) => !prev);
+    },
+    {
+      scopes: "dashboard",
+    }
   );
   const changeFieldType =
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
@@ -72,8 +84,14 @@ export function FilterActions({ type }: { type: string }) {
       dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
-
+  useEffect(() => {
+    enableScope("dashboard");
+    return () => {
+      disableScope("dashboard");
+    };
+  }, []);
   const handleDropdownOpen = (open) => {
+    open ? disableScope("dashboard") : enableScope("dashboard");
     setStart(open);
     if (currentFilter?.metric && currentFilter.value) {
       dispatch(
@@ -106,7 +124,23 @@ export function FilterActions({ type }: { type: string }) {
       );
       break;
     default:
-      trigger = <Button variant="small-dashed" icon={Filter} text="Filter" />;
+      trigger = (
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            content={
+              <>
+                <p className="caption text-gray-4">Show filter options</p>
+                <AlphanumericKey value={"F"} />
+              </>
+            }
+          >
+            <Button variant="small-dashed" icon={Filter} text="Filter" />
+          </Tooltip>
+        </div>
+      );
       break;
   }
   return (

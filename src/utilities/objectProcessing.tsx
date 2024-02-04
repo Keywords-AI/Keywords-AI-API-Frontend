@@ -251,7 +251,7 @@ export const aggregateApiData = (data) => {
 };
 
 interface DataItem {
-  name: string;
+  date_group: string;
   [key: string]: any;
 }
 
@@ -270,7 +270,7 @@ export const addMissingDate = (
   };
   const keys =
     data?.length > 0
-      ? Object.keys(data[0]).filter((key) => key !== "name")
+      ? Object.keys(data[0]).filter((key) => key !== "date_group")
       : [];
   const defaultFields = keys.reduce((acc, key) => {
     acc[key] = 0;
@@ -280,10 +280,10 @@ export const addMissingDate = (
     const now = new Date();
     for (let hour = 0; hour < 24; hour++) {
       const found = data.find((d) => {
-        return d.name.split(":")[0] === hour.toString();
+        return d.date_group.split(":")[0] === hour.toString();
       });
       newDataArray.push(
-        found ? { ...found } : { name: hour + ":00", ...defaultFields }
+        found ? { ...found } : { date_group: hour + ":00", ...defaultFields }
       );
     }
   };
@@ -302,12 +302,12 @@ export const addMissingDate = (
           .toString()
           .slice(-2)}`;
         const found = data.find(
-          (d) => localeUtc(d.name).getDate() === dayDate.getDate()
+          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
-            ? { ...found, name: dateString }
-            : { name: dateString, ...defaultFields }
+            ? { ...found, date_group: dateString }
+            : { date_group: dateString, ...defaultFields }
         );
       }
       break;
@@ -323,13 +323,13 @@ export const addMissingDate = (
         const year = now.getFullYear().toString().slice(-2);
         const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
         const found = data.find((d) => {
-          const date = localeUtc(d.name);
+          const date = localeUtc(d.date_group);
           return date.getDate() === day && date.getMonth() === now.getMonth();
         });
         newDataArray.push(
           found
-            ? { ...found, name: dayString }
-            : { name: dayString, ...defaultFields }
+            ? { ...found, date_group: dayString }
+            : { date_group: dayString, ...defaultFields }
         );
       }
       break;
@@ -337,13 +337,13 @@ export const addMissingDate = (
       for (let month = 0; month < 12; month++) {
         const monthString = formatTimeUnit(month + 1);
         const found = data.find((d) => {
-          const date = localeUtc(d.name);
+          const date = localeUtc(d.date_group);
           return date.getMonth() === month;
         });
         newDataArray.push(
           found
-            ? { ...found, name: monthString }
-            : { name: monthString, ...defaultFields }
+            ? { ...found, date_group: monthString }
+            : { date_group: monthString, ...defaultFields }
         );
       }
       break;
