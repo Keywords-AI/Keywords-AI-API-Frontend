@@ -221,7 +221,7 @@ const InputModal = ({ filterOption, defaultOperator }) => {
                 reset();
                 setOpen(false);
                 dispatch(
-                  dispatch(setCurrentFilter({ metric: undefined, id: "" }))
+                  setCurrentFilter({ metric: undefined, id: "" })
                 );
               }}
             />
