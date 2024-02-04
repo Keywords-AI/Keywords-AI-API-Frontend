@@ -1,8 +1,13 @@
 import React, { useEffect, lazy, Suspense } from "react";
-import { useRoutes, Navigate, Outlet } from "react-router-dom";
+import { useRoutes, Navigate, Outlet, useLocation } from "react-router-dom";
 import { connect } from "react-redux";
 import { NavigationLayout } from "src/layouts/NavigationLayout/NavigationLayout";
-import { getUser, isLoggedIn, updateUser } from "src/store/actions";
+import {
+  getUser,
+  isLoggedIn,
+  updateUser,
+  clearNotifications,
+} from "src/store/actions";
 import "src/components/styles/index.css";
 import { retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
@@ -41,17 +46,21 @@ const mapStateToProps = (state) => {
   };
 };
 
-
 const mapDispatchToProps = {
   getUser,
+  clearNotifications,
 };
 
-const Routes = ({ getUser, user, organization }) => {
+const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
     getUser();
   }, []);
+  const location = useLocation();
+  useEffect(() => {
+    clearNotifications();
+  }, [location]);
   useEffect(() => {
     const intervalId = setInterval(() => {
       // rotate the token every 10 minutes
@@ -61,14 +70,16 @@ const Routes = ({ getUser, user, organization }) => {
   }, [authToken]);
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
-    if (organization?.id) { // The init state of org is not empty, but the id is null
+    if (organization?.id) {
+      // The init state of org is not empty, but the id is null
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
       if (!onOnboradingPage && !organization?.active_subscription) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
     }
-    if (!organization) { // If user doesn't have org, fetching the user will make org null
+    if (!organization) {
+      // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded
       navigate("/onboarding");
     }
@@ -81,7 +92,7 @@ const Routes = ({ getUser, user, organization }) => {
       path: REDIRECT_URI, // "/platform"
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
-      { path: "playground", element: <Playground /> },
+        { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "requests", element: <Requests /> },
         {
@@ -158,7 +169,6 @@ const Routes = ({ getUser, user, organization }) => {
         <FullScreenLayout />
       ),
       children: [
-
         {
           path: "unauthenticated",
           element: <Unauthenticated />,

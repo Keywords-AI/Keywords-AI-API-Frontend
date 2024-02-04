@@ -111,21 +111,7 @@ export const models = [
     input_pricing: 0.001,
     output_pricing: 0.03,
   },
-  {
-    name: "Claude Instant 1",
-    value: "claude-instant-1",
-    brand: "anthropic",
-    rate_limit: 3500,
-    speed: 150,
-    icon: Anthropic,
-    mmlu_score: null,
-    mt_bench_score: null,
-    big_bench_score: null,
-    language_support: null,
-    streaming_support: "Yes",
-    input_pricing: null,
-    output_pricing: null,
-  },
+
   {
     name: "Claude Instant 1.2",
     value: "claude-instant-1.2",
@@ -186,19 +172,7 @@ export const models = [
     input_pricing: null,
     output_pricing: null,
   },
-  {
-    name: "GPT-3.5-turbo-16k",
-    value: "gpt-3.5-turbo-16k",
-    brand: "openai",
-    icon: OpenAI,
-    mmlu_score: null,
-    mt_bench_score: null,
-    big_bench_score: null,
-    language_support: null,
-    streaming_support: "Yes",
-    input_pricing: null,
-    output_pricing: null,
-  },
+
   {
     name: "Chat Bison",
     value: "chat-bison",

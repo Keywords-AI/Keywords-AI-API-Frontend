@@ -32,17 +32,28 @@ export const AlertsFallbackPage = () => {
     setFallbackEnabled(isFallbackEnabled);
     setSystemEnable(systemFallbackEnabled);
   }, [isFallbackEnabled, systemFallbackEnabled]);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
-
+  const { register, handleSubmit, watch, formState } = useForm();
   const model1 = watch("fall_back_model_1");
   const model2 = watch("fall_back_model_2");
   const model3 = watch("fall_back_model_3");
+  useEffect(() => {
+    const fallback_models = [model1, model2, model3].filter(
+      (item) => item !== "" && item !== undefined
+    );
+    if (
+      fallback_models.length === 0 ||
+      Object.keys(formState.dirtyFields).length === 0
+    ) {
+      return;
+    }
 
+    dispatch(
+      updateOrganization({
+        fallback_models,
+        fallback_model_enabled: fallbackEnabled,
+      })
+    );
+  }, [model1, model2, model3]);
   const filteredModelsForModel1 = [
     {
       name: "Please select a model",
@@ -78,20 +89,20 @@ export const AlertsFallbackPage = () => {
     );
   };
   const onSubmit = (data: any) => {
-    const fallback_models: any[] = [];
-    Object.keys(data).forEach((key) => {
-      if (key.includes("fall_back_model")) {
-        if (data[key] !== "") fallback_models.push(data[key]);
-      }
-    });
-
-    dispatch(
-      updateOrganization({
-        fallback_models,
-        fallback_model_enabled: fallbackEnabled,
-      })
-    );
+    // const fallback_models: any[] = [];
+    // Object.keys(data).forEach((key) => {
+    //   if (key.includes("fall_back_model")) {
+    //     if (data[key] !== "") fallback_models.push(data[key]);
+    //   }
+    // });
+    // dispatch(
+    //   updateOrganization({
+    //     fallback_models,
+    //     fallback_model_enabled: fallbackEnabled,
+    //   })
+    // );
   };
+
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
     dispatch(
@@ -166,7 +177,7 @@ export const AlertsFallbackPage = () => {
                 placeholder="Select model #3"
               />
             </div>
-            <Button variant="r4-primary" text="Save" />
+            {/* <Button variant="r4-primary" text="Save" /> */}
           </>
         )}
       </form>

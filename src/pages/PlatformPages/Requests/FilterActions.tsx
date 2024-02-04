@@ -42,6 +42,7 @@ export function FilterActions({ type }: { type: string }) {
     },
     {
       scopes: "dashboard",
+      preventDefault: true,
     }
   );
   const changeFieldType =
@@ -183,6 +184,14 @@ const InputModal = ({ filterOption, defaultOperator }) => {
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
     console.log(data);
+    console.log(
+      filterOption.metric,
+      data.filterValue,
+      defaultOperator,
+      filterOption.value_field_type,
+      filterOption.display_name,
+      Math.random().toString(36).substring(2, 15)
+    );
     dispatch(
       addFilter({
         metric: filterOption.metric,
@@ -209,6 +218,12 @@ const InputModal = ({ filterOption, defaultOperator }) => {
       >
         <TextInput
           placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(onSubmit)();
+              e.stopPropagation();
+            }
+          }}
           {...register("filterValue")}
           type={filterOption.value_field_type}
         />
@@ -220,9 +235,7 @@ const InputModal = ({ filterOption, defaultOperator }) => {
               onClick={() => {
                 reset();
                 setOpen(false);
-                dispatch(
-                  setCurrentFilter({ metric: undefined, id: "" })
-                );
+                dispatch(setCurrentFilter({ metric: undefined, id: "" }));
               }}
             />
             <Button variant="r4-primary" text="Apply" type="submit" />
