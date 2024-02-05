@@ -7,7 +7,12 @@ export const capitalize = (text: string) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-export const getDateStr = (date: number | string | undefined | null, lastUsed: boolean = false, inSeconds: boolean = false): string => {
+export const getDateStr = (
+  date: number | string | undefined | null,
+  lastUsed: boolean = false,
+  inSeconds: boolean = false
+): string => {
+  if (date === "Never") return "Never";
   if (!date) {
     if (lastUsed) {
       return "Never";
@@ -40,7 +45,6 @@ export const getDateStr = (date: number | string | undefined | null, lastUsed: b
   }
 };
 
-
 export function formatISOToReadableDate(isoDateString: string): string {
   /**
    * This function takes an ISO date string and returns a formatted date string
@@ -50,15 +54,15 @@ export function formatISOToReadableDate(isoDateString: string): string {
 
   // Use Intl.DateTimeFormat to format the date
   const options: Intl.DateTimeFormatOptions = {
-    month: 'short', // abbreviated month
-    day: '2-digit', // two-digit day
-    hour: 'numeric', // numeric hour
-    minute: '2-digit', // two-digit minute
-    hour12: true // 12-hour time with AM/PM
+    month: "short", // abbreviated month
+    day: "2-digit", // two-digit day
+    hour: "numeric", // numeric hour
+    minute: "2-digit", // two-digit minute
+    hour12: true, // 12-hour time with AM/PM
   };
 
   // Create a formatter
-  const formatter = new Intl.DateTimeFormat('en-US', options);
+  const formatter = new Intl.DateTimeFormat("en-US", options);
 
   // Format the date
   return formatter.format(date);
@@ -104,4 +108,3 @@ export const retrievePlanName = (context) => {
 export const firstNameInitial = (firstName) => {
   return firstName.charAt(0).toUpperCase();
 };
-

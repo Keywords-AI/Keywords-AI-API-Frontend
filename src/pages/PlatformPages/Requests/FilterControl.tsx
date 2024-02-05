@@ -4,10 +4,15 @@ import { Popover } from "src/components/Dialogs";
 import { Search, Down, Display } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import { getRequestLogs, addFilter } from "src/store/actions";
-import { setQueryParams } from "src/utilities/navigation";
+import {
+  getRequestLogs,
+  addFilter,
+  setCurrentFilter,
+  setFilters,
+} from "src/store/actions";
+import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
-import { RootState } from "src/types";
+import { Operator, RootState } from "src/types";
 import { get, useForm } from "react-hook-form";
 import { FilterPanel } from "./FilterPanel";
 
@@ -80,13 +85,29 @@ export default function FilterControl() {
         variant="small"
         text="Today"
         type="button"
-        active={timeRange ? true : false}
+        active={getQueryParam("time_range_type") == "daily" ? true : false}
         onClick={() => {
+          console.log("timeRange", timeRange);
           if (timeRange) {
+            // deactivate
             setQueryParams({ time_range_type: "" }, navigate);
+            dispatch(setFilters([]));
           } else {
+            // activate
             setQueryParams({ time_range_type: "daily" }, navigate);
+            dispatch(
+              addFilter({
+                metric: "timestamp",
+                value: [new Date().getDate()],
+                operator: "lte" as Operator,
+                value_field_type: "datetime-local",
+                display_name: "Time",
+                id: Math.random().toString(36).substring(2, 15),
+              })
+            );
+            dispatch(setCurrentFilter({ metric: undefined, id: "" }));
           }
+
           dispatch(getRequestLogs());
         }}
       />

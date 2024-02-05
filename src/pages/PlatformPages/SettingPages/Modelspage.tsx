@@ -194,6 +194,7 @@ const ModelsTable = ({
         </div>
         {ModlItems.map((item, index) => (
           <Drawer
+            key={index}
             open={false} // TODO: uncomment this line to activate the drawer
             trigger={
               <div
