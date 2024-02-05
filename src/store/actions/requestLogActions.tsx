@@ -251,6 +251,7 @@ export const filterParamsToFilterObjects = (
 export const getRequestLogs = (postData?: any) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
+    console.log(params.toString());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
