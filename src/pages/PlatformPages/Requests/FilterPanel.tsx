@@ -41,6 +41,9 @@ export function FilterPanel() {
     (state: RootState) => state.requestLogs.displayColumns
   );
   const user = useTypedSelector((state: RootState) => state.user);
+  const organization = useTypedSelector(
+    (state: RootState) => state.organization
+  );
   const displayColumns =
     user.display_properties.length > 0 ? user.display_properties : showColumns;
   const { register, handleSubmit, watch } = useForm();
@@ -169,15 +172,28 @@ export function FilterPanel() {
             })}
             {requestLogTagColumns.map((metric) => {
               const checked = displayColumns.includes(metric.retrievalKey);
-              return (
-                <CheckBoxButtonSmall
-                  key={metric.retrievalKey}
-                  {...register("display_properties")}
-                  text={metric.name}
-                  value={metric.retrievalKey}
-                  checked={checked}
-                />
-              );
+              if (metric.name === "Sentiment") {
+                return organization?.organization_subscription.plan_level >
+                  1 ? (
+                  <CheckBoxButtonSmall
+                    key={metric.retrievalKey}
+                    {...register("display_properties")}
+                    text={metric.name}
+                    value={metric.retrievalKey}
+                    checked={checked}
+                  />
+                ) : null;
+              } else {
+                return (
+                  <CheckBoxButtonSmall
+                    key={metric.retrievalKey}
+                    {...register("display_properties")}
+                    text={metric.name}
+                    value={metric.retrievalKey}
+                    checked={checked}
+                  />
+                );
+              }
             })}
           </div>
         </div>

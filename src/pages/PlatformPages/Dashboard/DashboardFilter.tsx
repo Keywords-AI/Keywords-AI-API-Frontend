@@ -222,6 +222,14 @@ export default function DashboardFilter() {
                   dispatch(
                     setDisplayMetric(e.target.value, setQueryParams, navigate)
                   );
+                  const noAverageDataMetrics = [
+                    Metrics.average_latency.value,
+                    Metrics.error_count.value,
+                    Metrics.number_of_requests.value,
+                  ];
+                  if (noAverageDataMetrics.includes(e.target.value)) {
+                    dispatch(setDisplayType("total", setQueryParams, navigate));
+                  }
                   getDashboardData();
                 }}
                 value={currentMetric}
