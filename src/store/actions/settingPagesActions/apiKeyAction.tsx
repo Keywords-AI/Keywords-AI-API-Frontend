@@ -108,11 +108,13 @@ export const getKeys = () => {
   };
 };
 
-export const addKey = (key) => {
+export const addKey = (data) => {
+  const payload = processKeyList([data])[0];
+  const { key, models, actions, ...rest } = payload;
   return {
     type: ADD_KEY,
     // No need to add actions here, setPrevKey (in ApiKeyPage) will get triggered once list is updated
-    payload: processKeyList([key])[0],
+    payload: rest,
   };
 };
 
@@ -125,9 +127,9 @@ export const createApiKey = (data) => {
       data: data,
       dispatch,
     })
-      .then((data) => {
+      .then((returnData) => {
         dispatch(setLoading(false));
-        dispatch(addKey(data));
+        dispatch(addKey(returnData));
         dispatch(
           dispatchNotification({ title: "API Key created successfully!" })
         );
@@ -175,7 +177,7 @@ export const updateEditingKey = (keyData: ApiKey) => {
       path: `api/update-key/${keyData?.prefix}/`,
       data: keyData,
       method: "PATCH",
-      dispatch
+      dispatch,
     })
       .then((data: any) => {
         dispatch(
