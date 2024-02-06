@@ -268,32 +268,6 @@ const CreateFormNotConnected = React.forwardRef(
                 />
               </div>
             )}
-            {/* <SelectInput
-                title={"Select preset"}
-                {...register("preset_models")}
-                defaultValue={models.reduce(
-                  (modelStr, model) => modelStr + "," + model.value,
-                  ""
-                )}
-                choices={[
-                  {
-                    name: "All",
-                    value: models.reduce(
-                      (modelStr, model) => modelStr + "," + model.value,
-                      ""
-                    ),
-                  },
-                  ...organization?.organization_model_presets.map((preset) => {
-                    return {
-                      name: preset.name,
-                      value: preset.preset_models.reduce(
-                        (modelStr, model) => modelStr + "," + model,
-                        ""
-                      ),
-                    };
-                  }),
-                ]}
-              /> */}
           </React.Fragment>
         ) : (
           <CopyInput
