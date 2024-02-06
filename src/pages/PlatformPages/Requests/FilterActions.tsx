@@ -183,7 +183,6 @@ const InputModal = ({ filterOption, defaultOperator }) => {
   const [open, setOpen] = useState(true);
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
-    console.log(data);
     console.log(
       filterOption.metric,
       data.filterValue,
@@ -205,11 +204,19 @@ const InputModal = ({ filterOption, defaultOperator }) => {
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     setOpen(false);
   };
+  useEffect(() => {
+    return () => {};
+  }, []);
   return (
     <Modal
       title={`Filter by ${filterOption.display_name}`}
       open={open}
-      setOpen={setOpen}
+      setOpen={(prev) => {
+        if (prev === false) {
+          dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+        }
+        setOpen(prev);
+      }}
       width="w-[600px]"
     >
       <form

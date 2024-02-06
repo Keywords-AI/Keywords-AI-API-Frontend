@@ -12,7 +12,7 @@ import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
 import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
@@ -25,11 +25,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
+  const cache_id =
+    useTypedSelector(
+      (state) => state.requestLogs.selectedRequest?.cached_response
+    ) || 0;
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(
-    logItem?.cached_response != 0 ? false : true
-  );
+
+  const [checked, setChecked] = useState(cache_id > 0);
+  useEffect(() => {
+    setChecked(cache_id > 0);
+  }, [cache_id]);
   const handleCheckCacheReponse = (checked: boolean) => {
     try {
       dispatch(setCacheResponse(checked));
@@ -38,8 +44,15 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       console.error("Error setting cache response", error);
     }
   };
-  const completeInteraction =
-    logItem?.prompt_messages?.concat([logItem?.completion_message]) || [];
+  const completeInteraction = [
+   ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
+  ];
+  const systemPrompt = completeInteraction.find(
+    (item) => item.role === "[system]"
+  );
+  if (systemPrompt) {
+    completeInteraction.splice(completeInteraction.indexOf(systemPrompt), 1);
+  }
   const displayObj = {
     "Created at": (
       <span className="text-sm-regular text-gray-4">
@@ -112,7 +125,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
   };
   const getMessageType = (role: string) => {
-    if (role === "system") {
+    if (role === "[system]") {
       return "System";
     } else if (role === "user") {
       return "User";
@@ -145,27 +158,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             padding="py-0"
           />
         </div>
-        {/* <div className="flex items-center">
-          {displayLog && (
-            <DotsButton
-              icon={IconPlayground}
-              onClick={() => {
-                dispatch(
-                  RestorePlaygroundState(
-                    logItem,
-                    navigate("/platform/playground")
-                  )
-                );
-              }}
-            />
-          )}
-          <DotsButton
-            icon={Copy}
-            onClick={() => {
-              navigator.clipboard.writeText(JSON.stringify(logItem));
-            }}
-          />
-        </div> */}
       </div>
       <div className="flex-col items-start self-stretch mt-[44px]">
         {!displayLog && (
@@ -213,22 +205,36 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 onCheckedChange={handleCheckCacheReponse}
               />
             </div>
-            {completeInteraction.map((message, index) => {
-              if (!message.content) {
-                return null;
-              }
-              return (
-                <React.Fragment key={index}>
+            {systemPrompt && (
+              <div className="flex-col px-lg pt-sm pb-md gap-xxxs self-stretch items-start">
+                <div className="flex justify-between items-center self-stretch">
+                  <p className="text-sm-md text-gray-5">
+                    {getMessageType(systemPrompt.role)}
+                  </p>
+                  <DotsButton
+                    icon={Copy}
+                    onClick={() => {
+                      navigator.clipboard.writeText(systemPrompt.content);
+                    }}
+                  />
+                </div>
+                <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
+                  <p className="break-words overflow-auto">
+                    {systemPrompt.content}
+                  </p>
+                </div>
+              </div>
+            )}
+            <Divider color="bg-gray-2" />
+            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
+              {completeInteraction.map((message, index) => {
+                if (!message.content) {
+                  return null;
+                }
+                return (
                   <div
-                    className={cn(
-                      "flex-col items-start gap-xxxs self-stretch px-lg ",
-                      getMessageType(message.role) === "System"
-                        ? "pb-md pt-sm"
-                        : "py-xxs",
-                      getMessageType(message.role) === "System"
-                        ? "shadow-border-b shadow-gray-2"
-                        : ""
-                    )}
+                    key={index}
+                    className="flex-col items-start gap-xxxs self-stretch "
                   >
                     <div className="flex justify-between items-center self-stretch">
                       <p className="text-sm-md text-gray-5">
@@ -247,9 +253,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       </p>
                     </div>
                   </div>
-                </React.Fragment>
-              );
-            })}
+                );
+              })}
+            </div>
           </>
         )}
       </div>

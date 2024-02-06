@@ -133,6 +133,7 @@ export const createApiKey = (data) => {
         dispatch(
           dispatchNotification({ title: "API Key created successfully!" })
         );
+        dispatch(getKeys());
       })
       .catch((err) => {
         dispatch(setLoading(false));

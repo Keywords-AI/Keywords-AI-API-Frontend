@@ -5,8 +5,14 @@ import { Down, Display, AlphanumericKey } from "src/components/Icons";
 import { Button, CheckBoxButtonSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { Divider } from "src/components/Sections";
-import { RootState } from "src/types";
-import { updateUser, getRequestLogs } from "src/store/actions";
+import { Operator, RootState } from "src/types";
+import {
+  updateUser,
+  getRequestLogs,
+  setFilters,
+  addFilter,
+  setCurrentFilter,
+} from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
@@ -18,6 +24,7 @@ import { setDisplayColumns } from "src/store/actions";
 import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 import { setQueryParams } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
+import { toLocalISOString } from "src/utilities/stringProcessing";
 
 export function FilterPanel() {
   const navigate = useNavigate();
@@ -40,6 +47,9 @@ export function FilterPanel() {
   const showColumns = useTypedSelector(
     (state: RootState) => state.requestLogs.displayColumns
   );
+  const currentFilters = useTypedSelector(
+    (state: RootState) => state.requestLogs.filters
+  );
   const user = useTypedSelector((state: RootState) => state.user);
   const organization = useTypedSelector(
     (state: RootState) => state.organization
@@ -51,7 +61,6 @@ export function FilterPanel() {
   useEffect(() => {
     if (displayProperties) {
       dispatch(setDisplayColumns(checkBoxFieldToList(displayProperties)));
-      console.log("displayProperties", displayProperties);
       dispatch(
         updateUser({ display_properties: displayProperties }, () => {}, true)
       );
@@ -108,6 +117,7 @@ export function FilterPanel() {
                 icon={Down}
                 padding="py-xxxs px-xxs"
                 gap="gap-xxs"
+                backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
                 defaultValue={user.sort_by}
@@ -134,6 +144,7 @@ export function FilterPanel() {
                 align="end"
                 defaultValue={currentTimeRange}
                 icon={Down}
+                backgroundColor="bg-gray-2"
                 padding="py-xxxs px-xxs"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
@@ -142,13 +153,69 @@ export function FilterPanel() {
                 onChange={(e) => {
                   const value = e.target.value;
                   const params = new URLSearchParams(window.location.search);
-                  if (value !== params.get("time_range_type")) {
-                    dispatch(
-                      updateUser({ time_range_type: value }, () => {}, true)
-                    );
-                    setQueryParams({ time_range_type: value }, navigate);
-                    dispatch(getRequestLogs());
+
+                  dispatch(
+                    updateUser({ time_range_type: value }, () => {}, true)
+                  );
+                  setQueryParams({ time_range_type: value }, navigate);
+                  dispatch(
+                    setFilters(
+                      currentFilters.filter(
+                        (filter) => filter.metric !== "timestamp"
+                      )
+                    )
+                  );
+                  let newDate = "";
+                  switch (value) {
+                    case "daily":
+                      console.log("daily");
+                      newDate = toLocalISOString(
+                        new Date(new Date().setDate(new Date().getDate() - 1))
+                      );
+
+                      break;
+
+                    case "weekly":
+                      console.log("weekly");
+                      newDate = toLocalISOString(
+                        new Date(new Date().setDate(new Date().getDate() - 7))
+                      );
+
+                      break;
+                    case "monthly":
+                      console.log("monthly");
+                      newDate = toLocalISOString(
+                        new Date(new Date().setMonth(new Date().getMonth() - 1))
+                      );
+
+                      break;
+                    case "yearly":
+                      console.log("yearly");
+                      newDate = toLocalISOString(
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() - 1)
+                        )
+                      );
+                      break;
+                    default:
+                      console.log("all");
+                      break;
                   }
+                  if (newDate !== "") {
+                    dispatch(
+                      addFilter({
+                        metric: "timestamp",
+                        value: [newDate],
+                        operator: "gte" as Operator,
+                        value_field_type: "datetime-local",
+                        display_name: "Time",
+                        id: Math.random().toString(36).substring(2, 15),
+                      })
+                    );
+                  }
+
+                  dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+                  dispatch(getRequestLogs());
                 }}
               />
             </div>

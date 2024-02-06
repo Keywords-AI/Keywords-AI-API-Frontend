@@ -286,6 +286,25 @@ export const getRequestLogs = (postData?: any) => {
   };
 };
 
+export const updateLog = (id, data) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    keywordsRequest({
+      path: `api/request-log/${id}/`,
+      method: "PATCH",
+      data: data,
+    }).then((data) => {
+      const updatedLogs = getState().requestLogs.logs.map((log) => {
+        if (log.id === id) {
+          return { ...log, ...data };
+        }
+        return log;
+      });
+      dispatch(setRequestLogs(updatedLogs));
+      setSelectedRequest({ ...data });
+    });
+  };
+};
+
 export const setCacheResponse = (cached: boolean) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const currentRequestLog = getState().requestLogs.selectedRequest;
@@ -310,36 +329,21 @@ export const setCacheResponse = (cached: boolean) => {
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log(data);
-        if (!data.id) {
-          throw new Error("failed to cache");
-        }
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
         }
-        const updatedLogs = getState().requestLogs.logs.map((log) => {
-          if (log.id === currentRequestLog.id) {
-            return {
-              ...log,
-              cached_response: data.id,
-            };
-          }
-          return log;
-        });
-        dispatch(setRequestLogs(updatedLogs));
+        dispatch(updateLog(currentRequestLog.id, { cached_response: data.id }));
       });
     } else {
       console.log("delete cache");
-      //delete cache
-      // keywordsRequest({
-      //   path: `api/caches/`,
-      //   method: "POST",
-      //   data: body,
-      // }).then((data) => {
-      //   const results = data.results;
-      //   console.log(results);
-      // });
+      console.log("hi", currentRequestLog.cached_response);
+      keywordsRequest({
+        path: `api/cache/${currentRequestLog.cached_response}/`,
+        method: "DELETE",
+      }).then((data) => {
+        dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
+      });
     }
   };
 };
