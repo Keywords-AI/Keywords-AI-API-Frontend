@@ -208,17 +208,7 @@ const CreateFormNotConnected = React.forwardRef(
               <span className="text-sm-regular text-gray-4">
                 Has rate limit{" "}
               </span>
-              {/* <IconButton
-                icon={Info}
-                onMouseEnter={() => setShowInfo(true)}
-                onMouseLeave={() => setShowInfo(false)}
-              />
-              {showInfo && (
-                <HoverPopup
-                  className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
-                  text="rate limit"
-                />
-              )} */}
+
               <SwitchButton
                 onCheckedChange={handleRateLimitSwitch}
                 className="absolute -top-[2px]"
@@ -305,7 +295,7 @@ const CreateFormNotConnected = React.forwardRef(
                   type="button"
                   onClick={handleClose}
                 />
-                {  !watchModelSelection || watchModelSelection.length < 1 ? (
+                {!watchModelSelection || watchModelSelection.length < 1 ? (
                   <Button disabled variant="r4-gray-2" text="Create" />
                 ) : (
                   <Button variant="r4-primary" text="Create" />

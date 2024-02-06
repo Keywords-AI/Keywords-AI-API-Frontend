@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Operator, RootState } from "src/types";
 import { get, useForm } from "react-hook-form";
 import { FilterPanel } from "./FilterPanel";
+import { toLocalISOString } from "src/utilities/stringProcessing";
 
 const typeChoices = [
   { name: "Total", value: "total" },
@@ -98,24 +99,23 @@ export default function FilterControl() {
         type="button"
         active={active}
         onClick={() => {
+          setQueryParams({ time_range_type: "" }, navigate);
           if (active) {
             // deactivate
-            // setQueryParams({ time_range_type: "" }, navigate);
+
             dispatch(setFilters([]));
           } else {
             // activate
             dispatch(
               setFilters(
-                filters.filter(
-                  (filter) => filter.metric !== "timestamp"
-                )
+                filters.filter((filter) => filter.metric !== "timestamp")
               )
             );
             dispatch(
               addFilter({
                 metric: "timestamp",
-                value: [new Date().toISOString().substring(0, 16)],
-                operator: "lte" as Operator,
+                value: [toLocalISOString(new Date())],
+                operator: "gte" as Operator,
                 value_field_type: "datetime-local",
                 display_name: "Time",
                 id: Math.random().toString(36).substring(2, 15),

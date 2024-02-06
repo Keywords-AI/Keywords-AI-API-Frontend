@@ -300,6 +300,7 @@ export const updateLog = (id, data) => {
         return log;
       });
       dispatch(setRequestLogs(updatedLogs));
+      setSelectedRequest({ ...data });
     });
   };
 };
@@ -341,13 +342,13 @@ export const setCacheResponse = (cached: boolean) => {
       });
     } else {
       console.log("delete cache");
+      console.log("hi", currentRequestLog.cached_response);
       keywordsRequest({
-        path: `api/cache/${currentRequestLog.cached_response}`,
+        path: `api/cache/${currentRequestLog.cached_response}/`,
         method: "DELETE",
       }).then((data) => {
         dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
       });
-
     }
   };
 };
