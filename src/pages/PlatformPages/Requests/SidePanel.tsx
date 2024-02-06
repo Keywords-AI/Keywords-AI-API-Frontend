@@ -39,7 +39,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
   };
   const completeInteraction = [
-    ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
+   ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
   ];
   const systemPrompt = completeInteraction.find(
     (item) => item.role === "[system]"
