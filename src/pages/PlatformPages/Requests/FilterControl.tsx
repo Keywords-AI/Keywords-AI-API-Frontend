@@ -67,7 +67,18 @@ export default function FilterControl() {
       onSubmit(e);
     }
   };
-
+  const active =
+    filters.find((filter) => {
+      if (filter.metric === "timestamp") {
+        const filterDate = new Date(filter.value[0] as string);
+        const today = new Date();
+        return (
+          filterDate.getDate() === today.getDate() &&
+          filterDate.getMonth() === today.getMonth() &&
+          filterDate.getFullYear() === today.getFullYear()
+        );
+      }
+    }) !== undefined;
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <TextInputSmall
@@ -85,20 +96,25 @@ export default function FilterControl() {
         variant="small"
         text="Today"
         type="button"
-        active={getQueryParam("time_range_type") == "daily" ? true : false}
+        active={active}
         onClick={() => {
-          console.log("timeRange", timeRange);
-          if (timeRange) {
+          if (active) {
             // deactivate
-            setQueryParams({ time_range_type: "" }, navigate);
+            // setQueryParams({ time_range_type: "" }, navigate);
             dispatch(setFilters([]));
           } else {
             // activate
-            setQueryParams({ time_range_type: "daily" }, navigate);
+            dispatch(
+              setFilters(
+                filters.filter(
+                  (filter) => filter.metric !== "timestamp"
+                )
+              )
+            );
             dispatch(
               addFilter({
                 metric: "timestamp",
-                value: [new Date().getDate()],
+                value: [new Date().toISOString().substring(0, 16)],
                 operator: "lte" as Operator,
                 value_field_type: "datetime-local",
                 display_name: "Time",

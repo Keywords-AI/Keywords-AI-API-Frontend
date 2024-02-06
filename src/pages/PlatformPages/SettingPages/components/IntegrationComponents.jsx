@@ -104,14 +104,16 @@ const IntegrationCardNotConnected = ({
     return value || [];
   };
   const onSubmit = (data) => {
-    let toSubmit = { vendor: vendorId, user: user?.id, organization: organization?.id, ...data };
+    let toSubmit = {
+      vendor: vendorId,
+      user: user?.id,
+      organization: organization?.id,
+      ...data,
+    };
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     // This currently handles update too
     // To update and clarify
-    if (
-      !apiKey &&
-      apiKeyString // entering new key
-    ) {
+    if (!apiKey) {
       verifyKey({ ...toSubmit, api_key: apiKeyString }, () => {
         setOpen(false);
       });
@@ -243,7 +245,7 @@ export const TitleCard = ({
             icon={Ellipse}
             iconProps={{ active }}
           />
-          {React.cloneElement(companyLogo, {size: "lg"})}
+          {React.cloneElement(companyLogo, { size: "lg" })}
         </div>
       </div>
       <div className="flex flex-col items-start">

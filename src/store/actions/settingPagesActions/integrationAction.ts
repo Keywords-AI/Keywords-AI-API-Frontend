@@ -28,7 +28,7 @@ export const getIntegrations = () => {
   return (dispatch: TypedDispatch) => {
     keywordsRequest({
       path: "vendor_integration/integrations",
-      dispatch
+      dispatch,
     })
       .then((data) => {
         dispatch({
@@ -42,13 +42,13 @@ export const getIntegrations = () => {
   };
 };
 
-export const createIntegration = (data, callback = () => { }) => {
+export const createIntegration = (data, callback = () => {}) => {
   return (dispatch: TypedDispatch) => {
     keywordsRequest({
       path: "vendor_integration/integrations/",
       data,
       method: "POST",
-      dispatch
+      dispatch,
     })
       .then((responseJson) => {
         dispatch(
@@ -74,7 +74,7 @@ export const updateIntegration = (data) => {
       path: `vendor_integration/integration/${data.integration_id}/`,
       data,
       method: "PATCH",
-      dispatch
+      dispatch,
     })
       .then((responseJson) => {
         dispatch(
@@ -107,13 +107,15 @@ export const setIntegration = (vendorName, data) => {
   };
 };
 
-export const verifyKey = (data, callback = () => { }) => {
+export const verifyKey = (data, callback = () => {}) => {
   return (dispatch: TypedDispatch) => {
+    
     keywordsRequest({
       path: "vendor_integration/validate-api-key/",
       data,
       method: "POST",
-      dispatch
+      dispatch,
+      hideError: true,
     })
       .then((responseJson) => {
         dispatch(
