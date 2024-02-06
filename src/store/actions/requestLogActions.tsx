@@ -289,7 +289,7 @@ export const getRequestLogs = (postData?: any) => {
 export const updateLog = (id, data) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     keywordsRequest({
-      path: `api/request-log/${id}`,
+      path: `api/request-log/${id}/`,
       method: "PATCH",
       data: data,
     }).then((data) => {
@@ -329,15 +329,10 @@ export const setCacheResponse = (cached: boolean) => {
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log(data);
-        if (!data.id) {
-          throw new Error("failed to cache");
-        }
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
         }
-
         dispatch(updateLog(currentRequestLog.id, { cached_response: data.id }));
       });
     } else {
