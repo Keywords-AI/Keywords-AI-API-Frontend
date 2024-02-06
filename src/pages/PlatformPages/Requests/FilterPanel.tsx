@@ -24,6 +24,7 @@ import { setDisplayColumns } from "src/store/actions";
 import { checkBoxFieldToList } from "src/utilities/objectProcessing";
 import { setQueryParams } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
+import { toLocalISOString } from "src/utilities/stringProcessing";
 
 export function FilterPanel() {
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ export function FilterPanel() {
                 icon={Down}
                 padding="py-xxxs px-xxs"
                 gap="gap-xxs"
+                backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
                 defaultValue={user.sort_by}
@@ -142,6 +144,7 @@ export function FilterPanel() {
                 align="end"
                 defaultValue={currentTimeRange}
                 icon={Down}
+                backgroundColor="bg-gray-2"
                 padding="py-xxxs px-xxs"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
@@ -166,36 +169,33 @@ export function FilterPanel() {
                   switch (value) {
                     case "daily":
                       console.log("daily");
-                      newDate = new Date(
-                        new Date().setDate(new Date().getDate() - 1)
-                      )
-                        .toISOString()
-                        .substring(0, 16);
+                      newDate = toLocalISOString(
+                        new Date(new Date().setDate(new Date().getDate() - 1))
+                      );
+
                       break;
 
                     case "weekly":
                       console.log("weekly");
-                      newDate = new Date(
-                        new Date().setDate(new Date().getDate() - 7)
-                      )
-                        .toISOString()
-                        .substring(0, 16);
+                      newDate = toLocalISOString(
+                        new Date(new Date().setDate(new Date().getDate() - 7))
+                      );
+
                       break;
                     case "monthly":
                       console.log("monthly");
-                      newDate = new Date(
-                        new Date().setMonth(new Date().getMonth() - 1)
-                      )
-                        .toISOString()
-                        .substring(0, 16);
+                      newDate = toLocalISOString(
+                        new Date(new Date().setMonth(new Date().getMonth() - 1))
+                      );
+
                       break;
                     case "yearly":
                       console.log("yearly");
-                      newDate = new Date(
-                        new Date().setFullYear(new Date().getFullYear() - 1)
-                      )
-                        .toISOString()
-                        .substring(0, 16);
+                      newDate = toLocalISOString(
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() - 1)
+                        )
+                      );
                       break;
                     default:
                       console.log("all");

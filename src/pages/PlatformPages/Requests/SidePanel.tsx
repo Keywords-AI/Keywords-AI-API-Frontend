@@ -12,7 +12,7 @@ import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
 import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
@@ -25,11 +25,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
+  const cache_id =
+    useTypedSelector(
+      (state) => state.requestLogs.selectedRequest?.cached_response
+    ) || 0;
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
-  const [checked, setChecked] = useState(
-    logItem?.cached_response != 0 ? true : false
-  );
+
+  const [checked, setChecked] = useState(cache_id > 0);
+  useEffect(() => {
+    setChecked(cache_id > 0);
+  }, [cache_id]);
   const handleCheckCacheReponse = (checked: boolean) => {
     try {
       dispatch(setCacheResponse(checked));
@@ -152,27 +158,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             padding="py-0"
           />
         </div>
-        {/* <div className="flex items-center">
-          {displayLog && (
-            <DotsButton
-              icon={IconPlayground}
-              onClick={() => {
-                dispatch(
-                  RestorePlaygroundState(
-                    logItem,
-                    navigate("/platform/playground")
-                  )
-                );
-              }}
-            />
-          )}
-          <DotsButton
-            icon={Copy}
-            onClick={() => {
-              navigator.clipboard.writeText(JSON.stringify(logItem));
-            }}
-          />
-        </div> */}
       </div>
       <div className="flex-col items-start self-stretch mt-[44px]">
         {!displayLog && (

@@ -108,3 +108,9 @@ export const retrievePlanName = (context) => {
 export const firstNameInitial = (firstName) => {
   return firstName.charAt(0).toUpperCase();
 };
+
+export const toLocalISOString = (date) => {
+  const tzoffset = date.getTimezoneOffset() * 60000;
+  const localISOTime = new Date(date - tzoffset).toISOString().slice(0, -1);
+  return localISOTime.substring(0, 16);
+};
