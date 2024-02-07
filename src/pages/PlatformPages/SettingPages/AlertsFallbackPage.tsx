@@ -11,16 +11,17 @@ import {
 } from "src/store/actions";
 import { RootState } from "src/types";
 import { useForm } from "react-hook-form";
-import { models } from "src/utilities/constants";
+import { models as MODELS } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { Redirect } from "src/components";
 
 export const AlertsFallbackPage = () => {
-  const { isFallbackEnabled, fallbackModels, systemFallbackEnabled } =
+  const { isFallbackEnabled, fallbackModels, systemFallbackEnabled, orgPlan } =
     useTypedSelector((state: RootState) => ({
       isFallbackEnabled: state.organization?.fallback_model_enabled,
       fallbackModels: state.organization?.fallback_models,
       systemFallbackEnabled: state.organization?.system_fallback_enabled,
+      orgPlan: state.organization?.organization_subscription?.plan,
     }));
 
   const dispatch = useTypedDispatch();
@@ -54,6 +55,10 @@ export const AlertsFallbackPage = () => {
       })
     );
   }, [model1, model2, model3]);
+  const isfreeUser = orgPlan.plan !== "team" && orgPlan.plan !== "custom";
+  const models = isfreeUser
+    ? MODELS.filter((model) => model.brand === "openai")
+    : MODELS;
   const filteredModelsForModel1 = [
     {
       name: "Please select a model",

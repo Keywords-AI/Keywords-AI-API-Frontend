@@ -110,16 +110,7 @@ export default function FilterControl() {
       }
     }) !== undefined;
   const inputRef = useRef<HTMLInputElement>(null);
-  const CloseButton = (
-    <div
-      onClick={(e: any) => {
-        e.preventDefault();
-        setSearchText("");
-      }}
-    >
-      <IconButton icon={Close} />
-    </div>
-  );
+
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <TextInputSmall
@@ -135,7 +126,8 @@ export default function FilterControl() {
         width="w-[192px]"
         onKeyDown={onKeyDown}
         rightIcon={<AlphanumericKey value="/" />}
-        CloseButton={CloseButton}
+        CloseButton
+        handleClose={() => setSearchText("")}
       />
       <Button
         variant="small"

@@ -109,7 +109,7 @@ export function FilterPanel() {
       <div className={"flex flex-col gap-xxs items-end"}>
         <div className="flex flex-col items-start gap-xs self-stretch">
           <div className="flex flex-col items-start gap-xs self-stretch">
-          <div className="flex justify-between items-center self-stretch ">
+            <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Grouping</span>
               <SelectInput
                 headLess
@@ -120,7 +120,7 @@ export function FilterPanel() {
                 backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
-                defaultValue={user.sort_by}
+                defaultValue={"No Grouping"}
                 choices={[
                   // Value will be the db column name of request log
                   { name: "API key", value: "-apikey" },
@@ -128,7 +128,7 @@ export function FilterPanel() {
                   { name: "Status", value: "-status" },
                   { name: "Cached", value: "-cached" },
                   { name: "Sentiment", value: "-sentiment" },
-                  { name: "No Grouping", value: "-default"}
+                  { name: "No Grouping", value: "-default" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -160,6 +160,7 @@ export function FilterPanel() {
                   { name: "Cost", value: "-cost" },
                   { name: "Latency", value: "-latency" },
                   { name: "TTFT", value: "-ttft" },
+                  { name: "Newest", value: "-timestamp" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
