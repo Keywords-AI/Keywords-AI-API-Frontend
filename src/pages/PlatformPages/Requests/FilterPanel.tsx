@@ -159,8 +159,7 @@ export function FilterPanel() {
                   { name: "Date", value: "-timestamp" },
                   { name: "Cost", value: "-cost" },
                   { name: "Latency", value: "-latency" },
-                  { name: "TTFT", value: "-ttft" },
-                  { name: "Newest", value: "-timestamp" },
+                  { name: "TTFT", value: "-ttft" }
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
