@@ -22,6 +22,7 @@ import { RootState, DisplayApiKey, ApiKey, ApiKeyState } from "src/types";
 import { Divider } from "src/components/Sections";
 import { ModelTags } from "./ApiKeyComponents";
 import { StateTag } from "src/components/Misc";
+import { useNavigate } from "react-router-dom";
 
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
@@ -54,6 +55,7 @@ export const ApiKeyPage = ({
   apiKeyLimit,
 }: ApiKeyPageProps) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
+  const navigate = useNavigate();
   const editingTrigger = (key: ApiKey, active: boolean) => {
     return (
       <div className="flex-row w-full justify-end gap-xxs">
@@ -70,7 +72,7 @@ export const ApiKeyPage = ({
     return (
       <div className="flex-col items-start gap-xxxs">
         <span className="text-sm-md text-gray-5">{keyName}</span>
-        <span className="caption text-gray-4">{keyPrefix}</span>
+        <span className="caption text-gray-4">{keyPrefix}...</span>
       </div>
     );
   };
@@ -109,10 +111,19 @@ export const ApiKeyPage = ({
             headers={[
               "Key",
               "Last used",
-              "Models",
-              `${apiKey.keyList?.length}/${apiKeyLimit}`,
+              <div className="flex gap-xxs justify-center items-center">
+                {`${apiKey.keyList?.length}/${apiKeyLimit}`}
+                <Button
+                  variant="footer"
+                  text="Upgrade"
+                  textColor="text-primary"
+                  onClick={() => {
+                    navigate("/platform/api/plans");
+                  }}
+                />
+              </div>,
             ]}
-            columnNames={["key", "last_used", "models", "actions"]}
+            columnNames={["key", "last_used", "actions"]}
           />
         )}
         <Button

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { SettingTable } from "src/components/Tables";
-import { Button } from "src/components/Buttons";
+import { LineTable, SettingTable } from "src/components/Tables";
+import { Button, DotsButton, IconButton } from "src/components/Buttons";
 import { Search } from "src/components/Icons";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import {
@@ -21,9 +21,7 @@ export const viewBillTrigger = (item: any) => {
   // The complete stripe Invoice object
   return (
     <>
-      <Button
-        variant="small"
-        text={"View"}
+      <DotsButton
         icon={Search}
         iconSize="sm"
         onClick={() => window.open(item.hosted_invoice_url, "_blank")}
@@ -58,7 +56,7 @@ export const BillingPage = () => {
       );
     }
   }, [billings, currentBilling]);
-
+  console.log("currentBillingData", bilingData);
   return (
     <PageContent
       title="Billing"
@@ -121,7 +119,12 @@ export const BillingPage = () => {
         }
       >
         {bilingData?.length > 0 && (
-          <SettingTable variant={"billings"} rows={bilingData} />
+          <LineTable
+            variant={"billings"}
+            rows={bilingData}
+            headers={["Date", "Amount", "Payment ID"]}
+            columnNames={["date", "amount", "payment_id"]}
+          />
         )}
         {false && (
           <Modal

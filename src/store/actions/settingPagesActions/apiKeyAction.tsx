@@ -44,7 +44,7 @@ export const processKey = (
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
     actions: actions(key, active),
-    models: Models(key.preset_models),
+    // models: Models(key.preset_models),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
 };
