@@ -165,6 +165,7 @@ export const processRequestLogs = (
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,
+      organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
         failed: log.failed,
