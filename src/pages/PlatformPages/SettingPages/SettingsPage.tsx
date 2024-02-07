@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import usePost from "src/hooks/usePost";
-import { TextInput, CopyInput } from "src/components/Inputs";
+import { TextInput, CopyInput, SelectInput } from "src/components/Inputs";
 import { Button, SwitchButton } from "src/components/Buttons";
 import { set, useForm } from "react-hook-form";
 import { setOrgName, updateOrganization } from "src/store/actions";
@@ -109,6 +109,33 @@ export const SettingPage = ({
           }}
         />
       </div>
+      <Divider />
+      <div className="flex items-start self-stretch justify-between">
+        <TitleStaticSubheading
+          title="Auto-archive requests"
+          subtitle={
+            "Automatically archive old requests for the configured time period. Changes will apply within one day."
+          }
+        />
+        <SwitchButton
+          checked={!organization?.disable_log}
+          onCheckedChange={(checked) => {
+            updateOrganization({ disable_log: !checked });
+          }}
+        />
+      </div>
+      <SelectInput
+        title="Auto-archive requests after"
+        defaultValue={organization?.auto_archive_period || "day"}
+        width="w-[248px]"
+        optionsWidth="w-[248px]"
+        choices={[
+          { name: "1 day", value: "day" },
+          { name: "1 week", value: "week" },
+          { name: "1 month", value: "month" },
+          { name: "1 year", value: "year" },
+        ]}
+      />
       <Divider />
     </PageContent>
   );
