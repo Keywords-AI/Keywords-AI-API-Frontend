@@ -10,9 +10,11 @@ import { dispatchNotification } from "src/store/actions";
 import { Divider } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import userReducer from "src/store/reducers/userReducer";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
+  user: state.user,
 });
 
 const mapDispatchToProps = {
@@ -22,6 +24,7 @@ const mapDispatchToProps = {
 };
 
 export const SettingPage = ({
+  user,
   organization,
   setOrgName,
   updateOrganization,
@@ -79,6 +82,7 @@ export const SettingPage = ({
             width="w-[400px]"
             value={currName || ""}
             placeholder="Enter your organization name..."
+            disabled={!user.is_organization_admin}
           />
           <CopyInput
             name="unique_organization_id"
@@ -100,8 +104,8 @@ export const SettingPage = ({
         />
         <SwitchButton
           checked={!organization?.disable_log}
-          onCheckedChange={(checked)=>{
-            updateOrganization({disable_log: !checked})
+          onCheckedChange={(checked) => {
+            updateOrganization({ disable_log: !checked });
           }}
         />
       </div>
