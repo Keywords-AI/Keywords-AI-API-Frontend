@@ -109,6 +109,38 @@ export function FilterPanel() {
       <div className={"flex flex-col gap-xxs items-end"}>
         <div className="flex flex-col items-start gap-xs self-stretch">
           <div className="flex flex-col items-start gap-xs self-stretch">
+          <div className="flex justify-between items-center self-stretch ">
+              <span className="text-sm-regular text-gray-4">Grouping</span>
+              <SelectInput
+                headLess
+                align="end"
+                icon={Down}
+                padding="py-xxxs px-xxs"
+                gap="gap-xxs"
+                backgroundColor="bg-gray-2"
+                width="min-w-[140px]"
+                optionsWidth="w-[120px]"
+                defaultValue={user.sort_by}
+                choices={[
+                  // Value will be the db column name of request log
+                  { name: "API key", value: "-apikey" },
+                  { name: "Model", value: "-model" },
+                  { name: "Status", value: "-status" },
+                  { name: "Cached", value: "-cached" },
+                  { name: "Sentiment", value: "-sentiment" },
+                  { name: "No Grouping", value: "-default"}
+                ]}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // const params = new URLSearchParams(window.location.search);
+                  // if (value !== params.get("sort_by")) {
+                  //   dispatch(updateUser({ sort_by: value }, () => {}, true));
+                  //   setQueryParams({ sort_by: value }, navigate);
+                  //   dispatch(getRequestLogs());
+                  // }
+                }}
+              />
+            </div>
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Ordering</span>
               <SelectInput
@@ -123,8 +155,11 @@ export function FilterPanel() {
                 defaultValue={user.sort_by}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "Time", value: "-timestamp" },
+                  { name: "Manual", value: "-manual" },
+                  { name: "Date", value: "-timestamp" },
                   { name: "Cost", value: "-cost" },
+                  { name: "Latency", value: "-latency" },
+                  { name: "TTFT", value: "-ttft" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -137,7 +172,7 @@ export function FilterPanel() {
                 }}
               />
             </div>
-            <div className="flex justify-between items-center self-stretch ">
+            {/* <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Display</span>
               <SelectInput
                 headLess
@@ -218,7 +253,7 @@ export function FilterPanel() {
                   dispatch(getRequestLogs());
                 }}
               />
-            </div>
+            </div> */}
           </div>
           <Divider color="bg-gray-3" />
           <span className="text-sm-regular text-gray-4">
