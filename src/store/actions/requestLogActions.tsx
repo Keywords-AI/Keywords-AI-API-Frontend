@@ -259,7 +259,6 @@ export const getRequestLogs = (postData?: any) => {
       data: postData,
     }).then((data) => {
       const results = data.results;
-      console.log(results?.[0]);
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
@@ -301,7 +300,9 @@ export const updateLog = (id, data) => {
         return log;
       });
       dispatch(setRequestLogs(updatedLogs));
-      setSelectedRequest({ ...data });
+      dispatch(setSelectedRequest(id));
+      console.log("data", data);
+      dispatch(getRequestLogs());
     });
   };
 };
@@ -339,11 +340,13 @@ export const setCacheResponse = (cached: boolean) => {
     } else {
       console.log("delete cache");
       console.log("hi", currentRequestLog.cached_response);
+      dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
       keywordsRequest({
         path: `api/cache/${currentRequestLog.cached_response}/`,
         method: "DELETE",
+        dispatch: dispatch,
       }).then((data) => {
-        dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
+        console.log("deleted cache", data);
       });
     }
   };

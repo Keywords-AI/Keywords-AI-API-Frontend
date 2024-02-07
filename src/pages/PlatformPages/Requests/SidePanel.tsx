@@ -45,7 +45,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
   };
   const completeInteraction = [
-   ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
+    ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
   ];
   const systemPrompt = completeInteraction.find(
     (item) => item.role === "[system]"
@@ -80,6 +80,14 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
       </span>
     ),
+    Cached: (
+      <Tag
+        text={logItem?.cached_response ? "Cached" : "No"}
+        backgroundColor="bg-primary/10"
+        textColor="text-primary"
+        border=""
+      />
+    ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.completion_tokens?.toLocaleString() || "4,220"}
@@ -113,14 +121,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Sentiment: (
       <SentimentTag
         sentiment_score={logItem?.sentiment_analysis?.sentiment_score || 0}
-      />
-    ),
-    Cached: (
-      <Tag
-        text={logItem?.cached ? "Cached" : "No"}
-        backgroundColor="bg-primary/10"
-        textColor="text-primary"
-        border=""
       />
     ),
   };
