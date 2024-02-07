@@ -12,10 +12,11 @@ import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
 import { Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
+import SearchLog from "./SearchLog";
 
 interface SidePanelProps {
   open: boolean;
@@ -25,6 +26,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
+
   const cache_id =
     useTypedSelector(
       (state) => state.requestLogs.selectedRequest?.cached_response
@@ -44,16 +46,41 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       console.error("Error setting cache response", error);
     }
   };
-  const completeInteraction = [
-   ...(logItem?.prompt_messages?.concat([logItem?.completion_message]) || []),
-  ];
+
+  const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
+  useEffect(() => {
+    setCompleteInteraction(
+      logItem?.prompt_messages
+        ? [...logItem.prompt_messages.concat([logItem?.completion_message])]
+        : []
+    );
+  }, [logItem]);
   const systemPrompt = completeInteraction.find(
     (item) => item.role === "[system]"
   );
   if (systemPrompt) {
-    completeInteraction.splice(completeInteraction.indexOf(systemPrompt), 1);
+    setCompleteInteraction(
+      completeInteraction.filter((item) => item !== systemPrompt)
+    );
   }
+  const searchContent = (keyword) => {
+    if (keyword === "") {
+      setCompleteInteraction(
+        logItem?.prompt_messages
+          ? [...logItem.prompt_messages.concat([logItem?.completion_message])]
+          : []
+      );
+      return;
+    }
+    const filteredInteraction = completeInteraction.filter((item) =>
+      item.content.toLowerCase().includes(keyword.toLowerCase())
+    );
+    setCompleteInteraction(filteredInteraction);
+  };
   const displayObj = {
+    "Request ID": (
+      <span className="text-sm-regular text-gray-4">{logItem?.id || "-"}</span>
+    ),
     "Created at": (
       <span className="text-sm-regular text-gray-4">
         {new Date(logItem?.timestamp || "Aug 25, 8:03 PM").toLocaleString(
@@ -79,6 +106,14 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       <span className="text-sm-regular text-gray-4">
         {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
       </span>
+    ),
+    Cached: (
+      <Tag
+        text={logItem?.cached_response ? "Cached" : "No"}
+        backgroundColor="bg-primary/10"
+        textColor="text-primary"
+        border=""
+      />
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
@@ -115,15 +150,20 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         sentiment_score={logItem?.sentiment_analysis?.sentiment_score || 0}
       />
     ),
-    Cached: (
-      <Tag
-        text={logItem?.cached ? "Cached" : "No"}
-        backgroundColor="bg-primary/10"
-        textColor="text-primary"
-        border=""
-      />
-    ),
   };
+  const metricRef = useRef(null);
+  const logRef = useRef(null);
+  useEffect(() => {
+    if (displayLog) {
+      if (logRef && logRef.current)
+        (logRef.current as HTMLElement)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      if (metricRef && metricRef.current)
+        (metricRef.current as HTMLElement)?.scrollIntoView({
+          behavior: "smooth",
+        });
+    }
+  }, []);
   const getMessageType = (role: string) => {
     if (role === "[system]") {
       return "System";
@@ -158,10 +198,31 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             padding="py-0"
           />
         </div>
+        <div>
+          {displayLog && (
+            <SearchLog
+              handleSearch={searchContent}
+              handleReset={() => {
+                setCompleteInteraction(
+                  logItem?.prompt_messages
+                    ? [
+                        ...logItem.prompt_messages.concat([
+                          logItem?.completion_message,
+                        ]),
+                      ]
+                    : []
+                );
+              }}
+            />
+          )}
+        </div>
       </div>
       <div className="flex-col items-start self-stretch mt-[44px]">
         {!displayLog && (
-          <div className="flex-col py-md px-lg items-start gap-xs self-stretch">
+          <div
+            ref={metricRef}
+            className="flex-col py-md px-lg items-start gap-xs self-stretch"
+          >
             {Object.keys(displayObj).map((key, index) => {
               return (
                 <div
@@ -198,7 +259,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
         {displayLog && (
           <>
-            <div className="flex py-xs px-lg justify-between items-start self-stretch">
+            <div
+              ref={logRef}
+              className="flex py-xs px-lg justify-between items-start self-stretch"
+            >
               <p className="text-sm-md text-gray-5">Cache response</p>
               <SwitchButton
                 checked={checked}

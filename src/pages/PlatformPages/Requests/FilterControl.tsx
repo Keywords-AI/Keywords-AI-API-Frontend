@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TextInputSmall, TextInput } from "src/components/Inputs";
 import { Popover } from "src/components/Dialogs";
-import { Search, Down, Display } from "src/components/Icons";
-import { Button } from "src/components/Buttons";
+import {
+  Search,
+  Down,
+  Display,
+  AlphanumericKey,
+  Close,
+} from "src/components/Icons";
+import { Button, IconButton } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import {
   getRequestLogs,
@@ -16,7 +22,7 @@ import { Operator, RootState } from "src/types";
 import { get, useForm } from "react-hook-form";
 import { FilterPanel } from "./FilterPanel";
 import { toLocalISOString } from "src/utilities/stringProcessing";
-
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 const typeChoices = [
   { name: "Total", value: "total" },
   { name: "Average", value: "average" },
@@ -45,8 +51,25 @@ export default function FilterControl() {
     filteredtypeChoices = typeChoices;
   }
 
-  const { register } = useForm();
+  const { register, setValue } = useForm();
   const [searchText, setSearchText] = useState("");
+  const { enableScope, disableScope } = useHotkeysContext();
+  useHotkeys(
+    "/",
+    () => {
+      if (inputRef.current) {
+        if (document.activeElement !== inputRef.current) {
+          inputRef.current.focus();
+        } else {
+          inputRef.current.blur();
+        }
+      }
+    },
+    {
+      scopes: "small_search_prompt",
+      preventDefault: true,
+    }
+  );
   const onSubmit = (e: any) => {
     const randomId = Math.random().toString(36).substring(2, 15);
     dispatch(
@@ -68,6 +91,12 @@ export default function FilterControl() {
       onSubmit(e);
     }
   };
+  useEffect(() => {
+    enableScope("small_search_prompt");
+    return () => {
+      disableScope("small_search_prompt");
+    };
+  }, []);
   const active =
     filters.find((filter) => {
       if (filter.metric === "timestamp") {
@@ -80,6 +109,8 @@ export default function FilterControl() {
         );
       }
     }) !== undefined;
+  const inputRef = useRef<HTMLInputElement>(null);
+
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <TextInputSmall
@@ -89,9 +120,14 @@ export default function FilterControl() {
           value: searchText,
           onChange: (e) => setSearchText(e.target.value),
         })}
+        name="prompt"
+        ref={inputRef}
         value={searchText}
         width="w-[192px]"
         onKeyDown={onKeyDown}
+        rightIcon={<AlphanumericKey value="/" />}
+        CloseButton
+        handleClose={() => setSearchText("")}
       />
       <Button
         variant="small"

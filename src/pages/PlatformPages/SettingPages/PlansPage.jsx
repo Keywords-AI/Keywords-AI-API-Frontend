@@ -63,7 +63,7 @@ export const PlansPage = connect(
         "Usage analytics",
         "Status monitoring",
         "Dynamic LLM router",
-        "OpenAI credits support",
+        "OpenAI models",
         "Email support",
       ],
       downgradeParams: {
@@ -93,9 +93,9 @@ export const PlansPage = connect(
         "Unlimited seats",
         "Unlimited proxy keys",
         "Advanced usage analytics",
-        "Advanced model fallback",
-        "Priority model access",
         "Admin roles",
+        "Advanced model fallback",
+        "Mistral, Anthropic, and x more models",
         "CTO priority support",
       ],
       downgradeParams: {

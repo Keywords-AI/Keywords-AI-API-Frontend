@@ -38,7 +38,7 @@ export type DisplayLogItem = {
   latency: React.ReactNode;
   promptTokens: number;
   outputTokens: number;
-  allTokens: number;
+  allTokens: React.ReactNode;
   organizationKey: string; //ID of the key
   apiKey: string;
   model: string;

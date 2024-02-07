@@ -7,7 +7,7 @@ import {
   RawFilterOption,
   Operator,
 } from "src/types";
-import { Down } from "src/components/Icons";
+import { Close, Down } from "src/components/Icons";
 import { SelectInputSmall, SelectInputMenu } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
@@ -16,7 +16,6 @@ import {
   setCurrentFilter,
   updateFilter,
 } from "src/store/actions";
-import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { InputFieldUpdateFilter } from "./FilterValueField";
 import { current } from "@reduxjs/toolkit";
