@@ -155,11 +155,11 @@ export function FilterPanel() {
                 defaultValue={user.sort_by || "-timestamp"}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "Manual", value: "-manual" },
+                  { name: "Default", value: "-timestamp" },
                   { name: "Date", value: "-timestamp" },
                   { name: "Cost", value: "-cost" },
                   { name: "Latency", value: "-latency" },
-                  { name: "TTFT", value: "-ttft" }
+                  { name: "TTFT", value: "-time_to_first_token" }
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
