@@ -120,24 +120,23 @@ export function FilterPanel() {
                 backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
-                defaultValue={"No Grouping"}
+                defaultValue={user.group_by || ""}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "API key", value: "-apikey" },
-                  { name: "Model", value: "-model" },
-                  { name: "Status", value: "-status" },
-                  { name: "Cached", value: "-cached" },
-                  { name: "Sentiment", value: "-sentiment" },
-                  { name: "No Grouping", value: "-default" },
+                  { name: "API key", value: "organization_key__name" },
+                  { name: "Model", value: "model" },
+                  { name: "Status", value: "failed" },
+                  // { name: "Cached", value: "cached" },
+                  { name: "Sentiment", value: "sentiment_score" },
+                  { name: "No Grouping", value: "" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
-                  // const params = new URLSearchParams(window.location.search);
-                  // if (value !== params.get("sort_by")) {
-                  //   dispatch(updateUser({ sort_by: value }, () => {}, true));
-                  //   setQueryParams({ sort_by: value }, navigate);
-                  //   dispatch(getRequestLogs());
-                  // }
+                  const params = new URLSearchParams(window.location.search);
+                  if (value !== params.get("group_by")) {
+                    setQueryParams({ group_by: value }, navigate);
+                    dispatch(getRequestLogs());
+                  }
                 }}
               />
             </div>
@@ -155,7 +154,7 @@ export function FilterPanel() {
                 defaultValue={user.sort_by || "-timestamp"}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "Default", value: "-timestamp" },
+                  { name: "Default", value: "" },
                   { name: "Date", value: "-timestamp" },
                   { name: "Cost", value: "-cost" },
                   { name: "Latency", value: "-latency" },
