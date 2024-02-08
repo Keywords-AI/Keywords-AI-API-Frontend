@@ -49,7 +49,8 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     };
     let displayChoice =
       filterOption.value_choices.find((choice) => {
-        return filterToUpdate.value?.[0] === choice?.value;
+        const choiceValue = String(choice?.value);
+        return filterToUpdate.value?.[0] === choiceValue;
       })?.name ?? filterOption.display_name;
     if (filterToUpdate.value && filterToUpdate.value.length > 1) {
       displayChoice = `${filterToUpdate.value.length} items`;
