@@ -200,8 +200,8 @@ export const keywordsApiStream = ({
           // Splitting the returned text chunck with the delimiter
           for (const line of message.split("---")) {
             // Line is a JSON string
-            if (callbackFunction && typeof callbackFunction === "function") {
-              callbackFunction(line);
+            if (readStreamLine && typeof readStreamLine === "function") {
+              readStreamLine(line);
             }
           }
         }

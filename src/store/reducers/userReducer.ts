@@ -31,6 +31,7 @@ const initialState: User = {
     content: "",
   },
   usage: 0,
+  group_by: "",
   is_active: false,
   active_subscription: false,
   is_admin: false,

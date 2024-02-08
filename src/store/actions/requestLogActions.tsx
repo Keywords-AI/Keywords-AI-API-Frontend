@@ -17,6 +17,7 @@ import {
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
 import { get } from "react-hook-form";
+import { SentimentTag, StatusTag } from "src/components/Misc";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -136,6 +137,31 @@ export const updateFilter = (filter: FilterObject) => {
   };
 };
 
+export const logColumnToDisplayLogColumn = (value: any): string => {
+  const convert = {
+    timestamp: "time",
+    status_code: "failed",
+    organization_key__name: "apiKey",
+    model: "model",
+    sentiment_score: 'sentimentScore'
+  }
+  return convert[value] || value;
+}
+
+export const processGroupingTitle = (value: string | number, metric?:string): React.ReactNode => {
+  if (typeof value==="boolean") {
+    return <StatusTag failed={value}/>
+  }
+  if (metric === "sentiment_score") {
+    return <SentimentTag sentiment_score={value as number} showScore={false}/>
+  }
+  if (!metric) {
+    return "Unknown"
+  }
+  return value
+};
+
+
 export const processRequestLogs = (
   requestLogs: LogItem[]
 ): DisplayLogItem[] => {
@@ -171,6 +197,7 @@ export const processRequestLogs = (
         failed: log.failed,
         errorCode: log.error_code,
       },
+      sentimentScore: log.sentiment_score,
     };
   });
 };

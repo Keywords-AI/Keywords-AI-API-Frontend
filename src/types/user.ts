@@ -60,5 +60,6 @@ export type User = {
   custom_bundle: {};
   custom_subscription: {};
   profile_color: string;
+  group_by: string;
   request_log_filters: FilterParams;
 };
