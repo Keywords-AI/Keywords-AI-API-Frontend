@@ -64,6 +64,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     );
   }
   const searchContent = (keyword) => {
+    console.log("keyword", keyword);
     if (keyword === "") {
       setCompleteInteraction(
         logItem?.prompt_messages
@@ -153,17 +154,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   };
   const metricRef = useRef(null);
   const logRef = useRef(null);
-  useEffect(() => {
-    if (displayLog) {
-      if (logRef && logRef.current)
-        (logRef.current as HTMLElement)?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      if (metricRef && metricRef.current)
-        (metricRef.current as HTMLElement)?.scrollIntoView({
-          behavior: "smooth",
-        });
-    }
-  }, []);
+
   const getMessageType = (role: string) => {
     if (role === "[system]") {
       return "System";
@@ -173,6 +164,21 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     return "Response";
   };
   const [displayLog, setDisplayLog] = useState(false);
+  useEffect(() => {
+    if (displayLog) {
+      if (logRef && logRef.current) {
+        console.log("logRef.current");
+        (logRef.current as HTMLElement)?.scrollIntoView({ behavior: "smooth" });
+      }
+      // } else {
+      //   if (metricRef && metricRef.current) {
+      //     console.log("metricRef.current");
+      //     (metricRef.current as HTMLElement)?.scrollIntoView({
+      //       behavior: "smooth",
+      //     });
+      //   }
+    }
+  }, [logItem]);
   return (
     <div
       className={cn(
@@ -181,8 +187,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         open ? "w-[400px]" : "w-0"
       )}
     >
-      <div className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1">
-        <div className="flex items-center gap-sm">
+      <div className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1 z-[100]">
+        <div className="flex items-center gap-sm ">
           <Button
             variant="text"
             text="Metrics"

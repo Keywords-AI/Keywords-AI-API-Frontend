@@ -56,9 +56,13 @@ export const AlertsFallbackPage = () => {
     );
   }, [model1, model2, model3]);
   const isfreeUser = orgPlan.plan !== "team" && orgPlan.plan !== "custom";
-  const models = isfreeUser
-    ? MODELS.filter((model) => model.brand === "openai")
-    : MODELS;
+  const models = MODELS.map((model) => {
+    if (model.brand !== "openai" || model.brand !== "azure") {
+      return { ...model, disabled: true };
+    }
+    return model;
+  });
+  console.log(models);
   const filteredModelsForModel1 = [
     {
       name: "Please select a model",

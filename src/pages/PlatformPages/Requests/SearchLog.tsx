@@ -46,7 +46,11 @@ export default function SearchLog({ handleSearch, handleReset }) {
         }
       >
         <div>
-          <DotsButton icon={Search} onClick={() => setCollapse(false)} />
+          <DotsButton
+            icon={Search}
+            onClick={() => setCollapse(false)}
+            className="w-[28px] h-[28px]"
+          />
         </div>
       </Tooltip>
     </div>
