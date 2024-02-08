@@ -1,13 +1,16 @@
 import { UseFormRegister } from "react-hook-form";
 
-export type Choice = {
-  name: string;
-  value: string | number;
-  textColor?: string;
-  icon?: React.ElementType;
-  secText?: string;
-  onClick?: () => void;
-} | null | undefined;
+export type Choice =
+  | {
+      name: string;
+      value: string | number;
+      textColor?: string;
+      icon?: React.ElementType;
+      secText?: string;
+      onClick?: () => void;
+    }
+  | null
+  | undefined;
 
 export type InputProps = {
   value: string | number | readonly string[] | undefined; // Add value prop
@@ -15,8 +18,7 @@ export type InputProps = {
   placeholder?: string;
   disabled?: boolean;
   name?: string;
-
-}
+};
 
 export interface SelectInputProps {
   open?: boolean;
@@ -71,4 +73,5 @@ export type TextInputProps = {
   pseudoElementClass?: string;
   register?: UseFormRegister<any>;
   validationSchema?: any;
+  dollarSign?: boolean;
 };
