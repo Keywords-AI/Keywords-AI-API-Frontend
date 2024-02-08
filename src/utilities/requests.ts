@@ -60,6 +60,9 @@ export const keywordsRequest = async ({
     }
     const response = await fetch(host + path, callBody);
     if (response.ok) {
+      if (response.status === 204) {
+        return;
+      }
       if (response.json === undefined) {
         return { status: response.status };
       }

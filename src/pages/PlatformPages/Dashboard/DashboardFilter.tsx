@@ -212,6 +212,7 @@ export default function DashboardFilter() {
                 placeholder="Request"
                 useShortCut
                 align="start"
+                backgroundColor="bg-gray-2"
                 icon={Down}
                 padding="py-xxxs px-xxs"
                 gap="gap-xxs"
@@ -295,6 +296,7 @@ export default function DashboardFilter() {
                     padding="py-xxxs px-xxs"
                     gap="gap-xxs"
                     width="min-w-[140px]"
+                    backgroundColor="bg-gray-2"
                     optionsWidth="w-[180px]"
                     value={currentType}
                     onChange={(e) =>
@@ -319,6 +321,7 @@ export default function DashboardFilter() {
                 gap="gap-xxs"
                 width="min-w-[140px]"
                 optionsWidth="w-[180px]"
+                backgroundColor="bg-gray-2"
                 alignOffset={-40}
                 value={currentBreakdown}
                 onChange={(e) =>

@@ -365,15 +365,13 @@ export const setCacheResponse = (cached: boolean) => {
         dispatch(updateLog(currentRequestLog.id, { cached_response: data.id }));
       });
     } else {
-      console.log("delete cache");
-      console.log("hi", currentRequestLog.cached_response);
       dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
       keywordsRequest({
         path: `api/cache/${currentRequestLog.cached_response}/`,
         method: "DELETE",
         dispatch: dispatch,
       }).then((data) => {
-        console.log("deleted cache", data);
+        return;
       });
     }
   };
