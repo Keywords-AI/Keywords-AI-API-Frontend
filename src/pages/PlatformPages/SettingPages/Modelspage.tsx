@@ -14,36 +14,29 @@ import { PageContent } from "src/components/Sections";
 import { models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
-type RightDrawerContentProps = {
-  parameter?: string;
-  speed?: React.ReactElement;
-  mmlu_score?: string;
-  mt_bench_score?: string;
-  big_bench_score?: string;
-  language_support?: number;
-  streaming_support?: number;
-  prompt_pricing?: number;
-  completion_pricing?: number;
-  rate_limit?: string;
-};
+
 const RightDrawerContent = ({
-  parameter,
+  name,
   speed,
+  max_context_window,
+  model_size,
   mmlu_score,
   mt_bench_score,
   big_bench_score,
-  language_support,
-  streaming_support,
-  prompt_pricing,
-  completion_pricing,
+  input_cost,
+  output_cost,
   rate_limit,
-}: RightDrawerContentProps) => {
+  multilingual,
+  streaming_support,
+  function_call,
+  weight,
+}) => {
   const DisplayObj = [
     {
-      label: "Parameter",
+      label: "Model",
       value: (
         <span className="text-sm-regular text-gray-4">
-          {parameter || "parameter"}
+          {name || "-"}
         </span>
       ),
     },
@@ -195,7 +188,6 @@ const ModelsTable = ({
         {ModlItems.map((item, index) => (
           <Drawer
             key={index}
-            open={false} // TODO: uncomment this line to activate the drawer
             trigger={
               <div
                 key={index}

@@ -26,11 +26,13 @@ export const stringOrNumber = (string: string): number | string => {
 }
 
 export const checkBoxFieldToList = (
-  field: boolean | string | string[]
-): string[] => {
+  field: boolean | string | string[] | number
+): string[] | number[] => {
   if (typeof field === "boolean") {
     return [];
   } else if (typeof field === "string") {
+    return [field];
+  } else if (typeof field === "number") {
     return [field];
   } else {
     return field;

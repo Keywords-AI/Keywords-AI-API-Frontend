@@ -103,22 +103,25 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       </span>
     ),
     Model: ModelTag({ model: logItem?.model || "unknown" }),
-    "Prompt tokens": (
-      <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
-      </span>
-    ),
-    Cached: (
+
+    Cached: logItem?.cached_response ? (
       <Tag
-        text={logItem?.cached_response ? "Cached" : "No"}
+        text={"Cached"}
         backgroundColor="bg-primary/10"
         textColor="text-primary"
         border=""
       />
+    ) : (
+      <span className="text-sm-regular text-gray-4">{"No"}</span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.completion_tokens?.toLocaleString() || "4,220"}
+      </span>
+    ),
+    "Prompt tokens": (
+      <span className="text-sm-regular text-gray-4">
+        {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
       </span>
     ),
     "Total tokens": (
