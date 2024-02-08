@@ -155,8 +155,12 @@ export const processGroupingTitle = (value: string | number, metric?:string): Re
   if (metric === "sentiment_score") {
     return <SentimentTag sentiment_score={value as number} showScore={false}/>
   }
+  if (!metric) {
+    return "Unknown"
+  }
   return value
 };
+
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
