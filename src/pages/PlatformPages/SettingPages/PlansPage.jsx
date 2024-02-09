@@ -12,6 +12,7 @@ import {
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
+import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -48,6 +49,7 @@ export const PlansPage = connect(
 )(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
+  const remaining = models.length;
   const cards = [
     {
       title: "Starter",
@@ -95,7 +97,7 @@ export const PlansPage = connect(
         "Advanced usage analytics",
         "Admin roles",
         "Advanced model fallback",
-        "Mistral, Anthropic, and x more models",
+        `Mistral, Anthropic, and ${remaining} more models`,
         "CTO priority support",
       ],
       downgradeParams: {

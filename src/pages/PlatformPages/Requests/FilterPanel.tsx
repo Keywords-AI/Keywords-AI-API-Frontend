@@ -128,7 +128,7 @@ export function FilterPanel() {
                   { name: "Status", value: "failed" },
                   // { name: "Cached", value: "cached" },
                   { name: "Sentiment", value: "sentiment_score" },
-                  { name: "No Grouping", value: "" },
+                  { name: "No grouping", value: "" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;

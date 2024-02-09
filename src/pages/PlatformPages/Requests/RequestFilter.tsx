@@ -129,7 +129,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
       })}
       {
         <DotsButton
-
           icon={Close}
           borderRadius="rounded-r-sm"
           bgColor="bg-gray-2"

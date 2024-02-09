@@ -55,14 +55,16 @@ export const AlertsFallbackPage = () => {
       })
     );
   }, [model1, model2, model3]);
-  const isfreeUser = orgPlan.plan !== "team" && orgPlan.plan !== "custom";
+  const isFreeUser = useTypedSelector((state: RootState) => {
+    const planLevel = state.organization?.organization_subscription.plan_level;
+    return planLevel < 2;
+  });
   const models = MODELS.map((model) => {
-    if (model.brand !== "openai" || model.brand !== "azure") {
+    if (isFreeUser && model.brand !== "openai") {
       return { ...model, disabled: true };
     }
     return model;
   });
-  console.log(models);
   const filteredModelsForModel1 = [
     {
       name: "Please select a model",
@@ -72,6 +74,7 @@ export const AlertsFallbackPage = () => {
       (model) => model.value !== model2 && model.value !== model3
     ),
   ];
+
   const filteredModelsForModel2 = [
     {
       name: "Please select a model",

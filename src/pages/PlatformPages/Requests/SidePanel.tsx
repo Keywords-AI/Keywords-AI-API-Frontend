@@ -1,4 +1,4 @@
-import { LogItem } from "src/types";
+import { LogItem, RootState } from "src/types";
 import {
   Button,
   CopyButton,
@@ -114,14 +114,15 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ) : (
       <span className="text-sm-regular text-gray-4">{"No"}</span>
     ),
-    "Completion tokens": (
-      <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens?.toLocaleString() || "4,220"}
-      </span>
-    ),
+
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
+      </span>
+    ),
+    "Completion tokens": (
+      <span className="text-sm-regular text-gray-4">
+        {logItem?.completion_tokens?.toLocaleString() || "4,220"}
       </span>
     ),
     "Total tokens": (
@@ -139,20 +140,21 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {"$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
-    Latency: (
+    "Routing time": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.latency.toFixed(3) || "-") + "s"}
+        {(logItem?.routing_time.toFixed(3) || "-") + "ms"}
       </span>
     ),
+
     TTFT: (
       <span className="text-sm-regular text-gray-4">
         {(logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
     ),
-    Sentiment: (
-      <SentimentTag
-        sentiment_score={logItem?.sentiment_analysis?.sentiment_score || 0}
-      />
+    Latency: (
+      <span className="text-sm-regular text-gray-4">
+        {(logItem?.latency.toFixed(3) || "-") + "s"}
+      </span>
     ),
   };
   const metricRef = useRef(null);
@@ -190,7 +192,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         open ? "w-[400px]" : "w-0"
       )}
     >
-      <div className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1 z-[100]">
+      <div
+        aria-label="table-keys-header"
+        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1 z-[10]"
+      >
         <div className="flex items-center gap-sm ">
           <Button
             variant="text"
@@ -208,7 +213,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           />
         </div>
         <div>
-          {displayLog && (
+          {/* {displayLog && (
             <SearchLog
               handleSearch={searchContent}
               handleReset={() => {
@@ -223,10 +228,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 );
               }}
             />
-          )}
+          )} */}
         </div>
       </div>
-      <div className="flex-col items-start self-stretch mt-[44px]">
+      <div
+        className="flex-col items-start self-stretch mt-[44px]"
+        aria-label="frame 1969"
+      >
         {!displayLog && (
           <div
             ref={metricRef}
@@ -250,6 +258,44 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                           <>
                             <span className="text-gray-4 caption">
                               Time to first generated token
+                            </span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <Info />
+                        </div>
+                      </Tooltip>
+                    )}
+                    {key === "Routing time" && (
+                      <Tooltip
+                        side="right"
+                        sideOffset={8}
+                        delayDuration={1}
+                        skipDelayDuration={1}
+                        content={
+                          <>
+                            <span className="text-gray-4 caption">
+                              Time to select model
+                            </span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <Info />
+                        </div>
+                      </Tooltip>
+                    )}
+                    {key === "Latency" && (
+                      <Tooltip
+                        side="right"
+                        sideOffset={8}
+                        delayDuration={1}
+                        skipDelayDuration={1}
+                        content={
+                          <>
+                            <span className="text-gray-4 caption">
+                              Time to generate response
                             </span>
                           </>
                         }
@@ -332,6 +378,105 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           </>
         )}
       </div>
+
+      {!displayLog && (
+        <>
+          <Divider />
+          <Evaluation />
+          <Divider />
+          {/* <Classification /> */}
+          <Divider />
+        </>
+      )}
+    </div>
+  );
+};
+
+const Evaluation = ({
+  sentimentScore = 0,
+  groundnessScore = 85,
+}: {
+  sentimentScore?: number;
+  groundnessScore?: number;
+}) => {
+  const isFreeUser = useTypedSelector((state: RootState) => {
+    const planLevel = state.organization?.organization_subscription.plan_level;
+    return planLevel < 2;
+  });
+
+  return (
+    <div
+      aria-label="frame 1974"
+      className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
+    >
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <Tooltip
+          side="right"
+          sideOffset={8}
+          delayDuration={1}
+          skipDelayDuration={1}
+          content={
+            <>
+              <span className="text-gray-4 caption">
+                Failure threshold = 85%
+              </span>
+            </>
+          }
+        >
+          <div className="flex items-center gap-xxs text-sm-md text-gray-5">
+            Groundedness
+            <Info />
+          </div>
+        </Tooltip>
+        <div className="flex items-center gap-xxxs">
+          {isFreeUser ? (
+            <Tag
+              text={"Upgrade"}
+              backgroundColor="bg-primary/10"
+              textColor="text-primary"
+              border=""
+            />
+          ) : (
+            <Tag
+              text={`${groundnessScore}% Grounded`}
+              backgroundColor={
+                groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
+              }
+              textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
+              border=""
+            />
+          )}
+        </div>
+      </div>
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-sm-md text-gray-5">
+          Sentiment
+        </div>
+
+        <div className="flex items-center gap-xxxs">
+          {isFreeUser ? (
+            <Tag
+              text={"Upgrade"}
+              backgroundColor="bg-primary/10"
+              textColor="text-primary"
+              border=""
+            />
+          ) : (
+            <SentimentTag showScore={false} sentiment_score={sentimentScore} />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Classification = () => {
+  return (
+    <div
+      aria-label="frame 1973"
+      className="flex-col py-sm px-lg items-start gap-xxxs self-stretch"
+    >
+      hi2
     </div>
   );
 };

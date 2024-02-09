@@ -143,24 +143,26 @@ export const logColumnToDisplayLogColumn = (value: any): string => {
     status_code: "failed",
     organization_key__name: "apiKey",
     model: "model",
-    sentiment_score: 'sentimentScore'
-  }
+    sentiment_score: "sentimentScore",
+  };
   return convert[value] || value;
-}
-
-export const processGroupingTitle = (value: string | number, metric?:string): React.ReactNode => {
-  if (typeof value==="boolean") {
-    return <StatusTag failed={value}/>
-  }
-  if (metric === "sentiment_score") {
-    return <SentimentTag sentiment_score={value as number} showScore={false}/>
-  }
-  if (!metric) {
-    return "Unknown"
-  }
-  return value
 };
 
+export const processGroupingTitle = (
+  value: string | number,
+  metric?: string
+): React.ReactNode => {
+  if (typeof value === "boolean") {
+    return <StatusTag failed={value} />;
+  }
+  if (metric === "sentiment_score") {
+    return <SentimentTag sentiment_score={value as number} showScore={false} />;
+  }
+  if (!metric) {
+    return "Unknown";
+  }
+  return value;
+};
 
 export const processRequestLogs = (
   requestLogs: LogItem[]
@@ -198,6 +200,7 @@ export const processRequestLogs = (
         errorCode: log.error_code,
       },
       sentimentScore: log.sentiment_score,
+      cachedResponse: log.cached_response,
     };
   });
 };
