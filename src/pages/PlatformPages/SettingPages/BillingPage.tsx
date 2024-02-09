@@ -114,9 +114,21 @@ export const BillingPage = () => {
       <PageParagraph
         heading="Payment history"
         subheading={
-          bilingData?.length > 0
-            ? "You can see your payment history below. For questions about billing, contact team@keywordsai.co."
-            : "There are no invoices to display."
+          bilingData?.length > 0 ? (
+            <span>
+              You can see your payment history below. For questions about
+              billing, contact{" "}
+              <a
+                className="text-primary cursor-pointer"
+                href="mailto:team@keywordsai.co"
+              >
+                team@keywordsai.co
+              </a>
+              .
+            </span>
+          ) : (
+            "There are no invoices to display."
+          )
         }
       >
         {bilingData?.length > 0 && (
