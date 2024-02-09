@@ -63,10 +63,10 @@ export const BillingPage = () => {
       title="Billing"
       subtitle="Manage your billing information and invoices."
     >
-      <PageParagraph heading="Available credits">
+      {/* <PageParagraph heading="Available credits">
         <span className="text-md-medium text-gray-5">$86.99</span>
       </PageParagraph>
-      <Divider />
+      <Divider /> */}
       <PageParagraph
         heading="Current plan"
         subheading={
