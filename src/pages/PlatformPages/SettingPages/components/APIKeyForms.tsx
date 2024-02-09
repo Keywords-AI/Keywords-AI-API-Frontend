@@ -221,7 +221,7 @@ const CreateFormNotConnected = React.forwardRef(
                       // onKeyDown={handleEnter}
                       placeholder={"100"}
                       type="number"
-                      defaultValue={100}
+                      defaultValue={200}
                       dollarSign
                     />
                   </>
