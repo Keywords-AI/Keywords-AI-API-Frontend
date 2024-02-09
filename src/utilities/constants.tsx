@@ -18,7 +18,7 @@ import {
   LogItemTag,
   RequestFilter,
 } from "src/types";
-import { ModelTag, StatusTag } from "src/components/Misc";
+import { ModelTag, StatusTag, Tag } from "src/components/Misc";
 import { SentimentTag } from "src/components/Misc";
 import React from "react";
 
@@ -531,6 +531,19 @@ export const requestLogTagColumns: LogItemTag[] = [
     renderFunction: ({ failed, errorCode }) => (
       <StatusTag failed={failed} errorCode={errorCode} />
     ),
+  },
+  {
+    name: "Cached",
+    retrievalKey: "cachedResponse",
+    renderFunction: (cached_response) =>
+      cached_response > 0 && (
+        <Tag
+          text={"Cached"}
+          backgroundColor="bg-primary/10"
+          textColor="text-primary"
+          border=""
+        />
+      ),
   },
   {
     name: "Sentiment",

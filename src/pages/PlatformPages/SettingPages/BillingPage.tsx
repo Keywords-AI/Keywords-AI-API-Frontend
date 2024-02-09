@@ -24,6 +24,7 @@ export const viewBillTrigger = (item: any) => {
       <DotsButton
         icon={Search}
         iconSize="sm"
+        className="w-[28px] h-[28px] p-0"
         onClick={() => window.open(item.hosted_invoice_url, "_blank")}
       />
     </>

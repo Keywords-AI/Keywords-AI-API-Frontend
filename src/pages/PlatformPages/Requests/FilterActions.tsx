@@ -165,32 +165,18 @@ export function FilterActions({ type }: { type: string }) {
                 ?.value as Operator
             }
           />
-          {/* <InputFieldFilter
-            filterOption={filterOptions[filterType]!}
-            defaultOperator={
-              filterOptions[filterType]?.operator_choices?.[0]
-                ?.value as Operator
-            }
-          /> */}
         </>
       )}
     </>
   );
 }
 
-const InputModal = ({ filterOption, defaultOperator }) => {
+export const InputModal = ({ filterOption, defaultOperator }) => {
   const { register, handleSubmit, reset } = useForm();
   const [open, setOpen] = useState(true);
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
-    console.log(
-      filterOption.metric,
-      data.filterValue,
-      defaultOperator,
-      filterOption.value_field_type,
-      filterOption.display_name,
-      Math.random().toString(36).substring(2, 15)
-    );
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     dispatch(
       addFilter({
         metric: filterOption.metric,
@@ -201,12 +187,10 @@ const InputModal = ({ filterOption, defaultOperator }) => {
         id: Math.random().toString(36).substring(2, 15),
       })
     );
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+
     setOpen(false);
   };
-  useEffect(() => {
-    return () => {};
-  }, []);
+
   return (
     <Modal
       title={`Filter by ${filterOption.display_name}`}
