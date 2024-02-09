@@ -28,6 +28,7 @@ export type LogItem = {
   };
   error_code: number;
   cached_response: number;
+  routing_time: number;
 };
 
 export type DisplayLogItem = {
@@ -49,6 +50,7 @@ export type DisplayLogItem = {
     errorCode: number;
   };
   sentimentAnalysis: any;
+  cachedResponse: number;
 };
 
 export type LogColumnKey = keyof DisplayLogItem;

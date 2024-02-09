@@ -34,11 +34,7 @@ const RightDrawerContent = ({
   const DisplayObj = [
     {
       label: "Model",
-      value: (
-        <span className="text-sm-regular text-gray-4">
-          {name || "-"}
-        </span>
-      ),
+      value: <span className="text-sm-regular text-gray-4">{name || "-"}</span>,
     },
     {
       label: "Speed",
@@ -188,6 +184,7 @@ const ModelsTable = ({
         {ModelItems.map((item, index) => (
           <Drawer
             key={index}
+            open={false}
             trigger={
               <div
                 key={index}
@@ -252,6 +249,7 @@ const ModelsTable = ({
   );
 };
 export default function Modelspage() {
+  console.log(models.length, "models");
   return (
     <PageContent title="Models" subtitle="">
       <span className="text-md-medium">Supported models</span>

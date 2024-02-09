@@ -23,6 +23,7 @@ import { Divider } from "src/components/Sections";
 import { ModelTags } from "./ApiKeyComponents";
 import { StateTag } from "src/components/Misc";
 import { useNavigate } from "react-router-dom";
+import { useTypedSelector } from "src/store/store";
 
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
@@ -95,6 +96,10 @@ export const ApiKeyPage = ({
     "AI21 Labs",
     "Google",
   ];
+  const isFreeUser = useTypedSelector((state: RootState) => {
+    const planLevel = state.organization?.organization_subscription.plan_level;
+    return planLevel < 2;
+  });
   return (
     <PageContent
       title="API Keys"
@@ -113,14 +118,17 @@ export const ApiKeyPage = ({
               "Last used",
               <div className="flex gap-xxs justify-center items-center">
                 {`${apiKey.keyList?.length}/${apiKeyLimit}`}
-                <Button
-                  variant="footer"
-                  text="Upgrade"
-                  textColor="text-primary"
-                  onClick={() => {
-                    navigate("/platform/api/plans");
-                  }}
-                />
+                {isFreeUser && (
+                  <Button
+                    variant="footer"
+                    text="Upgrade"
+                    padding="p-0"
+                    textColor="text-primary"
+                    onClick={() => {
+                      navigate("/platform/api/plans");
+                    }}
+                  />
+                )}
               </div>,
             ]}
             columnNames={["key", "last_used", "actions"]}
