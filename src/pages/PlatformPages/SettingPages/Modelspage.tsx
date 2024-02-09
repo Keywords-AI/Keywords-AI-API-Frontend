@@ -132,9 +132,9 @@ const RightDrawerContent = ({
 };
 
 const ModelsTable = ({
-  ModlItems,
+  ModelItems,
 }: {
-  ModlItems: {
+  ModelItems: {
     name: string;
     icon: ReactElement;
     promptCost: string;
@@ -185,7 +185,7 @@ const ModelsTable = ({
             Moderation
           </div>
         </div>
-        {ModlItems.map((item, index) => (
+        {ModelItems.map((item, index) => (
           <Drawer
             key={index}
             trigger={
@@ -256,7 +256,7 @@ export default function Modelspage() {
     <PageContent title="Models" subtitle="">
       <span className="text-md-medium">Supported models</span>
       <ModelsTable
-        ModlItems={[
+        ModelItems={[
           {
             name: "gpt-4",
             icon: <OpenAI size="sm" />,
@@ -267,7 +267,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "azure-gpt-4-32k",
+            name: "azure/gpt-4-32k",
             icon: <OpenAI size="sm" />,
             promptCost: "$0.063",
             completionCost: "$0.126",
@@ -285,7 +285,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "gpt-3.5-turbo-1106",
+            name: "gpt-3.5-turbo",
             icon: <OpenAI size="sm" />,
             promptCost: "$0.000525",
             completionCost: "$0.0315",
@@ -375,7 +375,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "gemini-pro",
+            name: "gemini/gemini-pro",
             icon: <Google size="sm" />,
             promptCost: "$0.001313",
             completionCost: "$0.002625",
@@ -384,7 +384,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "mistral-tiny",
+            name: "mistral/mistral-tiny",
             icon: <Mistral size="sm" />,
             promptCost: "$0.0001575",
             completionCost: "$0.000483",
@@ -393,7 +393,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "mistral-small",
+            name: "mistral/mistral-small",
             icon: <Mistral size="sm" />,
             promptCost: "$0.000683",
             completionCost: "$0.00206",
@@ -402,7 +402,7 @@ export default function Modelspage() {
             moderation: "Filtered",
           },
           {
-            name: "mistral-medium",
+            name: "mistral/mistral-medium",
             icon: <Mistral size="sm" />,
             promptCost: "$0.00287",
             completionCost: "$0.0086",

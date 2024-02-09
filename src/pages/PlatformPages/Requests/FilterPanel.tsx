@@ -151,7 +151,7 @@ export function FilterPanel() {
                 backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
                 optionsWidth="w-[120px]"
-                defaultValue={user.sort_by || "-timestamp"}
+                defaultValue={user.sort_by || ""}
                 choices={[
                   // Value will be the db column name of request log
                   { name: "Default", value: "" },
