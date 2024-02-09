@@ -110,7 +110,7 @@ export const SettingPage = ({
         />
       </div>
       <Divider />
-      <div aria-label="frame 2023" className="flex-col gap-sm w-full">
+      {/* <div aria-label="frame 2023" className="flex-col gap-sm w-full">
         <div
           aria-label="frame 1837"
           className="flex items-start self-stretch justify-between "
@@ -136,7 +136,7 @@ export const SettingPage = ({
           ]}
         />
       </div>
-      <Divider />
+      <Divider /> */}
     </PageContent>
   );
 };
