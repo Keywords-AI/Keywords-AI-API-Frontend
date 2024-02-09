@@ -110,33 +110,33 @@ export const SettingPage = ({
         />
       </div>
       <Divider />
-      <div className="flex items-start self-stretch justify-between">
-        <TitleStaticSubheading
-          title="Auto-archive requests"
-          subtitle={
-            "Automatically archive old requests for the configured time period. Changes will apply within one day."
-          }
-        />
-        <SwitchButton
-          checked={!organization?.disable_log}
-          onCheckedChange={(checked) => {
-            updateOrganization({ disable_log: !checked });
-          }}
+      {/* <div aria-label="frame 2023" className="flex-col gap-sm w-full">
+        <div
+          aria-label="frame 1837"
+          className="flex items-start self-stretch justify-between "
+        >
+          <TitleStaticSubheading
+            title="Auto-archive requests"
+            subtitle={
+              "Automatically archive old requests for the configured time period. Changes will apply within one day."
+            }
+          />
+          <SwitchButton />
+        </div>
+        <SelectInput
+          title="Auto-archive requests after"
+          defaultValue={organization?.auto_archive_period || "day"}
+          width="w-[248px]"
+          optionsWidth="w-[248px]"
+          choices={[
+            { name: "1 day", value: "day" },
+            { name: "1 week", value: "week" },
+            { name: "1 month", value: "month" },
+            { name: "1 year", value: "year" },
+          ]}
         />
       </div>
-      <SelectInput
-        title="Auto-archive requests after"
-        defaultValue={organization?.auto_archive_period || "day"}
-        width="w-[248px]"
-        optionsWidth="w-[248px]"
-        choices={[
-          { name: "1 day", value: "day" },
-          { name: "1 week", value: "week" },
-          { name: "1 month", value: "month" },
-          { name: "1 year", value: "year" },
-        ]}
-      />
-      <Divider />
+      <Divider /> */}
     </PageContent>
   );
 };

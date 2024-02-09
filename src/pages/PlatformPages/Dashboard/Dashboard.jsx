@@ -201,7 +201,7 @@ function DashboardNotConnected({
   }
 
   // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-  if (firstTime !== undefined && firstTime) return <WelcomeState />;
+  if (firstTime !== undefined && firstTime) return <WelcomeState isDashboard />;
   else
     return (
       <div className=" flex-col flex-1 self-stretch">

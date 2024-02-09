@@ -149,12 +149,12 @@ const CreateFormNotConnected = React.forwardRef(
     const [showMore, setShowMore] = useState(false);
     return (
       <form
-        className={"flex-col gap-sm self-stretch relative"}
+        className={"flex-col gap-md self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >
         {!apiKey?.apiKey ? (
           <React.Fragment>
-            <div className="grid gap-sm grid-cols-[1fr,160px]">
+            <div className="grid gap-xs grid-cols-[1fr,160px]">
               <TextInput
                 title={"Name"}
                 width={"w-full"}
@@ -221,7 +221,7 @@ const CreateFormNotConnected = React.forwardRef(
                       // onKeyDown={handleEnter}
                       placeholder={"100"}
                       type="number"
-                      defaultValue={100}
+                      defaultValue={200}
                       dollarSign
                     />
                   </>
@@ -389,7 +389,6 @@ const EditFormNotConnected = ({
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
-
     }
   }, [editingKey]);
   const {
@@ -408,11 +407,11 @@ const EditFormNotConnected = ({
   const [showMore, setShowMore] = useState(true);
   return (
     <form
-      className={"flex-col gap-sm self-stretch relative"}
+      className={"flex-col gap-md self-stretch relative"}
       onSubmit={handleSubmit(onSubmit)}
     >
       <React.Fragment>
-        <div className="grid gap-sm grid-cols-[1fr,160px]">
+        <div className="grid gap-xs grid-cols-[1fr,160px]">
           <TextInput
             title={"Name"}
             width={"w-full"}

@@ -26,7 +26,7 @@ import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
-
+import { Info } from "src/components/Icons";
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
   { name: "Average", value: "average", secText: "2" },
@@ -284,7 +284,27 @@ export default function DashboardFilter() {
               currentMetric !== Metrics.error_count.value &&
               currentMetric !== Metrics.average_latency.value && (
                 <div className="flex justify-between items-center self-stretch ">
-                  <span className="text-sm-regular text-gray-4">Type</span>
+                  <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
+                    Type
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Display the data as total value or averaging over per
+                          request
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                  </span>
                   <SelectInput
                     {...register("type")}
                     headLess

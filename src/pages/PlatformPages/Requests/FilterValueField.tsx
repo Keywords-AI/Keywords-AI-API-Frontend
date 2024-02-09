@@ -6,10 +6,13 @@ import {
   addFilter,
   setFilterType,
   updateFilter,
-  setCurrentFilter
+  setCurrentFilter,
+  deleteFilter,
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
-import { TextInputSmall } from "src/components/Inputs";
+import { TextInput, TextInputSmall } from "src/components/Inputs";
+import { Modal } from "src/components/Dialogs";
+import { useLocation } from "react-router-dom";
 
 export const InputFieldFilter = ({
   filterOption,
@@ -56,7 +59,9 @@ export const InputFieldFilter = ({
         variant="small"
         text="Cancel"
         type="button"
-        onClick={() => dispatch(dispatch(setCurrentFilter({ metric: undefined, id: "" })))}
+        onClick={() =>
+          dispatch(dispatch(setCurrentFilter({ metric: undefined, id: "" })))
+        }
       />
     </div>
   );
@@ -87,39 +92,106 @@ export const InputFieldUpdateFilter = ({
       setChanged(false);
     }
   }, [value]);
+  //   {
+  //     "id": "y6heh259ijf",
+  //     "metric": "prompt_messages",
+  //     "value_field_type": "text",
+  //     "operator": "icontains",
+  //     "value": [
+  //         "haha"
+  //     ],
+  //     "display_name": "Prompt"
+  // }
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSubmit();
     }
   };
+  const [showModal, setShowModal] = useState(false);
   return (
     <div className="flex-row items-center">
-      <TextInputSmall
-        {...register("value", {
-          onChange: (e) => {
-            setValue(e.target.value);
-          },
-        })}
-        padding="py-xxxs px-xxs"
-        onKeyDown={onKeyDown}
-        width="w-[120px]"
-        value={value as string}
-        type={filter.value_field_type}
+      <InputModal
+        filterOption={filter}
+        defaultOperator={filter.operator as Operator}
+        open={showModal}
+        setOpen={setShowModal}
+        trigger={
+          <Button variant="small-select" text={`"${value as string}"`} />
+        }
       />
-      {changed && (
-        <>
-          <Button variant="small" text="Apply" onClick={onSubmit} />
-          <Button
-            variant="small"
-            text="Cancel"
-            type="button"
-            onClick={() => {
-              setChanged(false);
-              setValue(filter.value[0]);
-            }}
-          />
-        </>
-      )}
     </div>
+  );
+};
+
+const InputModal = ({
+  filterOption,
+  defaultOperator,
+  trigger,
+  open,
+  setOpen,
+}) => {
+  const { register, handleSubmit, reset } = useForm();
+  const dispatch = useTypedDispatch();
+  const onSubmit = (data) => {
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(
+      addFilter({
+        metric: filterOption.metric,
+        value: [data.filterValue],
+        operator: defaultOperator,
+        value_field_type: filterOption.value_field_type,
+        display_name: filterOption.display_name,
+        id: Math.random().toString(36).substring(2, 15),
+      })
+    );
+  };
+  const location = useLocation();
+  useEffect(() => {
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+  }, [location]);
+  return (
+    <Modal
+      trigger={trigger}
+      title={`Filter by ${filterOption.display_name}`}
+      open={open}
+      setOpen={(prev) => {
+        if (prev === false) {
+          dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+        }
+        setOpen(prev);
+      }}
+      width="w-[600px]"
+    >
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex-col items-center gap-md self-stretch"
+      >
+        <TextInput
+          placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(onSubmit)();
+              e.stopPropagation();
+            }
+          }}
+          {...register("filterValue")}
+          type={filterOption.value_field_type}
+        />
+        <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
+          <div className="flex justify-end items-center gap-xs">
+            <Button
+              variant="r4-black"
+              text="Cancel"
+              onClick={() => {
+                reset();
+                setOpen(false);
+                dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+              }}
+            />
+            <Button variant="r4-primary" text="Apply" type="submit" />
+          </div>
+        </div>
+      </form>
+    </Modal>
   );
 };
