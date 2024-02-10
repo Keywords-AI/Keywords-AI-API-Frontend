@@ -190,7 +190,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.input_cost}
+                    {item.prompt_cost}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -199,7 +199,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.output_cost}
+                    {item.completion_cost}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -214,12 +214,14 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                 </div>
                 <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
                   <Tag
-                    text={"undefined"}
+                    text={item.moderation}
                     textColor={
-                      "undefined" == "Filtered" ? "text-success" : "text-error"
+                      item.moderation == "Filtered"
+                        ? "text-success"
+                        : "text-error"
                     }
                     backgroundColor={
-                      "undefined" == "Filtered" ? "bg-success/10" : ""
+                      item.moderation == "Filtered" ? "bg-success/10" : ""
                     }
                     border=""
                   />
