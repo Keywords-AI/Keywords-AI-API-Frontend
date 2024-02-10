@@ -15,7 +15,7 @@ export const stringOrBoolean = (string: string): boolean | string => {
   } else {
     return string;
   }
-}
+};
 
 export const stringOrNumber = (string: string): number | string => {
   if (!isNaN(Number(string))) {
@@ -23,7 +23,7 @@ export const stringOrNumber = (string: string): number | string => {
   } else {
     return string;
   }
-}
+};
 
 export const checkBoxFieldToList = (
   field: boolean | string | string[] | number
@@ -357,14 +357,15 @@ export const addMissingDate = (
 };
 
 export const getColorMap = (data, currentMetric, isModel) => {
-  const sortedData = data.sort((a, b) => {
+  let sortedData = data.sort((a, b) => {
     return b[currentMetric] - a[currentMetric];
   });
   const key = isModel ? "model" : "organization_key__name";
   let colorMap = {};
+  sortedData = sortedData.map((item) => item[key]);
+  sortedData = [...new Set(sortedData)];
   sortedData.forEach((item, index) => {
-    colorMap[item[key] || "unknown model"] =
-      colorTagsClasses[index % colorTagsClasses.length];
+    colorMap[item] = colorTagsClasses[index % colorTagsClasses.length];
   });
   return colorMap;
 };
