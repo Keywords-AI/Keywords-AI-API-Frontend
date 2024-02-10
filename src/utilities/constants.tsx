@@ -43,8 +43,26 @@ const colors = [
   "var(--green-light)",
   "var(--green-dark)",
 ];
-
-export const models = [
+export type ModelType = {
+  name: string;
+  value: string;
+  brand: string;
+  icon: any; // Replace 'any' with the actual type of 'icon'
+  speed: number;
+  max_context_window: number;
+  model_size: number;
+  mmlu_score: number;
+  mt_bench_score: number;
+  big_bench_score: number;
+  input_cost: number;
+  output_cost: number;
+  rate_limit: number;
+  multilingual: number;
+  streaming_support: number;
+  function_call: number;
+  weight: number;
+};
+export const models: ModelType[] = [
   {
     name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
@@ -82,7 +100,6 @@ export const models = [
     streaming_support: 1,
     function_call: 1,
     weight: 1,
-    output_pricing: 0.002,
   },
   // {
   //   name: "GPT-4-32k",
@@ -245,17 +262,21 @@ export const models = [
   {
     name: "Command",
     value: "command",
-    rate_limit: 500,
-    speed: 150,
     brand: "cohere",
     icon: Cohere,
-    mmlu_score: null,
-    mt_bench_score: null,
-    big_bench_score: null,
-    language_support: null,
-    streaming_support: "Yes",
-    input_pricing: null,
-    output_pricing: null,
+    speed: 150,
+    max_context_window: 4000,
+    model_size: 52,
+    mmlu_score: 60,
+    mt_bench_score: 6.5,
+    big_bench_score: 15,
+    input_cost: 1,
+    output_cost: 2,
+    rate_limit: 500,
+    multilingual: 1,
+    streaming_support: 1,
+    function_call: 0,
+    weight: 1,
   },
   {
     name: "Command Light",
@@ -263,14 +284,18 @@ export const models = [
     rate_limit: 500,
     speed: 150,
     brand: "cohere",
+    model_size: 6,
     icon: Cohere,
-    mmlu_score: null,
-    mt_bench_score: null,
-    big_bench_score: null,
-    language_support: null,
-    streaming_support: "Yes",
-    input_pricing: null,
-    output_pricing: null,
+    max_context_window: 4000,
+    mmlu_score: 60,
+    mt_bench_score: 6.5,
+    big_bench_score: 15,
+    input_cost: 1,
+    output_cost: 2,
+    multilingual: 1,
+    streaming_support: 1,
+    function_call: 0,
+    weight: 1,
   },
   {
     name: "J2 Mid",
@@ -320,6 +345,7 @@ export const models = [
     model_size: 540,
     mmlu_score: 79.13,
     mt_bench_score: 6.8,
+    big_bench_score: 40,
     input_cost: 1.3,
     output_cost: 2.6,
     rate_limit: 60,
@@ -338,6 +364,7 @@ export const models = [
     model_size: 540,
     mmlu_score: 79.13,
     mt_bench_score: 6.8,
+    big_bench_score: 40,
     input_cost: 1.3,
     output_cost: 2.6,
     rate_limit: 60,

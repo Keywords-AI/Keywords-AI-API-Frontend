@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate, useLocation} from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
@@ -13,7 +13,10 @@ import { connect } from "react-redux";
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = { googleLogin, signup };
 // admintestpassword
-export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogin, signup }) => {
+export const SignUp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(({ googleLogin, signup }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -45,13 +48,43 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
           className="flex-col justify-center items-center gap-md self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
-            <div className="flex items-center gap-xs self-stretch">
-              <TextInput title="First Name" required placeholder="First Name" {...register("first_name")} />
-              <TextInput title="Last Name" required placeholder="Last Name" {...register("last_name")} />
+            <div className="flex items-center gap-xs self-stretch ">
+              <TextInput
+                title="First Name"
+                required
+                placeholder="First Name"
+                {...register("first_name")}
+                width="w-[204px]"
+              />
+              <TextInput
+                title="Last Name"
+                required
+                placeholder="Last Name"
+                {...register("last_name")}
+                width="w-[204px]"
+              />
             </div>
-            <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, })} />
-            <TextInput title="Password" type="password" required placeholder="" {...register("password")} />
-            <TextInput title="Invitation Code" type="password" required placeholder="" {...register("invitation_code")} />
+            <TextInput
+              title="Email"
+              type="email"
+              required
+              placeholder="Put your email here"
+              {...register("email", { pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
+            />
+            <TextInput
+              title="Password"
+              type="password"
+              required
+              placeholder=""
+              {...register("password")}
+            />
+            <TextInput
+              title="Invitation Code"
+              type="password"
+              required
+              placeholder=""
+              {...register("invitation_code")}
+            />
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
@@ -66,13 +99,15 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
               iconSize="md"
               width="w-full" onClick={() => googleLogin()}
             /> */}
-            <span className="text-sm-regular text-gray-4">
+            {/* <span className="text-sm-regular text-gray-4">
               {"Already have an account? "}
-              <span className="text-primary cursor-pointer" 
-              onClick={()=>navigate(`/login?${params.toString()}`)}>{
-                "Sign in"
-              }</span>
+              <span
+                className="text-primary cursor-pointer"
+                onClick={() => navigate(`/login?${params.toString()}`)}
+              >
+                {"Sign in"}
               </span>
+            </span> */}
             <span className="caption text-gray-4 self-stretch text-center">
               By signing up, you agree to our{" "}
               <span
@@ -95,4 +130,4 @@ export const SignUp = connect(mapStateToProps, mapDispatchToProps)(({ googleLogi
       </div>
     </div>
   );
-})
+});
