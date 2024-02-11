@@ -9,9 +9,9 @@ import {
   ModelIcon,
   OpenAI,
 } from "src/components";
-import { Tag } from "src/components/Misc";
+import { ModelTag, Tag } from "src/components/Misc";
 import { PageContent } from "src/components/Sections";
-import { models } from "src/utilities/constants";
+import { ModelType, models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
 
@@ -127,19 +127,7 @@ const RightDrawerContent = ({
   );
 };
 
-const ModelsTable = ({
-  ModelItems,
-}: {
-  ModelItems: {
-    name: string;
-    icon: ReactElement;
-    promptCost: string;
-    completionCost: string;
-    context: string;
-    ratelimit: string;
-    moderation: string;
-  }[];
-}) => {
+const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
   const [clickedIndex, setClickedIndex] = React.useState(-1);
 
@@ -198,11 +186,11 @@ const ModelsTable = ({
                 onClick={() => handleRowClick(index)}
               >
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <Tag text={item.name} icon={item.icon} />
+                  <ModelTag model={item.value} />
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.promptCost}
+                    {item.prompt_cost}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -211,7 +199,7 @@ const ModelsTable = ({
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.completionCost}
+                    {item.completion_cost}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -219,10 +207,10 @@ const ModelsTable = ({
                   </span>
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
-                  {item.context}
+                  {item.max_context_window}
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
-                  {item.ratelimit}
+                  {item.rate_limit}
                 </div>
                 <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
                   <Tag
@@ -250,166 +238,166 @@ const ModelsTable = ({
 };
 export default function Modelspage() {
   console.log(models.length, "models");
+  const a = [
+    {
+      name: "gpt-4",
+      icon: <OpenAI size="sm" />,
+      promptCost: "$0.0315",
+      completionCost: "$0.063",
+      context: "8K",
+      ratelimit: "10K RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "azure/gpt-4-32k",
+      icon: <OpenAI size="sm" />,
+      promptCost: "$0.063",
+      completionCost: "$0.126",
+      context: "32K",
+      ratelimit: "10K RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "gpt-4-1106-preview",
+      icon: <OpenAI size="sm" />,
+      promptCost: "$0.0105",
+      completionCost: "$0.0315",
+      context: "128K",
+      ratelimit: "10K RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "gpt-3.5-turbo",
+      icon: <OpenAI size="sm" />,
+      promptCost: "$0.000525",
+      completionCost: "$0.0315",
+      context: "32K",
+      ratelimit: "10K RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "claude-2.0",
+      icon: <Anthropic size="sm" />,
+      promptCost: "$0.0084",
+      completionCost: "$0.0252",
+      context: "100K",
+      ratelimit: "-",
+      moderation: "Filtered",
+    },
+    {
+      name: "claude-2.1",
+      icon: <Anthropic size="sm" />,
+      promptCost: "$0.0084",
+      completionCost: "$0.0252",
+      context: "100K",
+      ratelimit: "-",
+      moderation: "Filtered",
+    },
+    {
+      name: "claude-instant-1.2",
+      icon: <Anthropic size="sm" />,
+      promptCost: "$0.00084",
+      completionCost: "$0.00252",
+      context: "100K",
+      ratelimit: "-",
+      moderation: "",
+    },
+    {
+      name: "j2-ultra",
+      icon: <Labs size="sm" />,
+      promptCost: "$0.01575",
+      completionCost: "$0.01575",
+      context: "8K",
+      ratelimit: "180 RPM",
+      moderation: "",
+    },
+    {
+      name: "j2-mid",
+      icon: <Labs size="sm" />,
+      promptCost: "$0.0105",
+      completionCost: "$0.0105",
+      context: "8K",
+      ratelimit: "480 RPM",
+      moderation: "",
+    },
+    {
+      name: "j2-light",
+      icon: <Labs size="sm" />,
+      promptCost: "$0.00315",
+      completionCost: "$0.00315",
+      context: "8K",
+      ratelimit: "480 RPM",
+      moderation: "",
+    },
+    {
+      name: "command",
+      icon: <Cohere size="sm" />,
+      promptCost: "$0.00105",
+      completionCost: "$0.0021",
+      context: "4K",
+      ratelimit: "10K RPM",
+      moderation: "",
+    },
+    {
+      name: "command-light",
+      icon: <Cohere size="sm" />,
+      promptCost: "$0.000315",
+      completionCost: "$0.00063",
+      context: "4K",
+      ratelimit: "10K RPM",
+      moderation: "",
+    },
+    {
+      name: "text-bison-32k",
+      icon: <Google size="sm" />,
+      promptCost: "$0.001313",
+      completionCost: "$0.002625",
+      context: "32K",
+      ratelimit: "300 RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "gemini/gemini-pro",
+      icon: <Google size="sm" />,
+      promptCost: "$0.001313",
+      completionCost: "$0.002625",
+      context: "32K",
+      ratelimit: "300 RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "mistral/mistral-tiny",
+      icon: <Mistral size="sm" />,
+      promptCost: "$0.0001575",
+      completionCost: "$0.000483",
+      context: "32K",
+      ratelimit: "120 RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "mistral/mistral-small",
+      icon: <Mistral size="sm" />,
+      promptCost: "$0.000683",
+      completionCost: "$0.00206",
+      context: "32K",
+      ratelimit: "120 RPM",
+      moderation: "Filtered",
+    },
+    {
+      name: "mistral/mistral-medium",
+      icon: <Mistral size="sm" />,
+      promptCost: "$0.00287",
+      completionCost: "$0.0086",
+      context: "32K",
+      ratelimit: "120 RPM",
+      moderation: "Filtered",
+    },
+  ];
+  console.log(a.length, "a");
   return (
     <PageContent title="Models" subtitle="">
       <span className="text-md-medium">Supported models</span>
-      <ModelsTable
-        ModelItems={[
-          {
-            name: "gpt-4",
-            icon: <OpenAI size="sm" />,
-            promptCost: "$0.0315",
-            completionCost: "$0.063",
-            context: "8K",
-            ratelimit: "10K RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "azure/gpt-4-32k",
-            icon: <OpenAI size="sm" />,
-            promptCost: "$0.063",
-            completionCost: "$0.126",
-            context: "32K",
-            ratelimit: "10K RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "gpt-4-1106-preview",
-            icon: <OpenAI size="sm" />,
-            promptCost: "$0.0105",
-            completionCost: "$0.0315",
-            context: "128K",
-            ratelimit: "10K RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "gpt-3.5-turbo",
-            icon: <OpenAI size="sm" />,
-            promptCost: "$0.000525",
-            completionCost: "$0.0315",
-            context: "32K",
-            ratelimit: "10K RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "claude-2.0",
-            icon: <Anthropic size="sm" />,
-            promptCost: "$0.0084",
-            completionCost: "$0.0252",
-            context: "100K",
-            ratelimit: "-",
-            moderation: "Filtered",
-          },
-          {
-            name: "claude-2.1",
-            icon: <Anthropic size="sm" />,
-            promptCost: "$0.0084",
-            completionCost: "$0.0252",
-            context: "100K",
-            ratelimit: "-",
-            moderation: "Filtered",
-          },
-          {
-            name: "claude-instant-1.2",
-            icon: <Anthropic size="sm" />,
-            promptCost: "$0.00084",
-            completionCost: "$0.00252",
-            context: "100K",
-            ratelimit: "-",
-            moderation: "",
-          },
-          {
-            name: "j2-ultra",
-            icon: <Labs size="sm" />,
-            promptCost: "$0.01575",
-            completionCost: "$0.01575",
-            context: "8K",
-            ratelimit: "180 RPM",
-            moderation: "",
-          },
-          {
-            name: "j2-mid",
-            icon: <Labs size="sm" />,
-            promptCost: "$0.0105",
-            completionCost: "$0.0105",
-            context: "8K",
-            ratelimit: "480 RPM",
-            moderation: "",
-          },
-          {
-            name: "j2-light",
-            icon: <Labs size="sm" />,
-            promptCost: "$0.00315",
-            completionCost: "$0.00315",
-            context: "8K",
-            ratelimit: "480 RPM",
-            moderation: "",
-          },
-          {
-            name: "command",
-            icon: <Cohere size="sm" />,
-            promptCost: "$0.00105",
-            completionCost: "$0.0021",
-            context: "4K",
-            ratelimit: "10K RPM",
-            moderation: "",
-          },
-          {
-            name: "command-light",
-            icon: <Cohere size="sm" />,
-            promptCost: "$0.000315",
-            completionCost: "$0.00063",
-            context: "4K",
-            ratelimit: "10K RPM",
-            moderation: "",
-          },
-          {
-            name: "text-bison-32k",
-            icon: <Google size="sm" />,
-            promptCost: "$0.001313",
-            completionCost: "$0.002625",
-            context: "32K",
-            ratelimit: "300 RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "gemini/gemini-pro",
-            icon: <Google size="sm" />,
-            promptCost: "$0.001313",
-            completionCost: "$0.002625",
-            context: "32K",
-            ratelimit: "300 RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "mistral/mistral-tiny",
-            icon: <Mistral size="sm" />,
-            promptCost: "$0.0001575",
-            completionCost: "$0.000483",
-            context: "32K",
-            ratelimit: "120 RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "mistral/mistral-small",
-            icon: <Mistral size="sm" />,
-            promptCost: "$0.000683",
-            completionCost: "$0.00206",
-            context: "32K",
-            ratelimit: "120 RPM",
-            moderation: "Filtered",
-          },
-          {
-            name: "mistral/mistral-medium",
-            icon: <Mistral size="sm" />,
-            promptCost: "$0.00287",
-            completionCost: "$0.0086",
-            context: "32K",
-            ratelimit: "120 RPM",
-            moderation: "Filtered",
-          },
-        ]}
-      />
+      <ModelsTable ModelItems={models} />
     </PageContent>
   );
 }
