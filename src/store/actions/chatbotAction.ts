@@ -69,6 +69,11 @@ export const deleteConversation = (id) => {
     if (getState().chatbot.conversation?.id === id) {
       dispatch({ type: RESET_CONVERSATION });
     }
+    keywordsRequest({
+      method: "DELETE",
+      path: `chatbot/conversation/${id}/`,
+      dispatch: dispatch,
+    });
   };
 };
 
@@ -101,7 +106,7 @@ export const getConversations = () => {
 
 export const getConversation = (id) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
+    fetch(`${apiConfig.apiURL}chatbot/conversation/${id}/`, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),

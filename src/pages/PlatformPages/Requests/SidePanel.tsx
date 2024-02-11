@@ -314,7 +314,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
         {displayLog && (
           <>
-            <div
+            {/* <div
               ref={logRef}
               className="flex py-xs px-lg justify-between items-start self-stretch"
             >
@@ -323,7 +323,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 checked={checked}
                 onCheckedChange={handleCheckCacheReponse}
               />
-            </div>
+            </div> */}
             {systemPrompt && (
               <div className="flex-col px-lg pt-sm pb-md gap-xxxs self-stretch items-start">
                 <div className="flex justify-between items-center self-stretch">
@@ -356,9 +356,20 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     className="flex-col items-start gap-xxxs self-stretch "
                   >
                     <div className="flex justify-between items-center self-stretch">
-                      <p className="text-sm-md text-gray-5">
-                        {getMessageType(message.role)}
-                      </p>
+                      <div className="flex items-center gap-xxs">
+                        <p className="text-sm-md text-gray-5">
+                          {getMessageType(message.role)}
+                        </p>
+                        {/* {true &&
+                          getMessageType(message.role) === "Response" && (
+                            <Button
+                              variant="footer"
+                              text="Cache"
+                              textColor="text-primary"
+                              padding="p-0"
+                            />
+                          )} */}
+                      </div>
                       <DotsButton
                         icon={Copy}
                         onClick={() => {
@@ -385,7 +396,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           <Evaluation />
           <Divider />
           {/* <Classification /> */}
-          <Divider />
+          {/* <Divider /> */}
         </>
       )}
     </div>

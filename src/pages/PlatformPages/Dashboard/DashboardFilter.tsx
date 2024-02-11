@@ -135,6 +135,7 @@ export default function DashboardFilter() {
             side="bottom"
             sideOffset={8}
             align="center"
+            delayDuration={1}
             content={
               <>
                 <p className="caption text-gray-4">Timeline</p>
@@ -175,6 +176,7 @@ export default function DashboardFilter() {
               side="bottom"
               sideOffset={8}
               align="center"
+              delayDuration={1}
               content={
                 <>
                   <p className="caption text-gray-4">Show display options</p>
@@ -286,24 +288,24 @@ export default function DashboardFilter() {
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
                     Type
-                  <Tooltip
-                    side="right"
-                    sideOffset={8}
-                    delayDuration={1}
-                    skipDelayDuration={1}
-                    content={
-                      <>
-                        <span className="text-gray-4 caption">
-                          Display the data as total value or averaging over per
-                          request
-                        </span>
-                      </>
-                    }
-                  >
-                    <div>
-                      <Info />
-                    </div>
-                  </Tooltip>
+                    <Tooltip
+                      side="right"
+                      sideOffset={8}
+                      delayDuration={1}
+                      skipDelayDuration={1}
+                      content={
+                        <>
+                          <span className="text-gray-4 caption">
+                            Display the data as total value or averaging over
+                            per request
+                          </span>
+                        </>
+                      }
+                    >
+                      <div>
+                        <Info />
+                      </div>
+                    </Tooltip>
                   </span>
                   <SelectInput
                     {...register("type")}
