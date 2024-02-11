@@ -360,7 +360,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         <p className="text-sm-md text-gray-5">
                           {getMessageType(message.role)}
                         </p>
-                        {true &&
+                        {/* {true &&
                           getMessageType(message.role) === "Response" && (
                             <Button
                               variant="footer"
@@ -368,7 +368,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                               textColor="text-primary"
                               padding="p-0"
                             />
-                          )}
+                          )} */}
                       </div>
                       <DotsButton
                         icon={Copy}
