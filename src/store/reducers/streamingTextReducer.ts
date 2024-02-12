@@ -16,11 +16,24 @@ type StreamingState = {
   isLoading: boolean;
   error: null | string;
   abort: boolean;
+  model: string | null;
 };
 
 const initialState: StreamingState[] = [
-  { streamingText: "", isLoading: false, error: null, abort: false },
-  { streamingText: "", isLoading: false, error: null, abort: false },
+  {
+    streamingText: "",
+    isLoading: false,
+    error: null,
+    abort: false,
+    model: null,
+  },
+  {
+    streamingText: "",
+    isLoading: false,
+    error: null,
+    abort: false,
+    model: null,
+  },
 ];
 
 const streamingTextReducer = (
@@ -82,11 +95,13 @@ const streamingTextReducer = (
       });
 
     case SEND_STREAMINGTEXT_PARTIAL:
+      const { text, model } = payload;
       return state.map((item, index) => {
         if (index === 0) {
           return {
             ...item,
-            streamingText: item.streamingText + payload,
+            streamingText: item.streamingText + text,
+            model: model,
           };
         }
         return item;

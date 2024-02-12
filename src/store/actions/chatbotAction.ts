@@ -28,7 +28,14 @@ export const DELETE_CONVERSATION = "DELETE_CONVERSATION";
 export const CREATE_MESSAGE = "CREATE_MESSAGE";
 export const DELETE_MESSAGE = "DELETE_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
+export const SET_MESSAGE_CONTENT = "SET_MESSAGE_CONTENT";
 
+export const setMessageContent = (id, content) => {
+  return {
+    type: SET_MESSAGE_CONTENT,
+    payload: { id, content },
+  };
+};
 export const errorMessage = (error) => ({
   type: ERROR_MESSAGE,
   payload: {
@@ -207,7 +214,7 @@ export const readStreamChunk = (chunk: string) => {
       if (textBit) {
         dispatch({
           type: SEND_STREAMINGTEXT_PARTIAL,
-          payload: textBit,
+          payload: { text: textBit, model: data.model },
         });
       }
     } catch (e) {}
@@ -226,6 +233,7 @@ export const sendMessage = (msgText?: string) => {
           conversation: conversation_id,
           role: "user",
           content: msgText,
+          model: null,
         })
       );
     }
@@ -238,7 +246,6 @@ export const sendMessage = (msgText?: string) => {
       role: "system",
       content: systemPrompt || "",
     };
-    console.log("sending messages", sessionMessages);
     const messagesToSend = [systemMessage, ...sessionMessages];
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
@@ -249,6 +256,7 @@ export const sendMessage = (msgText?: string) => {
       streamingDoneCallback: () => {
         const state = getState();
         const streamingText = state.streamingText[0].streamingText;
+        const streamingModel = state.streamingText[0].model;
         const currentConversationId = state.chatbot.conversation.id;
         dispatch({ type: SEND_STREAMINGTEXT_SUCCESS });
         dispatch(
@@ -256,6 +264,7 @@ export const sendMessage = (msgText?: string) => {
             conversation: currentConversationId,
             role: "assistant",
             content: streamingText,
+            model: streamingModel,
           })
         );
       },

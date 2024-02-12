@@ -10,6 +10,7 @@ import {
   DELETE_CONVERSATION,
   CREATE_MESSAGE,
   DELETE_MESSAGE,
+  SET_MESSAGE_CONTENT,
 } from "src/store/actions";
 import { REMOVE_LAST_MESSAGE } from "../actions/playgroundAction";
 
@@ -85,6 +86,19 @@ export default function chatbotReducer(state = initState, action) {
         conversation: {
           ...state.conversation,
           messages: state.conversation.messages?.slice(0, -1),
+        },
+      };
+    case SET_MESSAGE_CONTENT:
+      return {
+        ...state,
+        conversation: {
+          ...state.conversation,
+          messages: state.conversation.messages.map((message: any) => {
+            if (message?.id === action.payload.id) {
+              return { ...message, content: action.payload.content };
+            }
+            return message;
+          }),
         },
       };
     default:

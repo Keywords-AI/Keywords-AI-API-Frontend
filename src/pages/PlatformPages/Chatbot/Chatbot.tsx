@@ -9,7 +9,7 @@ import { Logo, LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { RootState } from "src/types";
-
+import { AutoScrollContainer } from "react-auto-scroll-container";
 export default function Chatbot({ chatbot }) {
   const dispatch = useTypedDispatch();
   const streaming = useTypedSelector(
@@ -58,6 +58,9 @@ const Messages = () => {
   const messages = useTypedSelector(
     (state: RootState) => state.chatbot.conversation.messages
   );
+  const StreamingObj = useTypedSelector(
+    (state: RootState) => state.streamingText[0]
+  );
   if (!messages || messages.length === 0) {
     return (
       <div
@@ -75,14 +78,24 @@ const Messages = () => {
     );
   } else {
     return (
-      <div
-        aria-label="frame 758"
+      <AutoScrollContainer
+        percentageThreshold={15}
         className="flex-col items-center gap-xl self-stretch overflow-auto"
       >
         {messages?.map((m, index) => {
           return <ChatMessage key={index} index={index} message={m} />;
         })}
-      </div>
+        {StreamingObj.isLoading && (
+          <ChatMessage
+            index={-1}
+            message={{
+              role: "assistant",
+              content: StreamingObj.streamingText,
+              model: StreamingObj.model,
+            }}
+          />
+        )}
+      </AutoScrollContainer>
     );
   }
 };
