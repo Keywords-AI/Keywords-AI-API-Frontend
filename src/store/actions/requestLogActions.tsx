@@ -48,6 +48,10 @@ const concatMessages = (
   return "";
 };
 
+const getLastUserText = (messages: ChatMessage[]) => {
+  return messages.findLast((message) => message.role === "user")?.content;
+}
+
 export const setFilterType = (filterType: keyof LogItem | undefined) => {
   return {
     type: SET_FILTER_TYPE,
@@ -176,7 +180,7 @@ export const processRequestLogs = (
         </span>
       ),
       prompt: (
-        <span className="truncate">{concatMessages(log.prompt_messages)}</span>
+        <span className="truncate">{getLastUserText(log.prompt_messages)}</span>
       ),
       response: (
         <span className="truncate">

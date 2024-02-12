@@ -1,9 +1,23 @@
+export type OrgUser = {
+    id: number;
+    role: string;
+    pending: boolean;
+    organization: number;
+    user: {
+        email: string;
+        first_name: string;
+        last_name: string;
+        id: number;
+    };
+};
+
 export type Organization = {
     id: number | null;
     name: string;
     organization_model_presets: any[];
     owner: any;
     users: any[];
+    org_users: OrgUser[];
     organization_subscription: any;
     active_subscription: boolean;
     unique_organization_id: string;

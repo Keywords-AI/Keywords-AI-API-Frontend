@@ -195,7 +195,7 @@ export const PlansPage = connect(
       subtitle={
         <Subheading
           price={cards[currIndex]?.price}
-          userCount={organization?.users?.length}
+          userCount={organization?.org_users?.length}
         />
       }
     >
