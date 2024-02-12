@@ -12,7 +12,8 @@ import {
   DELETE_MESSAGE,
   SET_MESSAGE_CONTENT,
 } from "src/store/actions";
-import { REMOVE_LAST_MESSAGE } from "../actions/playgroundAction";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { REMOVE_LAST_MESSAGE } from "../actions/chatbotAction";
 
 const initState = {
   isEditing: false,
@@ -26,7 +27,7 @@ const initState = {
   },
 };
 
-export default function chatbotReducer(state = initState, action) {
+export default function chatbotReducer(state = initState, action:PayloadAction<any>) {
   switch (action.type) {
     case SET_IS_EDITING:
       return { ...state, isEditing: action.payload };
@@ -57,10 +58,19 @@ export default function chatbotReducer(state = initState, action) {
         conversations: filteredConversations,
       };
     case RESET_CONVERSATION:
-      console.log("RESET_CONVERSATION");
+      console.log({
+        ...state,
+        conversation: {
+          id: undefined,
+          messages: [],
+        }
+      })
       return {
         ...state,
-        conversation: initState.conversation,
+        conversation: {
+          id: undefined,
+          messages: [],
+        }
       };
     case CREATE_MESSAGE:
       return {
