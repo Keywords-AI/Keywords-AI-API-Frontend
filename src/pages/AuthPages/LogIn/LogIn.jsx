@@ -24,7 +24,7 @@ const LogIn = ({ login, googleLogin, user }) => {
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      if (isDemoEnv) {
+      if (DEMO_ENV) {
         if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
           console.log("error", "Demo credentials not set");
           return;
@@ -89,9 +89,9 @@ const LogIn = ({ login, googleLogin, user }) => {
               title="Email"
               type="email"
               required
-              placeholder={isDemoEnv ? "" : "Put your email here"}
+              placeholder={DEMO_ENV ? "" : "Put your email here"}
               {...register("email")}
-              disabled={isDemoEnv}
+              disabled={DEMO_ENV}
             />
             <TextInput
               title="Password"
@@ -99,7 +99,7 @@ const LogIn = ({ login, googleLogin, user }) => {
               required
               placeholder=""
               {...register("password")}
-              disabled={isDemoEnv}
+              disabled={DEMO_ENV}
             />
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
