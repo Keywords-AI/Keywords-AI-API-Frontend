@@ -11,7 +11,7 @@ import { Google } from "src/components";
 import { dispatchNotification, isLoggedIn } from "src/store/actions";
 import { useLocation } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
-import { envVars } from "src/branch_env";
+import { DEMO_ENV, DEMO_EMAIL, DEMO_PASSWORD } from "src/env";
 const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
@@ -22,17 +22,16 @@ const LogIn = ({ login, googleLogin, user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
-  const isDemoEnv = envVars.DEMO_ENV === true;
   const onSubmit = async (data) => {
     try {
       if (isDemoEnv) {
-        if (envVars.DEMO_EMAIL === "" || envVars.DEMO_PASSWORD === "") {
+        if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
           console.log("error", "Demo credentials not set");
           return;
         }
         const demoCredentials = {
-          email: envVars.DEMO_EMAIL,
-          password: envVars.DEMO_PASSWORD,
+          email: DEMO_EMAIL,
+          password: DEMO_PASSWORD,
         };
         await login(demoCredentials);
         return;
