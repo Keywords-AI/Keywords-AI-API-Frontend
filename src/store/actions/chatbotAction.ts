@@ -2,7 +2,12 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsStream, keywordsRequest } from "src/utilities/requests";
-import { ChatMessage, ConversationMessage, RootState, TypedDispatch } from "src/types";
+import {
+  ChatMessage,
+  ConversationMessage,
+  RootState,
+  TypedDispatch,
+} from "src/types";
 import {
   SEND_STREAMINGTEXT_SUCCESS,
   SEND_STREAMINGTEXT_PARTIAL,
@@ -62,7 +67,6 @@ export const setCustomPromptFile = (customPromptFile) => {
   };
 }; // not used
 
-
 export const deleteConversation = (id) => {
   return (dispatch, getState) => {
     dispatch({ type: DELETE_CONVERSATION, payload: id });
@@ -101,7 +105,7 @@ export const getConversations = () => {
 
 export const getConversation = (id) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
+    fetch(`${apiConfig.apiURL}chatbot/conversation/${id}/`, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),
@@ -175,7 +179,7 @@ export const nameConversation = (id, content) => {
         }
       })
       .catch((err) => console.log(err));
-};
+  };
 }; // not used
 
 export const createMessage = (msg: ConversationMessage) => {
@@ -188,7 +192,7 @@ export const createMessage = (msg: ConversationMessage) => {
         method: "POST",
         path: "chatbot/messages/",
         dispatch: dispatch,
-      })
+      });
     } else {
       dispatch(createConversation(msg));
     }
@@ -211,7 +215,7 @@ export const readStreamChunk = (chunk: string) => {
 };
 
 export const sendMessage = (msgText?: string) => {
-  return async (dispatch: TypedDispatch, getState: ()=>RootState) => {
+  return async (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const { isLoading: streaming } = state.streamingText[0];
     const systemPrompt = state.chatbot.customPrompt;

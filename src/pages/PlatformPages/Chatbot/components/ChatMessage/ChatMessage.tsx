@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { Button } from "src/components/Buttons/Button/Button";
-import { ChatbotReactMarkdown } from "src/components/Misc";
+import { ChatbotReactMarkdown, ModelTag } from "src/components/Misc";
 import cn from "src/utilities/classMerge";
 import { DotsButton } from "src/components/Buttons";
-import { Check, Copy, Logo, Regenerate, User } from "src/components/Icons";
+import {
+  Check,
+  Copy,
+  Logo,
+  Pencil,
+  Refresh,
+  Regenerate,
+  Search,
+  User,
+} from "src/components/Icons";
 import { regenerateChatbotResponse } from "src/store/actions";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
@@ -18,44 +27,46 @@ export default function ChatMessage({ message, index }) {
   const handleToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(()=>{ setCopied(false)}, 3000);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
   };
   const handleRegenerate = () => {
-    dispatch(regenerateChatbotResponse())
+    dispatch(regenerateChatbotResponse());
   };
-  return (
-    <div
-      className={
-        cn(`chat-message `,
-        (message && message.role === "user" ? "bg-gray-1" : "bg-gray-2"),
-        (message && message.content && checkError(message.content)
-          ? " bg-error"
-          : ""),
-        " flex px-xxxl py-[24px] justify-between align-start w-[calc(100vw-280px)]",
-        )
-      }
-    >
-      <div className={"flex-row justify-center items-start gap-sm self-stretch"}>
-        {message?.role === "user" ? <User /> : <Logo />}
-        <div>
-            <ChatbotReactMarkdown content={message?.content} /> 
-            <div
-              className="flex-row items-center gap-xxs self-stretch mt-xs"
-              >
-              {message?.role !== "user" && conversation.messages.length === index + 1 ? (
-              <Button
-                variant="small"
-                text="Regenerate"
-                icon={Regenerate}
-                onClick={handleRegenerate}
-              />
-              ) : null}
-              <Button variant="small" padding="px-xxs py-xxs" 
-              onClick={()=>handleToClipboard(message.content)} iconSize="sm" 
-              bgColor="bg-gray-2" icon={copied? Check:Copy}/>
-              </div>
+
+  const isUser = message?.role === "user";
+  if (isUser) {
+    return (
+      <div className="flex items-start gap-sm self-stretch">
+        <div className="flex-col w-[36px] h-[36px] justify-center items-center">
+          <User />
+        </div>
+        <div className="flex-col items-start gap-xxs flex-1">
+          <div className="text-sm-regular text-gray-5">{message.content}</div>
+          <div className="flex items-center gap-xxxs">
+            <DotsButton icon={Pencil} iconSize="sm" />
+            <DotsButton icon={Copy} iconSize="sm" />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="flex items-start gap-sm self-stretch">
+        <div className="flex-col w-[36px] h-[36px] justify-center items-center">
+          <Logo />
+        </div>
+        <div className="flex-col items-start gap-xxs flex-1">
+          <div className="text-sm-regular text-gray-5">{message.content}</div>
+          <div className="flex items-center gap-xxxs">
+            <ModelTag model={message.model || "gpt-4"} />
+            <DotsButton icon={Refresh} iconSize="sm" />
+            <DotsButton icon={Copy} iconSize="sm" />
+            <DotsButton icon={Search} iconSize="sm" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
