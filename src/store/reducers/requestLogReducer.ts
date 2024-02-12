@@ -15,7 +15,8 @@ import {
   SET_FILTER_OPTIONS,
   DELETE_FILTER,
   UPDATE_FILTER,
-  SET_CURRENT_FILTER
+  SET_CURRENT_FILTER,
+  SET_SELECTED_REQUEST_CONTENT,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -82,6 +83,11 @@ export default function requestLogReducer(
       return {
         ...state,
         selectedRequest: state.logs.find((log) => log.id === action.payload),
+      };
+    case SET_SELECTED_REQUEST_CONTENT:
+      return {
+        ...state,
+        selectedRequest: { ...action.payload },
       };
     case SET_SIDE_PANEL_OPEN:
       return {

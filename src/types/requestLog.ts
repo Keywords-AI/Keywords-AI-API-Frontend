@@ -26,10 +26,11 @@ export type LogItem = {
     // sentiment_magnitude: mag,
     language: string;
   };
+  cached_responses: any[];
   error_code: number;
-  cached_response: number;
   routing_time: number;
   groundness: number;
+  status_code: number;
 };
 
 export type DisplayLogItem = {

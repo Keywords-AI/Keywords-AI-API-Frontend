@@ -21,37 +21,28 @@ import SearchLog from "./SearchLog";
 interface SidePanelProps {
   open: boolean;
 }
-
+const getMessageType = (role: string) => {
+  if (role === "[system]") {
+    return "System";
+  } else if (role === "user") {
+    return "User";
+  }
+  return "Response";
+};
 export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
     (state) => state.requestLogs.selectedRequest
   );
 
-  const cache_id =
-    useTypedSelector(
-      (state) => state.requestLogs.selectedRequest?.cached_response
-    ) || 0;
-  const dispatch = useTypedDispatch();
-  const navigate = useNavigate();
-
-  const [checked, setChecked] = useState(cache_id > 0);
-  useEffect(() => {
-    setChecked(cache_id > 0);
-  }, [cache_id]);
-  const handleCheckCacheReponse = (checked: boolean) => {
-    try {
-      dispatch(setCacheResponse(checked));
-      setChecked(checked);
-    } catch (error) {
-      console.error("Error setting cache response", error);
-    }
-  };
-
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
   useEffect(() => {
     setCompleteInteraction(
       logItem?.prompt_messages
-        ? [...logItem.prompt_messages.concat([logItem?.completion_message])]
+        ? [
+            ...logItem.prompt_messages.concat([
+              { ...logItem?.completion_message },
+            ]),
+          ]
         : []
     );
   }, [logItem]);
@@ -64,7 +55,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     );
   }
   const searchContent = (keyword) => {
-    console.log("keyword", keyword);
     if (keyword === "") {
       setCompleteInteraction(
         logItem?.prompt_messages
@@ -104,16 +94,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     Model: ModelTag({ model: logItem?.model || "unknown" }),
 
-    Cached: logItem?.cached_response ? (
-      <Tag
-        text={"Cached"}
-        backgroundColor="bg-primary/10"
-        textColor="text-primary"
-        border=""
-      />
-    ) : (
-      <span className="text-sm-regular text-gray-4">{"No"}</span>
-    ),
+    Cached:
+      logItem?.cached_responses?.length || 0 > 0 ? (
+        <Tag
+          text={"Cached"}
+          backgroundColor="bg-primary/10"
+          textColor="text-primary"
+          border=""
+        />
+      ) : (
+        <span className="text-sm-regular text-gray-4">{"No"}</span>
+      ),
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
@@ -160,14 +151,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const metricRef = useRef(null);
   const logRef = useRef(null);
 
-  const getMessageType = (role: string) => {
-    if (role === "[system]") {
-      return "System";
-    } else if (role === "user") {
-      return "User";
-    }
-    return "Response";
-  };
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
     if (displayLog) {
@@ -350,6 +333,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
+
                 return (
                   <div
                     key={index}
@@ -360,15 +344,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         <p className="text-sm-md text-gray-5">
                           {getMessageType(message.role)}
                         </p>
-                        {/* {true &&
-                          getMessageType(message.role) === "Response" && (
-                            <Button
-                              variant="footer"
-                              text="Cache"
-                              textColor="text-primary"
-                              padding="p-0"
-                            />
-                          )} */}
+                        <CacheButton
+                          message={message}
+                          completeInteraction={completeInteraction}
+                          index={index}
+                          logId={logItem?.id}
+                          systemPrompt={systemPrompt?.content}
+                        />
                       </div>
                       <DotsButton
                         icon={Copy}
@@ -418,7 +400,7 @@ const Evaluation = ({
     return planLevel < 2;
   });
   groundnessScore *= 100;
-  groundnessScore = groundnessScore.toFixed(2);
+  groundnessScore = parseFloat(groundnessScore.toFixed(2));
 
   return (
     <div
@@ -496,5 +478,75 @@ const Classification = () => {
     >
       hi2
     </div>
+  );
+};
+
+const CacheButton = ({
+  message,
+  completeInteraction,
+  index,
+  logId,
+  systemPrompt,
+}) => {
+  const logItem = useTypedSelector((state: RootState) =>
+    state.requestLogs.logs.find((log) => log.id === logId)
+  );
+
+  const [isCached, setIsCached] = useState(
+    logItem?.cached_responses.some((item) => item.request_index === index)
+  );
+  useEffect(() => {
+    setIsCached(
+      logItem?.cached_responses.some((item) => item.request_index === index)
+    );
+  }, [logId]);
+
+  const dispatch = useTypedDispatch();
+  const handleCheckCacheReponse = (
+    checked: boolean,
+    index: number,
+    message: string
+  ) => {
+    try {
+      dispatch(setCacheResponse(checked, index, message));
+      setIsCached(checked);
+    } catch (error) {
+      console.error("Error setting cache response", error);
+    }
+  };
+  return (
+    <>
+      {getMessageType(message.role) === "Response" &&
+        index !== completeInteraction.length - 1 &&
+        (isCached ? (
+          <Button
+            variant="footer"
+            text={"Uncache"}
+            textColor="text-red"
+            padding="p-0"
+            onClick={() =>
+              handleCheckCacheReponse(
+                false,
+                index,
+                systemPrompt + " " + message.content
+              )
+            }
+          />
+        ) : (
+          <Button
+            variant="footer"
+            text={"Cache"}
+            textColor="text-primary"
+            padding="p-0"
+            onClick={() =>
+              handleCheckCacheReponse(
+                true,
+                index,
+                systemPrompt + " " + message.content
+              )
+            }
+          />
+        ))}
+    </>
   );
 };
