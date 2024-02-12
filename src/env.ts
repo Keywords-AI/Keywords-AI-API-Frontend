@@ -19,3 +19,6 @@ export const STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY =
 export const SANITY_CHECK = envVars?.SANITY_CHECK || "Not sane";
 export const PRODUCTION_TEST_KEY = envVars?.PRODUCTION_TEST_KEY || "";
 export const LOCAL_TEST_KEY = envVars?.LOCAL_TEST_KEY || "";
+export const DEMO_ENV = window.location.hostname === "demo.keywordsai.co";
+export const DEMO_EMAIL = envVars?.DEMO_EMAIL || "demo@keywordsai.co";
+export const DEMO_PASSWORD = envVars?.DEMO_PASSWORD || "ycw24";
