@@ -49,8 +49,11 @@ const concatMessages = (
 };
 
 const getLastUserText = (messages: ChatMessage[]) => {
-  return messages.findLast((message) => message.role === "user")?.content;
-}
+  if (messages?.length && messages.length > 0) {
+    return messages.slice(-1)[0].content;
+  }
+  return "";
+};
 
 export const setFilterType = (filterType: keyof LogItem | undefined) => {
   return {
