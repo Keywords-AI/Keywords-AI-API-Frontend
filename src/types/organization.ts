@@ -16,8 +16,7 @@ export type Organization = {
     name: string;
     organization_model_presets: any[];
     owner: any;
-    users: any[];
-    org_users: OrgUser[];
+    users: OrgUser[];
     organization_subscription: any;
     active_subscription: boolean;
     unique_organization_id: string;

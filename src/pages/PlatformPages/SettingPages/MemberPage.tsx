@@ -14,8 +14,8 @@ export const MemberPage = () => {
   const [open, setOpen] = React.useState(false);
   const [members, setMembers] = React.useState(organization?.users || []);
   React.useEffect(() => {
-    setMembers(organization?.org_users || []);
-  }, [organization?.org_users]);
+    setMembers(organization?.users || []);
+  }, [organization?.users]);
   return (
     <PageContent
       title={"Members"}
