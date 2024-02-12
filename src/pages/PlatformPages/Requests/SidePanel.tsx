@@ -393,7 +393,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       {!displayLog && (
         <>
           <Divider />
-          <Evaluation />
+          <Evaluation
+            sentimentScore={logItem?.sentiment_score}
+            groundnessScore={logItem?.groundness}
+          />
           <Divider />
           {/* <Classification /> */}
           {/* <Divider /> */}
@@ -414,51 +417,55 @@ const Evaluation = ({
     const planLevel = state.organization?.organization_subscription.plan_level;
     return planLevel < 2;
   });
+  groundnessScore *= 100;
+  groundnessScore = groundnessScore.toFixed(2);
 
   return (
     <div
       aria-label="frame 1974"
       className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
     >
-      {/* <div className="flex h-[24px] justify-between items-center self-stretch">
-        <Tooltip
-          side="right"
-          sideOffset={8}
-          delayDuration={1}
-          skipDelayDuration={1}
-          content={
-            <>
-              <span className="text-gray-4 caption">
-                Failure threshold = 85%
-              </span>
-            </>
-          }
-        >
-          <div className="flex items-center gap-xxs text-sm-md text-gray-5">
-            Groundedness
-            <Info />
+      {groundnessScore > 0 && (
+        <div className="flex h-[24px] justify-between items-center self-stretch">
+          <Tooltip
+            side="right"
+            sideOffset={8}
+            delayDuration={1}
+            skipDelayDuration={1}
+            content={
+              <>
+                <span className="text-gray-4 caption">
+                  Failure threshold = 85%
+                </span>
+              </>
+            }
+          >
+            <div className="flex items-center gap-xxs text-sm-md text-gray-5">
+              Groundedness
+              <Info />
+            </div>
+          </Tooltip>
+          <div className="flex items-center gap-xxxs">
+            {isFreeUser ? (
+              <Tag
+                text={"Upgrade"}
+                backgroundColor="bg-primary/10"
+                textColor="text-primary"
+                border=""
+              />
+            ) : (
+              <Tag
+                text={`${groundnessScore}% Grounded`}
+                backgroundColor={
+                  groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
+                }
+                textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
+                border=""
+              />
+            )}
           </div>
-        </Tooltip>
-        <div className="flex items-center gap-xxxs">
-          {isFreeUser ? (
-            <Tag
-              text={"Upgrade"}
-              backgroundColor="bg-primary/10"
-              textColor="text-primary"
-              border=""
-            />
-          ) : (
-            <Tag
-              text={`${groundnessScore}% Grounded`}
-              backgroundColor={
-                groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
-              }
-              textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
-              border=""
-            />
-          )}
         </div>
-      </div> */}
+      )}
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-sm-md text-gray-5">
           Sentiment

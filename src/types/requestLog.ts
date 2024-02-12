@@ -29,6 +29,7 @@ export type LogItem = {
   error_code: number;
   cached_response: number;
   routing_time: number;
+  groundness: number;
 };
 
 export type DisplayLogItem = {
