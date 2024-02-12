@@ -142,7 +142,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     "Routing time": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.routing_time.toFixed(3) || "-") + "ms"}
+        {(logItem?.routing_time.toFixed(3) || "-") + "s"}
       </span>
     ),
 
