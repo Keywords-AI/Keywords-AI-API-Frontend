@@ -420,7 +420,7 @@ const Evaluation = ({
       aria-label="frame 1974"
       className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
     >
-      <div className="flex h-[24px] justify-between items-center self-stretch">
+      {/* <div className="flex h-[24px] justify-between items-center self-stretch">
         <Tooltip
           side="right"
           sideOffset={8}
@@ -458,7 +458,7 @@ const Evaluation = ({
             />
           )}
         </div>
-      </div>
+      </div> */}
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-sm-md text-gray-5">
           Sentiment
