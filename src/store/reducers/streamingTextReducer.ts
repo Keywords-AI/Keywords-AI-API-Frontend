@@ -52,6 +52,7 @@ const streamingTextReducer = (
             abort: false,
             isLoading: true,
             error: null,
+            model: null,
           };
         }
         return item;
@@ -66,6 +67,7 @@ const streamingTextReducer = (
             abort: false,
             isLoading: true,
             error: null,
+            model: null,
           };
         }
         return item;

@@ -19,7 +19,35 @@ import {
 } from "src/store/actions";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
-export default function ChatMessage({ message, index }) {
+export default function ChatMessage({
+  message,
+  index,
+  streamingMessage = false,
+}) {
+  if (message.role === "error") {
+    return (
+      <div className="flex items-start gap-sm self-stretch">
+        <div className="flex-col w-[36px] h-[36px] justify-center items-center">
+          <Logo />
+        </div>
+        <div className="flex-col items-start gap-xxs flex-1">
+          <div className="text-sm-regular text-red">{message?.content}</div>
+          <div className="flex items-center gap-xxxs">
+            <ModelTag model={message.model || "gpt-4"} />
+
+            <DotsButton
+              icon={Refresh}
+              iconSize="sm"
+              onClick={() => handleRegenerate()}
+            />
+
+            <DotsButton icon={Copy} iconSize="sm" />
+            <DotsButton icon={Search} iconSize="sm" />
+          </div>
+        </div>
+      </div>
+    );
+  }
   const isStreaming = useTypedSelector(
     (state) => state.streamingText[0].isLoading
   );
@@ -106,7 +134,7 @@ export default function ChatMessage({ message, index }) {
             <ChatbotReactMarkdown content={message?.content} />
           </div>
           <div className="flex items-center gap-xxxs">
-            <ModelTag model={message.model || "gpt-4"} />
+            {message.model && <ModelTag model={message.model || "gpt-4"} />}
             {conversation.messages.length === index + 1 && (
               <DotsButton
                 icon={Refresh}
