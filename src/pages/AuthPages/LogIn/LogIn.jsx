@@ -24,24 +24,28 @@ const LogIn = ({ login, googleLogin, user }) => {
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      if (DEMO_ENV) {
-        if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
-          console.log("error", "Demo credentials not set");
-          return;
-        }
-        const demoCredentials = {
-          email: DEMO_EMAIL,
-          password: DEMO_PASSWORD,
-        };
-        await login(demoCredentials);
-        return;
-      }
-
+      
       await login(data);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
   };
+  useEffect(()=>{
+    if (DEMO_ENV) {
+      if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
+        console.log("error", "Demo credentials not set");
+        return;
+      }
+      const demoCredentials = {
+        username: DEMO_EMAIL,
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      };
+      console.log("login with demo credentials")
+      login(demoCredentials);
+      return;
+    }
+  }, [])
   useEffect(() => {
     if (isLoggedIn(user)) {
       const next = new URLSearchParams(location.search).get("next");
