@@ -38,7 +38,7 @@ export const setIsEditing = (isEditing) => ({
   payload: isEditing,
 });
 
-export const setEnableCustomPrompt = (enable) => {
+export const setEnableCustomPrompt = (enable: boolean) => {
   return {
     type: SET_ENABLE_CUSTOM_PROMPT,
     payload: enable,
@@ -69,6 +69,11 @@ export const deleteConversation = (id) => {
     if (getState().chatbot.conversation?.id === id) {
       dispatch({ type: RESET_CONVERSATION });
     }
+    keywordsRequest({
+      method: "DELETE",
+      path: `chatbot/conversation/${id}/`,
+      dispatch: dispatch,
+    });
   };
 };
 
@@ -101,7 +106,7 @@ export const getConversations = () => {
 
 export const getConversation = (id) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
+    fetch(`${apiConfig.apiURL}chatbot/conversation/${id}/`, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),
@@ -230,12 +235,7 @@ export const sendMessage = (msgText?: string) => {
     const sessionMessages = messages.map((item) => {
       return { role: item.role, content: item.content };
     });
-    const systemMessage = {
-      role: "system",
-      content: systemPrompt || "",
-    };
-    console.log("sending messages", sessionMessages);
-    const messagesToSend = [systemMessage, ...sessionMessages];
+    const messagesToSend = sessionMessages;
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
       data: { messages: messagesToSend, stream: true },

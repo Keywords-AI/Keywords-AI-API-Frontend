@@ -142,7 +142,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     "Routing time": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.routing_time.toFixed(3) || "-") + "ms"}
+        {(logItem?.routing_time.toFixed(3) || "-") + "s"}
       </span>
     ),
 
@@ -360,7 +360,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         <p className="text-sm-md text-gray-5">
                           {getMessageType(message.role)}
                         </p>
-                        {true &&
+                        {/* {true &&
                           getMessageType(message.role) === "Response" && (
                             <Button
                               variant="footer"
@@ -368,7 +368,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                               textColor="text-primary"
                               padding="p-0"
                             />
-                          )}
+                          )} */}
                       </div>
                       <DotsButton
                         icon={Copy}
@@ -420,7 +420,7 @@ const Evaluation = ({
       aria-label="frame 1974"
       className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
     >
-      <div className="flex h-[24px] justify-between items-center self-stretch">
+      {/* <div className="flex h-[24px] justify-between items-center self-stretch">
         <Tooltip
           side="right"
           sideOffset={8}
@@ -458,7 +458,7 @@ const Evaluation = ({
             />
           )}
         </div>
-      </div>
+      </div> */}
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-sm-md text-gray-5">
           Sentiment

@@ -48,6 +48,13 @@ const concatMessages = (
   return "";
 };
 
+const getLastUserText = (messages: ChatMessage[]) => {
+  if (messages?.length && messages.length > 0) {
+    return messages.slice(-1)[0].content;
+  }
+  return "";
+};
+
 export const setFilterType = (filterType: keyof LogItem | undefined) => {
   return {
     type: SET_FILTER_TYPE,
@@ -176,7 +183,7 @@ export const processRequestLogs = (
         </span>
       ),
       prompt: (
-        <span className="truncate">{concatMessages(log.prompt_messages)}</span>
+        <span className="truncate">{getLastUserText(log.prompt_messages)}</span>
       ),
       response: (
         <span className="truncate">
@@ -282,7 +289,9 @@ export const filterParamsToFilterObjects = (
 export const getRequestLogs = (postData?: any) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
-    console.log(params.toString());
+    if (postData) {
+      params.set("page", "1");
+    }
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
@@ -329,10 +338,10 @@ export const updateLog = (id, data) => {
         }
         return log;
       });
+      const filters = getState().requestLogs.filters;
       dispatch(setRequestLogs(updatedLogs));
       dispatch(setSelectedRequest(id));
-      console.log("data", data);
-      dispatch(getRequestLogs());
+      dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
     });
   };
 };
