@@ -342,6 +342,23 @@ export const getDashboardData = (
           params.get("summary_type"),
           getState().dashboard.timeFrame
         );
+
+        let requestData = sliceChartData(dataList, "date_group", [
+          "error_count",
+          "number_of_requests",
+        ]);
+        const allZeros = requestData.every(
+          (item) => item[Metrics.error_count.value] == 0
+        );
+        if (allZeros) {
+          requestData = requestData.map((item) => {
+            return {
+              ...item,
+              [Metrics.error_count.value]: null,
+            };
+          });
+        }
+
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)
@@ -405,14 +422,7 @@ export const getDashboardData = (
             ])
           )
         );
-        dispatch(
-          setRequestCountData(
-            sliceChartData(dataList, "date_group", [
-              "error_count",
-              "number_of_requests",
-            ])
-          )
-        );
+        dispatch(setRequestCountData(requestData));
 
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
