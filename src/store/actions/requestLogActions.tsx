@@ -81,28 +81,29 @@ export const setCurrentFilter = (filter: CurrentFilterObject) => {
   };
 };
 
+function processFilters(filters: FilterObject[]): FilterParams {
+  return filters.reduce((acc: FilterParams, filter): FilterParams => {
+    if (!(filter.value instanceof Array)) {
+      filter.value = [filter.value];
+    }
+    var values = filter.value.map((value) => {
+      if (value === "true" || value === "false") {
+        value = value === "true" ? true : false;
+      }
+      return value;
+    });
+    filter.metric &&
+      (acc[filter.metric] = {
+        value: values,
+        operator: filter.operator,
+      });
+    return acc;
+  }, {});
+}
+
 export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
-    const postData = filters.reduce(
-      (acc: FilterParams, filter): FilterParams => {
-        if (!(filter.value instanceof Array)) {
-          filter.value = [filter.value];
-        }
-        var values = filter.value.map((value) => {
-          if (value === "true" || value === "false") {
-            value = value === "true" ? true : false;
-          }
-          return value;
-        });
-        filter.metric &&
-          (acc[filter.metric] = {
-            value: values,
-            operator: filter.operator,
-          });
-        return acc;
-      },
-      {}
-    );
+    const postData = processFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
     dispatch(getRequestLogs(postData));
   };
@@ -286,7 +287,7 @@ export const filterParamsToFilterObjects = (
   });
 };
 
-export const getRequestLogs = (postData?: any) => {
+export const getRequestLogs = (postData?: any, exporting=false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
     if (postData) {
@@ -295,7 +296,7 @@ export const getRequestLogs = (postData?: any) => {
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: postData,
+      data: {filters: postData, exporting: exporting},
     }).then((data) => {
       const results = data.results;
       dispatch(
@@ -422,4 +423,26 @@ export const setSecondFilter = (filter: string) => {
     type: SET_SECOND_FILTER,
     payload: filter,
   };
+};
+
+export const exportLogs = () => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    const filterData = processFilters(filters);
+    keywordsRequest({
+      path: `api/request-logs/`,
+      method: "POST",
+      data: {filters: filterData, exporting: true},
+    }).then((data) => {
+      const jsonData = JSON.stringify(data);
+      const blob = new Blob([jsonData], { type: "application/json" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "request_logs.json";
+      a.click();
+    });
+  };
+
 };

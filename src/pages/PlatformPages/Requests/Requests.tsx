@@ -9,7 +9,7 @@ import {
   setFilterOpen,
   setFilters,
 } from "src/store/actions";
-import { getRequestLogs } from "src/store/actions";
+import { getRequestLogs, exportLogs } from "src/store/actions";
 import { LogItem } from "src/types";
 import { Add, Button, Close, Down, Export, Filter } from "src/components";
 import { SideBar, SideBarActive } from "src/components/Icons";
@@ -42,6 +42,7 @@ const mapDispatchToProps = {
   setSelectedRequest,
   setFilterOpen,
   setFilters,
+  exportLogs,
 };
 
 interface Actions {
@@ -51,6 +52,7 @@ interface Actions {
   setSelectedRequest: (id: number) => void;
   setFilterOpen: (open: boolean) => void;
   setFilters: (filters: any) => void;
+  exportLogs: () => void;
 }
 
 type UsageLogsProps = ReturnType<typeof mapStateToProps> & Actions;
@@ -64,6 +66,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   selectedRequest,
   setSelectedRequest,
   setFilters,
+  exportLogs,
   filters,
   count,
   totalCount,
@@ -114,6 +117,11 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
               {count} / {totalCount}
             </div>
+            <Button variant="small" icon={Export} text="Export"
+              onClick={()=>{
+              exportLogs()
+              }}
+            />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={sidePanelOpen ? SideBarActive : SideBar}
