@@ -12,6 +12,7 @@ import {
   SEND_STREAMINGTEXT_SUCCESS,
   SEND_STREAMINGTEXT_PARTIAL,
   SEND_STREAMINGTEXT_REQUEST,
+  sendStreamingTextFailure,
 } from "./streamingTextAction";
 
 export const ERROR_MESSAGE = "ERROR_MESSAGE";
@@ -269,9 +270,14 @@ export const sendMessage = (msgText?: string) => {
           })
         );
       },
-    }).then((abortController) => {
-      console.log(abortController);
-    });
+    })
+      .then((abortController) => {
+        console.log(abortController);
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(sendStreamingTextFailure(err.toString()));
+      });
   };
 };
 

@@ -125,7 +125,7 @@ const streamingTextReducer = (
           return {
             ...item,
             isLoading: false,
-            error: payload.error,
+            error: payload,
           };
         }
         return item;
