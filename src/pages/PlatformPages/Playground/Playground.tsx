@@ -1,12 +1,23 @@
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import { PlaygroundMessage, PromptLogs, TopBar } from "./components";
-import { DotsButton } from "src/components/Buttons";
-import { Copy, Pencil } from "src/components";
-import { TextAreaInput } from "src/components/Inputs";
+import {
+  MostRecentPane,
+  PlaygroundMessage,
+  PromptLogs,
+  SessionPane,
+  TopBar,
+} from "./components";
+import { Button, DotsButton } from "src/components/Buttons";
+import { Copy, Divider, Pencil } from "src/components";
+import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { setPrompt, setSelectedLogs } from "src/store/actions";
 import { StreamingMessage } from "./components/PlaygroundMessage";
-
+import { Tabs } from "src/components/Sections/Tabs/Tabs";
+import { models } from "src/components/Misc";
+import { useState } from "react";
+import SliderInput from "src/components/Inputs/SliderInput";
+import { useForm, Controller } from "react-hook-form";
+import { variantType } from "src/types";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -20,6 +31,7 @@ export default function Playground() {
       <div className="flex items-start flex-1 self-stretch h-[calc(100vh-112px)]">
         {isLeftPanelOpen && <PromptLogs />}
         <Main />
+        {isRightPanelOpen && <RightPanel />}
       </div>
     </div>
   );
@@ -69,5 +81,30 @@ const MessageLists = () => {
       })}
       <StreamingMessage />
     </div>
+  );
+};
+
+const RightPanel = () => {
+  const tabGroups = [
+    {
+      value: "Session",
+      buttonVariant: "text" as variantType,
+      content: <SessionPane />,
+    },
+    {
+      value: "Most recent",
+      buttonVariant: "text" as variantType,
+      content: <MostRecentPane />,
+    },
+  ];
+  const [tab, setTab] = useState(tabGroups[0].value);
+  return (
+    <Tabs
+      tabs={tabGroups}
+      value={tab}
+      onValueChange={(value) => setTab(value)}
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2"
+      headerClassName="flex px-lg py-xxs items-center gap-sm self-stretch shadow-border-b shadow-gray-2"
+    />
   );
 };

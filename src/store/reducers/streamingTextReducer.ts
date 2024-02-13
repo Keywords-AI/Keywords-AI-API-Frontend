@@ -115,7 +115,7 @@ const streamingTextReducer = (
       });
     case SEND_STREAMINGTEXT2_FAILURE:
       return state.map((item, index) => {
-        if (index === index) {
+        if (index === 1) {
           return {
             ...item,
             isLoading: false,
