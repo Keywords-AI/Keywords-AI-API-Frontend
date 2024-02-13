@@ -31,7 +31,10 @@ const getMessageType = (role: string) => {
 };
 export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
-    (state) => state.requestLogs.selectedRequest
+    (state) =>
+      state.requestLogs.logs.find(
+        (log) => log.id === state.requestLogs?.selectedRequest?.id
+      ) || state.requestLogs.selectedRequest
   );
 
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);

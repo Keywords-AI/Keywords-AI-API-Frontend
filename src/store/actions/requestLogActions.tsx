@@ -351,7 +351,9 @@ export const setCacheResponse = (
   responseContent
 ) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    const currentRequestLog = getState().requestLogs.selectedRequest;
+    const currentRequestLog = getState().requestLogs.logs.find(
+      (e) => e.id === getState().requestLogs.selectedRequest?.id
+    );
     if (!currentRequestLog) {
       throw new Error("No request log selected");
     }
