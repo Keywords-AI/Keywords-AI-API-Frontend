@@ -1,5 +1,8 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { SET_CURRENT_TIME_RANGE } from "../actions/cachePageAction";
+import {
+  SET_CACHE_DATA,
+  SET_CURRENT_TIME_RANGE,
+} from "../actions/cachePageAction";
 // let currDate = new Date();
 type CachePageState = {
   // timeFrame: string;
@@ -27,8 +30,12 @@ const cachePageReducer = (
   action: PayloadAction<any>
 ): CachePageState => {
   switch (action.type) {
+    case SET_CACHE_DATA:
+      return {
+        ...state,
+        data: action.payload,
+      };
     case SET_CURRENT_TIME_RANGE:
-      const currTime = state.timeFrame;
       const currTimeRange = action.payload;
       // const offset = 0;
       // let updatedTimeFrame;
