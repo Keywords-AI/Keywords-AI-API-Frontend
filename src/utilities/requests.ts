@@ -112,51 +112,125 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
-  // fetch("http://localhost:8000/api/generate/", {
-  return fetch(`${host}${path}`, {
+
+  const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,
     body: JSON.stringify(data),
-  }).then(async (stream: any) => {
-    if (!stream.ok) {
-      const errors = await stream.json();
-      if (dispatch && typeof dispatch === "function") {
-        dispatch(handleApiResponseErrors(errors, stream.status));
+  });
+
+  const timeoutPromise = new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error("Request timed out"));
+    }, 10000); // 10 seconds
+  });
+
+  return Promise.race([fetchPromise, timeoutPromise]).then(
+    async (stream: any) => {
+      if (!stream.ok) {
+        const errors = await stream.json();
+        if (dispatch && typeof dispatch === "function") {
+          dispatch(handleApiResponseErrors(errors, stream.status));
+        }
+        throw new Error("Stream response error");
       }
-      throw new Error("Stream response error");
-    }
-    const reader = stream?.body.getReader();
-    const decoder = new TextDecoder();
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    // Start reading the stream
-    (async () => {
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done || signal.aborted) {
-            streamingDoneCallback && streamingDoneCallback();
-            break;
-          }
-          const message = decoder.decode(value);
-          // Splitting the returned text chunck with the delimiter
-          for (const line of message.split("---")) {
-            // Line is a JSON string
-            if (readStreamLine && typeof readStreamLine === "function") {
-              readStreamLine(line);
+      const reader = stream?.body.getReader();
+      const decoder = new TextDecoder();
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+
+      // Start reading the stream
+      (async () => {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done || signal.aborted) {
+              streamingDoneCallback && streamingDoneCallback();
+              break;
+            }
+            const message = decoder.decode(value);
+            // Splitting the returned text chunck with the delimiter
+            for (const line of message.split("---")) {
+              // Line is a JSON string
+              if (readStreamLine && typeof readStreamLine === "function") {
+                readStreamLine(line);
+              }
             }
           }
+        } catch (e) {
+          console.error("Stream error:", e);
         }
-      } catch (e) {
-        console.error("Stream error:", e);
-      }
-    })();
-    // Return a function to abort the stream from outside
-    return () => {
-      abortController.abort();
-    };
-  });
+      })();
+      // Return a function to abort the stream from outside
+      return () => {
+        abortController.abort();
+      };
+    }
+  );
 };
+// export const keywordsStream = ({
+//   path = "api/generate/",
+//   host = apiConfig.apiURL, // Ensure apiConfig is defined and imported
+//   data,
+//   readStreamLine,
+//   streamingDoneCallback,
+//   apiKey,
+//   dispatch,
+// }: StreamingParams) => {
+//   const headers = {
+//     "Content-Type": "application/json",
+//   };
+//   if (apiKey) {
+//     headers["Authorization"] = `Api-Key ${apiKey}`;
+//   } else {
+//     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
+//   }
+//   // fetch("http://localhost:8000/api/generate/", {
+//   return fetch(`${host}${path}`, {
+//     method: "POST",
+//     headers,
+//     body: JSON.stringify(data),
+//   }).then(async (stream: any) => {
+//     if (!stream.ok) {
+//       const errors = await stream.json();
+//       if (dispatch && typeof dispatch === "function") {
+//         dispatch(handleApiResponseErrors(errors, stream.status));
+//       }
+//       throw new Error("Stream response error");
+//     }
+//     const reader = stream?.body.getReader();
+//     const decoder = new TextDecoder();
+//     const abortController = new AbortController();
+//     const signal = abortController.signal;
+
+//     // Start reading the stream
+//     (async () => {
+//       try {
+//         while (true) {
+//           const { done, value } = await reader.read();
+//           if (done || signal.aborted) {
+//             streamingDoneCallback && streamingDoneCallback();
+//             break;
+//           }
+//           const message = decoder.decode(value);
+//           // Splitting the returned text chunck with the delimiter
+//           for (const line of message.split("---")) {
+//             // Line is a JSON string
+//             if (readStreamLine && typeof readStreamLine === "function") {
+//               readStreamLine(line);
+//             }
+//           }
+//         }
+//       } catch (e) {
+//         console.error("Stream error:", e);
+//       }
+//     })();
+//     // Return a function to abort the stream from outside
+//     return () => {
+//       abortController.abort();
+//     };
+//   });
+// };
 
 export const keywordsApiStream = ({
   path = "api/generate/",
