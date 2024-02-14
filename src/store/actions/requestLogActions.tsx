@@ -20,6 +20,7 @@ import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
+export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
@@ -39,6 +40,12 @@ export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+
+export const startGetRequestLogs = () => {
+  return {
+    type: START_GET_REQUEST_LOGS,
+  };
+};
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
 ): string => {
@@ -297,6 +304,7 @@ export const getRequestLogs = (postData?: any) => {
     if (postData) {
       params.set("page", "1");
     }
+    dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",

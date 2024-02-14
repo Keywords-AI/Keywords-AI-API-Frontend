@@ -17,6 +17,7 @@ import {
   UPDATE_FILTER,
   SET_CURRENT_FILTER,
   SET_SELECTED_REQUEST_CONTENT,
+  START_GET_REQUEST_LOGS,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -28,6 +29,7 @@ type StateType = {
   logs: LogItem[];
   count: number;
   totalCount: number;
+  loading: boolean;
   currentPage: number;
   nextPageUrl: string | null;
   lastPageUrl: string | null;
@@ -46,6 +48,7 @@ type StateType = {
 const initState: StateType = {
   logs: [],
   count: 0,
+  loading: false,
   totalCount: 0,
   currentPage: 1,
   nextPageUrl: null,
@@ -74,9 +77,15 @@ export default function requestLogReducer(
         ...state,
         logs: action.payload,
       };
+    case START_GET_REQUEST_LOGS:
+      return {
+        ...state,
+        loading: true,
+      };
     case SET_REQUEST_LOGS:
       return {
         ...state,
+        loading: false,
         logs: action.payload,
       };
     case SET_SELECTED_REQUEST:
