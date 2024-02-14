@@ -344,8 +344,9 @@ export const updateLog = (id) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
 
-    dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    dispatch(getRequestLogs());
+    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
+    // dispatch(getRequestLogs());
+
     dispatch(
       setselectRequestContent(
         getState().requestLogs.logs.find((log) => log.id === id)
