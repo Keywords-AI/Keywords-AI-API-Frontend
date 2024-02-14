@@ -38,6 +38,7 @@ import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 import { Requests } from "./pages/PlatformPages/Requests/Requests";
 import { Sentiment } from "./pages/PlatformPages/Sentiment";
+import CachePage from "./pages/CachePage/CachePage";
 
 const mapStateToProps = (state) => {
   return {
@@ -95,6 +96,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "requests", element: <Requests /> },
+        { path: "cache", element: <CachePage /> },
         {
           path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,

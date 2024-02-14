@@ -20,6 +20,7 @@ import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
+export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
@@ -38,7 +39,13 @@ export const ADD_FILTER = "ADD_FILTER";
 export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
+export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
 
+export const startGetRequestLogs = () => {
+  return {
+    type: START_GET_REQUEST_LOGS,
+  };
+};
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
 ): string => {
@@ -48,6 +55,12 @@ const concatMessages = (
   return "";
 };
 
+export const setselectRequestContent = (data) => {
+  return {
+    type: SET_SELECTED_REQUEST_CONTENT,
+    payload: data,
+  };
+};
 const getLastUserText = (messages: ChatMessage[]) => {
   if (messages?.length && messages.length > 0) {
     return messages.slice(-1)[0].content;
@@ -204,11 +217,10 @@ export const processRequestLogs = (
       organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.failed,
-        errorCode: log.error_code,
+        failed: log.status_code >= 300,
+        errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
-      cachedResponse: log.cached_response,
     };
   });
 };
@@ -293,6 +305,7 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
     if (postData) {
       params.set("page", "1");
     }
+    dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
@@ -326,64 +339,72 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
   };
 };
 
-export const updateLog = (id, data) => {
+export const updateLog = (id) => {
+  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    keywordsRequest({
-      path: `api/request-log/${id}/`,
-      method: "PATCH",
-      data: data,
-    }).then((data) => {
-      const updatedLogs = getState().requestLogs.logs.map((log) => {
-        if (log.id === id) {
-          return { ...log, ...data };
-        }
-        return log;
-      });
-      const filters = getState().requestLogs.filters;
-      dispatch(setRequestLogs(updatedLogs));
-      dispatch(setSelectedRequest(id));
-      dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    });
+    const filters = getState().requestLogs.filters;
+
+    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
+    // dispatch(getRequestLogs());
+
+    dispatch(
+      setselectRequestContent(
+        getState().requestLogs.logs.find((log) => log.id === id)
+      )
+    );
   };
 };
 
-export const setCacheResponse = (cached: boolean) => {
+export const setCacheResponse = (
+  cached: boolean,
+  requestIndex,
+  responseContent
+) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    const currentRequestLog = getState().requestLogs.selectedRequest;
+    const currentRequestLog = getState().requestLogs.logs.find(
+      (e) => e.id === getState().requestLogs.selectedRequest?.id
+    );
     if (!currentRequestLog) {
       throw new Error("No request log selected");
     }
-    const lastUserMessage = currentRequestLog.prompt_messages.findLast(
-      (message) => message.role === "user"
-    );
-    if (!lastUserMessage) {
-      throw new Error("No user message found");
+    const requestContent =
+      currentRequestLog.prompt_messages[requestIndex - 1].content;
+    if (requestContent === undefined) {
+      throw new Error("No request content found");
     }
     if (cached) {
-      //
       const body = {
+        request_log: currentRequestLog.id,
+        request_index: requestIndex,
         organization_key: currentRequestLog.organization_key,
-        request_content: lastUserMessage.content,
-        response_content: currentRequestLog.completion_message.content,
+        request_content: requestContent,
+        response_content: responseContent,
       };
+      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
         data: body,
       }).then((data) => {
+        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
         }
-        dispatch(updateLog(currentRequestLog.id, { cached_response: data.id }));
+        dispatch(updateLog(currentRequestLog.id));
+        return;
       });
     } else {
-      dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
+      const deleteId = currentRequestLog.cached_responses.find(
+        (e) => e.request_index === requestIndex
+      ).id;
+      console.log("deleteId", deleteId);
       keywordsRequest({
-        path: `api/cache/${currentRequestLog.cached_response}/`,
+        path: `api/cache/${deleteId}/`,
         method: "DELETE",
         dispatch: dispatch,
       }).then((data) => {
+        dispatch(updateLog(currentRequestLog.id));
         return;
       });
     }
