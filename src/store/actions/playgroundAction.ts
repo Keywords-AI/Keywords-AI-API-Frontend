@@ -1,7 +1,17 @@
 // Imports
 import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
-import { abortStreamingTextRequest } from "./streamingTextAction";
+import {
+  SEND_STREAMINGTEXT2_PARTIAL,
+  SEND_STREAMINGTEXT_PARTIAL,
+  abortStreamingTextRequest,
+  sendStreamingText2Request,
+  sendStreamingText2Success,
+  sendStreamingTextRequest,
+  sendStreamingTextSuccess,
+} from "./streamingTextAction";
 import { dispatchNotification } from "./notificationAction";
+import { TypedDispatch } from "src/types/redux";
+import { keywordsStream } from "src/utilities/requests";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -101,7 +111,7 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
   payload: cacheAnswers,
 });
 
-export const streamPlaygroundResponse = () => {
+export const streamPlaygroundResponse1 = () => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
     const currentModels = playground.currentModels;
@@ -183,18 +193,120 @@ export const streamPlaygroundResponse = () => {
                   );
                 }
               }
-
-              // const lastuserMessageIdx =
-              //   getState().playground.messages.length - 1;
-              // dispatch(appendMessage(newMessage));
-              // const cache = {
-              //   answer: streamingText,
-              //   index: lastuserMessageIdx,
-              // };
-              // dispatch(setCacheAnswer(currentModel, cache));
             },
             dispatch: dispatch,
             getState: getState,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
+  };
+};
+
+export const streamPlaygroundResponse = () => {
+  return async (dispatch, getState) => {
+    const playground = getState().playground;
+    const currentModels = playground.currentModels;
+    const messages = playground.messages;
+    const systemPrompt = playground.prompt;
+    dispatch(
+      appendMessage({
+        id: messages.legnth,
+        role: "assistant",
+        responses: [null, null],
+        hidden: true,
+      })
+    );
+    Promise.all(
+      currentModels.map(async (model, channel) => {
+        const chanelMessages = [
+          {
+            role: "system",
+            content: systemPrompt || "",
+          },
+          ...messages.map((item) => {
+            if (item.role == "user") {
+              return {
+                role: "user",
+                content: item.user_content,
+              };
+            }
+            return {
+              role: "assistant",
+              content: item.responses[channel].content,
+            };
+          }),
+        ];
+        if (channel == 0) {
+          dispatch(sendStreamingTextRequest());
+        } else if (channel == 1) {
+          dispatch(sendStreamingText2Request());
+        }
+        try {
+          await keywordsStream({
+            data: { messages: chanelMessages, stream: true, eval: true },
+            dispatch: dispatch,
+            path: "api/playground/ask/",
+            readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
+            streamingDoneCallback: () => {
+              const streamingText =
+                getState().streamingText[channel].streamingText;
+              const model = getState().streamingText[channel].model;
+              const id = getState().playground.messages.length - 1;
+              const lastMessage = getState().playground.messages.slice(-1)[0];
+              const newResponse = {
+                model: model,
+                content: streamingText,
+                complete: true,
+              };
+              if (channel == 0) {
+                dispatch(sendStreamingTextSuccess());
+                const complete =
+                  lastMessage.responses[1] != null &&
+                  lastMessage.responses[1].complete == true;
+                dispatch(
+                  setLastMessage({
+                    id: id,
+                    hidden: complete ? false : true,
+                    role: "assistant",
+                    responses: [newResponse, lastMessage.responses[1]],
+                  })
+                );
+                if (complete) {
+                  dispatch(
+                    appendMessage({
+                      id: id + 1,
+                      role: "user",
+                      user_content: "",
+                    })
+                  );
+                }
+              } else if (channel == 1) {
+                dispatch(sendStreamingText2Success());
+                const complete =
+                  lastMessage.responses[0] != null &&
+                  lastMessage.responses[0].complete == true;
+                dispatch(
+                  setLastMessage({
+                    id: id,
+                    hidden: complete ? false : true,
+                    role: "assistant",
+                    responses: [lastMessage.responses[0], newResponse],
+                  })
+                );
+                if (complete) {
+                  dispatch(
+                    appendMessage({
+                      id: id + 1,
+                      role: "user",
+                      user_content: "",
+                    })
+                  );
+                }
+              }
+            },
           });
         } catch (error) {
           console.log(error);
@@ -257,5 +369,32 @@ export const RestorePlaygroundState = (logItem, callback) => {
     dispatch(setPrompt(systemPrompt));
     dispatch(setMessages([...userMessages, assisantRespons]));
     callback();
+  };
+};
+
+const readStreamChunk = (chunk: string, channel: number) => {
+  return (dispatch: TypedDispatch) => {
+    try {
+      const data = JSON.parse(chunk);
+      const textBit = data.choices?.[0].delta.content;
+      if (textBit) {
+        switch (channel) {
+          case 0:
+            dispatch({
+              type: SEND_STREAMINGTEXT_PARTIAL,
+              payload: { text: textBit, model: data.model },
+            });
+            break;
+          case 1:
+            dispatch({
+              type: SEND_STREAMINGTEXT2_PARTIAL,
+              payload: { text: textBit, model: data.model },
+            });
+            break;
+          default:
+            throw new Error("Invalid channel");
+        }
+      }
+    } catch (e) {}
   };
 };

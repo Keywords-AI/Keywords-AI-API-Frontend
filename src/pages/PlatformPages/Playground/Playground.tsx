@@ -18,6 +18,7 @@ import { useState } from "react";
 import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
+import { AutoScrollContainer } from "react-auto-scroll-container";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -75,12 +76,15 @@ connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 const MessageLists = () => {
   const messages = useTypedSelector((state) => state.playground.messages);
   return (
-    <div className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-auto pr-xxs">
+    <AutoScrollContainer
+      percentageThreshold={15}
+      className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs "
+    >
       {messages.map((message, index) => {
         return <PlaygroundMessage key={index} id={index} {...message} />;
       })}
       <StreamingMessage />
-    </div>
+    </AutoScrollContainer>
   );
 };
 

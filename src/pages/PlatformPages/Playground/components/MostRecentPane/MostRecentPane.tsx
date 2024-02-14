@@ -1,12 +1,14 @@
+import React, { forwardRef } from 'react';
+
 export interface MostRecentPaneProps {
   prop?: string;
 }
 
-export function MostRecentPane({
-  prop = "default value",
-}: MostRecentPaneProps) {
-  return <></>;
-}
+export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
+  ({ prop = "default value" }, ref) => {
+    return <div ref={ref}></div>;
+  }
+);
 
 const LogCard = ({ displayObj }) => {
   return (

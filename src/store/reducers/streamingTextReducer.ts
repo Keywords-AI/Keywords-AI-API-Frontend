@@ -1,3 +1,4 @@
+import { RFC_2822 } from "moment";
 import {
   SEND_STREAMINGTEXT_REQUEST,
   SEND_STREAMINGTEXT_SUCCESS,
@@ -113,7 +114,8 @@ const streamingTextReducer = (
         if (index === 1) {
           return {
             ...item,
-            streamingText: item.streamingText + payload,
+            streamingText: item.streamingText + payload.text,
+            model: payload.model,
           };
         }
         return item;
@@ -136,7 +138,7 @@ const streamingTextReducer = (
           return {
             ...item,
             isLoading: false,
-            error: payload.error,
+            error: payload,
           };
         }
         return item;
