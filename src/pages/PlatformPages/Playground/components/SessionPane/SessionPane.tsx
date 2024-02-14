@@ -6,7 +6,8 @@ import React, { forwardRef, ForwardedRef, useEffect } from "react";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { setModelOptions } from "src/store/actions";
-
+import { debounce } from "lodash";
+import { useCallback } from "react";
 export interface SessionPaneProps {
   prop?: string;
 }
@@ -28,12 +29,19 @@ export const SessionPane = forwardRef(
       (state) => state.playground.modelOptions
     );
     const UpdatedModelOptions = watch();
+    const debouncedDispatch = useCallback(
+      debounce(
+        (updatedModelOptions) => dispatch(setModelOptions(updatedModelOptions)),
+        300
+      ),
+      [dispatch]
+    );
     useEffect(() => {
       if (Object.keys(dirtyFields).length === 0) return;
       if (
         JSON.stringify(ModelOptions) !== JSON.stringify(UpdatedModelOptions)
       ) {
-        dispatch(setModelOptions(UpdatedModelOptions));
+        debouncedDispatch(UpdatedModelOptions);
       }
     }, [UpdatedModelOptions, ModelOptions]);
     return (
@@ -60,6 +68,9 @@ export const SessionPane = forwardRef(
               <SliderInput
                 label="Temperature"
                 value={value}
+                min={0}
+                max={2}
+                step={0.01}
                 onValueChange={onChange}
               />
             )}
@@ -72,6 +83,9 @@ export const SessionPane = forwardRef(
               <SliderInput
                 label="Maximum length"
                 value={value}
+                min={1}
+                max={4096}
+                step={1}
                 onValueChange={onChange}
               />
             )}
@@ -84,6 +98,24 @@ export const SessionPane = forwardRef(
               <SliderInput
                 label="Top P"
                 value={value}
+                min={0}
+                max={1}
+                step={0.01}
+                onValueChange={onChange}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="Frequency Penalty"
+            defaultValue={ModelOptions.frequencyPenalty}
+            render={({ field: { value, onChange } }) => (
+              <SliderInput
+                label="Frequency penalty"
+                value={value}
+                min={0}
+                max={2}
+                step={0.01}
                 onValueChange={onChange}
               />
             )}
@@ -96,6 +128,9 @@ export const SessionPane = forwardRef(
               <SliderInput
                 label="Presence penalty"
                 value={value}
+                min={0}
+                max={2}
+                step={0.01}
                 onValueChange={onChange}
               />
             )}

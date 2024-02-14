@@ -131,6 +131,8 @@ export const streamPlaygroundResponse = () => {
     if (modelOptions.topP !== null) additonalParms["top_p"] = modelOptions.topP;
     if (modelOptions.presencePenalty !== null)
       additonalParms["presence_penalty"] = modelOptions.presencePenalty;
+    if (modelOptions.frequencyPenalty !== null)
+      additonalParms["frequency_penalty"] = modelOptions.frequencyPenalty;
     dispatch(
       appendMessage({
         id: messages.legnth,
@@ -165,13 +167,19 @@ export const streamPlaygroundResponse = () => {
         } else if (channel == 1) {
           dispatch(sendStreamingText2Request());
         }
+        console.log("body", {
+          messages: chanelMessages,
+          stream: true,
+          eval: true,
+          ...additonalParms,
+        });
         try {
           await keywordsStream({
             data: {
               messages: chanelMessages,
               stream: true,
               eval: true,
-              // ...additonalParms,
+              ...additonalParms,
             },
             dispatch: dispatch,
             path: "api/playground/ask/",
@@ -235,7 +243,6 @@ export const streamPlaygroundResponse = () => {
             },
           });
         } catch (error: any) {
-          console.log("streamPlaygroundResponse", error);
           if (channel == 0) {
             dispatch(sendStreamingTextFailure(error.toString()));
           } else if (channel == 1) {

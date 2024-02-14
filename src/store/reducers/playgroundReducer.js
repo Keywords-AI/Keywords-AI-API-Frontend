@@ -28,9 +28,10 @@ const initialState = {
   cacheAnswers: {},
   modelOptions: {
     model: "gpt-4",
-    temperature: 0.7,
-    maximumLength: 150,
+    temperature: 1,
+    maximumLength: 256,
     topP: 1,
+    frequencyPenalty: 0,
     presencePenalty: 0,
   },
   outputs: {
