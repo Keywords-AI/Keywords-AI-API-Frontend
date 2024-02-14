@@ -4,8 +4,10 @@ import {
   SEND_STREAMINGTEXT2_PARTIAL,
   SEND_STREAMINGTEXT_PARTIAL,
   abortStreamingTextRequest,
+  sendStreamingText2Failure,
   sendStreamingText2Request,
   sendStreamingText2Success,
+  sendStreamingTextFailure,
   sendStreamingTextRequest,
   sendStreamingTextSuccess,
 } from "./streamingTextAction";
@@ -111,106 +113,24 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
   payload: cacheAnswers,
 });
 
-export const streamPlaygroundResponse1 = () => {
-  return async (dispatch, getState) => {
-    const playground = getState().playground;
-    const currentModels = playground.currentModels;
-    const messages = playground.messages;
-    const systemPrompt = playground.prompt;
-    dispatch(
-      appendMessage({
-        id: messages.legnth,
-        role: "assistant",
-        responses: [null, null],
-        hidden: true,
-      })
-    );
-    Promise.all(
-      currentModels.map(async (model, channel) => {
-        try {
-          await sendStreamingTextThunk({
-            channel: channel,
-            params: {
-              messages: messages,
-              stream: true,
-              model: model,
-              optimize: playground.modelOptions.optimize,
-              creativity: playground.modelOptions.creativity,
-              max_tokens: playground.modelOptions.maxTokens, // python style snake case
-            },
-            prompt: systemPrompt,
-            callback: () => {
-              const streamingText =
-                getState().streamingText[channel].streamingText;
-
-              const id = getState().playground.messages.length - 1;
-              const lastMessage = getState().playground.messages.slice(-1)[0];
-              const newResponse = {
-                model: model,
-                content: streamingText,
-                complete: true,
-              };
-              if (channel == 0) {
-                const complete =
-                  lastMessage.responses[1] != null &&
-                  lastMessage.responses[1].complete == true;
-                dispatch(
-                  setLastMessage({
-                    id: id,
-                    hidden: complete ? false : true,
-                    role: "assistant",
-                    responses: [newResponse, lastMessage.responses[1]],
-                  })
-                );
-                if (complete) {
-                  dispatch(
-                    appendMessage({
-                      id: id + 1,
-                      role: "user",
-                      user_content: "",
-                    })
-                  );
-                }
-              } else if (channel == 1) {
-                const complete =
-                  lastMessage.responses[0] != null &&
-                  lastMessage.responses[0].complete == true;
-                dispatch(
-                  setLastMessage({
-                    id: id,
-                    hidden: complete ? false : true,
-                    role: "assistant",
-                    responses: [lastMessage.responses[0], newResponse],
-                  })
-                );
-                if (complete) {
-                  dispatch(
-                    appendMessage({
-                      id: id + 1,
-                      role: "user",
-                      user_content: "",
-                    })
-                  );
-                }
-              }
-            },
-            dispatch: dispatch,
-            getState: getState,
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      })
-    );
-  };
-};
-
 export const streamPlaygroundResponse = () => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
     const currentModels = playground.currentModels;
     const messages = playground.messages;
     const systemPrompt = playground.prompt;
+    const modelOptions = playground.modelOptions;
+
+    const additonalParms = {};
+    if (modelOptions.model !== null)
+      additonalParms["model"] = modelOptions.model;
+    if (modelOptions.temperature !== null)
+      additonalParms["temperature"] = modelOptions.temperature;
+    if (modelOptions.maximumLength !== null)
+      additonalParms["max_tokens"] = modelOptions.maximumLength;
+    if (modelOptions.topP !== null) additonalParms["top_p"] = modelOptions.topP;
+    if (modelOptions.presencePenalty !== null)
+      additonalParms["presence_penalty"] = modelOptions.presencePenalty;
     dispatch(
       appendMessage({
         id: messages.legnth,
@@ -219,6 +139,7 @@ export const streamPlaygroundResponse = () => {
         hidden: true,
       })
     );
+    console.log("streamPlaygroundResponse", additonalParms);
     Promise.all(
       currentModels.map(async (model, channel) => {
         const chanelMessages = [
@@ -246,7 +167,12 @@ export const streamPlaygroundResponse = () => {
         }
         try {
           await keywordsStream({
-            data: { messages: chanelMessages, stream: true, eval: true },
+            data: {
+              messages: chanelMessages,
+              stream: true,
+              eval: true,
+              // ...additonalParms,
+            },
             dispatch: dispatch,
             path: "api/playground/ask/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
@@ -308,8 +234,13 @@ export const streamPlaygroundResponse = () => {
               }
             },
           });
-        } catch (error) {
-          console.log(error);
+        } catch (error: any) {
+          console.log("streamPlaygroundResponse", error);
+          if (channel == 0) {
+            dispatch(sendStreamingTextFailure(error.toString()));
+          } else if (channel == 1) {
+            dispatch(sendStreamingText2Failure(error.toString()));
+          }
         }
       })
     );

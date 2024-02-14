@@ -7,6 +7,7 @@ import {
   ModelIcon,
   OpenAI,
   Pencil,
+  Refresh,
 } from "src/components";
 import { Button, DotsButton } from "src/components/Buttons";
 import { ModelTag, Tag } from "src/components/Misc";
@@ -42,7 +43,7 @@ export function PlaygroundMessage({
   if (hidden) return null;
   const textAreaRef = useRef(null);
   let contentSection;
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
   const isUser = role === "user";
   const isAssistant = role === "assistant";
   const dispatch = useTypedDispatch();
@@ -82,6 +83,10 @@ export function PlaygroundMessage({
         <MessageHeader
           title={<div className="text-sm-md text-gray-4">User</div>}
           content={user_content || ""}
+          editCallback={(e) => {
+            e.preventDefault();
+            // setIsFocused(false);
+          }}
         />
         <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
           <EditableBox
@@ -89,7 +94,7 @@ export function PlaygroundMessage({
             placeholder={"Enter a message..."}
             value={messageValue}
             onChange={handleChange}
-            
+            focus={isFocused}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -99,7 +104,10 @@ export function PlaygroundMessage({
             }}
           />
           {isFocused && (
-            <div className="flex justify-end gap-xxs self-stretch">
+            <div
+              className="flex justify-end gap-xxs self-stretch "
+              onMouseDown={(e) => e.preventDefault()}
+            >
               <Button
                 variant="small"
                 text="Send message"
@@ -139,6 +147,8 @@ export function PlaygroundMessage({
                     />
                   </div>
                 }
+                regenCallback={() => console.log("regen")}
+                isResponse
                 content={response.content || ""}
               />
               <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
@@ -193,13 +203,9 @@ export function PlaygroundMessage({
   return (
     <div
       className="flex-col items-start gap-xxxs self-stretch"
-      onClick={() => {
-        setIsFocused(true);
-      }}
-      onFocus={() => {
-        setIsFocused(true);
-      }}
       onBlur={handleBlur}
+      onClick={() => setIsFocused(true)}
+      onFocus={() => setIsFocused(true)}
     >
       {contentSection}
     </div>
@@ -209,15 +215,31 @@ export function PlaygroundMessage({
 const MessageHeader = ({
   title,
   content,
+  isResponse = false,
+  editCallback,
+  regenCallback,
 }: {
   title: ReactElement;
   content: string;
+  isResponse?: boolean;
+  editCallback?: (e) => void;
+  regenCallback?: (e) => void;
 }) => {
   return (
     <div className="flex justify-between items-center self-stretch">
       <div className="flex items-center gap-xxs">{title}</div>
       <div className="flex items-center">
-        <DotsButton icon={Pencil} />
+        {isResponse ? (
+          <DotsButton
+            icon={Refresh}
+            onClick={(e) => regenCallback && regenCallback(e)}
+          />
+        ) : (
+          <DotsButton
+            icon={Pencil}
+            onClick={(e) => editCallback && editCallback(e)}
+          />
+        )}
         <DotsButton
           icon={Copy}
           onClick={() => navigator?.clipboard.writeText(content)}
@@ -232,7 +254,12 @@ export function StreamingMessage() {
   const currentModels = useTypedSelector(
     (state) => state.playground.currentModels
   );
-  if (streamingStates.every((state) => state.isLoading === false)) return null;
+  if (
+    streamingStates.every(
+      (state) => state.isLoading === false && state.error == null
+    )
+  )
+    return null;
   return (
     <div className="flex items-start gap-xxs self-stretch">
       {streamingStates.length > 0 &&
@@ -293,6 +320,8 @@ export function StreamingMessage() {
                       }}
                     />
                   </div>
+                ) : streamingState.error ? (
+                  <span className="text-red">{streamingState.error}</span>
                 ) : (
                   <span className="text-gray-4">Generating...</span>
                 )}
