@@ -27,9 +27,11 @@ const initialState = {
   currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    optimize: "speed",
-    creativity: "high",
-    maxTokens: 256,
+    model: "gpt-4",
+    temperature: 0.7,
+    maximumLength: 150,
+    topP: 1,
+    presencePenalty: 0,
   },
   outputs: {
     score: {},
@@ -65,7 +67,7 @@ const playgroundReducer = (state = initialState, action) => {
         ...state,
         messages: [
           ...state.messages.slice(0, index),
-          { ... content },
+          { ...content },
           ...state.messages.slice(index + 1),
         ],
       };

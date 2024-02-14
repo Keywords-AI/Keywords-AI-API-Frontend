@@ -88,6 +88,7 @@ export type StreamingParams = {
     model?: string;
     stream: boolean;
     logprobs?: boolean;
+    eval?: boolean;
   };
   apiKey?: string;
   readStreamLine: (line: string) => void;
@@ -118,7 +119,6 @@ export const keywordsStream = ({
     headers,
     body: JSON.stringify(data),
   });
-
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
       reject(new Error("Request timed out"));

@@ -9,7 +9,7 @@ import {
   Pencil,
 } from "src/components";
 import { Button, DotsButton } from "src/components/Buttons";
-import { Tag } from "src/components/Misc";
+import { ModelTag, Tag } from "src/components/Misc";
 import {
   setMessageByIndex,
   streamPlaygroundResponse,
@@ -52,6 +52,7 @@ export function PlaygroundMessage({
     setIsFocused(false);
     dispatch(streamPlaygroundResponse());
   };
+
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
     if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -88,6 +89,14 @@ export function PlaygroundMessage({
             placeholder={"Enter a message..."}
             value={messageValue}
             onChange={handleChange}
+            
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSend(e);
+                setIsFocused(false);
+              }
+            }}
           />
           {isFocused && (
             <div className="flex justify-end gap-xxs self-stretch">
@@ -238,10 +247,9 @@ export function StreamingMessage() {
                 title={
                   <div className="flex items-center gap-xxs">
                     <div className="text-sm-md text-gray-4">Response</div>
-                    <Tag
-                      text={currentModels[index]}
-                      icon={React.createElement(Icon, { size: "md" })}
-                    />
+                    {streamingState.model && (
+                      <ModelTag model={streamingState.model} />
+                    )}
                   </div>
                 }
                 content={streamingState.streamingText || ""}

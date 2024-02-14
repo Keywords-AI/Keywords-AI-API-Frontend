@@ -75,13 +75,9 @@ export function TopBar() {
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         />
-        <Button
-          variant="small"
-          text="Clear session"
-          icon={Delete}
-          onClick={() => navigate(0)}
-        />
+
         <Button variant="small" text="View code" />
+        <DotsButton icon={Delete} onClick={() => navigate(0)} />
         <HorizontalDivier />
         <DotsButton
           icon={isRightPanelOpen ? SideBarActive : SideBar}
