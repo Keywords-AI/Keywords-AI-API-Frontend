@@ -1,17 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  getConversations,
-} from "src/store/actions";
+import { getConversations } from "src/store/actions";
 import { PanelChat } from "src/components/Sections";
 import ChatMessage from "./components/ChatMessage/ChatMessage";
 import { Sample } from "src/components/Cards";
 import useAutoScroll from "src/hooks/useAutoScroll";
 import KeywordsInput from "./components/KeywordsInput/KeywordsInput";
-import { LogoSubtract } from "src/components/Icons";
+import { Logo, LogoSubtract } from "src/components/Icons";
 import { HeaderLogo } from "src/components/BrandAssets";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { RootState } from "src/types";
-
+import { AutoScrollContainer } from "react-auto-scroll-container";
 export default function Chatbot({ chatbot }) {
   const dispatch = useTypedDispatch();
   const streaming = useTypedSelector(
@@ -34,7 +32,6 @@ export default function Chatbot({ chatbot }) {
     setGeneratingText(streamingText);
   }, [streamingText]);
 
-
   useEffect(() => {
     dispatch(getConversations());
   }, []);
@@ -53,78 +50,88 @@ export default function Chatbot({ chatbot }) {
   return (
     <div className="flex-row h-[calc(100vh-56px)] self-stretch">
       <PanelChat />
-      <div className="flex-col self-stretch flex-1 bg-red-500 w-[calc(100vw-280px)]">
-        <div className="flex text-sm text-gray4 t-c  model-name "></div>
-        <div className="chat-right flex flex-1 bg-gray-1 relative pt-sm pb-lg ">
-          <div
-            className="flex-col flex-1 h-[calc(100vh-184px)] overflow-y-auto overflow-x-hidden bg-gray-1"
-            ref={conversationBoxRef}
-          >
-            {conversation?.messages?.length > 0 ? (
-              <>
-                {conversation?.messages?.map((message, index) => (
-                  <ChatMessage key={index} message={message} index={index} />
-                ))}
-                {chatError && (
-                  <ChatMessage
-                    key={999999}
-                    message={{
-                      role: "assistant",
-                      content: "Error: " + chatError.detail,
-                    }}
-                  />
-                )}
-              </>
-            ) : (
-              <>
-                {true && ( // ! replaced streaming
-                  <div className="flex flex-col justify-center items-center gap-md self-stretch mt-[160px]">
-                    <LogoSubtract />
-                    <div className="flex-col justify-center items-center gap-xxxs self-stretch">
-                      <div className="flex-row gap-xxs items-center">
-                        <HeaderLogo />
-                        <span className="display-xs font-semibold">
-                          Keywords AI
-                        </span>
-                      </div>
-                      <span className="text-sm-md text-gray-3">
-                        Connect to the best model for your prompts.
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-            {streaming && streamingText && (
-              <ChatMessage
-                message={{ content: streamingText, role: "assistant" }}
-              />
-            )}
-          </div>
-          <div className="absolute flex flex-col items-center gap-xs left-xxxl right-xxxl bottom-lg">
-            {(!conversation?.messages ||
-              (conversation?.messages?.length === 0 && !streaming)) && (
-              <Sample />
-            )}
-            <div
-              style={{
-                position: "relative",
-              }}
-              className="flex-row self-stretch"
-            >
-              <KeywordsInput />
-            </div>
-            <div className="caption text-gray-4">
-              Keywords AI connects your prompts with the best model
-              automatically.{" "}
-              <a href="/platform/doc" className="text-gray-4 underline">
-                Learn more
-              </a>
-            </div>
-            <input type="file" hidden ref={fileUploadRef} />
-          </div>
-        </div>
-      </div>
+      <Main />
     </div>
   );
 }
+const Messages = () => {
+  const messages = useTypedSelector(
+    (state: RootState) => state.chatbot.conversation.messages
+  );
+  const StreamingObj = useTypedSelector(
+    (state: RootState) => state.streamingText[0]
+  );
+  if (!messages || messages.length === 0) {
+    return (
+      <div
+        aria-label="frame 775"
+        className="flex-col items-center gap-xxxs mt-[180px]  px-xxxl "
+      >
+        <div className="flex h-[36px] items-center gap-xxs">
+          <Logo />
+          <p className=" display-xs text-gray-5">Keywords AI</p>
+        </div>
+        <p className="text-md-md text-gray-3">
+          Connect to the best model for your prompts.
+        </p>
+      </div>
+    );
+  } else {
+    return (
+      <AutoScrollContainer
+        percentageThreshold={15}
+        className="flex-col items-center gap-xl self-stretch  px-xxxl  overflow-auto"
+      >
+        {messages?.map((m, index) => {
+          return <ChatMessage key={index} index={index} message={m} />;
+        })}
+        {StreamingObj.error == null && StreamingObj.isLoading && (
+          <ChatMessage
+            index={-1}
+            message={{
+              role: "assistant",
+              content: StreamingObj.streamingText,
+              model: StreamingObj.model,
+            }}
+          />
+        )}
+        {StreamingObj.error != null && (
+          <ChatMessage
+            index={-2}
+            message={{
+              role: "error",
+              content: StreamingObj.error || "Error",
+              model: StreamingObj.model,
+            }}
+          />
+        )}
+      </AutoScrollContainer>
+    );
+  }
+};
+
+const InputAndFooter = () => {
+  return (
+    <div className="flex-col items-center gap-xs self-stretch  px-xxxl ">
+      <KeywordsInput />
+      <div className="caption text-gray-4">
+        Keywords AI connects your prompts with the best model automatically.{" "}
+        <a href="/platform/doc" className="text-gray-4 underline">
+          Learn more
+        </a>
+      </div>
+    </div>
+  );
+};
+
+const Main = () => {
+  return (
+    <div
+      aria-label="frame 754 "
+      className="flex-col pt-xl pb-lg justify-between items-center flex-1 self-stretch max-w-[calc(100dvw-248px)] gap-lg"
+    >
+      <Messages />
+      <InputAndFooter />
+    </div>
+  );
+};
