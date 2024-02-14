@@ -21,37 +21,31 @@ import SearchLog from "./SearchLog";
 interface SidePanelProps {
   open: boolean;
 }
-
+const getMessageType = (role: string) => {
+  if (role === "[system]") {
+    return "System";
+  } else if (role === "user") {
+    return "User";
+  }
+  return "Response";
+};
 export const SidePanel = ({ open }: SidePanelProps) => {
   const logItem = useTypedSelector(
-    (state) => state.requestLogs.selectedRequest
+    (state) =>
+      state.requestLogs.logs.find(
+        (log) => log.id === state.requestLogs?.selectedRequest?.id
+      ) || state.requestLogs.selectedRequest
   );
-
-  const cache_id =
-    useTypedSelector(
-      (state) => state.requestLogs.selectedRequest?.cached_response
-    ) || 0;
-  const dispatch = useTypedDispatch();
-  const navigate = useNavigate();
-
-  const [checked, setChecked] = useState(cache_id > 0);
-  useEffect(() => {
-    setChecked(cache_id > 0);
-  }, [cache_id]);
-  const handleCheckCacheReponse = (checked: boolean) => {
-    try {
-      dispatch(setCacheResponse(checked));
-      setChecked(checked);
-    } catch (error) {
-      console.error("Error setting cache response", error);
-    }
-  };
 
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
   useEffect(() => {
     setCompleteInteraction(
       logItem?.prompt_messages
-        ? [...logItem.prompt_messages.concat([logItem?.completion_message])]
+        ? [
+            ...logItem.prompt_messages.concat([
+              { ...logItem?.completion_message },
+            ]),
+          ]
         : []
     );
   }, [logItem]);
@@ -64,7 +58,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     );
   }
   const searchContent = (keyword) => {
-    console.log("keyword", keyword);
     if (keyword === "") {
       setCompleteInteraction(
         logItem?.prompt_messages
@@ -104,16 +97,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     ),
     Model: ModelTag({ model: logItem?.model || "unknown" }),
 
-    Cached: logItem?.cached_response ? (
-      <Tag
-        text={"Cached"}
-        backgroundColor="bg-primary/10"
-        textColor="text-primary"
-        border=""
-      />
-    ) : (
-      <span className="text-sm-regular text-gray-4">{"No"}</span>
-    ),
+    Cached:
+      logItem?.cached_responses?.length || 0 > 0 ? (
+        <Tag
+          text={"Cached"}
+          backgroundColor="bg-primary/10"
+          textColor="text-primary"
+          border=""
+        />
+      ) : (
+        <span className="text-sm-regular text-gray-4">{"No"}</span>
+      ),
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
@@ -160,14 +154,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const metricRef = useRef(null);
   const logRef = useRef(null);
 
-  const getMessageType = (role: string) => {
-    if (role === "[system]") {
-      return "System";
-    } else if (role === "user") {
-      return "User";
-    }
-    return "Response";
-  };
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
     if (displayLog) {
@@ -350,6 +336,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
+
                 return (
                   <div
                     key={index}
@@ -360,15 +347,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         <p className="text-sm-md text-gray-5">
                           {getMessageType(message.role)}
                         </p>
-                        {/* {true &&
-                          getMessageType(message.role) === "Response" && (
-                            <Button
-                              variant="footer"
-                              text="Cache"
-                              textColor="text-primary"
-                              padding="p-0"
-                            />
-                          )} */}
+                        <CacheButton
+                          message={message}
+                          completeInteraction={completeInteraction}
+                          index={index}
+                          logId={logItem?.id}
+                          systemPrompt={systemPrompt?.content}
+                        />
                       </div>
                       <DotsButton
                         icon={Copy}
@@ -393,7 +378,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       {!displayLog && (
         <>
           <Divider />
-          <Evaluation />
+          <Evaluation
+            sentimentScore={logItem?.sentiment_score}
+            groundnessScore={logItem?.groundness}
+          />
           <Divider />
           {/* <Classification /> */}
           {/* <Divider /> */}
@@ -414,13 +402,14 @@ const Evaluation = ({
     const planLevel = state.organization?.organization_subscription.plan_level;
     return planLevel < 2;
   });
+  groundnessScore = parseFloat(groundnessScore.toFixed(2));
 
   return (
     <div
       aria-label="frame 1974"
       className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
     >
-      {/* <div className="flex h-[24px] justify-between items-center self-stretch">
+      <div className="flex h-[24px] justify-between items-center self-stretch">
         <Tooltip
           side="right"
           sideOffset={8}
@@ -429,7 +418,7 @@ const Evaluation = ({
           content={
             <>
               <span className="text-gray-4 caption">
-                Failure threshold = 85%
+                Failure threshold = 0.85
               </span>
             </>
           }
@@ -447,18 +436,31 @@ const Evaluation = ({
               textColor="text-primary"
               border=""
             />
+          ) : groundnessScore > 0 ? (
+            <div className="flex items-center gap-xxxs">
+              <Tag
+                text={`${groundnessScore}`}
+                backgroundColor={
+                  groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
+                }
+                textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
+                border=""
+              />
+              <Tag
+                text={` Grounded`}
+                backgroundColor={
+                  groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
+                }
+                textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
+                border=""
+              />
+            </div>
           ) : (
-            <Tag
-              text={`${groundnessScore}% Grounded`}
-              backgroundColor={
-                groundnessScore >= 85 ? "bg-green/10" : "bg-red/10"
-              }
-              textColor={groundnessScore >= 85 ? "text-green" : "text-red"}
-              border=""
-            />
+            <p className="text-sm-regular text-gray-4">N/A</p>
           )}
         </div>
-      </div> */}
+      </div>
+
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-sm-md text-gray-5">
           Sentiment
@@ -472,8 +474,10 @@ const Evaluation = ({
               textColor="text-primary"
               border=""
             />
+          ) : sentimentScore ? (
+            <SentimentTag sentiment_score={sentimentScore} />
           ) : (
-            <SentimentTag showScore={false} sentiment_score={sentimentScore} />
+            <p className="text-sm-regular text-gray-4">N/A</p>
           )}
         </div>
       </div>
@@ -489,5 +493,75 @@ const Classification = () => {
     >
       hi2
     </div>
+  );
+};
+
+const CacheButton = ({
+  message,
+  completeInteraction,
+  index,
+  logId,
+  systemPrompt,
+}) => {
+  const logItem = useTypedSelector((state: RootState) =>
+    state.requestLogs.logs.find((log) => log.id === logId)
+  );
+
+  const [isCached, setIsCached] = useState(
+    logItem?.cached_responses.some((item) => item.request_index === index)
+  );
+  useEffect(() => {
+    setIsCached(
+      logItem?.cached_responses.some((item) => item.request_index === index)
+    );
+  }, [logId]);
+
+  const dispatch = useTypedDispatch();
+  const handleCheckCacheReponse = (
+    checked: boolean,
+    index: number,
+    message: string
+  ) => {
+    try {
+      dispatch(setCacheResponse(checked, index, message));
+      setIsCached(checked);
+    } catch (error) {
+      console.error("Error setting cache response", error);
+    }
+  };
+  return (
+    <>
+      {getMessageType(message.role) === "Response" &&
+        index !== completeInteraction.length - 1 &&
+        (isCached ? (
+          <Button
+            variant="footer"
+            text={"Uncache"}
+            textColor="text-red"
+            padding="p-0"
+            onClick={() =>
+              handleCheckCacheReponse(
+                false,
+                index,
+                systemPrompt + " " + message.content
+              )
+            }
+          />
+        ) : (
+          <Button
+            variant="footer"
+            text={"Cache"}
+            textColor="text-primary"
+            padding="p-0"
+            onClick={() =>
+              handleCheckCacheReponse(
+                true,
+                index,
+                systemPrompt + " " + message.content
+              )
+            }
+          />
+        ))}
+    </>
   );
 };
