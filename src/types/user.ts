@@ -16,6 +16,7 @@ export type SystemPrompt = {
 };
     
 export type User = {
+  loading: boolean;
   id: number | null;
   sort_by: string;
   time_range_type: string;
