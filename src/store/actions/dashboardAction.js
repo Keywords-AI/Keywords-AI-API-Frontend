@@ -470,7 +470,6 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
       const hourString = formatTimeUnit(hour) + ":00";
       const found = data.find((d) => {
         const date = new Date(d.date_group);
-        console.log(date, "date")
         const foundDate =
           date.getHours() === hour;
         return foundDate;

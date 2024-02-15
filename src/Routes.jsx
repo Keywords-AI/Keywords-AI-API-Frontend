@@ -40,6 +40,7 @@ import { Requests } from "./pages/PlatformPages/Requests/Requests";
 import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
 import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
+import posthog from "posthog-js";
 
 const mapStateToProps = (state) => {
   return {
@@ -85,6 +86,14 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded
       navigate("/onboarding");
+    }
+
+    if (user.id) {
+      posthog.identify(user.id, {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
     }
   }, [user]);
   
