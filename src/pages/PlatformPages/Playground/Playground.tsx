@@ -81,7 +81,14 @@ const MessageLists = () => {
       className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs "
     >
       {messages.map((message, index) => {
-        return <PlaygroundMessage key={index} id={index} {...message} />;
+        return (
+          <PlaygroundMessage
+            key={index}
+            id={index}
+            isLast={index === messages.length - 1}
+            {...message}
+          />
+        );
       })}
       <StreamingMessage />
     </AutoScrollContainer>

@@ -1,6 +1,7 @@
-import React, { ReactElement, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import {
+  Check,
   Copy,
   EditableBox,
   EnterKey,
@@ -11,12 +12,17 @@ import {
 } from "src/components";
 import { Button, DotsButton } from "src/components/Buttons";
 import { ModelTag, Tag } from "src/components/Misc";
+import * as _ from "lodash";
 import {
+  regeneratePlaygroundResponse,
   setMessageByIndex,
+  setMessageResponseByIndex,
   streamPlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
+import { MessageBox } from "../MessageBox";
+import { RootState } from "src/types";
 
 export interface Reponse {
   model: string;
@@ -28,7 +34,7 @@ export interface PlaygroundMessageProps {
   role: string;
   user_content?: string;
   responses?: Reponse[];
-  isActive: boolean;
+  isLast: boolean;
   hidden: boolean;
 }
 
@@ -37,23 +43,33 @@ export function PlaygroundMessage({
   role,
   user_content,
   responses,
-  isActive,
   hidden,
 }: PlaygroundMessageProps) {
-  if (hidden) return null;
-  const textAreaRef = useRef(null);
-  let contentSection;
-  const [isFocused, setIsFocused] = useState(true);
+  let contentSection = <></>;
+  const messageLength = useTypedSelector(
+    (state: RootState) => state.playground.messages.length
+  );
+  const [isFocused, setIsFocused] = useState(false);
+  const [messageValue, setMessageValue] = useState(user_content || "");
+  const [responseValue, setResponseValue] = useState("");
   const isUser = role === "user";
   const isAssistant = role === "assistant";
+  useEffect(() => {
+    if (+id == messageLength - 1) {
+      setIsFocused(true);
+    } else {
+      setIsFocused(false);
+    }
+  }, [messageLength]);
   const dispatch = useTypedDispatch();
   const handleSend = async (event) => {
     event.stopPropagation();
     // if (streaming || textContent.length < 1) return;
+
     setIsFocused(false);
     dispatch(streamPlaygroundResponse());
   };
-
+  if (hidden) return null;
   const handleBlur = (event) => {
     // Check if the new focus target is not a descendant of the parent
     if (!event.currentTarget.contains(event.relatedTarget)) {
@@ -61,23 +77,13 @@ export function PlaygroundMessage({
     }
   };
 
+  const handleUpdateResponse = (id, channel, value) => {
+    dispatch(setMessageResponseByIndex(id, channel, value));
+  };
+  const handleChange = (value) => {
+    setMessageValue(value); // This sets what is displayed in the input box
+  };
   if (isUser) {
-    const [messageValue, setMessageValue] = useState(user_content || "");
-    const handleChange = (e) => {
-      setMessageValue(e.target.value); // This sets what is displayed in the input box
-      dispatch(
-        setMessageByIndex({
-          index: id,
-          content: {
-            id: id,
-            role: "user",
-            user_content: e.target.value,
-            responses: null,
-            isActive: true,
-          },
-        })
-      );
-    };
     contentSection = (
       <>
         <MessageHeader
@@ -89,19 +95,29 @@ export function PlaygroundMessage({
           }}
         />
         <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
-          <EditableBox
-            ref={textAreaRef}
-            placeholder={"Enter a message..."}
+          <MessageBox
             value={messageValue}
             onChange={handleChange}
-            focus={isFocused}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
+                dispatch(
+                  setMessageByIndex({
+                    index: id,
+                    content: {
+                      id: id,
+                      role: "user",
+                      user_content: messageValue,
+                      responses: null,
+                      isActive: true,
+                    },
+                  })
+                );
                 handleSend(e);
                 setIsFocused(false);
               }
             }}
+            disabled={!isFocused}
           />
           {isFocused && (
             <div
@@ -147,51 +163,37 @@ export function PlaygroundMessage({
                     />
                   </div>
                 }
-                regenCallback={() => console.log("regen")}
-                isResponse
+                regenCallback={() =>
+                  dispatch(regeneratePlaygroundResponse(index))
+                }
+                editCallback={(e) => {
+                  setIsFocused(true);
+                }}
+                showRegen={+id == messageLength - 2}
                 content={response.content || ""}
               />
               <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
                 {response.content ? (
-                  <div className="flex self-stretch max-w-full ">
-                    <Markdown
-                      children={response.content}
-                      className="text-sm-regular text-gray-5  "
-                      components={{
-                        pre: ({ node, children, ...props }) => (
-                          <pre className="clear-both break-words" {...props}>
-                            ```{children}```
-                          </pre>
-                        ),
-                        code: ({ node, ...props }) => (
-                          <code
-                            {...props}
-                            className=" whitespace-pre-wrap break-words"
-                          />
-                        ),
-                        p: ({ node, ...props }) => (
-                          <p
-                            {...props}
-                            className="whitespace-pre-line my-2 break-words"
-                          />
-                        ),
-                        ol: ({ node, ...props }) => (
-                          <ol
-                            {...props}
-                            className="list-inside list-decimal space-y-2 ml-1"
-                          />
-                        ),
-                        ul: ({ node, ...props }) => (
-                          <ul
-                            {...props}
-                            className="list-inside list-disc space-y-2 ml-1"
-                          />
-                        ),
-                      }}
-                    />
-                  </div>
+                  <MessageBox
+                    value={response.content}
+                    onChange={(val) => setResponseValue(val)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleUpdateResponse(id, index, responseValue);
+                        setIsFocused(false);
+                        // handleSend(e);
+                      }
+                    }}
+                    onBlur={() => {
+                      handleUpdateResponse(id, index, responseValue);
+                      setIsFocused(false);
+                    }}
+                    disabled={!isFocused}
+                  />
                 ) : (
-                  <span className="text-gray-4">Generating...</span>
+                  <span className="text-gray-4 text-sm-regular">
+                    Generating...
+                  </span>
                 )}
               </div>
             </div>
@@ -215,34 +217,44 @@ export function PlaygroundMessage({
 const MessageHeader = ({
   title,
   content,
-  isResponse = false,
+  showRegen = false,
   editCallback,
   regenCallback,
 }: {
   title: ReactElement;
   content: string;
-  isResponse?: boolean;
+  showRegen?: boolean;
   editCallback?: (e) => void;
   regenCallback?: (e) => void;
 }) => {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (copied) {
+      setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    }
+  }, [copied]);
   return (
     <div className="flex justify-between items-center self-stretch">
       <div className="flex items-center gap-xxs">{title}</div>
       <div className="flex items-center">
-        {isResponse ? (
+        <DotsButton
+          icon={Pencil}
+          onClick={(e) => editCallback && editCallback(e)}
+        />
+        {showRegen && (
           <DotsButton
             icon={Refresh}
             onClick={(e) => regenCallback && regenCallback(e)}
           />
-        ) : (
-          <DotsButton
-            icon={Pencil}
-            onClick={(e) => editCallback && editCallback(e)}
-          />
         )}
         <DotsButton
-          icon={Copy}
-          onClick={() => navigator?.clipboard.writeText(content)}
+          icon={copied ? Check : Copy}
+          onClick={() => {
+            navigator?.clipboard.writeText(content);
+            setCopied(true);
+          }}
         />
       </div>
     </div>
@@ -265,6 +277,12 @@ export function StreamingMessage() {
       {streamingStates.length > 0 &&
         streamingStates?.map((streamingState, index) => {
           const Icon = ModelIcon(currentModels[index]);
+          // if (
+          //   streamingState.isLoading == false &&
+          //   streamingState.error == null
+          // ) {
+          //   return null;
+          // }
           return (
             <div
               key={index}
@@ -283,47 +301,15 @@ export function StreamingMessage() {
               />
               <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
                 {streamingState.streamingText ? (
-                  <div>
-                    <Markdown
-                      children={streamingState.streamingText}
-                      className="text-sm-regular text-gray-5  "
-                      components={{
-                        pre: ({ node, children, ...props }) => (
-                          <pre className="clear-both break-words" {...props}>
-                            ```{children}```
-                          </pre>
-                        ),
-                        code: ({ node, ...props }) => (
-                          <code
-                            {...props}
-                            className=" whitespace-pre-wrap break-words"
-                          />
-                        ),
-                        p: ({ node, ...props }) => (
-                          <p
-                            {...props}
-                            className="whitespace-pre-line my-2 break-words"
-                          />
-                        ),
-                        ol: ({ node, ...props }) => (
-                          <ol
-                            {...props}
-                            className="list-inside list-decimal space-y-2 ml-1"
-                          />
-                        ),
-                        ul: ({ node, ...props }) => (
-                          <ul
-                            {...props}
-                            className="list-inside list-disc space-y-2 ml-1"
-                          />
-                        ),
-                      }}
-                    />
+                  <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-5">
+                    {streamingState.streamingText}
                   </div>
                 ) : streamingState.error ? (
                   <span className="text-red">{streamingState.error}</span>
                 ) : (
-                  <span className="text-gray-4">Generating...</span>
+                  <span className="text-sm-regular text-gray-4">
+                    Generating...
+                  </span>
                 )}
               </div>
             </div>

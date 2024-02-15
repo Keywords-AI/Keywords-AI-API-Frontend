@@ -5,9 +5,11 @@ import {
   SEND_STREAMINGTEXT_PARTIAL,
   abortStreamingTextRequest,
   sendStreamingText2Failure,
+  sendStreamingText2Partial,
   sendStreamingText2Request,
   sendStreamingText2Success,
   sendStreamingTextFailure,
+  sendStreamingTextPartial,
   sendStreamingTextRequest,
   sendStreamingTextSuccess,
 } from "./streamingTextAction";
@@ -30,8 +32,13 @@ export const TOGGLE_LEFT_PANEL = "TOGGLE_LEFT_PANEL";
 export const TOGGLE_RIGHT_PANEL = "TOGGLE_RIGHT_PANEL";
 export const SET_SELECTED_LOGS = "SET_SELECTED_LOGS";
 export const SET_MESSAGE_BY_INDEX = "SET_MESSAGE_BY_INDEX";
-
+export const SET_MESSAGE_RESPONSE_BY_INDEX = "SET_MESSAGE_RESPONSE_BY_INDEX";
 // Action Creator
+
+export const setMessageResponseByIndex = (id, channel, content) => ({
+  type: SET_MESSAGE_RESPONSE_BY_INDEX,
+  payload: { id, channel, content },
+});
 export const setMessageByIndex = (payload) => ({
   type: SET_MESSAGE_BY_INDEX,
   payload: payload,
@@ -113,7 +120,7 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
   payload: cacheAnswers,
 });
 
-export const streamPlaygroundResponse = () => {
+export const streamPlaygroundResponse = (singleChanel = -1) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
     const currentModels = playground.currentModels;
@@ -141,9 +148,9 @@ export const streamPlaygroundResponse = () => {
         hidden: true,
       })
     );
-    console.log("streamPlaygroundResponse", additonalParms);
-    Promise.all(
-      currentModels.map(async (model, channel) => {
+    const channels = singleChanel == -1 ? [0, 1] : [singleChanel];
+    await Promise.all(
+      channels.map(async (channel) => {
         const chanelMessages = [
           {
             role: "system",
@@ -167,12 +174,7 @@ export const streamPlaygroundResponse = () => {
         } else if (channel == 1) {
           dispatch(sendStreamingText2Request());
         }
-        console.log("body", {
-          messages: chanelMessages,
-          stream: true,
-          eval: true,
-          ...additonalParms,
-        });
+
         try {
           await keywordsStream({
             data: {
@@ -203,12 +205,12 @@ export const streamPlaygroundResponse = () => {
                 dispatch(
                   setLastMessage({
                     id: id,
-                    hidden: complete ? false : true,
+                    hidden: complete || singleChanel != -1 ? false : true,
                     role: "assistant",
                     responses: [newResponse, lastMessage.responses[1]],
                   })
                 );
-                if (complete) {
+                if (complete || singleChanel != -1) {
                   dispatch(
                     appendMessage({
                       id: id + 1,
@@ -225,12 +227,12 @@ export const streamPlaygroundResponse = () => {
                 dispatch(
                   setLastMessage({
                     id: id,
-                    hidden: complete ? false : true,
+                    hidden: complete || singleChanel != -1 ? false : true,
                     role: "assistant",
                     responses: [lastMessage.responses[0], newResponse],
                   })
                 );
-                if (complete) {
+                if (complete || singleChanel != -1) {
                   dispatch(
                     appendMessage({
                       id: id + 1,
@@ -254,11 +256,59 @@ export const streamPlaygroundResponse = () => {
   };
 };
 
-export const regeneratePlaygroundResponse = () => {
-  return (dispatch, getState) => {
+export const regeneratePlaygroundResponse = (channel) => {
+  return async (dispatch, getState) => {
+    // remove user last message
     dispatch(removeLastMessage());
+
+    // remove assistant last message
     dispatch(removeLastMessage());
-    dispatch(streamPlaygroundResponse());
+    await dispatch(streamPlaygroundResponse(channel));
+    // remove last user message
+    dispatch(removeLastMessage());
+    const lastAssistantMessage = {
+      ...getState().playground.messages.slice(-1)[0],
+    };
+    [0, 1].forEach((_, c) => {
+      if (c != channel) {
+        if (c == 0) {
+          const recoverText = getState().streamingText[c].streamingText;
+          const recoverModel = getState().streamingText[c].model;
+          dispatch(
+            setLastMessage({
+              id: lastAssistantMessage.id,
+              hidden: false,
+              role: "assistant",
+              responses: [
+                { content: recoverText, model: recoverModel, complete: true },
+                lastAssistantMessage.responses[1],
+              ],
+            })
+          );
+        } else if (c == 1) {
+          const recoverText = getState().streamingText[c].streamingText;
+          const recoverModel = getState().streamingText[c].model;
+          dispatch(
+            setLastMessage({
+              id: lastAssistantMessage.id,
+              hidden: false,
+              role: "assistant",
+              responses: [
+                lastAssistantMessage.responses[0],
+                { content: recoverText, model: recoverModel, complete: true },
+              ],
+            })
+          );
+        }
+        dispatch(
+          appendMessage({
+            id: lastAssistantMessage.id + 1,
+            role: "user",
+            user_content: "",
+          })
+        );
+      }
+    });
   };
 };
 

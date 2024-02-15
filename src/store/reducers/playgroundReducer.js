@@ -14,6 +14,7 @@ import {
   TOGGLE_RIGHT_PANEL,
   SET_SELECTED_LOGS,
   SET_MESSAGE_BY_INDEX,
+  SET_MESSAGE_RESPONSE_BY_INDEX,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -27,7 +28,7 @@ const initialState = {
   currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    model: "gpt-4",
+    model: null,
     temperature: 1,
     maximumLength: 256,
     topP: 1,
@@ -71,6 +72,26 @@ const playgroundReducer = (state = initialState, action) => {
           { ...content },
           ...state.messages.slice(index + 1),
         ],
+      };
+    case SET_MESSAGE_RESPONSE_BY_INDEX:
+      const { id: i, content: text, channel } = action.payload;
+      return {
+        ...state,
+        messages: state.messages.map((message, index) => {
+          if (index === i) {
+            const newResponse = message.responses.map((r, c) => {
+              if (c === channel) {
+                return { ...r, content: text };
+              }
+              return r;
+            });
+            return {
+              ...message,
+              responses: newResponse,
+            };
+          }
+          return message;
+        }),
       };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };
