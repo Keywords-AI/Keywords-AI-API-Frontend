@@ -314,7 +314,7 @@ export const getDashboardData = (
     if (params.get("type") === null) {
       params.set("type", getState().dashboard.displayFilter.type);
     }
-    const startTime = performance.now();
+    // const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
@@ -324,9 +324,9 @@ export const getDashboardData = (
       path: `api/dashboard?${params.toString()}`,
     })
       .then((data) => {
-        const endTime = performance.now(); // End time
+        // const endTime = performance.now(); // End time
 
-        console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
+        // console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
         dispatch(setDashboardData(data));
 
         if (params.get("breakdown") === "by_model") {
@@ -457,8 +457,8 @@ export const getDashboardData = (
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
         dispatch(setDashboardLoading(false));
-        const endTime2 = performance.now(); // End time
-        console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
+        // const endTime2 = performance.now(); // End time
+        // console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
       .catch((error) => {
         console.log("error", error);
@@ -605,134 +605,9 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
   return newDataArray;
 };
 
-export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
-  // this function returns the data grouped by date_group and model or api_key:
-  //[{name: "2021-07-21T00:00:00.000Z",
-  //modelname:{metrics...}}]
-  // https://recharts.org/en-US/examples/StackedBarChart
-  // Group data by date_group
-  data = data.map((item) => {
-    let newDateGroup = new Date(item.timestamp);
-    newDateGroup.setMinutes(
-      newDateGroup.getMinutes() + newDateGroup.getTimezoneOffset()
-    );
-
-    // timeRange = "monthly";
-    if (timeRange === "yearly") {
-      newDateGroup = (new Date(item.timestamp).getMonth() + 1)
-        .toString()
-        .padStart(2, "0");
-    } else if (timeRange === "monthly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else if (timeRange === "weekly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else {
-      newDateGroup = new Date(item.timestamp).getHours() + ":00";
-    }
-    return { ...item, date_group: newDateGroup };
-  });
-  const by_date_group = _.groupBy(data, ({ date_group }) => date_group);
-  const byModel = {};
-  // Group data by model or api_key
-  const groupByCallback = isbyModel
-    ? ({ model }) => (model == "" ? "unknown model" : model)
-    : ({ api_key }) => api_key;
-  Object.keys(by_date_group).forEach((key) => {
-    const updatedItem = _.groupBy(by_date_group[key], groupByCallback);
-    Object.keys(updatedItem).forEach((key) => {
-      // Aggregate the data for each model
-      // let request = updatedItem[key].length()
-      updatedItem[key] = updatedItem[key].reduce((accumulator, current) => {
-        accumulator.prompt_tokens =
-          (accumulator.prompt_tokens || 0) + current.prompt_tokens;
-        accumulator.completion_tokens =
-          (accumulator.completion_tokens || 0) + current.completion_tokens;
-        accumulator.latency = (accumulator.latency || 0) + current.latency;
-        accumulator.cost = (accumulator.cost || 0) + current.cost;
-        accumulator.error_count =
-          (accumulator.failed === true ? 1 : 0) + current.error_count || 0;
-        accumulator.timestamp = current.timestamp;
-        accumulator.number_of_requests =
-          (accumulator.number_of_requests || 0) + 1;
-        return accumulator;
-      }, {});
-      // Calculate the average and change naming
-      updatedItem[key].total_cost = updatedItem[key].cost;
-      delete updatedItem[key].cost;
-      // updatedItem[key].number_of_requests = request;
-      updatedItem[key].total_prompt_tokens = updatedItem[key].prompt_tokens;
-      delete updatedItem[key].prompt_tokens;
-      updatedItem[key].total_completion_tokens =
-        updatedItem[key].completion_tokens;
-      delete updatedItem[key].completion_tokens;
-      updatedItem[key].average_latency =
-        updatedItem[key].latency / updatedItem[key].number_of_requests;
-      delete updatedItem[key].latency;
-      updatedItem[key].total_tokens =
-        updatedItem[key].total_prompt_tokens +
-        updatedItem[key].total_completion_tokens;
-    });
-    byModel[key] = updatedItem;
-  });
-  const returnData = Object.keys(byModel)
-    .map((key) => {
-      let time;
-      if (key.includes(":")) {
-        time = new Date();
-        time.setHours(key.split(":")[0]);
-      } else {
-        time = new Date(key);
-      }
-      return {
-        name: key,
-        timestamp: time.toString(),
-        ...byModel[key],
-      };
-    })
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-  return returnData;
-};
-
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
-  console.log(metric);
-  const localTimeData = data.map((item) => {
-    let newDateGroup = new Date(item.date_group);
 
-    if (timeRange === "yearly") {
-      newDateGroup = (new Date(item.date_group).getMonth() + 1)
-        .toString()
-        .padStart(2, "0");
-    } else if (timeRange === "monthly") {
-      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else if (timeRange === "weekly") {
-      newDateGroup = new Date(item.date_group).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else {
-      newDateGroup = new Date(item.date_group).getHours() + ":00";
-    }
-    return {
-      ...item,
-      date_group: newDateGroup,
-      timestamp: new Date(item.date_group).toString(),
-    };
-  });
-  const groupByDate = _.groupBy(localTimeData, ({ date_group }) => date_group);
+  const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
   let returnData = [];
   Object.keys(groupByDate).forEach((key) => {
     const date_group = key;

@@ -262,12 +262,14 @@ export const addMissingDate = (
   dateGroup: string,
   currntTimeRange: string
 ): DataItem[] => {
+  console.log("addMissingDate");
   if (!data) return [];
   const newDataArray: DataItem[] = [];
 
   const localeUtc = (dateStr: string): Date => {
     const date = new Date(dateStr);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    return date;
   };
   const keys =
     data?.length > 0
