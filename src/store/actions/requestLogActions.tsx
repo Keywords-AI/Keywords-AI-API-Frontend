@@ -18,6 +18,8 @@ import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
 import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
+import { Parser } from '@json2csv/plainjs';
+
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
@@ -446,7 +448,7 @@ export const setSecondFilter = (filter: string) => {
   };
 };
 
-export const exportLogs = () => {
+export const exportLogs = (format=".csv") => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const filters = state.requestLogs.filters;
@@ -456,13 +458,23 @@ export const exportLogs = () => {
       method: "POST",
       data: {filters: filterData, exporting: true},
     }).then((data) => {
-      const jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: "application/json" });
+      let exportData: string;
+      let blob: Blob;
+      if(format === ".json") {
+        exportData = JSON.stringify(data);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(data);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "request_logs.json";
-      a.click();
+      a.download = "request_logs" + format;
+      console.log(a.download);
+      // a.click();
     });
   };
 
