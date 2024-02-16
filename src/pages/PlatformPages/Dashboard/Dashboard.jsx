@@ -72,6 +72,7 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const display_type = new URLSearchParams(location.search).get("type");
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
   useEffect(
@@ -100,6 +101,7 @@ function DashboardNotConnected({
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
+        dispatch(setDisplayType("total", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.number_of_requests.value,
@@ -117,6 +119,7 @@ function DashboardNotConnected({
       dataKey: Metrics.average_latency.value,
       unit: true,
       onClick: () => {
+        dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.average_latency.value,
