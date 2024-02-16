@@ -17,6 +17,7 @@ import {
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
 import { SentimentTag, StatusTag } from "src/components/Misc";
+import { Parser } from "@json2csv/plainjs";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
