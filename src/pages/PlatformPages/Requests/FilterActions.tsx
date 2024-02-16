@@ -3,6 +3,7 @@ import {
   SelectInputMenu,
   SelectCheckBoxMenu,
   TextInput,
+  SelectInput,
 } from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Add, AlphanumericKey, Filter } from "src/components/Icons";
@@ -177,11 +178,16 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    if (filterOption.metric === "timestamp") {
+      if (!data.filterValue) {
+        data.filterValue = new Date().toISOString().slice(0, -8);
+      }
+    }
     dispatch(
       addFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
-        operator: defaultOperator,
+        operator: operator.value,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
         id: Math.random().toString(36).substring(2, 15),
@@ -190,7 +196,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
 
     setOpen(false);
   };
-
+  const [operator, setOperator] = useState(filterOption?.operator_choices?.[0]);
   return (
     <Modal
       title={`Filter by ${filterOption.display_name}`}
@@ -207,17 +213,38 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
         onSubmit={handleSubmit(onSubmit)}
         className="flex-col items-center gap-md self-stretch"
       >
-        <TextInput
-          placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit(onSubmit)();
-              e.stopPropagation();
-            }
-          }}
-          {...register("filterValue")}
-          type={filterOption.value_field_type}
-        />
+        <div className="flex gap-xs self-stretch">
+          <SelectInput
+            headLess
+            trigger={() => (
+              <Button
+                variant="r4-gray-2"
+                text={operator.name}
+                className="outline-none"
+              />
+            )}
+            align="start"
+            choices={filterOption.operator_choices}
+            onChange={(e) => {
+              const value = e.target.value;
+              setOperator(
+                filterOption.operator_choices.find((e) => e.value === value)
+              );
+            }}
+            // multiple={true}
+          />
+          <TextInput
+            placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSubmit(onSubmit)();
+                e.stopPropagation();
+              }
+            }}
+            {...register("filterValue")}
+            type={filterOption.value_field_type}
+          />
+        </div>
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">
             <Button

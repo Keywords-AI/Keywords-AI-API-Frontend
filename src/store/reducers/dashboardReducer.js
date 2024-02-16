@@ -32,6 +32,7 @@ import {
   SET_SENTIMENT_SUMMARY_DATA,
   SET_SENTIMENT_DATA,
   RESET_TIME_FRAME_OFFSET,
+  SET_DASHBOARD_LOADING,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -53,6 +54,7 @@ const loadFilter = () => {
 let currDate = new Date();
 
 const initState = {
+  loading: true,
   data: [
     // {
     //   date_group: 20,
@@ -185,6 +187,8 @@ const initState = {
 
 export default function dashboardReducer(state = initState, action) {
   switch (action.type) {
+    case SET_DASHBOARD_LOADING:
+      return { ...state, loading: action.payload };
     case SET_DASHBOARD_DATA:
       return { ...state, ...action.payload };
     case SET_COST_DATA:

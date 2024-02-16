@@ -7,6 +7,9 @@ import {
   formatDate,
   getColorMap,
   addMissingDate,
+  digitToMonth,
+  formatTimeUnit,
+  formatDateUnit,
 } from "src/utilities/objectProcessing";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
@@ -41,6 +44,14 @@ export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
+export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
+
+export const setDashboardLoading = (data) => {
+  return {
+    type: SET_DASHBOARD_LOADING,
+    payload: data,
+  };
+};
 export const setKeyColors = (data) => {
   return {
     type: SET_KEY_COLORS,
@@ -286,6 +297,7 @@ export const getDashboardData = (
   overrideParams // search string
 ) => {
   return (dispatch, getState) => {
+    dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
     if (overrideParams) {
       params = new URLSearchParams(overrideParams);
@@ -444,6 +456,7 @@ export const getDashboardData = (
         dispatch(setP90Data(data?.summary.latency_p_90));
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
+        dispatch(setDashboardLoading(false));
         const endTime2 = performance.now(); // End time
         console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
@@ -455,7 +468,9 @@ export const getDashboardData = (
 
 export const fillMissingDate = (data, dateGroup, timeFrame) => {
   const newDataArray = [];
-  const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
+
+  // const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
+
   // localeUTC: given a UTC timestamp, return the UTC time when the local time is the same as the given timestamp
   const localeUtc = (dateStr) => {
     const date = new Date(dateStr);
@@ -467,11 +482,10 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
     // BE gives UTC strings, Date() converts to local timezone
     // The hours are accurate, but the date is not
     for (let hour = 0; hour < 24; hour++) {
-      const hourString = formatTimeUnit(hour) + ":00";
+      const hourString = formatTimeUnit(hour);
       const found = data.find((d) => {
         const date = new Date(d.date_group);
-        const foundDate =
-          date.getHours() === hour;
+        const foundDate = date.getHours() === hour;
         return foundDate;
       });
       newDataArray.push(
@@ -500,12 +514,7 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
         const dayDate = new Date(timeFrame);
         // Adjust the start date based on the current day of the week
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
-        const dateString = `${formatTimeUnit(
-          dayDate.getMonth() + 1
-        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate
-          .getFullYear()
-          .toString()
-          .slice(-2)}`;
+        const dateString = formatDateUnit(dayDate);
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
@@ -536,9 +545,8 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
 
       for (let day = 1; day <= daysInMonth; day++) {
         // Format the date string as MM/DD/YYYY
-        const month = formatTimeUnit(now.getMonth() + 1); // Month is 0-indexed
-        const year = now.getFullYear().toString().slice(-2);
-        const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
+        let date = new Date(now.getFullYear(), now.getMonth(), day);
+        const dayString = formatDateUnit(date);
 
         const found = data.find((d) => {
           const date = localeUtc(d.date_group);
@@ -567,7 +575,7 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
         // The start and end date will be offset by the timezone
         // This will lead of offset in the month
         // So we need to know the month in UTC.
-        const monthString = formatTimeUnit(month + 1);
+        const monthString = digitToMonth(month);
         const found = data.find((d) => {
           const date = localeUtc(d.date_group);
           return date.getMonth() === month;
@@ -605,6 +613,9 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   // Group data by date_group
   data = data.map((item) => {
     let newDateGroup = new Date(item.timestamp);
+    newDateGroup.setMinutes(
+      newDateGroup.getMinutes() + newDateGroup.getTimezoneOffset()
+    );
 
     // timeRange = "monthly";
     if (timeRange === "yearly") {
@@ -692,6 +703,7 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
 };
 
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+  console.log(metric);
   const localTimeData = data.map((item) => {
     let newDateGroup = new Date(item.date_group);
 

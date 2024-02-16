@@ -649,4 +649,5 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "apiKey",
   "model",
   "status",
+  "cachedResponse",
 ];
