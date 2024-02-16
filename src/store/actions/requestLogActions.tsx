@@ -477,8 +477,7 @@ export const exportLogs = (format=".csv") => {
       const a = document.createElement("a");
       a.href = url;
       a.download = "request_logs" + format;
-      console.log(a.download);
-      // a.click();
+      a.click();
     });
   };
 
