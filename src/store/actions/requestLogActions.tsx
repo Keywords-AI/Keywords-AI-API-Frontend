@@ -16,7 +16,6 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
-import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
@@ -61,8 +60,13 @@ export const setselectRequestContent = (data) => {
     payload: data,
   };
 };
-const getLastUserText = (messages: ChatMessage[]) => {
+const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
+    const lastMessage = messages.slice(-1)[0].content;
+    if (lastMessage instanceof Array) {
+      console.log("lastMessage", lastMessage);
+      return lastMessage.find((part)=>part.type === "text").text;
+    }
     return messages.slice(-1)[0].content;
   }
   return "";
