@@ -613,6 +613,9 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
   // Group data by date_group
   data = data.map((item) => {
     let newDateGroup = new Date(item.timestamp);
+    newDateGroup.setMinutes(
+      newDateGroup.getMinutes() + newDateGroup.getTimezoneOffset()
+    );
 
     // timeRange = "monthly";
     if (timeRange === "yearly") {
@@ -700,6 +703,7 @@ export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
 };
 
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+  console.log(metric);
   const localTimeData = data.map((item) => {
     let newDateGroup = new Date(item.date_group);
 

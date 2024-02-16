@@ -282,7 +282,7 @@ export const addMissingDate = (
     for (let hour = 0; hour < 24; hour++) {
       const hourString = formatTimeUnit(hour);
       const found = data.find((d) => {
-        return d.date_group.split(":")[0] === hourString;
+        return d.date_group.split(":")[0] === hour.toString();
       });
       newDataArray.push(
         found ? { ...found } : { date_group: hourString, ...defaultFields }
@@ -352,7 +352,12 @@ export const addMissingDate = (
 
 export const getColorMap = (data, currentMetric, isModel) => {
   let sortedData = data.sort((a, b) => {
-    return b[currentMetric] - a[currentMetric];
+    const primaryComparison =
+      b[currentMetric] * 10000 - a[currentMetric] * 10000;
+    // if (primaryComparison === 0) {
+    //   return a.model.localeCompare(b.model);
+    // }
+    return primaryComparison;
   });
   const key = isModel ? "model" : "organization_key__name";
   let colorMap = {};

@@ -117,9 +117,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
               {count} / {totalCount}
             </div>
-            <Button variant="small" icon={Export} text="Export"
-              onClick={()=>{
-              exportLogs()
+            <Button
+              variant="small"
+              icon={Export}
+              text="Export"
+              onClick={() => {
+                exportLogs();
               }}
             />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
