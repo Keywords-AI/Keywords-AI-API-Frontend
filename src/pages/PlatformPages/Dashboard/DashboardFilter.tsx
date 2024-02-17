@@ -306,7 +306,7 @@ export default function DashboardFilter() {
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
                     Type
-                    <Tooltip
+                    {/* <Tooltip
                       side="right"
                       sideOffset={8}
                       delayDuration={1}
@@ -323,7 +323,7 @@ export default function DashboardFilter() {
                       <div>
                         <Info />
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
                   </span>
                   <SelectInput
                     {...register("type")}
