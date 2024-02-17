@@ -27,9 +27,10 @@ import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import { Info } from "src/components/Icons";
+import { combineSlices } from "@reduxjs/toolkit";
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
-  { name: "Average", value: "average", secText: "2" },
+  { name: "Avg per request", value: "average", secText: "2" },
 ];
 
 const breakdownChoices = [
@@ -83,6 +84,16 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
+  } else if (currentMetric === "average_latency") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+      { name: "P50", value: "p50", secText: "2" },
+      { name: "P90", value: "p90", secText: "3" },
+      { name: "P95", value: "p95", secText: "4" },
+      { name: "P99", value: "p99", secText: "5" },
+      { name: "All", value: "all", secText: "6" },
+      // { name: "Total", value: "total", secText: "7" },
+    ];
   } else {
     filteredtypeChoices = typeChoices;
   }
@@ -233,6 +244,14 @@ export default function DashboardFilter() {
                   if (noAverageDataMetrics.includes(e.target.value)) {
                     dispatch(setDisplayType("total", setQueryParams, navigate));
                   }
+                  if (e.target.value === Metrics.average_latency.value) {
+                    dispatch(
+                      setDisplayType("average", setQueryParams, navigate)
+                    );
+                  } else {
+                    dispatch(setDisplayType("total", setQueryParams, navigate));
+                  }
+
                   getDashboardData();
                 }}
                 value={currentMetric}
@@ -283,12 +302,11 @@ export default function DashboardFilter() {
               />
             </div>
             {currentMetric !== Metrics.number_of_requests.value &&
-              currentMetric !== Metrics.error_count.value &&
-              currentMetric !== Metrics.average_latency.value && (
+              currentMetric !== Metrics.error_count.value && (
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
                     Type
-                    <Tooltip
+                    {/* <Tooltip
                       side="right"
                       sideOffset={8}
                       delayDuration={1}
@@ -305,7 +323,7 @@ export default function DashboardFilter() {
                       <div>
                         <Info />
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
                   </span>
                   <SelectInput
                     {...register("type")}
