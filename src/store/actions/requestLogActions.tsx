@@ -16,8 +16,9 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
-import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
+import { Parser } from '@json2csv/plainjs';
+
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
@@ -61,8 +62,13 @@ export const setselectRequestContent = (data) => {
     payload: data,
   };
 };
-const getLastUserText = (messages: ChatMessage[]) => {
+const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
+    const lastMessage = messages.slice(-1)[0].content;
+    if (lastMessage instanceof Array) {
+      console.log("lastMessage", lastMessage);
+      return lastMessage.find((part)=>part.type === "text").text;
+    }
     return messages.slice(-1)[0].content;
   }
   return "";
@@ -446,7 +452,7 @@ export const setSecondFilter = (filter: string) => {
   };
 };
 
-export const exportLogs = () => {
+export const exportLogs = (format=".csv") => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const filters = state.requestLogs.filters;
@@ -456,12 +462,21 @@ export const exportLogs = () => {
       method: "POST",
       data: {filters: filterData, exporting: true},
     }).then((data) => {
-      const jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: "application/json" });
+      let exportData: string;
+      let blob: Blob;
+      if(format === ".json") {
+        exportData = JSON.stringify(data);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(data);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "request_logs.json";
+      a.download = "request_logs" + format;
       a.click();
     });
   };
