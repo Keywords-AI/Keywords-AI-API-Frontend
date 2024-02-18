@@ -178,7 +178,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
         {ModelItems.map((item, index) => (
           <Drawer
             key={index}
-            // open={false}
+            open={false}
             trigger={
               <div
                 key={index}
