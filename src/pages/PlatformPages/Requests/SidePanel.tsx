@@ -338,7 +338,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
-
+                
                 return (
                   <div
                     key={index}
