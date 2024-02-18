@@ -162,7 +162,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_cost.name,
-      number: `$${summary.total_cost?.toFixed(3) || 0}`,
+      number: `$${summary.total_cost?.toFixed(4) || 0}`,
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {

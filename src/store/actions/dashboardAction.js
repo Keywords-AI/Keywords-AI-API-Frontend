@@ -560,7 +560,6 @@ export const getDashboardData = (
           )
         );
         dispatch(setRequestCountData(requestData));
-        console.log("data By model", data?.data_by_model);
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
         const modelData = getState().dashboard.data_by_model;
