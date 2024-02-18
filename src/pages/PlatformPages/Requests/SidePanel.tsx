@@ -347,13 +347,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                         <p className="text-sm-md text-gray-5">
                           {getMessageType(message.role)}
                         </p>
-                        <CacheButton
+                        {/* <CacheButton
                           message={message}
                           completeInteraction={completeInteraction}
                           index={index}
                           logId={logItem?.id}
                           systemPrompt={systemPrompt?.content}
-                        />
+                        /> */}
                       </div>
                       <DotsButton
                         icon={Copy}
