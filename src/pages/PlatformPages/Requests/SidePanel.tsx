@@ -330,7 +330,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </>
             )}
 
-            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
+            <div
+              className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start"
+              ref={logRef}
+            >
               {completeInteraction.map((message, index) => {
                 if (!message.content) {
                   return null;

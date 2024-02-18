@@ -116,6 +116,13 @@ const initState = {
     //   number_of_requests:0,
     // }
   ],
+  filterOpen: false,
+  filterType: undefined,
+  currentFilter: {
+    id: "",
+  },
+  filters: [],
+  filterOptions: {},
   avgModelData: [],
   apiData: [],
   avgApiData: [],
