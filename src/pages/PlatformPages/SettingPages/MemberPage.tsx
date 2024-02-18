@@ -19,6 +19,7 @@ export const MemberPage = () => {
   React.useEffect(() => {
     setMembers(organization?.users || []);
   }, [organization?.users]);
+  const isOwner = user.organization_role.user.id === organization?.owner.id;
   return (
     <PageContent
       title={"Members"}
@@ -44,21 +45,23 @@ export const MemberPage = () => {
           </Modal>
         )}
         {/* <SelectInput /> */}
-        <Modal
-          title={"Leave organization"}
-          subtitle={"Are you sure you want to leave this organization?"}
-          open={deleteModalOpen}
-          setOpen={setDeleteModalOpen}
-          trigger={<Button variant="r4-red" text="Leave organization" />}
-          children={
-            <DeleteModalForm
-              setOpen={setDeleteModalOpen}
-              roleId={user.organization_role.id}
-              firstName={user?.first_name}
-              lastName={user?.last_name}
-            />
-          }
-        />
+        {!isOwner && (
+          <Modal
+            title={"Leave organization"}
+            subtitle={"Are you sure you want to leave this organization?"}
+            open={deleteModalOpen}
+            setOpen={setDeleteModalOpen}
+            trigger={<Button variant="r4-red" text="Leave organization" />}
+            children={
+              <DeleteModalForm
+                setOpen={setDeleteModalOpen}
+                roleId={user.organization_role.user.id}
+                firstName={user?.first_name}
+                lastName={user?.last_name}
+              />
+            }
+          />
+        )}
       </PageParagraph>
     </PageContent>
   );
@@ -99,7 +102,7 @@ const DeleteModalForm = ({
             type="button"
             onClick={(e: any) => setOpen(false)}
           />
-          <Button variant="r4-red" text={`Remove ${firstName} ${lastName}`} />
+          <Button variant="r4-red" text={`Leave`} />
         </div>
       </div>
     </form>
