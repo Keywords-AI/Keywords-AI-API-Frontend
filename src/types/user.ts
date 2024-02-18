@@ -6,7 +6,7 @@ export type OrganizationRole = {
   access_level: number;
   role: string;
   pending: boolean;
-  user: number;
+  user: any;
   organization: number;
 };
 
@@ -14,7 +14,7 @@ export type SystemPrompt = {
   role: string;
   content: string;
 };
-    
+
 export type User = {
   loading: boolean;
   id: number | null;
@@ -24,7 +24,7 @@ export type User = {
   organization_role: OrganizationRole;
   has_product_access: boolean;
   is_organization_admin: boolean;
-  time_range_types: Choice[],
+  time_range_types: Choice[];
   last_login: null;
   email: string;
   placeholder: boolean;

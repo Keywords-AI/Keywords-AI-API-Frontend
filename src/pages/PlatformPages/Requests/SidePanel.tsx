@@ -89,7 +89,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag({ failed: logItem?.failed || false }),
+    Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "production"}
@@ -330,7 +330,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </>
             )}
 
-            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
+            <div
+              className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start"
+              ref={logRef}
+            >
               {completeInteraction.map((message, index) => {
                 if (!message.content) {
                   return null;
