@@ -91,6 +91,7 @@ export const ApiKeyPage = ({
   }, [apiKey.keyList]);
   const orderedVendors = [
     "OpenAI",
+    "Azure OpenAI",
     "Anthropic",
     "Cohere",
     "AI21 Labs",

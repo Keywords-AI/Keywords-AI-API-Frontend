@@ -16,6 +16,7 @@ const IntegrationsPageNotConnected = ({ vendors }) => {
   const [openRequest, setOpenRequest] = React.useState(false);
   const orderedVendors = [
     "OpenAI",
+    "Azure OpenAI",
     "Anthropic",
     "Cohere",
     "AI21 Labs",
