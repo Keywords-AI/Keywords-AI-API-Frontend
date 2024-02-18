@@ -180,7 +180,7 @@ export const processGroupingTitle = (
   metric?: string
 ): React.ReactNode => {
   if (typeof value === "boolean") {
-    return <StatusTag failed={value} />;
+    return <StatusTag statusCode={value} />;
   }
   if (metric === "sentiment_score") {
     return <SentimentTag sentiment_score={value as number} showScore={false} />;
@@ -223,7 +223,7 @@ export const processRequestLogs = (
       organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.status_code >= 300,
+        failed: log.status_code >= 300 || log.status_code === 0,
         errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
