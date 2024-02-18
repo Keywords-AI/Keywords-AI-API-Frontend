@@ -30,7 +30,6 @@ export const Filters = () => {
   const models = useTypedSelector(
     (state: RootState) => state.requestLogs.models
   );
-
   return (
     <div className="flex-row gap-xxxs items-center">
       {filters.map((filter, index) => (
