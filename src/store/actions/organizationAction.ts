@@ -221,6 +221,7 @@ export const deleteRole = (id) => {
         if (res.ok) {
           console.log(id);
           dispatch({ type: DELETE_ROLE, payload: id });
+          dispatch(getUser())
         } else if (res.status === 400) {
           const responseJson = await res.json();
           dispatch(
