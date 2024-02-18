@@ -14,6 +14,7 @@ import { PageContent } from "src/components/Sections";
 import { ModelType, models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
+import { useTypedSelector } from "src/store/store";
 
 const RightDrawerContent = ({
   name,
@@ -127,16 +128,14 @@ const RightDrawerContent = ({
   );
 };
 
-const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
+const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
   const [clickedIndex, setClickedIndex] = React.useState(-1);
-
   const isRowHighlighted = (index) => {
     return index === hoveredIndex || index === clickedIndex;
   };
 
   const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
-
   const handleRowClick = (index) => {
     setClickedIndex(index);
     setIsSidePanelOpen(true); // Open the side panel
@@ -185,12 +184,12 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                 onMouseLeave={() => setHoveredIndex(-1)}
                 onClick={() => handleRowClick(index)}
               >
-                <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <ModelTag model={item.value} />
+                <div className="flex w-[200px] items-center self-stretch text-gray-4 text-sm-md">
+                  <ModelTag model={item.model_name} />
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.prompt_cost}
+                    {+item.input_cost / 1000}$
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -203,7 +202,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
-                    / 1K tokens
+                    / 1M tokens
                   </span>
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
@@ -237,7 +236,6 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
   );
 };
 export default function Modelspage() {
-  console.log(models.length, "models");
   const a = [
     {
       name: "gpt-4",
@@ -393,7 +391,9 @@ export default function Modelspage() {
       moderation: "Filtered",
     },
   ];
-  console.log(a.length, "a");
+  const models = Object.values(
+    useTypedSelector((state) => state.models.models)
+  );
   return (
     <PageContent title="Models" subtitle="">
       <span className="text-md-medium">Supported models</span>

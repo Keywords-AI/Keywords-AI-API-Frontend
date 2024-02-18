@@ -25,6 +25,7 @@ import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
+import DashboardFilterLeft from "./DashboardFilterLeft";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -246,6 +247,7 @@ function DashboardNotConnected({
                   ))}
               </div>
             )} */}
+            <DashboardFilterLeft />
           </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />

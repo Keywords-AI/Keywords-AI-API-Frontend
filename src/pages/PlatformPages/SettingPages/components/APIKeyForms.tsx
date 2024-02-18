@@ -18,7 +18,7 @@ import {
   dispatchNotification,
 } from "src/store/actions";
 import { ApiKey } from "src/types";
-import { CodeViewer, Down, Info } from "src/components";
+import { CodeViewer, Down, Info, Up } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
 import { models } from "src/utilities/constants";
@@ -180,12 +180,14 @@ const CreateFormNotConnected = React.forwardRef(
             </div>
             <div className="flex-col justify-center items-start gap-xs self-stretch">
               <Button
-                icon={Down}
+                icon={showMore ? Up : Down}
                 variant="text"
                 type="button"
                 text="More options"
+                justification="justify-center"
+                iconSize="xxs"
                 onClick={() => setShowMore((prev) => !prev)}
-                padding="py-xxxs"
+                padding="py-xxs"
               />
               <div className="flex-col items-start justify-center gap-md self-stretch">
                 {showMore && (

@@ -45,6 +45,130 @@ export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
 export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
+//==============================================================================
+export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
+export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
+export const SET_DASHBOARD_CURRENT_FILTER_TYPE =
+  "SET_DASHBOARD_CURRENT_FILTER_TYPE";
+export const SET_DASHBOARD_FILTER_TYPE = "SET_DASHBOARD_FILTER_TYPE";
+export const SET_DASHBOARD_FILTER_OPTIONS = "SET_DASHBOARD_FILTER_OPTIONS";
+export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
+export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
+export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
+export const SET_DASHBOARD_CURRENT_FILTER = "SET_DASHBOARD_CURRENT_FILTER";
+
+// Filter actions
+
+export const setDashboardFilterType = (filterType) => {
+  return {
+    type: SET_DASHBOARD_FILTER_TYPE,
+    payload: filterType,
+  };
+};
+
+export const setDashboardFilters = (filters) => {
+  return (dispatch) => {
+    dispatch({
+      type: ADD_DASHBOARD_FILTER,
+      payload: filters,
+    });
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const setDashboardCurrentFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SET_DASHBOARD_CURRENT_FILTER,
+      payload: filter,
+    });
+  };
+};
+
+function processDashboardFilters(filters) {
+  return filters.reduce((acc, filter) => {
+    if (!(filter.value instanceof Array)) {
+      filter.value = [filter.value];
+    }
+    var values = filter.value.map((value) => {
+      if (value === "true" || value === "false") {
+        value = value === "true" ? true : false;
+      }
+      return value;
+    });
+    filter.metric &&
+      (acc[filter.metric] = {
+        value: values,
+        operator: filter.operator,
+      });
+    return acc;
+  }, {});
+}
+
+export const applyDashboardPostFilters = (filters) => {
+  return (dispatch) => {
+    const postData = processDashboardFilters(filters);
+    dispatch(updateUser({ request_log_filters: postData }, undefined, true));
+    dispatch(getRequestLogs(postData));
+  };
+};
+
+export const addDashboardFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ADD_DASHBOARD_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const deleteDashboardFilter = (filterId) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: DELETE_DASHBOARD_FILTER,
+      payload: filterId,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const updateDashboardFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: UPDATE_DASHBOARD_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+export const setDashboardFilterOptions = (filters) => {
+  return {
+    type: SET_DASHBOARD_FILTER_OPTIONS,
+    payload: filters,
+  };
+};
+
+export const setDashboardFilterOpen = (open) => {
+  return {
+    type: SET_DASHBOARD_FILTER_OPEN,
+    payload: open,
+  };
+};
+
+export const setDashboardSecondFilter = (filter) => {
+  return {
+    type: SET_DASHBOARD_SECOND_FILTER,
+    payload: filter,
+  };
+};
+//==============================================================================
 
 export const setDashboardLoading = (data) => {
   return {
@@ -320,6 +444,7 @@ export const getDashboardData = (
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
+    console.log("request time", date.toISOString());
     keywordsRequest({
       path: `api/dashboard?${params.toString()}`,
     })
@@ -435,7 +560,7 @@ export const getDashboardData = (
           )
         );
         dispatch(setRequestCountData(requestData));
-
+        console.log("data By model", data?.data_by_model);
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
         const modelData = getState().dashboard.data_by_model;
@@ -606,7 +731,6 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
 };
 
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
-
   const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
   let returnData = [];
   Object.keys(groupByDate).forEach((key) => {

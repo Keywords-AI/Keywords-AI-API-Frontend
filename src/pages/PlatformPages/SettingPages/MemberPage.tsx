@@ -45,7 +45,7 @@ export const MemberPage = () => {
           </Modal>
         )}
         {/* <SelectInput /> */}
-        {!isOwner && (
+        {/* {!isOwner && (
           <Modal
             title={"Leave organization"}
             subtitle={"Are you sure you want to leave this organization?"}
@@ -61,7 +61,7 @@ export const MemberPage = () => {
               />
             }
           />
-        )}
+        )} */}
       </PageParagraph>
     </PageContent>
   );

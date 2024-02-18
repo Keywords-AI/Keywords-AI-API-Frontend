@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { SmallPricingCard } from "src/components/Cards";
 import { createPaymentSession } from "src/services/stripe";
@@ -12,7 +12,6 @@ import {
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
-import { models } from "src/utilities/constants";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -49,7 +48,8 @@ export const PlansPage = connect(
 )(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
-  const remaining = models.length;
+  const models = Object.keys(useSelector((state) => state.models.models));
+  const remaining = models.length || 20;
   const cards = [
     {
       title: "Starter",
