@@ -39,6 +39,8 @@ import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
 import { Requests } from "./pages/PlatformPages/Requests/Requests";
 import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
+import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
+import posthog from "posthog-js";
 
 const mapStateToProps = (state) => {
   return {
@@ -54,6 +56,7 @@ const mapDispatchToProps = {
 
 const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
+  const hasAccess = user.loading? true: user.is_admin? true: false;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
     getUser();
@@ -84,7 +87,16 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       // navigate to dashboard if user has onboarded
       navigate("/onboarding");
     }
+
+    if (user.id) {
+      posthog.identify(user.id, {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
+    }
   }, [user]);
+  
   // comment the 2 lines below to switch between logged in/out states
   const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
@@ -93,8 +105,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       path: REDIRECT_URI, // "/platform"
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
-        { path: "playground", element: <Playground /> },
-        { path: "chatbot", element: <Chatbot /> },
         { path: "requests", element: <Requests /> },
         { path: "cache", element: <CachePage /> },
         {
@@ -103,12 +113,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           children: settingChildren,
         },
         {
-          path: "qa-wall",
-          element: <LeftNavigationLayout sectionName={"qa-wall"} />,
-          children: qaChildren,
-        },
-
-        {
           path: "dashboard",
           element: <Dashboard />,
         },
@@ -116,12 +120,24 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "sentiment",
           element: <Sentiment />,
         },
-
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
         },
       ],
+    },
+    {
+      path: REDIRECT_URI, // "/platform"
+      element: hasAccess ? <NavigationLayout /> : <Navigate to="/forbidden" />,
+      children: [
+        { path: "playground", element: <Playground /> },
+        { path: "chatbot", element: <Chatbot /> },
+        {
+          path: "qa-wall",
+          element: <LeftNavigationLayout sectionName={"qa-wall"} />,
+          children: qaChildren,
+        },
+      ]
     },
     {
       // Handled Separately to allow special redirection
@@ -193,6 +209,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
+    },
+    {
+      path: "forbidden",
+      element: <FullScreenLayout />,
+      children: [{ path: "", element: <Forbidden /> }],
     },
     {
       path: "*",

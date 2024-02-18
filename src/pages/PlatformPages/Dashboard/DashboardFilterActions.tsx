@@ -16,24 +16,23 @@ import {
   Operator,
 } from "src/types";
 import { addFilter } from "src/store/actions";
-import { InputFieldFilter } from "./FilterValueField";
 import { setFilterType, setCurrentFilter } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 
-export function FilterActions({ type }: { type: string }) {
+export function DashboardFilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
-    (state: RootState) => state.requestLogs.filterOptions
+    (state: RootState) => state.dashboard.filterOptions
   );
   const filterType = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter?.metric
+    (state: RootState) => state.dashboard.currentFilter?.metric
   );
   const currentFilter = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter
+    (state: RootState) => state.dashboard.currentFilter
   );
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(

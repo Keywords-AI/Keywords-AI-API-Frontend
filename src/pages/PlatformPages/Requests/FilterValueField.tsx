@@ -10,7 +10,7 @@ import {
   deleteFilter,
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
-import { TextInput, TextInputSmall } from "src/components/Inputs";
+import { SelectInput, TextInput, TextInputSmall } from "src/components/Inputs";
 import { Modal } from "src/components/Dialogs";
 import { useLocation } from "react-router-dom";
 
@@ -132,13 +132,19 @@ const InputModal = ({
 }) => {
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useTypedDispatch();
+  const [operator, setOperator] = useState(filterOption?.operator_choices?.[0]);
   const onSubmit = (data) => {
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    if (filterOption.metric === "timestamp") {
+      if (!data.filterValue) {
+        data.filterValue = new Date().toISOString().slice(0, -8);
+      }
+    }
     dispatch(
       addFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
-        operator: defaultOperator,
+        operator: operator.value,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
         id: Math.random().toString(36).substring(2, 15),
@@ -166,6 +172,27 @@ const InputModal = ({
         onSubmit={handleSubmit(onSubmit)}
         className="flex-col items-center gap-md self-stretch"
       >
+        {/*
+          <SelectInput
+            headLess
+            trigger={() => (
+              <Button
+                variant="r4-gray-2"
+                text={operator.name}
+                className="outline-none"
+              />
+            )}
+            align="start"
+            choices={filterOption.operator_choices}
+            onChange={(e) => {
+              const value = e.target.value;
+              setOperator(
+                filterOption.operator_choices.find((e) => e.value === value)
+              );
+            }}
+            // multiple={true}
+          /> */}
+
         <TextInput
           placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
           onKeyDown={(e) => {

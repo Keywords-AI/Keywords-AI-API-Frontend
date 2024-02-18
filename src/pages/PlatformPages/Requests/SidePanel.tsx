@@ -89,7 +89,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag({ failed: logItem?.failed || false }),
+    Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "production"}
@@ -311,27 +311,29 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               />
             </div> */}
             {systemPrompt && (
-              <div className="flex-col px-lg pt-sm pb-md gap-xxxs self-stretch items-start">
-                <div className="flex justify-between items-center self-stretch">
-                  <p className="text-sm-md text-gray-5">
-                    {getMessageType(systemPrompt.role)}
-                  </p>
-                  <DotsButton
-                    icon={Copy}
-                    onClick={() => {
-                      navigator.clipboard.writeText(systemPrompt.content);
-                    }}
-                  />
+              <>
+                <div className="flex-col px-lg pt-sm pb-md gap-xxxs self-stretch items-start">
+                  <div className="flex justify-between items-center self-stretch">
+                    <p className="text-sm-md text-gray-5">
+                      {getMessageType(systemPrompt.role)}
+                    </p>
+
+                    <CopyButton text={systemPrompt.content} />
+                  </div>
+                  <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
+                    <p className="break-words overflow-auto">
+                      {systemPrompt.content}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                  <p className="break-words overflow-auto">
-                    {systemPrompt.content}
-                  </p>
-                </div>
-              </div>
+                <Divider color="bg-gray-2" />
+              </>
             )}
-            <Divider color="bg-gray-2" />
-            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
+
+            <div
+              className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start"
+              ref={logRef}
+            >
               {completeInteraction.map((message, index) => {
                 if (!message.content) {
                   return null;
@@ -355,12 +357,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                           systemPrompt={systemPrompt?.content}
                         /> */}
                       </div>
-                      <DotsButton
-                        icon={Copy}
-                        onClick={() => {
-                          navigator.clipboard.writeText(message.content);
-                        }}
-                      />
+
+                      <CopyButton text={message.content} />
                     </div>
                     <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
                       <p className="break-words overflow-auto">
@@ -409,7 +407,7 @@ const Evaluation = ({
       aria-label="frame 1974"
       className="flex-col  px-lg py-sm items-start gap-xs self-stretch"
     >
-      <div className="flex h-[24px] justify-between items-center self-stretch">
+      {/* <div className="flex h-[24px] justify-between items-center self-stretch">
         <Tooltip
           side="right"
           sideOffset={8}
@@ -459,7 +457,7 @@ const Evaluation = ({
             <p className="text-sm-regular text-gray-4">N/A</p>
           )}
         </div>
-      </div>
+      </div> */}
 
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-sm-md text-gray-5">

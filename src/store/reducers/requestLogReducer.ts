@@ -48,7 +48,7 @@ type StateType = {
 const initState: StateType = {
   logs: [],
   count: 0,
-  loading: false,
+  loading: true,
   totalCount: 0,
   currentPage: 1,
   nextPageUrl: null,

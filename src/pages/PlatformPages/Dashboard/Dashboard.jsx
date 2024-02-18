@@ -25,6 +25,7 @@ import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
+import DashboardFilterLeft from "./DashboardFilterLeft";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -72,6 +73,7 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const display_type = new URLSearchParams(location.search).get("type");
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
   useEffect(
@@ -100,6 +102,7 @@ function DashboardNotConnected({
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
+        dispatch(setDisplayType("total", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.number_of_requests.value,
@@ -117,6 +120,7 @@ function DashboardNotConnected({
       dataKey: Metrics.average_latency.value,
       unit: true,
       onClick: () => {
+        dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.average_latency.value,
@@ -158,7 +162,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_cost.name,
-      number: `$${summary.total_cost?.toFixed(3) || 0}`,
+      number: `$${summary.total_cost?.toFixed(4) || 0}`,
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {
@@ -224,7 +228,7 @@ function DashboardNotConnected({
         </div>
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
           <div>
-            {breakdown_type !== "none" && (
+            {/* {breakdown_type !== "none" && (
               <div className="flex items-center content-center gap-xs flex-wrap">
                 {colorData &&
                   Object.keys(colorData).map((name, index) => (
@@ -242,7 +246,8 @@ function DashboardNotConnected({
                     </div>
                   ))}
               </div>
-            )}
+            )} */}
+            <DashboardFilterLeft />
           </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />

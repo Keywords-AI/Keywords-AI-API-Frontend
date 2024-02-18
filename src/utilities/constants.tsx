@@ -610,9 +610,11 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ failed, errorCode }) => (
-      <StatusTag failed={failed} errorCode={errorCode} />
-    ),
+    renderFunction: ({ failed, errorCode }) => {
+      return (
+        <StatusTag statusCode={errorCode} />
+      )
+    },
   },
   {
     name: "Cached",
@@ -649,4 +651,5 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "apiKey",
   "model",
   "status",
+  "cachedResponse",
 ];
