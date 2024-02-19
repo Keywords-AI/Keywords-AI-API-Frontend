@@ -17,6 +17,7 @@ import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
 import SearchLog from "./SearchLog";
+import LogMessage from "./LogMessage";
 
 interface SidePanelProps {
   open: boolean;
@@ -159,7 +160,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     if (displayLog) {
       if (logRef && logRef.current) {
         console.log("logRef.current");
-        (logRef.current as HTMLElement)?.scrollIntoView({ behavior: "smooth" });
+        (logRef.current as HTMLElement)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }
       // } else {
       //   if (metricRef && metricRef.current) {
@@ -338,7 +342,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
-
+                
                 return (
                   <div
                     key={index}
@@ -361,9 +365,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       <CopyButton text={message.content} />
                     </div>
                     <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                      <p className="break-words overflow-auto">
-                        {message.content}
-                      </p>
+                      <LogMessage MessageContent={message.content} />
                     </div>
                   </div>
                 );

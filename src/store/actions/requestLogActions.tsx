@@ -299,7 +299,7 @@ export const filterParamsToFilterObjects = (
       metric: key as keyof LogItem,
       value_field_type: filterOptions[key].value_field_type,
       operator: filterParams[key].operator,
-      value: filterParams[key].value,
+      value: filterParams[key].value.map((value: number | boolean| string)=>value.toString()),
       display_name: filterOptions[key].display_name,
     };
   });
