@@ -47,10 +47,10 @@ export const SET_AVG_TTFT_DATA = "SET_AVG_TTFT_DATA";
 //==============================================================================
 export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
 export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
-export const SET_DASHBOARD_CURRENT_FILTER_TYPE =
-  "SET_DASHBOARD_CURRENT_FILTER_TYPE";
+
 export const SET_DASHBOARD_FILTER_TYPE = "SET_DASHBOARD_FILTER_TYPE";
 export const SET_DASHBOARD_FILTER_OPTIONS = "SET_DASHBOARD_FILTER_OPTIONS";
+export const SET_DASHBOARD_FILTERS = "SET_DASHBOARD_FILTERS";
 export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
 export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
 export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
@@ -68,7 +68,7 @@ export const setDashboardFilterType = (filterType) => {
 export const setDashboardFilters = (filters) => {
   return (dispatch) => {
     dispatch({
-      type: ADD_DASHBOARD_FILTER,
+      type: SET_DASHBOARD_FILTERS,
       payload: filters,
     });
     dispatch(applyDashboardPostFilters(filters));
@@ -107,7 +107,7 @@ function processDashboardFilters(filters) {
 export const applyDashboardPostFilters = (filters) => {
   return (dispatch) => {
     const postData = processDashboardFilters(filters);
-    dispatch(updateUser({ request_log_filters: postData }, undefined, true));
+    dispatch(updateUser({dashboard_filters: postData }, undefined, true));
     dispatch(getDashboardData(postData));
   };
 };
@@ -131,7 +131,7 @@ export const deleteDashboardFilter = (filterId) => {
       payload: filterId,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -143,7 +143,7 @@ export const updateDashboardFilter = (filter) => {
       payload: filter,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -447,8 +447,6 @@ export const getDashboardData = (
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    console.log("request time", date.toISOString());
-
     keywordsRequest({
       path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",

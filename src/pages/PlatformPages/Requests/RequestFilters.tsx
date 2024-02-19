@@ -31,12 +31,12 @@ export const Filters = () => {
     (state: RootState) => state.requestLogs.models
   );
   return (
-    <div className="flex-row gap-xxxs items-center">
+    <>
       {filters.map((filter, index) => (
         <div key={filter.id} className="flex flex-row items-center gap-[2px]">
           <RequstFilter filter={filter} />
         </div>
       ))}
-    </div>
+    </>
   );
 };

@@ -2,19 +2,19 @@ import { Button, DotsButton } from "src/components/Buttons";
 import { useEffect, useState } from "react";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { FilterObject, RawFilterOption, Operator } from "src/types";
-import {
-  addFilter,
-  setFilterType,
-  updateFilter,
-  setCurrentFilter,
-  deleteFilter,
-} from "src/store/actions";
+
 import { useForm } from "react-hook-form";
 import { SelectInput, TextInput, TextInputSmall } from "src/components/Inputs";
 import { Modal } from "src/components/Dialogs";
 import { useLocation } from "react-router-dom";
+import {
+  addDashboardFilter,
+  setDashboardCurrentFilter,
+  setDashboardFilterType,
+  updateDashboardFilter,
+} from "src/store/actions";
 
-export const InputFieldFilter = ({
+export const DashboardInputFieldFilter = ({
   filterOption,
   defaultOperator,
   defaultValue,
@@ -53,7 +53,9 @@ export const InputFieldFilter = ({
         padding="py-xxxs px-xxs"
         type={filterOption.value_field_type}
         defaultValue={defaultValue as string}
-        step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
+        step={
+          filterOption.value_field_type === "number" ? "0.00001" : undefined
+        }
       />
       <Button variant="small" text="Apply" onClick={onSubmit} />
       <Button
@@ -61,14 +63,14 @@ export const InputFieldFilter = ({
         text="Cancel"
         type="button"
         onClick={() =>
-          dispatch(setCurrentFilter({ metric: undefined, id: "" }))
+          dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }))
         }
       />
     </div>
   );
 };
 
-export const InputFieldUpdateFilter = ({
+export const DashboardInputFieldUpdateFilter = ({
   filter,
 }: {
   filter: FilterObject;
@@ -79,12 +81,12 @@ export const InputFieldUpdateFilter = ({
   const [changed, setChanged] = useState(false);
   const onSubmit = () => {
     dispatch(
-      updateFilter({
+      updateDashboardFilter({
         ...filter,
         value: [value as string],
       })
     );
-    dispatch(setFilterType(undefined));
+    dispatch(setDashboardFilterType(undefined));
   };
   useEffect(() => {
     if (filter.value[0] !== value) {
@@ -134,14 +136,14 @@ const InputModal = ({
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
     if (filterOption.metric === "timestamp") {
       if (!data.filterValue) {
         data.filterValue = new Date().toISOString().slice(0, -8);
       }
     }
     dispatch(
-      addFilter({
+      addDashboardFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
         operator: filterOption.operator,
@@ -154,7 +156,7 @@ const InputModal = ({
   };
   const location = useLocation();
   useEffect(() => {
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
   }, [location]);
   return (
     <Modal
@@ -163,7 +165,7 @@ const InputModal = ({
       open={open}
       setOpen={(prev) => {
         if (prev === false) {
-          dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+          dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
         }
         setOpen(prev);
       }}
@@ -204,7 +206,9 @@ const InputModal = ({
           }}
           {...register("filterValue")}
           type={filterOption.value_field_type}
-          step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
+          step={
+            filterOption.value_field_type === "number" ? "0.00001" : undefined
+          }
         />
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">
@@ -214,7 +218,9 @@ const InputModal = ({
               onClick={() => {
                 reset();
                 setOpen(false);
-                dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+                dispatch(
+                  setDashboardCurrentFilter({ metric: undefined, id: "" })
+                );
               }}
             />
             <Button variant="r4-primary" text="Apply" type="submit" />
