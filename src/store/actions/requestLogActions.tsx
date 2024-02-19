@@ -40,7 +40,14 @@ export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+export const SET_JSON_MODE = "SET_JSON_MODE";
 
+export const setJsonMode = (jsonMode: boolean) => {
+  return {
+    type: SET_JSON_MODE,
+    payload: jsonMode,
+  };
+};
 export const startGetRequestLogs = () => {
   return {
     type: START_GET_REQUEST_LOGS,

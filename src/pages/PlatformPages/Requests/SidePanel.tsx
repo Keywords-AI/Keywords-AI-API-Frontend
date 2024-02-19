@@ -10,10 +10,14 @@ import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
-import { Copy, IconPlayground, Info } from "src/components";
+import { Compare, Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
+import {
+  RestorePlaygroundState,
+  setCacheResponse,
+  setJsonMode,
+} from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
 import SearchLog from "./SearchLog";
@@ -161,22 +165,24 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   };
   const metricRef = useRef(null);
   const logRef = useRef(null);
+  const dispatch = useTypedDispatch();
+  const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (displayLog) {
-      if (logRef && logRef.current) {
-        console.log("logRef.current");
-        (logRef.current as HTMLElement)?.scrollIntoView({ behavior: "smooth" });
-      }
-      // } else {
-      //   if (metricRef && metricRef.current) {
-      //     console.log("metricRef.current");
-      //     (metricRef.current as HTMLElement)?.scrollIntoView({
-      //       behavior: "smooth",
-      //     });
-      //   }
+    if (logRef && logRef.current) {
+      (logRef.current as HTMLElement)?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
+    // } else {
+    //   if (metricRef && metricRef.current) {
+    //     console.log("metricRef.current");
+    //     (metricRef.current as HTMLElement)?.scrollIntoView({
+    //       behavior: "smooth",
+    //     });
+    //   }
   }, [logItem]);
   return (
     <div
@@ -207,6 +213,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           />
         </div>
         <div>
+          {displayLog && (
+            <DotsButton
+              icon={Compare}
+              onClick={() => dispatch(setJsonMode(!jsonMode))}
+              active={jsonMode}
+            />
+          )}
           {/* {displayLog && (
             <SearchLog
               handleSearch={searchContent}
@@ -229,11 +242,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         className="flex-col items-start self-stretch mt-[44px]"
         aria-label="frame 1969"
       >
+        {" "}
+        <div ref={logRef}></div>
         {!displayLog && (
-          <div
-            ref={metricRef}
-            className="flex-col py-sm px-lg items-start gap-xs self-stretch"
-          >
+          <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
             {Object.keys(displayObj).map((key, index) => {
               return (
                 <div
@@ -357,10 +369,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </>
             )}
 
-            <div
-              className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start"
-              ref={logRef}
-            >
+            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
               {completeInteraction.map((message, index) => {
                 if (!message.content) {
                   return null;

@@ -18,6 +18,7 @@ import {
   SET_CURRENT_FILTER,
   SET_SELECTED_REQUEST_CONTENT,
   START_GET_REQUEST_LOGS,
+  SET_JSON_MODE,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -35,6 +36,7 @@ type StateType = {
   lastPageUrl: string | null;
   selectedRequest: LogItem | undefined;
   sidePanelOpen: boolean;
+  jsonMode: boolean;
   displayColumns: LogColumnKey[];
   filterOpen: boolean;
   filters: FilterObject[];
@@ -55,6 +57,7 @@ const initState: StateType = {
   lastPageUrl: null,
   selectedRequest: undefined,
   sidePanelOpen: false,
+  jsonMode: false,
   displayColumns: defaultRequestLogColumns,
   filterOpen: false,
   filterType: undefined,
@@ -97,6 +100,11 @@ export default function requestLogReducer(
       return {
         ...state,
         selectedRequest: { ...action.payload },
+      };
+    case SET_JSON_MODE:
+      return {
+        ...state,
+        jsonMode: action.payload,
       };
     case SET_SIDE_PANEL_OPEN:
       return {
