@@ -63,4 +63,5 @@ export type User = {
   profile_color: string;
   group_by: string;
   request_log_filters: FilterParams;
+  dashboard_filters: FilterParams;
 };

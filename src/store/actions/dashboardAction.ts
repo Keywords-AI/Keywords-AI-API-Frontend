@@ -1,7 +1,4 @@
-import { get, set } from "react-hook-form";
-import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
-import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import {
   sliceChartData,
   formatDate,
@@ -11,8 +8,10 @@ import {
   formatTimeUnit,
   formatDateUnit,
 } from "src/utilities/objectProcessing";
+import { updateUser, filterParamsToFilterObjects } from "src/store/actions/";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
+import { RootState } from "src/types";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -45,13 +44,14 @@ export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
 export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
+export const SET_AVG_TTFT_DATA = "SET_AVG_TTFT_DATA";
 //==============================================================================
 export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
 export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
-export const SET_DASHBOARD_CURRENT_FILTER_TYPE =
-  "SET_DASHBOARD_CURRENT_FILTER_TYPE";
+
 export const SET_DASHBOARD_FILTER_TYPE = "SET_DASHBOARD_FILTER_TYPE";
 export const SET_DASHBOARD_FILTER_OPTIONS = "SET_DASHBOARD_FILTER_OPTIONS";
+export const SET_DASHBOARD_FILTERS = "SET_DASHBOARD_FILTERS";
 export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
 export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
 export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
@@ -69,7 +69,7 @@ export const setDashboardFilterType = (filterType) => {
 export const setDashboardFilters = (filters) => {
   return (dispatch) => {
     dispatch({
-      type: ADD_DASHBOARD_FILTER,
+      type: SET_DASHBOARD_FILTERS,
       payload: filters,
     });
     dispatch(applyDashboardPostFilters(filters));
@@ -108,8 +108,8 @@ function processDashboardFilters(filters) {
 export const applyDashboardPostFilters = (filters) => {
   return (dispatch) => {
     const postData = processDashboardFilters(filters);
-    dispatch(updateUser({ request_log_filters: postData }, undefined, true));
-    dispatch(getRequestLogs(postData));
+    dispatch(updateUser({dashboard_filters: postData }, undefined, true));
+    dispatch(getDashboardData(postData));
   };
 };
 
@@ -120,7 +120,7 @@ export const addDashboardFilter = (filter) => {
       payload: filter,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -132,7 +132,7 @@ export const deleteDashboardFilter = (filterId) => {
       payload: filterId,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -144,7 +144,7 @@ export const updateDashboardFilter = (filter) => {
       payload: filter,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -169,6 +169,13 @@ export const setDashboardSecondFilter = (filter) => {
   };
 };
 //==============================================================================
+
+export const setAvgTtftData = (data) => {
+  return {
+    type: SET_AVG_TTFT_DATA,
+    payload: data,
+  };
+};
 
 export const setDashboardLoading = (data) => {
   return {
@@ -418,14 +425,11 @@ export const setSentimentData = (data) => {
 };
 
 export const getDashboardData = (
-  overrideParams // search string
+  postData,
 ) => {
-  return (dispatch, getState) => {
+  return (dispatch, getState: ()=> RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
-    if (overrideParams) {
-      params = new URLSearchParams(overrideParams);
-    }
     if (params.get("summary_type") === null) {
       params.set("summary_type", getState().dashboard.displayFilter.timeRange);
     }
@@ -444,15 +448,30 @@ export const getDashboardData = (
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    console.log("request time", date.toISOString());
     keywordsRequest({
-      path: `api/dashboard?${params.toString()}`,
+      path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
+      method: postData ? "POST" : "GET",
+      data: {filters: postData},
     })
       .then((data) => {
-        // const endTime = performance.now(); // End time
-
-        // console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
-        dispatch(setDashboardData(data));
+        const { filter_options, ...dashboardData} = data;
+        dispatch(setDashboardData(dashboardData));
+        dispatch(setDashboardFilterOptions(filter_options));
+        const state = getState();
+        const userFilters = state.user?.dashboard_filters || {};
+        const filters = filterParamsToFilterObjects(
+          userFilters,
+          data.filter_options
+        );
+        const currentFilterType = state.dashboard.currentFilter.id;
+        if (!currentFilterType) {
+          // If we are currently editing a filter, do no refresh the filters
+          console.log("filters", filters);
+          dispatch({
+            type: SET_DASHBOARD_FILTERS,
+            payload: filters,
+          });
+        }
 
         if (params.get("breakdown") === "by_model") {
           const breakDowndata = processBreakDownData(
@@ -495,7 +514,11 @@ export const getDashboardData = (
             };
           });
         }
-
+        dispatch(
+          setAvgTtftData(
+            sliceChartData(dataList, "date_group", Metrics.average_ttft.value)
+          )
+        );
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)

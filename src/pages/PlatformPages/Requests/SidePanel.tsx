@@ -10,10 +10,14 @@ import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
-import { Copy, IconPlayground, Info } from "src/components";
+import { Compare, Copy, IconPlayground, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
+import {
+  RestorePlaygroundState,
+  setCacheResponse,
+  setJsonMode,
+} from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
 import SearchLog from "./SearchLog";
@@ -90,13 +94,18 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: <StatusTag statusCode={logItem?.status_code} />,
+    Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.api_key || "production"}
+        {logItem?.api_key || "N/A"}
       </span>
     ),
-    Model: <ModelTag model={logItem?.model || "" } />,
+    "Customer ID": (
+      <span className="text-sm-regular text-gray-4">
+        {logItem?.customer_identifier || "N/A"}
+      </span>
+    ),
+    Model: <ModelTag model={logItem?.model || ""} />,
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -112,12 +121,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
+        {logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens?.toLocaleString() || "4,220"}
+        {logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
@@ -126,7 +135,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           (logItem?.prompt_tokens &&
             logItem?.prompt_tokens &&
             logItem?.prompt_tokens + logItem?.completion_tokens) ||
-          "6,532"
+          "-"
         ).toLocaleString()}
       </span>
     ),
@@ -154,25 +163,25 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   };
   const metricRef = useRef(null);
   const logRef = useRef(null);
+  const dispatch = useTypedDispatch();
+  const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (displayLog) {
-      if (logRef && logRef.current) {
-        console.log("logRef.current");
-        (logRef.current as HTMLElement)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-      // } else {
-      //   if (metricRef && metricRef.current) {
-      //     console.log("metricRef.current");
-      //     (metricRef.current as HTMLElement)?.scrollIntoView({
-      //       behavior: "smooth",
-      //     });
-      //   }
+    if (logRef && logRef.current) {
+      console.log("logRef.current");
+      (logRef.current as HTMLElement)?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
+    // } else {
+    //   if (metricRef && metricRef.current) {
+    //     console.log("metricRef.current");
+    //     (metricRef.current as HTMLElement)?.scrollIntoView({
+    //       behavior: "smooth",
+    //     });
+    //   }
   }, [logItem]);
   return (
     <div
@@ -184,7 +193,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     >
       <div
         aria-label="table-keys-header"
-        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1 z-[10]"
+        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-lb shadow-gray-2 fixed bg-gray-1 z-[10]"
       >
         <div className="flex items-center gap-sm ">
           <Button
@@ -203,6 +212,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           />
         </div>
         <div>
+          {displayLog && (
+            <DotsButton
+              icon={Compare}
+              onClick={() => dispatch(setJsonMode(!jsonMode))}
+              active={jsonMode}
+            />
+          )}
           {/* {displayLog && (
             <SearchLog
               handleSearch={searchContent}
@@ -225,11 +241,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         className="flex-col items-start self-stretch mt-[44px]"
         aria-label="frame 1969"
       >
+        {" "}
+        <div ref={logRef}></div>
         {!displayLog && (
-          <div
-            ref={metricRef}
-            className="flex-col py-md px-lg items-start gap-xs self-stretch"
-          >
+          <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
             {Object.keys(displayObj).map((key, index) => {
               return (
                 <div
@@ -238,6 +253,25 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 >
                   <div className="flex items-center gap-xxs">
                     <span className="text-sm-md text-gray-5">{key}</span>
+                    {key === "Customer ID" && (
+                      <Tooltip
+                        side="right"
+                        sideOffset={8}
+                        delayDuration={1}
+                        skipDelayDuration={1}
+                        content={
+                          <>
+                            <span className="text-gray-4 caption">
+                              Identifier for customer
+                            </span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <Info />
+                        </div>
+                      </Tooltip>
+                    )}
                     {key === "TTFT" && (
                       <Tooltip
                         side="right"
@@ -334,15 +368,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </>
             )}
 
-            <div
-              className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start"
-              ref={logRef}
-            >
+            <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
               {completeInteraction.map((message, index) => {
                 if (!message.content) {
                   return null;
                 }
-                
+
                 return (
                   <div
                     key={index}
@@ -377,6 +408,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
       {!displayLog && (
         <>
+          <Divider />
+          <RequestParams {...logItem?.full_request} />
           <Divider />
           <Evaluation
             sentimentScore={logItem?.sentiment_score}
@@ -563,5 +596,66 @@ const CacheButton = ({
           />
         ))}
     </>
+  );
+};
+
+const RequestParams = ({
+  presence_penalty,
+  frequency_penalty,
+  temperature,
+  max_tokens,
+  top_p,
+  stop_sequence,
+}) => {
+  return (
+    <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Temperature
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{temperature || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Maximum length
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{max_tokens || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Top P
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{top_p || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Frequency penalty
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {frequency_penalty || "-"}
+        </div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Presence penalty
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {presence_penalty || "-"}
+        </div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Stop sequences
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {stop_sequence || "-"}
+        </div>
+      </div>
+    </div>
   );
 };

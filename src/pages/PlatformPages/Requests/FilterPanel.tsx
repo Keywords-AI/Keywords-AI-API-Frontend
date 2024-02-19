@@ -101,7 +101,7 @@ export function FilterPanel() {
       setOpen={setShowPopover}
       padding="px-sm py-xs"
       side="bottom"
-      sideOffset={5}
+      sideOffset={4}
       align="end"
       width="w-[320px]"
     >

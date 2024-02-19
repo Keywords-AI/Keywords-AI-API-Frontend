@@ -17,8 +17,7 @@ import {
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
 import { SentimentTag, StatusTag } from "src/components/Misc";
-import { Parser } from '@json2csv/plainjs';
-
+import { Parser } from "@json2csv/plainjs";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
@@ -41,7 +40,14 @@ export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+export const SET_JSON_MODE = "SET_JSON_MODE";
 
+export const setJsonMode = (jsonMode: boolean) => {
+  return {
+    type: SET_JSON_MODE,
+    payload: jsonMode,
+  };
+};
 export const startGetRequestLogs = () => {
   return {
     type: START_GET_REQUEST_LOGS,
@@ -67,7 +73,7 @@ const getLastUserText = (messages: ChatMessage[]): string => {
     const lastMessage = messages.slice(-1)[0].content;
     if (lastMessage instanceof Array) {
       console.log("lastMessage", lastMessage);
-      return lastMessage.find((part)=>part.type === "text").text;
+      return lastMessage.find((part) => part.type === "text").text;
     }
     return messages.slice(-1)[0].content;
   }
@@ -146,6 +152,7 @@ export const deleteFilter = (filterId: string) => {
       type: DELETE_FILTER,
       payload: filterId,
     });
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -211,6 +218,9 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
+      time_to_first_token: (
+        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+      ),
       outputTokens: log.completion_tokens,
       cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
@@ -224,7 +234,7 @@ export const processRequestLogs = (
       sentimentAnalysis: log.sentiment_analysis,
       status: {
         failed: log.status_code >= 300 || log.status_code === 0,
-        statusCode: log.status_code,
+        errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
     };
@@ -299,13 +309,13 @@ export const filterParamsToFilterObjects = (
       metric: key as keyof LogItem,
       value_field_type: filterOptions[key].value_field_type,
       operator: filterParams[key].operator,
-      value: filterParams[key].value.map((value: number | boolean| string)=>value.toString()),
+      value: filterParams[key].value,
       display_name: filterOptions[key].display_name,
     };
   });
 };
 
-export const getRequestLogs = (postData?: any, exporting=false) => {
+export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
     if (postData) {
@@ -315,7 +325,7 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: {filters: postData, exporting: exporting},
+      data: { filters: postData, exporting: exporting },
     }).then((data) => {
       const results = data.results;
       dispatch(
@@ -452,19 +462,20 @@ export const setSecondFilter = (filter: string) => {
   };
 };
 
-export const exportLogs = (format=".csv") => {
+export const exportLogs = (format = ".csv") => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const filters = state.requestLogs.filters;
     const filterData = processFilters(filters);
+    console.log("format", format);
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",
-      data: {filters: filterData, exporting: true},
+      data: { filters: filterData, exporting: true },
     }).then((data) => {
       let exportData: string;
       let blob: Blob;
-      if(format === ".json") {
+      if (format === ".json") {
         exportData = JSON.stringify(data);
         blob = new Blob([exportData], { type: "text/json" });
       } else if (format === ".csv") {
@@ -480,5 +491,4 @@ export const exportLogs = (format=".csv") => {
       a.click();
     });
   };
-
 };
