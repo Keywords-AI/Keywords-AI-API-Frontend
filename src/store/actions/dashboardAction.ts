@@ -8,9 +8,10 @@ import {
   formatTimeUnit,
   formatDateUnit,
 } from "src/utilities/objectProcessing";
-import { updateUser } from "src/store/actions/";
+import { updateUser, filterParamsToFilterObjects } from "src/store/actions/";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
+import { RootState } from "src/types";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -426,7 +427,7 @@ export const setSentimentData = (data) => {
 export const getDashboardData = (
   postData,
 ) => {
-  return (dispatch, getState) => {
+  return (dispatch, getState: ()=> RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
     if (params.get("summary_type") === null) {
@@ -456,6 +457,22 @@ export const getDashboardData = (
         const { filter_options, ...dashboardData} = data;
         dispatch(setDashboardData(dashboardData));
         dispatch(setDashboardFilterOptions(filter_options));
+        const state = getState();
+        const userFilters = state.user?.dashboard_filters || {};
+        const filters = filterParamsToFilterObjects(
+          userFilters,
+          data.filter_options
+        );
+        const currentFilterType = state.dashboard.currentFilter.id;
+        if (!currentFilterType) {
+          // If we are currently editing a filter, do no refresh the filters
+          console.log("filters", filters);
+          dispatch({
+            type: SET_DASHBOARD_FILTERS,
+            payload: filters,
+          });
+        }
+
         if (params.get("breakdown") === "by_model") {
           const breakDowndata = processBreakDownData(
             data.model_breakdown,
