@@ -39,6 +39,7 @@ export function FilterActions({ type }: { type: string }) {
   useHotkeys(
     "f",
     () => {
+      if (loading) return;
       setStart((prev) => !prev);
     },
     {
@@ -70,7 +71,7 @@ export function FilterActions({ type }: { type: string }) {
         }
       )
     : [];
-
+  const loading = useTypedSelector((state) => state.requestLogs.loading);
   const selectMetric = (metric: keyof LogItem) => {
     dispatch(
       setCurrentFilter({
@@ -80,8 +81,9 @@ export function FilterActions({ type }: { type: string }) {
     );
   };
 
-  const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
+  const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
+      console.log("filterValue", typeof filterValue, filterValue);
       dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
@@ -93,7 +95,9 @@ export function FilterActions({ type }: { type: string }) {
   }, []);
   const handleDropdownOpen = (open) => {
     open ? disableScope("dashboard") : enableScope("dashboard");
+    if (loading) return;
     setStart(open);
+    console.log("open", currentFilter);
     if (currentFilter?.metric && currentFilter.value) {
       dispatch(
         addFilter({
