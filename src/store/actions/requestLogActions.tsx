@@ -224,7 +224,7 @@ export const processRequestLogs = (
       sentimentAnalysis: log.sentiment_analysis,
       status: {
         failed: log.status_code >= 300 || log.status_code === 0,
-        errorCode: log.status_code,
+        statusCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
     };

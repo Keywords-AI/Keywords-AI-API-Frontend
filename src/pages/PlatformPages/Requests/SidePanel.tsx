@@ -90,13 +90,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag({ statusCode: logItem?.status_code }),
+    Status: <StatusTag statusCode={logItem?.status_code} />,
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "production"}
       </span>
     ),
-    Model: ModelTag({ model: logItem?.model || "unknown" }),
+    Model: <ModelTag model={logItem?.model || "" } />,
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
