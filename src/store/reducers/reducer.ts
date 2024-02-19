@@ -15,6 +15,7 @@ import requestLogReducer from "./requestLogReducer";
 import { PayloadAction } from "@reduxjs/toolkit";
 import cachePageReducer from "./cachePageReducer";
 import modelReducer from "./modelReducer";
+import usersPageReducer from "./usersPageReducer";
 const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
   return {
     user: userReducer(state.user, action),
@@ -32,7 +33,8 @@ const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
     fallback: fallbackReducer(state.fallback, action),
     requestLogs: requestLogReducer(state.requestLogs, action),
     cachePage: cachePageReducer(state.cachePage, action),
-    models:  modelReducer(state.models, action)
+    models: modelReducer(state.models, action),
+    usersPage: usersPageReducer(state.usersPage, action),
   };
 };
 
