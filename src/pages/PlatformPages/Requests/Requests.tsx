@@ -13,7 +13,7 @@ import { getRequestLogs, exportLogs } from "src/store/actions";
 import { LogItem } from "src/types";
 import { Add, Button, Close, Down, Export, Filter } from "src/components";
 import { SideBar, SideBarActive } from "src/components/Icons";
-import { SelectInput } from "src/components/Inputs";
+import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
@@ -24,6 +24,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { get, set, useForm } from "react-hook-form";
 import { Filters } from "./RequestFilters";
 import { Paginator } from "./Paginator";
+import { Popover } from "src/components/Dialogs";
+import { useTypedDispatch } from "src/store/store";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
@@ -117,14 +119,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
               {count} / {totalCount}
             </div>
-            <Button
-              variant="small"
-              icon={Export}
-              text="Export"
-              onClick={() => {
-                exportLogs();
-              }}
-            />
+            <ExportPopOver />
+
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={sidePanelOpen ? SideBarActive : SideBar}
@@ -180,3 +176,59 @@ export const Requests = connect(
   mapStateToProps,
   mapDispatchToProps
 )(RequestsNotConnected);
+
+const ExportPopOver = () => {
+  const dispatch = useTypedDispatch();
+  const fileTypes = [
+    { name: "CSV", value: ".csv" },
+    { name: "JSON", value: ".json" },
+  ];
+  const [file, setFile] = useState(fileTypes[0].value);
+  return (
+    <Popover
+      width="w-[320px]"
+      padding=""
+      align="end"
+      sideOffset={4}
+      trigger={<Button variant="small" icon={Export} text="Export" />}
+    >
+      <div className="flex-col gap-sm py-sm px-md">
+        <div className="flex-col items-start gap-xxs self-stretch">
+          <p className="text-md-medium text-gray-5">Export logs</p>
+          <p className="text-sm-regular text-gray-4">
+            Download the copy of your log data in CSV or JSON format.
+          </p>
+        </div>
+        <div className="flex justify-between items-center self-stretch">
+          <p className="text-sm-regular text-gray-4">File type</p>
+          <SelectInputSmall
+            headLess
+            trigger={() => (
+              <Button
+                variant="small"
+                text={fileTypes.filter((item) => item.value === file)[0].name}
+                iconPosition="right"
+                icon={Down}
+              />
+            )}
+            align="end"
+            defaultValue={fileTypes[0].value}
+            choices={fileTypes}
+            onChange={(e) => setFile(e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end items-center gap-xs self-stretch">
+          <Button
+            variant="r4-primary"
+            text={
+              "Download " +
+              fileTypes.filter((item) => item.value === file)[0].name
+            }
+            onClick={() => dispatch(exportLogs(file))}
+            width="w-full"
+          />
+        </div>
+      </div>
+    </Popover>
+  );
+};

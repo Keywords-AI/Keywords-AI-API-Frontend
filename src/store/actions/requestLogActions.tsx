@@ -211,6 +211,9 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
+      time_to_first_token: (
+        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+      ),
       outputTokens: log.completion_tokens,
       cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
@@ -457,6 +460,7 @@ export const exportLogs = (format = ".csv") => {
     const state = getState();
     const filters = state.requestLogs.filters;
     const filterData = processFilters(filters);
+    console.log("format", format);
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",

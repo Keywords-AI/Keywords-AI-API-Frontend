@@ -15,6 +15,7 @@ export type LogItem = {
   prompt_messages: ChatMessage[];
   error_message: string;
   failed: boolean;
+  customer_identifier: string;
   category: string;
   organization_key: string; // The ID of the key
   api_key: string;
@@ -41,6 +42,7 @@ export type DisplayLogItem = {
   cost: React.ReactNode;
   latency: React.ReactNode;
   promptTokens: number;
+  time_to_first_token: number;
   outputTokens: number;
   allTokens: React.ReactNode;
   organizationKey: string; //ID of the key

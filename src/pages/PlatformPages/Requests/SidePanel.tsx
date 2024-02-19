@@ -17,6 +17,7 @@ import { RestorePlaygroundState, setCacheResponse } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
 import SearchLog from "./SearchLog";
+import { log } from "console";
 
 interface SidePanelProps {
   open: boolean;
@@ -92,10 +93,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.api_key || "production"}
+        {logItem?.api_key || "N/A"}
       </span>
     ),
-    Model: ModelTag({ model: logItem?.model || "unknown" }),
+    "Customer ID": (
+      <span className="text-sm-regular text-gray-4">
+        {logItem?.customer_identifier || "N/A"}
+      </span>
+    ),
+    Model: logItem?.model
+      ? ModelTag({ model: logItem?.model || "unknown" })
+      : null,
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -111,12 +119,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens?.toLocaleString() || "2,312"}
+        {logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens?.toLocaleString() || "4,220"}
+        {logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
@@ -125,7 +133,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           (logItem?.prompt_tokens &&
             logItem?.prompt_tokens &&
             logItem?.prompt_tokens + logItem?.completion_tokens) ||
-          "6,532"
+          "-"
         ).toLocaleString()}
       </span>
     ),
@@ -180,7 +188,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     >
       <div
         aria-label="table-keys-header"
-        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-b shadow-gray-2 fixed bg-gray-1 z-[10]"
+        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-lb shadow-gray-2 fixed bg-gray-1 z-[10]"
       >
         <div className="flex items-center gap-sm ">
           <Button
@@ -224,7 +232,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {!displayLog && (
           <div
             ref={metricRef}
-            className="flex-col py-md px-lg items-start gap-xs self-stretch"
+            className="flex-col py-sm px-lg items-start gap-xs self-stretch"
           >
             {Object.keys(displayObj).map((key, index) => {
               return (
@@ -234,6 +242,25 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 >
                   <div className="flex items-center gap-xxs">
                     <span className="text-sm-md text-gray-5">{key}</span>
+                    {key === "Customer ID" && (
+                      <Tooltip
+                        side="right"
+                        sideOffset={8}
+                        delayDuration={1}
+                        skipDelayDuration={1}
+                        content={
+                          <>
+                            <span className="text-gray-4 caption">
+                              Identifier for customer
+                            </span>
+                          </>
+                        }
+                      >
+                        <div>
+                          <Info />
+                        </div>
+                      </Tooltip>
+                    )}
                     {key === "TTFT" && (
                       <Tooltip
                         side="right"
@@ -375,6 +402,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
       {!displayLog && (
         <>
+          <Divider />
+          <RequestParams {...logItem?.full_request} />
           <Divider />
           <Evaluation
             sentimentScore={logItem?.sentiment_score}
@@ -561,5 +590,66 @@ const CacheButton = ({
           />
         ))}
     </>
+  );
+};
+
+const RequestParams = ({
+  presence_penalty,
+  frequency_penalty,
+  temperature,
+  max_tokens,
+  top_p,
+  stop_sequence,
+}) => {
+  return (
+    <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Temperature
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{temperature || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Maximum length
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{max_tokens || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Top P
+        </div>
+        <div className=" text-gray-4 text-sm-regular">{top_p || "-"}</div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Frequency penalty
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {frequency_penalty || "-"}
+        </div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Presence penalty
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {presence_penalty || "-"}
+        </div>
+      </div>
+
+      <div className="flex h-[24px] justify-between items-center self-stretch">
+        <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
+          Stop sequences
+        </div>
+        <div className=" text-gray-4 text-sm-regular">
+          {stop_sequence || "-"}
+        </div>
+      </div>
+    </div>
   );
 };

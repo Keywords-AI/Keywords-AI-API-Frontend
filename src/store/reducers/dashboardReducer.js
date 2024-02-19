@@ -33,6 +33,7 @@ import {
   SET_SENTIMENT_DATA,
   RESET_TIME_FRAME_OFFSET,
   SET_DASHBOARD_LOADING,
+  SET_AVG_TTFT_DATA,
 } from "src/store/actions";
 
 const loadFilter = () => {
@@ -84,6 +85,7 @@ const initState = {
     // {total_cost, date_group}
   ],
   avgCostData: [],
+  ttftData: [],
   tokenCountData: [
     // {total_tokens, date_group}
   ],
@@ -210,6 +212,8 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, promptTokenCountData: action.payload };
     case SET_AVG_PROMPT_TOKEN_COUNT_DATA:
       return { ...state, avgPromptTokenCountData: action.payload };
+    case SET_AVG_TTFT_DATA:
+      return { ...state, ttftData: action.payload };
     case SET_COMPLETION_TOKEN_COUNT_DATA:
       return { ...state, completionTokenCountData: action.payload };
     case SET_AVG_COMPLETION_TOKEN_COUNT_DATA:

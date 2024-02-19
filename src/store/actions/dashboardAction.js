@@ -45,6 +45,7 @@ export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
 export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
+export const SET_AVG_TTFT_DATA = "SET_AVG_TTFT_DATA";
 //==============================================================================
 export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
 export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
@@ -169,6 +170,13 @@ export const setDashboardSecondFilter = (filter) => {
   };
 };
 //==============================================================================
+
+export const setAvgTtftData = (data) => {
+  return {
+    type: SET_AVG_TTFT_DATA,
+    payload: data,
+  };
+};
 
 export const setDashboardLoading = (data) => {
   return {
@@ -495,7 +503,11 @@ export const getDashboardData = (
             };
           });
         }
-
+        dispatch(
+          setAvgTtftData(
+            sliceChartData(dataList, "date_group", Metrics.average_ttft.value)
+          )
+        );
         dispatch(
           setErrorData(
             sliceChartData(dataList, "date_group", Metrics.error_count.value)

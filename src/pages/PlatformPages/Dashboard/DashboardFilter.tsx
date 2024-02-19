@@ -94,6 +94,10 @@ export default function DashboardFilter() {
       { name: "All", value: "all", secText: "6" },
       // { name: "Total", value: "total", secText: "7" },
     ];
+  } else if (currentMetric === "average_ttft") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+    ];
   } else {
     filteredtypeChoices = typeChoices;
   }
@@ -244,7 +248,10 @@ export default function DashboardFilter() {
                   if (noAverageDataMetrics.includes(e.target.value)) {
                     dispatch(setDisplayType("total", setQueryParams, navigate));
                   }
-                  if (e.target.value === Metrics.average_latency.value) {
+                  if (
+                    e.target.value === Metrics.average_latency.value ||
+                    e.target.value === Metrics.average_ttft.value
+                  ) {
                     dispatch(
                       setDisplayType("average", setQueryParams, navigate)
                     );
@@ -275,28 +282,34 @@ export default function DashboardFilter() {
                     secText: "3",
                   },
                   {
+                    name: Metrics.average_ttft.name,
+                    value: Metrics.average_ttft.value,
+                    icon: Metrics.average_ttft.icon,
+                    secText: "4",
+                  },
+                  {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "4",
+                    secText: "5",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                 ]}
               />
