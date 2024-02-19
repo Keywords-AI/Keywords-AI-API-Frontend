@@ -15,8 +15,7 @@ import {
   Choice,
   Operator,
 } from "src/types";
-import { addFilter } from "src/store/actions";
-import { setFilterType, setCurrentFilter } from "src/store/actions";
+import { setDashboardCurrentFilter, addDashboardFilter } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
@@ -71,9 +70,8 @@ export function DashboardFilterActions({ type }: { type: string }) {
     : [];
 
   const selectMetric = (metric: keyof LogItem) => {
-    dispatch(setFilterType(metric));
     dispatch(
-      setCurrentFilter({
+      setDashboardCurrentFilter({
         metric,
         id: Math.random().toString(36).substring(2, 15),
       })
@@ -82,7 +80,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
 
   const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
-      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+      dispatch(setDashboardCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
   useEffect(() => {
@@ -96,7 +94,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
     setStart(open);
     if (currentFilter?.metric && currentFilter.value) {
       dispatch(
-        addFilter({
+        addDashboardFilter({
           display_name:
             filterOptions[currentFilter.metric]?.display_name ?? "failed",
           metric: filterType!,
@@ -111,7 +109,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
         })
       );
     }
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
   };
 
   let trigger: React.ReactNode;
@@ -176,14 +174,14 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
   const [open, setOpen] = useState(true);
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
     if (filterOption.metric === "timestamp") {
       if (!data.filterValue) {
         data.filterValue = new Date().toISOString().slice(0, -8);
       }
     }
     dispatch(
-      addFilter({
+      addDashboardFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
         operator: operator.value,
@@ -202,7 +200,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
       open={open}
       setOpen={(prev) => {
         if (prev === false) {
-          dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+          dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
         }
         setOpen(prev);
       }}
@@ -252,7 +250,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
               onClick={() => {
                 reset();
                 setOpen(false);
-                dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+                dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
               }}
             />
             <Button variant="r4-primary" text="Apply" type="submit" />

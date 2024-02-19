@@ -73,7 +73,6 @@ export function FilterActions({ type }: { type: string }) {
     : [];
   const loading = useTypedSelector((state) => state.requestLogs.loading);
   const selectMetric = (metric: keyof LogItem) => {
-    dispatch(setFilterType(metric));
     dispatch(
       setCurrentFilter({
         metric,

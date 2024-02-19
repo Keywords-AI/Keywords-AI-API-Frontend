@@ -234,7 +234,7 @@ export const processRequestLogs = (
       sentimentAnalysis: log.sentiment_analysis,
       status: {
         failed: log.status_code >= 300 || log.status_code === 0,
-        errorCode: log.status_code,
+        statusCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
     };
@@ -309,7 +309,7 @@ export const filterParamsToFilterObjects = (
       metric: key as keyof LogItem,
       value_field_type: filterOptions[key].value_field_type,
       operator: filterParams[key].operator,
-      value: filterParams[key].value,
+      value: filterParams[key].value.map((value: number | boolean| string)=>value.toString()),
       display_name: filterOptions[key].display_name,
     };
   });

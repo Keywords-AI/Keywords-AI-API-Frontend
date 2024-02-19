@@ -53,6 +53,7 @@ export const InputFieldFilter = ({
         padding="py-xxxs px-xxs"
         type={filterOption.value_field_type}
         defaultValue={defaultValue as string}
+        step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
       />
       <Button variant="small" text="Apply" onClick={onSubmit} />
       <Button
@@ -132,7 +133,7 @@ const InputModal = ({
 }) => {
   const { register, handleSubmit, reset } = useForm();
   const dispatch = useTypedDispatch();
-  const [operator, setOperator] = useState(filterOption?.operator_choices?.[0]);
+  useEffect(()=>{ console.log(filterOption)},[])
   const onSubmit = (data) => {
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     if (filterOption.metric === "timestamp") {
@@ -144,12 +145,13 @@ const InputModal = ({
       addFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
-        operator: operator.value,
+        operator: filterOption.operator,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
         id: Math.random().toString(36).substring(2, 15),
       })
     );
+    setOpen(false);
   };
   const location = useLocation();
   useEffect(() => {
@@ -203,6 +205,7 @@ const InputModal = ({
           }}
           {...register("filterValue")}
           type={filterOption.value_field_type}
+          step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
         />
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">

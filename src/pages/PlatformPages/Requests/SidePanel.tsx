@@ -21,7 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
 import SearchLog from "./SearchLog";
-import { log } from "console";
+import LogMessage from "./LogMessage";
 
 interface SidePanelProps {
   open: boolean;
@@ -94,7 +94,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: StatusTag({ statusCode: logItem?.status_code }),
+    Status: <StatusTag statusCode={logItem?.status_code} />,
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "N/A"}
@@ -105,9 +105,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: logItem?.model
-      ? ModelTag({ model: logItem?.model || "unknown" })
-      : null,
+    Model: <ModelTag model={logItem?.model || "" } />,
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -170,19 +168,22 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (logRef && logRef.current) {
-      (logRef.current as HTMLElement)?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
+    if (displayLog) {
+      if (logRef && logRef.current) {
+        console.log("logRef.current");
+        (logRef.current as HTMLElement)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+      // } else {
+      //   if (metricRef && metricRef.current) {
+      //     console.log("metricRef.current");
+      //     (metricRef.current as HTMLElement)?.scrollIntoView({
+      //       behavior: "smooth",
+      //     });
+      //   }
     }
-    // } else {
-    //   if (metricRef && metricRef.current) {
-    //     console.log("metricRef.current");
-    //     (metricRef.current as HTMLElement)?.scrollIntoView({
-    //       behavior: "smooth",
-    //     });
-    //   }
   }, [logItem]);
   return (
     <div
@@ -374,7 +375,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
-
+                
                 return (
                   <div
                     key={index}
@@ -397,9 +398,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       <CopyButton text={message.content} />
                     </div>
                     <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                      <p className="break-words overflow-auto">
-                        {message.content}
-                      </p>
+                      <LogMessage MessageContent={message.content} />
                     </div>
                   </div>
                 );

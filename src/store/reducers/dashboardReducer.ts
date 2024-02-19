@@ -33,8 +33,12 @@ import {
   SET_SENTIMENT_DATA,
   RESET_TIME_FRAME_OFFSET,
   SET_DASHBOARD_LOADING,
-  SET_AVG_TTFT_DATA,
+  SET_DASHBOARD_FILTER_OPTIONS,
+  SET_DASHBOARD_CURRENT_FILTER,
+  SET_DASHBOARD_CURRENT_FILTER_TYPE,
+  ADD_DASHBOARD_FILTER
 } from "src/store/actions";
+import { FilterObject, FilterParams } from "src/types";
 
 const loadFilter = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -85,7 +89,6 @@ const initState = {
     // {total_cost, date_group}
   ],
   avgCostData: [],
-  ttftData: [],
   tokenCountData: [
     // {total_tokens, date_group}
   ],
@@ -123,8 +126,8 @@ const initState = {
   currentFilter: {
     id: "",
   },
-  filters: [],
-  filterOptions: {},
+  filters: [] as FilterObject[],
+  filterOptions: {} as FilterParams,
   avgModelData: [],
   apiData: [],
   avgApiData: [],
@@ -191,10 +194,12 @@ const initState = {
       negative: 600,
       neutral: 600,
     },
-  ],
+  ]
 };
 
-export default function dashboardReducer(state = initState, action) {
+type DashboardState = typeof initState;
+
+export default function dashboardReducer(state = initState, action): DashboardState {
   switch (action.type) {
     case SET_DASHBOARD_LOADING:
       return { ...state, loading: action.payload };
@@ -212,8 +217,6 @@ export default function dashboardReducer(state = initState, action) {
       return { ...state, promptTokenCountData: action.payload };
     case SET_AVG_PROMPT_TOKEN_COUNT_DATA:
       return { ...state, avgPromptTokenCountData: action.payload };
-    case SET_AVG_TTFT_DATA:
-      return { ...state, ttftData: action.payload };
     case SET_COMPLETION_TOKEN_COUNT_DATA:
       return { ...state, completionTokenCountData: action.payload };
     case SET_AVG_COMPLETION_TOKEN_COUNT_DATA:
@@ -313,6 +316,12 @@ export default function dashboardReducer(state = initState, action) {
           currDate - currDate.getTimezoneOffset() * 60 * 1000
         ).toISOString(),
       };
+    case SET_DASHBOARD_FILTER_OPTIONS:
+      return { ...state, filterOptions: action.payload };
+    case SET_DASHBOARD_CURRENT_FILTER:
+      return { ...state, currentFilter: action.payload };
+    case ADD_DASHBOARD_FILTER:
+      return { ...state, filters: [...state.filters, action.payload] };
     default:
       return state;
   }

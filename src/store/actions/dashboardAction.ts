@@ -1,7 +1,4 @@
-import { get, set } from "react-hook-form";
-import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
-import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import {
   sliceChartData,
   formatDate,
@@ -11,6 +8,7 @@ import {
   formatTimeUnit,
   formatDateUnit,
 } from "src/utilities/objectProcessing";
+import { updateUser } from "src/store/actions/";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
@@ -110,7 +108,7 @@ export const applyDashboardPostFilters = (filters) => {
   return (dispatch) => {
     const postData = processDashboardFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
-    dispatch(getRequestLogs(postData));
+    dispatch(getDashboardData(postData));
   };
 };
 
@@ -121,7 +119,7 @@ export const addDashboardFilter = (filter) => {
       payload: filter,
     });
     const state = getState();
-    const filters = state.requestLogs.filters;
+    const filters = state.dashboard.filters;
     dispatch(applyDashboardPostFilters(filters));
   };
 };
@@ -426,14 +424,11 @@ export const setSentimentData = (data) => {
 };
 
 export const getDashboardData = (
-  overrideParams // search string
+  postData,
 ) => {
   return (dispatch, getState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
-    if (overrideParams) {
-      params = new URLSearchParams(overrideParams);
-    }
     if (params.get("summary_type") === null) {
       params.set("summary_type", getState().dashboard.displayFilter.timeRange);
     }
@@ -453,15 +448,16 @@ export const getDashboardData = (
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     console.log("request time", date.toISOString());
+
     keywordsRequest({
-      path: `api/dashboard?${params.toString()}`,
+      path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
+      method: postData ? "POST" : "GET",
+      data: {filters: postData},
     })
       .then((data) => {
-        // const endTime = performance.now(); // End time
-
-        // console.log(`Time taken  for fetch: ${endTime - startTime} ms`); // Time difference in milliseconds
-        dispatch(setDashboardData(data));
-
+        const { filter_options, ...dashboardData} = data;
+        dispatch(setDashboardData(dashboardData));
+        dispatch(setDashboardFilterOptions(filter_options));
         if (params.get("breakdown") === "by_model") {
           const breakDowndata = processBreakDownData(
             data.model_breakdown,
