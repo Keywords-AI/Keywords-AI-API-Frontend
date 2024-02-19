@@ -31,6 +31,7 @@ export type LogItem = {
   error_code: number;
   routing_time: number;
   groundness: number;
+  full_request: any;
   status_code: number;
 };
 

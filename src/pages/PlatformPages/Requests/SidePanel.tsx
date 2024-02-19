@@ -105,7 +105,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: <ModelTag model={logItem?.model || "" } />,
+    Model: <ModelTag model={logItem?.model || ""} />,
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -168,22 +168,20 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (displayLog) {
-      if (logRef && logRef.current) {
-        console.log("logRef.current");
-        (logRef.current as HTMLElement)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-      // } else {
-      //   if (metricRef && metricRef.current) {
-      //     console.log("metricRef.current");
-      //     (metricRef.current as HTMLElement)?.scrollIntoView({
-      //       behavior: "smooth",
-      //     });
-      //   }
+    if (logRef && logRef.current) {
+      console.log("logRef.current");
+      (logRef.current as HTMLElement)?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
     }
+    // } else {
+    //   if (metricRef && metricRef.current) {
+    //     console.log("metricRef.current");
+    //     (metricRef.current as HTMLElement)?.scrollIntoView({
+    //       behavior: "smooth",
+    //     });
+    //   }
   }, [logItem]);
   return (
     <div
@@ -375,7 +373,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 if (!message.content) {
                   return null;
                 }
-                
+
                 return (
                   <div
                     key={index}
