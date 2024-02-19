@@ -612,10 +612,8 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ statusCode }) => {
-      return (
-        <StatusTag statusCode={statusCode} />
-      )
+    renderFunction: ({ failed, errorCode }) => {
+      return <StatusTag statusCode={errorCode} />;
     },
   },
   {

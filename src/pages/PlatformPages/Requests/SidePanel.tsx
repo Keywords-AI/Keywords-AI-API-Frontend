@@ -94,7 +94,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         )}
       </span>
     ),
-    Status: <StatusTag statusCode={logItem?.status_code} />,
+    Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.api_key || "N/A"}
