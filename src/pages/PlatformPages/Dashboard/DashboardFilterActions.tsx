@@ -15,31 +15,28 @@ import {
   Choice,
   Operator,
 } from "src/types";
-import { addFilter } from "src/store/actions";
-import { InputFieldFilter } from "./FilterValueField";
-import { setFilterType, setCurrentFilter } from "src/store/actions";
+import { setDashboardCurrentFilter, addDashboardFilter } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 
-export function FilterActions({ type }: { type: string }) {
+export function DashboardFilterActions({ type }: { type: string }) {
   const [start, setStart] = useState<boolean | undefined>(false);
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
-    (state: RootState) => state.requestLogs.filterOptions
+    (state: RootState) => state.dashboard.filterOptions
   );
   const filterType = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter?.metric
+    (state: RootState) => state.dashboard.currentFilter?.metric
   );
   const currentFilter = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter
+    (state: RootState) => state.dashboard.currentFilter
   );
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(
     "f",
     () => {
-      if (loading) return;
       setStart((prev) => !prev);
     },
     {
@@ -71,20 +68,19 @@ export function FilterActions({ type }: { type: string }) {
         }
       )
     : [];
-  const loading = useTypedSelector((state) => state.requestLogs.loading);
+
   const selectMetric = (metric: keyof LogItem) => {
     dispatch(
-      setCurrentFilter({
+      setDashboardCurrentFilter({
         metric,
         id: Math.random().toString(36).substring(2, 15),
       })
     );
   };
 
-  const selectFilterValue = (filterValue: string[] | number[]) => {
+  const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
-      console.log("filterValue", typeof filterValue, filterValue);
-      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+      dispatch(setDashboardCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
   useEffect(() => {
@@ -95,12 +91,10 @@ export function FilterActions({ type }: { type: string }) {
   }, []);
   const handleDropdownOpen = (open) => {
     open ? disableScope("dashboard") : enableScope("dashboard");
-    if (loading) return;
     setStart(open);
-    console.log("open", currentFilter);
     if (currentFilter?.metric && currentFilter.value) {
       dispatch(
-        addFilter({
+        addDashboardFilter({
           display_name:
             filterOptions[currentFilter.metric]?.display_name ?? "failed",
           metric: filterType!,
@@ -115,7 +109,7 @@ export function FilterActions({ type }: { type: string }) {
         })
       );
     }
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
   };
 
   let trigger: React.ReactNode;
@@ -180,14 +174,14 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
   const [open, setOpen] = useState(true);
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
     if (filterOption.metric === "timestamp") {
       if (!data.filterValue) {
         data.filterValue = new Date().toISOString().slice(0, -8);
       }
     }
     dispatch(
-      addFilter({
+      addDashboardFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
         operator: operator.value,
@@ -206,7 +200,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
       open={open}
       setOpen={(prev) => {
         if (prev === false) {
-          dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+          dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
         }
         setOpen(prev);
       }}
@@ -256,7 +250,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
               onClick={() => {
                 reset();
                 setOpen(false);
-                dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+                dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
               }}
             />
             <Button variant="r4-primary" text="Apply" type="submit" />

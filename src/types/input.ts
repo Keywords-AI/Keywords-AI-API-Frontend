@@ -58,6 +58,7 @@ export interface SelectInputProps {
 export type TextInputProps = {
   title?: string;
   name?: string;
+  step?: string;
   errors?: any;
   required?: boolean;
   type?: React.HTMLInputTypeAttribute | undefined;

@@ -16,10 +16,11 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
-import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
+import { Parser } from "@json2csv/plainjs";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
+export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
@@ -38,7 +39,20 @@ export const ADD_FILTER = "ADD_FILTER";
 export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
+export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+export const SET_JSON_MODE = "SET_JSON_MODE";
 
+export const setJsonMode = (jsonMode: boolean) => {
+  return {
+    type: SET_JSON_MODE,
+    payload: jsonMode,
+  };
+};
+export const startGetRequestLogs = () => {
+  return {
+    type: START_GET_REQUEST_LOGS,
+  };
+};
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
 ): string => {
@@ -48,8 +62,19 @@ const concatMessages = (
   return "";
 };
 
-const getLastUserText = (messages: ChatMessage[]) => {
+export const setselectRequestContent = (data) => {
+  return {
+    type: SET_SELECTED_REQUEST_CONTENT,
+    payload: data,
+  };
+};
+const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
+    const lastMessage = messages.slice(-1)[0].content;
+    if (lastMessage instanceof Array) {
+      console.log("lastMessage", lastMessage);
+      return lastMessage.find((part) => part.type === "text").text;
+    }
     return messages.slice(-1)[0].content;
   }
   return "";
@@ -127,6 +152,7 @@ export const deleteFilter = (filterId: string) => {
       type: DELETE_FILTER,
       payload: filterId,
     });
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -161,7 +187,7 @@ export const processGroupingTitle = (
   metric?: string
 ): React.ReactNode => {
   if (typeof value === "boolean") {
-    return <StatusTag failed={value} />;
+    return <StatusTag statusCode={value} />;
   }
   if (metric === "sentiment_score") {
     return <SentimentTag sentiment_score={value as number} showScore={false} />;
@@ -192,6 +218,9 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
+      time_to_first_token: (
+        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+      ),
       outputTokens: log.completion_tokens,
       cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
@@ -204,11 +233,10 @@ export const processRequestLogs = (
       organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.failed,
-        errorCode: log.error_code,
+        failed: log.status_code >= 300 || log.status_code === 0,
+        errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
-      cachedResponse: log.cached_response,
     };
   });
 };
@@ -287,16 +315,17 @@ export const filterParamsToFilterObjects = (
   });
 };
 
-export const getRequestLogs = (postData?: any, exporting=false) => {
+export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
     if (postData) {
       params.set("page", "1");
     }
+    dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: {filters: postData, exporting: exporting},
+      data: { filters: postData, exporting: exporting },
     }).then((data) => {
       const results = data.results;
       dispatch(
@@ -326,64 +355,72 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
   };
 };
 
-export const updateLog = (id, data) => {
+export const updateLog = (id) => {
+  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    keywordsRequest({
-      path: `api/request-log/${id}/`,
-      method: "PATCH",
-      data: data,
-    }).then((data) => {
-      const updatedLogs = getState().requestLogs.logs.map((log) => {
-        if (log.id === id) {
-          return { ...log, ...data };
-        }
-        return log;
-      });
-      const filters = getState().requestLogs.filters;
-      dispatch(setRequestLogs(updatedLogs));
-      dispatch(setSelectedRequest(id));
-      dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    });
+    const filters = getState().requestLogs.filters;
+
+    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
+    // dispatch(getRequestLogs());
+
+    dispatch(
+      setselectRequestContent(
+        getState().requestLogs.logs.find((log) => log.id === id)
+      )
+    );
   };
 };
 
-export const setCacheResponse = (cached: boolean) => {
+export const setCacheResponse = (
+  cached: boolean,
+  requestIndex,
+  responseContent
+) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    const currentRequestLog = getState().requestLogs.selectedRequest;
+    const currentRequestLog = getState().requestLogs.logs.find(
+      (e) => e.id === getState().requestLogs.selectedRequest?.id
+    );
     if (!currentRequestLog) {
       throw new Error("No request log selected");
     }
-    const lastUserMessage = currentRequestLog.prompt_messages.findLast(
-      (message) => message.role === "user"
-    );
-    if (!lastUserMessage) {
-      throw new Error("No user message found");
+    const requestContent =
+      currentRequestLog.prompt_messages[requestIndex - 1].content;
+    if (requestContent === undefined) {
+      throw new Error("No request content found");
     }
     if (cached) {
-      //
       const body = {
+        request_log: currentRequestLog.id,
+        request_index: requestIndex,
         organization_key: currentRequestLog.organization_key,
-        request_content: lastUserMessage.content,
-        response_content: currentRequestLog.completion_message.content,
+        request_content: requestContent,
+        response_content: responseContent,
       };
+      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
         data: body,
       }).then((data) => {
+        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
         }
-        dispatch(updateLog(currentRequestLog.id, { cached_response: data.id }));
+        dispatch(updateLog(currentRequestLog.id));
+        return;
       });
     } else {
-      dispatch(updateLog(currentRequestLog.id, { cached_response: 0 }));
+      const deleteId = currentRequestLog.cached_responses.find(
+        (e) => e.request_index === requestIndex
+      ).id;
+      console.log("deleteId", deleteId);
       keywordsRequest({
-        path: `api/cache/${currentRequestLog.cached_response}/`,
+        path: `api/cache/${deleteId}/`,
         method: "DELETE",
         dispatch: dispatch,
       }).then((data) => {
+        dispatch(updateLog(currentRequestLog.id));
         return;
       });
     }
@@ -425,24 +462,33 @@ export const setSecondFilter = (filter: string) => {
   };
 };
 
-export const exportLogs = () => {
+export const exportLogs = (format = ".csv") => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const filters = state.requestLogs.filters;
     const filterData = processFilters(filters);
+    console.log("format", format);
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",
-      data: {filters: filterData, exporting: true},
+      data: { filters: filterData, exporting: true },
     }).then((data) => {
-      const jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: "application/json" });
+      let exportData: string;
+      let blob: Blob;
+      if (format === ".json") {
+        exportData = JSON.stringify(data);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(data);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "request_logs.json";
+      a.download = "request_logs" + format;
       a.click();
     });
   };
-
 };

@@ -32,7 +32,17 @@ import {
   SET_SENTIMENT_SUMMARY_DATA,
   SET_SENTIMENT_DATA,
   RESET_TIME_FRAME_OFFSET,
+  SET_DASHBOARD_LOADING,
+  SET_DASHBOARD_FILTER_OPTIONS,
+  SET_DASHBOARD_CURRENT_FILTER,
+  ADD_DASHBOARD_FILTER,
+  SET_DASHBOARD_FILTER_OPEN,
+  SET_DASHBOARD_FILTER_TYPE,
+  SET_DASHBOARD_FILTERS,
+  UPDATE_DASHBOARD_FILTER,
+  DELETE_DASHBOARD_FILTER,
 } from "src/store/actions";
+import { FilterObject, FilterParams } from "src/types";
 
 const loadFilter = () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -53,6 +63,7 @@ const loadFilter = () => {
 let currDate = new Date();
 
 const initState = {
+  loading: true,
   data: [
     // {
     //   date_group: 20,
@@ -114,6 +125,13 @@ const initState = {
     //   number_of_requests:0,
     // }
   ],
+  filterOpen: false,
+  filterType: undefined,
+  currentFilter: {
+    id: "",
+  },
+  filters: [] as FilterObject[],
+  filterOptions: {} as FilterParams,
   avgModelData: [],
   apiData: [],
   avgApiData: [],
@@ -183,8 +201,15 @@ const initState = {
   ],
 };
 
-export default function dashboardReducer(state = initState, action) {
+type DashboardState = typeof initState;
+
+export default function dashboardReducer(
+  state = initState,
+  action
+): DashboardState {
   switch (action.type) {
+    case SET_DASHBOARD_LOADING:
+      return { ...state, loading: action.payload };
     case SET_DASHBOARD_DATA:
       return { ...state, ...action.payload };
     case SET_COST_DATA:
@@ -297,6 +322,57 @@ export default function dashboardReducer(state = initState, action) {
         timeFrame: new Date(
           currDate - currDate.getTimezoneOffset() * 60 * 1000
         ).toISOString(),
+      };
+    case SET_DASHBOARD_FILTER_OPTIONS:
+      return { ...state, filterOptions: action.payload };
+
+    case ADD_DASHBOARD_FILTER:
+      return { ...state, filters: [...state.filters, action.payload] };
+    case SET_DASHBOARD_FILTER_OPEN:
+      return {
+        ...state,
+        filterOpen: action.payload,
+      };
+    case SET_DASHBOARD_FILTER_TYPE:
+      return {
+        ...state,
+        filterType: action.payload,
+      };
+    case SET_DASHBOARD_FILTERS:
+      return {
+        ...state,
+        filters: action.payload,
+      };
+    case SET_DASHBOARD_CURRENT_FILTER:
+      return {
+        ...state,
+        currentFilter: action.payload,
+      };
+    case ADD_DASHBOARD_FILTER:
+      return {
+        ...state,
+        filters: [...state.filters, action.payload],
+      };
+    case UPDATE_DASHBOARD_FILTER:
+      return {
+        ...state,
+        filters: state.filters.map((filter) => {
+          if (filter.id === action.payload.id) {
+            return action.payload;
+          }
+          return filter;
+        }),
+      };
+    case DELETE_DASHBOARD_FILTER:
+      return {
+        ...state,
+        filters: state.filters.filter((filter) => filter.id !== action.payload),
+      };
+
+    case SET_DASHBOARD_FILTER_OPTIONS:
+      return {
+        ...state,
+        filterOptions: action.payload,
       };
     default:
       return state;

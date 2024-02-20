@@ -566,6 +566,7 @@ export const Metrics = {
     icon: Quality,
   },
   average_latency: { name: "Latency", value: "average_latency", icon: Speed },
+  average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
@@ -586,6 +587,7 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },
+  { name: "TTFT", retrievalKey: "time_to_first_token", width: "64px" },
   { name: "Latency", retrievalKey: "latency", width: "64px" },
   { name: "Prompt tokens", retrievalKey: "promptTokens", width: "100px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "100px" },
@@ -610,9 +612,9 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ failed, errorCode }) => (
-      <StatusTag failed={failed} errorCode={errorCode} />
-    ),
+    renderFunction: ({ failed, errorCode }) => {
+      return <StatusTag statusCode={errorCode} />;
+    },
   },
   {
     name: "Cached",
@@ -649,4 +651,5 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "apiKey",
   "model",
   "status",
+  "cachedResponse",
 ];

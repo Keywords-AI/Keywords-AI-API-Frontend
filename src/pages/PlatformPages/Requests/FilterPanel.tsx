@@ -54,8 +54,7 @@ export function FilterPanel() {
   const organization = useTypedSelector(
     (state: RootState) => state.organization
   );
-  const displayColumns =
-    user.display_properties.length > 0 ? user.display_properties : showColumns;
+  const displayColumns = showColumns;
   const { register, handleSubmit, watch } = useForm();
   const displayProperties = watch("display_properties");
   useEffect(() => {
@@ -102,7 +101,7 @@ export function FilterPanel() {
       setOpen={setShowPopover}
       padding="px-sm py-xs"
       side="bottom"
-      sideOffset={5}
+      sideOffset={4}
       align="end"
       width="w-[320px]"
     >
@@ -158,7 +157,7 @@ export function FilterPanel() {
                   { name: "Date", value: "-timestamp" },
                   { name: "Cost", value: "-cost" },
                   { name: "Latency", value: "-latency" },
-                  { name: "TTFT", value: "-time_to_first_token" }
+                  { name: "TTFT", value: "-time_to_first_token" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;

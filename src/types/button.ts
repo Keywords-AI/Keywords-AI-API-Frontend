@@ -26,8 +26,10 @@ export type ButtonProps = {
   active?: boolean;
   hover?: boolean;
   variant?: variantType;
+  adminOnly?: boolean;
   text?: string;
   secText?: string;
+  title?: string;
   type?: "button" | "submit" | "reset" | undefined;
   icon?: React.ElementType;
   secIcon?: React.ElementType;
