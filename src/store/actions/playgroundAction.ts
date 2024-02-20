@@ -212,9 +212,8 @@ export const streamPlaygroundResponse = () => {
             data: {
               messages: chanelMessages,
               stream: true,
-              eval: true,
-              request_breakdown: true,
-              ...additonalParms,
+              // request_breakdown: true,
+              // ...additonalParms,
               ...modelParams[channel],
             },
             dispatch: dispatch,
