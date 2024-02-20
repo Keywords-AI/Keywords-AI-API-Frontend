@@ -7,10 +7,16 @@ import {
   TopBar,
 } from "./components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
-import { Copy, Divider, Pencil } from "src/components";
+import { Add, Copy, Divider, EnterKey, Pencil } from "src/components";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { getModels, setPrompt, setSelectedLogs } from "src/store/actions";
+import {
+  appendMessage,
+  getModels,
+  setPrompt,
+  setSelectedLogs,
+  streamPlaygroundResponse,
+} from "src/store/actions";
 import { StreamingMessage } from "./components/PlaygroundMessage";
 import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import { models } from "src/components/Misc";
@@ -19,6 +25,7 @@ import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
 import { AutoScrollContainer } from "react-auto-scroll-container";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -30,6 +37,23 @@ export default function Playground() {
   useEffect(() => {
     dispatch(getModels());
   }, []);
+  const { enableScope, disableScope } = useHotkeysContext();
+  useEffect(() => {
+    enableScope("playground");
+    return () => {
+      disableScope("playground");
+    };
+  }, []);
+  useHotkeys(
+    "enter",
+    () => {
+      dispatch(streamPlaygroundResponse());
+    },
+    {
+      scopes: "playground",
+      preventDefault: true,
+    }
+  );
   return (
     <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] ">
       <TopBar />
@@ -79,23 +103,52 @@ connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 
 const MessageLists = () => {
   const messages = useTypedSelector((state) => state.playground.messages);
+  const dispatch = useTypedDispatch();
   return (
-    <AutoScrollContainer
-      percentageThreshold={15}
-      className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs "
-    >
-      {messages.map((message, index) => {
-        return (
-          <PlaygroundMessage
-            key={index}
-            id={index}
-            isLast={index === messages.length - 1}
-            {...message}
-          />
-        );
-      })}
-      <StreamingMessage />
-    </AutoScrollContainer>
+    <div className="flex-col items-start gap-xxs flex-1 self-stretch">
+      <AutoScrollContainer
+        percentageThreshold={15}
+        className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
+      >
+        {messages.map((message, index) => {
+          return (
+            <PlaygroundMessage
+              key={index}
+              id={index}
+              isLast={index === messages.length - 1}
+              {...message}
+            />
+          );
+        })}
+        <StreamingMessage />
+      </AutoScrollContainer>
+      <div className="flex items-start gap-xxs">
+        <Button
+          variant="small"
+          text="Add message"
+          icon={Add}
+          iconPosition="left"
+          onClick={() => {
+            dispatch(
+              appendMessage({
+                id: messages.length,
+                role: "user",
+                content: "",
+              })
+            );
+          }}
+        />
+        <Button
+          variant="small"
+          text="Send message"
+          icon={EnterKey}
+          iconPosition="left"
+          onClick={() => {
+            dispatch(streamPlaygroundResponse());
+          }}
+        />
+      </div>
+    </div>
   );
 };
 

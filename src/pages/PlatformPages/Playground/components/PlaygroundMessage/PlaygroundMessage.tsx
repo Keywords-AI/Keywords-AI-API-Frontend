@@ -12,7 +12,7 @@ import {
   Refresh,
 } from "src/components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
-import { ModelTag, Tag } from "src/components/Misc";
+import { ModelTag, StatusTag, Tag } from "src/components/Misc";
 import * as _ from "lodash";
 import {
   deleMessageByIndex,
@@ -125,7 +125,7 @@ export function PlaygroundMessage({
             }}
             disabled={!isFocused}
           />
-          {isFocused && (
+          {/* {isFocused && (
             <div
               className="flex justify-end gap-xxs self-stretch "
               onMouseDown={(e) => e.preventDefault()}
@@ -141,7 +141,7 @@ export function PlaygroundMessage({
                 iconHoverFill="fill-gray-5"
               />
             </div>
-          )}
+          )} */}
         </div>
       </>
     );
@@ -150,7 +150,7 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          const Icon = ModelIcon(response.model);
+          const isError = response.content.startsWith("Error:");
           return (
             <div
               key={index}
@@ -165,10 +165,7 @@ export function PlaygroundMessage({
                     <div className="text-sm-md text-gray-4">
                       Response {index == 0 ? "A" : "B"}
                     </div>
-                    <Tag
-                      text={response.model}
-                      icon={React.createElement(Icon, { size: "md" })}
-                    />
+                    <ModelTag model={response.model} />
                   </div>
                 }
                 regenCallback={() =>
@@ -182,25 +179,34 @@ export function PlaygroundMessage({
                 showRegen={true}
                 content={response.content || ""}
               />
-              <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
+              <div
+                className={cn(
+                  "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
+                  isError ? "" : "shadow-border shadow-gray-3"
+                )}
+              >
                 {response.content ? (
-                  <MessageBox
-                    value={response.content}
-                    onChange={(val) => setResponseValue(val)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleUpdateResponse(id, index, responseValue);
+                  isError ? (
+                    <StatusTag statusCode={500} />
+                  ) : (
+                    <MessageBox
+                      value={response.content}
+                      onChange={(val) => setResponseValue(val)}
+                      onKeyDown={(e) => {
+                        // if (e.key === "Enter") {
+                        //   handleUpdateResponse(id, index, responseValue);
+                        //   setIsFocused(false);
+                        //   // handleSend(e);
+                        // }
+                      }}
+                      onBlur={() => {
+                        responseValue != "" &&
+                          handleUpdateResponse(id, index, responseValue);
                         setIsFocused(false);
-                        // handleSend(e);
-                      }
-                    }}
-                    onBlur={() => {
-                      responseValue != "" &&
-                        handleUpdateResponse(id, index, responseValue);
-                      setIsFocused(false);
-                    }}
-                    disabled={!isFocused}
-                  />
+                      }}
+                      disabled={!isFocused}
+                    />
+                  )
                 ) : (
                   <span className="text-gray-4 text-sm-regular">
                     Generating...
@@ -270,12 +276,7 @@ export function StreamingMessage() {
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
   );
-  if (
-    streamingStates.every(
-      (state) => state.isLoading === false && state.error == null
-    )
-  )
-    return null;
+  if (streamingStates.every((state) => state.isLoading === false)) return null;
 
   return (
     <div className="flex items-start gap-xxs self-stretch">
@@ -323,7 +324,9 @@ export function StreamingMessage() {
                     {streamingState.streamingText}
                   </div>
                 ) : streamingState.error ? (
-                  <span className="text-red">{streamingState.error}</span>
+                  <span className="text-sm-regular text-gray-4">
+                    {"Generating..."}
+                  </span>
                 ) : (
                   <span className="text-sm-regular text-gray-4">
                     {streamingState.isLoading ? "Generating..." : null}

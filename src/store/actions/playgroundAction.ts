@@ -213,6 +213,7 @@ export const streamPlaygroundResponse = () => {
               messages: chanelMessages,
               stream: true,
               eval: true,
+              request_breakdown: true,
               ...additonalParms,
               ...modelParams[channel],
             },
@@ -284,10 +285,45 @@ export const streamPlaygroundResponse = () => {
           });
         } catch (error: any) {
           console.log("error", error);
+          const lastMessage = getState().playground.messages.slice(-1)[0];
+          const id = getState().playground.messages.length - 1;
+          const model = getState().streamingText[channel].model;
           if (channel == 0) {
             dispatch(sendStreamingTextFailure(error.toString()));
+            const complete =
+              lastMessage.responses[1] != null &&
+              lastMessage.responses[1].complete == true;
+            const errorResponse = {
+              model: model,
+              content: error.toString(),
+              complete: true,
+            };
+            dispatch(
+              setLastMessage({
+                id: id,
+                hidden: singleChanel ? false : !complete,
+                role: "assistant",
+                responses: [errorResponse, lastMessage.responses[1]],
+              })
+            );
           } else if (channel == 1) {
             dispatch(sendStreamingText2Failure(error.toString()));
+            const complete =
+              lastMessage.responses[0] != null &&
+              lastMessage.responses[0].complete == true;
+            const errorResponse = {
+              model: model,
+              content: error.toString(),
+              complete: true,
+            };
+            dispatch(
+              setLastMessage({
+                id: id,
+                hidden: singleChanel ? false : !complete,
+                role: "assistant",
+                responses: [lastMessage.responses[0], errorResponse],
+              })
+            );
           }
         }
       })
@@ -403,7 +439,9 @@ const readStreamChunk = (chunk: string, channel: number) => {
   return (dispatch: TypedDispatch) => {
     try {
       const data = JSON.parse(chunk);
+      console.log("data", data);
       const textBit = data.choices?.[0].delta.content;
+
       if (textBit) {
         switch (channel) {
           case 0:
