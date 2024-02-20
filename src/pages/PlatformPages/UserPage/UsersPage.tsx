@@ -167,7 +167,7 @@ const Table = () => {
                 <div
                   key={index}
                   aria-label="row"
-                  className="px-lg py-xxs grid gap-x-sm "
+                  className="px-lg py-xxs grid gap-x-sm items-center "
                   style={{
                     gridTemplateColumns: templateString,
                   }}
