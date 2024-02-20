@@ -68,13 +68,13 @@ const Table = () => {
     switch (name) {
       case "customerId":
         return (
-          <div className="flex text-sm-regular text-gray-4">
+          <div className="flex text-sm-regular text-gray-4 items-center h-[20px]">
             {value as string}
           </div>
         );
       case "lastActive":
         return (
-          <div className="flex text-sm-regular text-gray-5 whitespace-nowrap">
+          <div className="flex text-sm-regular text-gray-5 whitespace-nowrap  items-center h-[20px]">
             {`${new Date(value)
               .toLocaleString("en-US", options)
               .replace(",", " at")}`}
@@ -82,33 +82,33 @@ const Table = () => {
         );
       case "activeFor":
         return (
-          <div className="flex text-sm-regular text-gray-5">
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {value as string}
           </div>
         );
       case "totalRequests":
         return (
-          <div className="flex text-sm-regular text-gray-5">
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
           </div>
         );
       case "requestsPerDay":
         return (
-          <div className="flex text-sm-regular text-gray-5">
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
           </div>
         );
 
       case "totalTokens":
         return (
-          <div className="flex text-sm-regular text-gray-5">
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
           </div>
         );
 
       case "tokensPerDay":
         return (
-          <div className="flex text-sm-regular text-gray-5">
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
           </div>
         );
@@ -138,7 +138,7 @@ const Table = () => {
   const Header = (
     <div
       aria-label="table header"
-      className="px-lg py-xs grid gap-x-sm bg-gray-2"
+      className="px-lg py-xs grid gap-x-sm bg-gray-2 h-[44px]"
       style={{
         gridTemplateColumns: templateString,
       }}

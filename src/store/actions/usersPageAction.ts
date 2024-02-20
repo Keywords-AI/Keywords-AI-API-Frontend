@@ -1,6 +1,6 @@
 import { TypedDispatch, RootState } from "src/types";
 import { keywordsRequest } from "src/utilities/requests";
-import { Parser } from "unified";
+import { Parser } from "@json2csv/plainjs";
 
 export const SET_USERS_LOG_DATA = "SET_USERS_LOG_DATA";
 export const SET_USERS_LOG_DATA_LOADING = "SET_USERS_LOG_DATA_LOADING";
@@ -43,105 +43,128 @@ export const filterUsersLogDataAction = (searchString: string) => {
 };
 
 const fetchUsersLogData = async () => {
-  return new Promise((resolve) => {
-    const fake = [
-      {
-        customerId: "tghst23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "tghst23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "tghst23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "aavbasd23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "aavbasd23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "aavbasd23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-      {
-        customerId: "aavbasd23ddfg",
-        lastActive: new Date().toISOString(),
-        activeFor: "3 days",
-        totalRequests: 203122,
-        requestsPerDay: 50,
-        totalTokens: 203122,
-        tokensPerDay: 203122,
-      },
-    ];
-    setTimeout(() => {
-      resolve([...fake, ...fake, ...fake, ...fake, ...fake, ...fake]);
-    }, 1000);
-  });
+  try {
+    const responseData = await keywordsRequest({
+      path: `api/users`,
+      method: "GET",
+      data: {},
+    });
+    console.log(responseData);
+    return responseData.map((data: any) => {
+      return {
+        customerId: data.customer_identifier,
+        lastActive: new Date(data.last_active_timeframe).toISOString(),
+        activeFor:
+          data.active_days + (+data.active_days > 1 ? " days" : " day"),
+        totalRequests: data.number_of_requests,
+        requestsPerDay: Math.round(data.request_per_day as number),
+        totalTokens: data.total_tokens,
+        tokensPerDay: Math.round(data.tokens_per_day as number),
+      };
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  // return new Promise((resolve) => {
+  //   const fake = [
+  //     {
+  //       customerId: "tghst23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "tghst23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "tghst23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "aavbasd23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "aavbasd23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "aavbasd23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //     {
+  //       customerId: "aavbasd23ddfg",
+  //       lastActive: new Date().toISOString(),
+  //       activeFor: "3 days",
+  //       totalRequests: 203122,
+  //       requestsPerDay: 50,
+  //       totalTokens: 203122,
+  //       tokensPerDay: 203122,
+  //     },
+  //   ];
+  //   setTimeout(() => {
+  //     resolve([...fake, ...fake, ...fake, ...fake, ...fake, ...fake]);
+  //   }, 1000);
+  // });
 };
 
 export const exportUserLogs = (format = ".csv") => {
-  return (dispatch: TypedDispatch, getState: () => RootState) => {
-    console.log("Exporting user logs", format);
+  return async (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
-    //   const filters = state.requestLogs.filters;
-    //   const filterData = processFilters(filters);
-    //   keywordsRequest({
-    //     path: `api/request-logs/`,
-    //     method: "POST",
-    //     data: { filters: filterData, exporting: true },
-    //   }).then((data) => {
-    //     let exportData: string;
-    //     let blob: Blob;
-    //     if (format === ".json") {
-    //       exportData = JSON.stringify(data);
-    //       blob = new Blob([exportData], { type: "text/json" });
-    //     } else if (format === ".csv") {
-    //       exportData = new Parser().parse(data);
-    //       blob = new Blob([exportData], { type: "text/csv" });
-    //     } else {
-    //       throw new Error("Invalid format");
-    //     }
-    //     const url = window.URL.createObjectURL(blob);
-    //     const a = document.createElement("a");
-    //     a.href = url;
-    //     a.download = "request_logs" + format;
-    //     a.click();
-    //   });
+    try {
+      const responseData = await keywordsRequest({
+        path: `api/users`,
+        method: "GET",
+        data: { exporting: true },
+      });
+      let blob: Blob;
+      let exportData: string;
+      if (format === ".json") {
+        exportData = JSON.stringify(responseData);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(responseData);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "users_logs" + format;
+      a.click();
+    } catch (error) {
+      console.error(error);
+    }
   };
 };
