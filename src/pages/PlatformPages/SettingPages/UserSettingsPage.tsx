@@ -84,7 +84,7 @@ export const UserSettings = () => {
           <Button text="Update" variant="r4-primary" />
         </form>
       </PageParagraph>
-      <Divider />
+      {/* <Divider />
       <div className="flex items-start self-stretch justify-between">
         <TitleStaticSubheading
           title="Dark theme"
@@ -94,7 +94,7 @@ export const UserSettings = () => {
           checked={theme === "dark"}
           onCheckedChange={handleSwitchCheckedChange}
         />
-      </div>
+      </div> */}
     </PageContent>
   );
 };

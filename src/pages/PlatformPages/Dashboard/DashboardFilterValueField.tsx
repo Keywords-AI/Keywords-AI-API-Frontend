@@ -13,6 +13,7 @@ import {
   setDashboardFilterType,
   updateDashboardFilter,
 } from "src/store/actions";
+import { combineSlices } from "@reduxjs/toolkit";
 
 export const DashboardInputFieldFilter = ({
   filterOption,
@@ -142,14 +143,15 @@ const InputModal = ({
         data.filterValue = new Date().toISOString().slice(0, -8);
       }
     }
+    console.log(filterOption);
     dispatch(
-      addDashboardFilter({
+      updateDashboardFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
         operator: filterOption.operator,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
-        id: Math.random().toString(36).substring(2, 15),
+        id: filterOption.id,
       })
     );
     setOpen(false);
