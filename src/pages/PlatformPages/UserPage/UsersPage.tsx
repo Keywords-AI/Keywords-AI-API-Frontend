@@ -8,6 +8,7 @@ import {
 } from "src/store/actions/usersPageAction";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { WelcomeState } from "src/components/Sections";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -15,13 +16,22 @@ export default function UsersPage({}: Props) {
   useEffect(() => {
     dispatch(getUsersLogData());
   }, []);
+  const usersLogState = useTypedSelector((state) => state.usersPage);
+  const isEmpty =
+    usersLogState.usersLogData.length === 0 && !usersLogState.loading;
   return (
     <div
       className="flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 "
       aria-label="frame 1733"
     >
-      <TopBar />
-      <Table />
+      {true ? (
+        <EmptyState />
+      ) : (
+        <>
+          <TopBar />
+          <Table />
+        </>
+      )}
     </div>
   );
 }
@@ -182,5 +192,11 @@ const Table = () => {
             })}
       </div>
     </div>
+  );
+};
+
+const EmptyState = () => {
+  return (
+    <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline-1 outline-gray-3 shadow-window rounded-md"></div>
   );
 };

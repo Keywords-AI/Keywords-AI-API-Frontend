@@ -10,9 +10,16 @@ import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
-import { Compare, Copy, IconPlayground, Info } from "src/components";
+import {
+  AlphanumericKey,
+  Compare,
+  Copy,
+  IconPlayground,
+  Info,
+} from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   RestorePlaygroundState,
   setCacheResponse,
@@ -41,7 +48,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
+  const { enableScope, disableScope } = useHotkeysContext();
 
+  useHotkeys(
+    "V",
+    () => {
+      dispatch(setJsonMode(!jsonMode));
+    },
+    {
+      scopes: "request_sidepanel",
+    }
+  );
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
   useEffect(() => {
     setCompleteInteraction(
@@ -105,7 +122,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: <ModelTag model={logItem?.model || ""} />,
+    Model: logItem?.model ? (
+      <ModelTag model={logItem?.model || ""} />
+    ) : (
+      <span className="text-sm-regular text-gray-4">N/A</span>
+    ),
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -121,43 +142,53 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens?.toLocaleString() || "-"}
+        {logItem?.failed
+          ? "-"
+          : logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens?.toLocaleString() || "-"}
+        {logItem?.failed
+          ? "-"
+          : logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
       <span className="text-sm-regular text-gray-4">
-        {(
-          (logItem?.prompt_tokens &&
-            logItem?.prompt_tokens &&
-            logItem?.prompt_tokens + logItem?.completion_tokens) ||
-          "-"
-        ).toLocaleString()}
+        {logItem?.failed
+          ? "-"
+          : (
+              (logItem?.prompt_tokens &&
+                logItem?.prompt_tokens &&
+                logItem?.prompt_tokens + logItem?.completion_tokens) ||
+              "-"
+            ).toLocaleString()}
       </span>
     ),
     Cost: (
       <span className="text-sm-regular text-gray-4">
-        {"$" + logItem?.cost.toFixed(6) || "-"}
+        {logItem?.failed ? "-" : "$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
     "Routing time": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.routing_time.toFixed(3) || "-") + "s"}
+        {logItem?.failed
+          ? "-"
+          : (logItem?.routing_time.toFixed(3) || "-") + "s"}
       </span>
     ),
 
     TTFT: (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
+        {logItem?.failed
+          ? "-"
+          : (logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
     ),
     Latency: (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.latency.toFixed(3) || "-") + "s"}
+        {logItem?.failed ? "-" : (logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
   };
@@ -167,6 +198,15 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
   const [displayLog, setDisplayLog] = useState(false);
+  useEffect(() => {
+    if (logItem?.failed) {
+      setDisplayLog(false);
+    }
+    if (displayLog) enableScope("request_sidepanel");
+    return () => {
+      disableScope("request_sidepanel");
+    };
+  }, [displayLog]);
   useEffect(() => {
     if (logRef && logRef.current) {
       (logRef.current as HTMLElement)?.scrollIntoView({
@@ -202,21 +242,38 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             onClick={() => setDisplayLog(false)}
             padding="py-0"
           />
-          <Button
-            variant="text"
-            text="Log"
-            active={displayLog}
-            onClick={() => setDisplayLog(true)}
-            padding="py-0"
-          />
+          {!logItem?.failed && (
+            <Button
+              variant="text"
+              text="Log"
+              active={displayLog}
+              onClick={() => setDisplayLog(true)}
+              padding="py-0"
+            />
+          )}
         </div>
         <div>
           {displayLog && (
-            <DotsButton
-              icon={Compare}
-              onClick={() => dispatch(setJsonMode(!jsonMode))}
-              active={jsonMode}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={4}
+              align="end"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">View mode</p>
+                  <AlphanumericKey value={"V"} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={Compare}
+                  onClick={() => dispatch(setJsonMode(!jsonMode))}
+                  active={jsonMode}
+                />
+              </div>
+            </Tooltip>
           )}
           {/* {displayLog && (
             <SearchLog
