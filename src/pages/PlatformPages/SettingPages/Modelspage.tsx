@@ -407,7 +407,10 @@ export default function Modelspage() {
     useTypedSelector((state) => state.models.models)
   );
   return (
-    <PageContent title="Models" subtitle="">
+    <PageContent
+      title="Models"
+      subtitle="Browse models currently supported by Keywords AI. "
+    >
       <span className="text-md-medium">Supported models</span>
       <ModelsTable ModelItems={models} />
     </PageContent>

@@ -1,12 +1,24 @@
 import React from "react";
+import { useTypedSelector } from "src/store/store";
+import cn from "src/utilities/classMerge";
 
 type Props = {
   MessageContent: any;
 };
 
 export default function LogMessage({ MessageContent }: Props) {
+  const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
   if (typeof MessageContent === "string") {
-    return <p className="break-words overflow-auto">{MessageContent} </p>;
+    return (
+      <p
+        className={cn(
+          "w-full",
+          jsonMode ? "whitespace-pre break-all" : "overflow-auto break-words"
+        )}
+      >
+        {MessageContent}{" "}
+      </p>
+    );
   } else if (Array.isArray(MessageContent)) {
     return (
       <div>
