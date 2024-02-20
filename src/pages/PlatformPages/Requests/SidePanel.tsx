@@ -169,7 +169,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
     if (logRef && logRef.current) {
-      console.log("logRef.current");
       (logRef.current as HTMLElement)?.scrollIntoView({
         behavior: "smooth",
         block: "end",
@@ -396,7 +395,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       <CopyButton text={message.content} />
                     </div>
                     <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                      <LogMessage MessageContent={message.content} />
+                      <LogMessage
+                        MessageContent={
+                          jsonMode
+                            ? JSON.stringify(message, null, "\t")
+                            : message.content
+                        }
+                      />
                     </div>
                   </div>
                 );

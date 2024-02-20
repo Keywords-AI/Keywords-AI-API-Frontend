@@ -466,7 +466,7 @@ export const getDashboardData = (
         const currentFilterType = state.dashboard.currentFilter.id;
         if (!currentFilterType) {
           // If we are currently editing a filter, do no refresh the filters
-          console.log("filters", filters);
+          // console.log("filters", filters);
           dispatch({
             type: SET_DASHBOARD_FILTERS,
             payload: filters,
