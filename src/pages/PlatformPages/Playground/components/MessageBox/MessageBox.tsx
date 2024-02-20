@@ -38,7 +38,7 @@ export function MessageBox({
         target.style.height = target.scrollHeight + "px";
       }}
       defaultValue={value}
-      disabled={disabled}
+      disabled={false}
       className={cn(
         "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words outline-none resize-none border-none bg-transparent max-h-full placeholder:text-gray-4 "
       )}

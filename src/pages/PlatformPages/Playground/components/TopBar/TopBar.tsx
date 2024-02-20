@@ -49,7 +49,7 @@ export function TopBar() {
   return (
     <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bggray-1">
       <div className="flex items-center gap-xxs">
-        <DotsButton
+        {/* <DotsButton
           icon={isLeftPanelOpen ? SideBarActiveLeft : SideBarLeft}
           onClick={() => dispatch(toggleLeftPanel())}
         />
@@ -67,7 +67,7 @@ export function TopBar() {
               onClick: () => console.log("publish"),
             },
           ]}
-        />
+        /> */}
       </div>
       <div className="flex gap-xxs items-start">
         <Button

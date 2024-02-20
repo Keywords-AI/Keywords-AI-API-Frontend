@@ -8,6 +8,8 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { setModelOptions } from "src/store/actions";
 import { debounce } from "lodash";
 import { useCallback } from "react";
+import _ from "lodash";
+import { useDispatch } from "react-redux";
 export interface SessionPaneProps {
   prop?: string;
 }
@@ -36,14 +38,30 @@ export const SessionPane = forwardRef(
       ),
       [dispatch]
     );
+    const allModels = Object.values(
+      useTypedSelector((state) => state.models.models)
+    ).map((model: any) => {
+      return {
+        name: model.display_name,
+        value: model.model_name,
+      };
+    });
+    const selectChoices = [
+      { name: "Router", value: "router" },
+      { name: "None", value: "none" },
+      ...allModels,
+    ];
     useEffect(() => {
       if (Object.keys(dirtyFields).length === 0) return;
-      if (
-        JSON.stringify(ModelOptions) !== JSON.stringify(UpdatedModelOptions)
-      ) {
-        debouncedDispatch(UpdatedModelOptions);
+      const newModelOptionsState = {
+        ...UpdatedModelOptions,
+        models: [UpdatedModelOptions.modela, UpdatedModelOptions.modelb],
+      };
+
+      if (!_.isEqual(newModelOptionsState, ModelOptions)) {
+        debouncedDispatch(newModelOptionsState);
       }
-    }, [UpdatedModelOptions, ModelOptions]);
+    }, [UpdatedModelOptions]);
     return (
       <>
         <div
@@ -52,13 +70,23 @@ export const SessionPane = forwardRef(
         >
           <SelectInput
             //{ value: ModelOptions.model }
-            {...register("model")}
-            title="Model"
+            {...register("modela")}
+            title="Model A"
             width="w-[248px]"
             optionsWidth="w-[248px]"
-            choices={models}
+            choices={selectChoices}
             placeholder="Select a model"
-            defaultValue={ModelOptions.model}
+            defaultValue={ModelOptions.models[0]}
+          />
+          <SelectInput
+            //{ value: ModelOptions.model }
+            {...register("modelb")}
+            title="Model B"
+            width="w-[248px]"
+            optionsWidth="w-[248px]"
+            choices={selectChoices}
+            placeholder="Select a model"
+            defaultValue={ModelOptions.models[1]}
           />
           <Controller
             control={control}
@@ -107,7 +135,7 @@ export const SessionPane = forwardRef(
           />
           <Controller
             control={control}
-            name="Frequency Penalty"
+            name="frequencyPenalty"
             defaultValue={ModelOptions.frequencyPenalty}
             render={({ field: { value, onChange } }) => (
               <SliderInput

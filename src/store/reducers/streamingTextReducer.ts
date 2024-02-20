@@ -10,6 +10,7 @@ import {
   SEND_STREAMINGTEXT2_FAILURE,
   SEND_STREAMINGTEXT2_PARTIAL,
   ABORT_STREAMINGTEXT2_REQUEST,
+  RESET_STREAMINGTEXT,
 } from "../actions/streamingTextAction";
 
 type StreamingState = {
@@ -168,7 +169,8 @@ const streamingTextReducer = (
         }
         return item;
       });
-
+    case RESET_STREAMINGTEXT:
+      return initialState;
     default:
       return state;
   }

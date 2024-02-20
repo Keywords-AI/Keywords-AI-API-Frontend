@@ -4,6 +4,7 @@ import {
   SEND_STREAMINGTEXT2_PARTIAL,
   SEND_STREAMINGTEXT_PARTIAL,
   abortStreamingTextRequest,
+  resetStreamingText,
   sendStreamingText2Failure,
   sendStreamingText2Partial,
   sendStreamingText2Request,
@@ -16,6 +17,7 @@ import {
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
+import { every } from "d3-array";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -33,8 +35,19 @@ export const TOGGLE_RIGHT_PANEL = "TOGGLE_RIGHT_PANEL";
 export const SET_SELECTED_LOGS = "SET_SELECTED_LOGS";
 export const SET_MESSAGE_BY_INDEX = "SET_MESSAGE_BY_INDEX";
 export const SET_MESSAGE_RESPONSE_BY_INDEX = "SET_MESSAGE_RESPONSE_BY_INDEX";
-// Action Creator
+export const DELETE_MESSAGE_BY_INDEX = "DELETE_MESSAGE_BY_INDEX";
+export const SET_CHANNEL_MODE = "SET_CHANNEL_MODE";
 
+// Action Creator
+export const setChannelMode = (isSingle) => ({
+  type: SET_CHANNEL_MODE,
+  payload: isSingle,
+});
+
+export const deleMessageByIndex = (id, deleteChannel = -1) => ({
+  type: DELETE_MESSAGE_BY_INDEX,
+  payload: { id, deleteChannel },
+});
 export const setMessageResponseByIndex = (id, channel, content) => ({
   type: SET_MESSAGE_RESPONSE_BY_INDEX,
   payload: { id, channel, content },
@@ -120,7 +133,7 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
   payload: cacheAnswers,
 });
 
-export const streamPlaygroundResponse = (singleChanel = -1) => {
+export const streamPlaygroundResponse = () => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
     const currentModels = playground.currentModels;
@@ -129,26 +142,43 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
     const modelOptions = playground.modelOptions;
 
     const additonalParms = {};
-    if (modelOptions.model !== null)
-      additonalParms["model"] = modelOptions.model;
-    if (modelOptions.temperature !== null)
+    // if (modelOptions.model !== null)
+    //   additonalParms["model"] = modelOptions.model;
+    if (modelOptions.temperature !== null) {
       additonalParms["temperature"] = modelOptions.temperature;
-    if (modelOptions.maximumLength !== null)
+    }
+    if (modelOptions.maximumLength !== null) {
       additonalParms["max_tokens"] = modelOptions.maximumLength;
+    }
     if (modelOptions.topP !== null) additonalParms["top_p"] = modelOptions.topP;
-    if (modelOptions.presencePenalty !== null)
+    if (modelOptions.presencePenalty !== null) {
       additonalParms["presence_penalty"] = modelOptions.presencePenalty;
-    if (modelOptions.frequencyPenalty !== null)
+    }
+    if (modelOptions.frequencyPenalty !== null) {
       additonalParms["frequency_penalty"] = modelOptions.frequencyPenalty;
+    }
+
     dispatch(
       appendMessage({
-        id: messages.legnth,
+        id: messages.length,
         role: "assistant",
         responses: [null, null],
         hidden: true,
       })
     );
-    const channels = singleChanel == -1 ? [0, 1] : [singleChanel];
+    const singleChanel = modelOptions.models.some((model) => model == "none");
+    if (singleChanel) {
+      dispatch(resetStreamingText());
+    }
+    dispatch(setChannelMode(singleChanel));
+    const modelParams = modelOptions.models.map((model) => {
+      if (model == "none" || model == "router") return null;
+      else return { model: model };
+    });
+    // console.log("modelParams", modelParams);
+    const channels = !singleChanel
+      ? [0, 1]
+      : [modelOptions.models.indexOf("none") ? 0 : 1];
     await Promise.all(
       channels.map(async (channel) => {
         const chanelMessages = [
@@ -165,7 +195,9 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
             }
             return {
               role: "assistant",
-              content: item.responses[channel].content,
+              content: item.responses[channel]
+                ? item.responses[channel].content
+                : "",
             };
           }),
         ];
@@ -182,6 +214,7 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
               stream: true,
               eval: true,
               ...additonalParms,
+              ...modelParams[channel],
             },
             dispatch: dispatch,
             path: "api/playground/ask/",
@@ -191,26 +224,29 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
                 getState().streamingText[channel].streamingText;
               const model = getState().streamingText[channel].model;
               const id = getState().playground.messages.length - 1;
-              const lastMessage = getState().playground.messages.slice(-1)[0];
+
               const newResponse = {
                 model: model,
                 content: streamingText,
                 complete: true,
               };
+              const lastMessage = getState().playground.messages.slice(-1)[0];
               if (channel == 0) {
                 dispatch(sendStreamingTextSuccess());
+                console.log(channel, lastMessage);
                 const complete =
                   lastMessage.responses[1] != null &&
                   lastMessage.responses[1].complete == true;
                 dispatch(
                   setLastMessage({
                     id: id,
-                    hidden: complete || singleChanel != -1 ? false : true,
+                    hidden: singleChanel ? false : !complete,
                     role: "assistant",
                     responses: [newResponse, lastMessage.responses[1]],
                   })
                 );
-                if (complete || singleChanel != -1) {
+
+                if (complete || singleChanel) {
                   dispatch(
                     appendMessage({
                       id: id + 1,
@@ -220,6 +256,7 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
                   );
                 }
               } else if (channel == 1) {
+                console.log(channel, lastMessage);
                 dispatch(sendStreamingText2Success());
                 const complete =
                   lastMessage.responses[0] != null &&
@@ -227,12 +264,13 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
                 dispatch(
                   setLastMessage({
                     id: id,
-                    hidden: complete || singleChanel != -1 ? false : true,
+                    hidden: singleChanel ? false : !complete,
                     role: "assistant",
                     responses: [lastMessage.responses[0], newResponse],
                   })
                 );
-                if (complete || singleChanel != -1) {
+
+                if (complete || singleChanel) {
                   dispatch(
                     appendMessage({
                       id: id + 1,
@@ -245,6 +283,7 @@ export const streamPlaygroundResponse = (singleChanel = -1) => {
             },
           });
         } catch (error: any) {
+          console.log("error", error);
           if (channel == 0) {
             dispatch(sendStreamingTextFailure(error.toString()));
           } else if (channel == 1) {

@@ -56,7 +56,8 @@ const mapDispatchToProps = {
 
 const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
-  const hasAccess = user.loading? true: user.is_admin? true: false;
+  // const hasAccess = user.loading? true: user.is_admin? true: false;
+  const hasAccess = true;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
     getUser();

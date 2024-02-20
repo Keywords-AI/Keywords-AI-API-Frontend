@@ -6,15 +6,15 @@ import {
   SessionPane,
   TopBar,
 } from "./components";
-import { Button, DotsButton } from "src/components/Buttons";
+import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { Copy, Divider, Pencil } from "src/components";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { setPrompt, setSelectedLogs } from "src/store/actions";
+import { getModels, setPrompt, setSelectedLogs } from "src/store/actions";
 import { StreamingMessage } from "./components/PlaygroundMessage";
 import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import { models } from "src/components/Misc";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
@@ -26,6 +26,10 @@ export default function Playground() {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const dispatch = useTypedDispatch();
+  useEffect(() => {
+    dispatch(getModels());
+  }, []);
   return (
     <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] ">
       <TopBar />
@@ -60,8 +64,8 @@ const PromptInput = (selectedLogs) => {
       <div className="flex justify-between items-center self-stretch">
         <p className="text-sm-md text-gray-4">System</p>
         <div className="flex items-center">
-          <DotsButton icon={Pencil} />
-          <DotsButton icon={Copy} />
+          {/* <DotsButton icon={Pencil} /> */}
+          <CopyButton text={prompt} />
         </div>
       </div>
       <TextAreaInput

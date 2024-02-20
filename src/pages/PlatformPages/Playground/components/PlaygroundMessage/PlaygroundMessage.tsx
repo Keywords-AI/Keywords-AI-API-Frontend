@@ -3,6 +3,7 @@ import Markdown from "react-markdown";
 import {
   Check,
   Copy,
+  Delete,
   EditableBox,
   EnterKey,
   ModelIcon,
@@ -10,10 +11,11 @@ import {
   Pencil,
   Refresh,
 } from "src/components";
-import { Button, DotsButton } from "src/components/Buttons";
+import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { ModelTag, Tag } from "src/components/Misc";
 import * as _ from "lodash";
 import {
+  deleMessageByIndex,
   regeneratePlaygroundResponse,
   setMessageByIndex,
   setMessageResponseByIndex,
@@ -48,6 +50,9 @@ export function PlaygroundMessage({
   let contentSection = <></>;
   const messageLength = useTypedSelector(
     (state: RootState) => state.playground.messages.length
+  );
+  const isSingleChannel = useTypedSelector(
+    (state: RootState) => state.playground.isSingleChannel
   );
   const [isFocused, setIsFocused] = useState(false);
   const [messageValue, setMessageValue] = useState(user_content || "");
@@ -89,9 +94,10 @@ export function PlaygroundMessage({
         <MessageHeader
           title={<div className="text-sm-md text-gray-4">User</div>}
           content={user_content || ""}
-          editCallback={(e) => {
+          deleteCallback={(e) => {
             e.preventDefault();
-            // setIsFocused(false);
+            if (+id == 0) return;
+            dispatch(deleMessageByIndex(id));
           }}
         />
         <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
@@ -143,20 +149,22 @@ export function PlaygroundMessage({
     contentSection = (
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
-          if (!response) return null;
+          if (!response || response.content == "") return null;
           const Icon = ModelIcon(response.model);
           return (
             <div
               key={index}
               className={cn(
                 "flex-col items-start gap-xxxs self-stretch",
-                responses.length > 1 ? "w-1/2" : "w-full"
+                isSingleChannel ? "w-full" : "w-1/2"
               )}
             >
               <MessageHeader
                 title={
                   <div className="flex items-center gap-xxs">
-                    <div className="text-sm-md text-gray-4">Response</div>
+                    <div className="text-sm-md text-gray-4">
+                      Response {index == 0 ? "A" : "B"}
+                    </div>
                     <Tag
                       text={response.model}
                       icon={React.createElement(Icon, { size: "md" })}
@@ -166,10 +174,12 @@ export function PlaygroundMessage({
                 regenCallback={() =>
                   dispatch(regeneratePlaygroundResponse(index))
                 }
-                editCallback={(e) => {
-                  setIsFocused(true);
+                deleteCallback={(e) => {
+                  e.preventDefault();
+                  if (+id == 0) return;
+                  dispatch(deleMessageByIndex(id, index));
                 }}
-                showRegen={+id == messageLength - 2}
+                showRegen={true}
                 content={response.content || ""}
               />
               <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
@@ -185,7 +195,8 @@ export function PlaygroundMessage({
                       }
                     }}
                     onBlur={() => {
-                      handleUpdateResponse(id, index, responseValue);
+                      responseValue != "" &&
+                        handleUpdateResponse(id, index, responseValue);
                       setIsFocused(false);
                     }}
                     disabled={!isFocused}
@@ -218,45 +229,35 @@ const MessageHeader = ({
   title,
   content,
   showRegen = false,
-  editCallback,
+  deleteCallback,
   regenCallback,
+  streaming = false,
 }: {
   title: ReactElement;
   content: string;
   showRegen?: boolean;
-  editCallback?: (e) => void;
+  deleteCallback?: (e) => void;
   regenCallback?: (e) => void;
+  streaming?: boolean;
 }) => {
-  const [copied, setCopied] = useState(false);
-  useEffect(() => {
-    if (copied) {
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    }
-  }, [copied]);
   return (
     <div className="flex justify-between items-center self-stretch">
       <div className="flex items-center gap-xxs">{title}</div>
-      <div className="flex items-center">
-        <DotsButton
-          icon={Pencil}
-          onClick={(e) => editCallback && editCallback(e)}
-        />
-        {showRegen && (
+      {!streaming && (
+        <div className="flex items-center">
+          {showRegen && (
+            <DotsButton
+              icon={Refresh}
+              onClick={(e) => regenCallback && regenCallback(e)}
+            />
+          )}
+          <CopyButton text={content} />
           <DotsButton
-            icon={Refresh}
-            onClick={(e) => regenCallback && regenCallback(e)}
+            icon={Delete}
+            onClick={(e) => deleteCallback && deleteCallback(e)}
           />
-        )}
-        <DotsButton
-          icon={copied ? Check : Copy}
-          onClick={() => {
-            navigator?.clipboard.writeText(content);
-            setCopied(true);
-          }}
-        />
-      </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -266,32 +267,49 @@ export function StreamingMessage() {
   const currentModels = useTypedSelector(
     (state) => state.playground.currentModels
   );
+  const isSingleChannel = useTypedSelector(
+    (state: RootState) => state.playground.isSingleChannel
+  );
   if (
     streamingStates.every(
       (state) => state.isLoading === false && state.error == null
     )
   )
     return null;
+
   return (
     <div className="flex items-start gap-xxs self-stretch">
       {streamingStates.length > 0 &&
         streamingStates?.map((streamingState, index) => {
           const Icon = ModelIcon(currentModels[index]);
-          // if (
-          //   streamingState.isLoading == false &&
-          //   streamingState.error == null
-          // ) {
-          //   return null;
-          // }
+          if (
+            streamingStates.every(
+              (item) => item.isLoading === false && item.error == null
+            )
+          ) {
+            return null;
+          }
+          if (
+            isSingleChannel &&
+            streamingState.isLoading === false &&
+            streamingState.error == null
+          )
+            return null;
           return (
             <div
               key={index}
-              className="flex-col items-start gap-xxxs self-stretch w-1/2"
+              className={cn(
+                "flex-col items-start gap-xxxs self-stretch",
+                isSingleChannel ? "w-full" : "w-1/2"
+              )}
             >
               <MessageHeader
+                streaming
                 title={
                   <div className="flex items-center gap-xxs">
-                    <div className="text-sm-md text-gray-4">Response</div>
+                    <div className="text-sm-md text-gray-4">
+                      Response {index == 0 ? "A" : "B"}
+                    </div>
                     {streamingState.model && (
                       <ModelTag model={streamingState.model} />
                     )}
@@ -308,7 +326,7 @@ export function StreamingMessage() {
                   <span className="text-red">{streamingState.error}</span>
                 ) : (
                   <span className="text-sm-regular text-gray-4">
-                    Generating...
+                    {streamingState.isLoading ? "Generating..." : null}
                   </span>
                 )}
               </div>
