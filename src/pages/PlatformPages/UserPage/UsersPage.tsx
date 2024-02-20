@@ -24,7 +24,7 @@ export default function UsersPage({}: Props) {
       className="flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 "
       aria-label="frame 1733"
     >
-      {true ? (
+      {false ? (
         <EmptyState />
       ) : (
         <>
