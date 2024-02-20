@@ -121,6 +121,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "sentiment",
           element: <Sentiment />,
         },
+        { path: "users", element: <UsersPage /> },
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
@@ -128,13 +129,12 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       ],
     },
     {
-      path: REDIRECT_URI, // "/platform"
+      path: REDIRECT_URI, // "/These pages are only accessible to admin users."
       element: hasAccess ? <NavigationLayout /> : <Navigate to="/forbidden" />,
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
         { path: "cache", element: <CachePage /> },
-        { path: "users", element: <UsersPage /> },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
