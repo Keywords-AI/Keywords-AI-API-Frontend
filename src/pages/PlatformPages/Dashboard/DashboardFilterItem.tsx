@@ -48,7 +48,7 @@ const DashboardFilterValueFields: DashboardFilterValueFieldType = {
     let displayChoice =
       filterOption.value_choices.find((choice) => {
         const choiceValue = choice?.value.toString();
-        return filterToUpdate.value?.[0] === choiceValue;
+        return filterToUpdate.value?.[0]?.toString() === choiceValue;
       })?.name ?? filterOption.display_name;
     if (filterToUpdate.value && filterToUpdate.value.length > 1) {
       displayChoice = `${filterToUpdate.value.length} items`;
