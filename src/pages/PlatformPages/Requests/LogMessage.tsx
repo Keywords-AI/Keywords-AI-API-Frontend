@@ -1,6 +1,7 @@
 import React from "react";
 import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
+import { json } from "stream/consumers";
 
 type Props = {
   MessageContent: any;
@@ -9,14 +10,13 @@ type Props = {
 export default function LogMessage({ MessageContent }: Props) {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
   if (typeof MessageContent === "string") {
-    return (
-      <p
-        className={cn(
-          "w-full",
-          jsonMode ? "whitespace-pre break-all" : "overflow-auto break-words"
-        )}
-      >
-        {MessageContent}{" "}
+    return jsonMode ? (
+      <pre className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-mono">
+        {MessageContent}
+      </pre>
+    ) : (
+      <p className={cn("w-full", "overflow-auto break-words")}>
+        {MessageContent}
       </p>
     );
   } else if (Array.isArray(MessageContent)) {
