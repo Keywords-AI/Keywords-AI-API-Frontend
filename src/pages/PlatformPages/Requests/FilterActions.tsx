@@ -24,8 +24,8 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 
 export function FilterActions({ type }: { type: string }) {
-  const isLoading = useTypedSelector((state) => state.requestLogs.loading);
-  if (isLoading) return <></>;
+  // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
+  // if (isLoading) return <></>;
   const [start, setStart] = useState<boolean | undefined>(false);
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
