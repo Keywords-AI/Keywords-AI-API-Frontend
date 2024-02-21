@@ -26,11 +26,11 @@ export default function UsersPage({}: Props) {
     <div
       className={cn(
         "flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 ",
-        true ? "p-lg" : ""
+        isEmpty ? "p-lg" : ""
       )}
       aria-label="frame 1733"
     >
-      {true ? (
+      {isEmpty ? (
         <EmptyState />
       ) : (
         <>
