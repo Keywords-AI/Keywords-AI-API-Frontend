@@ -209,6 +209,7 @@ export const streamPlaygroundResponse = () => {
 
         try {
           await keywordsStream({
+            // apiKey: "YinymGBd.6LvH08t8WQofGFl4GsRSUCtMNAZEGrt1",
             data: {
               messages: chanelMessages,
               stream: true,
@@ -216,7 +217,7 @@ export const streamPlaygroundResponse = () => {
               // ...additonalParms,
               ...modelParams[channel],
             },
-            dispatch: dispatch,
+            // dispatch: dispatch,
             path: "api/playground/ask/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
