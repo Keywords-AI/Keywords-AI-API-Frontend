@@ -24,6 +24,8 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 
 export function FilterActions({ type }: { type: string }) {
+  // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
+  // if (isLoading) return <></>;
   const [start, setStart] = useState<boolean | undefined>(false);
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
@@ -83,7 +85,6 @@ export function FilterActions({ type }: { type: string }) {
 
   const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
-      console.log("filterValue", typeof filterValue, filterValue);
       dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
     }
   };
@@ -97,8 +98,11 @@ export function FilterActions({ type }: { type: string }) {
     open ? disableScope("dashboard") : enableScope("dashboard");
     if (loading) return;
     setStart(open);
-    console.log("open", currentFilter);
-    if (currentFilter?.metric && currentFilter.value) {
+    if (
+      currentFilter?.metric &&
+      currentFilter.value &&
+      currentFilter.value.length > 0
+    ) {
       dispatch(
         addFilter({
           display_name:

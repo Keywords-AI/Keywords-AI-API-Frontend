@@ -11,7 +11,7 @@ export default function LogMessage({ MessageContent }: Props) {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
   if (typeof MessageContent === "string") {
     return jsonMode ? (
-      <pre className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-mono">
+      <pre className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono">
         {MessageContent}
       </pre>
     ) : (

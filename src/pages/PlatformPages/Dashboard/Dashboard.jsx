@@ -226,7 +226,7 @@ function DashboardNotConnected({
             />
           ))}
         </div>
-        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
+        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full h-[52px]">
           <div>
             {/* {breakdown_type !== "none" && (
               <div className="flex items-center content-center gap-xs flex-wrap">

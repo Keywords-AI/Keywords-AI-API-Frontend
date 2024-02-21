@@ -13,7 +13,7 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { Button, DotsButton } from "src/components/Buttons";
 import {
   deleteDashboardFilter,
-  setCurrentFilter,
+  setDashboardCurrentFilter,
   updateDashboardFilter,
 } from "src/store/actions";
 import { DashboardInputFieldUpdateFilter } from "./DashboardFilterValueField";
@@ -41,14 +41,14 @@ const DashboardFilterValueFields: DashboardFilterValueFieldType = {
     const dispatch = useTypedDispatch();
     const handleOpen = (opening: boolean | undefined) => {
       if (opening) {
-        dispatch(setCurrentFilter(filterToUpdate));
+        dispatch(setDashboardCurrentFilter(filterToUpdate));
       }
       setOpen(opening);
     };
     let displayChoice =
       filterOption.value_choices.find((choice) => {
         const choiceValue = choice?.value.toString();
-        return filterToUpdate.value?.[0] === choiceValue;
+        return filterToUpdate.value?.[0]?.toString() === choiceValue;
       })?.name ?? filterOption.display_name;
     if (filterToUpdate.value && filterToUpdate.value.length > 1) {
       displayChoice = `${filterToUpdate.value.length} items`;
