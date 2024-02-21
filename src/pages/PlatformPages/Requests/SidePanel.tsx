@@ -206,7 +206,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     return () => {
       disableScope("request_sidepanel");
     };
-  }, [displayLog]);
+  }, [displayLog, logItem]);
   useEffect(() => {
     if (logRef && logRef.current) {
       (logRef.current as HTMLElement)?.scrollIntoView({
@@ -256,7 +256,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           {displayLog && (
             <Tooltip
               side="bottom"
-              sideOffset={4}
+              sideOffset={5}
               align="end"
               delayDuration={1}
               content={
@@ -297,100 +297,115 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         className="flex-col items-start self-stretch mt-[44px]"
         aria-label="frame 1969"
       >
-        {" "}
         <div ref={logRef}></div>
         {!displayLog && (
-          <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
-            {Object.keys(displayObj).map((key, index) => {
-              return (
-                <div
-                  className="flex h-[24px] justify-between items-center self-stretch"
-                  key={index}
-                >
-                  <div className="flex items-center gap-xxs">
-                    <span className="text-sm-md text-gray-5">{key}</span>
-                    {key === "Customer ID" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Identifier for customer
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "TTFT" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to first generated token
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "Routing time" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to select model
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "Latency" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to generate response
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
+          <>
+            {logItem?.failed && (
+              <>
+                <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
+                  <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
+                    Error
+                    <CopyButton text={logItem?.error_message || ""} />
                   </div>
-                  {displayObj[key]}
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular">
+                    {logItem?.error_message}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+                <Divider />
+              </>
+            )}
+            <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+              {Object.keys(displayObj).map((key, index) => {
+                return (
+                  <div
+                    className="flex h-[24px] justify-between items-center self-stretch"
+                    key={index}
+                  >
+                    <div className="flex items-center gap-xxs">
+                      <span className="text-sm-md text-gray-5">{key}</span>
+                      {key === "Customer ID" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Identifier for customer
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "TTFT" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to first generated token
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "Routing time" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to select model
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "Latency" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to generate response
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                    </div>
+                    {displayObj[key]}
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
         {displayLog && (
           <>

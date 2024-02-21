@@ -9,6 +9,9 @@ import {
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { WelcomeState } from "src/components/Sections";
+import cn from "src/utilities/classMerge";
+import { TitleAuth } from "src/components/Titles";
+import { Button, Right } from "src/components";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -21,10 +24,13 @@ export default function UsersPage({}: Props) {
     usersLogState.usersLogData.length === 0 && !usersLogState.loading;
   return (
     <div
-      className="flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 "
+      className={cn(
+        "flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 ",
+        true ? "p-lg" : ""
+      )}
       aria-label="frame 1733"
     >
-      {false ? (
+      {true ? (
         <EmptyState />
       ) : (
         <>
@@ -164,10 +170,7 @@ const Table = () => {
   );
   return (
     <div className="flex-col w-full max-h-[calc(100vh-157px)] items-start overflow-auto ">
-      <div
-        aria-label="table"
-        className="grid grid-flow-row auto-rows-[40px] w-full"
-      >
+      <div aria-label="table" className="grid grid-flow-row w-full">
         {Header}
         {isloading
           ? LoadingRow
@@ -177,7 +180,7 @@ const Table = () => {
                 <div
                   key={index}
                   aria-label="row"
-                  className="px-lg py-xxs grid gap-x-sm items-center "
+                  className="px-lg py-xxs grid gap-x-sm items-center h-[40px] "
                   style={{
                     gridTemplateColumns: templateString,
                   }}
@@ -197,6 +200,28 @@ const Table = () => {
 
 const EmptyState = () => {
   return (
-    <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline-1 outline-gray-3 shadow-window rounded-md"></div>
+    <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline outline-1 outline-gray-3  rounded-md">
+      <TitleAuth
+        title="Welcome to Keywords AI!"
+        subtitle={
+          "Add the customer_identifier parameter to your API calls to view user metrics."
+        }
+        textAlign="text-center"
+      />
+      <div className="flex justify-center items-center gap-xs">
+        <Button
+          variant="r4-black"
+          text="View docs"
+          icon={Right}
+          iconPosition="right"
+          onClick={() =>
+            window.open(
+              "https://docs.keywordsai.co/api-usage/request-params#extra-parameters-for-monitoring",
+              "_blank"
+            )
+          }
+        />
+      </div>
+    </div>
   );
 };
