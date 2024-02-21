@@ -307,7 +307,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     Error
                     <CopyButton text={logItem?.error_message || ""} />
                   </div>
-                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular">
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
                     {logItem?.error_message}
                   </div>
                 </div>
