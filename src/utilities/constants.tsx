@@ -412,7 +412,7 @@ export const models: ModelType[] = [
   },
   {
     name: "Mistral Tiny",
-    value: "mistral/mistral-tiny",
+    value: "mistral-tiny",
     brand: "google",
     icon: Mistral,
     speed: 250,
@@ -434,7 +434,7 @@ export const models: ModelType[] = [
   },
   {
     name: "Mistral Small",
-    value: "mistral/mistral-small",
+    value: "mistral-small",
     brand: "google",
     icon: Mistral,
     speed: 220,
