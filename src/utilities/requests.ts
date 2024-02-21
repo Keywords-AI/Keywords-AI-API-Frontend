@@ -113,7 +113,7 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
-
+  console.log("data", `${host}${path}`, headers, data);
   const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,
@@ -146,9 +146,9 @@ export const keywordsStream = ({
         try {
           while (true) {
             const { done, value } = await reader.read();
-            if (value === undefined && done === true && count === 0) {
-              throw new Error("Streaming error");
-            }
+            // if (value === undefined && done === true && count === 0) {
+            //   throw new Error("Streaming error");
+            // }
             if (done || signal.aborted) {
               streamingDoneCallback && streamingDoneCallback();
               break;

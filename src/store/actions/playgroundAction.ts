@@ -209,7 +209,7 @@ export const streamPlaygroundResponse = () => {
 
         try {
           await keywordsStream({
-            // apiKey: "YinymGBd.6LvH08t8WQofGFl4GsRSUCtMNAZEGrt1",
+            apiKey: "BnTT8vvE.b2dxVXFa4qYgo5jgHcVHn0WKK91Xm8mb",
             data: {
               messages: chanelMessages,
               stream: true,
@@ -218,7 +218,7 @@ export const streamPlaygroundResponse = () => {
               ...modelParams[channel],
             },
             // dispatch: dispatch,
-            path: "api/playground/ask/",
+            path: "api/generate/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =
@@ -234,7 +234,6 @@ export const streamPlaygroundResponse = () => {
               const lastMessage = getState().playground.messages.slice(-1)[0];
               if (channel == 0) {
                 dispatch(sendStreamingTextSuccess());
-                console.log(channel, lastMessage);
                 const complete =
                   lastMessage.responses[1] != null &&
                   lastMessage.responses[1].complete == true;
