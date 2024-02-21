@@ -10,9 +10,16 @@ import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag, Tag } from "src/components/Misc";
-import { Compare, Copy, IconPlayground, Info } from "src/components";
+import {
+  AlphanumericKey,
+  Compare,
+  Copy,
+  IconPlayground,
+  Info,
+} from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   RestorePlaygroundState,
   setCacheResponse,
@@ -41,7 +48,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
+  const { enableScope, disableScope } = useHotkeysContext();
 
+  useHotkeys(
+    "V",
+    () => {
+      dispatch(setJsonMode(!jsonMode));
+    },
+    {
+      scopes: "request_sidepanel",
+    }
+  );
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
   useEffect(() => {
     setCompleteInteraction(
@@ -105,7 +122,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: <ModelTag model={logItem?.model || ""} />,
+    Model: logItem?.model ? (
+      <ModelTag model={logItem?.model || ""} />
+    ) : (
+      <span className="text-sm-regular text-gray-4">N/A</span>
+    ),
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -121,43 +142,53 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     "Prompt tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.prompt_tokens?.toLocaleString() || "-"}
+        {logItem?.failed
+          ? "-"
+          : logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.completion_tokens?.toLocaleString() || "-"}
+        {logItem?.failed
+          ? "-"
+          : logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
       <span className="text-sm-regular text-gray-4">
-        {(
-          (logItem?.prompt_tokens &&
-            logItem?.prompt_tokens &&
-            logItem?.prompt_tokens + logItem?.completion_tokens) ||
-          "-"
-        ).toLocaleString()}
+        {logItem?.failed
+          ? "-"
+          : (
+              (logItem?.prompt_tokens &&
+                logItem?.prompt_tokens &&
+                logItem?.prompt_tokens + logItem?.completion_tokens) ||
+              "-"
+            ).toLocaleString()}
       </span>
     ),
     Cost: (
       <span className="text-sm-regular text-gray-4">
-        {"$" + logItem?.cost.toFixed(6) || "-"}
+        {logItem?.failed ? "-" : "$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
     "Routing time": (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.routing_time.toFixed(3) || "-") + "s"}
+        {logItem?.failed
+          ? "-"
+          : (logItem?.routing_time.toFixed(3) || "-") + "s"}
       </span>
     ),
 
     TTFT: (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
+        {logItem?.failed
+          ? "-"
+          : (logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
     ),
     Latency: (
       <span className="text-sm-regular text-gray-4">
-        {(logItem?.latency.toFixed(3) || "-") + "s"}
+        {logItem?.failed ? "-" : (logItem?.latency.toFixed(3) || "-") + "s"}
       </span>
     ),
   };
@@ -168,8 +199,16 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
+    if (logItem?.failed) {
+      setDisplayLog(false);
+    }
+    if (displayLog) enableScope("request_sidepanel");
+    return () => {
+      disableScope("request_sidepanel");
+    };
+  }, [displayLog, logItem]);
+  useEffect(() => {
     if (logRef && logRef.current) {
-      console.log("logRef.current");
       (logRef.current as HTMLElement)?.scrollIntoView({
         behavior: "smooth",
         block: "end",
@@ -203,21 +242,38 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             onClick={() => setDisplayLog(false)}
             padding="py-0"
           />
-          <Button
-            variant="text"
-            text="Log"
-            active={displayLog}
-            onClick={() => setDisplayLog(true)}
-            padding="py-0"
-          />
+          {!logItem?.failed && (
+            <Button
+              variant="text"
+              text="Log"
+              active={displayLog}
+              onClick={() => setDisplayLog(true)}
+              padding="py-0"
+            />
+          )}
         </div>
         <div>
           {displayLog && (
-            <DotsButton
-              icon={Compare}
-              onClick={() => dispatch(setJsonMode(!jsonMode))}
-              active={jsonMode}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={5}
+              align="end"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">View mode</p>
+                  <AlphanumericKey value={"V"} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={Compare}
+                  onClick={() => dispatch(setJsonMode(!jsonMode))}
+                  active={jsonMode}
+                />
+              </div>
+            </Tooltip>
           )}
           {/* {displayLog && (
             <SearchLog
@@ -241,100 +297,115 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         className="flex-col items-start self-stretch mt-[44px]"
         aria-label="frame 1969"
       >
-        {" "}
         <div ref={logRef}></div>
         {!displayLog && (
-          <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
-            {Object.keys(displayObj).map((key, index) => {
-              return (
-                <div
-                  className="flex h-[24px] justify-between items-center self-stretch"
-                  key={index}
-                >
-                  <div className="flex items-center gap-xxs">
-                    <span className="text-sm-md text-gray-5">{key}</span>
-                    {key === "Customer ID" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Identifier for customer
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "TTFT" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to first generated token
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "Routing time" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to select model
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
-                    {key === "Latency" && (
-                      <Tooltip
-                        side="right"
-                        sideOffset={8}
-                        delayDuration={1}
-                        skipDelayDuration={1}
-                        content={
-                          <>
-                            <span className="text-gray-4 caption">
-                              Time to generate response
-                            </span>
-                          </>
-                        }
-                      >
-                        <div>
-                          <Info />
-                        </div>
-                      </Tooltip>
-                    )}
+          <>
+            {logItem?.failed && (
+              <>
+                <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
+                  <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
+                    Error
+                    <CopyButton text={logItem?.error_message || ""} />
                   </div>
-                  {displayObj[key]}
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
+                    {logItem?.error_message}
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+                <Divider />
+              </>
+            )}
+            <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+              {Object.keys(displayObj).map((key, index) => {
+                return (
+                  <div
+                    className="flex h-[24px] justify-between items-center self-stretch"
+                    key={index}
+                  >
+                    <div className="flex items-center gap-xxs">
+                      <span className="text-sm-md text-gray-5">{key}</span>
+                      {key === "Customer ID" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Identifier for customer
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "TTFT" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to first generated token
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "Routing time" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to select model
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                      {key === "Latency" && (
+                        <Tooltip
+                          side="right"
+                          sideOffset={8}
+                          delayDuration={1}
+                          skipDelayDuration={1}
+                          content={
+                            <>
+                              <span className="text-gray-4 caption">
+                                Time to generate response
+                              </span>
+                            </>
+                          }
+                        >
+                          <div>
+                            <Info />
+                          </div>
+                        </Tooltip>
+                      )}
+                    </div>
+                    {displayObj[key]}
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
         {displayLog && (
           <>
@@ -396,7 +467,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                       <CopyButton text={message.content} />
                     </div>
                     <div className="flex  py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-                      <LogMessage MessageContent={message.content} />
+                      <LogMessage
+                        MessageContent={
+                          jsonMode
+                            ? JSON.stringify(message, null, "\t")
+                            : message.content
+                        }
+                      />
                     </div>
                   </div>
                 );

@@ -15,7 +15,10 @@ import {
   Choice,
   Operator,
 } from "src/types";
-import { setDashboardCurrentFilter, addDashboardFilter } from "src/store/actions";
+import {
+  setDashboardCurrentFilter,
+  addDashboardFilter,
+} from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
@@ -80,7 +83,13 @@ export function DashboardFilterActions({ type }: { type: string }) {
 
   const selectFilterValue = (filterValue: string[] | number[] | boolean[]) => {
     if (filterValue) {
-      dispatch(setDashboardCurrentFilter({ ...currentFilter, value: filterValue }));
+      if (Array.isArray(filterValue) && filterValue.length > 0) {
+        dispatch(
+          setDashboardCurrentFilter({ ...currentFilter, value: filterValue })
+        );
+      } else {
+        dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
+      }
     }
   };
   useEffect(() => {
@@ -92,7 +101,11 @@ export function DashboardFilterActions({ type }: { type: string }) {
   const handleDropdownOpen = (open) => {
     open ? disableScope("dashboard") : enableScope("dashboard");
     setStart(open);
-    if (currentFilter?.metric && currentFilter.value) {
+    if (
+      currentFilter?.metric &&
+      currentFilter.value &&
+      currentFilter.value.length > 0
+    ) {
       dispatch(
         addDashboardFilter({
           display_name:
@@ -250,7 +263,9 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
               onClick={() => {
                 reset();
                 setOpen(false);
-                dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
+                dispatch(
+                  setDashboardCurrentFilter({ metric: undefined, id: "" })
+                );
               }}
             />
             <Button variant="r4-primary" text="Apply" type="submit" />

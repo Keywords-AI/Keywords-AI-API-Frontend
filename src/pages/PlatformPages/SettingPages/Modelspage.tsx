@@ -144,7 +144,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
     setIsSidePanelOpen(true); // Open the side panel
   };
   // const activated = hover;
-  const templateString = "220px 180px 180px 80px 80px 100px";
+  const templateString = "320px 180px 180px 80px 80px ";
   const activated = hoveredIndex >= 0;
   return (
     <div className="flex flex-row w-full">
@@ -171,9 +171,9 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
           <div className="items-center self-stretch text-gray-4 text-sm-md">
             Rate limit
           </div>
-          <div className="items-center self-stretch text-gray-4 text-sm-md">
+          {/* <div className="items-center self-stretch text-gray-4 text-sm-md">
             Moderation
-          </div>
+          </div> */}
         </div>
         {ModelItems.map((item, index) => (
           <Drawer
@@ -221,7 +221,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
                   {item.rate_limit.toLocaleString()}
                 </div>
-                <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
+                {/* <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
                   <Tag
                     text={item.company.moderation}
                     textColor={
@@ -236,7 +236,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                     }
                     border=""
                   />
-                </div>
+                </div> */}
               </div>
             }
           >
@@ -407,7 +407,10 @@ export default function Modelspage() {
     useTypedSelector((state) => state.models.models)
   );
   return (
-    <PageContent title="Models" subtitle="">
+    <PageContent
+      title="Models"
+      subtitle="Browse models currently supported by Keywords AI. "
+    >
       <span className="text-md-medium">Supported models</span>
       <ModelsTable ModelItems={models} />
     </PageContent>
