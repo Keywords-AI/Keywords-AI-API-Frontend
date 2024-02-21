@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/types";
 import {
@@ -20,12 +20,13 @@ import { WelcomeState } from "src/components/Sections";
 import { SidePanel } from "./SidePanel";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { get, set, useForm } from "react-hook-form";
 import { Filters } from "./RequestFilters";
 import { Paginator } from "./Paginator";
 import { Popover } from "src/components/Dialogs";
 import { useTypedDispatch } from "src/store/store";
+import { getQueryParam } from "src/utilities/navigation";
 
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
@@ -35,6 +36,7 @@ const mapStateToProps = (state: RootState) => ({
   filters: state.requestLogs.filters,
   count: state.requestLogs.count,
   totalCount: state.requestLogs.totalCount,
+  loading: state.requestLogs.loading,
 });
 
 const mapDispatchToProps = {
@@ -72,6 +74,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   filters,
   count,
   totalCount,
+  loading,
 }) => {
   useEffect(() => {
     getRequestLogs();
@@ -79,7 +82,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       setSelectedRequest(requestLogs?.[0]?.id);
     }
   }, []);
-
+  const tableRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (tableRef.current) {
+      tableRef.current.scrollTop = 0;
+    }
+  }, [getQueryParam("page")]);
   const clearFilters = () => {
     setFilters([]);
   };
@@ -89,12 +97,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
         <div
           aria-label=""
-          className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
+          className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filters.length > 0 === false && <FilterActions type="filter" />}
+            {!loading && filters.length > 0 === false && (
+              <FilterActions type="filter" />
+            )}
 
-            {filters.length > 0 && (
+            {!loading && filters.length > 0 && (
               <React.Fragment>
                 <Button
                   variant="small-dashed"
@@ -111,13 +121,15 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         </div>
         <div
           aria-label="filter-display"
-          className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2"
+          className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
-            <React.Fragment>
-              <Filters />
-              {filters.length > 0 && <FilterActions type="add" />}
-            </React.Fragment>
+            {!loading && (
+              <React.Fragment>
+                <Filters />
+                {filters.length > 0 && <FilterActions type="add" />}
+              </React.Fragment>
+            )}
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
@@ -147,6 +159,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div
             aria-label="scroll-control"
+            ref={tableRef}
             className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
           >
             <RequestLogTable />

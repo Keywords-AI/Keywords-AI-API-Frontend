@@ -9,7 +9,8 @@ import {
   CREATE_CONVERSATION,
   DELETE_CONVERSATION,
   CREATE_MESSAGE,
-  DELETE_MESSAGE
+  DELETE_MESSAGE,
+  SET_MESSAGE_CONTENT,
 } from "src/store/actions";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { REMOVE_LAST_MESSAGE } from "../actions/chatbotAction";
@@ -26,7 +27,10 @@ const initState = {
   },
 };
 
-export default function chatbotReducer(state = initState, action:PayloadAction<any>) {
+export default function chatbotReducer(
+  state = initState,
+  action: PayloadAction<any>
+) {
   switch (action.type) {
     case SET_IS_EDITING:
       return { ...state, isEditing: action.payload };
@@ -48,7 +52,7 @@ export default function chatbotReducer(state = initState, action:PayloadAction<a
       };
     case DELETE_CONVERSATION:
       const filteredConversations = state.conversations.filter(
-        (conversation) => {
+        (conversation: any) => {
           return conversation?.id !== action.payload;
         }
       );
@@ -57,19 +61,12 @@ export default function chatbotReducer(state = initState, action:PayloadAction<a
         conversations: filteredConversations,
       };
     case RESET_CONVERSATION:
-      console.log({
-        ...state,
-        conversation: {
-          id: undefined,
-          messages: [],
-        }
-      })
       return {
         ...state,
         conversation: {
           id: undefined,
           messages: [],
-        }
+        },
       };
     case CREATE_MESSAGE:
       return {
@@ -95,6 +92,19 @@ export default function chatbotReducer(state = initState, action:PayloadAction<a
         conversation: {
           ...state.conversation,
           messages: state.conversation.messages?.slice(0, -1),
+        },
+      };
+    case SET_MESSAGE_CONTENT:
+      return {
+        ...state,
+        conversation: {
+          ...state.conversation,
+          messages: state.conversation.messages.map((message: any) => {
+            if (message?.id === action.payload.id) {
+              return { ...message, content: action.payload.content };
+            }
+            return message;
+          }),
         },
       };
     default:

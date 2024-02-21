@@ -147,10 +147,12 @@ export default function FilterControl() {
                 filters.filter((filter) => filter.metric !== "timestamp")
               )
             );
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
             dispatch(
               addFilter({
                 metric: "timestamp",
-                value: [toLocalISOString(new Date())],
+                value: [toLocalISOString(today)],
                 operator: "gte" as Operator,
                 value_field_type: "datetime-local",
                 display_name: "Time",

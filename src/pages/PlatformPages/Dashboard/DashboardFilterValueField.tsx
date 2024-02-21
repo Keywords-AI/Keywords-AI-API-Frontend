@@ -29,7 +29,7 @@ export const DashboardInputFieldFilter = ({
   const data = watch("value");
   const onSubmit = () => {
     dispatch(
-      addFilter({
+      addDashboardFilter({
         metric: filterOption.metric,
         value: [data],
         operator: defaultOperator,
@@ -38,7 +38,7 @@ export const DashboardInputFieldFilter = ({
         id: Math.random().toString(36).substring(2, 15),
       })
     );
-    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
   };
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

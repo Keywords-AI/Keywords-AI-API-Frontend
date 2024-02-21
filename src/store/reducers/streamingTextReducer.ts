@@ -1,3 +1,4 @@
+import { RFC_2822 } from "moment";
 import {
   SEND_STREAMINGTEXT_REQUEST,
   SEND_STREAMINGTEXT_SUCCESS,
@@ -9,6 +10,7 @@ import {
   SEND_STREAMINGTEXT2_FAILURE,
   SEND_STREAMINGTEXT2_PARTIAL,
   ABORT_STREAMINGTEXT2_REQUEST,
+  RESET_STREAMINGTEXT,
 } from "../actions/streamingTextAction";
 
 type StreamingState = {
@@ -16,11 +18,24 @@ type StreamingState = {
   isLoading: boolean;
   error: null | string;
   abort: boolean;
+  model: string | null;
 };
 
 const initialState: StreamingState[] = [
-  { streamingText: "", isLoading: false, error: null, abort: false },
-  { streamingText: "", isLoading: false, error: null, abort: false },
+  {
+    streamingText: "",
+    isLoading: false,
+    error: null,
+    abort: false,
+    model: null,
+  },
+  {
+    streamingText: "",
+    isLoading: false,
+    error: null,
+    abort: false,
+    model: null,
+  },
 ];
 
 const streamingTextReducer = (
@@ -39,6 +54,7 @@ const streamingTextReducer = (
             abort: false,
             isLoading: true,
             error: null,
+            model: null,
           };
         }
         return item;
@@ -53,6 +69,7 @@ const streamingTextReducer = (
             abort: false,
             isLoading: true,
             error: null,
+            model: null,
           };
         }
         return item;
@@ -82,11 +99,13 @@ const streamingTextReducer = (
       });
 
     case SEND_STREAMINGTEXT_PARTIAL:
+      const { text, model } = payload;
       return state.map((item, index) => {
         if (index === 0) {
           return {
             ...item,
-            streamingText: item.streamingText + payload,
+            streamingText: item.streamingText + text,
+            model: model,
           };
         }
         return item;
@@ -96,7 +115,8 @@ const streamingTextReducer = (
         if (index === 1) {
           return {
             ...item,
-            streamingText: item.streamingText + payload,
+            streamingText: item.streamingText + payload.text,
+            model: payload.model,
           };
         }
         return item;
@@ -108,18 +128,18 @@ const streamingTextReducer = (
           return {
             ...item,
             isLoading: false,
-            error: payload.error,
+            error: payload,
           };
         }
         return item;
       });
     case SEND_STREAMINGTEXT2_FAILURE:
       return state.map((item, index) => {
-        if (index === index) {
+        if (index === 1) {
           return {
             ...item,
             isLoading: false,
-            error: payload.error,
+            error: payload,
           };
         }
         return item;
@@ -149,7 +169,8 @@ const streamingTextReducer = (
         }
         return item;
       });
-
+    case RESET_STREAMINGTEXT:
+      return initialState;
     default:
       return state;
   }

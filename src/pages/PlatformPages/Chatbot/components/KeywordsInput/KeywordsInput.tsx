@@ -59,6 +59,7 @@ export default function KeywordsInput() {
           "rounded-sm text-sm py-xxs px-xs " +
           (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")
         }
+        focus={true}
         borderless={false}
         placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}
