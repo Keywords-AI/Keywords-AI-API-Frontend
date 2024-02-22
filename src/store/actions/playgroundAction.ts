@@ -17,7 +17,6 @@ import {
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
-import { every } from "d3-array";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -37,8 +36,18 @@ export const SET_MESSAGE_BY_INDEX = "SET_MESSAGE_BY_INDEX";
 export const SET_MESSAGE_RESPONSE_BY_INDEX = "SET_MESSAGE_RESPONSE_BY_INDEX";
 export const DELETE_MESSAGE_BY_INDEX = "DELETE_MESSAGE_BY_INDEX";
 export const SET_CHANNEL_MODE = "SET_CHANNEL_MODE";
-
+export const SET_BREAKDOWN_DATA = "SET_BREAKDOWN_DATA";
+export const SET_MODEL_LOG_DATA = "SET_MODEL_LOG_DATA";
 // Action Creator
+
+export const setModelLogData = (data) => ({
+  type: SET_MODEL_LOG_DATA,
+  payload: data,
+});
+export const setBreakDownData = (data) => ({
+  type: SET_BREAKDOWN_DATA,
+  payload: data,
+});
 export const setChannelMode = (isSingle) => ({
   type: SET_CHANNEL_MODE,
   payload: isSingle,
@@ -133,7 +142,7 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
   payload: cacheAnswers,
 });
 
-export const streamPlaygroundResponse = () => {
+export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
     const currentModels = playground.currentModels;
@@ -166,19 +175,27 @@ export const streamPlaygroundResponse = () => {
         hidden: true,
       })
     );
-    const singleChanel = modelOptions.models.some((model) => model == "none");
-    if (singleChanel) {
-      dispatch(resetStreamingText());
+    let singleChanel = modelOptions.models.some((model) => model == "none");
+    if (specifyChannel != null) {
+      singleChanel = true;
     }
-    dispatch(setChannelMode(singleChanel));
+
+    if (singleChanel && specifyChannel == null) {
+      dispatch(setChannelMode(singleChanel));
+    } else if (specifyChannel != null) {
+      dispatch(setChannelMode(false));
+    }
+
     const modelParams = modelOptions.models.map((model) => {
       if (model == "none" || model == "router") return null;
       else return { model: model };
     });
-    // console.log("modelParams", modelParams);
-    const channels = !singleChanel
+    let channels = !singleChanel
       ? [0, 1]
       : [modelOptions.models.indexOf("none") ? 0 : 1];
+    if (specifyChannel != null) {
+      channels = [specifyChannel];
+    }
     await Promise.all(
       channels.map(async (channel) => {
         const chanelMessages = [
@@ -206,15 +223,14 @@ export const streamPlaygroundResponse = () => {
         } else if (channel == 1) {
           dispatch(sendStreamingText2Request());
         }
-
         try {
           await keywordsStream({
             apiKey: "BnTT8vvE.b2dxVXFa4qYgo5jgHcVHn0WKK91Xm8mb",
             data: {
               messages: chanelMessages,
               stream: true,
-              // request_breakdown: true,
-              // ...additonalParms,
+              request_breakdown: true,
+              ...additonalParms,
               ...modelParams[channel],
             },
             // dispatch: dispatch,
@@ -256,7 +272,6 @@ export const streamPlaygroundResponse = () => {
                   );
                 }
               } else if (channel == 1) {
-                console.log(channel, lastMessage);
                 dispatch(sendStreamingText2Success());
                 const complete =
                   lastMessage.responses[0] != null &&
@@ -294,7 +309,7 @@ export const streamPlaygroundResponse = () => {
               lastMessage.responses[1].complete == true;
             const errorResponse = {
               model: model,
-              content: error.toString(),
+              content: "Error:" + error.toString(),
               complete: true,
             };
             dispatch(
@@ -312,7 +327,7 @@ export const streamPlaygroundResponse = () => {
               lastMessage.responses[0].complete == true;
             const errorResponse = {
               model: model,
-              content: error.toString(),
+              content: "Error:" + error.toString(),
               complete: true,
             };
             dispatch(
@@ -435,11 +450,55 @@ export const RestorePlaygroundState = (logItem, callback) => {
 };
 
 const readStreamChunk = (chunk: string, channel: number) => {
-  return (dispatch: TypedDispatch) => {
+  return (dispatch: TypedDispatch, getState) => {
     try {
+      if (chunk == "[DONE]" || !chunk) return;
       const data = JSON.parse(chunk);
-      console.log("data", data);
       const textBit = data.choices?.[0].delta.content;
+      const breakdownData = data.choices?.[0].request_breakdown;
+      if (data.id == "request_breakdown") {
+        console.log("bd");
+      }
+      if (breakdownData) {
+        console.log("data", channel, data);
+        const {
+          prompt_tokens,
+          completion_tokens,
+          cost,
+          model,
+          latency,
+          timestamp,
+          routing_time,
+          status_code,
+          time_to_first_token,
+        } = breakdownData;
+        const currBreakdownData = getState().playground.breakdownData;
+        const aggregatedBreakdownData = {
+          ...currBreakdownData,
+        };
+        aggregatedBreakdownData.prompt_tokens += prompt_tokens;
+        aggregatedBreakdownData.completion_tokens += completion_tokens;
+        aggregatedBreakdownData.cost += cost;
+        aggregatedBreakdownData.total_tokens +=
+          prompt_tokens + completion_tokens;
+
+        aggregatedBreakdownData.timestamp = timestamp;
+        aggregatedBreakdownData.routing_time = routing_time;
+        aggregatedBreakdownData.status = status_code;
+        dispatch(setBreakDownData(aggregatedBreakdownData));
+        const newModelLogData = [...getState().playground.modelLogs];
+        newModelLogData[channel] = {
+          model: model,
+          completion_tokens: completion_tokens,
+          cost: cost,
+          ttft: time_to_first_token,
+          latency: latency,
+          time_to_first_token: time_to_first_token,
+          status: status_code,
+        };
+        console.log("newModelLogData", newModelLogData);
+        dispatch(setModelLogData(newModelLogData));
+      }
 
       if (textBit) {
         switch (channel) {
@@ -459,6 +518,8 @@ const readStreamChunk = (chunk: string, channel: number) => {
             throw new Error("Invalid channel");
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error parsing streaming text chunk", chunk);
+    }
   };
 };

@@ -113,7 +113,8 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
-  console.log("data", `${host}${path}`, headers, data);
+  console.log("headers", headers);
+  console.log("data", data);
   const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,
@@ -127,7 +128,6 @@ export const keywordsStream = ({
 
   return Promise.race([fetchPromise, timeoutPromise])
     .then(async (stream: any) => {
-      console.log("stream", stream.body);
       if (!stream.ok) {
         const errors = await stream.json();
         if (dispatch && typeof dispatch === "function") {
@@ -162,6 +162,7 @@ export const keywordsStream = ({
                 readStreamLine(line);
               }
             }
+
             count++;
           }
         } catch (e) {
