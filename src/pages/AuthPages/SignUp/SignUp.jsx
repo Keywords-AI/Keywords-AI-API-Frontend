@@ -32,7 +32,7 @@ export const SignUp = connect(
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <div className="flex-col items-start gap-xxs self-stretch">
-        <BackButton text="Home" link={"/"} />
+        <BackButton text="Home" link={"https://keywordsai.co/"} />
       </div>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
