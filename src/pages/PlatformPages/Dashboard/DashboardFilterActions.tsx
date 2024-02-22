@@ -141,7 +141,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
           <Tooltip
             side="bottom"
             sideOffset={8}
-            align="center"
+            align="start"
             content={
               <>
                 <p className="caption text-gray-4">Show filter options</p>

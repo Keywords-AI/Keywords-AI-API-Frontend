@@ -181,7 +181,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     TTFT: (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.failed
+        {logItem?.failed ||
+        (logItem?.time_to_first_token && logItem?.time_to_first_token < 0)
           ? "-"
           : (logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
@@ -199,7 +200,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (logItem?.failed) {
+    if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
       setDisplayLog(false);
     }
     if (displayLog) enableScope("request_sidepanel");
@@ -242,7 +243,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             onClick={() => setDisplayLog(false)}
             padding="py-0"
           />
-          {!logItem?.failed && (
+          {(!logItem?.failed || logItem?.prompt_messages?.length === 0) && (
             <Button
               variant="text"
               text="Log"

@@ -59,7 +59,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]));
         },
@@ -91,7 +91,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
             dispatch(
@@ -147,7 +147,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -155,7 +155,7 @@ export const StartWithPlan = () => {
       },
       buttonParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -178,7 +178,7 @@ export const StartWithPlan = () => {
     } else if (index === currIndex) {
       return {
         buttonText: "Current plan",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {},
       };
     } else {

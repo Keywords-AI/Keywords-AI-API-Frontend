@@ -14,9 +14,9 @@ export function Unauthenticated() {
   }, []);
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
-      <BackButton text="Home" link="/" />
+      <BackButton text="Home" link="https://keywordsai.co/" />
       <div className="flex-col w-full max-w-[420px] items-center gap-md ">
-        {(location.search) ?
+        {location.search ? (
           <>
             <TitleAuth
               title="Social Authentication in Progress..."
@@ -24,7 +24,7 @@ export function Unauthenticated() {
               textAlign="text-center"
             />
           </>
-          :
+        ) : (
           <>
             <TitleAuth
               title="Authentication Required"
@@ -48,8 +48,7 @@ export function Unauthenticated() {
               />
             </div>
           </>
-
-        }
+        )}
       </div>
     </div>
   );
