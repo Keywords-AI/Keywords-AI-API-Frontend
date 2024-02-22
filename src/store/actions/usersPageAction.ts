@@ -49,7 +49,6 @@ const fetchUsersLogData = async () => {
       method: "GET",
       data: {},
     });
-    console.log(responseData);
     return responseData.map((data: any) => {
       return {
         customerId: data.customer_identifier,
@@ -69,7 +68,7 @@ const fetchUsersLogData = async () => {
   // return new Promise((resolve) => {
   //   const fake = [
   //     {
-  //       customerId: "tghst23ddfg",
+  //       customerId: "tghst23ddfgtghst23ddfgtghst23ddfgtghst23ddfgtghst23ddfgtghst23ddfg",
   //       lastActive: new Date().toISOString(),
   //       activeFor: "3 days",
   //       totalRequests: 203122,
