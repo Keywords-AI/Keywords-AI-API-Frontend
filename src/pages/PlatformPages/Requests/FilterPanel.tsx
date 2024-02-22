@@ -78,7 +78,7 @@ export function FilterPanel() {
           <Tooltip
             side="bottom"
             sideOffset={8}
-            align="center"
+            align="end"
             content={
               <>
                 <p className="caption text-gray-4">Show display options</p>
