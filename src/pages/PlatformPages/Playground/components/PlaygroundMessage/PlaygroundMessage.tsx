@@ -131,7 +131,7 @@ export function PlaygroundMessage({
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && e.shiftKey) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -204,7 +204,7 @@ export function PlaygroundMessage({
                 }
                 deleteCallback={(e) => {
                   e.preventDefault();
-                  if (+id == 0) return;
+                  // if (+id == 0) return;
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
@@ -222,18 +222,27 @@ export function PlaygroundMessage({
                 >
                   {response.content ? (
                     <MessageBox
-                      value={response.content}
+                      defaultValue={response.content}
                       onChange={(val) => setResponseValue(val)}
                       onKeyDown={(e) => {
-                        // if (e.key === "Enter") {
-                        //   handleUpdateResponse(id, index, responseValue);
-                        //   setIsFocused(false);
-                        //   // handleSend(e);
-                        // }
+                        if (e.key === "Enter" && e.shiftKey) {
+                          e.preventDefault();
+                          handleUpdateResponse(
+                            id,
+                            index,
+                            responseValue + "\u200B"
+                          );
+                          setIsFocused(false);
+                          handleSend(e);
+                        }
                       }}
+                      onFoucs={(e) => setResponseValue(e.target.value)}
                       onBlur={() => {
-                        responseValue != "" &&
-                          handleUpdateResponse(id, index, responseValue);
+                        handleUpdateResponse(
+                          id,
+                          index,
+                          responseValue + "\u200B"
+                        );
                         setIsFocused(false);
                       }}
                       blur={!isFocused}

@@ -184,7 +184,7 @@ const RightPanel = () => {
       content: <SessionPane />,
     },
     {
-      value: "Most recent",
+      value: "Recent",
       buttonVariant: "text" as variantType,
       content: <MostRecentPane />,
     },
@@ -195,7 +195,7 @@ const RightPanel = () => {
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
-      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2"
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
       headerClassName="flex px-lg py-xxs items-center gap-sm self-stretch shadow-border-b shadow-gray-2"
     />
   );

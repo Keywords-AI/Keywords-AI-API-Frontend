@@ -298,7 +298,8 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             },
           });
         } catch (error: any) {
-          console.log("error", error);
+          console.log("raw", error.message)
+          console.log("error", JSON.parse(error.message).error);
           const lastMessage = getState().playground.messages.slice(-1)[0];
           const id = getState().playground.messages.length - 1;
           const model = getState().streamingText[channel].model;
@@ -309,7 +310,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               lastMessage.responses[1].complete == true;
             const errorResponse = {
               model: model,
-              content: "Error:" + error.toString(),
+              content: error.toString(),
               complete: true,
             };
             dispatch(
@@ -327,7 +328,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               lastMessage.responses[0].complete == true;
             const errorResponse = {
               model: model,
-              content: "Error:" + error.toString(),
+              content: error.toString(),
               complete: true,
             };
             dispatch(
@@ -456,11 +457,8 @@ const readStreamChunk = (chunk: string, channel: number) => {
       const data = JSON.parse(chunk);
       const textBit = data.choices?.[0].delta.content;
       const breakdownData = data.choices?.[0].request_breakdown;
-      if (data.id == "request_breakdown") {
-        console.log("bd");
-      }
+
       if (breakdownData) {
-        console.log("data", channel, data);
         const {
           prompt_tokens,
           completion_tokens,
@@ -496,7 +494,6 @@ const readStreamChunk = (chunk: string, channel: number) => {
           time_to_first_token: time_to_first_token,
           status: status_code,
         };
-        console.log("newModelLogData", newModelLogData);
         dispatch(setModelLogData(newModelLogData));
       }
 

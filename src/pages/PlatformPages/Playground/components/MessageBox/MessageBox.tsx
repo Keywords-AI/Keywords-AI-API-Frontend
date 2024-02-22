@@ -5,8 +5,10 @@ import cn from "src/utilities/classMerge";
 export interface MessageBoxProps {
   prop?: string;
   value?: string;
+  defaultValue?: string;
   onChange: (value: string) => void;
   onKeyDown?: (event: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onFoucs?: (e: any) => void;
   disabled?: boolean;
   onBlur?: () => void;
   blur?: boolean;
@@ -14,9 +16,11 @@ export interface MessageBoxProps {
 
 export function MessageBox({
   value,
+  defaultValue,
   onChange,
   onKeyDown,
   onBlur,
+  onFoucs,
   disabled,
   blur,
 }: MessageBoxProps) {
@@ -48,7 +52,9 @@ export function MessageBox({
       onInput={(e) => {
         setHeight();
       }}
+      onFocus={onFoucs}
       value={value}
+      defaultValue={defaultValue}
       disabled={false}
       className={cn(
         "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 "

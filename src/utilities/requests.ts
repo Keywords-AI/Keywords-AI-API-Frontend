@@ -146,9 +146,9 @@ export const keywordsStream = ({
         try {
           while (true) {
             const { done, value } = await reader.read();
-            // if (value === undefined && done === true && count === 0) {
-            //   throw new Error("Streaming error");
-            // }
+            if (value === undefined && done === true && count === 0) {
+              throw new Error("Streaming error");
+            }
             if (done || signal.aborted) {
               streamingDoneCallback && streamingDoneCallback();
               break;
@@ -175,7 +175,7 @@ export const keywordsStream = ({
       };
     })
     .catch((error) => {
-      throw error;
+      throw new Error(error);
     });
 };
 // export const keywordsStream = ({
