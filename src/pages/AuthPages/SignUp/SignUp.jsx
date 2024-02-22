@@ -26,10 +26,6 @@ export const SignUp = connect(
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    if (data.invitation_code !== "keywordsai_ycw24") {
-      alert("Invitation code is invalid");
-      return;
-    }
     signup(data);
   };
   // Keywords666
