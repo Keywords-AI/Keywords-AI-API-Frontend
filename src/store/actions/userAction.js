@@ -51,7 +51,6 @@ export const getUser = () => {
           );
           // ---------Chatbot Actions---------
           // Set user's custom prompt for chatbot
-          console.log("USER ", user.system_prompt);
           dispatch(setCustomPrompt(data.system_prompt));
           dispatch(setEnableCustomPrompt(data.system_prompt_active));
           dispatch(setCustomPromptFile(data.current_file));
@@ -97,8 +96,7 @@ export const updateUser = (data = {}, callback = () => {}, mute = false) => {
 
 export const updateSystemPrompt = (promptAndActive) => {
   return (dispatch) => {
-    console.log("PROMPT ", promptAndActive);
-    dispatch(setEnableCustomPrompt(promptAndActive.enable_prompt));
+    dispatch(setEnableCustomPrompt(promptAndActive.system_prompt_active));
     // dispatch(setCustomPromptFile(promptAndActive.current_file));
     keywordsRequest({
       path: "user/update_user_system_prompt/",

@@ -12,8 +12,6 @@ import {
 import { ApiKey, ApiKeyState } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
-
-
 const initState: ApiKeyState = {
   keyList: [],
   newKey: undefined,
@@ -23,7 +21,10 @@ const initState: ApiKeyState = {
   loading: false,
 };
 
-export default function apiKeyReducer(state = initState, action: PayloadAction<any>): ApiKeyState {
+export default function apiKeyReducer(
+  state = initState,
+  action: PayloadAction<any>
+): ApiKeyState {
   switch (action.type) {
     case SET_NEW_KEY_NAME:
       return {
@@ -36,8 +37,8 @@ export default function apiKeyReducer(state = initState, action: PayloadAction<a
         loading: action.payload,
       };
     case ADD_KEY:
+      
       const { api_key, ...secretLessKey } = action.payload;
-      console.log(api_key)
       return {
         ...state,
         keyList: [...state.keyList, secretLessKey],

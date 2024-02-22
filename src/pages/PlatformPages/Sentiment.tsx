@@ -1,17 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import {
-  getDashboardData,
-  setSidePanelOpen,
-  setSelectedRequest,
-} from "src/store/actions";
-import { getRequestLogs } from "src/store/actions";
-import { Add, Button, Close, Down, Export, Filter } from "src/components";
-import { SideBar, SideBarActive } from "src/components/Icons";
-import { SelectInput } from "src/components/Inputs";
-import { RequestLogTable } from "src/components/Tables";
-import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
-import { WelcomeState } from "src/components/Sections";
 import { SentimentChart } from "src/components/Display";
 
 const mapStateToProps = (state) => ({});

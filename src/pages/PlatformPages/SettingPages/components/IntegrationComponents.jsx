@@ -41,6 +41,13 @@ export const vendors = {
     apiPageAddress: "https://platform.openai.com/api-keys",
     companyLogo: <OpenAI size="md" />,
   },
+  "Azure OpenAI": {
+    models: [
+      { name: "azure/gpt-35-turbo" }
+    ],
+    apiPageAddress: "https://platform.openai.com/api-keys",
+    companyLogo: <OpenAI size="md" />,
+  },
   Anthropic: {
     models: [
       { name: "claude-instant-1" },
@@ -73,8 +80,6 @@ const IntegrationCardNotConnected = ({
   apiKey,
   vendorId,
   companyName,
-  activatedModels,
-  availableModels,
   organization,
   setOpen,
   createIntegration,
@@ -83,6 +88,7 @@ const IntegrationCardNotConnected = ({
   setActivatedModels,
   verifyKey,
   vendor,
+  extraKwargs,
   apiPageAddress,
 }) => {
   const {
@@ -104,14 +110,16 @@ const IntegrationCardNotConnected = ({
     return value || [];
   };
   const onSubmit = (data) => {
-    let toSubmit = { vendor: vendorId, user: user?.id, organization: organization?.id, ...data };
+    let toSubmit = {
+      vendor: vendorId,
+      user: user?.id,
+      organization: organization?.id,
+      ...data,
+    };
     toSubmit.activated_models = validateCheckbox(toSubmit.activated_models);
     // This currently handles update too
     // To update and clarify
-    if (
-      !apiKey &&
-      apiKeyString // entering new key
-    ) {
+    if (!apiKey) {
       verifyKey({ ...toSubmit, api_key: apiKeyString }, () => {
         setOpen(false);
       });
@@ -175,6 +183,14 @@ const IntegrationCardNotConnected = ({
           value={apiKeyString}
           placeholder={`Paste your ${companyName} API key here`}
         />
+        {Object.keys(extraKwargs).length > 0 && Object.keys(extraKwargs).map((key, index)=>(
+          <TextInput
+          {...register(key)}
+          title="Extra kwargs"
+          width={"w-full"}
+          placeholder={`Paste your ${key} here`}
+        />
+        ))}
         <div className="flex justify-between items-center self-stretch">
           {apiKeyString ? (
             <div className="flex gap-xxs">
@@ -233,6 +249,7 @@ export const TitleCard = ({
   modelCount,
   active,
   apiKey,
+  extraKwargs,
 }) => {
   return (
     <div className="flex flex-row items-center gap-xs self-stretch">
@@ -243,7 +260,7 @@ export const TitleCard = ({
             icon={Ellipse}
             iconProps={{ active }}
           />
-          {React.cloneElement(companyLogo, {size: "lg"})}
+          {React.cloneElement(companyLogo, { size: "lg" })}
         </div>
       </div>
       <div className="flex flex-col items-start">
@@ -280,6 +297,7 @@ export const IntegrationModal = ({ vendor }) => {
     availableModels,
     integration: vendor.integration,
     apiKey: vendor.integration?.api_key_display || "",
+    extraKwargs: vendor.extra_kwargs || {},
     apiPageAddress: vendors[vendor.name] && vendors[vendor.name].apiPageAddress,
     vendor,
     setActivatedModels,

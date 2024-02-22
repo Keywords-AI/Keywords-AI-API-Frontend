@@ -1,6 +1,6 @@
 import userReducer from "./userReducer";
 import playgroundReducer from "./playgroundReducer";
-import  streamingTextReducer  from "./streamingTextReducer";
+import streamingTextReducer from "./streamingTextReducer";
 import apiKeyReducer from "./settingPagesReducer/apiKeyReducer";
 import organizationReducer from "./organizationReducer";
 import billingsReducer from "./settingPagesReducer/billingsReducer";
@@ -13,6 +13,9 @@ import onboardingReducer from "./onboardingReducer";
 import fallbackReducer from "./settingPagesReducer/fallbackReducer";
 import requestLogReducer from "./requestLogReducer";
 import { PayloadAction } from "@reduxjs/toolkit";
+import cachePageReducer from "./cachePageReducer";
+import modelReducer from "./modelReducer";
+import usersPageReducer from "./usersPageReducer";
 const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
   return {
     user: userReducer(state.user, action),
@@ -29,6 +32,9 @@ const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
     onboarding: onboardingReducer(state.onboarding, action),
     fallback: fallbackReducer(state.fallback, action),
     requestLogs: requestLogReducer(state.requestLogs, action),
+    cachePage: cachePageReducer(state.cachePage, action),
+    models: modelReducer(state.models, action),
+    usersPage: usersPageReducer(state.usersPage, action),
   };
 };
 

@@ -22,7 +22,7 @@ export const StartWithPlan = () => {
   const dispatch = useTypedDispatch();
   const memoSelector = createSelector(
     [(state: RootState) => state.organization, (state) => state.user],
-    (organization, user) => ({ organization, user }),
+    (organization, user) => ({ organization, user })
   ); // This creates a memorized selector callback
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
@@ -192,7 +192,7 @@ export const StartWithPlan = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-[800px] gap-sm pb-xxxl">
+    <div className="flex flex-col w-full max-w-[800px] gap-sm pb-xxxl pt-[88px] ">
       <div className="flex flex-col w-full items-center gap-lg">
         <TitleStaticHeading
           title="Subscription options"

@@ -17,7 +17,6 @@ import {
 } from "src/store/actions";
 import { RequstFilter } from "./RequestFilter";
 
-
 export const Filters = () => {
   const dispatch = useTypedDispatch();
   const filters = useTypedSelector((state) => state.requestLogs.filters);
@@ -31,17 +30,13 @@ export const Filters = () => {
   const models = useTypedSelector(
     (state: RootState) => state.requestLogs.models
   );
-
   return (
-    <div className="flex-row gap-xxxs items-center">
+    <>
       {filters.map((filter, index) => (
-        <div
-          key={filter.id}
-          className="flex flex-row items-center gap-[2px]"
-        >
+        <div key={filter.id} className="flex flex-row items-center gap-[2px]">
           <RequstFilter filter={filter} />
         </div>
       ))}
-    </div>
+    </>
   );
 };

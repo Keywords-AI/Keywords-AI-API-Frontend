@@ -15,7 +15,7 @@ export const stringOrBoolean = (string: string): boolean | string => {
   } else {
     return string;
   }
-}
+};
 
 export const stringOrNumber = (string: string): number | string => {
   if (!isNaN(Number(string))) {
@@ -23,14 +23,16 @@ export const stringOrNumber = (string: string): number | string => {
   } else {
     return string;
   }
-}
+};
 
 export const checkBoxFieldToList = (
-  field: boolean | string | string[]
-): string[] => {
+  field: boolean | string | string[] | number
+): string[] | number[] => {
   if (typeof field === "boolean") {
     return [];
   } else if (typeof field === "string") {
+    return [field];
+  } else if (typeof field === "number") {
     return [field];
   } else {
     return field;
@@ -38,7 +40,7 @@ export const checkBoxFieldToList = (
 };
 import { colorTagsClasses } from "./constants";
 
-export const digitToMonth = (digit, year) => {
+export const digitToMonth = (digit, year?) => {
   // let month = digit;
   // if (!digit) month = new Date().getMonth() + 1;
   // if (month === undefined) month = new Date().getMonth();
@@ -251,7 +253,7 @@ export const aggregateApiData = (data) => {
 };
 
 interface DataItem {
-  name: string;
+  date_group: string;
   [key: string]: any;
 }
 
@@ -260,17 +262,18 @@ export const addMissingDate = (
   dateGroup: string,
   currntTimeRange: string
 ): DataItem[] => {
+  console.log("addMissingDate");
   if (!data) return [];
   const newDataArray: DataItem[] = [];
-  const formatTimeUnit = (unit: number): string =>
-    unit.toString().padStart(2, "0");
+
   const localeUtc = (dateStr: string): Date => {
     const date = new Date(dateStr);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+    return date;
   };
   const keys =
     data?.length > 0
-      ? Object.keys(data[0]).filter((key) => key !== "name")
+      ? Object.keys(data[0]).filter((key) => key !== "date_group")
       : [];
   const defaultFields = keys.reduce((acc, key) => {
     acc[key] = 0;
@@ -279,11 +282,12 @@ export const addMissingDate = (
   const handleDailyCase = (): void => {
     const now = new Date();
     for (let hour = 0; hour < 24; hour++) {
+      const hourString = formatTimeUnit(hour);
       const found = data.find((d) => {
-        return d.name.split(":")[0] === hour.toString();
+        return d.date_group.split(":")[0] === hour.toString();
       });
       newDataArray.push(
-        found ? { ...found } : { name: hour + ":00", ...defaultFields }
+        found ? { ...found } : { date_group: hourString, ...defaultFields }
       );
     }
   };
@@ -295,19 +299,14 @@ export const addMissingDate = (
       for (let day = 0; day < 7; day++) {
         const dayDate = new Date(currntTimeRange);
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
-        const dateString = `${formatTimeUnit(
-          dayDate.getMonth() + 1
-        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate
-          .getFullYear()
-          .toString()
-          .slice(-2)}`;
+        const dateString = formatDateUnit(dayDate);
         const found = data.find(
-          (d) => localeUtc(d.name).getDate() === dayDate.getDate()
+          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
         newDataArray.push(
           found
-            ? { ...found, name: dateString }
-            : { name: dateString, ...defaultFields }
+            ? { ...found, date_group: dateString }
+            : { date_group: dateString, ...defaultFields }
         );
       }
       break;
@@ -319,31 +318,30 @@ export const addMissingDate = (
         0
       ).getDate();
       for (let day = 1; day <= daysInMonth; day++) {
-        const month = formatTimeUnit(now.getMonth() + 1);
-        const year = now.getFullYear().toString().slice(-2);
-        const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
+        let date = new Date(now.getFullYear(), now.getMonth(), day);
+        const dayString = formatDateUnit(date);
         const found = data.find((d) => {
-          const date = localeUtc(d.name);
+          const date = localeUtc(d.date_group);
           return date.getDate() === day && date.getMonth() === now.getMonth();
         });
         newDataArray.push(
           found
-            ? { ...found, name: dayString }
-            : { name: dayString, ...defaultFields }
+            ? { ...found, date_group: dayString }
+            : { date_group: dayString, ...defaultFields }
         );
       }
       break;
     case "yearly":
       for (let month = 0; month < 12; month++) {
-        const monthString = formatTimeUnit(month + 1);
+        const monthString = digitToMonth(month);
         const found = data.find((d) => {
-          const date = localeUtc(d.name);
+          const date = localeUtc(d.date_group);
           return date.getMonth() === month;
         });
         newDataArray.push(
           found
-            ? { ...found, name: monthString }
-            : { name: monthString, ...defaultFields }
+            ? { ...found, date_group: monthString }
+            : { date_group: monthString, ...defaultFields }
         );
       }
       break;
@@ -355,14 +353,43 @@ export const addMissingDate = (
 };
 
 export const getColorMap = (data, currentMetric, isModel) => {
-  const sortedData = data.sort((a, b) => {
-    return b[currentMetric] - a[currentMetric];
+  let sortedData = data.sort((a, b) => {
+    const primaryComparison =
+      b[currentMetric] * 10000 - a[currentMetric] * 10000;
+    // if (primaryComparison === 0) {
+    //   return a.model.localeCompare(b.model);
+    // }
+    return primaryComparison;
   });
   const key = isModel ? "model" : "organization_key__name";
   let colorMap = {};
+  sortedData = sortedData.map((item) => item[key]);
+  sortedData = [...new Set(sortedData)];
   sortedData.forEach((item, index) => {
-    colorMap[item[key] || "unknown model"] =
-      colorTagsClasses[index % colorTagsClasses.length];
+    colorMap[item] = colorTagsClasses[index % colorTagsClasses.length];
   });
   return colorMap;
+};
+
+export const formatTimeUnit = (unit) => {
+  const hour = parseInt(unit, 10);
+  const currentHour = new Date().getHours();
+  // if (hour === currentHour) {
+  //   return "now";
+  // }
+  const period = hour < 12 || hour === 24 ? "AM" : "PM";
+  const hour12 = hour === 0 || hour === 12 ? 12 : hour % 12;
+  return `${hour12} ${period}`;
+};
+
+export const formatDateUnit = (date) => {
+  const today = new Date();
+  const month = date.getMonth() + 1; // getMonth returns months from 0-11, so add 1
+  const day = date.getDate();
+
+  // if (date.toDateString() === today.toDateString()) {
+  //   return "today";
+  // }
+
+  return `${month}/${day}`;
 };

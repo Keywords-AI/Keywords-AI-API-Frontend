@@ -4,6 +4,7 @@ import { Choice, SelectInputProps, TextInputProps } from "./input";
 
 export type LogItem = {
   id: number;
+  sentiment_score: number;
   timestamp: string;
   cost: number;
   latency: number;
@@ -14,7 +15,9 @@ export type LogItem = {
   prompt_messages: ChatMessage[];
   error_message: string;
   failed: boolean;
+  customer_identifier: string;
   category: string;
+  organization_key: string; // The ID of the key
   api_key: string;
   time_to_first_token: number;
   aggregation_data: any;
@@ -24,7 +27,12 @@ export type LogItem = {
     // sentiment_magnitude: mag,
     language: string;
   };
+  cached_responses: any[];
   error_code: number;
+  routing_time: number;
+  groundness: number;
+  full_request: any;
+  status_code: number;
 };
 
 export type DisplayLogItem = {
@@ -32,19 +40,22 @@ export type DisplayLogItem = {
   time: React.ReactNode;
   prompt: React.ReactNode;
   response: React.ReactNode;
-  cost: string;
-  latency: string;
+  cost: React.ReactNode;
+  latency: React.ReactNode;
   promptTokens: number;
+  time_to_first_token: number;
   outputTokens: number;
-  allTokens: number;
+  allTokens: React.ReactNode;
+  organizationKey: string; //ID of the key
   apiKey: string;
   model: string;
   failed: boolean;
   status: {
     failed: boolean;
-    errorCode: number
-  }
+    errorCode: number;
+  };
   sentimentAnalysis: any;
+  cachedResponse: number;
 };
 
 export type LogColumnKey = keyof DisplayLogItem;
@@ -79,9 +90,13 @@ export type RequestFilter = {
   }) => React.ReactNode; // any keywords input field, for example <TextInput {...params} />
 };
 
-export type FilterFieldType = "text" | "selection" | "datetime-local" | "number"
+export type FilterFieldType =
+  | "text"
+  | "selection"
+  | "datetime-local"
+  | "number";
 
-export type Operator = "gte" | "lte" | "exact" | "icontains"
+export type Operator = "gte" | "lte" | "exact" | "icontains";
 
 export type RequestFilters = {
   [type in FilterFieldType]?: RequestFilter;

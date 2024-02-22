@@ -49,7 +49,7 @@ export function TopBar() {
   return (
     <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bggray-1">
       <div className="flex items-center gap-xxs">
-        <DotsButton
+        {/* <DotsButton
           icon={isLeftPanelOpen ? SideBarActiveLeft : SideBarLeft}
           onClick={() => dispatch(toggleLeftPanel())}
         />
@@ -67,7 +67,7 @@ export function TopBar() {
               onClick: () => console.log("publish"),
             },
           ]}
-        />
+        /> */}
       </div>
       <div className="flex gap-xxs items-start">
         <Button
@@ -75,13 +75,9 @@ export function TopBar() {
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         />
-        <Button
-          variant="small"
-          text="Clear session"
-          icon={Delete}
-          onClick={() => navigate(0)}
-        />
+
         <Button variant="small" text="View code" />
+        <DotsButton icon={Delete} onClick={() => navigate(0)} />
         <HorizontalDivier />
         <DotsButton
           icon={isRightPanelOpen ? SideBarActive : SideBar}

@@ -10,8 +10,10 @@ import {
   DELETE_CONVERSATION,
   CREATE_MESSAGE,
   DELETE_MESSAGE,
+  SET_MESSAGE_CONTENT,
 } from "src/store/actions";
-import { REMOVE_LAST_MESSAGE } from "../actions/playgroundAction";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { REMOVE_LAST_MESSAGE } from "../actions/chatbotAction";
 
 const initState = {
   isEditing: false,
@@ -25,7 +27,10 @@ const initState = {
   },
 };
 
-export default function chatbotReducer(state = initState, action) {
+export default function chatbotReducer(
+  state = initState,
+  action: PayloadAction<any>
+) {
   switch (action.type) {
     case SET_IS_EDITING:
       return { ...state, isEditing: action.payload };
@@ -47,8 +52,8 @@ export default function chatbotReducer(state = initState, action) {
       };
     case DELETE_CONVERSATION:
       const filteredConversations = state.conversations.filter(
-        (conversation) => {
-          return conversation.id !== action.payload;
+        (conversation: any) => {
+          return conversation?.id !== action.payload;
         }
       );
       return {
@@ -58,7 +63,10 @@ export default function chatbotReducer(state = initState, action) {
     case RESET_CONVERSATION:
       return {
         ...state,
-        conversation: initState.conversation,
+        conversation: {
+          id: undefined,
+          messages: [],
+        },
       };
     case CREATE_MESSAGE:
       return {
@@ -74,16 +82,29 @@ export default function chatbotReducer(state = initState, action) {
         conversations: {
           ...state.conversation,
           messages: state.conversation.messages.filter(
-            (message) => message.id !== action.payload.id
+            (message) => message?.id !== action.payload.id
           ),
         },
       };
     case REMOVE_LAST_MESSAGE:
       return {
         ...state,
-        conversations: {
+        conversation: {
           ...state.conversation,
-          messages: state.conversation.messages.slice(0, -1),
+          messages: state.conversation.messages?.slice(0, -1),
+        },
+      };
+    case SET_MESSAGE_CONTENT:
+      return {
+        ...state,
+        conversation: {
+          ...state.conversation,
+          messages: state.conversation.messages.map((message: any) => {
+            if (message?.id === action.payload.id) {
+              return { ...message, content: action.payload.content };
+            }
+            return message;
+          }),
         },
       };
     default:

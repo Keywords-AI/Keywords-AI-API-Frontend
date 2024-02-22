@@ -1,13 +1,10 @@
-import apiConfig from "src/services/apiConfig";
-import { getCookie } from "src/services/getCookie";
-import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsRequest } from "src/utilities/requests";
 import { TypedDispatch } from "src/types";
 
 // !!!!!!!!!!!!!!!! This is a redux action, dispatch it!!!!!!!!!!
 export const createPaymentSession = (
   lookupKeys: string[],
-  successPath = "/onboarding/get-started",
+  successPath = "/platform/dashboard",
   cancelPath = "/onboarding/plans"
 ) => {
   // Checkout items

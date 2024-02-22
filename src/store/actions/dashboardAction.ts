@@ -1,14 +1,17 @@
-import { get, set } from "react-hook-form";
-import { keywordsFetch } from "src/services/apiConfig";
 import { Metrics, colorTagsClasses } from "src/utilities/constants";
-import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import {
   sliceChartData,
   formatDate,
   getColorMap,
+  addMissingDate,
+  digitToMonth,
+  formatTimeUnit,
+  formatDateUnit,
 } from "src/utilities/objectProcessing";
+import { updateUser, filterParamsToFilterObjects } from "src/store/actions/";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
+import { RootState } from "src/types";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -40,6 +43,146 @@ export const SET_TIME_FRAME_OFFSET = "SET_TIME_FRAME_OFFSET";
 export const SET_MODEL_COLORS = "SET_MODEL_COLORS";
 export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
+export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
+export const SET_AVG_TTFT_DATA = "SET_AVG_TTFT_DATA";
+//==============================================================================
+export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
+export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
+
+export const SET_DASHBOARD_FILTER_TYPE = "SET_DASHBOARD_FILTER_TYPE";
+export const SET_DASHBOARD_FILTER_OPTIONS = "SET_DASHBOARD_FILTER_OPTIONS";
+export const SET_DASHBOARD_FILTERS = "SET_DASHBOARD_FILTERS";
+export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
+export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
+export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
+export const SET_DASHBOARD_CURRENT_FILTER = "SET_DASHBOARD_CURRENT_FILTER";
+
+// Filter actions
+
+export const setDashboardFilterType = (filterType) => {
+  return {
+    type: SET_DASHBOARD_FILTER_TYPE,
+    payload: filterType,
+  };
+};
+
+export const setDashboardFilters = (filters) => {
+  return (dispatch) => {
+    dispatch({
+      type: SET_DASHBOARD_FILTERS,
+      payload: filters,
+    });
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const setDashboardCurrentFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: SET_DASHBOARD_CURRENT_FILTER,
+      payload: filter,
+    });
+  };
+};
+
+function processDashboardFilters(filters) {
+  return filters.reduce((acc, filter) => {
+    if (!(filter.value instanceof Array)) {
+      filter.value = [filter.value];
+    }
+    var values = filter.value.map((value) => {
+      if (value === "true" || value === "false") {
+        value = value === "true" ? true : false;
+      }
+      return value;
+    });
+    filter.metric &&
+      (acc[filter.metric] = {
+        value: values,
+        operator: filter.operator,
+      });
+    return acc;
+  }, {});
+}
+
+export const applyDashboardPostFilters = (filters) => {
+  return (dispatch) => {
+    const postData = processDashboardFilters(filters);
+    dispatch(updateUser({dashboard_filters: postData }, undefined, true));
+    dispatch(getDashboardData(postData));
+  };
+};
+
+export const addDashboardFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ADD_DASHBOARD_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.dashboard.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const deleteDashboardFilter = (filterId) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: DELETE_DASHBOARD_FILTER,
+      payload: filterId,
+    });
+    const state = getState();
+    const filters = state.dashboard.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+
+export const updateDashboardFilter = (filter) => {
+  return (dispatch, getState) => {
+    dispatch({
+      type: UPDATE_DASHBOARD_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.dashboard.filters;
+    dispatch(applyDashboardPostFilters(filters));
+  };
+};
+export const setDashboardFilterOptions = (filters) => {
+  return {
+    type: SET_DASHBOARD_FILTER_OPTIONS,
+    payload: filters,
+  };
+};
+
+export const setDashboardFilterOpen = (open) => {
+  return {
+    type: SET_DASHBOARD_FILTER_OPEN,
+    payload: open,
+  };
+};
+
+export const setDashboardSecondFilter = (filter) => {
+  return {
+    type: SET_DASHBOARD_SECOND_FILTER,
+    payload: filter,
+  };
+};
+//==============================================================================
+
+export const setAvgTtftData = (data) => {
+  return {
+    type: SET_AVG_TTFT_DATA,
+    payload: data,
+  };
+};
+
+export const setDashboardLoading = (data) => {
+  return {
+    type: SET_DASHBOARD_LOADING,
+    payload: data,
+  };
+};
 export const setKeyColors = (data) => {
   return {
     type: SET_KEY_COLORS,
@@ -282,58 +425,99 @@ export const setSentimentData = (data) => {
 };
 
 export const getDashboardData = (
-  overrideParams // search string
+  postData,
 ) => {
-  return (dispatch, getState) => {
+  return (dispatch, getState: ()=> RootState) => {
+    dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
-    if (overrideParams) {
-      params = new URLSearchParams(overrideParams);
+    if (params.get("summary_type") === null) {
+      params.set("summary_type", getState().dashboard.displayFilter.timeRange);
     }
-
+    if (params.get("metric") === null) {
+      params.set("metric", getState().dashboard.displayFilter.metric);
+    }
+    if (params.get("breakdown") === null) {
+      params.set("breakdown", getState().dashboard.displayFilter.breakdown);
+    }
+    if (params.get("type") === null) {
+      params.set("type", getState().dashboard.displayFilter.type);
+    }
+    // const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
     params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
-    keywordsFetch({
-      path: `api/dashboard?${params.toString()}`,
+    keywordsRequest({
+      path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
+      method: postData ? "POST" : "GET",
+      data: {filters: postData},
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error");
-        } else {
-          return response.json();
-        }
-      })
       .then((data) => {
-        dispatch(setDashboardData(data));
-        let by_model = [];
-        let by_key = [];
-        if (
-          params.get("breakdown") === "by_model" ||
-          params.get("breakdown") === "by_key"
-        ) {
-          by_model = getgroupByData(
-            data.raw_data,
+        const { filter_options, ...dashboardData} = data;
+        dispatch(setDashboardData(dashboardData));
+        dispatch(setDashboardFilterOptions(filter_options));
+        const state = getState();
+        const userFilters = state.user?.dashboard_filters || {};
+        const filters = filterParamsToFilterObjects(
+          userFilters,
+          data.filter_options
+        );
+        const currentFilterType = state.dashboard.currentFilter.id;
+        if (!currentFilterType) {
+          // If we are currently editing a filter, do no refresh the filters
+          // console.log("filters", filters);
+          dispatch({
+            type: SET_DASHBOARD_FILTERS,
+            payload: filters,
+          });
+        }
+
+        if (params.get("breakdown") === "by_model") {
+          const breakDowndata = processBreakDownData(
+            data.model_breakdown,
             true,
-            params.get("summary_type")
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
           );
-          by_key = getgroupByData(
-            data.raw_data,
+          dispatch(setGroupByData(breakDowndata));
+        } else if (params.get("breakdown") === "by_key") {
+          const breakDowndata = processBreakDownData(
+            data.key_breakdown,
             false,
-            params.get("summary_type")
+            params.get("summary_type"),
+            params.get("metric"),
+            getState().dashboard.timeFrame
           );
-          const groupByData = {
-            by_model: by_model || [],
-            by_key: by_key || [],
-          };
-          dispatch(setGroupByData(groupByData));
+          dispatch(setGroupByData(breakDowndata));
         }
 
         const dataList = fillMissingDate(
           data?.data,
           params.get("summary_type"),
           getState().dashboard.timeFrame
+        );
+
+        let requestData = sliceChartData(dataList, "date_group", [
+          "error_count",
+          "number_of_requests",
+        ]);
+        const allZeros = requestData.every(
+          (item) => item[Metrics.error_count.value] == 0
+        );
+        if (allZeros) {
+          requestData = requestData.map((item) => {
+            return {
+              ...item,
+              [Metrics.error_count.value]: null,
+            };
+          });
+        }
+        dispatch(
+          setAvgTtftData(
+            sliceChartData(dataList, "date_group", Metrics.average_ttft.value)
+          )
         );
         dispatch(
           setErrorData(
@@ -389,18 +573,16 @@ export const getDashboardData = (
         );
         dispatch(
           setLatencyData(
-            sliceChartData(dataList, "date_group", "average_latency")
-          )
-        );
-        dispatch(
-          setRequestCountData(
             sliceChartData(dataList, "date_group", [
-              "error_count",
-              "number_of_requests",
+              "average_latency",
+              "latency_p_50",
+              "latency_p_90",
+              "latency_p_95",
+              "latency_p_99",
             ])
           )
         );
-
+        dispatch(setRequestCountData(requestData));
         dispatch(setModelData(data?.data_by_model));
         dispatch(setApiData(data?.data_by_key));
         const modelData = getState().dashboard.data_by_model;
@@ -421,6 +603,9 @@ export const getDashboardData = (
         dispatch(setP90Data(data?.summary.latency_p_90));
         dispatch(setP95Data(data?.summary.latency_p_95));
         dispatch(setP99Data(data?.summary.latency_p_99));
+        dispatch(setDashboardLoading(false));
+        // const endTime2 = performance.now(); // End time
+        // console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
       .catch((error) => {
         console.log("error", error);
@@ -430,7 +615,9 @@ export const getDashboardData = (
 
 export const fillMissingDate = (data, dateGroup, timeFrame) => {
   const newDataArray = [];
-  const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
+
+  // const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
+
   // localeUTC: given a UTC timestamp, return the UTC time when the local time is the same as the given timestamp
   const localeUtc = (dateStr) => {
     const date = new Date(dateStr);
@@ -442,11 +629,10 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
     // BE gives UTC strings, Date() converts to local timezone
     // The hours are accurate, but the date is not
     for (let hour = 0; hour < 24; hour++) {
-      const hourString = formatTimeUnit(hour) + ":00";
+      const hourString = formatTimeUnit(hour);
       const found = data.find((d) => {
         const date = new Date(d.date_group);
-        const foundDate =
-          date.getHours() === hour && date.getDate() === now.getDate(); //@ruifeng
+        const foundDate = date.getHours() === hour;
         return foundDate;
       });
       newDataArray.push(
@@ -475,12 +661,7 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
         const dayDate = new Date(timeFrame);
         // Adjust the start date based on the current day of the week
         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
-        const dateString = `${formatTimeUnit(
-          dayDate.getMonth() + 1
-        )}/${formatTimeUnit(dayDate.getDate())}/${dayDate
-          .getFullYear()
-          .toString()
-          .slice(-2)}`;
+        const dateString = formatDateUnit(dayDate);
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
         );
@@ -511,9 +692,8 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
 
       for (let day = 1; day <= daysInMonth; day++) {
         // Format the date string as MM/DD/YYYY
-        const month = formatTimeUnit(now.getMonth() + 1); // Month is 0-indexed
-        const year = now.getFullYear().toString().slice(-2);
-        const dayString = `${month}/${formatTimeUnit(day)}/${year}`;
+        let date = new Date(now.getFullYear(), now.getMonth(), day);
+        const dayString = formatDateUnit(date);
 
         const found = data.find((d) => {
           const date = localeUtc(d.date_group);
@@ -542,7 +722,7 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
         // The start and end date will be offset by the timezone
         // This will lead of offset in the month
         // So we need to know the month in UTC.
-        const monthString = formatTimeUnit(month + 1);
+        const monthString = digitToMonth(month);
         const found = data.find((d) => {
           const date = localeUtc(d.date_group);
           return date.getMonth() === month;
@@ -572,95 +752,52 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
   return newDataArray;
 };
 
-export const getgroupByData = (data, isbyModel, timeRange = "daily") => {
-  // this function returns the data grouped by date_group and model or api_key:
-  //[{name: "2021-07-21T00:00:00.000Z",
-  //modelname:{metrics...}}]
-  // https://recharts.org/en-US/examples/StackedBarChart
-  // Group data by date_group
-  data = data.map((item) => {
-    let newDateGroup = new Date(item.timestamp);
+const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+  const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
+  let returnData = [];
+  Object.keys(groupByDate).forEach((key) => {
+    const date_group = key;
+    let obj = {};
+    obj.date_group = date_group;
 
-    // timeRange = "monthly";
-    if (timeRange === "yearly") {
-      newDateGroup = (new Date(item.timestamp).getMonth() + 1)
-        .toString()
-        .padStart(2, "0");
-    } else if (timeRange === "monthly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else if (timeRange === "weekly") {
-      newDateGroup = new Date(item.timestamp).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "2-digit",
-      });
-    } else {
-      newDateGroup = new Date(item.timestamp).getHours() + ":00";
-    }
-    return { ...item, date_group: newDateGroup };
-  });
-  const by_date_group = _.groupBy(data, ({ date_group }) => date_group);
-  const byModel = {};
-  // Group data by model or api_key
-  const groupByCallback = isbyModel
-    ? ({ model }) => (model == "" ? "unknown model" : model)
-    : ({ api_key }) => api_key;
-  Object.keys(by_date_group).forEach((key) => {
-    const updatedItem = _.groupBy(by_date_group[key], groupByCallback);
-    Object.keys(updatedItem).forEach((key) => {
-      // Aggregate the data for each model
-      // let request = updatedItem[key].length()
-      updatedItem[key] = updatedItem[key].reduce((accumulator, current) => {
-        accumulator.prompt_tokens =
-          (accumulator.prompt_tokens || 0) + current.prompt_tokens;
-        accumulator.completion_tokens =
-          (accumulator.completion_tokens || 0) + current.completion_tokens;
-        accumulator.latency = (accumulator.latency || 0) + current.latency;
-        accumulator.cost = (accumulator.cost || 0) + current.cost;
-        accumulator.error_count =
-          (accumulator.failed === true ? 1 : 0) + current.error_count || 0;
-        accumulator.timestamp = current.timestamp;
-        accumulator.number_of_requests =
-          (accumulator.number_of_requests || 0) + 1;
-        return accumulator;
-      }, {});
-      // Calculate the average and change naming
-      updatedItem[key].total_cost = updatedItem[key].cost;
-      delete updatedItem[key].cost;
-      // updatedItem[key].number_of_requests = request;
-      updatedItem[key].total_prompt_tokens = updatedItem[key].prompt_tokens;
-      delete updatedItem[key].prompt_tokens;
-      updatedItem[key].total_completion_tokens =
-        updatedItem[key].completion_tokens;
-      delete updatedItem[key].completion_tokens;
-      updatedItem[key].average_latency =
-        updatedItem[key].latency / updatedItem[key].number_of_requests;
-      delete updatedItem[key].latency;
-      updatedItem[key].total_tokens =
-        updatedItem[key].total_prompt_tokens +
-        updatedItem[key].total_completion_tokens;
+    groupByDate[key].forEach((item) => {
+      const { date_group, timestamp, ...rest } = item;
+      obj.timestamp = new Date(timestamp).toString();
+      const itemName = isModel ? rest.model : rest.organization_key__name;
+      isModel ? delete rest.model : delete rest.organization_key__name;
+      obj[itemName] = rest;
     });
-    byModel[key] = updatedItem;
+    returnData.push(obj);
   });
 
-  return Object.keys(byModel)
-    .map((key) => {
-      let time;
-      if (key.includes(":")) {
-        time = new Date();
-        time.setHours(key.split(":")[0]);
-      } else {
-        time = new Date(key);
-      }
-      return {
-        name: key,
-        timestamp: time.toString(),
-        ...byModel[key],
-      };
-    })
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  returnData = returnData.sort(
+    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+  );
+  let modelKeys = [];
+  returnData = returnData.map((item) => {
+    const { date_group, timestamp, ...models } = item;
+    const modelSection = {};
+    modelKeys.push(...Object.keys(models));
+    // console.log("modelKeys", modelKeys);
+    modelKeys = [...new Set(modelKeys)];
+    Object.keys(models).forEach((modelKey) => {
+      modelSection[modelKey] = models[modelKey][metric];
+    });
+
+    return { date_group, ...modelSection };
+  });
+  returnData = addMissingDate(returnData, timeRange, timeFrame);
+  return returnData;
+};
+
+const getBreakDownColors = (data, metric, isModel) => {
+  const sorted = data
+    .sort((a, b) => a.metric - b.metric)
+    .map((item) => (isModel ? item.model : item.organization_key__name));
+  // console.log("sorted", sorted);
+  const colorMap = {};
+  // modelKeys.forEach((key) => {
+  //   colorMap[key] = colorTagsClasses[key];
+  // });
+  return colorMap;
 };

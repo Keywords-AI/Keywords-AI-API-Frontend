@@ -1,5 +1,5 @@
 import { Button, DotsButton } from "src/components/Buttons";
-import { Left, Right, Down } from "src/components/Icons";
+import { Left, Right, Down, First, Last } from "src/components/Icons";
 import { SelectInput } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { RootState } from "src/types";
@@ -8,6 +8,7 @@ import { getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
 import { useEffect } from "react";
+import { shallowEqual } from "react-redux";
 
 export const Paginator = () => {
   const dispatch = useTypedDispatch();
@@ -37,6 +38,16 @@ export const Paginator = () => {
       dispatch(getRequestLogs());
     }
   };
+  const handleFistPage = () => {
+    setQueryParams({ page: "1" }, navigate);
+    dispatch(getRequestLogs());
+  };
+  const handleLastPage = () => {
+    const lastPageNumber = Math.ceil(count / pageSize);
+    console.log(lastPageNumber);
+    setQueryParams({ page: lastPageNumber }, navigate);
+    dispatch(getRequestLogs());
+  };
   const hanlePreviousPage = () => {
     if (lastPageUrl) {
       const params = new URLSearchParams(lastPageUrl.split("?")[1]);
@@ -52,6 +63,7 @@ export const Paginator = () => {
           headLess
           padding="px-xxs py-xxxs"
           gap="gap-xxs"
+          textColor="text-gray-5"
           icon={Down}
           defaultValue={"100"}
           {...register("page_size")}
@@ -59,6 +71,7 @@ export const Paginator = () => {
             { name: "25", value: "25" },
             { name: "50", value: "50" },
             { name: "100", value: "100" },
+            { name: "250", value: "250" },
           ]}
         />
       </div>
@@ -68,6 +81,12 @@ export const Paginator = () => {
         </span>
         <div className="flex-row">
           <DotsButton
+            icon={First}
+            onClick={handleFistPage}
+            disabled={lastPageUrl ? false : true}
+            iconFill={lastPageUrl ? undefined : "fill-gray-2"}
+          />
+          <DotsButton
             icon={Left}
             onClick={hanlePreviousPage}
             disabled={lastPageUrl ? false : true}
@@ -76,6 +95,12 @@ export const Paginator = () => {
           <DotsButton
             icon={Right}
             onClick={hanleNextPage}
+            disabled={nextPageUrl ? false : true}
+            iconFill={nextPageUrl ? undefined : "fill-gray-2"}
+          />
+          <DotsButton
+            icon={Last}
+            onClick={handleLastPage}
             disabled={nextPageUrl ? false : true}
             iconFill={nextPageUrl ? undefined : "fill-gray-2"}
           />

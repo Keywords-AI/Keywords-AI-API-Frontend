@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { SmallPricingCard } from "src/components/Cards";
 import { createPaymentSession } from "src/services/stripe";
@@ -48,6 +48,8 @@ export const PlansPage = connect(
 )(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
+  const models = Object.keys(useSelector((state) => state.models.models));
+  const remaining = models.length || 20;
   const cards = [
     {
       title: "Starter",
@@ -63,7 +65,7 @@ export const PlansPage = connect(
         "Usage analytics",
         "Status monitoring",
         "Dynamic LLM router",
-        "OpenAI credits support",
+        "OpenAI models",
         "Email support",
       ],
       downgradeParams: {
@@ -93,9 +95,9 @@ export const PlansPage = connect(
         "Unlimited seats",
         "Unlimited proxy keys",
         "Advanced usage analytics",
-        "Advanced model fallback",
-        "Priority model access",
         "Admin roles",
+        "Advanced model fallback",
+        `Mistral, Anthropic, and ${remaining} more models`,
         "CTO priority support",
       ],
       downgradeParams: {

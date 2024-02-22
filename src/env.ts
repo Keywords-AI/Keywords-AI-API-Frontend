@@ -1,4 +1,4 @@
-import { envVars } from "./branch_env";
+import { envVars } from "src/branch_env";
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 // const envVars = undefined;
 export const FETCH_ENDPOINT =
@@ -19,3 +19,6 @@ export const STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY =
 export const SANITY_CHECK = envVars?.SANITY_CHECK || "Not sane";
 export const PRODUCTION_TEST_KEY = envVars?.PRODUCTION_TEST_KEY || "";
 export const LOCAL_TEST_KEY = envVars?.LOCAL_TEST_KEY || "";
+export const DEMO_ENV = window.location.hostname === "demo.keywordsai.co";
+export const DEMO_EMAIL = envVars?.DEMO_EMAIL || "demo@keywordsai.co";
+export const DEMO_PASSWORD = envVars?.DEMO_PASSWORD || "ycw24";

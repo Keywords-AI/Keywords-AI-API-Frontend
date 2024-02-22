@@ -15,7 +15,10 @@ import {
   SET_FILTER_OPTIONS,
   DELETE_FILTER,
   UPDATE_FILTER,
-  SET_CURRENT_FILTER
+  SET_CURRENT_FILTER,
+  SET_SELECTED_REQUEST_CONTENT,
+  START_GET_REQUEST_LOGS,
+  SET_JSON_MODE,
 } from "src/store/actions/requestLogActions";
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
@@ -27,11 +30,13 @@ type StateType = {
   logs: LogItem[];
   count: number;
   totalCount: number;
+  loading: boolean;
   currentPage: number;
   nextPageUrl: string | null;
   lastPageUrl: string | null;
   selectedRequest: LogItem | undefined;
   sidePanelOpen: boolean;
+  jsonMode: boolean;
   displayColumns: LogColumnKey[];
   filterOpen: boolean;
   filters: FilterObject[];
@@ -45,12 +50,14 @@ type StateType = {
 const initState: StateType = {
   logs: [],
   count: 0,
+  loading: true,
   totalCount: 0,
   currentPage: 1,
   nextPageUrl: null,
   lastPageUrl: null,
   selectedRequest: undefined,
   sidePanelOpen: false,
+  jsonMode: false,
   displayColumns: defaultRequestLogColumns,
   filterOpen: false,
   filterType: undefined,
@@ -73,15 +80,31 @@ export default function requestLogReducer(
         ...state,
         logs: action.payload,
       };
+    case START_GET_REQUEST_LOGS:
+      return {
+        ...state,
+        loading: true,
+      };
     case SET_REQUEST_LOGS:
       return {
         ...state,
+        loading: false,
         logs: action.payload,
       };
     case SET_SELECTED_REQUEST:
       return {
         ...state,
         selectedRequest: state.logs.find((log) => log.id === action.payload),
+      };
+    case SET_SELECTED_REQUEST_CONTENT:
+      return {
+        ...state,
+        selectedRequest: { ...action.payload },
+      };
+    case SET_JSON_MODE:
+      return {
+        ...state,
+        jsonMode: action.payload,
       };
     case SET_SIDE_PANEL_OPEN:
       return {

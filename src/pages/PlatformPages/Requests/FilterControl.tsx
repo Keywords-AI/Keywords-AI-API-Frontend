@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TextInputSmall, TextInput } from "src/components/Inputs";
 import { Popover } from "src/components/Dialogs";
-import { Search, Down, Display } from "src/components/Icons";
-import { Button } from "src/components/Buttons";
+import {
+  Search,
+  Down,
+  Display,
+  AlphanumericKey,
+  Close,
+} from "src/components/Icons";
+import { Button, IconButton } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
-import { getRequestLogs, addFilter } from "src/store/actions";
-import { setQueryParams } from "src/utilities/navigation";
+import {
+  getRequestLogs,
+  addFilter,
+  setCurrentFilter,
+  setFilters,
+} from "src/store/actions";
+import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
-import { RootState } from "src/types";
+import { Operator, RootState } from "src/types";
 import { get, useForm } from "react-hook-form";
 import { FilterPanel } from "./FilterPanel";
-
+import { toLocalISOString } from "src/utilities/stringProcessing";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 const typeChoices = [
   { name: "Total", value: "total" },
   { name: "Average", value: "average" },
@@ -39,8 +51,25 @@ export default function FilterControl() {
     filteredtypeChoices = typeChoices;
   }
 
-  const { register } = useForm();
+  const { register, setValue } = useForm();
   const [searchText, setSearchText] = useState("");
+  const { enableScope, disableScope } = useHotkeysContext();
+  useHotkeys(
+    "/",
+    () => {
+      if (inputRef.current) {
+        if (document.activeElement !== inputRef.current) {
+          inputRef.current.focus();
+        } else {
+          inputRef.current.blur();
+        }
+      }
+    },
+    {
+      scopes: "small_search_prompt",
+      preventDefault: true,
+    }
+  );
   const onSubmit = (e: any) => {
     const randomId = Math.random().toString(36).substring(2, 15);
     dispatch(
@@ -62,6 +91,25 @@ export default function FilterControl() {
       onSubmit(e);
     }
   };
+  useEffect(() => {
+    enableScope("small_search_prompt");
+    return () => {
+      disableScope("small_search_prompt");
+    };
+  }, []);
+  const active =
+    filters.find((filter) => {
+      if (filter.metric === "timestamp") {
+        const filterDate = new Date(filter.value[0] as string);
+        const today = new Date();
+        return (
+          filterDate.getDate() === today.getDate() &&
+          filterDate.getMonth() === today.getMonth() &&
+          filterDate.getFullYear() === today.getFullYear()
+        );
+      }
+    }) !== undefined;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
@@ -72,20 +120,48 @@ export default function FilterControl() {
           value: searchText,
           onChange: (e) => setSearchText(e.target.value),
         })}
+        name="prompt"
+        ref={inputRef}
         value={searchText}
+        width="w-[192px]"
         onKeyDown={onKeyDown}
+        rightIcon={<AlphanumericKey value="/" />}
+        CloseButton
+        handleClose={() => setSearchText("")}
       />
       <Button
         variant="small"
         text="Today"
         type="button"
-        active={timeRange ? true : false}
+        active={active}
         onClick={() => {
-          if (timeRange) {
-            setQueryParams({ time_range_type: "" }, navigate);
+          setQueryParams({ time_range_type: "" }, navigate);
+          if (active) {
+            // deactivate
+
+            dispatch(setFilters([]));
           } else {
-            setQueryParams({ time_range_type: "daily" }, navigate);
+            // activate
+            dispatch(
+              setFilters(
+                filters.filter((filter) => filter.metric !== "timestamp")
+              )
+            );
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+            dispatch(
+              addFilter({
+                metric: "timestamp",
+                value: [toLocalISOString(today)],
+                operator: "gte" as Operator,
+                value_field_type: "datetime-local",
+                display_name: "Time",
+                id: Math.random().toString(36).substring(2, 15),
+              })
+            );
+            dispatch(setCurrentFilter({ metric: undefined, id: "" }));
           }
+
           dispatch(getRequestLogs());
         }}
       />
