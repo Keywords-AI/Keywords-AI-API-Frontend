@@ -1,5 +1,7 @@
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  CodeViewer,
   Delete,
   IconPlayground,
   Pencil,
@@ -9,6 +11,9 @@ import {
   SideBarLeft,
 } from "src/components";
 import { Button, ButtonGroup, DotsButton } from "src/components/Buttons";
+import { Modal } from "src/components/Dialogs";
+import useForwardRef from "src/hooks/useForwardRef";
+import { getKeys } from "src/store/actions";
 import {
   toggleLeftPanel,
   toggleRightPanel,
@@ -69,14 +74,14 @@ export function TopBar() {
           ]}
         /> */}
       </div>
-      <div className="flex gap-xxs items-start">
+      <div className="flex gap-xxs items-center">
         <Button
           variant="small"
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         />
 
-        <Button variant="small" text="View code" />
+        <ViewCode />
         <DotsButton icon={Delete} onClick={() => navigate(0)} />
         <HorizontalDivier />
         <DotsButton
@@ -96,3 +101,35 @@ const HorizontalDivier = () => {
     ></div>
   );
 };
+
+const ViewCode = React.forwardRef<HTMLDivElement>((props: any, ref) => {
+  const navigate = useNavigate();
+  const localRef = useForwardRef(ref);
+  const dispatch = useTypedDispatch();
+
+  // useEffect(() => {
+  //   dispatch(getKeys());
+  // }, []);
+  return (
+    <Modal
+      ref={localRef}
+      trigger={<Button variant="small" text="View code" />}
+      title="View code"
+      subtitle="You can use the following code to start integrating your current prompt and settings into your application."
+      width="w-[864px]"
+    >
+      <CodeViewer apikey={"your_apikey"} />
+      <p className="text-sm-regular text-gray-4">
+        Your API key can be found{" "}
+        <a
+          onClick={() => navigate("/platform/api/api-keys")}
+          className="text-primary cursor-pointer"
+        >
+          here
+        </a>
+        . You should use environment variables or a secret management tool to
+        expose your key to your applications.
+      </p>
+    </Modal>
+  );
+});

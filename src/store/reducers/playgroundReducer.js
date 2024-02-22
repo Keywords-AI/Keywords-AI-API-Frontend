@@ -17,6 +17,8 @@ import {
   SET_MESSAGE_RESPONSE_BY_INDEX,
   DELETE_MESSAGE_BY_INDEX,
   SET_CHANNEL_MODE,
+  SET_BREAKDOWN_DATA,
+  SET_MODEL_LOG_DATA,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -30,7 +32,7 @@ const initialState = {
   currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    models: ["router", "router"],
+    models: ["router", "gpt-4"],
     temperature: 1,
     maximumLength: 256,
     topP: 1,
@@ -44,6 +46,34 @@ const initialState = {
     latency: 0.8,
     tokens: 4386,
   },
+  breakdownData: {
+    prompt_tokens: 0,
+    completion_tokens: 0,
+    cost: 0,
+    total_tokens: 0,
+    routing_time: 0,
+    timestamp: "",
+    status: "",
+  },
+  modelLogs: [
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+  ],
+
   isLeftPanelOpen: false,
   isRightPanelOpen: true,
   selectedLogs: "",
@@ -66,6 +96,8 @@ const playgroundReducer = (state = initialState, action) => {
           { ...state.messages.slice(-1)[0], ...action.payload },
         ],
       };
+    case SET_BREAKDOWN_DATA:
+      return { ...state, breakdownData: action.payload };
     case SET_CHANNEL_MODE:
       return { ...state, isSingleChannel: action.payload };
     case SET_MESSAGE_BY_INDEX:
@@ -112,7 +144,8 @@ const playgroundReducer = (state = initialState, action) => {
           }),
         };
       }
-
+    case SET_MODEL_LOG_DATA:
+      return { ...state, modelLogs: action.payload };
     case SET_MESSAGE_RESPONSE_BY_INDEX:
       const { id: i, content: text, channel } = action.payload;
       return {

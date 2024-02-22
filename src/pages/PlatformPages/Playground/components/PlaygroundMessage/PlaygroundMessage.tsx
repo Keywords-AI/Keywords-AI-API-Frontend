@@ -25,6 +25,8 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { MessageBox } from "../MessageBox";
 import { RootState } from "src/types";
+import { set } from "react-hook-form";
+import { resetSingleStreamingText } from "src/store/actions";
 
 export interface Reponse {
   model: string;
@@ -51,12 +53,23 @@ export function PlaygroundMessage({
   const messageLength = useTypedSelector(
     (state: RootState) => state.playground.messages.length
   );
+  const lastResponseMessageId = useTypedSelector(
+    (state) =>
+      state.playground.messages.findLast(
+        (message) => message.role === "assistant"
+      )?.id
+  );
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
   );
+  const streamingState = useTypedSelector((state) => state.streamingText);
+  useEffect(() => {
+    if (streamingState.some((state) => state.isLoading)) setIsFocused(false);
+  }, [streamingState]);
   const [isFocused, setIsFocused] = useState(false);
   const [messageValue, setMessageValue] = useState(user_content || "");
   const [responseValue, setResponseValue] = useState("");
+
   const isUser = role === "user";
   const isAssistant = role === "assistant";
   useEffect(() => {
@@ -87,6 +100,18 @@ export function PlaygroundMessage({
   };
   const handleChange = (value) => {
     setMessageValue(value); // This sets what is displayed in the input box
+    dispatch(
+      setMessageByIndex({
+        index: id,
+        content: {
+          id: id,
+          role: "user",
+          user_content: messageValue,
+          responses: null,
+          isActive: true,
+        },
+      })
+    );
   };
   if (isUser) {
     contentSection = (
@@ -104,6 +129,7 @@ export function PlaygroundMessage({
           <MessageBox
             value={messageValue}
             onChange={handleChange}
+            blur={!isFocused}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -123,7 +149,7 @@ export function PlaygroundMessage({
                 setIsFocused(false);
               }
             }}
-            disabled={!isFocused}
+            // disabled={!isFocused}
           />
           {/* {isFocused && (
             <div
@@ -146,6 +172,11 @@ export function PlaygroundMessage({
       </>
     );
   } else if (isAssistant) {
+    const deletedOneChannel = responses?.some(
+      (response) =>
+        !response ||
+        (response.complete && response.content == "" && !response.model)
+    );
     contentSection = (
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
@@ -156,7 +187,7 @@ export function PlaygroundMessage({
               key={index}
               className={cn(
                 "flex-col items-start gap-xxxs self-stretch",
-                isSingleChannel ? "w-full" : "w-1/2"
+                isSingleChannel || deletedOneChannel ? "w-full" : "w-1/2"
               )}
             >
               <MessageHeader
@@ -175,20 +206,21 @@ export function PlaygroundMessage({
                   e.preventDefault();
                   if (+id == 0) return;
                   dispatch(deleMessageByIndex(id, index));
+                  dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={true}
+                showRegen={+id == +lastResponseMessageId}
                 content={response.content || ""}
               />
-              <div
-                className={cn(
-                  "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
-                  isError ? "" : "shadow-border shadow-gray-3"
-                )}
-              >
-                {response.content ? (
-                  isError ? (
-                    <StatusTag statusCode={500} />
-                  ) : (
+              {isError ? (
+                <StatusTag statusCode={500} />
+              ) : (
+                <div
+                  className={cn(
+                    "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
+                    "shadow-border shadow-gray-3"
+                  )}
+                >
+                  {response.content ? (
                     <MessageBox
                       value={response.content}
                       onChange={(val) => setResponseValue(val)}
@@ -204,15 +236,15 @@ export function PlaygroundMessage({
                           handleUpdateResponse(id, index, responseValue);
                         setIsFocused(false);
                       }}
-                      disabled={!isFocused}
+                      blur={!isFocused}
                     />
-                  )
-                ) : (
-                  <span className="text-gray-4 text-sm-regular">
-                    Generating...
-                  </span>
-                )}
-              </div>
+                  ) : (
+                    <span className="text-gray-4 text-sm-regular">
+                      Generating...
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
@@ -279,7 +311,7 @@ export function StreamingMessage() {
   if (streamingStates.every((state) => state.isLoading === false)) return null;
 
   return (
-    <div className="flex items-start gap-xxs self-stretch">
+    <div className="flex items-start gap-xxs self-stretch ">
       {streamingStates.length > 0 &&
         streamingStates?.map((streamingState, index) => {
           const Icon = ModelIcon(currentModels[index]);
@@ -296,43 +328,58 @@ export function StreamingMessage() {
             streamingState.error == null
           )
             return null;
+          const deletedOneChannel = streamingStates?.some(
+            (state) => state.streamingText == "" && state.isLoading === false
+          );
+          if (deletedOneChannel && !streamingState.isLoading) return null;
           return (
             <div
               key={index}
               className={cn(
                 "flex-col items-start gap-xxxs self-stretch",
-                isSingleChannel ? "w-full" : "w-1/2"
+                isSingleChannel || deletedOneChannel ? "w-full" : "w-1/2"
               )}
             >
-              <MessageHeader
-                streaming
-                title={
-                  <div className="flex items-center gap-xxs">
-                    <div className="text-sm-md text-gray-4">
-                      Response {index == 0 ? "A" : "B"}
-                    </div>
-                    {streamingState.model && (
-                      <ModelTag model={streamingState.model} />
+              {
+                <>
+                  <MessageHeader
+                    streaming
+                    title={
+                      <div className="flex items-center gap-xxs">
+                        <div className="text-sm-md text-gray-4">
+                          Response {index == 0 ? "A" : "B"}
+                        </div>
+                        {streamingState.model && (
+                          <ModelTag model={streamingState.model} />
+                        )}
+                      </div>
+                    }
+                    content={streamingState.streamingText || ""}
+                  />
+                  <div
+                    className={cn(
+                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-3 max-w-full ",
+                      isSingleChannel || deletedOneChannel
+                        ? "max-w-full"
+                        : "max-w-1/2"
+                    )}
+                  >
+                    {streamingState.streamingText ? (
+                      <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-5 text-wrap break-all">
+                        {streamingState.streamingText}
+                      </div>
+                    ) : streamingState.error ? (
+                      <span className="text-sm-regular text-gray-4">
+                        {"Generating..."}
+                      </span>
+                    ) : (
+                      <span className="text-sm-regular text-gray-4">
+                        {streamingState.isLoading ? "Generating..." : null}
+                      </span>
                     )}
                   </div>
-                }
-                content={streamingState.streamingText || ""}
-              />
-              <div className="flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
-                {streamingState.streamingText ? (
-                  <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-5">
-                    {streamingState.streamingText}
-                  </div>
-                ) : streamingState.error ? (
-                  <span className="text-sm-regular text-gray-4">
-                    {"Generating..."}
-                  </span>
-                ) : (
-                  <span className="text-sm-regular text-gray-4">
-                    {streamingState.isLoading ? "Generating..." : null}
-                  </span>
-                )}
-              </div>
+                </>
+              }
             </div>
           );
         })}
