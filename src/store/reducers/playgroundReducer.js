@@ -18,6 +18,7 @@ import {
   DELETE_MESSAGE_BY_INDEX,
   SET_CHANNEL_MODE,
   SET_BREAKDOWN_DATA,
+  SET_MODEL_LOG_DATA,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
@@ -50,7 +51,29 @@ const initialState = {
     completion_tokens: 0,
     cost: 0,
     total_tokens: 0,
+    routing_time: 0,
+    timestamp: "",
+    status: "",
   },
+  modelLogs: [
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+  ],
+
   isLeftPanelOpen: false,
   isRightPanelOpen: true,
   selectedLogs: "",
@@ -121,7 +144,8 @@ const playgroundReducer = (state = initialState, action) => {
           }),
         };
       }
-
+    case SET_MODEL_LOG_DATA:
+      return { ...state, modelLogs: action.payload };
     case SET_MESSAGE_RESPONSE_BY_INDEX:
       const { id: i, content: text, channel } = action.payload;
       return {

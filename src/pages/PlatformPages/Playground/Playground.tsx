@@ -151,7 +151,7 @@ const MessageLists = () => {
               appendMessage({
                 id: messages.length,
                 role: "user",
-                content: "",
+                user_content: "",
               })
             );
             // buttonRef &&

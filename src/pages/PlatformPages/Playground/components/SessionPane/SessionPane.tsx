@@ -30,41 +30,45 @@ export const SessionPane = forwardRef(
     const ModelOptions = useTypedSelector(
       (state) => state.playground.modelOptions
     );
-    const UpdatedModelOptions = watch();
-    const debouncedDispatch = useCallback(
-      debounce(
-        (updatedModelOptions) => dispatch(setModelOptions(updatedModelOptions)),
-        300
-      ),
-      [dispatch]
-    );
+
     const breakDownData = useTypedSelector(
       (state) => state.playground.breakdownData
     );
-    const allModels = Object.values(
-      useTypedSelector((state) => state.models.models)
-    ).map((model: any) => {
+    const allModels = useTypedSelector((state) => state.models.models);
+    const modelsArray = Object.values(allModels).map((model: any) => {
       return {
         name: model.display_name,
         value: model.model_name,
       };
     });
-    const selectChoices = [
+    let [selectChoices, setSelectChoices] = React.useState<any[]>([
       { name: "Router (best for prompt)", value: "router" },
       { name: "None", value: "none" },
-      ...allModels,
-    ];
+    ]);
     useEffect(() => {
-      if (Object.keys(dirtyFields).length === 0) return;
-      const newModelOptionsState = {
-        ...UpdatedModelOptions,
-        models: [UpdatedModelOptions.modela, UpdatedModelOptions.modelb],
-      };
-
-      if (!_.isEqual(newModelOptionsState, ModelOptions)) {
-        debouncedDispatch(newModelOptionsState);
-      }
-    }, [UpdatedModelOptions]);
+      setSelectChoices([
+        { name: "Router (best for prompt)", value: "router" },
+        { name: "None", value: "none" },
+        ...modelsArray,
+      ]);
+    }, [modelsArray]);
+    const debouncedDispatch = useCallback(
+      debounce((value) => dispatch(setModelOptions(value)), 300),
+      [dispatch]
+    );
+    useEffect(() => {
+      watch((value, { name, type }) => {
+        const newModelOptionsState = {
+          temperature: value.temperature,
+          maximumLength: value.maximumLength,
+          topP: value.topP,
+          frequencyPenalty: value.frequencyPenalty,
+          presencePenalty: value.presencePenalty,
+          models: [value.modela, value.modelb],
+        };
+        dispatch(setModelOptions(newModelOptionsState));
+      });
+    }, [watch]);
     return (
       <>
         <div
@@ -73,7 +77,9 @@ export const SessionPane = forwardRef(
         >
           <SelectInput
             //{ value: ModelOptions.model }
-            {...register("modela")}
+            {...register("modela", {
+              value: selectChoices[0].value,
+            })}
             title="Model A"
             width="w-[256px]"
             optionsWidth="w-[256px]"
@@ -83,15 +89,18 @@ export const SessionPane = forwardRef(
           />
           <SelectInput
             //{ value: ModelOptions.model }
-            {...register("modelb")}
+            {...register("modelb", {
+              value:
+                selectChoices.find((item) => item.value == "gpt-4")?.value ||
+                "gpt-4",
+            })}
             title="Model B"
             width="w-[256px]"
             optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
             defaultValue={
-              selectChoices.find((item) => item.value === "gpt-4")?.value ||
-              "none"
+              selectChoices.find((item) => item.value == "gpt-4")?.value
             }
           />
           <Controller

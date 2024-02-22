@@ -113,6 +113,8 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
+  console.log("headers", headers);
+  console.log("data", data);
   const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,
@@ -160,6 +162,7 @@ export const keywordsStream = ({
                 readStreamLine(line);
               }
             }
+
             count++;
           }
         } catch (e) {
