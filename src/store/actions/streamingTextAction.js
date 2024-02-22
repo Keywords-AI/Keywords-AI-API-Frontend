@@ -10,7 +10,14 @@ export const SEND_STREAMINGTEXT2_SUCCESS = "SEND_STREAMINGTEXT2_SUCCESS";
 export const SEND_STREAMINGTEXT2_FAILURE = "SEND_STREAMINGTEXT2_FAILURE";
 export const SEND_STREAMINGTEXT2_PARTIAL = "SEND_STREAMINGTEXT2_PARTIAL";
 export const ABORT_STREAMINGTEXT2_REQUEST = "ABORT_STREAMINGTEXT2_REQUEST";
+export const RESET_SINGLE_STREAMINGTEXT = "RESET_SINGLE_STREAMINGTEXT";
 
+export const resetSingleStreamingText = (channel) => {
+  return {
+    type: RESET_SINGLE_STREAMINGTEXT,
+    payload: channel,
+  };
+};
 export const resetStreamingText = () => ({
   type: RESET_STREAMINGTEXT,
 });

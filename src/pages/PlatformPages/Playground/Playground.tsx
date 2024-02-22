@@ -20,7 +20,7 @@ import {
 import { StreamingMessage } from "./components/PlaygroundMessage";
 import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import { models } from "src/components/Misc";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
@@ -55,7 +55,7 @@ export default function Playground() {
     }
   );
   return (
-    <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] ">
+    <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] max-w-[100vw]">
       <TopBar />
       <div className="flex items-start flex-1 self-stretch h-[calc(100vh-112px)]">
         {isLeftPanelOpen && <PromptLogs />}
@@ -103,11 +103,27 @@ connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 
 const MessageLists = () => {
   const messages = useTypedSelector((state) => state.playground.messages);
+  const isLeftPanelOpen = useTypedSelector(
+    (state) => state.playground.isLeftPanelOpen
+  );
+  const buttonRef = useRef(null);
+  const isRightPanelOpen = useTypedSelector(
+    (state) => state.playground.isRightPanelOpen
+  );
+  const streamingStates = useTypedSelector((state) => state.streamingText);
   const dispatch = useTypedDispatch();
   return (
-    <div className="flex-col items-start gap-xxs flex-1 self-stretch">
+    <div
+      className="flex-col items-start gap-xxs  self-stretch  w-full"
+      style={{
+        maxWidth: `calc(100vw - ${isLeftPanelOpen ? "240px" : "0px"} - ${
+          isRightPanelOpen ? "320px" : "0px"
+        })`,
+      }}
+    >
       <AutoScrollContainer
-        percentageThreshold={15}
+        percentageThreshold={10}
+        behavior="instant"
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
         {messages.map((message, index) => {
@@ -121,14 +137,16 @@ const MessageLists = () => {
           );
         })}
         <StreamingMessage />
-      </AutoScrollContainer>
-      <div className="flex items-start gap-xxs">
         <Button
           variant="small"
           text="Add message"
           icon={Add}
+          ref={buttonRef}
           iconPosition="left"
+          disabled={streamingStates.some((state) => state.isLoading)}
           onClick={() => {
+            if (streamingStates.some((state) => state.isLoading)) return;
+
             dispatch(
               appendMessage({
                 id: messages.length,
@@ -136,13 +154,19 @@ const MessageLists = () => {
                 content: "",
               })
             );
+            // buttonRef &&
+            //   buttonRef.current &&
+            //   (buttonRef.current as HTMLButtonElement).scrollIntoView({
+            //     behavior: "instant",
+            //     block: "end",
+            //   });
           }}
         />
+      </AutoScrollContainer>
+      <div className="flex items-start gap-xxs">
         <Button
-          variant="small"
-          text="Send message"
-          icon={EnterKey}
-          iconPosition="left"
+          variant="r4-primary"
+          text="Submit"
           onClick={() => {
             dispatch(streamPlaygroundResponse());
           }}
