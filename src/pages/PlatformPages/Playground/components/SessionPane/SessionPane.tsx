@@ -30,38 +30,45 @@ export const SessionPane = forwardRef(
     const ModelOptions = useTypedSelector(
       (state) => state.playground.modelOptions
     );
-    const UpdatedModelOptions = watch();
-    const debouncedDispatch = useCallback(
-      debounce(
-        (updatedModelOptions) => dispatch(setModelOptions(updatedModelOptions)),
-        300
-      ),
-      [dispatch]
+
+    const breakDownData = useTypedSelector(
+      (state) => state.playground.breakdownData
     );
-    const allModels = Object.values(
-      useTypedSelector((state) => state.models.models)
-    ).map((model: any) => {
+    const allModels = useTypedSelector((state) => state.models.models);
+    const modelsArray = Object.values(allModels).map((model: any) => {
       return {
         name: model.display_name,
         value: model.model_name,
       };
     });
-    const selectChoices = [
-      { name: "Router", value: "router" },
+    let [selectChoices, setSelectChoices] = React.useState<any[]>([
+      { name: "Router (best for prompt)", value: "router" },
       { name: "None", value: "none" },
-      ...allModels,
-    ];
+    ]);
     useEffect(() => {
-      if (Object.keys(dirtyFields).length === 0) return;
-      const newModelOptionsState = {
-        ...UpdatedModelOptions,
-        models: [UpdatedModelOptions.modela, UpdatedModelOptions.modelb],
-      };
-
-      if (!_.isEqual(newModelOptionsState, ModelOptions)) {
-        debouncedDispatch(newModelOptionsState);
-      }
-    }, [UpdatedModelOptions]);
+      setSelectChoices([
+        { name: "Router (best for prompt)", value: "router" },
+        { name: "None", value: "none" },
+        ...modelsArray,
+      ]);
+    }, [modelsArray]);
+    const debouncedDispatch = useCallback(
+      debounce((value) => dispatch(setModelOptions(value)), 300),
+      [dispatch]
+    );
+    useEffect(() => {
+      watch((value, { name, type }) => {
+        const newModelOptionsState = {
+          temperature: value.temperature,
+          maximumLength: value.maximumLength,
+          topP: value.topP,
+          frequencyPenalty: value.frequencyPenalty,
+          presencePenalty: value.presencePenalty,
+          models: [value.modela, value.modelb],
+        };
+        dispatch(setModelOptions(newModelOptionsState));
+      });
+    }, [watch]);
     return (
       <>
         <div
@@ -70,23 +77,31 @@ export const SessionPane = forwardRef(
         >
           <SelectInput
             //{ value: ModelOptions.model }
-            {...register("modela")}
+            {...register("modela", {
+              value: selectChoices[0].value,
+            })}
             title="Model A"
-            width="w-[248px]"
-            optionsWidth="w-[248px]"
+            width="w-[256px]"
+            optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
-            defaultValue={ModelOptions.models[0]}
+            defaultValue={selectChoices[0].value}
           />
           <SelectInput
             //{ value: ModelOptions.model }
-            {...register("modelb")}
+            {...register("modelb", {
+              value:
+                selectChoices.find((item) => item.value == "gpt-4")?.value ||
+                "gpt-4",
+            })}
             title="Model B"
-            width="w-[248px]"
-            optionsWidth="w-[248px]"
+            width="w-[256px]"
+            optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
-            defaultValue={ModelOptions.models[1]}
+            defaultValue={
+              selectChoices.find((item) => item.value == "gpt-4")?.value
+            }
           />
           <Controller
             control={control}
@@ -168,19 +183,27 @@ export const SessionPane = forwardRef(
         <div className="flex-col px-lg py-md items-start gap-xs self-stretch">
           <div className="flex h-[24px] justify-between items-center self-stretch">
             <p className="text-sm-md text-gray-5">Prompt tokens</p>
-            <p className="text-sm-regular text-gray-4">2,312</p>
+            <p className="text-sm-regular text-gray-4">
+              {breakDownData.prompt_tokens.toLocaleString()}
+            </p>
           </div>
           <div className="flex h-[24px] justify-between items-center self-stretch">
             <p className="text-sm-md text-gray-5">Completion tokens</p>
-            <p className="text-sm-regular text-gray-4">2,312</p>
+            <p className="text-sm-regular text-gray-4">
+              {breakDownData.completion_tokens.toLocaleString()}
+            </p>
           </div>
           <div className="flex h-[24px] justify-between items-center self-stretch">
             <p className="text-sm-md text-gray-5">Total tokens</p>
-            <p className="text-sm-regular text-gray-4">2,312</p>
+            <p className="text-sm-regular text-gray-4">
+              {breakDownData.total_tokens.toLocaleString()}
+            </p>
           </div>
           <div className="flex h-[24px] justify-between items-center self-stretch">
             <p className="text-sm-md text-gray-5">Cost</p>
-            <p className="text-sm-regular text-gray-4">2,312</p>
+            <p className="text-sm-regular text-gray-4">
+              ${breakDownData.cost.toFixed(4)}
+            </p>
           </div>
         </div>
       </>
