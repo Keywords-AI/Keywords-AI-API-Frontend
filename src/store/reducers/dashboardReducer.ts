@@ -41,6 +41,7 @@ import {
   SET_DASHBOARD_FILTERS,
   UPDATE_DASHBOARD_FILTER,
   DELETE_DASHBOARD_FILTER,
+  SET_AVG_TTFT_DATA,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -93,6 +94,7 @@ const initState = {
     // {total_cost, date_group}
   ],
   avgCostData: [],
+  ttftData: [],
   tokenCountData: [
     // {total_tokens, date_group}
   ],
@@ -240,6 +242,8 @@ export default function dashboardReducer(
       return { ...state, panelData: action.payload };
     case SET_MODEL_DATA:
       return { ...state, modelData: action.payload };
+    case SET_AVG_TTFT_DATA:
+      return { ...state, ttftData: action.payload };
     case SET_AVG_MODEL_DATA:
       return { ...state, avgModelData: action.payload };
     case SET_API_DATA:

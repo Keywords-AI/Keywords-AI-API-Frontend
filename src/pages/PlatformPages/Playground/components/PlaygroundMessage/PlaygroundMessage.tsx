@@ -121,7 +121,7 @@ export function PlaygroundMessage({
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
-            if (+id == 0) return;
+            if (messageLength === 1) return;
             dispatch(deleMessageByIndex(id));
           }}
         />
@@ -131,7 +131,7 @@ export function PlaygroundMessage({
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && e.shiftKey) {
+              if (e.key === "Enter" && e.ctrlKey) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -181,7 +181,8 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          const isError = response.content.startsWith("Error:");
+          const isError = response.content.includes("errorText");
+          const errorObj = isError ? JSON.parse(response.content) : null;
           return (
             <div
               key={index}
@@ -205,14 +206,15 @@ export function PlaygroundMessage({
                 deleteCallback={(e) => {
                   e.preventDefault();
                   // if (+id == 0) return;
+                  console.log("deleting", id);
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={+id == +lastResponseMessageId}
+                showRegen={+id == +lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
               {isError ? (
-                <StatusTag statusCode={500} />
+                <StatusTag statusCode={errorObj.errorCode || 500} />
               ) : (
                 <div
                   className={cn(
@@ -225,7 +227,7 @@ export function PlaygroundMessage({
                       defaultValue={response.content}
                       onChange={(val) => setResponseValue(val)}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" && e.shiftKey) {
+                        if (e.key === "Enter" && e.ctrlKey) {
                           e.preventDefault();
                           handleUpdateResponse(
                             id,
@@ -299,10 +301,10 @@ const MessageHeader = ({
             />
           )}
           <CopyButton text={content} />
-          <DotsButton
+          {/* <DotsButton
             icon={Delete}
             onClick={(e) => deleteCallback && deleteCallback(e)}
-          />
+          /> */}
         </div>
       )}
     </div>

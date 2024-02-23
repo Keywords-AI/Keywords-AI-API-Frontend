@@ -225,7 +225,8 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
         }
         try {
           await keywordsStream({
-            apiKey: "BnTT8vvE.b2dxVXFa4qYgo5jgHcVHn0WKK91Xm8mb",
+            apiKey: "En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2",
+            // apiKey:"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",
             data: {
               messages: chanelMessages,
               stream: true,
@@ -234,7 +235,10 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               ...modelParams[channel],
             },
             // dispatch: dispatch,
-            path: "api/generate/",
+            host: "https://api.keywordsai.co/",
+            // path: "",
+
+            // path: "api/generate/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =
@@ -298,8 +302,13 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             },
           });
         } catch (error: any) {
-          console.log("raw", error.message)
-          console.log("error", JSON.parse(error.message).error);
+          console.log("error", error);
+          let displayError = { errorText: "An error occurred", errorCode: 404 };
+          if (!isNaN(parseFloat(error.message))) {
+            displayError.errorCode = +error.message;
+          }
+
+          // console.log("error", JSON.parse(error.message).error);
           const lastMessage = getState().playground.messages.slice(-1)[0];
           const id = getState().playground.messages.length - 1;
           const model = getState().streamingText[channel].model;
@@ -310,7 +319,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               lastMessage.responses[1].complete == true;
             const errorResponse = {
               model: model,
-              content: error.toString(),
+              content: JSON.stringify(displayError),
               complete: true,
             };
             dispatch(
@@ -328,7 +337,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               lastMessage.responses[0].complete == true;
             const errorResponse = {
               model: model,
-              content: error.toString(),
+              content: JSON.stringify(displayError),
               complete: true,
             };
             dispatch(
