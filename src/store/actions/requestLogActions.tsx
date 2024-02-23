@@ -165,6 +165,10 @@ export const updateFilter = (filter: FilterObject) => {
       type: UPDATE_FILTER,
       payload: filter,
     });
+    if (filter.value?.length === 0) {
+      dispatch(deleteFilter(filter.id));
+      return;
+    }
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
