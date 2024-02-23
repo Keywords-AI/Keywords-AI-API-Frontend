@@ -20,10 +20,11 @@ import {
   SET_BREAKDOWN_DATA,
   SET_MODEL_LOG_DATA,
 } from "../actions/playgroundAction";
+import { v4 as uuidv4 } from "uuid";
 const initialState = {
   messages: [
     {
-      id: 0,
+      id: uuidv4(),
       role: "user",
       user_content: "",
     },
@@ -105,34 +106,121 @@ const playgroundReducer = (state = initialState, action) => {
       const { index, content } = action.payload;
       return {
         ...state,
-        messages: [
-          ...state.messages.slice(0, index),
-          { ...content },
-          ...state.messages.slice(index + 1),
-        ],
+        messages: state.messages.map((message, i) => {
+          if (message.id === index) {
+            return { ...content };
+          }
+          return message;
+        }),
       };
     case DELETE_MESSAGE_BY_INDEX:
-      const { id, deleteChannel } = action.payload;
+      const { id, deleteChannel: dc } = action.payload;
 
-      if (deleteChannel === -1) {
+      if (dc === -1) {
         return {
           ...state,
-          messages: state.messages.filter((message, index) => index !== id),
+          messages: state.messages.filter(
+            (message, index) => message.id !== id
+          ),
         };
       } else {
-        const deleteBoth = state.messages[id].responses.some(
+        const theMessage = state.messages.find(
+          (message, index) => message.id === id
+        );
+        const deleteBoth = theMessage.responses.some(
           (element) => element === null
         );
         if (deleteBoth) {
           return {
             ...state,
-            messages: state.messages.filter((message, index) => index !== id),
+            messages: state.messages.filter(
+              (message, index) => message.id !== id
+            ),
           };
         }
         return {
           ...state,
           messages: state.messages.map((message, index) => {
-            if (index === id) {
+            if (message.id === id) {
+              return {
+                ...message,
+                responses: message.responses.map((r, c) => {
+                  if (c === dc) return null;
+                  else return r;
+                }),
+              };
+            }
+            return message;
+          }),
+        };
+      }
+    case SET_MODEL_LOG_DATA:
+      return { ...state, modelLogs: action.payload };
+    case SET_MESSAGE_RESPONSE_BY_INDEX:
+      const {
+        id: set_i,
+        content: responseText,
+        channel: set_c,
+      } = action.payload;
+      return {
+        ...state,
+        messages: state.messages.map((message, index) => {
+          if (message.id === set_i) {
+            const newResponse = message.responses.map((r, c) => {
+              if (c === set_c) {
+                return { ...r, content: responseText };
+              }
+              return r;
+            });
+            return {
+              ...message,
+              responses: newResponse,
+            };
+          }
+          return message;
+        }),
+      };
+    case SET_PROMPT:
+      return { ...state, prompt: action.payload };
+    case SET_CURRENT_MODEL:
+      return { ...state, currentModels: action.payload };
+    case SET_CURRENT_BRAND:
+      return { ...state, currentBrand: action.payload };
+
+    case SET_OUTPUTS:
+      return { ...state, outputs: { ...state.outputs, ...action.payload } };
+    case SET_FIRST_TIME:
+      return { ...state, isFirstTime: action.payload };
+
+    case DELETE_MESSAGE_BY_INDEX:
+      const { id: det_i, deleteChannel } = action.payload;
+
+      if (deleteChannel === -1) {
+        return {
+          ...state,
+          messages: state.messages.filter(
+            (message, index) => message.id !== det_i
+          ),
+        };
+      } else {
+        const theMessage = state.messages.find(
+          (message, index) => message.id === det_i
+        );
+        const deleteBoth = theMessage.responses.some(
+          (element) => element === null
+        );
+        if (deleteBoth) {
+          return {
+            ...state,
+            messages: state.messages.filter(
+              (message, index) => message.id !== det_i
+            ),
+          };
+        }
+        return {
+          ...state,
+          messages: state.messages.map((message, index) => {
+            if (message.id === det_i) {
               return {
                 ...message,
                 responses: message.responses.map((r, c) => {
@@ -148,11 +236,11 @@ const playgroundReducer = (state = initialState, action) => {
     case SET_MODEL_LOG_DATA:
       return { ...state, modelLogs: action.payload };
     case SET_MESSAGE_RESPONSE_BY_INDEX:
-      const { id: i, content: text, channel } = action.payload;
+      const { id: set_resp_i, content: text, channel } = action.payload;
       return {
         ...state,
         messages: state.messages.map((message, index) => {
-          if (index === i) {
+          if (message.id === set_resp_i) {
             const newResponse = message.responses.map((r, c) => {
               if (c === channel) {
                 return { ...r, content: text };

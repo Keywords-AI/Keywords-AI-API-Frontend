@@ -4,6 +4,7 @@ import {
   SEND_STREAMINGTEXT2_PARTIAL,
   SEND_STREAMINGTEXT_PARTIAL,
   abortStreamingTextRequest,
+  resetSingleStreamingText,
   resetStreamingText,
   sendStreamingText2Failure,
   sendStreamingText2Partial,
@@ -14,6 +15,7 @@ import {
   sendStreamingTextRequest,
   sendStreamingTextSuccess,
 } from "./streamingTextAction";
+import { v4 as uuidv4 } from "uuid";
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
@@ -169,7 +171,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
 
     dispatch(
       appendMessage({
-        id: messages.length,
+        id: uuidv4(),
         role: "assistant",
         responses: [null, null],
         hidden: true,
@@ -179,11 +181,11 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
     if (specifyChannel != null) {
       singleChanel = true;
     }
-
     if (singleChanel && specifyChannel == null) {
       dispatch(setChannelMode(singleChanel));
     } else if (specifyChannel != null) {
-      dispatch(setChannelMode(false));
+      console.log("here", singleChanel);
+      dispatch(setChannelMode(singleChanel ? false : true));
     }
 
     const modelParams = modelOptions.models.map((model) => {
@@ -223,6 +225,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
         } else if (channel == 1) {
           dispatch(sendStreamingText2Request());
         }
+        console.log("channel", channel, chanelMessages);
         try {
           await keywordsStream({
             apiKey: "En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2",
@@ -244,7 +247,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               const streamingText =
                 getState().streamingText[channel].streamingText;
               const model = getState().streamingText[channel].model;
-              const id = getState().playground.messages.length - 1;
+              const id = uuidv4();
 
               const newResponse = {
                 model: model,
@@ -269,11 +272,12 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                 if (complete || singleChanel) {
                   dispatch(
                     appendMessage({
-                      id: id + 1,
+                      id: uuidv4(),
                       role: "user",
                       user_content: "",
                     })
                   );
+                  // dispatch(resetSingleStreamingText(channel));
                 }
               } else if (channel == 1) {
                 dispatch(sendStreamingText2Success());
@@ -292,12 +296,13 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                 if (complete || singleChanel) {
                   dispatch(
                     appendMessage({
-                      id: id + 1,
+                      id: uuidv4(),
                       role: "user",
                       user_content: "",
                     })
                   );
                 }
+                // dispatch(resetSingleStreamingText(channel));
               }
             },
           });
@@ -310,7 +315,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
 
           // console.log("error", JSON.parse(error.message).error);
           const lastMessage = getState().playground.messages.slice(-1)[0];
-          const id = getState().playground.messages.length - 1;
+          const id = uuidv4();
           const model = getState().streamingText[channel].model;
           if (channel == 0) {
             dispatch(sendStreamingTextFailure(error.toString()));
@@ -359,49 +364,62 @@ export const regeneratePlaygroundResponse = (channel) => {
   return async (dispatch, getState) => {
     // remove user last message
     dispatch(removeLastMessage());
-
+    const lastAssistantMessage = {
+      ...getState().playground.messages.slice(-1)[0],
+    };
+    let singleChanel = getState().playground.modelOptions.models.some(
+      (model) => model == "none"
+    );
+    if (singleChanel) {
+      if (channel == 0) {
+        dispatch(resetSingleStreamingText(1));
+      } else if (channel == 1) {
+        dispatch(resetSingleStreamingText(0));
+      }
+    }
     // remove assistant last message
     dispatch(removeLastMessage());
     await dispatch(streamPlaygroundResponse(channel));
     // remove last user message
     dispatch(removeLastMessage());
-    const lastAssistantMessage = {
-      ...getState().playground.messages.slice(-1)[0],
-    };
+
+    console.log("lastAssistantMessage", lastAssistantMessage);
     [0, 1].forEach((_, c) => {
       if (c != channel) {
         if (c == 0) {
-          const recoverText = getState().streamingText[c].streamingText;
-          const recoverModel = getState().streamingText[c].model;
+          const recoverText = lastAssistantMessage.responses[c]?.content;
+          const recoverModel = lastAssistantMessage.responses[c]?.model;
+          const recoverContent =
+            recoverText && recoverModel
+              ? { content: recoverText, model: recoverModel, complete: true }
+              : null;
           dispatch(
             setLastMessage({
               id: lastAssistantMessage.id,
               hidden: false,
               role: "assistant",
-              responses: [
-                { content: recoverText, model: recoverModel, complete: true },
-                lastAssistantMessage.responses[1],
-              ],
+              responses: [recoverContent, lastAssistantMessage.responses[1]],
             })
           );
         } else if (c == 1) {
-          const recoverText = getState().streamingText[c].streamingText;
-          const recoverModel = getState().streamingText[c].model;
+          const recoverText = lastAssistantMessage.responses[c]?.content;
+          const recoverModel = lastAssistantMessage.responses[c]?.model;
+          const recoverContent =
+            recoverText && recoverModel
+              ? { content: recoverText, model: recoverModel, complete: true }
+              : null;
           dispatch(
             setLastMessage({
               id: lastAssistantMessage.id,
               hidden: false,
               role: "assistant",
-              responses: [
-                lastAssistantMessage.responses[0],
-                { content: recoverText, model: recoverModel, complete: true },
-              ],
+              responses: [lastAssistantMessage.responses[0], recoverContent],
             })
           );
         }
         dispatch(
           appendMessage({
-            id: lastAssistantMessage.id + 1,
+            id: uuidv4(),
             role: "user",
             user_content: "",
           })
