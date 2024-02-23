@@ -184,6 +184,7 @@ const streamingTextReducer = (
         return item;
       });
     case RESET_STREAMINGTEXT:
+      console.log("resetting");
       return initialState;
     default:
       return state;

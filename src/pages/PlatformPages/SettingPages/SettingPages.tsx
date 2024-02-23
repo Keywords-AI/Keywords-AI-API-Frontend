@@ -13,8 +13,7 @@ import { UserSettings } from "./UserSettingsPage";
 import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
-import ModelsPage from "./ModelsPage";
-
+import ModelsPage from "./Modelspage";
 const pages: PreProcessPage[] = [
   {
     title: "General",
