@@ -25,17 +25,17 @@ export const StartWithPlan = () => {
     (organization, user) => ({ organization, user })
   ); // This creates a memorized selector callback
   const { organization, user } = useTypedSelector(memoSelector);
-  useEffect(() => {
-    // If subscribed users stumbled on this page, redirect them
-    console.log("organization", organization);
-    if (organization?.active_subscription) {
-      if (organization?.onboarded) {
-        navigate(REDIRECT_URI);
-      } else {
-        navigate("/onboarding/get-started");
-      }
-    }
-  }, [organization]);
+  // useEffect(() => {
+  //   // If subscribed users stumbled on this page, redirect them
+  //   console.log("organization", organization);
+  //   if (organization?.active_subscription) {
+  //     if (organization?.onboarded) {
+  //       navigate(REDIRECT_URI);
+  //     } else {
+  //       navigate("/onboarding/get-started");
+  //     }
+  //   }
+  // }, [organization]);
   const [isYearly, setIsYearly] = useState(true);
   const [teamPrice, setTeamPrice] = useState("29");
 
