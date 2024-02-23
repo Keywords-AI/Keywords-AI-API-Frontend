@@ -121,7 +121,11 @@ export function PlaygroundMessage({
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
-            if (messageLength === 1) return;
+            if (messageLength === 1) {
+              console.log("cannot delete last message");
+              return;
+            }
+            console.log("deleting", id);
             dispatch(deleMessageByIndex(id));
           }}
         />
