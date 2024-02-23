@@ -30,7 +30,8 @@ export const SessionPane = forwardRef(
     const ModelOptions = useTypedSelector(
       (state) => state.playground.modelOptions
     );
-
+    const streamingState = useTypedSelector((state) => state.streamingText);
+    const isStreaming = streamingState.some((item) => item.isLoading === true);
     const breakDownData = useTypedSelector(
       (state) => state.playground.breakdownData
     );
@@ -80,6 +81,7 @@ export const SessionPane = forwardRef(
             {...register("modela", {
               value: selectChoices[0].value,
             })}
+            disabled={isStreaming}
             title="Model A"
             width="w-[256px]"
             optionsWidth="w-[256px]"
@@ -97,6 +99,7 @@ export const SessionPane = forwardRef(
             title="Model B"
             width="w-[256px]"
             optionsWidth="w-[256px]"
+            disabled={isStreaming}
             choices={selectChoices}
             placeholder="Select a model"
             defaultValue={
@@ -107,11 +110,13 @@ export const SessionPane = forwardRef(
             control={control}
             name="temperature"
             defaultValue={ModelOptions.temperature}
+            // disabled={isStreaming}
             render={({ field: { value, onChange } }) => (
               <SliderInput
                 label="Temperature"
                 value={value}
                 min={0}
+                disabled={isStreaming}
                 max={2}
                 step={0.01}
                 onValueChange={onChange}
@@ -122,12 +127,14 @@ export const SessionPane = forwardRef(
             control={control}
             name="maximumLength"
             defaultValue={ModelOptions.maximumLength}
+            // disabled={isStreaming}
             render={({ field: { value, onChange } }) => (
               <SliderInput
                 label="Maximum length"
                 value={value}
                 min={1}
                 max={4096}
+                disabled={isStreaming}
                 step={1}
                 onValueChange={onChange}
               />
@@ -137,12 +144,14 @@ export const SessionPane = forwardRef(
             control={control}
             name="topP"
             defaultValue={ModelOptions.topP}
+            // disabled={isStreaming}
             render={({ field: { value, onChange } }) => (
               <SliderInput
                 label="Top P"
                 value={value}
                 min={0}
                 max={1}
+                disabled={isStreaming}
                 step={0.01}
                 onValueChange={onChange}
               />
@@ -152,12 +161,14 @@ export const SessionPane = forwardRef(
             control={control}
             name="frequencyPenalty"
             defaultValue={ModelOptions.frequencyPenalty}
+            // disabled={isStreaming}
             render={({ field: { value, onChange } }) => (
               <SliderInput
                 label="Frequency penalty"
                 value={value}
                 min={0}
                 max={2}
+                disabled={isStreaming}
                 step={0.01}
                 onValueChange={onChange}
               />
@@ -167,10 +178,12 @@ export const SessionPane = forwardRef(
             control={control}
             name="presencePenalty"
             defaultValue={ModelOptions.presencePenalty}
+            // disabled={isStreaming}
             render={({ field: { value, onChange } }) => (
               <SliderInput
                 label="Presence penalty"
                 value={value}
+                disabled={isStreaming}
                 min={0}
                 max={2}
                 step={0.01}

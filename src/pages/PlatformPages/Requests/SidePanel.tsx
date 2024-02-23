@@ -243,15 +243,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             onClick={() => setDisplayLog(false)}
             padding="py-0"
           />
-          {(!logItem?.failed || logItem?.prompt_messages?.length === 0) && (
-            <Button
-              variant="text"
-              text="Log"
-              active={displayLog}
-              onClick={() => setDisplayLog(true)}
-              padding="py-0"
-            />
-          )}
+          {!logItem?.failed &&
+            logItem?.prompt_messages &&
+            logItem?.prompt_messages?.length > 0 && (
+              <Button
+                variant="text"
+                text="Log"
+                active={displayLog}
+                onClick={() => setDisplayLog(true)}
+                padding="py-0"
+              />
+            )}
         </div>
         <div>
           {displayLog && (

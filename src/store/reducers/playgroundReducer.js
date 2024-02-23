@@ -23,6 +23,7 @@ import {
 const initialState = {
   messages: [
     {
+      id: 0,
       role: "user",
       user_content: "",
     },

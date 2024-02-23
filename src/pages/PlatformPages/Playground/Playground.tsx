@@ -33,6 +33,8 @@ export default function Playground() {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const streamingStates = useTypedSelector((state) => state.streamingText);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getModels());
@@ -45,8 +47,9 @@ export default function Playground() {
     };
   }, []);
   useHotkeys(
-    "enter",
+    "ctrl+enter",
     () => {
+      if (isStreaming) return;
       dispatch(streamPlaygroundResponse());
     },
     {
@@ -111,6 +114,7 @@ const MessageLists = () => {
     (state) => state.playground.isRightPanelOpen
   );
   const streamingStates = useTypedSelector((state) => state.streamingText);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   return (
     <div
@@ -143,9 +147,9 @@ const MessageLists = () => {
           icon={Add}
           ref={buttonRef}
           iconPosition="left"
-          disabled={streamingStates.some((state) => state.isLoading)}
+          disabled={isStreaming}
           onClick={() => {
-            if (streamingStates.some((state) => state.isLoading)) return;
+            if (isStreaming) return;
 
             dispatch(
               appendMessage({
@@ -168,6 +172,7 @@ const MessageLists = () => {
           variant="r4-primary"
           text="Submit"
           onClick={() => {
+            if (isStreaming) return;
             dispatch(streamPlaygroundResponse());
           }}
         />
@@ -184,7 +189,7 @@ const RightPanel = () => {
       content: <SessionPane />,
     },
     {
-      value: "Most recent",
+      value: "Recent",
       buttonVariant: "text" as variantType,
       content: <MostRecentPane />,
     },
@@ -195,7 +200,7 @@ const RightPanel = () => {
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
-      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2"
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
       headerClassName="flex px-lg py-xxs items-center gap-sm self-stretch shadow-border-b shadow-gray-2"
     />
   );
