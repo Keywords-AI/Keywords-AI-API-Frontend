@@ -181,7 +181,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
     TTFT: (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.failed
+        {logItem?.failed ||
+        (logItem?.time_to_first_token && logItem?.time_to_first_token < 0)
           ? "-"
           : (logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
@@ -199,7 +200,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
-    if (logItem?.failed) {
+    if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
       setDisplayLog(false);
     }
     if (displayLog) enableScope("request_sidepanel");
@@ -306,7 +307,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               <>
                 <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
                   <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
-                    Error
+                    Error message
                     <CopyButton text={logItem?.error_message || ""} />
                   </div>
                   <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
