@@ -100,6 +100,7 @@ export function PlaygroundMessage({
   };
   const handleChange = (value) => {
     setMessageValue(value); // This sets what is displayed in the input box
+    console.log("setid", id);
     dispatch(
       setMessageByIndex({
         index: id,
@@ -214,7 +215,7 @@ export function PlaygroundMessage({
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={+id == +lastResponseMessageId && !isError}
+                showRegen={id == lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
               {isError ? (
@@ -317,11 +318,12 @@ const MessageHeader = ({
 
 export function StreamingMessage() {
   const streamingStates = useTypedSelector((state) => state.streamingText);
-  const currentModels = useTypedSelector(
-    (state) => state.playground.currentModels
-  );
+
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
+  );
+  const selectedModel = useTypedSelector(
+    (state) => state.playground.modelOptions.models
   );
   if (streamingStates.every((state) => state.isLoading === false)) return null;
 
@@ -329,30 +331,30 @@ export function StreamingMessage() {
     <div className="flex items-start gap-xxs self-stretch ">
       {streamingStates.length > 0 &&
         streamingStates?.map((streamingState, index) => {
-          const Icon = ModelIcon(currentModels[index]);
           if (
-            streamingStates.every(
-              (item) => item.isLoading === false && item.error == null
-            )
+            selectedModel[index] === "none" &&
+            selectedModel.every((item) => item === "none")
           ) {
             return null;
           }
+          if (isSingleChannel && selectedModel[index] === "none") return null;
           if (
             isSingleChannel &&
-            streamingState.isLoading === false &&
-            streamingState.error == null
+            !streamingState.isLoading &&
+            streamingState.streamingText === ""
           )
             return null;
-          const deletedOneChannel = streamingStates?.some(
-            (state) => state.streamingText == "" && state.isLoading === false
-          );
-          if (deletedOneChannel && !streamingState.isLoading) return null;
+          if (streamingState.streamingText === "" && !streamingState.isLoading)
+            return null;
+          console.log(isSingleChannel);
+          // if (deletedOneChannel && !streamingState.isLoading) return null;
+
           return (
             <div
               key={index}
               className={cn(
-                "flex-col items-start gap-xxxs self-stretch",
-                isSingleChannel || deletedOneChannel ? "w-full" : "w-1/2"
+                "flex-col items-start gap-xxxs flex-1 self-stretch"
+                // isSingleChannel ? "w-full" : "w-1/2"
               )}
             >
               {
@@ -373,10 +375,8 @@ export function StreamingMessage() {
                   />
                   <div
                     className={cn(
-                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-3 max-w-full ",
-                      isSingleChannel || deletedOneChannel
-                        ? "max-w-full"
-                        : "max-w-1/2"
+                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-3 max-w-full "
+                      // isSingleChannel ? "max-w-full" : "max-w-1/2"
                     )}
                   >
                     {streamingState.streamingText ? (
