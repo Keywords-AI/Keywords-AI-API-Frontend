@@ -14,10 +14,16 @@ import {
   TOGGLE_RIGHT_PANEL,
   SET_SELECTED_LOGS,
   SET_MESSAGE_BY_INDEX,
+  SET_MESSAGE_RESPONSE_BY_INDEX,
+  DELETE_MESSAGE_BY_INDEX,
+  SET_CHANNEL_MODE,
+  SET_BREAKDOWN_DATA,
+  SET_MODEL_LOG_DATA,
 } from "../actions/playgroundAction";
 const initialState = {
   messages: [
     {
+      id: 0,
       role: "user",
       user_content: "",
     },
@@ -27,18 +33,50 @@ const initialState = {
   currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    optimize: "speed",
-    creativity: "high",
-    maxTokens: 256,
+    models: ["router", "gpt-4"],
+    temperature: 1,
+    maximumLength: 256,
+    topP: 1,
+    frequencyPenalty: 0,
+    presencePenalty: 0,
   },
+  isSingleChannel: false,
   outputs: {
     score: {},
     cost: 0.00123,
     latency: 0.8,
     tokens: 4386,
   },
+  breakdownData: {
+    prompt_tokens: 0,
+    completion_tokens: 0,
+    cost: 0,
+    total_tokens: 0,
+    routing_time: 0,
+    timestamp: "",
+    status: "",
+  },
+  modelLogs: [
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+    {
+      model: "",
+      completion_tokens: 0,
+      cost: 0,
+      ttft: 0,
+      latency: 0,
+      status: -1,
+    },
+  ],
+
   isLeftPanelOpen: false,
-  isRightPanelOpen: false,
+  isRightPanelOpen: true,
   selectedLogs: "",
 };
 
@@ -59,15 +97,75 @@ const playgroundReducer = (state = initialState, action) => {
           { ...state.messages.slice(-1)[0], ...action.payload },
         ],
       };
+    case SET_BREAKDOWN_DATA:
+      return { ...state, breakdownData: action.payload };
+    case SET_CHANNEL_MODE:
+      return { ...state, isSingleChannel: action.payload };
     case SET_MESSAGE_BY_INDEX:
       const { index, content } = action.payload;
       return {
         ...state,
         messages: [
           ...state.messages.slice(0, index),
-          { ... content },
+          { ...content },
           ...state.messages.slice(index + 1),
         ],
+      };
+    case DELETE_MESSAGE_BY_INDEX:
+      const { id, deleteChannel } = action.payload;
+
+      if (deleteChannel === -1) {
+        return {
+          ...state,
+          messages: state.messages.filter((message, index) => index !== id),
+        };
+      } else {
+        const deleteBoth = state.messages[id].responses.some(
+          (element) => element === null
+        );
+        if (deleteBoth) {
+          return {
+            ...state,
+            messages: state.messages.filter((message, index) => index !== id),
+          };
+        }
+        return {
+          ...state,
+          messages: state.messages.map((message, index) => {
+            if (index === id) {
+              return {
+                ...message,
+                responses: message.responses.map((r, c) => {
+                  if (c === deleteChannel) return null;
+                  else return r;
+                }),
+              };
+            }
+            return message;
+          }),
+        };
+      }
+    case SET_MODEL_LOG_DATA:
+      return { ...state, modelLogs: action.payload };
+    case SET_MESSAGE_RESPONSE_BY_INDEX:
+      const { id: i, content: text, channel } = action.payload;
+      return {
+        ...state,
+        messages: state.messages.map((message, index) => {
+          if (index === i) {
+            const newResponse = message.responses.map((r, c) => {
+              if (c === channel) {
+                return { ...r, content: text };
+              }
+              return r;
+            });
+            return {
+              ...message,
+              responses: newResponse,
+            };
+          }
+          return message;
+        }),
       };
     case SET_PROMPT:
       return { ...state, prompt: action.payload };

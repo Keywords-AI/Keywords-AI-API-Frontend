@@ -22,7 +22,7 @@ export const StartWithPlan = () => {
   const dispatch = useTypedDispatch();
   const memoSelector = createSelector(
     [(state: RootState) => state.organization, (state) => state.user],
-    (organization, user) => ({ organization, user }),
+    (organization, user) => ({ organization, user })
   ); // This creates a memorized selector callback
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
@@ -46,7 +46,7 @@ export const StartWithPlan = () => {
       subtitle: "Best for solo builders.",
       price: "0",
       billFrequency: "Free forever",
-      featureTitle: "Starter plan fretures",
+      featureTitle: "Starter plan features",
       features: [
         "10,000 API requests",
         "1 developer seat",
@@ -59,7 +59,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           dispatch(createPaymentSession([STRIPE_STATER_LOOKUP_KEY]));
         },
@@ -91,7 +91,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
             dispatch(
@@ -147,7 +147,7 @@ export const StartWithPlan = () => {
       ],
       downgradeParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -155,7 +155,7 @@ export const StartWithPlan = () => {
       },
       buttonParams: {
         buttonText: "Book a demo",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
           window.open("https://keywordsai.co", "_blank");
@@ -178,7 +178,7 @@ export const StartWithPlan = () => {
     } else if (index === currIndex) {
       return {
         buttonText: "Current plan",
-        buttonVariant: "r4-gray2",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {},
       };
     } else {
@@ -192,7 +192,7 @@ export const StartWithPlan = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-[800px] gap-sm pb-xxxl">
+    <div className="flex flex-col w-full max-w-[800px] gap-sm pb-xxxl pt-[88px] ">
       <div className="flex flex-col w-full items-center gap-lg">
         <TitleStaticHeading
           title="Subscription options"

@@ -4,3 +4,4 @@ export * from './apiKeyAction';
 export * from './usageAction';
 export * from './integrationAction'
 export * from './fallbackAction'
+export * from './modelsPageAction'

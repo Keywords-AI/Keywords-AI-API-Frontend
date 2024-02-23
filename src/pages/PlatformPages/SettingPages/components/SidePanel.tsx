@@ -15,8 +15,6 @@ import React, { useState } from "react";
 import { RestorePlaygroundState } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
-import { Drawer } from "@medusajs/ui";
-
 interface SidePanelProps {
   open: boolean;
 }

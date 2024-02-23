@@ -1,5 +1,7 @@
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  CodeViewer,
   Delete,
   IconPlayground,
   Pencil,
@@ -9,6 +11,9 @@ import {
   SideBarLeft,
 } from "src/components";
 import { Button, ButtonGroup, DotsButton } from "src/components/Buttons";
+import { Modal } from "src/components/Dialogs";
+import useForwardRef from "src/hooks/useForwardRef";
+import { getKeys } from "src/store/actions";
 import {
   toggleLeftPanel,
   toggleRightPanel,
@@ -47,9 +52,9 @@ export function TopBar() {
   };
 
   return (
-    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bggray-1">
+    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
       <div className="flex items-center gap-xxs">
-        <DotsButton
+        {/* <DotsButton
           icon={isLeftPanelOpen ? SideBarActiveLeft : SideBarLeft}
           onClick={() => dispatch(toggleLeftPanel())}
         />
@@ -67,21 +72,17 @@ export function TopBar() {
               onClick: () => console.log("publish"),
             },
           ]}
-        />
+        /> */}
       </div>
-      <div className="flex gap-xxs items-start">
-        <Button
+      <div className="flex gap-xxs items-center">
+        {/* <Button
           variant="small"
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
-        />
-        <Button
-          variant="small"
-          text="Clear session"
-          icon={Delete}
-          onClick={() => navigate(0)}
-        />
-        <Button variant="small" text="View code" />
+        /> */}
+
+        {/* <ViewCode /> */}
+        <DotsButton icon={Delete} onClick={() => navigate(0)} />
         <HorizontalDivier />
         <DotsButton
           icon={isRightPanelOpen ? SideBarActive : SideBar}
@@ -100,3 +101,35 @@ const HorizontalDivier = () => {
     ></div>
   );
 };
+
+const ViewCode = React.forwardRef<HTMLDivElement>((props: any, ref) => {
+  const navigate = useNavigate();
+  const localRef = useForwardRef(ref);
+  const dispatch = useTypedDispatch();
+
+  // useEffect(() => {
+  //   dispatch(getKeys());
+  // }, []);
+  return (
+    <Modal
+      ref={localRef}
+      trigger={<Button variant="small" text="View code" />}
+      title="View code"
+      subtitle="You can use the following code to start integrating your current prompt and settings into your application."
+      width="w-[864px]"
+    >
+      <CodeViewer apikey={"your_apikey"} />
+      <p className="text-sm-regular text-gray-4">
+        Your API key can be found{" "}
+        <a
+          onClick={() => navigate("/platform/api/api-keys")}
+          className="text-primary cursor-pointer"
+        >
+          here
+        </a>
+        . You should use environment variables or a secret management tool to
+        expose your key to your applications.
+      </p>
+    </Modal>
+  );
+});

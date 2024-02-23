@@ -2,11 +2,17 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsStream, keywordsRequest } from "src/utilities/requests";
-import { ChatMessage, ConversationMessage, RootState, TypedDispatch } from "src/types";
+import {
+  ChatMessage,
+  ConversationMessage,
+  RootState,
+  TypedDispatch,
+} from "src/types";
 import {
   SEND_STREAMINGTEXT_SUCCESS,
   SEND_STREAMINGTEXT_PARTIAL,
   SEND_STREAMINGTEXT_REQUEST,
+  sendStreamingTextFailure,
 } from "./streamingTextAction";
 
 export const ERROR_MESSAGE = "ERROR_MESSAGE";
@@ -23,7 +29,14 @@ export const DELETE_CONVERSATION = "DELETE_CONVERSATION";
 export const CREATE_MESSAGE = "CREATE_MESSAGE";
 export const DELETE_MESSAGE = "DELETE_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
+export const SET_MESSAGE_CONTENT = "SET_MESSAGE_CONTENT";
 
+export const setMessageContent = (id, content) => {
+  return {
+    type: SET_MESSAGE_CONTENT,
+    payload: { id, content },
+  };
+};
 export const errorMessage = (error) => ({
   type: ERROR_MESSAGE,
   payload: {
@@ -38,7 +51,7 @@ export const setIsEditing = (isEditing) => ({
   payload: isEditing,
 });
 
-export const setEnableCustomPrompt = (enable) => {
+export const setEnableCustomPrompt = (enable: boolean) => {
   return {
     type: SET_ENABLE_CUSTOM_PROMPT,
     payload: enable,
@@ -62,13 +75,17 @@ export const setCustomPromptFile = (customPromptFile) => {
   };
 }; // not used
 
-
 export const deleteConversation = (id) => {
   return (dispatch, getState) => {
     dispatch({ type: DELETE_CONVERSATION, payload: id });
     if (getState().chatbot.conversation?.id === id) {
       dispatch({ type: RESET_CONVERSATION });
     }
+    keywordsRequest({
+      method: "DELETE",
+      path: `chatbot/conversation/${id}/`,
+      dispatch: dispatch,
+    });
   };
 };
 
@@ -101,7 +118,7 @@ export const getConversations = () => {
 
 export const getConversation = (id) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}chatbot/conversations/${id}/`, {
+    fetch(`${apiConfig.apiURL}chatbot/conversation/${id}/`, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": getCookie("csrftoken"),
@@ -175,7 +192,7 @@ export const nameConversation = (id, content) => {
         }
       })
       .catch((err) => console.log(err));
-};
+  };
 }; // not used
 
 export const createMessage = (msg: ConversationMessage) => {
@@ -188,7 +205,7 @@ export const createMessage = (msg: ConversationMessage) => {
         method: "POST",
         path: "chatbot/messages/",
         dispatch: dispatch,
-      })
+      });
     } else {
       dispatch(createConversation(msg));
     }
@@ -203,7 +220,7 @@ export const readStreamChunk = (chunk: string) => {
       if (textBit) {
         dispatch({
           type: SEND_STREAMINGTEXT_PARTIAL,
-          payload: textBit,
+          payload: { text: textBit, model: data.model },
         });
       }
     } catch (e) {}
@@ -211,7 +228,7 @@ export const readStreamChunk = (chunk: string) => {
 };
 
 export const sendMessage = (msgText?: string) => {
-  return async (dispatch: TypedDispatch, getState: ()=>RootState) => {
+  return async (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const { isLoading: streaming } = state.streamingText[0];
     const systemPrompt = state.chatbot.customPrompt;
@@ -222,6 +239,7 @@ export const sendMessage = (msgText?: string) => {
           conversation: conversation_id,
           role: "user",
           content: msgText,
+          model: null,
         })
       );
     }
@@ -230,12 +248,7 @@ export const sendMessage = (msgText?: string) => {
     const sessionMessages = messages.map((item) => {
       return { role: item.role, content: item.content };
     });
-    const systemMessage = {
-      role: "system",
-      content: systemPrompt || "",
-    };
-    console.log("sending messages", sessionMessages);
-    const messagesToSend = [systemMessage, ...sessionMessages];
+    const messagesToSend = sessionMessages;
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
       data: { messages: messagesToSend, stream: true },
@@ -245,6 +258,7 @@ export const sendMessage = (msgText?: string) => {
       streamingDoneCallback: () => {
         const state = getState();
         const streamingText = state.streamingText[0].streamingText;
+        const streamingModel = state.streamingText[0].model;
         const currentConversationId = state.chatbot.conversation.id;
         dispatch({ type: SEND_STREAMINGTEXT_SUCCESS });
         dispatch(
@@ -252,12 +266,18 @@ export const sendMessage = (msgText?: string) => {
             conversation: currentConversationId,
             role: "assistant",
             content: streamingText,
+            model: streamingModel,
           })
         );
       },
-    }).then((abortController) => {
-      console.log(abortController);
-    });
+    })
+      .then((abortController) => {
+        console.log(abortController);
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(sendStreamingTextFailure(err.toString()));
+      });
   };
 };
 

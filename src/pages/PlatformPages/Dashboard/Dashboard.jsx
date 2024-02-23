@@ -24,6 +24,8 @@ import { PanelGraph } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
+import { color } from "@uiw/react-codemirror";
+import DashboardFilterLeft from "./DashboardFilterLeft";
 
 const mapStateToProps = (state) => ({
   summary: state.dashboard.summary,
@@ -71,11 +73,16 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const display_type = new URLSearchParams(location.search).get("type");
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
-  useEffect(() => {
-    getDashboardData();
-  }, [performance_param, breakdown_type], shallowEqual);
+  useEffect(
+    () => {
+      getDashboardData();
+    },
+    [performance_param, breakdown_type],
+    shallowEqual
+  );
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -88,7 +95,6 @@ function DashboardNotConnected({
   if (breakdown_type !== "none") {
     colorData = breakdown_type === "by_model" ? modelColors : keyColors;
   }
-
   const metrics = [
     {
       title: Metrics.number_of_requests.name,
@@ -96,6 +102,7 @@ function DashboardNotConnected({
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
+        dispatch(setDisplayType("total", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.number_of_requests.value,
@@ -113,6 +120,7 @@ function DashboardNotConnected({
       dataKey: Metrics.average_latency.value,
       unit: true,
       onClick: () => {
+        dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.average_latency.value,
@@ -154,7 +162,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_cost.name,
-      number: `$${summary.total_cost?.toFixed(3) || 0}`,
+      number: `$${summary.total_cost?.toFixed(4) || 0}`,
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {
@@ -197,7 +205,7 @@ function DashboardNotConnected({
   }
 
   // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-  if (firstTime !== undefined && firstTime) return <WelcomeState />;
+  if (firstTime !== undefined && firstTime) return <WelcomeState isDashboard />;
   else
     return (
       <div className=" flex-col flex-1 self-stretch">
@@ -218,9 +226,9 @@ function DashboardNotConnected({
             />
           ))}
         </div>
-        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
+        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full h-[52px]">
           <div>
-            {breakdown_type !== "none" && (
+            {/* {breakdown_type !== "none" && (
               <div className="flex items-center content-center gap-xs flex-wrap">
                 {colorData &&
                   Object.keys(colorData).map((name, index) => (
@@ -229,7 +237,7 @@ function DashboardNotConnected({
                         className={cn("w-[8px] h-[8px] rounded-[2px] ")}
                         style={{
                           backgroundColor:
-                            colorTagsClasses[index % colorTagsClasses.length],
+                            colorData[name] || "rgba(0, 0, 0, 0.1)",
                         }}
                       ></div>
                       <span className="caption text-gray-4">
@@ -238,7 +246,8 @@ function DashboardNotConnected({
                     </div>
                   ))}
               </div>
-            )}
+            )} */}
+            <DashboardFilterLeft />
           </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />

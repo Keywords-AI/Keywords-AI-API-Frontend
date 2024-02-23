@@ -1,4 +1,8 @@
-import { DISPATCH_NOTIFICATION, DISMISS_NOTIFICATION } from "src/store/actions";
+import {
+  DISPATCH_NOTIFICATION,
+  DISMISS_NOTIFICATION,
+  CLEAR_NOTIFICATIONS,
+} from "src/store/actions";
 const initState = {
   notifications: [
     // {
@@ -26,6 +30,11 @@ export default function notificationReducer(state = initState, action) {
         (notification) => notification.id !== action.payload
       );
       return { ...state, notifications: newNotifications };
+    case CLEAR_NOTIFICATIONS:
+      if (state.notifications.length === 0) {
+        return state;
+      }
+      return { ...state, notifications: [] };
     default:
       return state;
   }

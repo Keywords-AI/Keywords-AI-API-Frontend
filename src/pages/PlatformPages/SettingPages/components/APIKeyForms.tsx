@@ -18,7 +18,7 @@ import {
   dispatchNotification,
 } from "src/store/actions";
 import { ApiKey } from "src/types";
-import { CodeViewer, Info } from "src/components";
+import { CodeViewer, Down, Info, Up } from "src/components";
 import { HoverPopup } from "src/components/Cards";
 import "./specialInput.css";
 import { models } from "src/utilities/constants";
@@ -123,53 +123,38 @@ const CreateFormNotConnected = React.forwardRef(
       watch,
     } = useForm();
     const onSubmit = (data) => {
-      if (!data.name) {
-        data.name = "New Key";
+      console.log("data", data);
+      const name = data.name || "New Key";
+      setNewKeyName!(name);
+      if (!showMore) {
+        createApiKey!({ name: name, expiry_date: data.expiry_date });
+        return;
       }
-      setNewKeyName(data.name);
+
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
         data.rate_limit = 100;
       }
-      data.preset_models = checkBoxFieldToList(data.preset_models);
-      if (data.preset_models.length === 0) {
-        dispatchNotification({
-          type: "error",
-          title: "Please select at least one model",
-        });
-        return;
-      }
-      createApiKey(data);
+      createApiKey!(data);
     };
-    const watchModelSelection = watch("preset_models");
-    console.log(watchModelSelection);
+
     const handleClose = (e: any) => {
       e.preventDefault();
       e.stopPropagation();
       setShowForm(false);
     };
-    const [showInfo, setShowInfo] = useState(false);
     const [currentKeyName, setCurrentKeyName] = useState("New Key");
-    const [isRateLimitEnabled, setIsRateLimitEnabled] = useState(false);
     const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
-    const [isSpendingLimitEnabled, setIsSpendingLimitEnabled] = useState(false);
 
-    const handleRateLimitSwitch = (checked) => {
-      setIsRateLimitEnabled(checked);
-    };
-
-    const handleSpendingLimitSwitch = (checked) => {
-      setIsSpendingLimitEnabled(checked);
-    };
-
+    const [showMore, setShowMore] = useState(false);
     return (
       <form
-        className={"flex-col gap-sm self-stretch relative"}
+        className={"flex-col gap-md self-stretch relative"}
         onSubmit={handleSubmit(onSubmit)}
       >
         {!apiKey?.apiKey ? (
           <React.Fragment>
-            <div className="grid gap-sm grid-cols-[1fr,160px]">
+            <div className="grid gap-xs grid-cols-[1fr,160px]">
               <TextInput
                 title={"Name"}
                 width={"w-full"}
@@ -193,153 +178,146 @@ const CreateFormNotConnected = React.forwardRef(
                 choices={expiryOptions}
               />
             </div>
-            <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
-              <div className="text-gray-4 text-sm-regular w-full">Models</div>
-              {models.map((model, index) => (
-                <CheckboxInput
-                  key={index}
-                  text={model.name}
-                  {...register("preset_models")}
-                  value={model.value}
-                />
-              ))}
-            </div>
-            <div className="flex flex-row items-center gap-xxs relative">
-              <span className="text-sm-regular text-gray-4">
-                Has rate limit{" "}
-              </span>
-              {/* <IconButton
-                icon={Info}
-                onMouseEnter={() => setShowInfo(true)}
-                onMouseLeave={() => setShowInfo(false)}
+            <div className="flex-col justify-center items-start gap-xs self-stretch">
+              <Button
+                icon={showMore ? Up : Down}
+                variant="text"
+                type="button"
+                text="More options"
+                justification="justify-center"
+                iconSize="xxs"
+                onClick={() => setShowMore((prev) => !prev)}
+                padding="py-xxs"
               />
-              {showInfo && (
-                <HoverPopup
-                  className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
-                  text="rate limit"
-                />
-              )} */}
-              <SwitchButton
-                onCheckedChange={handleRateLimitSwitch}
-                className="absolute -top-[2px]"
-              />
-            </div>
-            {isRateLimitEnabled && (
-              <div className="grid gap-sm grid-cols-[1fr,160px]">
-                <TextInput
-                  title={"Rate limit"}
-                  width={"w-full"}
-                  {...register("rate_limit")}
-                  // onKeyDown={handleEnter}
-                  placeholder={"None"}
-                  type="number"
-                  pseudoElementClass="special-input"
-                />
-                <SelectInput
-                  title={"Unit"}
-                  optionsWidth={"w-[160px]"}
-                  {...register("unit", {
-                    value: currentUnit,
-                    onChange: (e) => setCurrentUnit(e.target.value),
-                  })}
-                  // onKeyDown={handleEnter}
-                  placeholder={"per minute"}
-                  //This corresponds to the 'Never' option
-                  choices={unitOptions}
-                />
-              </div>
-            )}
-            <div className="flex flex-row items-center gap-xxs relative">
-              <span className="text-sm-regular text-gray-4">
-                Has spending limit{" "}
-              </span>
-              <SwitchButton onCheckedChange={handleSpendingLimitSwitch} />
-            </div>
-            {isSpendingLimitEnabled && (
-              <div className="grid gap-sm grid-cols-1">
-                <TextInput
-                  title={"Spending limit"}
-                  width={"w-full"}
-                  {...register("spending_limit")}
-                  // onKeyDown={handleEnter}
-                  placeholder={"$100"}
-                  type="number"
-                  defaultValue={100}
-                />
-              </div>
-            )}
-            {/* <SelectInput
-                title={"Select preset"}
-                {...register("preset_models")}
-                defaultValue={models.reduce(
-                  (modelStr, model) => modelStr + "," + model.value,
-                  ""
+              <div className="flex-col items-start justify-center gap-md self-stretch">
+                {showMore && (
+                  <>
+                    <div className="flex items-center gap-xs self-stretch">
+                      <TextInput
+                        title={"Rate limit"}
+                        width={"w-full"}
+                        {...register("rate_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"None"}
+                        type="number"
+                        pseudoElementClass="special-input"
+                      />
+                      <SelectInput
+                        title={"Unit"}
+                        optionsWidth={"w-[160px]"}
+                        {...register("unit", {
+                          value: currentUnit,
+                          onChange: (e) => setCurrentUnit(e.target.value),
+                        })}
+                        // onKeyDown={handleEnter}
+                        placeholder={"per minute"}
+                        width="w-[160px]"
+                        //This corresponds to the 'Never' option
+                        choices={unitOptions}
+                      />
+                    </div>
+                    <TextInput
+                      title={"Spending limit"}
+                      width={"w-full"}
+                      {...register("spending_limit")}
+                      // onKeyDown={handleEnter}
+                      placeholder={"100"}
+                      type="number"
+                      defaultValue={200}
+                      dollarSign
+                    />
+                  </>
                 )}
-                choices={[
-                  {
-                    name: "All",
-                    value: models.reduce(
-                      (modelStr, model) => modelStr + "," + model.value,
-                      ""
-                    ),
-                  },
-                  ...organization?.organization_model_presets.map((preset) => {
-                    return {
-                      name: preset.name,
-                      value: preset.preset_models.reduce(
-                        (modelStr, model) => modelStr + "," + model,
-                        ""
-                      ),
-                    };
-                  }),
-                ]}
-              /> */}
+                <div
+                  className={cn(
+                    "flex-row self-stretch items-center",
+                    loading ? "justify-between" : "justify-end"
+                  )}
+                >
+                  {loading && (
+                    <div className="text-sm-md text-success ">
+                      Creating Key...
+                    </div>
+                  )}
+                  <div className="flex-row gap-xs ">
+                    {apiKey.apiKey ? (
+                      <>
+                        <ViewCode
+                          apiKey={apiKey.apiKey}
+                          name={apiKey.newKey?.name}
+                        />
+                        <Button
+                          variant="r4-primary"
+                          type="button"
+                          onClick={handleClose}
+                          text="Done"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="r4-black"
+                          bgColor="transparent"
+                          text={"Cancel"}
+                          type="button"
+                          onClick={handleClose}
+                        />
+
+                        <Button variant="r4-primary" text="Create" />
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </React.Fragment>
         ) : (
-          <CopyInput
-            title={apiKey.newKey?.name}
-            value={apiKey.apiKey}
-            disabled
-          />
-        )}
-        <div
-          className={cn(
-            "flex-row self-stretch items-center",
-            loading ? "justify-between" : "justify-end"
-          )}
-        >
-          {loading && (
-            <div className="text-sm-md text-success ">Creating Key...</div>
-          )}
-          <div className="flex-row gap-xs ">
-            {apiKey.apiKey ? (
-              <>
-                <ViewCode apiKey={apiKey.apiKey} name={apiKey.newKey?.name} />
-                <Button
-                  variant="r4-primary"
-                  type="button"
-                  onClick={handleClose}
-                  text="Done"
-                />
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="r4-black"
-                  bgColor="transparent"
-                  text={"Cancel"}
-                  type="button"
-                  onClick={handleClose}
-                />
-                {  !watchModelSelection || watchModelSelection.length < 1 ? (
-                  <Button disabled variant="r4-gray-2" text="Create" />
+          <div className="flex-col self-stretch flex-1 gap-md">
+            <CopyInput
+              title={apiKey.newKey?.name}
+              value={apiKey.apiKey}
+              disabled
+            />
+            <div
+              className={cn(
+                "flex-row self-stretch items-center",
+                loading ? "justify-between" : "justify-end"
+              )}
+            >
+              {loading && (
+                <div className="text-sm-md text-success ">Creating Key...</div>
+              )}
+              <div className="flex-row gap-xs ">
+                {apiKey.apiKey ? (
+                  <>
+                    <ViewCode
+                      apiKey={apiKey.apiKey}
+                      name={apiKey.newKey?.name}
+                    />
+                    <Button
+                      variant="r4-primary"
+                      type="button"
+                      onClick={handleClose}
+                      text="Done"
+                    />
+                  </>
                 ) : (
-                  <Button variant="r4-primary" text="Create" />
+                  <>
+                    <Button
+                      variant="r4-black"
+                      bgColor="transparent"
+                      text={"Cancel"}
+                      type="button"
+                      onClick={handleClose}
+                    />
+
+                    <Button variant="r4-primary" text="Create" />
+                  </>
                 )}
-              </>
-            )}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </form>
     );
   }
@@ -405,22 +383,14 @@ const EditFormNotConnected = ({
   updateEditingKey,
   dispatchNotification,
 }: EditingFromProps) => {
-  const [showInfo, setShowInfo] = useState(false);
   const [currentKeyName, setCurrentKeyName] = useState(
     editingKey?.name || "New Key"
   );
-  const [isRateLimitEnabled, setIsRateLimitEnabled] = useState(false);
   const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
-  const [isSpendingLimitEnabled, setIsSpendingLimitEnabled] = useState(false);
+  console.log("currentUnit", currentUnit);
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
-      const spendingLimit = editingKey?.spending_limit;
-      const rateLimit = editingKey?.rate_limit;
-      setIsRateLimitEnabled(rateLimit !== null && rateLimit !== undefined);
-      setIsSpendingLimitEnabled(
-        spendingLimit !== null && spendingLimit !== undefined
-      );
     }
   }, [editingKey]);
   const {
@@ -429,14 +399,6 @@ const EditFormNotConnected = ({
     formState: { errors },
   } = useForm();
   const onSubmit = (data: any) => {
-    data.preset_models = checkBoxFieldToList(data.preset_models);
-    if (data.preset_models.length === 0) {
-      dispatchNotification({
-        type: "error",
-        title: "Please select at least one model",
-      });
-      return;
-    }
     updateEditingKey({ ...editingKey, ...data });
     setEditingKey(undefined);
   };
@@ -444,21 +406,14 @@ const EditFormNotConnected = ({
     setEditingKey(undefined);
   };
 
-  const handleRateLimitSwitch = (checked) => {
-    setIsRateLimitEnabled(checked);
-  };
-
-  const handleSpendingLimitSwitch = (checked) => {
-    setIsSpendingLimitEnabled(checked);
-  };
-
+  const [showMore, setShowMore] = useState(true);
   return (
     <form
-      className={"flex-col gap-sm self-stretch relative"}
+      className={"flex-col gap-md self-stretch relative"}
       onSubmit={handleSubmit(onSubmit)}
     >
       <React.Fragment>
-        <div className="grid gap-sm grid-cols-[1fr,160px]">
+        <div className="grid gap-xs grid-cols-[1fr,160px]">
           <TextInput
             title={"Name"}
             width={"w-full"}
@@ -482,101 +437,75 @@ const EditFormNotConnected = ({
             choices={expiryOptions}
           />
         </div>
-        <div className="flex items-center content-center gap-xs self-stretch flex-wrap">
-          <div className="text-gray-4 text-sm-regular w-full">Models</div>
-          {models.map((model, index) => (
-            <CheckboxInput
-              key={index}
-              text={model.name}
-              {...register("preset_models")}
-              value={model.value}
-              checked={editingKey?.preset_models.includes(model.value)}
-            />
-          ))}
-        </div>
-        <div className="flex flex-row items-center gap-xxs relative">
-          <span className="text-sm-regular text-gray-4">Has rate limit </span>
-          <IconButton
-            icon={Info}
-            onMouseEnter={() => setShowInfo(true)}
-            onMouseLeave={() => setShowInfo(false)}
-          />
-          {showInfo && (
-            <HoverPopup
-              className="absolute bottom-1/2 translate-y-1/2 left-6 translate-x-32 "
-              text="rate limit"
-            />
-          )}
-          <SwitchButton
-            checked={isRateLimitEnabled}
-            onCheckedChange={handleRateLimitSwitch}
-            className="absolute -top-[2px]"
-          />
-        </div>
-        {isRateLimitEnabled && (
-          <div className="grid gap-sm grid-cols-[1fr,160px]">
-            <TextInput
-              title={"Rate limit"}
-              width={"w-full"}
-              {...register("rate_limit")}
-              // onKeyDown={handleEnter}
-              placeholder={"None"}
-              defaultValue={editingKey?.rate_limit}
-              type="number"
-              pseudoElementClass="special-input"
-            />
-            <SelectInput
-              title={"Unit"}
-              optionsWidth={"w-[160px]"}
-              {...register("unit", {
-                value: currentUnit,
-                onChange: (e) => setCurrentUnit(e.target.value),
-              })}
-              // onKeyDown={handleEnter}
-              placeholder={"per minute"}
-              //This corresponds to the 'Never' option
-              choices={unitOptions}
-            />
-          </div>
-        )}
-        <div className="flex flex-row items-center gap-xxs relative">
-          <span className="text-sm-regular text-gray-4">
-            Has spending limit{" "}
-          </span>
-          <SwitchButton
-            onCheckedChange={handleSpendingLimitSwitch}
-            checked={isSpendingLimitEnabled}
-          />
-        </div>
-        {isSpendingLimitEnabled && (
-          <div className="grid gap-sm grid-cols-1">
-            <TextInput
-              title={"Spending limit"}
-              width={"w-full"}
-              {...register("spending_limit", {
-                value: editingKey?.spending_limit,
-              })}
-              // onKeyDown={handleEnter}
-              placeholder={"$100"}
-              type="number"
-              defaultValue={100}
-            />
-          </div>
-        )}
-      </React.Fragment>
-
-      <div className="flex-row justify-end self-stretch">
-        <div className="flex-row gap-xs">
+        <div className="flex-col justify-center items-start gap-xs self-stretch">
           <Button
-            variant="r4-gray-2"
-            bgColor="transparent"
-            text={"Cancel"}
+            icon={Down}
+            variant="text"
             type="button"
-            onClick={handleClose}
+            text="More options"
+            onClick={() => setShowMore((prev) => !prev)}
+            padding="py-xxxs"
           />
-          <Button variant="r4-primary" text="Save" />
+          <div className="flex-col items-start justify-center gap-md self-stretch">
+            {showMore && (
+              <>
+                <div className="flex items-center gap-xs self-stretch">
+                  <TextInput
+                    title={"Rate limit"}
+                    width={"w-full"}
+                    {...register("rate_limit")}
+                    // onKeyDown={handleEnter}
+                    placeholder={"None"}
+                    type="number"
+                    defaultValue={editingKey?.rate_limit}
+                    pseudoElementClass="special-input"
+                  />
+                  <SelectInput
+                    title={"Unit"}
+                    optionsWidth={"w-[160px]"}
+                    {...register("unit", {
+                      value: currentUnit,
+                      onChange: (e) => setCurrentUnit(e.target.value),
+                    })}
+                    // onKeyDown={handleEnter}
+                    placeholder={"per minute"}
+                    width="w-[160px]"
+                    //This corresponds to the 'Never' option
+                    choices={unitOptions}
+                  />
+                </div>
+                <TextInput
+                  title={"Spending limit"}
+                  width={"w-full"}
+                  {...register("spending_limit")}
+                  // onKeyDown={handleEnter}
+                  placeholder={"100"}
+                  type="number"
+                  dollarSign
+                  defaultValue={editingKey?.spending_limit}
+                />
+              </>
+            )}
+            <div
+              className={cn(
+                "flex-row self-stretch items-center",
+                "justify-end"
+              )}
+            >
+              <div className="flex-row gap-xs ">
+                <Button
+                  variant="r4-gray-2"
+                  bgColor="transparent"
+                  text={"Cancel"}
+                  type="button"
+                  onClick={handleClose}
+                />
+                <Button variant="r4-primary" text="Save" />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     </form>
   );
 };

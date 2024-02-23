@@ -3,6 +3,7 @@ import { User } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: User = {
+  loading: true,
   id: null,
   is_organization_admin: false,
   sort_by: "",
@@ -31,6 +32,7 @@ const initialState: User = {
     content: "",
   },
   usage: 0,
+  group_by: "",
   is_active: false,
   active_subscription: false,
   is_admin: false,

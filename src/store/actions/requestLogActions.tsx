@@ -16,9 +16,11 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
-import { get } from "react-hook-form";
+import { SentimentTag, StatusTag } from "src/components/Misc";
+import { Parser } from "@json2csv/plainjs";
 
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
+export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
 export const SET_SELECTED_REQUEST = "SET_SELECTED_REQUEST";
 export const SET_SIDE_PANEL_OPEN = "SET_SIDE_PANEL_OPEN";
@@ -37,12 +39,43 @@ export const ADD_FILTER = "ADD_FILTER";
 export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
+export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+export const SET_JSON_MODE = "SET_JSON_MODE";
 
+export const setJsonMode = (jsonMode: boolean) => {
+  return {
+    type: SET_JSON_MODE,
+    payload: jsonMode,
+  };
+};
+export const startGetRequestLogs = () => {
+  return {
+    type: START_GET_REQUEST_LOGS,
+  };
+};
 const concatMessages = (
   messages: ChatMessage[] | undefined[] | undefined
 ): string => {
   if (messages) {
     return messages.map((message) => message?.content).join(" ");
+  }
+  return "";
+};
+
+export const setselectRequestContent = (data) => {
+  return {
+    type: SET_SELECTED_REQUEST_CONTENT,
+    payload: data,
+  };
+};
+const getLastUserText = (messages: ChatMessage[]): string => {
+  if (messages?.length && messages.length > 0) {
+    const lastMessage = messages.slice(-1)[0].content;
+    if (lastMessage instanceof Array) {
+      console.log("lastMessage", lastMessage);
+      return lastMessage.find((part) => part.type === "text").text;
+    }
+    return messages.slice(-1)[0].content;
   }
   return "";
 };
@@ -73,28 +106,29 @@ export const setCurrentFilter = (filter: CurrentFilterObject) => {
   };
 };
 
+function processFilters(filters: FilterObject[]): FilterParams {
+  return filters.reduce((acc: FilterParams, filter): FilterParams => {
+    if (!(filter.value instanceof Array)) {
+      filter.value = [filter.value];
+    }
+    var values = filter.value.map((value) => {
+      if (value === "true" || value === "false") {
+        value = value === "true" ? true : false;
+      }
+      return value;
+    });
+    filter.metric &&
+      (acc[filter.metric] = {
+        value: values,
+        operator: filter.operator,
+      });
+    return acc;
+  }, {});
+}
+
 export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
-    const postData = filters.reduce(
-      (acc: FilterParams, filter): FilterParams => {
-        if (!(filter.value instanceof Array)) {
-          filter.value = [filter.value];
-        }
-        var values = filter.value.map((value) => {
-          if (value === "true" || value === "false") {
-            value = value === "true" ? true : false;
-          }
-          return value;
-        });
-        filter.metric &&
-          (acc[filter.metric] = {
-            value: values,
-            operator: filter.operator,
-          });
-        return acc;
-      },
-      {}
-    );
+    const postData = processFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
     dispatch(getRequestLogs(postData));
   };
@@ -118,6 +152,7 @@ export const deleteFilter = (filterId: string) => {
       type: DELETE_FILTER,
       payload: filterId,
     });
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -130,10 +165,41 @@ export const updateFilter = (filter: FilterObject) => {
       type: UPDATE_FILTER,
       payload: filter,
     });
+    if (filter.value?.length === 0) {
+      dispatch(deleteFilter(filter.id));
+      return;
+    }
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
   };
+};
+
+export const logColumnToDisplayLogColumn = (value: any): string => {
+  const convert = {
+    timestamp: "time",
+    status_code: "failed",
+    organization_key__name: "apiKey",
+    model: "model",
+    sentiment_score: "sentimentScore",
+  };
+  return convert[value] || value;
+};
+
+export const processGroupingTitle = (
+  value: string | number,
+  metric?: string
+): React.ReactNode => {
+  if (typeof value === "boolean") {
+    return <StatusTag statusCode={value} />;
+  }
+  if (metric === "sentiment_score") {
+    return <SentimentTag sentiment_score={value as number} showScore={false} />;
+  }
+  if (!metric) {
+    return "Unknown";
+  }
+  return value;
 };
 
 export const processRequestLogs = (
@@ -148,7 +214,7 @@ export const processRequestLogs = (
         </span>
       ),
       prompt: (
-        <span className="truncate">{concatMessages(log.prompt_messages)}</span>
+        <span className="truncate">{getLastUserText(log.prompt_messages)}</span>
       ),
       response: (
         <span className="truncate">
@@ -156,6 +222,9 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
+      time_to_first_token: (
+        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+      ),
       outputTokens: log.completion_tokens,
       cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
       allTokens: (
@@ -165,11 +234,13 @@ export const processRequestLogs = (
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,
+      organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.failed,
-        errorCode: log.error_code,
+        failed: log.status_code >= 300 || log.status_code === 0,
+        errorCode: log.status_code,
       },
+      sentimentScore: log.sentiment_score,
     };
   });
 };
@@ -248,16 +319,19 @@ export const filterParamsToFilterObjects = (
   });
 };
 
-export const getRequestLogs = (postData?: any) => {
+export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
+    if (postData) {
+      params.set("page", "1");
+    }
+    dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: postData,
+      data: { filters: postData, exporting: exporting },
     }).then((data) => {
       const results = data.results;
-      console.log(results?.[0]);
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
@@ -285,60 +359,74 @@ export const getRequestLogs = (postData?: any) => {
   };
 };
 
-export const setCacheResponse = (cached: boolean) => {
+export const updateLog = (id) => {
+  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
-    const currentRequestLog = getState().requestLogs.selectedRequest;
+    const filters = getState().requestLogs.filters;
+
+    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
+    // dispatch(getRequestLogs());
+
+    dispatch(
+      setselectRequestContent(
+        getState().requestLogs.logs.find((log) => log.id === id)
+      )
+    );
+  };
+};
+
+export const setCacheResponse = (
+  cached: boolean,
+  requestIndex,
+  responseContent
+) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const currentRequestLog = getState().requestLogs.logs.find(
+      (e) => e.id === getState().requestLogs.selectedRequest?.id
+    );
     if (!currentRequestLog) {
       throw new Error("No request log selected");
     }
-    const lastUserMessage = currentRequestLog.prompt_messages.findLast(
-      (message) => message.role === "user"
-    );
-    if (!lastUserMessage) {
-      throw new Error("No user message found");
+    const requestContent =
+      currentRequestLog.prompt_messages[requestIndex - 1].content;
+    if (requestContent === undefined) {
+      throw new Error("No request content found");
     }
     if (cached) {
-      //
       const body = {
+        request_log: currentRequestLog.id,
+        request_index: requestIndex,
         organization_key: currentRequestLog.organization_key,
-        request_content: lastUserMessage.content,
-        response_content: currentRequestLog.completion_message.content,
+        request_content: requestContent,
+        response_content: responseContent,
       };
+      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log(data);
-        if (!data.id) {
-          throw new Error("failed to cache");
-        }
+        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
         }
-        const updatedLogs = getState().requestLogs.logs.map((log) => {
-          if (log.id === currentRequestLog.id) {
-            return {
-              ...log,
-              cached_response: data.id,
-            };
-          }
-          return log;
-        });
-        dispatch(setRequestLogs(updatedLogs));
+        dispatch(updateLog(currentRequestLog.id));
+        return;
       });
     } else {
-      console.log("delete cache");
-      //delete cache
-      // keywordsRequest({
-      //   path: `api/caches/`,
-      //   method: "POST",
-      //   data: body,
-      // }).then((data) => {
-      //   const results = data.results;
-      //   console.log(results);
-      // });
+      const deleteId = currentRequestLog.cached_responses.find(
+        (e) => e.request_index === requestIndex
+      ).id;
+      console.log("deleteId", deleteId);
+      keywordsRequest({
+        path: `api/cache/${deleteId}/`,
+        method: "DELETE",
+        dispatch: dispatch,
+      }).then((data) => {
+        dispatch(updateLog(currentRequestLog.id));
+        return;
+      });
     }
   };
 };
@@ -375,5 +463,36 @@ export const setSecondFilter = (filter: string) => {
   return {
     type: SET_SECOND_FILTER,
     payload: filter,
+  };
+};
+
+export const exportLogs = (format = ".csv") => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const state = getState();
+    const filters = state.requestLogs.filters;
+    const filterData = processFilters(filters);
+    console.log("format", format);
+    keywordsRequest({
+      path: `api/request-logs/`,
+      method: "POST",
+      data: { filters: filterData, exporting: true },
+    }).then((data) => {
+      let exportData: string;
+      let blob: Blob;
+      if (format === ".json") {
+        exportData = JSON.stringify(data);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(data);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "request_logs" + format;
+      a.click();
+    });
   };
 };

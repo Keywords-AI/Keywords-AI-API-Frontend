@@ -11,6 +11,7 @@ import { Google } from "src/components";
 import { dispatchNotification, isLoggedIn } from "src/store/actions";
 import { useLocation } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
+import { DEMO_ENV, DEMO_EMAIL, DEMO_PASSWORD } from "src/env";
 const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
@@ -23,21 +24,38 @@ const LogIn = ({ login, googleLogin, user }) => {
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      login(data);
+      
+      await login(data);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
   };
+  useEffect(()=>{
+    if (DEMO_ENV) {
+      if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
+        console.log("error", "Demo credentials not set");
+        return;
+      }
+      const demoCredentials = {
+        username: DEMO_EMAIL,
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      };
+      console.log("login with demo credentials")
+      login(demoCredentials);
+      return;
+    }
+  }, [])
   useEffect(() => {
     if (isLoggedIn(user)) {
-      const next = new URLSearchParams(location.search).get("next")
+      const next = new URLSearchParams(location.search).get("next");
       if (next) {
         navigate(next);
       } else {
         navigate(REDIRECT_URI);
       }
     }
-  }, [user])
+  }, [user]);
   const {
     register,
     handleSubmit,
@@ -49,7 +67,7 @@ const LogIn = ({ login, googleLogin, user }) => {
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <div className="flex-col items-start gap-xxs self-stretch">
-        <BackButton text="Home" link={"/"} />
+        <BackButton text="Home" link={"https://keywordsai.co/"} />
       </div>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
@@ -71,15 +89,25 @@ const LogIn = ({ login, googleLogin, user }) => {
           className="flex-col justify-center items-center gap-md self-stretch"
         >
           <div className="flex-col justify-center items-start gap-xs self-stretch">
-            <TextInput title="Email" type="email" required placeholder="Put your email here" {...register("email")} />
-            <TextInput title="Password" type="password" required placeholder="" {...register("password")} />
+            <TextInput
+              title="Email"
+              type="email"
+              required
+              placeholder={DEMO_ENV ? "" : "Put your email here"}
+              {...register("email")}
+              disabled={DEMO_ENV}
+            />
+            <TextInput
+              title="Password"
+              type="password"
+              required
+              placeholder=""
+              {...register("password")}
+              disabled={DEMO_ENV}
+            />
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
-            <Button
-              text={"Sign in"}
-              variant={"r4-primary"}
-              width={"w-full"}
-            />
+            <Button text={"Sign in"} variant={"r4-primary"} width={"w-full"} />
             {/* <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
               width="w-full" onClick={() => googleLogin()} type="button" /> */}
             <p

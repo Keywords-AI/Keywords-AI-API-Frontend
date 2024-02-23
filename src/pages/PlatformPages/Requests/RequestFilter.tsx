@@ -7,7 +7,7 @@ import {
   RawFilterOption,
   Operator,
 } from "src/types";
-import { Down } from "src/components/Icons";
+import { Close, Down } from "src/components/Icons";
 import { SelectInputSmall, SelectInputMenu } from "src/components/Inputs";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { DotsButton } from "src/components/Buttons";
@@ -16,7 +16,6 @@ import {
   setCurrentFilter,
   updateFilter,
 } from "src/store/actions";
-import { Close } from "src/components/Icons";
 import { Button } from "src/components/Buttons";
 import { InputFieldUpdateFilter } from "./FilterValueField";
 import { current } from "@reduxjs/toolkit";
@@ -50,7 +49,8 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     };
     let displayChoice =
       filterOption.value_choices.find((choice) => {
-        return filterToUpdate.value?.[0] === choice?.value;
+        const choiceValue = choice?.value.toString();
+        return filterToUpdate.value?.[0]?.toString() === choiceValue;
       })?.name ?? filterOption.display_name;
     if (filterToUpdate.value && filterToUpdate.value.length > 1) {
       displayChoice = `${filterToUpdate.value.length} items`;

@@ -65,7 +65,7 @@ export type DisplayApiKey = {
     name: string;
     revoked: boolean;
     last_used: string;
-    models: React.ReactNode;
+    // models: React.ReactNode;
     organization: number;
     actions: React.ReactNode;
     mod_prefix: string;

@@ -26,10 +26,11 @@ import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
-
+import { Info } from "src/components/Icons";
+import { combineSlices } from "@reduxjs/toolkit";
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
-  { name: "Average", value: "average", secText: "2" },
+  { name: "Avg per request", value: "average", secText: "2" },
 ];
 
 const breakdownChoices = [
@@ -83,6 +84,20 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
+  } else if (currentMetric === "average_latency") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+      { name: "P50", value: "p50", secText: "2" },
+      { name: "P90", value: "p90", secText: "3" },
+      { name: "P95", value: "p95", secText: "4" },
+      { name: "P99", value: "p99", secText: "5" },
+      { name: "All", value: "all", secText: "6" },
+      // { name: "Total", value: "total", secText: "7" },
+    ];
+  } else if (currentMetric === "average_ttft") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+    ];
   } else {
     filteredtypeChoices = typeChoices;
   }
@@ -135,6 +150,7 @@ export default function DashboardFilter() {
             side="bottom"
             sideOffset={8}
             align="center"
+            delayDuration={1}
             content={
               <>
                 <p className="caption text-gray-4">Timeline</p>
@@ -175,6 +191,7 @@ export default function DashboardFilter() {
               side="bottom"
               sideOffset={8}
               align="center"
+              delayDuration={1}
               content={
                 <>
                   <p className="caption text-gray-4">Show display options</p>
@@ -212,6 +229,7 @@ export default function DashboardFilter() {
                 placeholder="Request"
                 useShortCut
                 align="start"
+                backgroundColor="bg-gray-2"
                 icon={Down}
                 padding="py-xxxs px-xxs"
                 gap="gap-xxs"
@@ -222,6 +240,25 @@ export default function DashboardFilter() {
                   dispatch(
                     setDisplayMetric(e.target.value, setQueryParams, navigate)
                   );
+                  const noAverageDataMetrics = [
+                    Metrics.average_latency.value,
+                    Metrics.error_count.value,
+                    Metrics.number_of_requests.value,
+                  ];
+                  if (noAverageDataMetrics.includes(e.target.value)) {
+                    dispatch(setDisplayType("total", setQueryParams, navigate));
+                  }
+                  if (
+                    e.target.value === Metrics.average_latency.value ||
+                    e.target.value === Metrics.average_ttft.value
+                  ) {
+                    dispatch(
+                      setDisplayType("average", setQueryParams, navigate)
+                    );
+                  } else {
+                    dispatch(setDisplayType("total", setQueryParams, navigate));
+                  }
+
                   getDashboardData();
                 }}
                 value={currentMetric}
@@ -245,37 +282,62 @@ export default function DashboardFilter() {
                     secText: "3",
                   },
                   {
+                    name: Metrics.average_ttft.name,
+                    value: Metrics.average_ttft.value,
+                    icon: Metrics.average_ttft.icon,
+                    secText: "4",
+                  },
+                  {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "4",
+                    secText: "5",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                 ]}
               />
             </div>
             {currentMetric !== Metrics.number_of_requests.value &&
-              currentMetric !== Metrics.error_count.value &&
-              currentMetric !== Metrics.average_latency.value && (
+              currentMetric !== Metrics.error_count.value && (
                 <div className="flex justify-between items-center self-stretch ">
-                  <span className="text-sm-regular text-gray-4">Type</span>
+                  <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
+                    Type
+                    {/* <Tooltip
+                      side="right"
+                      sideOffset={8}
+                      delayDuration={1}
+                      skipDelayDuration={1}
+                      content={
+                        <>
+                          <span className="text-gray-4 caption">
+                            Display the data as total value or averaging over
+                            per request
+                          </span>
+                        </>
+                      }
+                    >
+                      <div>
+                        <Info />
+                      </div>
+                    </Tooltip> */}
+                  </span>
                   <SelectInput
                     {...register("type")}
                     headLess
@@ -287,6 +349,7 @@ export default function DashboardFilter() {
                     padding="py-xxxs px-xxs"
                     gap="gap-xxs"
                     width="min-w-[140px]"
+                    backgroundColor="bg-gray-2"
                     optionsWidth="w-[180px]"
                     value={currentType}
                     onChange={(e) =>
@@ -311,6 +374,7 @@ export default function DashboardFilter() {
                 gap="gap-xxs"
                 width="min-w-[140px]"
                 optionsWidth="w-[180px]"
+                backgroundColor="bg-gray-2"
                 alignOffset={-40}
                 value={currentBreakdown}
                 onChange={(e) =>

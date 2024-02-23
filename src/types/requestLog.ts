@@ -4,6 +4,7 @@ import { Choice, SelectInputProps, TextInputProps } from "./input";
 
 export type LogItem = {
   id: number;
+  sentiment_score: number;
   timestamp: string;
   cost: number;
   latency: number;
@@ -14,6 +15,7 @@ export type LogItem = {
   prompt_messages: ChatMessage[];
   error_message: string;
   failed: boolean;
+  customer_identifier: string;
   category: string;
   organization_key: string; // The ID of the key
   api_key: string;
@@ -25,8 +27,12 @@ export type LogItem = {
     // sentiment_magnitude: mag,
     language: string;
   };
+  cached_responses: any[];
   error_code: number;
-  cached_response: number;
+  routing_time: number;
+  groundness: number;
+  full_request: any;
+  status_code: number;
 };
 
 export type DisplayLogItem = {
@@ -37,8 +43,9 @@ export type DisplayLogItem = {
   cost: React.ReactNode;
   latency: React.ReactNode;
   promptTokens: number;
+  time_to_first_token: number;
   outputTokens: number;
-  allTokens: number;
+  allTokens: React.ReactNode;
   organizationKey: string; //ID of the key
   apiKey: string;
   model: string;
@@ -48,6 +55,7 @@ export type DisplayLogItem = {
     errorCode: number;
   };
   sentimentAnalysis: any;
+  cachedResponse: number;
 };
 
 export type LogColumnKey = keyof DisplayLogItem;

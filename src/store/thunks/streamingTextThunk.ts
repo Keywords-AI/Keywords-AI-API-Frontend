@@ -30,7 +30,7 @@ export const sendStreamingTextThunk = async ({
   channel,
   params,
   host = apiConfig.apiURL,
-  path = "api/playground/ask/",
+  path = "api/playground/chatbot/",
   prompt,
   callback,
   dispatch,
@@ -76,6 +76,8 @@ export const sendStreamingTextThunk = async ({
       "X-CSRFToken": getCookie("csrftoken") || "", // Ensure "X-CSRFToken" is not null
       Authorization: `Bearer ${retrieveAccessToken()}`,
     };
+    console.log("Sending streaming text", host + path);
+    // https://api-test.keywordsai.co/api/playground/chatbot/
     const response = await Promise.race([
       fetch(host + path, {
         method: "POST",
