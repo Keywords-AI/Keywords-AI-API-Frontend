@@ -229,7 +229,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
         try {
           await keywordsStream({
             apiKey: "En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2",
-            // apiKey:"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",
             data: {
               messages: chanelMessages,
               stream: true,
@@ -484,7 +483,6 @@ const readStreamChunk = (chunk: string, channel: number) => {
       const data = JSON.parse(chunk);
       const textBit = data.choices?.[0].delta.content;
       const breakdownData = data.choices?.[0].request_breakdown;
-
       if (breakdownData) {
         const {
           prompt_tokens,
