@@ -243,15 +243,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             onClick={() => setDisplayLog(false)}
             padding="py-0"
           />
-          {(!logItem?.failed || logItem?.prompt_messages?.length === 0) && (
-            <Button
-              variant="text"
-              text="Log"
-              active={displayLog}
-              onClick={() => setDisplayLog(true)}
-              padding="py-0"
-            />
-          )}
+          {!logItem?.failed &&
+            logItem?.prompt_messages &&
+            logItem?.prompt_messages?.length > 0 && (
+              <Button
+                variant="text"
+                text="Log"
+                active={displayLog}
+                onClick={() => setDisplayLog(true)}
+                padding="py-0"
+              />
+            )}
         </div>
         <div>
           {displayLog && (
@@ -305,7 +307,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               <>
                 <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
                   <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
-                    Error
+                    Error message
                     <CopyButton text={logItem?.error_message || ""} />
                   </div>
                   <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">

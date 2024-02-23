@@ -46,7 +46,7 @@ export const StartWithPlan = () => {
       subtitle: "Best for solo builders.",
       price: "0",
       billFrequency: "Free forever",
-      featureTitle: "Starter plan fretures",
+      featureTitle: "Starter plan features",
       features: [
         "10,000 API requests",
         "1 developer seat",
