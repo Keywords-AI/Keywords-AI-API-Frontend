@@ -465,7 +465,6 @@ const readStreamChunk = (chunk: string, channel: number) => {
       const data = JSON.parse(chunk);
       const textBit = data.choices?.[0].delta.content;
       const breakdownData = data.choices?.[0].request_breakdown;
-
       if (breakdownData) {
         const {
           prompt_tokens,
