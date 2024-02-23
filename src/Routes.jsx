@@ -42,6 +42,7 @@ import CachePage from "./pages/CachePage/CachePage";
 import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
 import posthog from "posthog-js";
 import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
+import DemoWelcome from "./pages/MISC/DemoWelcome";
 
 const mapStateToProps = (state) => {
   return {
@@ -171,6 +172,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         {
           path: "onboarding/get-started",
           element: <GetStarted />,
+        },
+        {
+          path: "/platform/demo",
+          element: <DemoWelcome />,
         },
         {
           path: "",
