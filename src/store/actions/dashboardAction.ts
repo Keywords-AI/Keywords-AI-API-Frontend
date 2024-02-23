@@ -108,7 +108,7 @@ function processDashboardFilters(filters) {
 export const applyDashboardPostFilters = (filters) => {
   return (dispatch) => {
     const postData = processDashboardFilters(filters);
-    dispatch(updateUser({dashboard_filters: postData }, undefined, true));
+    dispatch(updateUser({ dashboard_filters: postData }, undefined, true));
     dispatch(getDashboardData(postData));
   };
 };
@@ -424,10 +424,8 @@ export const setSentimentData = (data) => {
   };
 };
 
-export const getDashboardData = (
-  postData,
-) => {
-  return (dispatch, getState: ()=> RootState) => {
+export const getDashboardData = (postData) => {
+  return (dispatch, getState: () => RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
     if (params.get("summary_type") === null) {
@@ -451,10 +449,10 @@ export const getDashboardData = (
     keywordsRequest({
       path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: {filters: postData},
+      data: { filters: postData },
     })
       .then((data) => {
-        const { filter_options, ...dashboardData} = data;
+        const { filter_options, ...dashboardData } = data;
         dispatch(setDashboardData(dashboardData));
         dispatch(setDashboardFilterOptions(filter_options));
         const state = getState();
@@ -472,8 +470,9 @@ export const getDashboardData = (
             payload: filters,
           });
         }
-
+        console.log("wwwww");
         if (params.get("breakdown") === "by_model") {
+          console.log("data.model_breakdown");
           const breakDowndata = processBreakDownData(
             data.model_breakdown,
             true,
