@@ -121,7 +121,11 @@ export function PlaygroundMessage({
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
-            if (+id == 0) return;
+            if (messageLength === 1) {
+              console.log("cannot delete last message");
+              return;
+            }
+            console.log("deleting", id);
             dispatch(deleMessageByIndex(id));
           }}
         />
@@ -131,7 +135,7 @@ export function PlaygroundMessage({
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && e.ctrlKey) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -181,7 +185,8 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          const isError = response.content.startsWith("Error:");
+          const isError = response.content.includes("errorText");
+          const errorObj = isError ? JSON.parse(response.content) : null;
           return (
             <div
               key={index}
@@ -204,15 +209,16 @@ export function PlaygroundMessage({
                 }
                 deleteCallback={(e) => {
                   e.preventDefault();
-                  if (+id == 0) return;
+                  // if (+id == 0) return;
+                  console.log("deleting", id);
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={+id == +lastResponseMessageId}
+                showRegen={+id == +lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
               {isError ? (
-                <StatusTag statusCode={500} />
+                <StatusTag statusCode={errorObj.errorCode || 500} />
               ) : (
                 <div
                   className={cn(
@@ -222,18 +228,27 @@ export function PlaygroundMessage({
                 >
                   {response.content ? (
                     <MessageBox
-                      value={response.content}
+                      defaultValue={response.content}
                       onChange={(val) => setResponseValue(val)}
                       onKeyDown={(e) => {
-                        // if (e.key === "Enter") {
-                        //   handleUpdateResponse(id, index, responseValue);
-                        //   setIsFocused(false);
-                        //   // handleSend(e);
-                        // }
+                        if (e.key === "Enter" && e.ctrlKey) {
+                          e.preventDefault();
+                          handleUpdateResponse(
+                            id,
+                            index,
+                            responseValue + "\u200B"
+                          );
+                          setIsFocused(false);
+                          handleSend(e);
+                        }
                       }}
+                      onFoucs={(e) => setResponseValue(e.target.value)}
                       onBlur={() => {
-                        responseValue != "" &&
-                          handleUpdateResponse(id, index, responseValue);
+                        handleUpdateResponse(
+                          id,
+                          index,
+                          responseValue + "\u200B"
+                        );
                         setIsFocused(false);
                       }}
                       blur={!isFocused}
@@ -290,10 +305,10 @@ const MessageHeader = ({
             />
           )}
           <CopyButton text={content} />
-          <DotsButton
+          {/* <DotsButton
             icon={Delete}
             onClick={(e) => deleteCallback && deleteCallback(e)}
-          />
+          /> */}
         </div>
       )}
     </div>
