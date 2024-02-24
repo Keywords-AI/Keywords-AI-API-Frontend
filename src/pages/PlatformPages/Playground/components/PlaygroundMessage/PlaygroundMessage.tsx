@@ -107,7 +107,7 @@ export function PlaygroundMessage({
         content: {
           id: id,
           role: "user",
-          user_content: messageValue,
+          user_content: value,
           responses: null,
           isActive: true,
         },
