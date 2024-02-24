@@ -100,7 +100,6 @@ export function PlaygroundMessage({
   };
   const handleChange = (value) => {
     setMessageValue(value); // This sets what is displayed in the input box
-    console.log("setid", id);
     dispatch(
       setMessageByIndex({
         index: id,
@@ -306,10 +305,10 @@ const MessageHeader = ({
             />
           )}
           <CopyButton text={content} />
-          {/* <DotsButton
+          <DotsButton
             icon={Delete}
             onClick={(e) => deleteCallback && deleteCallback(e)}
-          /> */}
+          />
         </div>
       )}
     </div>
@@ -346,7 +345,6 @@ export function StreamingMessage() {
             return null;
           if (streamingState.streamingText === "" && !streamingState.isLoading)
             return null;
-          console.log(isSingleChannel);
           // if (deletedOneChannel && !streamingState.isLoading) return null;
 
           return (

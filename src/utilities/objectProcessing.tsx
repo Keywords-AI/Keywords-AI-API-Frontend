@@ -286,7 +286,9 @@ export const addMissingDate = (
         return new Date(d.date_group).getHours() === hour;
       });
       newDataArray.push(
-        found ? { ...found } : { date_group: hourString, ...defaultFields }
+        found
+          ? { ...found, date_group: hourString }
+          : { date_group: hourString, ...defaultFields }
       );
     }
   };
