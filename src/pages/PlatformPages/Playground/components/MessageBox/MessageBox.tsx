@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { set } from "react-hook-form";
 import cn from "src/utilities/classMerge";
 
 export interface MessageBoxProps {
@@ -33,7 +32,7 @@ export function MessageBox({
   };
   useEffect(() => {
     setHeight();
-  }, [value]);
+  }, [value, defaultValue]);
   useEffect(() => {
     if (!textAreaRef.current) return;
     if (!blur) return;
@@ -57,7 +56,7 @@ export function MessageBox({
       defaultValue={defaultValue}
       disabled={false}
       className={cn(
-        "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 "
+        "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch"
       )}
     ></textarea>
   );

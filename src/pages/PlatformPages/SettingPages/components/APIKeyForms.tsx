@@ -330,7 +330,7 @@ export const CreateForm = connect(
 const DeleteFormNotConnected = React.forwardRef(
   ({ deletingKey, setDeletingKey, deleteKey }, ref) => {
     const { loading, error, data, postData } = usePost({
-      path: `api/delete-key/${deletingKey?.prefix}/`,
+      path: `api/delete-key/${deletingKey?.id}/`,
       method: "DELETE",
     });
     const handleSubmit = (e) => {
