@@ -184,7 +184,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
     if (singleChanel && specifyChannel == null) {
       dispatch(setChannelMode(singleChanel));
     } else if (specifyChannel != null) {
-      console.log("here", singleChanel);
       dispatch(setChannelMode(singleChanel ? false : true));
     }
 
@@ -225,7 +224,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
         } else if (channel == 1) {
           dispatch(sendStreamingText2Request());
         }
-        console.log("channel", channel, chanelMessages);
         try {
           await keywordsStream({
             apiKey: "En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2",
@@ -382,7 +380,6 @@ export const regeneratePlaygroundResponse = (channel) => {
     // remove last user message
     dispatch(removeLastMessage());
 
-    console.log("lastAssistantMessage", lastAssistantMessage);
     [0, 1].forEach((_, c) => {
       if (c != channel) {
         if (c == 0) {
@@ -540,8 +537,55 @@ const readStreamChunk = (chunk: string, channel: number) => {
             throw new Error("Invalid channel");
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error parsing streaming text chunk", chunk);
+      const singleChanel = getState().playground.isSingleChannel;
+      let displayError = { errorText: "An error occurred", errorCode: 500 };
+      if (!isNaN(parseFloat(e.message))) {
+        displayError.errorCode = +e.message;
+      }
+
+      // console.log("error", JSON.parse(error.message).error);
+      const lastMessage = getState().playground.messages.slice(-1)[0];
+      const id = uuidv4();
+      const model = getState().streamingText[channel].model;
+      if (channel == 0) {
+        dispatch(sendStreamingTextFailure(e.toString()));
+        const complete =
+          lastMessage.responses[1] != null &&
+          lastMessage.responses[1].complete == true;
+        const errorResponse = {
+          model: model,
+          content: JSON.stringify(displayError),
+          complete: true,
+        };
+        dispatch(
+          setLastMessage({
+            id: id,
+            hidden: singleChanel ? false : !complete,
+            role: "assistant",
+            responses: [errorResponse, lastMessage.responses[1]],
+          })
+        );
+      } else if (channel == 1) {
+        dispatch(sendStreamingText2Failure(e.toString()));
+        const complete =
+          lastMessage.responses[0] != null &&
+          lastMessage.responses[0].complete == true;
+        const errorResponse = {
+          model: model,
+          content: JSON.stringify(displayError),
+          complete: true,
+        };
+        dispatch(
+          setLastMessage({
+            id: id,
+            hidden: singleChanel ? false : !complete,
+            role: "assistant",
+            responses: [lastMessage.responses[0], errorResponse],
+          })
+        );
+      }
     }
   };
 };
