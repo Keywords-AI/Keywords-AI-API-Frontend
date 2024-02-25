@@ -7,6 +7,7 @@ import { getCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { TypedDispatch } from "src/types";
 import { getUser } from "./userAction";
+import { get } from "react-hook-form";
 
 export const SET_ORGANIZATION = "SET_ORGANIZATION";
 export const CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
@@ -308,6 +309,7 @@ export const changeRole = (id: number, roleName: string) => {
       type: CHANGE_ROLE,
       payload: { id, roleName },
     });
+    console.log(id, roleName);
     keywordsRequest({
       path: `user/organization-user-role/${id}/`,
       method: "PATCH",
@@ -315,6 +317,7 @@ export const changeRole = (id: number, roleName: string) => {
       dispatch,
     })
       .then((responseData) => {
+        dispatch(getUser());
         dispatch(
           dispatchNotification({
             title: "Role changed!",

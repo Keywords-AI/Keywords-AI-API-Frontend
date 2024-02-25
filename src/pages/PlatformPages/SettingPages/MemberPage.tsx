@@ -24,7 +24,7 @@ export const MemberPage = () => {
   React.useEffect(() => {
     setMembers(organization?.users || []);
   }, [organization?.users]);
-  const isOwner = user.organization_role.user.id === organization?.owner.id;
+  // const isOwner = user.organization_role.user.id === organization?.owner.id;
   return (
     <PageContent
       title={"Members"}
@@ -34,11 +34,11 @@ export const MemberPage = () => {
         heading={"Manage members"}
         subheading={"Manage members and their permissions."}
       >
-        <div className="flex-row flex-wrap gap-md">
+        {/* <div className="flex-row flex-wrap gap-md">
           {members.map((member, index) => {
             return <MemberCard key={index} {...member} />;
           })}
-        </div>
+        </div> */}
 
         {/* 
         {!isOwner && (
@@ -158,15 +158,12 @@ const MembersTable = () => {
               </div>
             </div>
             <div className="flex items-center">
-              {/* <RoleActions {...member} /> */}
               <div className="flex py-xxxs justify-center items-center gap-xxs text-sm-md text-gray-4 text-center">
-                {member.pending && member.role != "owner"
-                  ? "Pending"
-                  : capitalize(member.role)}
+                <RoleActions {...member} />
               </div>
             </div>
             <div className="flex items-center justify-end">
-              <RoleActions {...member} />
+              <MemberActions {...member} />
             </div>
           </div>
         );
@@ -175,15 +172,16 @@ const MembersTable = () => {
   );
 };
 
-export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
+const MemberActions = ({ user, role, id, pending }: OrgUser) => {
   const currUser = useTypedSelector((state: RootState) => state.user);
   const organization = useTypedSelector(
     (state: RootState) => state.organization
   );
   const dispatch = useTypedDispatch();
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
-
+  const isOwner = role === "owner";
   // snake case for props spreading
+  isOwner ? (pending = false) : null;
   const choices = pending
     ? [
         {
@@ -212,19 +210,20 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
         //         dispatch(changeRole(role.id, "member"));
         //     },
         // },
-        {
-          name: "Admin",
-          value: "admin",
-          textColor: "text-gray-4 focus:text-gray-5",
-          onClick: () => {
-            dispatch(changeRole(id, "admin"));
-          },
-        },
+        // {
+        //   name: "Admin",
+        //   value: "admin",
+        //   textColor: "text-gray-4 focus:text-gray-5",
+        //   onClick: () => {
+        //     dispatch(changeRole(id, "admin"));
+        //   },
+        // },
       ];
-  const isOwner = role === "owner";
 
   const isSelf = currUser?.email === user?.email;
   !isSelf &&
+    (currUser?.organization_role.role === "owner" ||
+      currUser?.organization_role.role === "admin") &&
     choices.push({
       name: "Remove user",
       value: "remove",
@@ -235,6 +234,7 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
     });
 
   isSelf &&
+    currUser?.organization_role.role === "member" &&
     choices.push({
       name: "Leave organization",
       value: "leave",
@@ -286,6 +286,85 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
         headLess={true}
         choices={choices}
         trigger={() => <DotsButton icon={Dots} />}
+        defaultValue={role}
+        // Yeah, of course you cannot edit yourself
+        placeholder={isOwner ? "Owner" : "Member"}
+        align="start"
+        alignOffset={32}
+        // triggerProps={{
+        //   first_name: user?.first_name,
+        //   last_name: user?.last_name,
+        //   pending: !isOwner && pending,
+        //   disabled: isOwner || isSelf,
+        //   isSelf,
+        //   selected: isSelf ? "You" : capitalize(role),
+        // }}
+      />
+      <Modal
+        title={"Remove member"}
+        subtitle={"Are you sure you want to remove this member?"}
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        trigger={<></>}
+        children={
+          <DeleteModalForm
+            setOpen={setDeleteModalOpen}
+            roleId={id}
+            firstName={user?.first_name}
+            lastName={user?.last_name}
+          />
+        }
+      />
+    </>
+  );
+};
+
+export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
+  const currUser = useTypedSelector((state: RootState) => state.user);
+  const organization = useTypedSelector(
+    (state: RootState) => state.organization
+  );
+  const dispatch = useTypedDispatch();
+  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const isOwner = role === "owner";
+  // snake case for props spreading
+  isOwner ? (pending = false) : null;
+
+  const choices: any[] = [];
+  role === "admin"
+    ? choices.push({
+        name: "Member",
+        value: "member",
+        textColor: "text-gray-4 focus:text-gray-5",
+        onClick: () => {
+          dispatch(changeRole(id, "member"));
+        },
+      })
+    : choices.push({
+        name: "Admin",
+        value: "admin",
+        textColor: "text-gray-4 focus:text-gray-5",
+        onClick: () => {
+          dispatch(changeRole(id, "admin"));
+        },
+      });
+
+  const isSelf = currUser?.email === user?.email;
+
+  return (
+    <>
+      <SelectInput
+        headLess={true}
+        choices={choices}
+        disabled={currUser?.organization_role.role === "owner" && isSelf}
+        trigger={() => (
+          <Button
+            variant="text"
+            text={capitalize(role)}
+            icon={Down}
+            iconPosition="right"
+          />
+        )}
         defaultValue={role}
         // Yeah, of course you cannot edit yourself
         placeholder={isOwner ? "Owner" : "Member"}

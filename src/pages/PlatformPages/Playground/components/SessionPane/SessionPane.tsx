@@ -43,12 +43,12 @@ export const SessionPane = forwardRef(
       };
     });
     let [selectChoices, setSelectChoices] = React.useState<any[]>([
-      { name: "Router (best for prompt)", value: "router" },
+      // { name: "Router (best for prompt)", value: "router" },
       { name: "None", value: "none" },
     ]);
     useEffect(() => {
       setSelectChoices([
-        { name: "Router (best for prompt)", value: "router" },
+        // { name: "Router (best for prompt)", value: "router" },
         { name: "None", value: "none" },
         ...modelsArray,
       ]);
@@ -79,7 +79,9 @@ export const SessionPane = forwardRef(
           <SelectInput
             //{ value: ModelOptions.model }
             {...register("modela", {
-              value: selectChoices[0].value,
+              value:
+                selectChoices.find((item) => item.value == "gpt-3.5-turbo")
+                  ?.value || "gpt-3.5-turbo",
             })}
             disabled={isStreaming}
             title="Model A"
@@ -87,7 +89,9 @@ export const SessionPane = forwardRef(
             optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
-            defaultValue={selectChoices[0].value}
+            defaultValue={
+              selectChoices.find((item) => item.value == "gpt-3.5-turbo")?.value
+            }
           />
           <SelectInput
             //{ value: ModelOptions.model }
