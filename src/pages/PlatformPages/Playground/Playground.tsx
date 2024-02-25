@@ -55,6 +55,19 @@ export default function Playground() {
     {
       scopes: "playground",
       preventDefault: true,
+      // enableOnFormTags: true,
+    }
+  );
+  useHotkeys(
+    "meta+enter",
+    () => {
+      if (isStreaming) return;
+      dispatch(streamPlaygroundResponse());
+    },
+    {
+      scopes: "playground",
+      preventDefault: true,
+      // enableOnFormTags: true,
     }
   );
   return (

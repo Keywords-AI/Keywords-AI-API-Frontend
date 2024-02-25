@@ -215,8 +215,12 @@ export const AlertsFallbackPage = () => {
             subtitle="Automatically fallback to a system assigned model if fallback models are not responding or specified."
           />
           <div className="flex flex-row items-start justify-center pt-[3px]">
-        <Tag text= "Upgrade" backgroundColor="bg-primary/10" textColor="text-primary" border="shadow-transparent"/>
-
+            <Tag
+              text="Upgrade"
+              backgroundColor="bg-primary/10"
+              textColor="text-primary"
+              border="shadow-transparent"
+            />
           </div>
         </div>
       )}

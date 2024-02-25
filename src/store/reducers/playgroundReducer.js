@@ -34,7 +34,7 @@ const initialState = {
   currentModels: ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    models: ["router", "gpt-4"],
+    models: ["gpt-3.5-turbo", "gpt-4"],
     temperature: 1,
     maximumLength: 256,
     topP: 1,

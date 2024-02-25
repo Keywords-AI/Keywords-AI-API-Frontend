@@ -225,6 +225,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
           dispatch(sendStreamingText2Request());
         }
         try {
+          // console.log("channel", channel, chanelMessages);
           await keywordsStream({
             data: {
               messages: chanelMessages,
@@ -356,7 +357,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
 export const regeneratePlaygroundResponse = (channel) => {
   return async (dispatch, getState) => {
     // remove user last message
-    dispatch(removeLastMessage());
+    getState().playground.messages.slice(-1)[0].role == "user" &&
+      dispatch(removeLastMessage());
+
     const lastAssistantMessage = {
       ...getState().playground.messages.slice(-1)[0],
     };
