@@ -7,6 +7,7 @@ import { getCookie } from "src/utilities/cookies";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { TypedDispatch } from "src/types";
 import { getUser } from "./userAction";
+import { get } from "react-hook-form";
 
 export const SET_ORGANIZATION = "SET_ORGANIZATION";
 export const CREATE_ORGANIZATION = "CREATE_ORGANIZATION";
@@ -37,50 +38,60 @@ export const addMember = (member) => {
   };
 };
 
-export const createOrganization = (organization, callback = () => { }) => {
+export const createOrganization = (organization, callback = () => {}) => {
   // organization {name, organization_size}
   return (dispatch) => {
     keywordsFetch({
       path: "user/organizations/",
       method: "POST",
       data: organization,
-    }).then(async (res) => {
-      if (res.ok) {
-        dispatch(
-          dispatchNotification({ title: "Organization created successfully!" })
-        );
-        return res.json();
-      } else {
-        if (res.status === 409) {
-          // Conflict: Organization already exists
-          const responseJson = await res.json();
+    })
+      .then(async (res) => {
+        if (res.ok) {
           dispatch(
-            dispatchNotification({ type: "error", title: responseJson.detail })
+            dispatchNotification({
+              title: "Organization created successfully!",
+            })
           );
-          dispatch(getUser())
-          callback(); // Perform the action anyway
+          return res.json();
         } else {
-          const errors = await res.json();
-          if (errors.detail) {
+          if (res.status === 409) {
+            // Conflict: Organization already exists
+            const responseJson = await res.json();
             dispatch(
-              dispatchNotification({ type: "error", title: errors.detail })
+              dispatchNotification({
+                type: "error",
+                title: responseJson.detail,
+              })
             );
+            dispatch(getUser());
+            callback(); // Perform the action anyway
           } else {
-            handleSerializerErrors(errors, (err) => {
-              dispatch(dispatchNotification({ type: "error", title: err }));
-            });
+            const errors = await res.json();
+            if (errors.detail) {
+              dispatch(
+                dispatchNotification({ type: "error", title: errors.detail })
+              );
+            } else {
+              handleSerializerErrors(errors, (err) => {
+                dispatch(dispatchNotification({ type: "error", title: err }));
+              });
+            }
           }
         }
-      }
-    })
+      })
       .then((responseJson) => {
         dispatch(setOrg(responseJson));
         callback();
-      })
+      });
   };
 };
 
-export const updateOrganization = (update_fields, callback = () => { }, muteNotifications = false) => {
+export const updateOrganization = (
+  update_fields,
+  callback = () => {},
+  muteNotifications = false
+) => {
   return (dispatch, getState) => {
     const organization = getState().organization;
     dispatch({ type: UPDATE_ORGANIZATION, payload: update_fields });
@@ -101,7 +112,7 @@ export const updateOrganization = (update_fields, callback = () => { }, muteNoti
   };
 };
 
-export const sendInvitation = (data, callback = () => { }, resend = false) => {
+export const sendInvitation = (data, callback = () => {}, resend = false) => {
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
@@ -117,20 +128,22 @@ export const sendInvitation = (data, callback = () => { }, resend = false) => {
             title: "Invitation sent to " + data.email,
           })
         );
-        const responseJson = await res.json()
+        const responseJson = await res.json();
         console.log(responseJson);
         const payLoad = {
           email: data.email,
           ...responseJson.temp_role,
           role: responseJson.temp_role,
-        }
+        };
         console.log(payLoad);
-        if (!resend) { // Only add member on UI if it is first time sending
+        if (!resend) {
+          // Only add member on UI if it is first time sending
           dispatch({
             type: ADD_MEMBER,
             payload: payLoad,
           });
         }
+        dispatch(getUser());
       } else {
         const responseJson = await res.json();
         if (responseJson.detail) {
@@ -221,7 +234,7 @@ export const deleteRole = (id) => {
         if (res.ok) {
           console.log(id);
           dispatch({ type: DELETE_ROLE, payload: id });
-          dispatch(getUser())
+          dispatch(getUser());
         } else if (res.status === 400) {
           const responseJson = await res.json();
           dispatch(
@@ -241,9 +254,9 @@ export const addModelPreset = (preset) => {
     type: ADD_PRESET,
     payload: preset,
   };
-}
+};
 
-export const createPreset = (data, callback = () => { }) => {
+export const createPreset = (data, callback = () => {}) => {
   return (dispatch) => {
     keywordsRequest({
       path: "user/model-presets/",
@@ -260,16 +273,16 @@ export const createPreset = (data, callback = () => { }) => {
         dispatch(addModelPreset(responseData));
         callback();
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
-}
+};
 
 export const deletePreset = (id, callback) => {
   return (dispatch) => {
     dispatch({
       type: DELETE_PRESET,
       payload: id,
-    })
+    });
     keywordsRequest({
       path: `user/model-preset/${id}/`,
       method: "DELETE",
@@ -282,20 +295,21 @@ export const deletePreset = (id, callback) => {
           })
         );
         if (callback && typeof callback === "function") {
-          console.log("callback")
+          console.log("callback");
           callback();
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
   };
-}
+};
 
 export const changeRole = (id: number, roleName: string) => {
   return (dispatch: TypedDispatch) => {
     dispatch({
       type: CHANGE_ROLE,
       payload: { id, roleName },
-    })
+    });
+    console.log(id, roleName);
     keywordsRequest({
       path: `user/organization-user-role/${id}/`,
       method: "PATCH",
@@ -303,12 +317,13 @@ export const changeRole = (id: number, roleName: string) => {
       dispatch,
     })
       .then((responseData) => {
+        dispatch(getUser());
         dispatch(
           dispatchNotification({
             title: "Role changed!",
           })
         );
       })
-      .catch((error) => { });
-  }
-}
+      .catch((error) => {});
+  };
+};

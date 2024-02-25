@@ -66,6 +66,13 @@ export default function DashboardFilter() {
     (state: RootState) => state.dashboard.displayFilter.breakDown
   );
   useEffect(() => {
+    if (
+      (currentMetric === "average_latency" ||
+        currentMetric == "average_ttft") &&
+      currentType === "all"
+    ) {
+      dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
+    }
     dispatch(setDisplayMetric(currentMetric, setQueryParams, navigate));
     dispatch(setDisplayType(currentType, setQueryParams, navigate));
     dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
@@ -75,7 +82,11 @@ export default function DashboardFilter() {
       disableScope("dashboard");
     };
   }, []);
-
+  useEffect(() => {
+    if (currentMetric === "average_latency" && currentType === "all") {
+      dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
+    }
+  }, [currentMetric, currentType]);
   let filteredtypeChoices: any[] = [];
   if (
     currentMetric === "number_of_requests" ||
@@ -107,7 +118,10 @@ export default function DashboardFilter() {
     monthly: "Month",
     yearly: "Year",
   };
-  const filteredBreakdownChoices = breakdownChoices;
+  const filteredBreakdownChoices =
+    currentType === "all"
+      ? breakdownChoices.filter((e) => e.value == "none")
+      : breakdownChoices;
 
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);

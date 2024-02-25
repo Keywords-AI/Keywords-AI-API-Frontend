@@ -68,7 +68,10 @@ export function PlaygroundMessage({
   }, [streamingState]);
   const [isFocused, setIsFocused] = useState(false);
   const [messageValue, setMessageValue] = useState(user_content || "");
-  const [responseValue, setResponseValue] = useState("");
+  const [responseValue, setResponseValue] = useState([
+    responses?.[0]?.content || "",
+    responses?.[1]?.content || "",
+  ]);
 
   const isUser = role === "user";
   const isAssistant = role === "assistant";
@@ -113,6 +116,7 @@ export function PlaygroundMessage({
       })
     );
   };
+
   if (isUser) {
     contentSection = (
       <>
@@ -129,13 +133,20 @@ export function PlaygroundMessage({
             dispatch(deleMessageByIndex(id));
           }}
         />
-        <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
+        <div
+          className={cn(
+            "flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm",
+            isFocused
+              ? "shadow-border shadow-gray-3"
+              : "shadow-border shadow-gray-2"
+          )}
+        >
           <MessageBox
             value={messageValue}
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && e.ctrlKey) {
+              if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -185,6 +196,8 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
+          if (response.content == "\u200B")
+            response.content = `{"errorText":"errorText"}`;
           const isError = response.content.includes("errorText");
           const errorObj = isError ? JSON.parse(response.content) : null;
           return (
@@ -223,31 +236,53 @@ export function PlaygroundMessage({
                 <div
                   className={cn(
                     "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
-                    "shadow-border shadow-gray-3"
+                    isFocused
+                      ? "shadow-border shadow-gray-3"
+                      : "shadow-border shadow-gray-2"
                   )}
                 >
                   {response.content ? (
                     <MessageBox
                       defaultValue={response.content}
-                      onChange={(val) => setResponseValue(val)}
+                      onChange={(val) =>
+                        setResponseValue((prev) => {
+                          const updatedArray = [...prev];
+                          if (index === 0) {
+                            updatedArray[0] = val;
+                          } else if (index === 1) {
+                            updatedArray[1] = val;
+                          }
+                          return updatedArray;
+                        })
+                      }
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" && e.ctrlKey) {
+                        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                           e.preventDefault();
                           handleUpdateResponse(
                             id,
                             index,
-                            responseValue + "\u200B"
+                            responseValue[index] + "\u200B"
                           );
                           setIsFocused(false);
                           handleSend(e);
                         }
                       }}
-                      onFoucs={(e) => setResponseValue(e.target.value)}
+                      onFoucs={(e) =>
+                        setResponseValue((prev) => {
+                          const updatedArray = [...prev];
+                          if (index === 0) {
+                            updatedArray[0] = e.target.value;
+                          } else if (index === 1) {
+                            updatedArray[1] = e.target.value;
+                          }
+                          return updatedArray;
+                        })
+                      }
                       onBlur={() => {
                         handleUpdateResponse(
                           id,
                           index,
-                          responseValue + "\u200B"
+                          responseValue[index] + "\u200B"
                         );
                         setIsFocused(false);
                       }}
@@ -373,12 +408,13 @@ export function StreamingMessage() {
                   />
                   <div
                     className={cn(
-                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-3 max-w-full "
+                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-2 max-w-full "
                       // isSingleChannel ? "max-w-full" : "max-w-1/2"
                     )}
                   >
-                    {streamingState.streamingText ? (
-                      <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-5 text-wrap break-all">
+                    {streamingState.streamingText &&
+                    streamingState.streamingText != "\u200B" ? (
+                      <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-4 text-wrap break-all">
                         {streamingState.streamingText}
                       </div>
                     ) : streamingState.error ? (

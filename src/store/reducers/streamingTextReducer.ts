@@ -51,7 +51,7 @@ const streamingTextReducer = (
         if (index === 0) {
           return {
             ...item,
-            streamingText: "",
+            streamingText: "\u200B",
             abort: false,
             isLoading: true,
             error: null,
@@ -79,7 +79,7 @@ const streamingTextReducer = (
         if (index === 1) {
           return {
             ...item,
-            streamingText: "",
+            streamingText: "\u200B",
             abort: false,
             isLoading: true,
             error: null,

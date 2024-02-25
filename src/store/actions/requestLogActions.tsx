@@ -406,7 +406,6 @@ export const setCacheResponse = (
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
