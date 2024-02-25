@@ -175,7 +175,7 @@ export const updateEditingKey = (keyData: ApiKey) => {
       payload: keyData,
     });
     keywordsRequest({
-      path: `api/update-key/${keyData?.prefix}/`,
+      path: `api/update-key/${keyData?.id}/`,
       data: keyData,
       method: "PATCH",
       dispatch,

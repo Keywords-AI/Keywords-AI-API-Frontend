@@ -226,7 +226,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
         }
         try {
           await keywordsStream({
-            apiKey: "En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2",
             data: {
               messages: chanelMessages,
               stream: true,
@@ -234,11 +233,8 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               ...additonalParms,
               ...modelParams[channel],
             },
-            // dispatch: dispatch,
-            host: "https://api.keywordsai.co/",
-            // path: "",
-
-            // path: "api/generate/",
+            dispatch: dispatch,
+            path: "api/playground/ask/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =
