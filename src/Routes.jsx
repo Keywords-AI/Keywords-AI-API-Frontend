@@ -9,7 +9,7 @@ import {
   clearNotifications,
 } from "src/store/actions";
 import "src/components/styles/index.css";
-import { retrieveAccessToken } from "./utilities/authorization";
+import { accessMap, retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
 const Playground = lazy(() =>
   import("./pages/PlatformPages/Playground/Playground")
@@ -66,6 +66,9 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const location = useLocation();
   useEffect(() => {
     clearNotifications();
+    // accessMap(999, location.pathname)
+    //   ? console.log("has access")
+    //   : console.log("No access");
   }, [location]);
   useEffect(() => {
     const intervalId = setInterval(() => {

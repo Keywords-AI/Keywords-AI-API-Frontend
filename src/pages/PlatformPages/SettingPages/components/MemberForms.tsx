@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import {
   sendInvitation,
   dispatchNotification,
-  getUser,
 } from "src/store/actions";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { RootState } from "src/types";
