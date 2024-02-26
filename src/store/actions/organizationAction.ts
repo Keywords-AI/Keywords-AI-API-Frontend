@@ -64,7 +64,6 @@ export const createOrganization = (organization, callback = () => {}) => {
                 title: responseJson.detail,
               })
             );
-            dispatch(getUser());
             callback(); // Perform the action anyway
           } else {
             const errors = await res.json();
@@ -143,7 +142,7 @@ export const sendInvitation = (data, callback = () => {}, resend = false) => {
             payload: payLoad,
           });
         }
-        dispatch(getUser());
+        // dispatch(getUser());
       } else {
         const responseJson = await res.json();
         if (responseJson.detail) {
@@ -234,7 +233,7 @@ export const deleteRole = (id) => {
         if (res.ok) {
           console.log(id);
           dispatch({ type: DELETE_ROLE, payload: id });
-          dispatch(getUser());
+          // dispatch(getUser());
         } else if (res.status === 400) {
           const responseJson = await res.json();
           dispatch(
@@ -317,7 +316,7 @@ export const changeRole = (id: number, roleName: string) => {
       dispatch,
     })
       .then((responseData) => {
-        dispatch(getUser());
+        // dispatch(getUser());
         dispatch(
           dispatchNotification({
             title: "Role changed!",

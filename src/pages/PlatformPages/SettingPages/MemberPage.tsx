@@ -1,5 +1,4 @@
 import React, { MouseEventHandler } from "react";
-import { MemberCard } from "src/components/Cards/MemberCard";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import { AvatarButton, Button, DotsButton } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
@@ -7,7 +6,6 @@ import { AddMemberForm } from "./components/MemberForms";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { OrgUser, RootState } from "src/types";
 import { changeRole, deleteRole, sendInvitation } from "src/store/actions";
-import { TitleStaticSubheading } from "src/components/Titles";
 import { SelectInput } from "src/components/Inputs";
 import cn from "src/utilities/classMerge";
 import { Dots, Down } from "src/components";
@@ -19,12 +17,7 @@ export const MemberPage = () => {
   );
   const user = useTypedSelector((state: RootState) => state.user);
   const [open, setOpen] = React.useState(false);
-  const [members, setMembers] = React.useState(organization?.users || []);
-  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
-  React.useEffect(() => {
-    setMembers(organization?.users || []);
-  }, [organization?.users]);
-  // const isOwner = user.organization_role.user.id === organization?.owner.id;
+
   return (
     <PageContent
       title={"Members"}
@@ -121,13 +114,12 @@ const DeleteModalForm = ({
 
 const MembersTable = () => {
   const gridTemplateString = "240px 100px 1fr";
-  const dispatch = useTypedDispatch();
   const members = useTypedSelector(
     (state: RootState) => state.organization?.users
   );
   const user = useTypedSelector((state: RootState) => state.user);
 
-  const sortedMembers = members?.sort((a, b) => {
+  const sortedMembers = [...(members || [])].sort((a, b) => {
     if (a.id === user.organization_role.id) return -1;
     if (b.id === user.organization_role.id) return 1;
     return 0;
@@ -180,7 +172,6 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
   const dispatch = useTypedDispatch();
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const isOwner = role === "owner";
-  // snake case for props spreading
   isOwner ? (pending = false) : null;
   const choices = pending
     ? [
@@ -244,48 +235,15 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
       },
     });
 
-  const SelectionTrigger = ({
-    first_name,
-    last_name,
-    selected,
-    placeholder,
-    disabled,
-    pending = false,
-    onClick = (e: any) => {},
-  }) => {
-    const handleClick: MouseEventHandler<HTMLDivElement> = (e: any) => {
-      onClick(e);
-    };
-    const [hover, setHover] = React.useState(false);
-    placeholder = pending ? "Pending" : placeholder;
-    return (
-      <div
-        className={cn(
-          "flex-row items-center gap-xs w-[240px]",
-          disabled ? "cursor-not-allowed" : "cursor-pointer"
-        )}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        onClick={handleClick}
-      >
-        <div className="flex flex-col">
-          <div className="flex-row gap-xxs items-center">
-            <div className={cn("text-sm-md text-gray-4", pending && "")}>
-              {selected || placeholder}
-            </div>
-            {!disabled && <Down active={hover} />}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
       <SelectInput
         headLess={true}
         choices={choices}
-        trigger={() => <DotsButton icon={Dots} />}
+        disabled={role === "owner" || isSelf}
+        trigger={() => (
+          <DotsButton icon={Dots} disabled={role === "owner" || isSelf} />
+        )}
         defaultValue={role}
         // Yeah, of course you cannot edit yourself
         placeholder={isOwner ? "Owner" : "Member"}
@@ -321,55 +279,72 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
 
 export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
   const currUser = useTypedSelector((state: RootState) => state.user);
-  const organization = useTypedSelector(
-    (state: RootState) => state.organization
-  );
+
   const dispatch = useTypedDispatch();
   const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
   const isOwner = role === "owner";
+  const selfRole = currUser.organization_role.role;
   // snake case for props spreading
   isOwner ? (pending = false) : null;
 
-  const choices: any[] = [];
-  role === "admin"
-    ? choices.push({
+  let choices: any[] = [];
+  if (role == "admin") {
+    choices = [
+      {
         name: "Member",
         value: "member",
         textColor: "text-gray-4 focus:text-gray-5",
         onClick: () => {
           dispatch(changeRole(id, "member"));
         },
-      })
-    : choices.push({
-        name: "Admin",
-        value: "admin",
-        textColor: "text-gray-4 focus:text-gray-5",
-        onClick: () => {
-          dispatch(changeRole(id, "admin"));
+      },
+    ];
+  } else if (role == "member") {
+    if (selfRole === "owner" || selfRole === "admin") {
+      choices = [
+        {
+          name: "Admin",
+          value: "admin",
+          textColor: "text-gray-4 focus:text-gray-5",
+          onClick: () => {
+            dispatch(changeRole(id, "admin"));
+          },
         },
-      });
+      ];
+    }
+  }
 
   const isSelf = currUser?.email === user?.email;
 
-  return (
+  return pending ? (
+    <Button variant="text" text={"Pending"} iconPosition="right" disabled />
+  ) : (
     <>
       <SelectInput
         headLess={true}
         choices={choices}
-        disabled={currUser?.organization_role.role === "owner" && isSelf}
+        disabled={
+          role === "owner" ||
+          isSelf ||
+          currUser.organization_role.role === "member"
+        }
         trigger={() => (
           <Button
             variant="text"
             text={capitalize(role)}
             icon={Down}
             iconPosition="right"
+            disabled={
+              role === "owner" ||
+              isSelf ||
+              currUser.organization_role.role === "member"
+            }
           />
         )}
         defaultValue={role}
         // Yeah, of course you cannot edit yourself
         placeholder={isOwner ? "Owner" : "Member"}
         align="start"
-        alignOffset={32}
         // triggerProps={{
         //   first_name: user?.first_name,
         //   last_name: user?.last_name,
