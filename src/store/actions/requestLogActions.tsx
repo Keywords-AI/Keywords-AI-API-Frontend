@@ -115,6 +115,9 @@ function processFilters(filters: FilterObject[]): FilterParams {
       if (value === "true" || value === "false") {
         value = value === "true" ? true : false;
       }
+      if (filter.value_field_type === "datetime-local") {
+        value = new Date(value as string).toISOString();
+      }
       return value;
     });
     filter.metric &&
@@ -325,6 +328,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
     if (postData) {
       params.set("page", "1");
     }
+    // console.log("postData", postData);
     dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
