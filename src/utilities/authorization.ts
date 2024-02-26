@@ -31,11 +31,17 @@ export const accessMap = (user_level, path) => {
     "/platform/api",
     "/login",
     "/signup",
+    "/onboarding",
+    "/unauthenticated",
+    "/forgot-password",
+    "/unauthorized",
+    "email-confirmation",
+    "/platform/doc",
   ];
   const lv2Pages = [
     "/platform/playground",
-    "/platform/chatbot",
-    "/platform/cache",
+    // "/platform/chatbot",
+    // "/platform/cache",
     ...lv1Pages,
   ];
   const map = {
