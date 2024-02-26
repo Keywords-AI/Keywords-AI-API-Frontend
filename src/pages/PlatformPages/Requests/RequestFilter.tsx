@@ -36,7 +36,23 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     return <InputFieldUpdateFilter filter={filterToUpdate} />;
   },
   "datetime-local": (filterToUpdate, filterOption, onChange) => {
-    return <InputFieldUpdateFilter filter={filterToUpdate} />;
+    return (
+      <InputFieldUpdateFilter
+        filter={{
+          ...filterToUpdate,
+          value: filterToUpdate.value.map((item) =>
+            new Date(item as string).toLocaleString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            })
+          ),
+        }}
+      />
+    );
   },
   selection: (filterToUpdate, filterOption, onChange) => {
     const [open, setOpen] = React.useState<boolean | undefined>(false);

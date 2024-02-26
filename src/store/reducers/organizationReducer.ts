@@ -10,7 +10,7 @@ import {
 } from "src/store/actions";
 import { Organization } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
-
+import _ from "lodash";
 const initState: Organization = {
   id: null,
   name: "",
@@ -36,10 +36,13 @@ const initState: Organization = {
   system_fallback_enabled: false,
 };
 
-export default function organizationReducer(state: Organization = initState, action: PayloadAction<any>): Organization {
+export default function organizationReducer(
+  state: Organization = initState,
+  action: PayloadAction<any>
+): Organization {
   switch (action.type) {
     case SET_ORG:
-      return action.payload;
+      return { ..._.cloneDeep(action.payload) };
 
     case SET_ORG_NAME:
       return {
@@ -54,7 +57,7 @@ export default function organizationReducer(state: Organization = initState, act
     case ADD_MEMBER:
       return {
         ...state,
-        users: [...(state?.users ?? []), action.payload],
+        users: [...(state?.users ?? []), action .payload],
       } as Organization;
     case DELETE_ROLE:
       return {
@@ -81,10 +84,13 @@ export default function organizationReducer(state: Organization = initState, act
         ...state,
         users: state?.users.map((user) =>
           user.role.id === action.payload.id
-            ? { ...user, role: {
-              ...user.role,
-              name: action.payload.roleName
-            } }
+            ? {
+                ...user,
+                role: {
+                  ...user.role,
+                  name: action.payload.roleName,
+                },
+              }
             : user
         ),
       } as Organization;
