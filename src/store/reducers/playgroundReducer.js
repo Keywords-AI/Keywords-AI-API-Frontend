@@ -19,6 +19,7 @@ import {
   SET_CHANNEL_MODE,
   SET_BREAKDOWN_DATA,
   SET_MODEL_LOG_DATA,
+  RESET_MODEL_OPTIONS,
 } from "../actions/playgroundAction";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
@@ -84,6 +85,13 @@ const initialState = {
 // Reducer
 const playgroundReducer = (state = initialState, action) => {
   switch (action.type) {
+    case RESET_MODEL_OPTIONS:
+      return {
+        ...state,
+        modelOptions: {
+          ...initialState.modelOptions,
+        },
+      };
     case SET_MESSAGES:
       return { ...state, messages: action.payload };
     case APPEND_MESSAGE:
