@@ -40,8 +40,12 @@ export const DELETE_MESSAGE_BY_INDEX = "DELETE_MESSAGE_BY_INDEX";
 export const SET_CHANNEL_MODE = "SET_CHANNEL_MODE";
 export const SET_BREAKDOWN_DATA = "SET_BREAKDOWN_DATA";
 export const SET_MODEL_LOG_DATA = "SET_MODEL_LOG_DATA";
+export const RESET_MODEL_OPTIONS = "RESET_MODEL_OPTIONS";
 // Action Creator
 
+export const resetModelOptions = () => ({
+  type: RESET_MODEL_OPTIONS,
+});
 export const setModelLogData = (data) => ({
   type: SET_MODEL_LOG_DATA,
   payload: data,
