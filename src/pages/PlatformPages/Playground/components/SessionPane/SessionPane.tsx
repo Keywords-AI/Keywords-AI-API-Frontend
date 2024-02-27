@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import { setModelOptions } from "src/store/actions";
+import { defaultReset, setModelOptions } from "src/store/actions";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import _ from "lodash";
@@ -36,6 +36,9 @@ export const SessionPane = forwardRef(
     );
     const streamingState = useTypedSelector((state) => state.streamingText);
     const isStreaming = streamingState.some((item) => item.isLoading === true);
+    const isPlaygroundReseted = useTypedSelector(
+      (state) => state.playground.isReseted
+    );
     const breakDownData = useTypedSelector(
       (state) => state.playground.breakdownData
     );
@@ -63,10 +66,11 @@ export const SessionPane = forwardRef(
     );
 
     useEffect(() => {
-      if (isReset) {
+      if (isReset || isPlaygroundReseted) {
         reset();
+        dispatch(defaultReset());
       }
-    }, [isReset]);
+    }, [isReset, isPlaygroundReseted]);
 
     useEffect(() => {
       watch((value, { name, type }) => {

@@ -122,12 +122,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
-            {!loading && (
+            {
               <React.Fragment>
                 <Filters />
                 {filters.length > 0 && <FilterActions type="add" />}
               </React.Fragment>
-            )}
+            }
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
