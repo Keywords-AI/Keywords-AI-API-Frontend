@@ -6,8 +6,7 @@ import {
   addFilter,
   setFilterType,
   updateFilter,
-  setCurrentFilter,
-  deleteFilter,
+  setCurrentFilter
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
 import { SelectInput, TextInput, TextInputSmall } from "src/components/Inputs";

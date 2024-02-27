@@ -13,6 +13,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   appendMessage,
   getModels,
+  resetModelOptions,
   setPrompt,
   setSelectedLogs,
   streamPlaygroundResponse,
@@ -111,6 +112,7 @@ const PromptInput = (selectedLogs) => {
       <TextAreaInput
         value={prompt}
         onChange={(e) => dispatch(setPrompt(e.target.value))}
+        placeholder="You are a helpful assistant."
       />
     </div>
   );
@@ -195,26 +197,48 @@ const MessageLists = () => {
 };
 
 const RightPanel = () => {
+  const timestamp = useTypedSelector(
+    (state) => state.playground.breakdownData.timestamp
+  );
+  const streamingStates = useTypedSelector((state) => state.streamingText);
+  const [isReset, setIsReset] = useState(false);
   const tabGroups = [
     {
       value: "Session",
       buttonVariant: "text" as variantType,
-      content: <SessionPane />,
+      content: <SessionPane isReset={isReset} />,
     },
-    {
+    timestamp && {
       value: "Recent",
       buttonVariant: "text" as variantType,
       content: <MostRecentPane />,
     },
   ];
   const [tab, setTab] = useState(tabGroups[0].value);
+  const dispatch = useTypedDispatch();
+
   return (
     <Tabs
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
       rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
-      headerClassName="flex px-lg py-xxs items-center gap-sm self-stretch shadow-border-b shadow-gray-2"
+      headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
+      headerRight={
+        <Button
+          variant="text"
+          text="Reset"
+          onClick={() => {
+            if (streamingStates.some((item) => item.isLoading === true)) return;
+
+            setIsReset(true);
+            setTimeout(() => {
+              setIsReset(false);
+            }, 100);
+            dispatch(resetModelOptions());
+          }}
+        />
+      }
     />
   );
 };

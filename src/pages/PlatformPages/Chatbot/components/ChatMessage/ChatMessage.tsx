@@ -124,6 +124,9 @@ export default function ChatMessage({
       </div>
     );
   } else {
+    if (index === -1 && message.content === "\u200B") {
+      console.log("Generating...", message.content);
+    }
     return (
       <div className="flex items-start gap-sm self-stretch">
         <div className="flex-col w-[36px] h-[36px] justify-center items-center">
@@ -131,7 +134,13 @@ export default function ChatMessage({
         </div>
         <div className="flex-col items-start gap-xxs flex-1">
           <div className="text-sm-regular text-gray-5">
-            <ChatbotReactMarkdown content={message?.content} />
+            <ChatbotReactMarkdown
+              content={
+                isStreaming && index === -1 && message.content === "\u200B"
+                  ? "Generating..."
+                  : message?.content
+              }
+            />
           </div>
           <div className="flex items-center gap-xxxs">
             {message.model && <ModelTag model={message.model || "gpt-4"} />}

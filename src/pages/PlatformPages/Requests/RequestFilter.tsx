@@ -56,6 +56,9 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
   },
   selection: (filterToUpdate, filterOption, onChange) => {
     const [open, setOpen] = React.useState<boolean | undefined>(false);
+    if (!filterOption || !filterOption.value_choices) {
+      return null;
+    }
     const dispatch = useTypedDispatch();
     const handleOpen = (opening: boolean | undefined) => {
       if (opening) {
@@ -136,12 +139,16 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {RequstFilterValueField(filter, filterOption!, (values) => {
-        dispatch(
-          updateFilter({
-            ...filter,
-            value: values,
-          })
-        );
+        if (values.length === 0) {
+          dispatch(deleteFilter(filter.id));
+        } else {
+          dispatch(
+            updateFilter({
+              ...filter,
+              value: values,
+            })
+          );
+        }
       })}
       {
         <DotsButton
