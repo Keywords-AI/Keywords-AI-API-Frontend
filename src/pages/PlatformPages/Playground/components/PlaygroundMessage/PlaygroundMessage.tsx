@@ -62,6 +62,7 @@ export function PlaygroundMessage({
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
   );
+  const isReset = useTypedSelector((state) => state.playground.isReseted);
   const streamingState = useTypedSelector((state) => state.streamingText);
   useEffect(() => {
     if (streamingState.some((state) => state.isLoading)) setIsFocused(false);
@@ -72,7 +73,9 @@ export function PlaygroundMessage({
     responses?.[0]?.content || "",
     responses?.[1]?.content || "",
   ]);
-
+  useEffect(() => {
+    setMessageValue(user_content || "");
+  }, [isReset]);
   const isUser = role === "user";
   const isAssistant = role === "assistant";
   useEffect(() => {

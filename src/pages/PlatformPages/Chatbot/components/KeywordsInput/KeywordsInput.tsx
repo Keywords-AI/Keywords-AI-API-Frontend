@@ -28,6 +28,8 @@ export default function KeywordsInput() {
 
   // }
   const onKeyDown = (e) => {
+    if (e.shiftKey && e.key === "Enter") {
+    }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       e.target.form.requestSubmit();

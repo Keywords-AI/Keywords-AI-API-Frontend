@@ -40,8 +40,15 @@ export const SET_CHANNEL_MODE = "SET_CHANNEL_MODE";
 export const SET_BREAKDOWN_DATA = "SET_BREAKDOWN_DATA";
 export const SET_MODEL_LOG_DATA = "SET_MODEL_LOG_DATA";
 export const RESET_MODEL_OPTIONS = "RESET_MODEL_OPTIONS";
+export const RESET_PLAYGROUND = "RESET_PLAYGROUND";
+export const DEFAULT_RESET = "DEFAULT_RESET";
 // Action Creator
-
+export const defaultReset = () => ({
+  type: DEFAULT_RESET,
+});
+export const ResetPlayground = () => ({
+  type: RESET_PLAYGROUND,
+});
 export const resetModelOptions = () => ({
   type: RESET_MODEL_OPTIONS,
 });
@@ -541,52 +548,52 @@ const readStreamChunk = (chunk: string, channel: number) => {
       }
     } catch (e: any) {
       console.error("Error parsing streaming text chunk", chunk);
-      const singleChanel = getState().playground.isSingleChannel;
-      let displayError = { errorText: "An error occurred", errorCode: 500 };
-      if (!isNaN(parseFloat(e.message))) {
-        displayError.errorCode = +e.message;
-      }
-      // console.log("error", JSON.parse(error.message).error);
-      const lastMessage = getState().playground.messages.slice(-1)[0];
-      const id = uuidv4();
-      const model = getState().streamingText[channel].model;
-      if (channel == 0) {
-        dispatch(sendStreamingTextFailure(e.toString()));
-        const complete =
-          lastMessage.responses[1] != null &&
-          lastMessage.responses[1].complete == true;
-        const errorResponse = {
-          model: model,
-          content: JSON.stringify(displayError),
-          complete: true,
-        };
-        dispatch(
-          setLastMessage({
-            id: id,
-            hidden: singleChanel ? false : !complete,
-            role: "assistant",
-            responses: [errorResponse, lastMessage.responses[1]],
-          })
-        );
-      } else if (channel == 1) {
-        dispatch(sendStreamingText2Failure(e.toString()));
-        const complete =
-          lastMessage.responses[0] != null &&
-          lastMessage.responses[0].complete == true;
-        const errorResponse = {
-          model: model,
-          content: JSON.stringify(displayError),
-          complete: true,
-        };
-        dispatch(
-          setLastMessage({
-            id: id,
-            hidden: singleChanel ? false : !complete,
-            role: "assistant",
-            responses: [lastMessage.responses[0], errorResponse],
-          })
-        );
-      }
+      // const singleChanel = getState().playground.isSingleChannel;
+      // let displayError = { errorText: "An error occurred", errorCode: 500 };
+      // if (!isNaN(parseFloat(e.message))) {
+      //   displayError.errorCode = +e.message;
+      // }
+
+      // const lastMessage = getState().playground.messages.slice(-1)[0];
+      // const id = uuidv4();
+      // const model = getState().streamingText[channel].model;
+      // if (channel == 0) {
+      //   dispatch(sendStreamingTextFailure(e.toString()));
+      //   const complete =
+      //     lastMessage.responses[1] != null &&
+      //     lastMessage.responses[1].complete == true;
+      //   const errorResponse = {
+      //     model: model,
+      //     content: JSON.stringify(displayError),
+      //     complete: true,
+      //   };
+      //   dispatch(
+      //     setLastMessage({
+      //       id: id,
+      //       hidden: singleChanel ? false : !complete,
+      //       role: "assistant",
+      //       responses: [errorResponse, lastMessage.responses[1]],
+      //     })
+      //   );
+      // } else if (channel == 1) {
+      //   dispatch(sendStreamingText2Failure(e.toString()));
+      //   const complete =
+      //     lastMessage.responses[0] != null &&
+      //     lastMessage.responses[0].complete == true;
+      //   const errorResponse = {
+      //     model: model,
+      //     content: JSON.stringify(displayError),
+      //     complete: true,
+      //   };
+      //   dispatch(
+      //     setLastMessage({
+      //       id: id,
+      //       hidden: singleChanel ? false : !complete,
+      //       role: "assistant",
+      //       responses: [lastMessage.responses[0], errorResponse],
+      //     })
+      //   );
+      // }
     }
   };
 };

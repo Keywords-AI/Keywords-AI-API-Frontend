@@ -327,8 +327,6 @@ export default function dashboardReducer(
           currDate - currDate.getTimezoneOffset() * 60 * 1000
         ).toISOString(),
       };
-    case SET_DASHBOARD_FILTER_OPTIONS:
-      return { ...state, filterOptions: action.payload };
 
     case ADD_DASHBOARD_FILTER:
       return { ...state, filters: [...state.filters, action.payload] };

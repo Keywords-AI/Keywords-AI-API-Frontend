@@ -15,6 +15,7 @@ import { Modal } from "src/components/Dialogs";
 import useForwardRef from "src/hooks/useForwardRef";
 import { getKeys } from "src/store/actions";
 import {
+  ResetPlayground,
   toggleLeftPanel,
   toggleRightPanel,
 } from "src/store/actions/playgroundAction";
@@ -82,7 +83,14 @@ export function TopBar() {
         /> */}
 
         {/* <ViewCode /> */}
-        <DotsButton icon={Delete} onClick={() => navigate(0)} />
+        <DotsButton
+          icon={Delete}
+          onClick={() => {
+            if (store.getState().streamingText.some((item) => item.isLoading))
+              return;
+            dispatch(ResetPlayground());
+          }}
+        />
         <HorizontalDivier />
         <DotsButton
           icon={isRightPanelOpen ? SideBarActive : SideBar}
