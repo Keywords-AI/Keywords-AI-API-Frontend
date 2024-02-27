@@ -72,6 +72,7 @@ const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
     const lastMessage = messages.slice(-1)[0].content;
     if (lastMessage instanceof Array) {
+      console.log("lastMessage", lastMessage);
       return lastMessage.find((part) => part.type === "text").text;
     }
     return messages.slice(-1)[0].content;
@@ -310,9 +311,6 @@ export const filterParamsToFilterObjects = (
   filterOptions: RawFilterOptions
 ): FilterObject[] => {
   return Object.keys(filterParams).map((key): FilterObject => {
-    if (!filterOptions[key]) {
-      throw new Error("Invalid filter option");
-    }
     return {
       id: Math.random().toString(36).substring(2, 15),
       metric: key as keyof LogItem,

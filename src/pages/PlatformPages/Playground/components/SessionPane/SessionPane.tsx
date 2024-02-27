@@ -2,13 +2,7 @@ import SliderInput from "src/components/Inputs/SliderInput";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { useForm, Controller } from "react-hook-form";
 import { Divider } from "src/components";
-import React, {
-  forwardRef,
-  ForwardedRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import React, { forwardRef, ForwardedRef, useEffect } from "react";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { setModelOptions } from "src/store/actions";
@@ -17,16 +11,18 @@ import { useCallback } from "react";
 import _ from "lodash";
 import { useDispatch } from "react-redux";
 export interface SessionPaneProps {
-  isReset: boolean;
+  prop?: string;
 }
 
 export const SessionPane = forwardRef(
-  ({ isReset }: SessionPaneProps, ref: ForwardedRef<any>) => {
+  (
+    { prop = "default value" }: SessionPaneProps,
+    ref: ForwardedRef<HTMLDivElement>
+  ) => {
     const {
       handleSubmit,
       control,
       watch,
-      reset,
       register,
       formState: { isDirty, dirtyFields },
     } = useForm();
@@ -61,18 +57,8 @@ export const SessionPane = forwardRef(
       debounce((value) => dispatch(setModelOptions(value)), 300),
       [dispatch]
     );
-
-    useEffect(() => {
-      if (isReset) {
-        reset();
-      }
-    }, [isReset]);
-
     useEffect(() => {
       watch((value, { name, type }) => {
-        if (!value || value.length === 0 || Object.keys(value).length === 0)
-          return;
-        console.log("watching", value);
         const newModelOptionsState = {
           temperature: value.temperature,
           maximumLength: value.maximumLength,
@@ -93,7 +79,9 @@ export const SessionPane = forwardRef(
           <SelectInput
             //{ value: ModelOptions.model }
             {...register("modela", {
-              value: ModelOptions.models[0],
+              value:
+                selectChoices.find((item) => item.value == "gpt-3.5-turbo")
+                  ?.value || "gpt-3.5-turbo",
             })}
             disabled={isStreaming}
             title="Model A"
@@ -102,14 +90,15 @@ export const SessionPane = forwardRef(
             choices={selectChoices}
             placeholder="Select a model"
             defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[0])
-                ?.value
+              selectChoices.find((item) => item.value == "gpt-3.5-turbo")?.value
             }
           />
           <SelectInput
             //{ value: ModelOptions.model }
             {...register("modelb", {
-              value: ModelOptions.models[1],
+              value:
+                selectChoices.find((item) => item.value == "gpt-4")?.value ||
+                "gpt-4",
             })}
             title="Model B"
             width="w-[256px]"
@@ -118,8 +107,7 @@ export const SessionPane = forwardRef(
             choices={selectChoices}
             placeholder="Select a model"
             defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[1])
-                ?.value
+              selectChoices.find((item) => item.value == "gpt-4")?.value
             }
           />
           <Controller

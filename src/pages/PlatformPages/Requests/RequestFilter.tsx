@@ -56,9 +56,6 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
   },
   selection: (filterToUpdate, filterOption, onChange) => {
     const [open, setOpen] = React.useState<boolean | undefined>(false);
-    if (!filterOption || !filterOption.value_choices) {
-      return null;
-    }
     const dispatch = useTypedDispatch();
     const handleOpen = (opening: boolean | undefined) => {
       if (opening) {
