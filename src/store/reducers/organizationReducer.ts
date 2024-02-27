@@ -12,6 +12,7 @@ import { Organization } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 const initState: Organization = {
+  loading: true,
   id: null,
   name: "",
   organization_size: 0,
