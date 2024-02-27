@@ -105,7 +105,7 @@ const DeleteModalForm = ({
             type="button"
             onClick={(e: any) => setOpen(false)}
           />
-          <Button variant="r4-red" text={`Leave`} />
+          <Button variant="r4-red" text={`Remove`} />
         </div>
       </div>
     </form>
@@ -225,7 +225,7 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
     });
 
   isSelf &&
-    currUser?.organization_role.role === "member" &&
+    currUser?.organization_role.role !== "owner" &&
     choices.push({
       name: "Leave organization",
       value: "leave",
@@ -240,10 +240,8 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
       <SelectInput
         headLess={true}
         choices={choices}
-        disabled={role === "owner" || isSelf}
-        trigger={() => (
-          <DotsButton icon={Dots} disabled={role === "owner" || isSelf} />
-        )}
+        disabled={role === "owner"}
+        trigger={() => <DotsButton icon={Dots} disabled={role === "owner"} />}
         defaultValue={role}
         // Yeah, of course you cannot edit yourself
         placeholder={isOwner ? "Owner" : "Member"}

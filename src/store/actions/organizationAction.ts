@@ -233,7 +233,7 @@ export const deleteRole = (id) => {
         if (res.ok) {
           console.log(id);
           dispatch({ type: DELETE_ROLE, payload: id });
-          // dispatch(getUser());
+          dispatch(getUser());
         } else if (res.status === 400) {
           const responseJson = await res.json();
           dispatch(
@@ -316,7 +316,7 @@ export const changeRole = (id: number, roleName: string) => {
       dispatch,
     })
       .then((responseData) => {
-        // dispatch(getUser());
+        dispatch(getUser());
         dispatch(
           dispatchNotification({
             title: "Role changed!",
