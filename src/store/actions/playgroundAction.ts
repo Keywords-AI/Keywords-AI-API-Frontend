@@ -546,7 +546,6 @@ const readStreamChunk = (chunk: string, channel: number) => {
       if (!isNaN(parseFloat(e.message))) {
         displayError.errorCode = +e.message;
       }
-
       // console.log("error", JSON.parse(error.message).error);
       const lastMessage = getState().playground.messages.slice(-1)[0];
       const id = uuidv4();
