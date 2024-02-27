@@ -1,5 +1,4 @@
 // Imports
-import { sendStreamingTextThunk } from "src/store/thunks/streamingTextThunk";
 import {
   SEND_STREAMINGTEXT2_PARTIAL,
   SEND_STREAMINGTEXT_PARTIAL,
