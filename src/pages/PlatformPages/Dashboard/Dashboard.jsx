@@ -247,7 +247,7 @@ function DashboardNotConnected({
                   ))}
               </div>
             )} */}
-            <DashboardFilterLeft />
+            {/* <DashboardFilterLeft /> */}
           </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />

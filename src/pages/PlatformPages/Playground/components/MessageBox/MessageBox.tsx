@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  ForwardedRef,
+  useImperativeHandle,
+} from "react";
 import cn from "src/utilities/classMerge";
 
 export interface MessageBoxProps {
@@ -13,51 +20,58 @@ export interface MessageBoxProps {
   blur?: boolean;
 }
 
-export function MessageBox({
-  value,
-  defaultValue,
-  onChange,
-  onKeyDown,
-  onBlur,
-  onFoucs,
-  disabled,
-  blur,
-}: MessageBoxProps) {
-  const textAreaRef = useRef(null);
-  const setHeight = () => {
-    if (!textAreaRef.current) return;
-    const target = textAreaRef.current as HTMLTextAreaElement;
-    target.style.height = "1px";
-    target.style.height = target.scrollHeight + "px";
-  };
-  useEffect(() => {
-    setHeight();
-  }, [value, defaultValue]);
-  useEffect(() => {
-    if (!textAreaRef.current) return;
-    if (!blur) return;
-    const target = textAreaRef.current as HTMLTextAreaElement;
-    target.blur();
-    setHeight();
-  }, [blur]);
-  return (
-    <textarea
-      ref={textAreaRef}
-      onBlur={onBlur}
-      placeholder="Enter a message..."
-      onChange={(e) => onChange(e.target.value)}
-      rows={1}
-      onKeyDown={(e) => onKeyDown && onKeyDown(e)}
-      onInput={(e) => {
-        setHeight();
-      }}
-      onFocus={onFoucs}
-      value={value}
-      defaultValue={defaultValue}
-      disabled={false}
-      className={cn(
-        "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch text-gray-4 focus:text-gray-5"
-      )}
-    ></textarea>
-  );
-}
+export const MessageBox = forwardRef(
+  (
+    {
+      value,
+      defaultValue,
+      onChange,
+      onKeyDown,
+      onBlur,
+      onFoucs,
+      disabled,
+      blur,
+    }: MessageBoxProps,
+    ref: ForwardedRef<HTMLTextAreaElement>
+  ) => {
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const setHeight = () => {
+      if (!textAreaRef.current) return;
+      const target = textAreaRef.current;
+      target.style.height = "1px";
+      target.style.height = target.scrollHeight + "px";
+    };
+    useImperativeHandle(ref, () => textAreaRef.current!, []);
+    useEffect(() => {
+      setHeight();
+    }, [value, defaultValue]);
+    useEffect(() => {
+      if (!textAreaRef.current) return;
+      if (!blur) return;
+      const target = textAreaRef.current;
+      target.blur();
+      setHeight();
+    }, [blur]);
+    return (
+      <textarea
+        ref={textAreaRef}
+        onBlur={onBlur}
+        placeholder="Enter a message..."
+        onChange={(e) => onChange(e.target.value)}
+        rows={1}
+        onKeyDown={(e) => onKeyDown && onKeyDown(e)}
+        onInput={(e) => {
+          setHeight();
+        }}
+        onFocus={onFoucs}
+        value={value}
+        defaultValue={defaultValue}
+        disabled={false}
+        className={cn(
+          "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch text-gray-4 focus:text-gray-5 focus:shadow-border focus:shadow-gray-3 shadow-border shadow-gray-2",
+          "px-xs py-xxs rounded-sm"
+        )}
+      ></textarea>
+    );
+  }
+);
