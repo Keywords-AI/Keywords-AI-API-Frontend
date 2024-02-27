@@ -314,9 +314,7 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
 
   const isSelf = currUser?.email === user?.email;
 
-  return pending ? (
-    <Button variant="text" text={"Pending"} iconPosition="right" disabled />
-  ) : (
+  return (
     <>
       <SelectInput
         headLess={true}

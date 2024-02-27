@@ -142,7 +142,7 @@ export const sendInvitation = (data, callback = () => {}, resend = false) => {
             payload: payLoad,
           });
         }
-        // dispatch(getUser());
+        dispatch(getUser());
       } else {
         const responseJson = await res.json();
         if (responseJson.detail) {
