@@ -84,6 +84,7 @@ export function FilterActions({ type }: { type: string }) {
   };
 
   const selectFilterValue = (filterValue: string[] | number[]) => {
+    console.log("currentFilter", currentFilter);
     if (filterValue) {
       dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
     }

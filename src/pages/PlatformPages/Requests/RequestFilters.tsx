@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { UseFormRegister, useForm } from "react-hook-form";
-import { Close, Down } from "src/components";
-import { SelectInput, TextInputSmall } from "src/components/Inputs";
 import {
   RequestFilters as RequestFiltersType,
   FilterObject,
@@ -9,12 +5,6 @@ import {
   RequestFilter as RequestFilterType,
 } from "src/types";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import {
-  getRequestLogs,
-  setFilters,
-  setFilterOpen,
-  setCurrentFilter,
-} from "src/store/actions";
 import { RequstFilter } from "./RequestFilter";
 
 export const Filters = () => {

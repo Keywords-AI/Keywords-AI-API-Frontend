@@ -8,10 +8,7 @@ import { Divider } from "src/components/Sections";
 import { Operator, RootState } from "src/types";
 import {
   updateUser,
-  getRequestLogs,
-  setFilters,
-  addFilter,
-  setCurrentFilter,
+  getRequestLogs
 } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
