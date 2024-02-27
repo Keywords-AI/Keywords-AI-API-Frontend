@@ -100,11 +100,9 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {!loading && filters.length > 0 === false && (
-              <FilterActions type="filter" />
-            )}
+            {filters.length > 0 === false && <FilterActions type="filter" />}
 
-            {!loading && filters.length > 0 && (
+            {filters.length > 0 && (
               <React.Fragment>
                 <Button
                   variant="small-dashed"

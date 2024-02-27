@@ -72,7 +72,6 @@ export const SessionPane = forwardRef(
       watch((value, { name, type }) => {
         if (!value || value.length === 0 || Object.keys(value).length === 0)
           return;
-        console.log("watching", value);
         const newModelOptionsState = {
           temperature: value.temperature,
           maximumLength: value.maximumLength,
