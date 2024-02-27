@@ -86,8 +86,8 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
-    }
-    if (!organization) {
+    } 
+    if (!organization?.id && !organization?.loading) {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded
       navigate("/onboarding");
@@ -161,6 +161,15 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
+          path: "forgot-password",
+          element: <ForgotPassword />,
+        },
+        {
+          path: "forgot-password/reset/confirm/:uid?/:token?",
+          element: <ResetPassword />,
+        },
+        { path: "activate/:uid?/:token?", element: <ActivationPage /> },
+        {
           path: "onboarding",
           element: isUserLoggedIn ? (
             <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
@@ -203,14 +212,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           element: <Unauthenticated />,
         },
         {
-          path: "forgot-password",
-          element: <ForgotPassword />,
-        },
-        {
-          path: "forgot-password/reset/confirm/:uid?/:token?",
-          element: <ResetPassword />,
-        },
-        {
           path: "unauthorized",
           element: <Unauthorized />,
         },
@@ -218,7 +219,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "email-confirmation/:email?",
           element: <EmailConfirmation />,
         },
-        { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
     },
     {
