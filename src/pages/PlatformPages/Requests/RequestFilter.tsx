@@ -139,12 +139,16 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {RequstFilterValueField(filter, filterOption!, (values) => {
-        dispatch(
-          updateFilter({
-            ...filter,
-            value: values,
-          })
-        );
+        if (values.length === 0) {
+          dispatch(deleteFilter(filter.id));
+        } else {
+          dispatch(
+            updateFilter({
+              ...filter,
+              value: values,
+            })
+          );
+        }
       })}
       {
         <DotsButton

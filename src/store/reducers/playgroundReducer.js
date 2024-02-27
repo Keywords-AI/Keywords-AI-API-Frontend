@@ -20,6 +20,8 @@ import {
   SET_BREAKDOWN_DATA,
   SET_MODEL_LOG_DATA,
   RESET_MODEL_OPTIONS,
+  RESET_PLAYGROUND,
+  DEFAULT_RESET,
 } from "../actions/playgroundAction";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
@@ -80,11 +82,22 @@ const initialState = {
   isLeftPanelOpen: false,
   isRightPanelOpen: true,
   selectedLogs: "",
+  isReseted: false,
 };
 
 // Reducer
 const playgroundReducer = (state = initialState, action) => {
   switch (action.type) {
+    case DEFAULT_RESET:
+      return {
+        ...state,
+        isReseted: false,
+      };
+    case RESET_PLAYGROUND:
+      return {
+        ...JSON.parse(JSON.stringify(initialState)),
+        isReseted: true,
+      };
     case RESET_MODEL_OPTIONS:
       return {
         ...state,

@@ -104,11 +104,17 @@ export const BillingPage = () => {
             </p>
           </div>
         </div>
-        {/* <Button
-          variant="r4-gray2"
+        <Button
+          variant="r4-gray-2"
           text="Edit"
-          onClick={() => navigate("plans")}
-        /> */}
+          onClick={() =>
+            window.open(
+              "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000",
+              "_blank"
+            )
+          }
+          className="w-[60px] h-[36px]"
+        />
       </PageParagraph>
       <Divider />
       <PageParagraph
