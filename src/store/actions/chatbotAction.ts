@@ -2,6 +2,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsStream, keywordsRequest } from "src/utilities/requests";
+import { v4 as uuidv4 } from "uuid";
 import {
   ChatMessage,
   ConversationMessage,
@@ -30,7 +31,14 @@ export const CREATE_MESSAGE = "CREATE_MESSAGE";
 export const DELETE_MESSAGE = "DELETE_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 export const SET_MESSAGE_CONTENT = "SET_MESSAGE_CONTENT";
+export const SET_EDIT_MESSAGE = "SET_EDIT_MESSAGE";
 
+export const setEditMessage = (id) => {
+  return {
+    type: SET_EDIT_MESSAGE,
+    payload: id,
+  };
+};
 export const setMessageContent = (id, content) => {
   return {
     type: SET_MESSAGE_CONTENT,
@@ -237,6 +245,7 @@ export const sendMessage = (msgText?: string) => {
       dispatch(
         createMessage({
           conversation: conversation_id,
+
           role: "user",
           content: msgText,
           model: null,
@@ -248,12 +257,18 @@ export const sendMessage = (msgText?: string) => {
     const sessionMessages = messages.map((item) => {
       return { role: item.role, content: item.content };
     });
-    const messagesToSend = sessionMessages;
+    const messagesToSend = [
+     
+      ...sessionMessages,
+    ];
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
-      data: { messages: messagesToSend, stream: true },
+      data: { messages: messagesToSend, stream: true, model: "gpt-4" },
       dispatch: dispatch,
-      path: "api/playground/chatbot/",
+      // path: "api/playground/chatbot/"
+      path: "api/generate/",
+      // zrXMovph.BMpn7htSwiiaBJOeUcBxpNWTloZOxsUe
+      apiKey: "zrXMovph.BMpn7htSwiiaBJOeUcBxpNWTloZOxsUe",
       readStreamLine: (line) => dispatch(readStreamChunk(line)),
       streamingDoneCallback: () => {
         const state = getState();
@@ -272,7 +287,7 @@ export const sendMessage = (msgText?: string) => {
       },
     })
       .then((abortController) => {
-        console.log(abortController);
+        // console.log(abortController);
       })
       .catch((err) => {
         console.log(err);

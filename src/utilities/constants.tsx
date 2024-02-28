@@ -653,3 +653,33 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "status",
   "cachedResponse",
 ];
+export const userTableColumns = [
+  {
+    name: "Customer ID",
+    value: "customerId",
+  },
+  {
+    name: "Last Active",
+    value: "lastActive",
+  },
+  {
+    name: "Active for",
+    value: "activeFor",
+  },
+  {
+    name: "Total requests",
+    value: "totalRequests",
+  },
+  {
+    name: "Requests / day",
+    value: "requestsPerDay",
+  },
+  {
+    name: "Total tokens",
+    value: "totalTokens",
+  },
+  {
+    name: "Tokens / day",
+    value: "tokensPerDay",
+  },
+];

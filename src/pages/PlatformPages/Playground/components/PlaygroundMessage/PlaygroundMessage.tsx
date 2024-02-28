@@ -136,20 +136,13 @@ export function PlaygroundMessage({
             dispatch(deleMessageByIndex(id));
           }}
         />
-        <div
-          className={cn(
-            "flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm",
-            isFocused
-              ? "shadow-border shadow-gray-3"
-              : "shadow-border shadow-gray-2"
-          )}
-        >
+        <div className="flex self-stretch flex-1">
           <MessageBox
             value={messageValue}
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -236,14 +229,7 @@ export function PlaygroundMessage({
               {isError ? (
                 <StatusTag statusCode={errorObj.errorCode || 500} />
               ) : (
-                <div
-                  className={cn(
-                    "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
-                    isFocused
-                      ? "shadow-border shadow-gray-3"
-                      : "shadow-border shadow-gray-2"
-                  )}
-                >
+                <div className="flex self-stretch flex-1">
                   {response.content ? (
                     <MessageBox
                       defaultValue={response.content}
@@ -258,8 +244,8 @@ export function PlaygroundMessage({
                           return updatedArray;
                         })
                       }
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                      onKeyDown={(e: any) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
                           handleUpdateResponse(
                             id,

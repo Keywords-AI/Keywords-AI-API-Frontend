@@ -48,7 +48,7 @@ export default function Playground() {
     };
   }, []);
   useHotkeys(
-    "ctrl+enter",
+    "enter",
     () => {
       if (isStreaming) return;
       dispatch(streamPlaygroundResponse());
@@ -59,18 +59,18 @@ export default function Playground() {
       // enableOnFormTags: true,
     }
   );
-  useHotkeys(
-    "meta+enter",
-    () => {
-      if (isStreaming) return;
-      dispatch(streamPlaygroundResponse());
-    },
-    {
-      scopes: "playground",
-      preventDefault: true,
-      // enableOnFormTags: true,
-    }
-  );
+  // useHotkeys(
+  //   "meta+enter",
+  //   () => {
+  //     if (isStreaming) return;
+  //     dispatch(streamPlaygroundResponse());
+  //   },
+  //   {
+  //     scopes: "playground",
+  //     preventDefault: true,
+  //     // enableOnFormTags: true,
+  //   }
+  // );
   return (
     <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] max-w-[100vw]">
       <TopBar />
