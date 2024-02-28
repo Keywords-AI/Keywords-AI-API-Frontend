@@ -236,7 +236,10 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
     });
 
   return (
-    <>
+    <div className="flex justify-end items-center gap-[10px] flex-1">
+      {pending && (
+        <p className="text-sm-regular text-primary text-center">Pending</p>
+      )}
       <SelectInput
         headLess={true}
         choices={choices}
@@ -271,7 +274,7 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
           />
         }
       />
-    </>
+    </div>
   );
 };
 

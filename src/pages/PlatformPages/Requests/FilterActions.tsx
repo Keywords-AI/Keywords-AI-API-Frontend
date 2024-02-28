@@ -23,6 +23,7 @@ import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 import store from "src/store/store";
+import { combineSlices } from "@reduxjs/toolkit";
 export function FilterActions({ type }: { type: string }) {
   // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
   // if (isLoading) return <></>;
@@ -66,15 +67,15 @@ export function FilterActions({ type }: { type: string }) {
     }
   );
   const secondStepItems = filterType
-    ? filterOptions[filterType]?.value_choices?.map(
-        (valueChoice, index): Choice => {
+    ? filterOptions[filterType]?.value_choices
+        ?.map((valueChoice, index): Choice => {
           if (!valueChoice) return null;
           return {
             name: valueChoice.name,
             value: valueChoice.value,
           };
-        }
-      )
+        })
+        .sort((a: any, b: any) => a.name.localeCompare(b.name))
     : [];
   const loading = useTypedSelector((state) => state.requestLogs.loading);
   const selectMetric = (metric: keyof LogItem) => {

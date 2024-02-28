@@ -26,8 +26,7 @@ import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
-import { Info } from "src/components/Icons";
-import { combineSlices } from "@reduxjs/toolkit";
+
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
   { name: "Avg per request", value: "average", secText: "2" },

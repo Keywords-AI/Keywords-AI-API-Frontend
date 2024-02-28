@@ -59,6 +59,7 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
     if (!filterOption || !filterOption.value_choices) {
       return null;
     }
+
     const dispatch = useTypedDispatch();
     const handleOpen = (opening: boolean | undefined) => {
       if (opening) {
@@ -84,7 +85,11 @@ const RequestFilterValueFields: RequestFilterValueFieldType = {
         onChange={onChange}
         value={filterToUpdate.value as string[]}
         align="start"
-        items={filterOption?.value_choices || []}
+        items={
+          [...filterOption?.value_choices].sort((a: any, b: any) =>
+            a?.name.localeCompare(b.name)
+          ) || []
+        }
         multiple={true}
       />
     );
@@ -100,7 +105,7 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const filterOption = filterOptions[filter.metric || "failed"];
   const RequstFilterValueField =
     RequestFilterValueFields[filterOption?.value_field_type || "selection"];
-
+  const Filters = useTypedSelector((state) => state.requestLogs.filters);
   return (
     <div className="flex flex-row items-center gap-[1px]">
       <Button
@@ -139,6 +144,10 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {RequstFilterValueField(filter, filterOption!, (values) => {
+        const currentFilter = Filters.find(
+          (currFilter) => currFilter.id === filter.id
+        );
+        if (values.toString() === currentFilter?.value?.toString()) return;
         if (values.length === 0) {
           dispatch(deleteFilter(filter.id));
         } else {
