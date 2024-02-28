@@ -13,9 +13,13 @@ import {
   SET_MESSAGE_CONTENT,
 } from "src/store/actions";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { REMOVE_LAST_MESSAGE } from "../actions/chatbotAction";
+import {
+  REMOVE_LAST_MESSAGE,
+  SET_EDIT_MESSAGE,
+} from "../actions/chatbotAction";
 
 const initState = {
+  editMessage: null,
   isEditing: false,
   enableCustomPrompt: false,
   customPrompt: "",
@@ -32,6 +36,8 @@ export default function chatbotReducer(
   action: PayloadAction<any>
 ) {
   switch (action.type) {
+    case SET_EDIT_MESSAGE:
+      return { ...state, editMessage: action.payload };
     case SET_IS_EDITING:
       return { ...state, isEditing: action.payload };
     case SET_CUSTOM_PROMPT:
@@ -99,8 +105,8 @@ export default function chatbotReducer(
         ...state,
         conversation: {
           ...state.conversation,
-          messages: state.conversation.messages.map((message: any) => {
-            if (message?.id === action.payload.id) {
+          messages: state.conversation.messages.map((message: any, index) => {
+            if (index === action.payload.id) {
               return { ...message, content: action.payload.content };
             }
             return message;
