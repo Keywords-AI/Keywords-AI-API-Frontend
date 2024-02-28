@@ -224,6 +224,7 @@ export const readStreamChunk = (chunk: string) => {
   return (dispatch: TypedDispatch) => {
     try {
       const data = JSON.parse(chunk);
+      console.log(data)
       const textBit = data.choices?.[0].delta.content;
       if (textBit) {
         dispatch({
@@ -263,12 +264,9 @@ export const sendMessage = (msgText?: string) => {
     ];
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
-      data: { messages: messagesToSend, stream: true, model: "gpt-4" },
+      data: { messages: messagesToSend, stream: true },
       dispatch: dispatch,
-      // path: "api/playground/chatbot/"
-      path: "api/generate/",
-      // zrXMovph.BMpn7htSwiiaBJOeUcBxpNWTloZOxsUe
-      apiKey: "zrXMovph.BMpn7htSwiiaBJOeUcBxpNWTloZOxsUe",
+      path: "api/playground/chatbot/",
       readStreamLine: (line) => dispatch(readStreamChunk(line)),
       streamingDoneCallback: () => {
         const state = getState();
