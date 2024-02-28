@@ -287,7 +287,7 @@ export const sendMessage = (msgText?: string) => {
       },
     })
       .then((abortController) => {
-        console.log(abortController);
+        // console.log(abortController);
       })
       .catch((err) => {
         console.log(err);

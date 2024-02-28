@@ -103,7 +103,10 @@ export default function ChatMessage({
           <div
             onKeyDown={handleEnterKey}
             onBlur={handleEditBoxBlur} // Add onBlur event handler
-            className="text-sm-regular text-gray-5 outline-none break-words text-wrap min-h-[20px] whitespace-pre-wrap "
+            className={cn(
+              "text-sm-regular text-gray-5 outline-none break-words text-wrap min-h-[20px] whitespace-pre-wrap rounded-sm",
+              editmessage == index && "bg-gray-2"
+            )}
             style={{ width: "calc(100% - 52px)" }}
             contentEditable={editmessage == index}
             suppressContentEditableWarning
@@ -137,16 +140,13 @@ export default function ChatMessage({
       </div>
     );
   } else {
-    if (index === -1 && message.content === "\u200B") {
-      console.log("Generating...", message.content);
-    }
     return (
-      <div className="flex items-start gap-sm self-stretch">
-        <div className="flex-col w-[36px] h-[36px] justify-center items-center">
+      <div className="flex items-start gap-sm w-full">
+        <div className="flex-col w-[36px] h-[36px] justify-center items-center shrink-0">
           <Logo />
         </div>
-        <div className="flex-col items-start gap-xxs flex-1">
-          <div className="text-sm-regular text-gray-5">
+        <div className="flex-col items-start gap-xxs flex-1 w-full h-full">
+          <div className="text-sm-regular text-gray-5 whitespace-pre-wrap rounded-sm">
             <ChatbotReactMarkdown
               content={
                 isStreaming && index === -1 && message.content === "\u200B"

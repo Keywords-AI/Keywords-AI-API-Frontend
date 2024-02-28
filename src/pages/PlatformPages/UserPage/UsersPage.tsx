@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ExportPopOver, SearchUser } from "./components";
+import { DisplayPopover, ExportPopOver, SearchUser } from "./components";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import {
   exportUserLogs,
@@ -12,6 +12,7 @@ import { WelcomeState } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
 import { TitleAuth } from "src/components/Titles";
 import { Button, Right } from "src/components";
+import { userTableColumns } from "src/utilities/constants";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -58,6 +59,7 @@ const TopBar = () => {
       >
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          <DisplayPopover />
         </div>
       </div>
       <div
@@ -151,6 +153,7 @@ const Table = () => {
       </div>
     ));
   const isloading = useTypedSelector((state) => state.usersPage.loading);
+  const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
   const Header = (
     <div
       aria-label="table header"
@@ -159,13 +162,17 @@ const Table = () => {
         gridTemplateColumns: templateString,
       }}
     >
-      <div className="text-sm-md text-gray-4">Customer ID</div>
-      <div className="text-sm-md text-gray-4">Last Active</div>
-      <div className="text-sm-md text-gray-4">Active for</div>
-      <div className="text-sm-md text-gray-4">Total Requests</div>
-      <div className="text-sm-md text-gray-4">Requests / day</div>
-      <div className="text-sm-md text-gray-4">Total tokens</div>
-      <div className="text-sm-md text-gray-4">Tokens / day</div>
+      {userTableColumns.map((column, index) => (
+        <div
+          key={index}
+          className={cn(
+            "text-sm-md ",
+            currentsortKey == column.value ? "text-gray-5" : "text-gray-4"
+          )}
+        >
+          {column.name}
+        </div>
+      ))}
     </div>
   );
   return (

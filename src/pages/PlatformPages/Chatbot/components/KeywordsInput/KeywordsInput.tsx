@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs";
 import { Button, IconButton } from "src/components/Buttons";
@@ -13,6 +13,7 @@ export default function KeywordsInput() {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm();
 
   const streamingText = useTypedSelector(
