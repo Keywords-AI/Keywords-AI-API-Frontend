@@ -6,10 +6,7 @@ import { Button, CheckBoxButtonSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { Divider } from "src/components/Sections";
 import { Operator, RootState } from "src/types";
-import {
-  updateUser,
-  getRequestLogs
-} from "src/store/actions";
+import { updateUser, getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
@@ -54,6 +51,13 @@ export function FilterPanel() {
   const displayColumns = showColumns;
   const { register, handleSubmit, watch } = useForm();
   const displayProperties = watch("display_properties");
+  useEffect(() => {
+    if (user?.display_properties) {
+      dispatch(
+        setDisplayColumns(checkBoxFieldToList(user?.display_properties))
+      );
+    }
+  }, [user]);
   useEffect(() => {
     if (displayProperties) {
       dispatch(setDisplayColumns(checkBoxFieldToList(displayProperties)));

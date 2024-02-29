@@ -33,6 +33,8 @@ export type LogItem = {
   groundness: number;
   full_request: any;
   status_code: number;
+  warnings: string;
+  token_per_second: number;
 };
 
 export type DisplayLogItem = {
@@ -56,6 +58,7 @@ export type DisplayLogItem = {
   };
   sentimentAnalysis: any;
   cachedResponse: number;
+  warnings: string;
 };
 
 export type LogColumnKey = keyof DisplayLogItem;
