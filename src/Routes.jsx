@@ -22,13 +22,18 @@ import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
+
 import { qaChildren } from "./pages/PlatformPages/QaPages/QaPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
-import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
+const Dashboard = lazy(() =>
+  import("./pages/PlatformPages/Dashboard/Dashboard").then((module) => ({
+    default: module.Dashboard,
+  }))
+);
 import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
@@ -36,13 +41,18 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
-import { Requests } from "./pages/PlatformPages/Requests/Requests";
+const Requests = lazy(() =>
+  import("./pages/PlatformPages/Requests/Requests").then((module) => ({
+    default: module.Requests,
+  }))
+);
 import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
 import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
 import posthog from "posthog-js";
 import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
 import DemoWelcome from "./pages/MISC/DemoWelcome";
+import { LoadingPage } from "./components/LoadingPage";
 
 const mapStateToProps = (state) => {
   return {
@@ -138,6 +148,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       children: [
         { path: "playground", element: <Playground /> },
         { path: "chatbot", element: <Chatbot /> },
+        { path: "loading", element: <LoadingPage /> },
         { path: "cache", element: <CachePage /> },
         {
           path: "qa-wall",
@@ -235,7 +246,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
 
   const element = useRoutes(routes);
 
-  return <Suspense fallback={<div></div>}>{element}</Suspense>;
+  return <Suspense fallback={<LoadingPage />}>{element}</Suspense>;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

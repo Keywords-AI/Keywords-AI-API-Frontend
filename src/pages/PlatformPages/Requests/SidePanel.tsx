@@ -49,7 +49,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       ) || state.requestLogs.selectedRequest
   );
   const { enableScope, disableScope } = useHotkeysContext();
-
+  const navigate = useNavigate();
   useHotkeys(
     "V",
     () => {
@@ -122,8 +122,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: logItem?.model ? (
-      <ModelTag model={logItem?.model || ""} />
+    Model: logItem?.model && logItem?.model !== "None" ? (
+      <ModelTag model={logItem?.model} />
     ) : (
       <span className="text-sm-regular text-gray-4">N/A</span>
     ),
@@ -516,7 +516,7 @@ const Evaluation = ({
     return planLevel < 2;
   });
   groundnessScore = parseFloat(groundnessScore.toFixed(2));
-
+  const navigate = useNavigate();
   return (
     <div
       aria-label="frame 1974"
@@ -586,6 +586,9 @@ const Evaluation = ({
               backgroundColor="bg-primary/10"
               textColor="text-primary"
               border=""
+              onClick={() => {
+                navigate("/platform/api/plans");
+              }}
             />
           ) : sentimentScore ? (
             <SentimentTag sentiment_score={sentimentScore} />

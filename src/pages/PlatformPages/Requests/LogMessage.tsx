@@ -11,9 +11,9 @@ export default function LogMessage({ MessageContent }: Props) {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
   if (typeof MessageContent === "string") {
     return jsonMode ? (
-      <pre className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono">
+      <p className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono whitespace-pre-wrap">
         {MessageContent}
-      </pre>
+      </p>
     ) : (
       <p className={cn("w-full", "overflow-auto break-words")}>
         {MessageContent}
@@ -24,14 +24,22 @@ export default function LogMessage({ MessageContent }: Props) {
       <div>
         {MessageContent.map((content, index) => {
           if (content.type && content.type == "text") {
-            return <p className="break-words overflow-auto">{content.text} </p>;
+            return (
+              <p key={index} className="break-words overflow-auto">
+                {content.text}{" "}
+              </p>
+            );
           } else if (
             content.type &&
             content.type == "image_url" &&
             content.image_url.url
           ) {
             return (
-              <img src={content.image_url.url} className="w-full h-full" />
+              <img
+                key={index}
+                src={content.image_url.url}
+                className="w-full h-full"
+              />
             );
           }
         })}
