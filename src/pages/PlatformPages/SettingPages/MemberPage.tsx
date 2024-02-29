@@ -248,8 +248,9 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
         defaultValue={role}
         // Yeah, of course you cannot edit yourself
         placeholder={isOwner ? "Owner" : "Member"}
-        align="start"
-        alignOffset={32}
+        align="end"
+        sideOffset={4}
+        alignOffset={0}
         // triggerProps={{
         //   first_name: user?.first_name,
         //   last_name: user?.last_name,
@@ -292,6 +293,14 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
   if (role == "admin") {
     choices = [
       {
+        name: "Admin",
+        value: "admin",
+        textColor: "text-gray-4 focus:text-gray-5",
+        onClick: () => {
+          dispatch(changeRole(id, "admin"));
+        },
+      },
+      {
         name: "Member",
         value: "member",
         textColor: "text-gray-4 focus:text-gray-5",
@@ -309,6 +318,14 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
           textColor: "text-gray-4 focus:text-gray-5",
           onClick: () => {
             dispatch(changeRole(id, "admin"));
+          },
+        },
+        {
+          name: "Member",
+          value: "member",
+          textColor: "text-gray-4 focus:text-gray-5",
+          onClick: () => {
+            dispatch(changeRole(id, "member"));
           },
         },
       ];
@@ -331,7 +348,13 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
           <Button
             variant="text"
             text={capitalize(role)}
-            icon={Down}
+            icon={
+              role === "owner" ||
+              isSelf ||
+              currUser.organization_role.role === "member"
+                ? null
+                : Down
+            }
             iconPosition="right"
             disabled={
               role === "owner" ||

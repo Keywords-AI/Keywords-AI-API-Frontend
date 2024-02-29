@@ -73,7 +73,7 @@ const TopBar = () => {
 };
 
 const Table = () => {
-  const templateString = "1fr 128px 100px 120px 120px 120px 120px ";
+  const templateString = "1fr 140px 100px 120px 120px 120px 120px ";
   const data = useTypedSelector((state) => state.usersPage.usersLogData);
   const renderItem = (name: string, value: Date | number | string) => {
     let options = {

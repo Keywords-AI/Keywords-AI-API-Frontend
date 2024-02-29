@@ -29,6 +29,7 @@ import Tooltip from "src/components/Misc/Tooltip";
 import {
   getUsersLogData,
   setUsersLogDataSort,
+  setUsersLogDataSortOrdering,
 } from "src/store/actions/usersPageAction";
 export interface DisplayPopoverProps {}
 
@@ -62,6 +63,9 @@ export function DisplayPopover({}: DisplayPopoverProps) {
   const [showPopover, setShowPopover] = useState(false);
   const { enableScope, disableScope } = useHotkeysContext();
   const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
+  const currentsortOrder = useTypedSelector(
+    (state) => state.usersPage.sortOrder
+  );
   const choices = userTableColumns.map((column, index) => {
     return {
       value: column.value,
@@ -118,7 +122,7 @@ export function DisplayPopover({}: DisplayPopoverProps) {
       <form className={"flex flex-col gap-xxs items-end"}>
         <div className="flex flex-col items-start gap-xxs self-stretch">
           <div className="flex justify-between items-center self-stretch ">
-            <span className="text-sm-regular text-gray-4">Ordering</span>
+            <span className="text-sm-regular text-gray-4">Sort by</span>
             <SelectInput
               headLess
               placeholder="Request"
@@ -137,6 +141,31 @@ export function DisplayPopover({}: DisplayPopoverProps) {
               }}
               value={currentsortKey}
               choices={choices}
+            />
+          </div>
+          <div className="flex justify-between items-center self-stretch ">
+            <span className="text-sm-regular text-gray-4">Ordering</span>
+            <SelectInput
+              headLess
+              placeholder="Request"
+              useShortCut
+              align="start"
+              backgroundColor="bg-gray-2"
+              icon={Down}
+              padding="py-xxxs px-xxs"
+              gap="gap-xxs"
+              width="min-w-[140px]"
+              alignOffset={-40}
+              optionsWidth="w-[180px]"
+              onChange={(e) => {
+                dispatch(setUsersLogDataSortOrdering(e.target.value));
+                dispatch(getUsersLogData());
+              }}
+              value={currentsortOrder}
+              choices={[
+                { value: "asc", name: "Ascending", secText: "1" },
+                { value: "desc", name: "Descending", secText: "2" },
+              ]}
             />
           </div>
         </div>
