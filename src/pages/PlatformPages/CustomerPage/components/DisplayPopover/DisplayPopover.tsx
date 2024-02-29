@@ -35,7 +35,6 @@ export interface DisplayPopoverProps {}
 
 export function DisplayPopover({}: DisplayPopoverProps) {
   const dispatch = useTypedDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     enableScope("userspage_displaypopover");
@@ -44,12 +43,13 @@ export function DisplayPopover({}: DisplayPopoverProps) {
     };
   }, []);
 
-  const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   const { enableScope, disableScope } = useHotkeysContext();
-  const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
+  const currentsortKey = useTypedSelector(
+    (state) => state.customersPage.sortKey
+  );
   const currentsortOrder = useTypedSelector(
-    (state) => state.usersPage.sortOrder
+    (state) => state.customersPage.sortOrder
   );
   const choices = userTableColumns.map((column, index) => {
     return {
