@@ -248,10 +248,10 @@ function DashboardNotConnected({
                   ))}
               </div>
             )} */}
-            {/* <DashboardFilterLeft /> */}
+            {(user.is_admin || user.is_superadmin) && <DashboardFilterLeft />}
           </div>
           <div className="flex items-center gap-xxs">
-            {user.is_admin && <DashboardFilter />}
+            <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
