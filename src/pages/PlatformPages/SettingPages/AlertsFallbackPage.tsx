@@ -15,6 +15,7 @@ import { models as MODELS } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { Redirect } from "src/components";
 import { Tag } from "src/components/Misc";
+import { useNavigate } from "react-router-dom";
 
 export const AlertsFallbackPage = () => {
   const { isFallbackEnabled, fallbackModels, systemFallbackEnabled, orgPlan } =
@@ -122,6 +123,7 @@ export const AlertsFallbackPage = () => {
       updateOrganization({ system_fallback_enabled: !systemFallbackEnabled })
     );
   };
+  const navigate = useNavigate();
   return (
     <PageContent
       title="Alerts & Fallback"
@@ -220,6 +222,9 @@ export const AlertsFallbackPage = () => {
               backgroundColor="bg-primary/10"
               textColor="text-primary"
               border="shadow-transparent"
+              onClick={() => {
+                navigate("/platform/api/plans");
+              }}
             />
           </div>
         </div>

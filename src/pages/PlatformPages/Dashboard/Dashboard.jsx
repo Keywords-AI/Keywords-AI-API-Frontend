@@ -28,6 +28,7 @@ import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 
 const mapStateToProps = (state) => ({
+  user: state.user,
   summary: state.dashboard.summary,
   organization: state.organization,
   firstName: state.user.first_name,
@@ -58,7 +59,7 @@ function DashboardNotConnected({
   getDashboardData,
   firstTime,
   organization,
-  modelData,
+  user,
   modelColors,
   keyColors,
 }) {
@@ -250,7 +251,7 @@ function DashboardNotConnected({
             {/* <DashboardFilterLeft /> */}
           </div>
           <div className="flex items-center gap-xxs">
-            <DashboardFilter />
+            {user.is_admin && <DashboardFilter />}
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
