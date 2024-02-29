@@ -112,6 +112,7 @@ export const updateOrganization = (
 };
 
 export const sendInvitation = (data, callback = () => {}, resend = false) => {
+  console.log(data);
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
