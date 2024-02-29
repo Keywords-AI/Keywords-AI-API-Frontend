@@ -228,11 +228,19 @@ export const processRequestLogs = (
         <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
       ),
       outputTokens: log.completion_tokens,
-      cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
-      allTokens: (
-        <span className="">{log.completion_tokens + log.prompt_tokens}</span>
+      cost: (
+        <span className="">{log.failed ? "" : `$${log.cost.toFixed(6)}`}</span>
       ),
-      latency: <span className="">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
+      allTokens: (
+        <span className="">
+          {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
+        </span>
+      ),
+      latency: (
+        <span className="">
+          {log.failed ? "" : `${log.latency.toFixed(3)}s`}
+        </span>
+      ), // + converts string to number
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,

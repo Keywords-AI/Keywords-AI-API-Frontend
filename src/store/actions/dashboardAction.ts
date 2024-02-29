@@ -472,7 +472,6 @@ export const getDashboardData = (postData) => {
           });
         }
         if (params.get("breakdown") === "by_model") {
-          console.log("data.model_breakdown");
           const breakDowndata = processBreakDownData(
             data.model_breakdown,
             true,
@@ -752,7 +751,6 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
 };
 
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
-  console.log("data", data);
   data = data.map((item) => {
     return { ...item, model: item.model || "Unknown model" };
   });

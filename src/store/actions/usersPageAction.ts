@@ -5,7 +5,13 @@ import { Parser } from "@json2csv/plainjs";
 export const SET_USERS_LOG_DATA = "SET_USERS_LOG_DATA";
 export const SET_USERS_LOG_DATA_LOADING = "SET_USERS_LOG_DATA_LOADING";
 export const SET_USERS_LOG_DATA_SORT = "SET_USERS_LOG_DATA_SORT";
+export const SET_USERSLOG_DATA_SORT_ORDERING =
+  "SET_USERSLOG_DATA_SORT_ORDERING";
 
+export const setUsersLogDataSortOrdering = (ordering: string) => ({
+  type: SET_USERSLOG_DATA_SORT_ORDERING,
+  payload: ordering,
+});
 export const setUsersLogDataSort = (sortFuncKey: any) => ({
   type: SET_USERS_LOG_DATA_SORT,
   payload: sortFuncKey,
@@ -27,7 +33,10 @@ export const getUsersLogData = () => {
     dispatch(
       setUsersLogData(
         await fetchUsersLogData(
-          getSortFunction(getState().usersPage.sortKey, "asc")
+          getSortFunction(
+            getState().usersPage.sortKey,
+            getState().usersPage.sortOrder
+          )
         )
       )
     );
@@ -42,19 +51,29 @@ export const filterUsersLogDataAction = (searchString: string) => {
       dispatch(
         setUsersLogData(
           await fetchUsersLogData(
-            getSortFunction(getState().usersPage.sortKey, "asc")
+            getSortFunction(
+              getState().usersPage.sortKey,
+              getState().usersPage.sortOrder
+            )
           )
         )
       );
     } else {
       const data: any[] = (await fetchUsersLogData(
-        getSortFunction(getState().usersPage.sortKey, "asc")
+        getSortFunction(
+          getState().usersPage.sortKey,
+          getState().usersPage.sortOrder
+        )
       )) as any[];
       const filteredData = data.filter((data: any) => {
         return data.customerId
           .toLowerCase()
           .includes(searchString.toLowerCase());
       });
+      if (filteredData.length === 0) {
+        dispatch(setUsersLogDataLoading(false));
+        return;
+      }
       dispatch(setUsersLogData(filteredData));
     }
     dispatch(setUsersLogDataLoading(false));
@@ -108,7 +127,6 @@ const fetchUsersLogData = async (sortFunc) => {
       method: "GET",
       data: {},
     });
-    console.log(sortFunc);
     return responseData
       .map((data: any) => {
         return {

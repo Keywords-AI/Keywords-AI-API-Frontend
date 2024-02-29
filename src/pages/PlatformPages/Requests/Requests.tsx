@@ -12,7 +12,7 @@ import {
 import { getRequestLogs, exportLogs } from "src/store/actions";
 import { LogItem } from "src/types";
 import { Add, Button, Close, Down, Export, Filter } from "src/components";
-import { SideBar, SideBarActive } from "src/components/Icons";
+import { AlphanumericKey, SideBar, SideBarActive } from "src/components/Icons";
 import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
@@ -27,7 +27,8 @@ import { Paginator } from "./Paginator";
 import { Popover } from "src/components/Dialogs";
 import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
-
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -199,13 +200,55 @@ const ExportPopOver = () => {
     { name: "JSON", value: ".json" },
   ];
   const [file, setFile] = useState(fileTypes[0].value);
+  const { enableScope, disableScope } = useHotkeysContext();
+  const [showDropdown, setShowDropdown] = useState(false);
+  useHotkeys(
+    "e",
+    () => {
+      setShowDropdown((prev) => !prev);
+    },
+    {
+      scopes: "exportLogs"
+    }
+  );
+  useEffect(() => {
+    enableScope("exportLogs");
+    return () => {
+      disableScope("exportLogs");
+    };
+  }, []);
+
   return (
     <Popover
       width="w-[320px]"
       padding=""
       align="end"
       sideOffset={4}
-      trigger={<Button variant="small" icon={Export} text="Export" />}
+      open={showDropdown}
+      setOpen={setShowDropdown}
+      trigger={
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">Export logs</p>
+                <AlphanumericKey value={"E"} />
+              </>
+            }
+          >
+            <Button
+              variant="small"
+              icon={Export}
+              text="Export"
+              onClick={() => setShowDropdown((prev) => !prev)}
+            />
+          </Tooltip>
+        </div>
+      }
     >
       <div className="flex-col gap-sm py-sm px-md">
         <div className="flex-col items-start gap-xxs self-stretch">

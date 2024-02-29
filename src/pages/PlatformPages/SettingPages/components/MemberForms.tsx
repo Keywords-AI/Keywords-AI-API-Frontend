@@ -1,10 +1,7 @@
 import { TextInput, SelectInput } from "src/components/Inputs";
 import { Button } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
-import {
-  sendInvitation,
-  dispatchNotification,
-} from "src/store/actions";
+import { sendInvitation, dispatchNotification } from "src/store/actions";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { RootState } from "src/types";
 
@@ -46,7 +43,7 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => {} }) => {
   };
 
   return (
-    <form className="flex-col gap-sm w-full" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex-col gap-md w-full" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex-row gap-xs self-stretch">
         <TextInput
           {...register("email")}
@@ -54,14 +51,25 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => {} }) => {
           width="flex-grow"
           placeholder="example@example.com"
         />
-        {/* <SelectInput
-                    {...register("role")}
-                    title="Role"
-                    choices={[{ name: "Admin", value: "admin" }, { name: "Member", value: "member" }]}
-                    placeholder="Member"
-                    defaultValue="member"
-                    width="w-[160px]"
-                /> */}
+        <SelectInput
+          {...register("role")}
+          title="Role"
+          choices={[
+            { name: "Admin", value: "admin" },
+            { name: "Member", value: "member" },
+          ]}
+          placeholder="Member"
+          defaultValue="member"
+          width="w-[160px]"
+        />
+      </div>
+      <div className="flex self-stretch">
+        <TextInput
+          {...register("message")}
+          title="Message"
+          width="flex-grow"
+          placeholder={`You are invited to join ${organization?.name}.`}
+        />
       </div>
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">

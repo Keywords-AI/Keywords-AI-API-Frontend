@@ -123,7 +123,6 @@ const CreateFormNotConnected = React.forwardRef(
       watch,
     } = useForm();
     const onSubmit = (data) => {
-      console.log("data", data);
       const name = data.name || "New Key";
       setNewKeyName!(name);
       if (!showMore) {
