@@ -302,7 +302,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     Error message
                     <CopyButton text={logItem?.error_message || ""} />
                   </div>
-                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm break-words text-wrap whitespace-pre-wrap">
                     {logItem?.error_message}
                   </div>
                 </div>
@@ -316,8 +316,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     Warning message
                     <CopyButton text={logItem?.warnings || ""} />
                   </div>
-                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm">
-                    {logItem?.warnings}
+                  <div className="flex items-start gap-[10px]  py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm self-stretch">
+                    <p className="break-all  flex self-stretch">
+                      {logItem?.warnings}
+                    </p>
                   </div>
                 </div>
                 <Divider />
