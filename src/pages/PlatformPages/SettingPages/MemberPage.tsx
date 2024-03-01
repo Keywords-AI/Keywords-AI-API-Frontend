@@ -10,6 +10,7 @@ import { SelectInput } from "src/components/Inputs";
 import cn from "src/utilities/classMerge";
 import { Dots, Down } from "src/components";
 import { capitalize } from "src/utilities/stringProcessing";
+import { useNavigate } from "react-router-dom";
 
 export const MemberPage = () => {
   const organization = useTypedSelector(
@@ -17,7 +18,9 @@ export const MemberPage = () => {
   );
   const user = useTypedSelector((state: RootState) => state.user);
   const [open, setOpen] = React.useState(false);
-
+  const isFreeUser = useTypedSelector((state: RootState) => {
+    return state.organization?.organization_subscription.plan_level < 2;
+  });
   return (
     <PageContent
       title={"Members"}
@@ -52,7 +55,7 @@ export const MemberPage = () => {
           />
         )} */}
         <MembersTable />
-        {user.is_organization_admin && (
+        {user.is_organization_admin && !isFreeUser && (
           <Modal
             title={"Invite member"}
             subtitle={
@@ -114,11 +117,14 @@ const DeleteModalForm = ({
 
 const MembersTable = () => {
   const gridTemplateString = "240px 100px 1fr";
+  const navigate = useNavigate();
   const members = useTypedSelector(
     (state: RootState) => state.organization?.users
   );
   const user = useTypedSelector((state: RootState) => state.user);
-
+  const isFreeUser = useTypedSelector((state: RootState) => {
+    return state.organization?.organization_subscription.plan_level < 2;
+  });
   const sortedMembers = [...(members || [])].sort((a, b) => {
     if (a.id === user.organization_role.id) return -1;
     if (b.id === user.organization_role.id) return 1;
@@ -134,7 +140,20 @@ const MembersTable = () => {
       >
         <div className="text-sm-md text-gray-4">User</div>
         <div className="text-sm-md text-gray-4">Role</div>
-        <div></div>
+        <div className="flex justify-end">
+          {isFreeUser ||
+            (true && (
+              <Button
+                variant="footer"
+                text="Upgrade to invite team"
+                padding="p-0"
+                textColor="text-primary"
+                onClick={() => {
+                  navigate("/platform/api/plans");
+                }}
+              />
+            ))}
+        </div>
       </div>
       {sortedMembers?.map((member, index) => {
         return (
