@@ -52,7 +52,7 @@ export function FilterPanel() {
   const { register, handleSubmit, watch } = useForm();
   const displayProperties = watch("display_properties");
   useEffect(() => {
-    if (user?.display_properties) {
+    if (user?.display_properties.length > 0) {
       dispatch(
         setDisplayColumns(checkBoxFieldToList(user?.display_properties))
       );
