@@ -714,6 +714,22 @@ export const requestLogTagColumns: LogItemTag[] = [
       />
     ),
   },
+  {
+    name: "Warnings",
+    retrievalKey: "warnings",
+    renderFunction: (warnings: any) => {
+      if (warnings?.length > 0 && warnings != "{}") {
+        return (
+          <Tag
+            icon={<Warning fill="fill-orange" size="sm" />}
+            backgroundColor="bg-orange/10"
+            textColor="text-orange"
+            border=""
+          />
+        );
+      }
+    },
+  },
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [

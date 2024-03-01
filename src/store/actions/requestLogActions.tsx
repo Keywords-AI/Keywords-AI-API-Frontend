@@ -224,9 +224,12 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
-      time_to_first_token: (
-        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
-      ),
+      time_to_first_token:
+        log.time_to_first_token && log.time_to_first_token != -1 ? (
+          <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+        ) : (
+          <span className="">{"-"}</span>
+        ),
       outputTokens: log.completion_tokens,
       cost: (
         <span className="">{log.failed ? "" : `$${log.cost.toFixed(6)}`}</span>
@@ -251,6 +254,7 @@ export const processRequestLogs = (
         errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
+      warnings: log.warnings,
     };
   });
 };

@@ -122,11 +122,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
-    Model: logItem?.model && logItem?.model !== "None" ? (
-      <ModelTag model={logItem?.model} />
-    ) : (
-      <span className="text-sm-regular text-gray-4">N/A</span>
-    ),
+    Model:
+      logItem?.model && logItem?.model !== "None" ? (
+        <ModelTag model={logItem?.model} />
+      ) : (
+        <span className="text-sm-regular text-gray-4">N/A</span>
+      ),
 
     Cached:
       logItem?.cached_responses?.length || 0 > 0 ? (
@@ -190,6 +191,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     Latency: (
       <span className="text-sm-regular text-gray-4">
         {logItem?.failed ? "-" : (logItem?.latency.toFixed(3) || "-") + "s"}
+      </span>
+    ),
+    Speed: (
+      <span className="text-sm-regular text-gray-4">
+        {!logItem?.token_per_second || logItem?.token_per_second < 0
+          ? "-"
+          : (logItem?.token_per_second?.toFixed(3) || "-") + "T/s"}
       </span>
     ),
   };
@@ -278,22 +286,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               </div>
             </Tooltip>
           )}
-          {/* {displayLog && (
-            <SearchLog
-              handleSearch={searchContent}
-              handleReset={() => {
-                setCompleteInteraction(
-                  logItem?.prompt_messages
-                    ? [
-                        ...logItem.prompt_messages.concat([
-                          logItem?.completion_message,
-                        ]),
-                      ]
-                    : []
-                );
-              }}
-            />
-          )} */}
         </div>
       </div>
       <div
@@ -312,6 +304,20 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                   </div>
                   <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
                     {logItem?.error_message}
+                  </div>
+                </div>
+                <Divider />
+              </>
+            )}
+            {logItem?.warnings && logItem?.warnings != "{}" && (
+              <>
+                <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
+                  <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
+                    Warning message
+                    <CopyButton text={logItem?.warnings || ""} />
+                  </div>
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm">
+                    {logItem?.warnings}
                   </div>
                 </div>
                 <Divider />

@@ -53,6 +53,7 @@ import posthog from "posthog-js";
 import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
 import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
+import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
 
 const mapStateToProps = (state) => {
   return {
@@ -149,6 +150,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         { path: "chatbot", element: <Chatbot /> },
         { path: "loading", element: <LoadingPage /> },
         { path: "cache", element: <CachePage /> },
+        { path: "customers", element: <CustomerPage /> },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
