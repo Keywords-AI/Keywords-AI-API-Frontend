@@ -27,7 +27,6 @@ import {
 } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
-import SearchLog from "./SearchLog";
 import LogMessage from "./LogMessage";
 
 interface SidePanelProps {
@@ -334,7 +333,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     className="flex h-[24px] justify-between items-center self-stretch"
                     key={index}
                   >
-                    <div className="flex items-center gap-xxs">
+                    <div className="flex items-center gap-xxs ">
                       <span className="text-sm-md text-gray-5">{key}</span>
                       {key === "Customer ID" && (
                         <Tooltip

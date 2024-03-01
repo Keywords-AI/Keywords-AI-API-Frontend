@@ -7,6 +7,19 @@ export const SET_USERS_LOG_DATA_LOADING = "SET_USERS_LOG_DATA_LOADING";
 export const SET_USERS_LOG_DATA_SORT = "SET_USERS_LOG_DATA_SORT";
 export const SET_USERSLOG_DATA_SORT_ORDERING =
   "SET_USERSLOG_DATA_SORT_ORDERING";
+export const SET_USERS_LOG_DATA_TIMERANGE = "SET_USERS_LOG_DATA_TIMERANGE";
+export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
+  "SET_USERS_LOG_DATA_DISPLAY_COLUMNS";
+
+export const setUsersLogDataDisplayColumns = (columns: string[]) => ({
+  type: SET_USERS_LOG_DATA_DISPLAY_COLUMNS,
+  payload: columns,
+});
+
+export const setUsersLogDataTimeRange = (timeRange: string) => ({
+  type: SET_USERS_LOG_DATA_TIMERANGE,
+  payload: timeRange,
+});
 
 export const setUsersLogDataSortOrdering = (ordering: string) => ({
   type: SET_USERSLOG_DATA_SORT_ORDERING,
@@ -95,19 +108,19 @@ const sortFunctions = {
     return order === "asc" ? result : -result;
   },
   totalRequests: (a: any, b: any, order: string) => {
-    const result = a.totalRequests - b.totalRequests;
+    const result = (a.totalRequests as number) - (b.totalRequests as number);
     return order === "asc" ? result : -result;
   },
-  requestsPerDay: (a: any, b: any, order: string) => {
-    const result = a.requestsPerDay - b.requestsPerDay;
+  requests: (a: any, b: any, order: string) => {
+    const result = (a.requests as number) - (b.requests as number);
     return order === "asc" ? result : -result;
   },
   totalTokens: (a: any, b: any, order: string) => {
-    const result = a.totalTokens - b.totalTokens;
+    const result = (a.totalTokens as number) - (b.totalTokens as number);
     return order === "asc" ? result : -result;
   },
-  tokensPerDay: (a: any, b: any, order: string) => {
-    const result = a.tokensPerDay - b.tokensPerDay;
+  tokens: (a: any, b: any, order: string) => {
+    const result = (a.tokens as number) - (b.tokens as number);
     return order === "asc" ? result : -result;
   },
 };
@@ -135,9 +148,9 @@ const fetchUsersLogData = async (sortFunc) => {
           activeFor:
             data.active_days + (+data.active_days > 1 ? " days" : " day"),
           totalRequests: data.number_of_requests,
-          requestsPerDay: Math.round(data.request_per_day as number),
+          requests: Math.round(data.request_per_day as number),
           totalTokens: data.total_tokens,
-          tokensPerDay: Math.round(data.tokens_per_day as number),
+          tokens: Math.round(data.tokens_per_day as number),
         };
       })
       .sort(sortFunc);

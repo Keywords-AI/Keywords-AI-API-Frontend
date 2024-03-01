@@ -74,8 +74,13 @@ export const SignUp = connect(
             />
             <TextInput
               title="Invitation Code"
-              type="password"
+              type="text"
               required
+              inputSyle={{
+                WebkitTextSecurity: "disc", // For Webkit browsers (Chrome, Safari)
+                textSecurity: "disc", // For Firefox
+              }}
+              autoComplete="off"
               placeholder=""
               {...register("invitation_code")}
             />

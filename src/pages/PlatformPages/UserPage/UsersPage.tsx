@@ -1,5 +1,10 @@
 import React, { useEffect } from "react";
-import { DisplayPopover, ExportPopOver, SearchUser } from "./components";
+import {
+  DisplayPopover,
+  ExportPopOver,
+  SearchUser,
+  TimeSwitcher,
+} from "./components";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import {
   exportUserLogs,
@@ -59,6 +64,7 @@ const TopBar = () => {
       >
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          <TimeSwitcher />
           <DisplayPopover />
         </div>
       </div>
@@ -73,8 +79,12 @@ const TopBar = () => {
 };
 
 const Table = () => {
-  const templateString = "1fr 140px 100px 120px 120px 120px 120px ";
+  const templateString = "1fr 140px 100px 120px 120px 120px 120px 120px ";
   const data = useTypedSelector((state) => state.usersPage.usersLogData);
+  const displayColumns = useTypedSelector(
+    (state) => state.usersPage.displayColumns
+  );
+
   const renderItem = (name: string, value: Date | number | string) => {
     let options = {
       month: "short",
@@ -110,7 +120,7 @@ const Table = () => {
             {(value as number).toLocaleString()}
           </div>
         );
-      case "requestsPerDay":
+      case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
@@ -124,10 +134,16 @@ const Table = () => {
           </div>
         );
 
-      case "tokensPerDay":
+      case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number).toLocaleString()}
+          </div>
+        );
+      case "sentiment":
+        return (
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
+            {value as string}
           </div>
         );
     }
@@ -144,7 +160,7 @@ const Table = () => {
         }}
       >
         <SkeletonTheme baseColor="#1E1E23" highlightColor="#23232B">
-          {Array(7)
+          {Array(8)
             .fill(null)
             .map((_, idx) => (
               <Skeleton duration={3} key={idx} className="h-[24px]" />
@@ -154,6 +170,15 @@ const Table = () => {
     ));
   const isloading = useTypedSelector((state) => state.usersPage.loading);
   const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
+  const currentTimeRange = useTypedSelector(
+    (state) => state.usersPage.timeRane
+  );
+  const timeValueToName = {
+    daily: "Day",
+    weekly: "Week",
+    monthly: "Month",
+    yearly: "Year",
+  };
   const Header = (
     <div
       aria-label="table header"
@@ -162,17 +187,21 @@ const Table = () => {
         gridTemplateColumns: templateString,
       }}
     >
-      {userTableColumns.map((column, index) => (
-        <div
-          key={index}
-          className={cn(
-            "text-sm-md ",
-            currentsortKey == column.value ? "text-gray-5" : "text-gray-4"
-          )}
-        >
-          {column.name}
-        </div>
-      ))}
+      {userTableColumns
+        .filter((e) => displayColumns.includes(e.value))
+        .map((column, index) => (
+          <div
+            key={index}
+            className={cn(
+              "text-sm-md ",
+              currentsortKey == column.value ? "text-gray-5" : "text-gray-4"
+            )}
+          >
+            {column.value == "requests" || column.value == "tokens"
+              ? column.name + "/" + timeValueToName[currentTimeRange]
+              : column.name}
+          </div>
+        ))}
     </div>
   );
   return (
@@ -192,11 +221,13 @@ const Table = () => {
                     gridTemplateColumns: templateString,
                   }}
                 >
-                  {Object.entries(item).map(([key, value], i) => (
-                    <React.Fragment key={i}>
-                      {renderItem(key, value)}
-                    </React.Fragment>
-                  ))}
+                  {Object.entries(item)
+                    .filter((item) => displayColumns.includes(item[0]))
+                    .map(([key, value], i) => (
+                      <React.Fragment key={i}>
+                        {renderItem(key, value)}
+                      </React.Fragment>
+                    ))}
                 </div>
               );
             })}
