@@ -161,6 +161,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             ref={tableRef}
             className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
           >
+            
             <RequestLogTable />
             {filters.length > 0 && (
               <div className="flex-row py-lg justify-center items-center w-full">
