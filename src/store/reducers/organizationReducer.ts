@@ -26,7 +26,7 @@ const initState: Organization = {
   prioritize_objectives: [],
   monthly_spending: 0,
   budget_goal: "",
-  has_api_call: false,
+  has_api_call: true,
   preset_models: [],
   preset_opiton: "",
   dynamic_routing_enabled: false,
@@ -58,7 +58,7 @@ export default function organizationReducer(
     case ADD_MEMBER:
       return {
         ...state,
-        users: [...(state?.users ?? []), action .payload],
+        users: [...(state?.users ?? []), action.payload],
       } as Organization;
     case DELETE_ROLE:
       return {

@@ -102,6 +102,7 @@ interface CreateProps {
   createApiKey?: (data: any) => {};
   dispatchNotification?: (notification: any) => {};
   loading?: boolean;
+  organization?: any;
 }
 
 const CreateFormNotConnected = React.forwardRef(
@@ -113,6 +114,7 @@ const CreateFormNotConnected = React.forwardRef(
       createApiKey,
       loading,
       dispatchNotification,
+      organization,
     }: CreateProps,
     ref
   ) => {
@@ -142,7 +144,9 @@ const CreateFormNotConnected = React.forwardRef(
       e.stopPropagation();
       setShowForm(false);
     };
-    const [currentKeyName, setCurrentKeyName] = useState("New Key");
+    const [currentKeyName, setCurrentKeyName] = useState(
+      organization.name + " Default"
+    );
     const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
 
     const [showMore, setShowMore] = useState(false);

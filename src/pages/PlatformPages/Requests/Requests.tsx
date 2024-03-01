@@ -208,7 +208,7 @@ const ExportPopOver = () => {
       setShowDropdown((prev) => !prev);
     },
     {
-      scopes: "exportLogs"
+      scopes: "exportLogs",
     }
   );
   useEffect(() => {

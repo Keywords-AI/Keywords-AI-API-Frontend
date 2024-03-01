@@ -543,7 +543,8 @@ export const models: ModelType[] = [
     weight: 0.5,
   },
 ];
-
+export const ChartTooltipOuterStyle =
+  "flex flex-col items-start shadow-border shadow-gray-3 gap-xs py-xs px-sm bg-gray-2 rounded-sm w-[280px]";
 export const colorTagsClasses = [
   "#F55656",
   "#FFB340",
@@ -713,6 +714,22 @@ export const requestLogTagColumns: LogItemTag[] = [
         showScore={false}
       />
     ),
+  },
+  {
+    name: "Warnings",
+    retrievalKey: "warnings",
+    renderFunction: (warnings: any) => {
+      if (warnings?.length > 0 && warnings != "{}") {
+        return (
+          <Tag
+            icon={<Warning fill="fill-orange" size="sm" />}
+            backgroundColor="bg-orange/10 h-[24px]"
+            textColor="text-orange "
+            border=""
+          />
+        );
+      }
+    },
   },
 ];
 
