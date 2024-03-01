@@ -93,6 +93,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     if (organization?.id) {
       // The init state of org is not empty, but the id is null
       const onOnboradingPage = window.location.pathname.includes("/onboarding");
+      console.log("onOnboradingPage", onOnboradingPage, organization?.active_subscription);
       if (!onOnboradingPage && !organization?.active_subscription) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
@@ -111,7 +112,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         last_name: user.last_name,
       });
     }
-  }, [user]);
+  }, []);
 
   // comment the 2 lines below to switch between logged in/out states
   const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
