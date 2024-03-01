@@ -28,7 +28,7 @@ import { useTypedSelector } from "src/store/store";
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
   vendors: state.integration.vendors,
-  apiKeyLimit: state.organization?.organization_subscription.api_key_limit ?? 0,
+  apiKeyLimit: state.organization?.organization_subscription?.api_key_limit ?? 0,
 });
 
 const mapDispatchToProps = {
