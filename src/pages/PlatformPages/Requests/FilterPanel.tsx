@@ -274,7 +274,7 @@ export function FilterPanel() {
             {requestLogTagColumns.map((metric) => {
               const checked = displayColumns.includes(metric.retrievalKey);
               if (metric.name === "Sentiment") {
-                return organization?.organization_subscription.plan_level >
+                return organization?.organization_subscription?.plan_level ?? 0 >
                   1 ? (
                   <CheckBoxButtonSmall
                     key={metric.retrievalKey}

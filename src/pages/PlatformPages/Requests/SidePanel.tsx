@@ -518,7 +518,7 @@ const Evaluation = ({
   groundnessScore?: number;
 }) => {
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription.plan_level;
+    const planLevel = state.organization?.organization_subscription?.plan_level ?? 0;
     return planLevel < 2;
   });
   groundnessScore = parseFloat(groundnessScore.toFixed(2));

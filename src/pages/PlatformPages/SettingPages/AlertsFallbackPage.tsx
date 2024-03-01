@@ -58,7 +58,7 @@ export const AlertsFallbackPage = () => {
     );
   }, [model1, model2, model3]);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription.plan_level;
+    const planLevel = state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   const models = MODELS.map((model) => {
