@@ -112,7 +112,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         last_name: user.last_name,
       });
     }
-  }, []);
+  }, [user]);
 
   // comment the 2 lines below to switch between logged in/out states
   const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
