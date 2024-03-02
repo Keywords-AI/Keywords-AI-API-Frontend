@@ -141,18 +141,17 @@ const MembersTable = () => {
         <div className="text-sm-md text-gray-4">User</div>
         <div className="text-sm-md text-gray-4">Role</div>
         <div className="flex justify-end">
-          {isFreeUser ||
-            (true && (
-              <Button
-                variant="footer"
-                text="Upgrade to invite team"
-                padding="p-0"
-                textColor="text-primary"
-                onClick={() => {
-                  navigate("/platform/api/plans");
-                }}
-              />
-            ))}
+          {isFreeUser && (
+            <Button
+              variant="footer"
+              text="Upgrade to invite team"
+              padding="p-0"
+              textColor="text-primary"
+              onClick={() => {
+                navigate("/platform/api/plans");
+              }}
+            />
+          )}
         </div>
       </div>
       {sortedMembers?.map((member, index) => {

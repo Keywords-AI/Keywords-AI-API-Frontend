@@ -228,7 +228,7 @@ export const processRequestLogs = (
         log.time_to_first_token && log.time_to_first_token != -1 ? (
           <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
         ) : (
-          <span className="">{"-"}</span>
+          <span className="">{""}</span>
         ),
       outputTokens: log.completion_tokens,
       cost: (

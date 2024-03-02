@@ -13,11 +13,12 @@ import {
 } from "src/store/actions/usersPageAction";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { WelcomeState } from "src/components/Sections";
+import { Divider, WelcomeState } from "src/components/Sections";
 import cn from "src/utilities/classMerge";
 import { TitleAuth } from "src/components/Titles";
 import { Button, Right } from "src/components";
 import { userTableColumns } from "src/utilities/constants";
+import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -56,23 +57,119 @@ const TopBar = () => {
   const handleReset = () => {
     dispatch(filterUsersLogDataAction(""));
   };
+  const sampleData = [
+    {
+      active: 150,
+      total: 200,
+    },
+    {
+      active: 120,
+      total: 180,
+    },
+    {
+      active: 80,
+      total: 150,
+    },
+    {
+      active: 200,
+      total: 250,
+    },
+    {
+      active: 150,
+      total: 200,
+    },
+    {
+      active: 120,
+      total: 180,
+    },
+    {
+      active: 80,
+      total: 150,
+    },
+    {
+      active: 200,
+      total: 250,
+    },
+    {
+      active: 150,
+      total: 200,
+    },
+    {
+      active: 120,
+      total: 180,
+    },
+    {
+      active: 80,
+      total: 150,
+    },
+    {
+      active: 200,
+      total: 250,
+    },
+  ];
+  const cardData = [
+    {
+      title: "Total users",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "total",
+    },
+    {
+      title: "Monthly active users",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "active",
+    },
+    {
+      title: "Daily active users",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "active",
+    },
+    {
+      title: "New users",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "active",
+    },
+    {
+      title: "Daily request per user",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "active",
+    },
+    {
+      title: "Monthly cost per user",
+      number: "0",
+      chartData: sampleData,
+      dataKey: "active",
+    },
+  ];
   return (
     <>
+      <div aria-label="frame 1938" className="flex items-start w-full bg-red ">
+        {cardData.map((item, index) => (
+          <MetricCardFocus
+            key={index}
+            title={item.title}
+            number={item.number}
+            chartData={item.chartData}
+            dataKey={item.dataKey}
+            width="flex-1"
+          />
+        ))}
+      </div>
+      <Divider />
       <div
         aria-label="frame 1944"
-        className="flex px-lg py-xs justify-end items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
+        className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
       >
+        <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
           <TimeSwitcher />
           <DisplayPopover />
         </div>
-      </div>
-      <div
-        aria-label="frame 1943"
-        className="flex px-lg py-xs justify-end items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
-      >
-        <ExportPopOver exportAction={exportUserLogs} />
       </div>
     </>
   );

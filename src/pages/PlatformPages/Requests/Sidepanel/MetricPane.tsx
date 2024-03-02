@@ -133,7 +133,7 @@ export const MetricPane = ({}) => {
               <CopyButton text={logItem?.error_message || ""} />
             </div>
             <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm ">
-              <p className="break-all  flex self-stretch">
+              <p className="break-all  flex self-stretch text-wrap">
                 {logItem?.error_message}
               </p>
             </div>
@@ -149,7 +149,7 @@ export const MetricPane = ({}) => {
               <CopyButton text={logItem?.warnings || ""} />
             </div>
             <div className="flex items-start gap-[10px]  py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm self-stretch">
-              <p className="break-all  flex self-stretch">
+              <p className="break-all  flex self-stretch text-wrap">
                 {logItem?.warnings}
               </p>
             </div>

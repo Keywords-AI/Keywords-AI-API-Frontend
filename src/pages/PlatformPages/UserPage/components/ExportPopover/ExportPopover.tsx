@@ -34,7 +34,7 @@ export default function ExportPopOver({ exportAction }) {
     <Popover
       width="w-[320px]"
       padding=""
-      align="end"
+      align="start"
       sideOffset={4}
       open={showDropdown}
       setOpen={setShowDropdown}

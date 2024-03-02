@@ -135,9 +135,9 @@ const MessageLists = () => {
     <div
       className="flex-col items-start gap-xxs  self-stretch  w-full"
       style={{
-        maxWidth: `calc(100vw - ${isLeftPanelOpen ? "240px" : "0px"} - ${
-          isRightPanelOpen ? "320px" : "0px"
-        })`,
+        maxWidth: `calc(100vw - 320px - ${
+          isLeftPanelOpen ? "240px" : "0px"
+        } - ${isRightPanelOpen ? "320px" : "0px"})`,
       }}
     >
       <AutoScrollContainer
