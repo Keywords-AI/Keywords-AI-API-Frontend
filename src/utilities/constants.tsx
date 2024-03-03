@@ -744,6 +744,7 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "model",
   "status",
   "cachedResponse",
+  "warnings",
 ];
 export const userTableColumns = [
   {
@@ -760,12 +761,12 @@ export const userTableColumns = [
   },
 
   {
-    name: "Requests",
+    name: "requests",
     value: "requests",
   },
 
   {
-    name: "Tokens",
+    name: "tokens",
     value: "tokens",
   },
   {

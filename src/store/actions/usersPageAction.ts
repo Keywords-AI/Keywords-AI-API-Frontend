@@ -73,12 +73,12 @@ export const filterUsersLogDataAction = (searchString: string) => {
         )
       );
     } else {
-      const {results: data, ...summary } = (await fetchUsersLogData(
+      const { results: data, ...summary } = await fetchUsersLogData(
         getSortFunction(
           getState().usersPage.sortKey,
           getState().usersPage.sortOrder
         )
-      ));
+      );
       const filteredData = data.filter((data: any) => {
         return data.customerId
           .toLowerCase()
@@ -136,11 +136,16 @@ const getSortFunction = (property: string, order: string) => {
 
 const fetchUsersLogData = async (sortFunc) => {
   try {
-    const {results: responseData, aggregation_data, ...rest} = await keywordsRequest({
+    const {
+      results: responseData,
+      aggregation_data,
+      ...rest
+    } = await keywordsRequest({
       path: `api/users`,
       method: "GET",
       data: {},
     });
+    console.log("aggregation_data", aggregation_data, rest, responseData);
     return responseData
       .map((data: any) => {
         return {
@@ -162,7 +167,7 @@ export const exportUserLogs = (format = ".csv") => {
   return async (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     try {
-      const {results: responseData, ...rest} = await keywordsRequest({
+      const { results: responseData, ...rest } = await keywordsRequest({
         path: `api/users`,
         method: "GET",
         data: { exporting: true },

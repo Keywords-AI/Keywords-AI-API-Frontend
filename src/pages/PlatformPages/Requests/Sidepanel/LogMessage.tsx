@@ -11,11 +11,11 @@ export default function LogMessage({ MessageContent }: Props) {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
   if (typeof MessageContent === "string") {
     return jsonMode ? (
-      <p className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono whitespace-pre-wrap">
+      <p className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono whitespace-pre-wrap select-text">
         {MessageContent}
       </p>
     ) : (
-      <p className={cn("w-full", "overflow-auto break-words")}>
+      <p className={cn("w-full", "overflow-auto break-words select-text")}>
         {MessageContent}
       </p>
     );
@@ -25,7 +25,7 @@ export default function LogMessage({ MessageContent }: Props) {
         {MessageContent.map((content, index) => {
           if (content.type && content.type == "text") {
             return (
-              <p key={index} className="break-words overflow-auto">
+              <p key={index} className="break-words overflow-auto select-text">
                 {content.text}{" "}
               </p>
             );

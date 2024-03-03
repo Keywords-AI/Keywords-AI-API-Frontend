@@ -20,7 +20,7 @@ export const MetricPane = ({}) => {
       <span className="text-sm-regular text-gray-4">{logItem?.id || "-"}</span>
     ),
     "Created at": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
         {new Date(logItem?.timestamp || "Aug 25, 8:03 PM").toLocaleString(
           "en-US",
           {
@@ -35,12 +35,12 @@ export const MetricPane = ({}) => {
     ),
     Status: StatusTag({ statusCode: logItem?.status_code }),
     "API key": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
         {logItem?.api_key || "N/A"}
       </span>
     ),
     "Customer ID": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
@@ -174,7 +174,7 @@ export const MetricPane = ({}) => {
               }
             >
               <div
-                className="flex h-[24px] justify-between items-center self-stretch cursor-pointer"
+                className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs"
                 onClick={() => {
                   const text =
                     key == "Model"
@@ -186,7 +186,7 @@ export const MetricPane = ({}) => {
                 }}
                 key={index}
               >
-                <div className="flex items-center gap-xxs ">
+                <div className="flex items-center gap-xxs flex-shrink-0">
                   <span className="text-sm-md text-gray-5">{key}</span>
                   {key === "Customer ID" && (
                     <Tooltip

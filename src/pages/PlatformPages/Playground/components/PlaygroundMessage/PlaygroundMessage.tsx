@@ -340,8 +340,21 @@ const MessageHeader = ({
 };
 
 export function StreamingMessage() {
-  const streamingStates = useTypedSelector((state) => state.streamingText);
+  const textAreaRefs = useRef([React.createRef(), React.createRef()]);
 
+  const setHeight = (ref) => {
+    if (!ref) return;
+
+    const target = ref.current;
+    if (!target) return;
+    target.style.height = "1px";
+    target.style.height = target.scrollHeight + "px";
+  };
+  const streamingStates = useTypedSelector((state) => state.streamingText);
+  useEffect(() => {
+    textAreaRefs.current[0] && setHeight(textAreaRefs.current[0]);
+    textAreaRefs.current[1] && setHeight(textAreaRefs.current[1]);
+  }, [streamingStates[0].streamingText, streamingStates[1].streamingText]);
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
   );
@@ -375,7 +388,7 @@ export function StreamingMessage() {
             <div
               key={index}
               className={cn(
-                "flex-col items-start gap-xxxs flex-1 self-stretch"
+                "flex-col items-start gap-xxxs flex-1 "
                 // isSingleChannel ? "w-full" : "w-1/2"
               )}
             >
@@ -403,9 +416,14 @@ export function StreamingMessage() {
                   >
                     {streamingState.streamingText &&
                     streamingState.streamingText != "\u200B" ? (
-                      <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-4 text-wrap break-all">
-                        {streamingState.streamingText}
-                      </div>
+                      <textarea
+                        ref={textAreaRefs.current[index]}
+                        className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
+                        disabled
+                        value={streamingState.streamingText}
+                      >
+                        {/* {streamingState.streamingText} */}
+                      </textarea>
                     ) : streamingState.error ? (
                       <span className="text-sm-regular text-gray-4">
                         {"Generating..."}
