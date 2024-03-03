@@ -72,7 +72,7 @@ const TopBar = () => {
 };
 
 const Table = () => {
-  const templateString = "1fr 140px 100px 120px 120px 120px 120px ";
+  const templateString = "1fr 140px 100px 120px 120px 120px 120px 120px";
   const data = useTypedSelector(
     (state) => state.customersPage.customersLogData
   );
@@ -95,7 +95,7 @@ const Table = () => {
         return (
           <div className="flex text-sm-regular text-gray-5 whitespace-nowrap  items-center h-[20px]">
             {`${new Date(value)
-              .toLocaleString("en-US", options)
+              .toLocaleString("en-US", options as any)
               .replace(",", " at")}`}
           </div>
         );
@@ -153,7 +153,7 @@ const Table = () => {
         </SkeletonTheme>
       </div>
     ));
-  const isloading = useTypedSelector((state) => state.usersPage.loading);
+  const isloading = useTypedSelector((state) => state.customersPage.loading);
   const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
   const Header = (
     <div

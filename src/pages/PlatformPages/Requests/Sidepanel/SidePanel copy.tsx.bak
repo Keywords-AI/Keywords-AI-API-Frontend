@@ -27,7 +27,6 @@ import {
 } from "src/store/actions";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "src/components/Misc/Tooltip";
-import SearchLog from "./SearchLog";
 import LogMessage from "./LogMessage";
 
 interface SidePanelProps {
@@ -302,8 +301,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     Error message
                     <CopyButton text={logItem?.error_message || ""} />
                   </div>
-                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm">
-                    {logItem?.error_message}
+                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm ">
+                    <p className="break-all  flex self-stretch">
+                      {logItem?.error_message}
+                    </p>
                   </div>
                 </div>
                 <Divider />
@@ -316,8 +317,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     Warning message
                     <CopyButton text={logItem?.warnings || ""} />
                   </div>
-                  <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm">
-                    {logItem?.warnings}
+                  <div className="flex items-start gap-[10px]  py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm self-stretch">
+                    <p className="break-all  flex self-stretch">
+                      {logItem?.warnings}
+                    </p>
                   </div>
                 </div>
                 <Divider />
@@ -330,7 +333,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     className="flex h-[24px] justify-between items-center self-stretch"
                     key={index}
                   >
-                    <div className="flex items-center gap-xxs">
+                    <div className="flex items-center gap-xxs ">
                       <span className="text-sm-md text-gray-5">{key}</span>
                       {key === "Customer ID" && (
                         <Tooltip
