@@ -147,7 +147,7 @@ const TopBar = () => {
   ];
   return (
     <>
-      <div aria-label="frame 1938" className="flex items-start w-full bg-red ">
+      <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
         {cardData.map((item, index) => (
           <MetricCardFocus
             key={index}

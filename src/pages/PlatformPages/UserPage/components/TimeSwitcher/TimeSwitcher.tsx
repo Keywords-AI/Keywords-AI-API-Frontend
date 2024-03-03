@@ -15,6 +15,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     weekly: "Week",
     monthly: "Month",
     yearly: "Year",
+    total: "Total",
   };
   const currentTimeRange = useTypedSelector(
     (state) => state.usersPage.timeRane
@@ -67,6 +68,11 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
           { name: "Week", value: "weekly", secText: "2" },
           { name: "Month", value: "monthly", secText: "3" },
           { name: "Year", value: "yearly", secText: "4" },
+          {
+            name: "Total",
+            value: "total",
+            secText: "5",
+          },
         ]}
         handleSelected={(value) => {
           dispatch(setUsersLogDataTimeRange(value as string));
