@@ -28,7 +28,7 @@ export default function UsersPage({}: Props) {
   }, []);
   const usersLogState = useTypedSelector((state) => state.usersPage);
   const isEmpty =
-    usersLogState.usersLogData.length === 0 && !usersLogState.loading;
+    (usersLogState.usersLogData?.length ?? 0) === 0 && !usersLogState.loading;
   return (
     <div
       className={cn(
@@ -51,6 +51,9 @@ export default function UsersPage({}: Props) {
 
 const TopBar = () => {
   const dispatch = useTypedDispatch();
+  const aggregatedData = useTypedSelector(
+    (state) => state.usersPage.aggregationData
+  );
   const handleSearch = (searchString: string) => {
     dispatch(filterUsersLogDataAction(searchString));
   };
@@ -110,37 +113,37 @@ const TopBar = () => {
   const cardData = [
     {
       title: "Total users",
-      number: "0",
+      number: aggregatedData.total_count.toLocaleString(),
       chartData: sampleData,
       dataKey: "total",
     },
     {
       title: "Monthly active users",
-      number: "0",
+      number: aggregatedData.monthly_active_users.toLocaleString(),
       chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Daily active users",
-      number: "0",
+      number: aggregatedData.daily_active_users.toLocaleString(),
       chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "New users",
-      number: "0",
+      number: aggregatedData.new_users.toLocaleString(),
       chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Daily request per user",
-      number: "0",
+      number: aggregatedData.daily_request_per_user.toLocaleString(),
       chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Monthly cost per user",
-      number: "0",
+      number: aggregatedData.monthly_cost_per_user.toLocaleString(),
       chartData: sampleData,
       dataKey: "active",
     },
