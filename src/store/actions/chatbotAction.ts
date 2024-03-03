@@ -246,10 +246,9 @@ export const sendMessage = (msgText?: string) => {
       dispatch(
         createMessage({
           conversation: conversation_id,
-
           role: "user",
           content: msgText,
-          model: null,
+          model: "",
         })
       );
     }

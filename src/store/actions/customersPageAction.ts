@@ -123,7 +123,7 @@ const getSortFunction = (property: string, order: string) => {
 const fetchCustomersLogData = async (sortFunc) => {
   try {
     const responseData = await keywordsRequest({
-      path: `api/users`,
+      path: `api/customers`,
       method: "GET",
       data: {},
     });
@@ -151,7 +151,7 @@ export const exportCustomerLogs = (format = ".csv") => {
     const state = getState();
     try {
       const responseData = await keywordsRequest({
-        path: `api/users`,
+        path: `api/customers`,
         method: "GET",
         data: { exporting: true },
       });

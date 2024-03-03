@@ -28,7 +28,7 @@ import { useTypedSelector } from "src/store/store";
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
   vendors: state.integration.vendors,
-  apiKeyLimit: state.organization?.organization_subscription.api_key_limit ?? 0,
+  apiKeyLimit: state.organization?.organization_subscription?.api_key_limit ?? 0,
 });
 
 const mapDispatchToProps = {
@@ -98,7 +98,7 @@ export const ApiKeyPage = ({
     "Google",
   ];
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription.plan_level;
+    const planLevel = state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   return (

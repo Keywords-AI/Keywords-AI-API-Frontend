@@ -19,7 +19,7 @@ export const MemberPage = () => {
   const user = useTypedSelector((state: RootState) => state.user);
   const [open, setOpen] = React.useState(false);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    return state.organization?.organization_subscription.plan_level < 2;
+    return state.organization?.organization_subscription?.plan_level || 0 < 2;
   });
   return (
     <PageContent
@@ -123,7 +123,7 @@ const MembersTable = () => {
   );
   const user = useTypedSelector((state: RootState) => state.user);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    return state.organization?.organization_subscription.plan_level < 2;
+    return state.organization?.organization_subscription?.plan_level || 0 < 2;
   });
   const sortedMembers = [...(members || [])].sort((a, b) => {
     if (a.id === user.organization_role.id) return -1;
