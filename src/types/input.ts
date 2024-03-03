@@ -65,6 +65,8 @@ export type TextInputProps = {
   icon?: any;
   value?: string | number | readonly string[] | undefined; // Add value prop
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined; // Add onChange prop
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
   placeholder?: string;
   disabled?: boolean;
   width?: string;
@@ -75,4 +77,5 @@ export type TextInputProps = {
   register?: UseFormRegister<any>;
   validationSchema?: any;
   dollarSign?: boolean;
+  inputSyle?: { [key: string]: string };
 };

@@ -763,15 +763,19 @@ export const userTableColumns = [
     value: "totalRequests",
   },
   {
-    name: "Requests / day",
-    value: "requestsPerDay",
+    name: "Requests",
+    value: "requests",
   },
   {
     name: "Total tokens",
     value: "totalTokens",
   },
   {
-    name: "Tokens / day",
-    value: "tokensPerDay",
+    name: "Tokens",
+    value: "tokens",
   },
+  {
+    name:"Sentiment",
+    value:"sentiment"
+  }
 ];

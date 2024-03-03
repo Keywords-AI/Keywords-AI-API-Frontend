@@ -17,7 +17,7 @@ import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
-import { SidePanel } from "./SidePanel";
+import { SidePanel } from "./Sidepanel/SidePanel";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -161,6 +161,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             ref={tableRef}
             className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
           >
+            
             <RequestLogTable />
             {filters.length > 0 && (
               <div className="flex-row py-lg justify-center items-center w-full">

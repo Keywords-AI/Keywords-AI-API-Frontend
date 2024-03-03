@@ -8,7 +8,7 @@ import {
   EnterKey,
   AlphanumericKey,
 } from "src/components/Icons";
-import { Button } from "src/components/Buttons";
+import { Button, CheckBoxButtonSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
@@ -28,9 +28,11 @@ import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import {
   getUsersLogData,
+  setUsersLogDataDisplayColumns,
   setUsersLogDataSort,
   setUsersLogDataSortOrdering,
 } from "src/store/actions/usersPageAction";
+import { Divider } from "src/components/Sections";
 export interface DisplayPopoverProps {}
 
 export function DisplayPopover({}: DisplayPopoverProps) {
@@ -48,6 +50,9 @@ export function DisplayPopover({}: DisplayPopoverProps) {
   const [showPopover, setShowPopover] = useState(false);
   const { enableScope, disableScope } = useHotkeysContext();
   const currentsortKey = useTypedSelector((state) => state.usersPage.sortKey);
+  const currentDisplayColumns = useTypedSelector(
+    (state) => state.usersPage.displayColumns
+  );
   const currentsortOrder = useTypedSelector(
     (state) => state.usersPage.sortOrder
   );
@@ -58,7 +63,13 @@ export function DisplayPopover({}: DisplayPopoverProps) {
       secText: (index + 1).toString(),
     };
   });
-
+  useEffect(() => {
+    watch((value, { name, type }) => {
+      if (!value || value.length === 0 || Object.keys(value).length === 0)
+        return;
+      dispatch(setUsersLogDataDisplayColumns(value.display_properties));
+    });
+  }, [watch]);
   useHotkeys(
     "d",
     () => {
@@ -68,6 +79,7 @@ export function DisplayPopover({}: DisplayPopoverProps) {
       scopes: "userspage_displaypopover",
     }
   );
+  const [_, ...displayTags] = userTableColumns;
   return (
     <Popover
       trigger={
@@ -152,6 +164,24 @@ export function DisplayPopover({}: DisplayPopoverProps) {
                 { value: "desc", name: "Descending", secText: "2" },
               ]}
             />
+          </div>
+          <Divider color="bg-gray-3" />
+          <div className="flex items-center gap-[10px] self-stretch text-gray-4 text-sm-regular">
+            Display properties
+          </div>
+          <div className="flex items-start content-start gap-xxxs self-stretch flex-wrap">
+            {displayTags.map((metric, index) => {
+              const checked = currentDisplayColumns.includes(metric.value);
+              return (
+                <CheckBoxButtonSmall
+                  key={index}
+                  {...register("display_properties")}
+                  text={metric.name}
+                  value={metric.value}
+                  checked={checked}
+                />
+              );
+            })}
           </div>
         </div>
       </form>
