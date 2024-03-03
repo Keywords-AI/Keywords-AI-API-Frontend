@@ -91,14 +91,14 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
-    console.log("onOnboradingPage", onOnboradingPage, organization?.active_subscription);
+
     if (organization.id && !organization?.loading) {
       // The init state of org is not empty, but the id is null
       if (!onOnboradingPage && !organization?.active_subscription) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
-    } 
+    }
     if (!organization?.id && !organization?.loading) {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded

@@ -758,24 +758,18 @@ export const userTableColumns = [
     name: "Active for",
     value: "activeFor",
   },
-  {
-    name: "Total requests",
-    value: "totalRequests",
-  },
+
   {
     name: "Requests",
     value: "requests",
   },
-  {
-    name: "Total tokens",
-    value: "totalTokens",
-  },
+
   {
     name: "Tokens",
     value: "tokens",
   },
   {
-    name:"Sentiment",
-    value:"sentiment"
-  }
+    name: "Sentiment",
+    value: "sentiment",
+  },
 ];

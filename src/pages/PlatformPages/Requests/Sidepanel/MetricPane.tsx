@@ -127,13 +127,13 @@ export const MetricPane = ({}) => {
     <>
       {logItem?.failed && (
         <>
-          <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
+          <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch ">
             <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
               Error message
               <CopyButton text={logItem?.error_message || ""} />
             </div>
             <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-red text-sm-regular rounded-sm ">
-              <p className="break-all  flex self-stretch text-wrap">
+              <p className="break-all  flex self-stretch text-wrap max-h-[400px] overflow-auto">
                 {logItem?.error_message}
               </p>
             </div>
@@ -143,13 +143,13 @@ export const MetricPane = ({}) => {
       )}
       {logItem?.warnings && logItem?.warnings != "{}" && (
         <>
-          <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch">
+          <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch ">
             <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
               Warning message
               <CopyButton text={logItem?.warnings || ""} />
             </div>
-            <div className="flex items-start gap-[10px]  py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm self-stretch">
-              <p className="break-all  flex self-stretch text-wrap">
+            <div className="flex items-start gap-[10px]  py-xxxs px-xxs bg-gray-2 text-orange text-sm-regular rounded-sm self-stretch ">
+              <p className="break-all  flex self-stretch text-wrap max-h-[400px] overflow-auto">
                 {logItem?.warnings}
               </p>
             </div>
@@ -161,6 +161,7 @@ export const MetricPane = ({}) => {
         {Object.keys(displayObj).map((key, index) => {
           return (
             <Tooltip
+              key={index}
               side="top"
               delayDuration={1}
               skipDelayDuration={1}

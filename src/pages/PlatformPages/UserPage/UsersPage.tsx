@@ -133,7 +133,7 @@ const TopBar = () => {
       dataKey: "active",
     },
     {
-      title: "Daily request per user",
+      title: "Daily requests per user",
       number: "0",
       chartData: sampleData,
       dataKey: "active",
@@ -271,10 +271,11 @@ const Table = () => {
     (state) => state.usersPage.timeRane
   );
   const timeValueToName = {
-    daily: "Day",
-    weekly: "Week",
-    monthly: "Month",
-    yearly: "Year",
+    daily: "Daily",
+    weekly: "Weekly",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    total: "Total",
   };
   const Header = (
     <div
@@ -295,7 +296,7 @@ const Table = () => {
             )}
           >
             {column.value == "requests" || column.value == "tokens"
-              ? column.name + "/" + timeValueToName[currentTimeRange]
+              ? timeValueToName[currentTimeRange] + " " + column.name
               : column.name}
           </div>
         ))}
