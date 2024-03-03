@@ -1,5 +1,9 @@
 import SliderInput from "src/components/Inputs/SliderInput";
-import { SelectInput, TextAreaInput } from "src/components/Inputs";
+import {
+  SelectInput,
+  SelectInputMenu,
+  TextAreaInput,
+} from "src/components/Inputs";
 import { useForm, Controller } from "react-hook-form";
 import { Divider } from "src/components";
 import React, {
@@ -101,6 +105,7 @@ export const SessionPane = forwardRef(
             disabled={isStreaming}
             title="Model A"
             width="w-[256px]"
+            height="h-[50vh]"
             optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
@@ -116,6 +121,7 @@ export const SessionPane = forwardRef(
             })}
             title="Model B"
             width="w-[256px]"
+            height="h-[50vh]"
             optionsWidth="w-[256px]"
             disabled={isStreaming}
             choices={selectChoices}
