@@ -10,6 +10,7 @@ export const SET_USERSLOG_DATA_SORT_ORDERING =
 export const SET_USERS_LOG_DATA_TIMERANGE = "SET_USERS_LOG_DATA_TIMERANGE";
 export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
   "SET_USERS_LOG_DATA_DISPLAY_COLUMNS";
+export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
 
 export const setUsersLogDataDisplayColumns = (columns: string[]) => ({
   type: SET_USERS_LOG_DATA_DISPLAY_COLUMNS,
@@ -72,12 +73,12 @@ export const filterUsersLogDataAction = (searchString: string) => {
         )
       );
     } else {
-      const data: any[] = (await fetchUsersLogData(
+      const {results: data, ...summary } = (await fetchUsersLogData(
         getSortFunction(
           getState().usersPage.sortKey,
           getState().usersPage.sortOrder
         )
-      )) as any[];
+      ));
       const filteredData = data.filter((data: any) => {
         return data.customerId
           .toLowerCase()
@@ -135,7 +136,7 @@ const getSortFunction = (property: string, order: string) => {
 
 const fetchUsersLogData = async (sortFunc) => {
   try {
-    const responseData = await keywordsRequest({
+    const {results: responseData, aggregation_data, ...rest} = await keywordsRequest({
       path: `api/users`,
       method: "GET",
       data: {},
@@ -161,7 +162,7 @@ export const exportUserLogs = (format = ".csv") => {
   return async (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     try {
-      const responseData = await keywordsRequest({
+      const {results: responseData, ...rest} = await keywordsRequest({
         path: `api/users`,
         method: "GET",
         data: { exporting: true },

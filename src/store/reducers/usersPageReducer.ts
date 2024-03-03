@@ -5,6 +5,7 @@ import {
   SET_USERS_LOG_DATA_LOADING,
   SET_USERS_LOG_DATA_SORT,
   SET_USERS_LOG_DATA_TIMERANGE,
+  SET_AGGREGATION_DATA,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
@@ -19,6 +20,14 @@ type State = {
   loading: boolean;
   usersLogData: UserLogData[];
   filteredUsersLogData: UserLogData[];
+  aggregationData: {
+    total_count: number;
+    monthly_active_users: number;
+    daily_active_users: number;
+    new_users: number;
+    daily_request_per_user: number;
+    monthly_cost_per_user: number;
+  };
   sortKey: string;
   sortOrder: string;
   timeRane: string;
@@ -27,6 +36,14 @@ type State = {
 const initialState = {
   loading: true,
   usersLogData: [],
+  aggregationData: {
+    total_count: 0,
+    monthly_active_users: 0,
+    daily_active_users: 0,
+    new_users: 0,
+    daily_request_per_user: 0,
+    monthly_cost_per_user: 0,
+  },
   filteredUsersLogData: [],
   sortKey: "customerId",
   sortOrder: "asc",
@@ -53,6 +70,11 @@ const usersPageReducer = (state = initialState, action: any): State => {
       return {
         ...state,
         timeRane: action.payload,
+      };
+    case SET_AGGREGATION_DATA:
+      return {
+        ...state,
+        aggregationData: {...state.aggregationData, ...action.payload},
       };
     case SET_USERSLOG_DATA_SORT_ORDERING:
       return {
