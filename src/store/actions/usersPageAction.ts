@@ -145,7 +145,6 @@ const fetchUsersLogData = async (sortFunc) => {
       method: "GET",
       data: {},
     });
-    console.log("aggregation_data", aggregation_data, rest, responseData);
     return responseData
       .map((data: any) => {
         return {

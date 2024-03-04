@@ -343,7 +343,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
     if (postData) {
       params.set("page", "1");
     }
-    // console.log("postData", postData);
     dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
@@ -379,7 +378,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
 };
 
 export const updateLog = (id) => {
-  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
 
@@ -419,7 +417,6 @@ export const setCacheResponse = (
         request_content: requestContent,
         response_content: responseContent,
       };
-      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
@@ -436,7 +433,6 @@ export const setCacheResponse = (
       const deleteId = currentRequestLog.cached_responses.find(
         (e) => e.request_index === requestIndex
       ).id;
-      console.log("deleteId", deleteId);
       keywordsRequest({
         path: `api/cache/${deleteId}/`,
         method: "DELETE",
@@ -489,7 +485,6 @@ export const exportLogs = (format = ".csv") => {
     const state = getState();
     const filters = state.requestLogs.filters;
     const filterData = processFilters(filters);
-    console.log("format", format);
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",
