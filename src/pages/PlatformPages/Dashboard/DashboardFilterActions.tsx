@@ -7,17 +7,20 @@ import {
 } from "src/components/Inputs";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Add, AlphanumericKey, Filter } from "src/components/Icons";
-import { useTypedSelector, useTypedDispatch } from "src/store/store";
+import store, { useTypedSelector, useTypedDispatch } from "src/store/store";
 import {
   RootState,
   RawFilterOption,
   LogItem,
   Choice,
   Operator,
+  CurrentFilterObject,
 } from "src/types";
 import {
   setDashboardCurrentFilter,
   addDashboardFilter,
+  updateDashboardFilter,
+  deleteDashboardFilter,
 } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
@@ -36,6 +39,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
   const currentFilter = useTypedSelector(
     (state: RootState) => state.dashboard.currentFilter
   );
+  const filters = useTypedSelector((state) => state.dashboard.filters);
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(
     "f",
@@ -87,8 +91,53 @@ export function DashboardFilterActions({ type }: { type: string }) {
         dispatch(
           setDashboardCurrentFilter({ ...currentFilter, value: filterValue })
         );
-      } else {
+        const latestFilter = store.getState().dashboard
+          .currentFilter as CurrentFilterObject;
+        if (!latestFilter || !latestFilter.metric || !latestFilter.value)
+          return;
+        const sameTypeFilter = filters.find(
+          (filter) => filter.metric === latestFilter.metric
+        );
+        if (sameTypeFilter) {
+          dispatch(
+            updateDashboardFilter({
+              display_name:
+                filterOptions[latestFilter.metric]?.display_name ?? "failed",
+              metric: latestFilter.metric,
+              operator:
+                (filterOptions[latestFilter.metric]?.operator_choices?.[0]
+                  ?.value as string) ?? "contains",
+              value: Array.from(
+                new Set([...sameTypeFilter.value, ...filterValue])
+              ),
+              id: sameTypeFilter.id,
+              value_field_type:
+                filterOptions[latestFilter.metric]?.value_field_type ??
+                "selection",
+            })
+          );
+        } else {
+          dispatch(
+            addDashboardFilter({
+              display_name:
+                filterOptions[latestFilter.metric]?.display_name ?? "failed",
+              metric: latestFilter.metric,
+              operator:
+                (filterOptions[latestFilter.metric]?.operator_choices?.[0]
+                  ?.value as string) ?? "contains",
+              value: latestFilter.value,
+              id: latestFilter.id,
+              value_field_type:
+                filterOptions[latestFilter.metric]?.value_field_type ??
+                "selection",
+            })
+          );
+        }
         dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
+      } else {
+        const latestFilter = store.getState().dashboard.currentFilter;
+        dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
+        dispatch(deleteDashboardFilter(latestFilter.id));
       }
     }
   };
