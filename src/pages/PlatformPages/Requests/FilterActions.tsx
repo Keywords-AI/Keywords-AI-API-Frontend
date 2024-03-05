@@ -24,6 +24,7 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 import store from "src/store/store";
 import { combineSlices } from "@reduxjs/toolkit";
+import { Value } from "@radix-ui/react-select";
 export function FilterActions({ type }: { type: string }) {
   // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
   // if (isLoading) return <></>;
@@ -95,7 +96,10 @@ export function FilterActions({ type }: { type: string }) {
         if (!latestFilter || !latestFilter.metric || !latestFilter.value)
           return;
         const filters = store.getState().requestLogs.filters;
-        if (filters.find((filter) => filter.id === latestFilter.id)) {
+        const sameTypeFilter = filters.find(
+          (filter) => filter.metric === latestFilter.metric
+        );
+        if (sameTypeFilter) {
           dispatch(
             updateFilter({
               display_name:
@@ -104,13 +108,17 @@ export function FilterActions({ type }: { type: string }) {
               operator:
                 (filterOptions[latestFilter.metric]?.operator_choices?.[0]
                   ?.value as string) ?? "contains",
-              value: latestFilter.value,
-              id: currentFilter.id,
+              value: Array.from(
+                new Set([...sameTypeFilter.value, ...filterValue])
+              ),
+              id: sameTypeFilter.id,
               value_field_type:
                 filterOptions[latestFilter.metric]?.value_field_type ??
                 "selection",
             })
           );
+
+          
         } else {
           dispatch(
             addFilter({
@@ -177,7 +185,13 @@ export function FilterActions({ type }: { type: string }) {
       break;
     case "add":
       trigger = (
-        <DotsButton icon={Add} onClick={() => handleDropdownOpen(!start)} />
+        <DotsButton
+          icon={Add}
+          onClick={() => {
+            if (loading) return;
+            handleDropdownOpen(!start);
+          }}
+        />
       );
       break;
     default:

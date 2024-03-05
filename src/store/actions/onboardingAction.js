@@ -10,5 +10,4 @@ export const setCurrentStep = (step) => ({
 export const setNextStep = () => (dispatch, getState) => {
     const { currentStep } = getState().onboarding;
     dispatch(setCurrentStep(currentStep + 1));
-    console.log(currentStep)
   }

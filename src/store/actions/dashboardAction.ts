@@ -779,7 +779,6 @@ const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
     const { date_group, timestamp, ...models } = item;
     const modelSection = {};
     modelKeys.push(...Object.keys(models));
-    // console.log("modelKeys", modelKeys);
     modelKeys = [...new Set(modelKeys)];
     Object.keys(models).forEach((modelKey) => {
       modelSection[modelKey] = models[modelKey][metric];
@@ -795,7 +794,6 @@ const getBreakDownColors = (data, metric, isModel) => {
   const sorted = data
     .sort((a, b) => a.metric - b.metric)
     .map((item) => (isModel ? item.model : item.organization_key__name));
-  // console.log("sorted", sorted);
   const colorMap = {};
   // modelKeys.forEach((key) => {
   //   colorMap[key] = colorTagsClasses[key];

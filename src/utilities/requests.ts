@@ -275,7 +275,6 @@ export const keywordsApiStream = ({
         while (true) {
           const { done, value } = await reader.read();
           if (done || signal.aborted) {
-            console.log("Stream complete");
             break;
           }
           const message = decoder.decode(value);

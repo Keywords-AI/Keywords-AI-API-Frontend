@@ -131,6 +131,7 @@ const initState = {
   filterType: undefined,
   currentFilter: {
     id: "",
+    metric: undefined,
   },
   filters: [] as FilterObject[],
   filterOptions: {} as FilterParams,

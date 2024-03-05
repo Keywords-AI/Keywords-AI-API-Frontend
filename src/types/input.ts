@@ -24,6 +24,7 @@ export interface SelectInputProps {
   open?: boolean;
   title?: string;
   headLess?: boolean;
+  height?: string;
   choices?: Choice[];
   handleSelected?: (value: string | number) => void;
   placeholder?: string;

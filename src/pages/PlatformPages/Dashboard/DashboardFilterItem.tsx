@@ -118,12 +118,17 @@ export const DashboardFilterItem = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {DashboardFilterValueField(filter, filterOption!, (values) => {
-        dispatch(
-          updateDashboardFilter({
-            ...filter,
-            value: values,
-          })
-        );
+        if (values.length === 0) {
+          dispatch(deleteDashboardFilter(filter.id));
+        } else {
+          dispatch(
+            updateDashboardFilter({
+              ...filter,
+              value: values,
+            })
+          );
+        }
+        dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
       })}
       {
         <DotsButton

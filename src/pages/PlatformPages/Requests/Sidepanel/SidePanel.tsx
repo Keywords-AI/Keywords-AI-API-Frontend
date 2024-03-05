@@ -22,6 +22,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
   RestorePlaygroundState,
+  RestorePlaygroundStateFromLog,
   setCacheResponse,
   setJsonMode,
 } from "src/store/actions";
@@ -30,6 +31,7 @@ import Tooltip from "src/components/Misc/Tooltip";
 import LogMessage from "./LogMessage";
 import { LogPane } from "./LogPane";
 import { MetricPane } from "./MetricPane";
+import { set } from "react-hook-form";
 
 interface SidePanelProps {
   open: boolean;
@@ -51,15 +53,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   );
   const { enableScope, disableScope } = useHotkeysContext();
   const navigate = useNavigate();
-  useHotkeys(
-    "V",
-    () => {
-      dispatch(setJsonMode(!jsonMode));
-    },
-    {
-      scopes: "request_sidepanel",
-    }
-  );
+
   const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
   useEffect(() => {
     setCompleteInteraction(
@@ -94,7 +88,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     );
     setCompleteInteraction(filteredInteraction);
   };
-
+  useEffect(() => {
+    enableScope("request_sidepanel");
+    return () => {
+      disableScope("request_sidepanel");
+    };
+  }, []);
   const metricRef = useRef(null);
   const logRef = useRef(null);
   const dispatch = useTypedDispatch();
@@ -105,11 +104,42 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
       setDisplayLog(false);
     }
-    if (displayLog) enableScope("request_sidepanel");
+    if (displayLog) enableScope("request_sidepanel_log");
+    if (!displayLog) disableScope("request_sidepanel_log");
     return () => {
-      disableScope("request_sidepanel");
+      disableScope("request_sidepanel_log");
     };
   }, [displayLog, logItem]);
+  useHotkeys(
+    "V",
+    () => {
+      if (displayLog) dispatch(setJsonMode(!jsonMode));
+    },
+    {
+      scopes: "request_sidepanel_log",
+    }
+  );
+  useHotkeys(
+    "M",
+    () => {
+      setDisplayLog(false);
+    },
+    {
+      scopes: "request_sidepanel",
+    }
+  );
+  useHotkeys(
+    "L",
+    () => {
+      if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
+        return;
+      }
+      setDisplayLog(true);
+    },
+    {
+      scopes: "request_sidepanel",
+    }
+  );
   useEffect(() => {
     if (logRef && logRef.current) {
       (logRef.current as HTMLElement)?.scrollIntoView({
@@ -138,47 +168,98 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-lb shadow-gray-2 fixed bg-gray-1 z-[10]"
       >
         <div className="flex items-center gap-sm ">
-          <Button
-            variant="text"
-            text="Metrics"
-            active={!displayLog}
-            onClick={() => setDisplayLog(false)}
-            padding="py-0"
-          />
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">Show metrics</p>
+                <AlphanumericKey value={"M"} />
+              </>
+            }
+          >
+            <Button
+              variant="text"
+              text="Metrics"
+              active={!displayLog}
+              onClick={() => setDisplayLog(false)}
+              padding="py-0"
+            />
+          </Tooltip>
+
           {!logItem?.failed &&
             logItem?.prompt_messages &&
             logItem?.prompt_messages?.length > 0 && (
-              <Button
-                variant="text"
-                text="Log"
-                active={displayLog}
-                onClick={() => setDisplayLog(true)}
-                padding="py-0"
-              />
+              <Tooltip
+                side="bottom"
+                sideOffset={8}
+                align="center"
+                delayDuration={1}
+                content={
+                  <>
+                    <p className="caption text-gray-4">Show log</p>
+                    <AlphanumericKey value={"L"} />
+                  </>
+                }
+              >
+                <Button
+                  variant="text"
+                  text="Log"
+                  active={displayLog}
+                  onClick={() => setDisplayLog(true)}
+                  padding="py-0"
+                />
+              </Tooltip>
             )}
         </div>
-        <div>
+        <div className="flex items-center">
           {displayLog && (
-            <Tooltip
-              side="bottom"
-              sideOffset={5}
-              align="end"
-              delayDuration={1}
-              content={
-                <>
-                  <p className="caption text-gray-4">View mode</p>
-                  <AlphanumericKey value={"V"} />
-                </>
-              }
-            >
-              <div>
-                <DotsButton
-                  icon={Compare}
-                  onClick={() => dispatch(setJsonMode(!jsonMode))}
-                  active={jsonMode}
-                />
-              </div>
-            </Tooltip>
+            <>
+              <Tooltip
+                side="bottom"
+                sideOffset={5}
+                align="end"
+                delayDuration={1}
+                content={
+                  <>
+                    <p className="caption text-gray-4">View mode</p>
+                    <AlphanumericKey value={"V"} />
+                  </>
+                }
+              >
+                <div>
+                  <DotsButton
+                    icon={IconPlayground}
+                    onClick={() => {
+                      dispatch(RestorePlaygroundStateFromLog());
+                      navigate("/platform/playground");
+                    }}
+                  />
+                </div>
+              </Tooltip>
+              <Tooltip
+                side="bottom"
+                sideOffset={5}
+                align="end"
+                delayDuration={1}
+                content={
+                  <>
+                    <p className="caption text-gray-4">View mode</p>
+                    <AlphanumericKey value={"V"} />
+                  </>
+                }
+              >
+                <div>
+                  <DotsButton
+                    icon={Compare}
+                    onClick={() => dispatch(setJsonMode(!jsonMode))}
+                    active={jsonMode}
+                  />
+                </div>
+              </Tooltip>
+            </>
           )}
         </div>
       </div>

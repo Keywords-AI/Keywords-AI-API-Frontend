@@ -1,5 +1,9 @@
 import SliderInput from "src/components/Inputs/SliderInput";
-import { SelectInput, TextAreaInput } from "src/components/Inputs";
+import {
+  SelectInput,
+  SelectInputMenu,
+  TextAreaInput,
+} from "src/components/Inputs";
 import { useForm, Controller } from "react-hook-form";
 import { Divider } from "src/components";
 import React, {
@@ -16,6 +20,7 @@ import { debounce } from "lodash";
 import { useCallback } from "react";
 import _ from "lodash";
 import { useDispatch } from "react-redux";
+import { Combobox } from "src/components/Inputs/Combobox";
 export interface SessionPaneProps {
   isReset: boolean;
 }
@@ -93,7 +98,31 @@ export const SessionPane = forwardRef(
           className="flex-col px-lg py-md items-start gap-xs self-stretch"
           ref={ref}
         >
-          <SelectInput
+          <Controller
+            control={control}
+            name="modela"
+            defaultValue={
+              selectChoices.find((i) => i.value == ModelOptions.models[0])
+                ?.value || "gpt-3.5-turbo"
+            }
+            render={({ field: { value, onChange } }) => {
+              return (
+                <Combobox
+                  title="Model A"
+                  value={value}
+                  width="w-[256px]"
+                  height="h-[50vh]"
+                  onChange={onChange}
+                  items={selectChoices}
+                  defaultValue={
+                    selectChoices.find((i) => i.value == ModelOptions.models[0])
+                      ?.value || "gpt-3.5-turbo"
+                  }
+                />
+              );
+            }}
+          />
+          {/* <SelectInput
             //{ value: ModelOptions.model }
             {...register("modela", {
               value: ModelOptions.models[0],
@@ -101,6 +130,7 @@ export const SessionPane = forwardRef(
             disabled={isStreaming}
             title="Model A"
             width="w-[256px]"
+            height="h-[50vh]"
             optionsWidth="w-[256px]"
             choices={selectChoices}
             placeholder="Select a model"
@@ -108,14 +138,39 @@ export const SessionPane = forwardRef(
               selectChoices.find((i) => i.value == ModelOptions.models[0])
                 ?.value
             }
+          /> */}
+          <Controller
+            control={control}
+            name="modelb"
+            defaultValue={
+              selectChoices.find((i) => i.value == ModelOptions.models[1])
+                ?.value || "gpt-4"
+            }
+            render={({ field: { value, onChange } }) => {
+              return (
+                <Combobox
+                  title="Model B"
+                  value={value}
+                  width="w-[256px]"
+                  height="h-[50vh]"
+                  onChange={onChange}
+                  items={selectChoices}
+                  defaultValue={
+                    selectChoices.find((i) => i.value == ModelOptions.models[1])
+                      ?.value || "gpt-4"
+                  }
+                />
+              );
+            }}
           />
-          <SelectInput
+          {/* <SelectInput
             //{ value: ModelOptions.model }
             {...register("modelb", {
               value: ModelOptions.models[1],
             })}
             title="Model B"
             width="w-[256px]"
+            height="h-[50vh]"
             optionsWidth="w-[256px]"
             disabled={isStreaming}
             choices={selectChoices}
@@ -124,7 +179,7 @@ export const SessionPane = forwardRef(
               selectChoices.find((i) => i.value == ModelOptions.models[1])
                 ?.value
             }
-          />
+          /> */}
           <Controller
             control={control}
             name="temperature"
