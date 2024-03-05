@@ -91,7 +91,7 @@ const RightDrawerContent = ({
       label: "Prompt pricing",
       value: (
         <span className="text-sm-regular text-gray-5">
-          ${input_cost / 1000 || 0.2134}
+          ${(input_cost / 1000) || 0.2134}
           <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
         </span>
       ),
@@ -199,7 +199,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    ${+item.input_cost / 1000}
+                    ${(+item.input_cost / 1000)}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
