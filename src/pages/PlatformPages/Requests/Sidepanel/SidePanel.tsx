@@ -120,6 +120,18 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
   );
   useHotkeys(
+    "P",
+    () => {
+      if (displayLog) {
+        dispatch(RestorePlaygroundStateFromLog());
+        navigate("/platform/playground");
+      }
+    },
+    {
+      scopes: "request_sidepanel_log",
+    }
+  );
+  useHotkeys(
     "M",
     () => {
       setDisplayLog(false);
@@ -224,8 +236,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 delayDuration={1}
                 content={
                   <>
-                    <p className="caption text-gray-4">View mode</p>
-                    <AlphanumericKey value={"V"} />
+                    <p className="caption text-gray-4">Open in playground</p>
+                    <AlphanumericKey value={"P"} />
                   </>
                 }
               >
