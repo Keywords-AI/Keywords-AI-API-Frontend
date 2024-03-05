@@ -160,114 +160,100 @@ export const MetricPane = ({}) => {
       <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
         {Object.keys(displayObj).map((key, index) => {
           return (
-            <Tooltip
+            <div
+              className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs"
+              onClick={() => {
+                const text =
+                  key == "Model"
+                    ? logItem?.model
+                    : key == "Status"
+                    ? logItem?.status_code
+                    : displayObj[key].props.children;
+                navigator.clipboard.writeText(text);
+              }}
               key={index}
-              side="top"
-              delayDuration={1}
-              skipDelayDuration={1}
-              content={
-                <>
-                  <span className="text-gray-4 caption">
-                    Click to copy {key.toLowerCase()}
-                  </span>
-                </>
-              }
             >
-              <div
-                className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs"
-                onClick={() => {
-                  const text =
-                    key == "Model"
-                      ? logItem?.model
-                      : key == "Status"
-                      ? logItem?.status_code
-                      : displayObj[key].props.children;
-                  navigator.clipboard.writeText(text);
-                }}
-                key={index}
-              >
-                <div className="flex items-center gap-xxs flex-shrink-0">
-                  <span className="text-sm-md text-gray-5">{key}</span>
-                  {key === "Customer ID" && (
-                    <Tooltip
-                      side="right"
-                      sideOffset={8}
-                      delayDuration={1}
-                      skipDelayDuration={1}
-                      content={
-                        <>
-                          <span className="text-gray-4 caption">
-                            Identifier for customer
-                          </span>
-                        </>
-                      }
-                    >
-                      <div>
-                        <Info />
-                      </div>
-                    </Tooltip>
-                  )}
-                  {key === "TTFT" && (
-                    <Tooltip
-                      side="right"
-                      sideOffset={8}
-                      delayDuration={1}
-                      skipDelayDuration={1}
-                      content={
-                        <>
-                          <span className="text-gray-4 caption">
-                            Time to first generated token
-                          </span>
-                        </>
-                      }
-                    >
-                      <div>
-                        <Info />
-                      </div>
-                    </Tooltip>
-                  )}
-                  {key === "Routing time" && (
-                    <Tooltip
-                      side="right"
-                      sideOffset={8}
-                      delayDuration={1}
-                      skipDelayDuration={1}
-                      content={
-                        <>
-                          <span className="text-gray-4 caption">
-                            Time to select model
-                          </span>
-                        </>
-                      }
-                    >
-                      <div>
-                        <Info />
-                      </div>
-                    </Tooltip>
-                  )}
-                  {key === "Latency" && (
-                    <Tooltip
-                      side="right"
-                      sideOffset={8}
-                      delayDuration={1}
-                      skipDelayDuration={1}
-                      content={
-                        <>
-                          <span className="text-gray-4 caption">
-                            Time to generate response
-                          </span>
-                        </>
-                      }
-                    >
-                      <div>
-                        <Info />
-                      </div>
-                    </Tooltip>
-                  )}
-                </div>
-                {displayObj[key]}
+              <div className="flex items-center gap-xxs flex-shrink-0">
+                <span className="text-sm-md text-gray-5">{key}</span>
+                {key === "Customer ID" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Identifier for customer
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "TTFT" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Time to first generated token
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "Routing time" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Time to select model
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "Latency" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Time to generate response
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
               </div>
-            </Tooltip>
+              {displayObj[key]}
+            </div>
           );
         })}
       </div>

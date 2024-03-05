@@ -150,7 +150,7 @@ const TopBar = () => {
   ];
   return (
     <>
-      <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
+      {/* <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
         {cardData.map((item, index) => (
           <MetricCardFocus
             key={index}
@@ -162,7 +162,7 @@ const TopBar = () => {
           />
         ))}
       </div>
-      <Divider />
+      <Divider /> */}
       <div
         aria-label="frame 1944"
         className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
@@ -170,7 +170,7 @@ const TopBar = () => {
         <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
-          <TimeSwitcher />
+          {/* <TimeSwitcher /> */}
           <DisplayPopover />
         </div>
       </div>

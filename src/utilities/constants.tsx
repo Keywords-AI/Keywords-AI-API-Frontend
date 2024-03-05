@@ -769,8 +769,8 @@ export const userTableColumns = [
     name: "tokens",
     value: "tokens",
   },
-  {
-    name: "Sentiment",
-    value: "sentiment",
-  },
+  // {
+  //   name: "Sentiment",
+  //   value: "sentiment",
+  // },
 ];

@@ -47,7 +47,7 @@ const initialState = {
   filteredUsersLogData: [],
   sortKey: "customerId",
   sortOrder: "asc",
-  timeRane: "daily",
+  timeRane: "total",
   displayColumns: [
     "customerId",
     "lastActive",
@@ -74,7 +74,7 @@ const usersPageReducer = (state = initialState, action: any): State => {
     case SET_AGGREGATION_DATA:
       return {
         ...state,
-        aggregationData: {...state.aggregationData, ...action.payload},
+        aggregationData: { ...state.aggregationData, ...action.payload },
       };
     case SET_USERSLOG_DATA_SORT_ORDERING:
       return {

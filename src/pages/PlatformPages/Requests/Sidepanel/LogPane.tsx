@@ -6,7 +6,7 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
 export const LogPane = ({}) => {
   const getMessageType = (role: string) => {
-    if (role === "[system]") {
+    if (role === "[system]" || role === "system") {
       return "System";
     } else if (role === "user") {
       return "User";
@@ -21,26 +21,25 @@ export const LogPane = ({}) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
-  const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
-  useEffect(() => {
-    setCompleteInteraction(
-      logItem?.prompt_messages
-        ? [
-            ...logItem.prompt_messages.concat([
-              { ...logItem?.completion_message },
-            ]),
-          ]
-        : []
-    );
-  }, [logItem]);
-  const systemPrompt = completeInteraction.find(
-    (item) => item.role === "[system]" || item.role === "system"
+  const [completeInteraction, setCompleteInteraction] = useState<any[]>(
+    logItem?.prompt_messages
+      ? [
+          ...logItem.prompt_messages.concat([
+            { ...logItem?.completion_message },
+          ]),
+        ]
+      : []
   );
-  if (systemPrompt) {
-    setCompleteInteraction(
-      completeInteraction.filter((item) => item !== systemPrompt)
-    );
-  }
+  const systemPrompt = logItem?.prompt_messages.find(
+    (item) => item.role === "system"
+  );
+  useEffect(() => {
+    if (systemPrompt) {
+      setCompleteInteraction(
+        completeInteraction.filter((item) => item !== systemPrompt)
+      );
+    }
+  }, [systemPrompt]);
 
   return (
     <>
