@@ -19,7 +19,6 @@ export const refreshToken = () => {
           localStorage.setItem("access", responseJson.access);
         } else if (res.status === 400) {
           const responseJson = await res.json();
-          console.log(responseJson);
         }
     })
     .catch((error) => console.log(error));

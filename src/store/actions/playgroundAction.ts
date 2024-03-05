@@ -235,7 +235,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
           dispatch(sendStreamingText2Request());
         }
         try {
-          // console.log("channel", channel, chanelMessages);
           await keywordsStream({
             data: {
               messages: chanelMessages,
@@ -317,7 +316,6 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             displayError.errorCode = +error.message;
           }
 
-          // console.log("error", JSON.parse(error.message).error);
           const lastMessage = getState().playground.messages.slice(-1)[0];
           const id = uuidv4();
           const model = getState().streamingText[channel].model;

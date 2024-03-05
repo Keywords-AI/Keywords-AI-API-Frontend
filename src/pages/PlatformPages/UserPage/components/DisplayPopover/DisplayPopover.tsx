@@ -176,7 +176,9 @@ export function DisplayPopover({}: DisplayPopoverProps) {
                 <CheckBoxButtonSmall
                   key={index}
                   {...register("display_properties")}
-                  text={metric.name}
+                  text={
+                    metric.name.charAt(0).toUpperCase() + metric.name.slice(1)
+                  }
                   value={metric.value}
                   checked={checked}
                 />

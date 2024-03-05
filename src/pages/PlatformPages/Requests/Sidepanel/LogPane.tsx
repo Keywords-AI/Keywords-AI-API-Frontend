@@ -34,7 +34,7 @@ export const LogPane = ({}) => {
     );
   }, [logItem]);
   const systemPrompt = completeInteraction.find(
-    (item) => item.role === "[system]"
+    (item) => item.role === "[system]" || item.role === "system"
   );
   if (systemPrompt) {
     setCompleteInteraction(

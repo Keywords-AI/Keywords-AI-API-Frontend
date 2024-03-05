@@ -158,6 +158,7 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
             })
           );
         }
+        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
       })}
       {
         <DotsButton

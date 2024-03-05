@@ -228,6 +228,9 @@ const RightPanel = () => {
         <Button
           variant="text"
           text="Reset"
+          textColor="text-gray-3"
+          textHoverColor="text-red"
+          textClickedColor="text-red"
           onClick={() => {
             if (streamingStates.some((item) => item.isLoading === true)) return;
 

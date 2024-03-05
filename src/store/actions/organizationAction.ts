@@ -112,7 +112,6 @@ export const updateOrganization = (
 };
 
 export const sendInvitation = (data, callback = () => {}, resend = false) => {
-  console.log(data);
   // data = {email, role, organization}
   return (dispatch) => {
     keywordsFetch({
@@ -129,13 +128,11 @@ export const sendInvitation = (data, callback = () => {}, resend = false) => {
           })
         );
         const responseJson = await res.json();
-        console.log(responseJson);
         const payLoad = {
           email: data.email,
           ...responseJson.temp_role,
           role: responseJson.temp_role,
         };
-        console.log(payLoad);
         if (!resend) {
           // Only add member on UI if it is first time sending
           dispatch({
@@ -199,7 +196,6 @@ export const acceptInvitation = (code) => {
               })
             );
           } else {
-            console.log(responseJson);
             handleSerializerErrors(responseJson, (error) => {
               dispatch(dispatchNotification({ type: "error", title: error }));
             });
@@ -232,7 +228,6 @@ export const deleteRole = (id) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          console.log(id);
           dispatch({ type: DELETE_ROLE, payload: id });
           dispatch(getUser());
         } else if (res.status === 400) {
@@ -295,7 +290,6 @@ export const deletePreset = (id, callback) => {
           })
         );
         if (callback && typeof callback === "function") {
-          console.log("callback");
           callback();
         }
       })
@@ -309,7 +303,6 @@ export const changeRole = (id: number, roleName: string) => {
       type: CHANGE_ROLE,
       payload: { id, roleName },
     });
-    console.log(id, roleName);
     keywordsRequest({
       path: `user/organization-user-role/${id}/`,
       method: "PATCH",

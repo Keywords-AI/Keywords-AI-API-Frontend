@@ -77,6 +77,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   totalCount,
   loading,
 }) => {
+  const { enableScope, disableScope } = useHotkeysContext();
   useEffect(() => {
     getRequestLogs();
     if (!selectedRequest) {
@@ -92,6 +93,23 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const clearFilters = () => {
     setFilters([]);
   };
+  useEffect(() => {
+    if (filters.length > 0) enableScope("clear_filters");
+    else disableScope("clear_filters");
+    return () => {
+      disableScope("clear_filters");
+    };
+  }, [filters]);
+  useHotkeys(
+    "C",
+    () => {
+      if (loading) return;
+      clearFilters();
+    },
+    {
+      scopes: "clear_filters",
+    }
+  );
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -105,13 +123,26 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
 
             {filters.length > 0 && (
               <React.Fragment>
-                <Button
-                  variant="small-dashed"
-                  icon={Close}
-                  text="Clear filters"
-                  onClick={clearFilters}
-                  iconPosition="right"
-                />
+                <Tooltip
+                  side="bottom"
+                  sideOffset={8}
+                  align="start"
+                  delayDuration={1}
+                  content={
+                    <>
+                      <p className="caption text-gray-4">Clear filters</p>
+                      <AlphanumericKey value={"C"} />
+                    </>
+                  }
+                >
+                  <Button
+                    variant="small-dashed"
+                    icon={Close}
+                    text="Clear filters"
+                    onClick={clearFilters}
+                    iconPosition="right"
+                  />
+                </Tooltip>
               </React.Fragment>
             )}
           </div>
@@ -161,7 +192,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             ref={tableRef}
             className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
           >
-            
             <RequestLogTable />
             {filters.length > 0 && (
               <div className="flex-row py-lg justify-center items-center w-full">
