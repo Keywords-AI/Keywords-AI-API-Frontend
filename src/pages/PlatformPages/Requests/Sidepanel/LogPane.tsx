@@ -40,10 +40,20 @@ export const LogPane = ({}) => {
       );
     }
   }, [systemPrompt]);
-
+  useEffect(() => {
+    setCompleteInteraction(
+      logItem?.prompt_messages
+        ? [
+            ...logItem.prompt_messages.concat([
+              { ...logItem?.completion_message },
+            ]),
+          ]
+        : []
+    );
+  }, [logItem?.prompt_messages, logItem?.completion_message]);
   return (
     <>
-      {systemPrompt && (
+      {systemPrompt && systemPrompt.content && (
         <>
           <div className="flex-col px-lg pt-sm pb-md gap-xxxs self-stretch items-start">
             <div className="flex justify-between items-center self-stretch">
