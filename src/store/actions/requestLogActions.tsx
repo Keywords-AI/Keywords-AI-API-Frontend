@@ -246,12 +246,12 @@ export const processRequestLogs = (
         </span>
       ), // + converts string to number
       apiKey: log.api_key,
-      model: log.model,
+      model: log.cached_responses.length > 0 ? "None" : log.model,
       failed: log.failed,
       organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.status_code >= 300 || log.status_code === 0,
+        cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,

@@ -19,6 +19,7 @@ const initState: Organization = {
   owner: {},
   users: [],
   unique_organization_id: "",
+
   organization_model_presets: [],
   active_subscription: false,
   organization_subscription: {},
@@ -26,7 +27,7 @@ const initState: Organization = {
   prioritize_objectives: [],
   monthly_spending: 0,
   budget_goal: "",
-  has_api_call: true,
+  has_api_call: false,
   preset_models: [],
   preset_opiton: "",
   dynamic_routing_enabled: false,

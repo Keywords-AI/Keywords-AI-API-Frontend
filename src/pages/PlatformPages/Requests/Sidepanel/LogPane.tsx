@@ -64,7 +64,13 @@ export const LogPane = ({}) => {
             </div>
             <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
               <p className="break-words overflow-auto">
-                {systemPrompt.content}
+                <LogMessage
+                  MessageContent={
+                    jsonMode
+                      ? JSON.stringify(systemPrompt, null, "\t")
+                      : systemPrompt.content
+                  }
+                />
               </p>
             </div>
           </div>
