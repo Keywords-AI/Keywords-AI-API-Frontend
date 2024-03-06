@@ -63,7 +63,7 @@ export const LogPane = ({}) => {
               <CopyButton text={systemPrompt.content} />
             </div>
             <div className="flex py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-words">
-              <p className="break-words overflow-auto">
+              <div className="break-words overflow-auto">
                 <LogMessage
                   MessageContent={
                     jsonMode
@@ -71,7 +71,7 @@ export const LogPane = ({}) => {
                       : systemPrompt.content
                   }
                 />
-              </p>
+              </div>
             </div>
           </div>
           <Divider color="bg-gray-2" />

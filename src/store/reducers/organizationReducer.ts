@@ -27,7 +27,7 @@ const initState: Organization = {
   prioritize_objectives: [],
   monthly_spending: 0,
   budget_goal: "",
-  has_api_call: false,
+  has_api_call: true,
   preset_models: [],
   preset_opiton: "",
   dynamic_routing_enabled: false,
