@@ -88,6 +88,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
+
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     const onOnboradingPage = window.location.pathname.includes("/onboarding");

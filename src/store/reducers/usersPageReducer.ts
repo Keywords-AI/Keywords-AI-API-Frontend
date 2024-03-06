@@ -22,7 +22,7 @@ type State = {
   usersLogData: UserLogData[];
   filteredUsersLogData: UserLogData[];
   aggregationData: {
-    total_count: number;
+    total_users: number;
     monthly_active_users: number;
     daily_active_users: number;
     new_users: number;
@@ -39,7 +39,7 @@ const initialState = {
   loading: true,
   usersLogData: [],
   aggregationData: {
-    total_count: 0,
+    total_users: 0,
     monthly_active_users: 0,
     daily_active_users: 0,
     new_users: 0,
@@ -97,7 +97,7 @@ const usersPageReducer = (state = initialState, action: any): State => {
     case SET_USERS_LOG_DATA:
       return {
         ...state,
-        usersLogData: action.payload.usersLogData,
+        usersLogData: action.payload,
       };
     case SET_USERS_LOG_DATA_LOADING:
       return {

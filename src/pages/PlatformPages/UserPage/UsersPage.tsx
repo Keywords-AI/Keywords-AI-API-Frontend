@@ -22,12 +22,12 @@ import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 type Props = {};
 
 export default function UsersPage({}: Props) {
+  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty)
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getUsersLogData());
-  }, []);
-  const usersLogState = useTypedSelector((state) => state.usersPage);
-  const isEmpty = usersLogState.isEmpty;
+  }, []); 
+
   return (
     <div
       className={cn(
@@ -112,7 +112,7 @@ const TopBar = () => {
   const cardData = [
     {
       title: "Total users",
-      number: aggregatedData.total_count.toLocaleString(),
+      number: aggregatedData.total_users.toLocaleString(),
       chartData: sampleData,
       dataKey: "total",
     },
@@ -149,19 +149,19 @@ const TopBar = () => {
   ];
   return (
     <>
-      {/* <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
+      <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
         {cardData.map((item, index) => (
           <MetricCardFocus
             key={index}
             title={item.title}
             number={item.number}
-            chartData={item.chartData}
-            dataKey={item.dataKey}
+            // chartData={item.chartData}
+            // dataKey={item.dataKey}
             width="flex-1"
           />
         ))}
       </div>
-      <Divider /> */}
+      <Divider />
       <div
         aria-label="frame 1944"
         className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
@@ -169,7 +169,7 @@ const TopBar = () => {
         <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
-          {/* <TimeSwitcher /> */}
+          <TimeSwitcher />
           <DisplayPopover />
         </div>
       </div>
