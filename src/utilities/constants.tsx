@@ -544,7 +544,8 @@ export const models: ModelType[] = [
     weight: 0.5,
   },
 ];
-
+export const ChartTooltipOuterStyle =
+  "flex flex-col items-start shadow-border shadow-gray-3 gap-xs py-xs px-sm bg-gray-2 rounded-sm w-[280px]";
 export const colorTagsClasses = [
   "#F55656",
   "#FFB340",
@@ -565,22 +566,97 @@ export const Metrics = {
     name: "Request",
     value: "number_of_requests",
     icon: Quality,
+    unit: "requests",
   },
-  average_latency: { name: "Latency", value: "average_latency", icon: Speed },
-  average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed },
+  average_latency: {
+    name: "Latency",
+    value: "average_latency",
+    icon: Speed,
+    unit: "s",
+  },
+  average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed, unit: "s" },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
     icon: Tokens,
+    unit: "tokens",
   },
   total_completion_tokens: {
     name: "Output tokens",
     value: "total_completion_tokens",
     icon: Tokens,
+    unit: "tokens",
   },
-  total_tokens: { name: "All tokens", value: "total_tokens", icon: Tokens },
-  total_cost: { name: "Total cost", value: "total_cost", icon: Cost },
-  error_count: { name: "Errors", value: "error_count", icon: Warning },
+  total_tokens: {
+    name: "All tokens",
+    value: "total_tokens",
+    icon: Tokens,
+    unit: "tokens",
+  },
+  total_cost: {
+    name: "Total cost",
+    value: "total_cost",
+    icon: Cost,
+    unit: "$",
+  },
+  error_count: {
+    name: "Errors",
+    value: "error_count",
+    icon: Warning,
+    unit: "errors",
+  },
+  latency_p_50: {
+    name: "Latency p50",
+    value: "latency_p_50",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_90: {
+    name: "Latency p90",
+    value: "latency_p_90",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_95: {
+    name: "Latency p95",
+    value: "latency_p_95",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_99: {
+    name: "Latency p99",
+    value: "latency_p_99",
+    icon: Speed,
+    unit: "s",
+  },
+  ttft_p_50: { name: "TTFT p50", value: "ttft_p_50", icon: Speed, unit: "s" },
+  ttft_p_90: { name: "TTFT p90", value: "ttft_p_90", icon: Speed, unit: "s" },
+  ttft_p_95: { name: "TTFT p95", value: "ttft_p_95", icon: Speed, unit: "s" },
+  ttft_p_99: { name: "TTFT p99", value: "ttft_p_99", icon: Speed, unit: "s" },
+  average_cost: {
+    name: "Average cost",
+    value: "average_cost",
+    icon: Cost,
+    unit: "$",
+  },
+  average_tokens: {
+    name: "Average tokens",
+    value: "average_tokens",
+    icon: Tokens,
+    unit: "tokens",
+  },
+  average_completion_tokens: {
+    name: "Average output tokens",
+    value: "average_completion_tokens",
+    icon: Tokens,
+    unit: "output tokens",
+  },
+  average_prompt_tokens: {
+    name: "Average prompt tokens",
+    value: "average_prompt_tokens",
+    icon: Tokens,
+    unit: "prompt tokens",
+  },
 };
 
 export const requestLogColumns: LogItemColumn[] = [
@@ -640,6 +716,22 @@ export const requestLogTagColumns: LogItemTag[] = [
       />
     ),
   },
+  {
+    name: "Warnings",
+    retrievalKey: "warnings",
+    renderFunction: (warnings: any) => {
+      if (warnings?.length > 0 && warnings != "{}") {
+        return (
+          <Tag
+            icon={<Warning fill="fill-orange" size="sm" />}
+            backgroundColor="bg-orange/10 h-[24px]"
+            textColor="text-orange "
+            border=""
+          />
+        );
+      }
+    },
+  },
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [
@@ -653,4 +745,33 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "model",
   "status",
   "cachedResponse",
+  "warnings",
+];
+export const userTableColumns = [
+  {
+    name: "Customer ID",
+    value: "customerId",
+  },
+  {
+    name: "Last active",
+    value: "lastActive",
+  },
+  {
+    name: "Active for",
+    value: "activeFor",
+  },
+
+  {
+    name: "requests",
+    value: "requests",
+  },
+
+  {
+    name: "tokens",
+    value: "tokens",
+  },
+  // {
+  //   name: "Sentiment",
+  //   value: "sentiment",
+  // },
 ];

@@ -262,7 +262,6 @@ export const addMissingDate = (
   dateGroup: string,
   currntTimeRange: string
 ): DataItem[] => {
-  console.log("addMissingDate");
   if (!data) return [];
   const newDataArray: DataItem[] = [];
 
@@ -284,10 +283,12 @@ export const addMissingDate = (
     for (let hour = 0; hour < 24; hour++) {
       const hourString = formatTimeUnit(hour);
       const found = data.find((d) => {
-        return d.date_group.split(":")[0] === hour.toString();
+        return new Date(d.date_group).getHours() === hour;
       });
       newDataArray.push(
-        found ? { ...found } : { date_group: hourString, ...defaultFields }
+        found
+          ? { ...found, date_group: hourString }
+          : { date_group: hourString, ...defaultFields }
       );
     }
   };

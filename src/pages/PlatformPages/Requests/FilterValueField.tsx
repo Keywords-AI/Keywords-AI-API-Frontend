@@ -7,7 +7,6 @@ import {
   setFilterType,
   updateFilter,
   setCurrentFilter,
-  deleteFilter,
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
 import { SelectInput, TextInput, TextInputSmall } from "src/components/Inputs";
@@ -53,7 +52,9 @@ export const InputFieldFilter = ({
         padding="py-xxxs px-xxs"
         type={filterOption.value_field_type}
         defaultValue={defaultValue as string}
-        step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
+        step={
+          filterOption.value_field_type === "number" ? "0.00001" : undefined
+        }
       />
       <Button variant="small" text="Apply" onClick={onSubmit} />
       <Button
@@ -204,7 +205,9 @@ const InputModal = ({
           }}
           {...register("filterValue")}
           type={filterOption.value_field_type}
-          step={filterOption.value_field_type === "number" ? "0.00001" : undefined}
+          step={
+            filterOption.value_field_type === "number" ? "0.00001" : undefined
+          }
         />
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">

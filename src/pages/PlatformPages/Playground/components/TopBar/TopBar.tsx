@@ -15,6 +15,7 @@ import { Modal } from "src/components/Dialogs";
 import useForwardRef from "src/hooks/useForwardRef";
 import { getKeys } from "src/store/actions";
 import {
+  ResetPlayground,
   toggleLeftPanel,
   toggleRightPanel,
 } from "src/store/actions/playgroundAction";
@@ -52,7 +53,7 @@ export function TopBar() {
   };
 
   return (
-    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bggray-1">
+    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
       <div className="flex items-center gap-xxs">
         {/* <DotsButton
           icon={isLeftPanelOpen ? SideBarActiveLeft : SideBarLeft}
@@ -75,14 +76,21 @@ export function TopBar() {
         /> */}
       </div>
       <div className="flex gap-xxs items-center">
-        <Button
+        {/* <Button
           variant="small"
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
-        />
+        /> */}
 
-        <ViewCode />
-        <DotsButton icon={Delete} onClick={() => navigate(0)} />
+        {/* <ViewCode /> */}
+        <DotsButton
+          icon={Delete}
+          onClick={() => {
+            if (store.getState().streamingText.some((item) => item.isLoading))
+              return;
+            dispatch(ResetPlayground());
+          }}
+        />
         <HorizontalDivier />
         <DotsButton
           icon={isRightPanelOpen ? SideBarActive : SideBar}

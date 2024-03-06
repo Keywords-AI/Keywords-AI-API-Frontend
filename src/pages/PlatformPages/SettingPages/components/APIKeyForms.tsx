@@ -102,6 +102,7 @@ interface CreateProps {
   createApiKey?: (data: any) => {};
   dispatchNotification?: (notification: any) => {};
   loading?: boolean;
+  organization?: any;
 }
 
 const CreateFormNotConnected = React.forwardRef(
@@ -113,6 +114,7 @@ const CreateFormNotConnected = React.forwardRef(
       createApiKey,
       loading,
       dispatchNotification,
+      organization,
     }: CreateProps,
     ref
   ) => {
@@ -123,7 +125,6 @@ const CreateFormNotConnected = React.forwardRef(
       watch,
     } = useForm();
     const onSubmit = (data) => {
-      console.log("data", data);
       const name = data.name || "New Key";
       setNewKeyName!(name);
       if (!showMore) {
@@ -143,7 +144,9 @@ const CreateFormNotConnected = React.forwardRef(
       e.stopPropagation();
       setShowForm(false);
     };
-    const [currentKeyName, setCurrentKeyName] = useState("New Key");
+    const [currentKeyName, setCurrentKeyName] = useState(
+      organization.name + " Default"
+    );
     const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
 
     const [showMore, setShowMore] = useState(false);
@@ -330,7 +333,7 @@ export const CreateForm = connect(
 const DeleteFormNotConnected = React.forwardRef(
   ({ deletingKey, setDeletingKey, deleteKey }, ref) => {
     const { loading, error, data, postData } = usePost({
-      path: `api/delete-key/${deletingKey?.prefix}/`,
+      path: `api/delete-key/${deletingKey?.id}/`,
       method: "DELETE",
     });
     const handleSubmit = (e) => {

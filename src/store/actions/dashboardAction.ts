@@ -12,6 +12,7 @@ import { updateUser, filterParamsToFilterObjects } from "src/store/actions/";
 import { keywordsRequest } from "src/utilities/requests";
 import _ from "lodash";
 import { RootState } from "src/types";
+import { Item } from "@radix-ui/react-dropdown-menu";
 export const GET_DASHBOARD_DATA = "GET_DASHBOARD_DATA";
 export const SET_DASHBOARD_DATA = "SET_DASHBOARD_DATA";
 export const SET_COST_DATA = "SET_COST_DATA";
@@ -470,9 +471,7 @@ export const getDashboardData = (postData) => {
             payload: filters,
           });
         }
-        console.log("wwwww");
         if (params.get("breakdown") === "by_model") {
-          console.log("data.model_breakdown");
           const breakDowndata = processBreakDownData(
             data.model_breakdown,
             true,
@@ -752,6 +751,9 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
 };
 
 const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+  data = data.map((item) => {
+    return { ...item, model: item.model || "Unknown model" };
+  });
   const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
   let returnData = [];
   Object.keys(groupByDate).forEach((key) => {
@@ -761,7 +763,7 @@ const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
 
     groupByDate[key].forEach((item) => {
       const { date_group, timestamp, ...rest } = item;
-      obj.timestamp = new Date(timestamp).toString();
+      obj.timestamp = new Date(date_group).toString();
       const itemName = isModel ? rest.model : rest.organization_key__name;
       isModel ? delete rest.model : delete rest.organization_key__name;
       obj[itemName] = rest;
@@ -777,7 +779,6 @@ const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
     const { date_group, timestamp, ...models } = item;
     const modelSection = {};
     modelKeys.push(...Object.keys(models));
-    // console.log("modelKeys", modelKeys);
     modelKeys = [...new Set(modelKeys)];
     Object.keys(models).forEach((modelKey) => {
       modelSection[modelKey] = models[modelKey][metric];
@@ -793,7 +794,6 @@ const getBreakDownColors = (data, metric, isModel) => {
   const sorted = data
     .sort((a, b) => a.metric - b.metric)
     .map((item) => (isModel ? item.model : item.organization_key__name));
-  // console.log("sorted", sorted);
   const colorMap = {};
   // modelKeys.forEach((key) => {
   //   colorMap[key] = colorTagsClasses[key];

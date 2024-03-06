@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Down, Export } from "src/components";
 import { Popover } from "src/components/Dialogs";
+import { AlphanumericKey } from "src/components/Icons/iconsDS";
 import { SelectInputSmall } from "src/components/Inputs";
+import Tooltip from "src/components/Misc/Tooltip";
 import { useTypedDispatch } from "src/store/store";
-
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 export default function ExportPopOver({ exportAction }) {
   const dispatch = useTypedDispatch();
   const fileTypes = [
@@ -11,13 +13,54 @@ export default function ExportPopOver({ exportAction }) {
     { name: "JSON", value: ".json" },
   ];
   const [file, setFile] = useState(fileTypes[0].value);
+  const { enableScope, disableScope } = useHotkeysContext();
+  const [showDropdown, setShowDropdown] = useState(false);
+  useHotkeys(
+    "e",
+    () => {
+      setShowDropdown((prev) => !prev);
+    },
+    {
+      scopes: "exportLogs",
+    }
+  );
+  useEffect(() => {
+    enableScope("exportLogs");
+    return () => {
+      disableScope("exportLogs");
+    };
+  }, []);
   return (
     <Popover
       width="w-[320px]"
       padding=""
-      align="end"
+      align="start"
       sideOffset={4}
-      trigger={<Button variant="small" icon={Export} text="Export" />}
+      open={showDropdown}
+      setOpen={setShowDropdown}
+      trigger={
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">Export logs</p>
+                <AlphanumericKey value={"E"} />
+              </>
+            }
+          >
+            <Button
+              variant="small"
+              icon={Export}
+              text="Export"
+              onClick={() => setShowDropdown((prev) => !prev)}
+            />
+          </Tooltip>
+        </div>
+      }
     >
       <div className="flex-col gap-sm py-sm px-md">
         <div className="flex-col items-start gap-xxs self-stretch">

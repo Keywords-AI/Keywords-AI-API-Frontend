@@ -62,14 +62,20 @@ export function PlaygroundMessage({
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
   );
+  const isReset = useTypedSelector((state) => state.playground.isReseted);
   const streamingState = useTypedSelector((state) => state.streamingText);
   useEffect(() => {
     if (streamingState.some((state) => state.isLoading)) setIsFocused(false);
   }, [streamingState]);
   const [isFocused, setIsFocused] = useState(false);
   const [messageValue, setMessageValue] = useState(user_content || "");
-  const [responseValue, setResponseValue] = useState("");
-
+  const [responseValue, setResponseValue] = useState([
+    responses?.[0]?.content || "",
+    responses?.[1]?.content || "",
+  ]);
+  useEffect(() => {
+    setMessageValue(user_content || "");
+  }, [isReset]);
   const isUser = role === "user";
   const isAssistant = role === "assistant";
   useEffect(() => {
@@ -106,13 +112,14 @@ export function PlaygroundMessage({
         content: {
           id: id,
           role: "user",
-          user_content: messageValue,
+          user_content: value,
           responses: null,
           isActive: true,
         },
       })
     );
   };
+
   if (isUser) {
     contentSection = (
       <>
@@ -121,17 +128,21 @@ export function PlaygroundMessage({
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
-            if (+id == 0) return;
+            if (messageLength === 1) {
+              console.log("cannot delete last message");
+              return;
+            }
+            console.log("deleting", id);
             dispatch(deleMessageByIndex(id));
           }}
         />
-        <div className="flex-col px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm shadow-border shadow-gray-3">
+        <div className="flex self-stretch flex-1">
           <MessageBox
             value={messageValue}
             onChange={handleChange}
             blur={!isFocused}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 dispatch(
                   setMessageByIndex({
@@ -181,7 +192,10 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          const isError = response.content.startsWith("Error:");
+          if (response.content == "\u200B")
+            response.content = `{"errorText":"errorText"}`;
+          const isError = response.content.includes("errorText");
+          const errorObj = isError ? JSON.parse(response.content) : null;
           return (
             <div
               key={index}
@@ -204,36 +218,61 @@ export function PlaygroundMessage({
                 }
                 deleteCallback={(e) => {
                   e.preventDefault();
-                  if (+id == 0) return;
+                  // if (+id == 0) return;
+                  console.log("deleting", id);
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={+id == +lastResponseMessageId}
+                showRegen={id == lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
               {isError ? (
-                <StatusTag statusCode={500} />
+                <StatusTag statusCode={errorObj.errorCode || 500} />
               ) : (
-                <div
-                  className={cn(
-                    "flex px-xs py-xxs items-start gap-[10px] self-stretch rounded-sm ",
-                    "shadow-border shadow-gray-3"
-                  )}
-                >
+                <div className="flex self-stretch flex-1">
                   {response.content ? (
                     <MessageBox
-                      value={response.content}
-                      onChange={(val) => setResponseValue(val)}
-                      onKeyDown={(e) => {
-                        // if (e.key === "Enter") {
-                        //   handleUpdateResponse(id, index, responseValue);
-                        //   setIsFocused(false);
-                        //   // handleSend(e);
-                        // }
+                      defaultValue={response.content}
+                      onChange={(val) =>
+                        setResponseValue((prev) => {
+                          const updatedArray = [...prev];
+                          if (index === 0) {
+                            updatedArray[0] = val;
+                          } else if (index === 1) {
+                            updatedArray[1] = val;
+                          }
+                          return updatedArray;
+                        })
+                      }
+                      onKeyDown={(e: any) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleUpdateResponse(
+                            id,
+                            index,
+                            responseValue[index] + "\u200B"
+                          );
+                          setIsFocused(false);
+                          handleSend(e);
+                        }
                       }}
+                      onFoucs={(e) =>
+                        setResponseValue((prev) => {
+                          const updatedArray = [...prev];
+                          if (index === 0) {
+                            updatedArray[0] = e.target.value;
+                          } else if (index === 1) {
+                            updatedArray[1] = e.target.value;
+                          }
+                          return updatedArray;
+                        })
+                      }
                       onBlur={() => {
-                        responseValue != "" &&
-                          handleUpdateResponse(id, index, responseValue);
+                        handleUpdateResponse(
+                          id,
+                          index,
+                          responseValue[index] + "\u200B"
+                        );
                         setIsFocused(false);
                       }}
                       blur={!isFocused}
@@ -301,12 +340,26 @@ const MessageHeader = ({
 };
 
 export function StreamingMessage() {
+  const textAreaRefs = useRef([React.createRef(), React.createRef()]);
+
+  const setHeight = (ref) => {
+    if (!ref) return;
+
+    const target = ref.current;
+    if (!target) return;
+    target.style.height = "1px";
+    target.style.height = target.scrollHeight + "px";
+  };
   const streamingStates = useTypedSelector((state) => state.streamingText);
-  const currentModels = useTypedSelector(
-    (state) => state.playground.currentModels
-  );
+  useEffect(() => {
+    textAreaRefs.current[0] && setHeight(textAreaRefs.current[0]);
+    textAreaRefs.current[1] && setHeight(textAreaRefs.current[1]);
+  }, [streamingStates[0].streamingText, streamingStates[1].streamingText]);
   const isSingleChannel = useTypedSelector(
     (state: RootState) => state.playground.isSingleChannel
+  );
+  const selectedModel = useTypedSelector(
+    (state) => state.playground.modelOptions.models
   );
   if (streamingStates.every((state) => state.isLoading === false)) return null;
 
@@ -314,30 +367,29 @@ export function StreamingMessage() {
     <div className="flex items-start gap-xxs self-stretch ">
       {streamingStates.length > 0 &&
         streamingStates?.map((streamingState, index) => {
-          const Icon = ModelIcon(currentModels[index]);
           if (
-            streamingStates.every(
-              (item) => item.isLoading === false && item.error == null
-            )
+            selectedModel[index] === "none" &&
+            selectedModel.every((item) => item === "none")
           ) {
             return null;
           }
+          if (isSingleChannel && selectedModel[index] === "none") return null;
           if (
             isSingleChannel &&
-            streamingState.isLoading === false &&
-            streamingState.error == null
+            !streamingState.isLoading &&
+            streamingState.streamingText === ""
           )
             return null;
-          const deletedOneChannel = streamingStates?.some(
-            (state) => state.streamingText == "" && state.isLoading === false
-          );
-          if (deletedOneChannel && !streamingState.isLoading) return null;
+          if (streamingState.streamingText === "" && !streamingState.isLoading)
+            return null;
+          // if (deletedOneChannel && !streamingState.isLoading) return null;
+
           return (
             <div
               key={index}
               className={cn(
-                "flex-col items-start gap-xxxs self-stretch",
-                isSingleChannel || deletedOneChannel ? "w-full" : "w-1/2"
+                "flex-col items-start gap-xxxs flex-1 "
+                // isSingleChannel ? "w-full" : "w-1/2"
               )}
             >
               {
@@ -358,16 +410,20 @@ export function StreamingMessage() {
                   />
                   <div
                     className={cn(
-                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-3 max-w-full ",
-                      isSingleChannel || deletedOneChannel
-                        ? "max-w-full"
-                        : "max-w-1/2"
+                      "flex px-xs py-xxs items-start gap-[10px] w-full rounded-sm shadow-border shadow-gray-2 max-w-full "
+                      // isSingleChannel ? "max-w-full" : "max-w-1/2"
                     )}
                   >
-                    {streamingState.streamingText ? (
-                      <div className="flex self-stretch max-w-full whitespace-pre-line break-words text-sm-regular text-gray-5 text-wrap break-all">
-                        {streamingState.streamingText}
-                      </div>
+                    {streamingState.streamingText &&
+                    streamingState.streamingText != "\u200B" ? (
+                      <textarea
+                        ref={textAreaRefs.current[index]}
+                        className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
+                        disabled
+                        value={streamingState.streamingText}
+                      >
+                        {/* {streamingState.streamingText} */}
+                      </textarea>
                     ) : streamingState.error ? (
                       <span className="text-sm-regular text-gray-4">
                         {"Generating..."}

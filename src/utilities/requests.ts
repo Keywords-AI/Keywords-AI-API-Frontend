@@ -113,8 +113,6 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
-  console.log("headers", headers);
-  console.log("data", data);
   const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,
@@ -122,7 +120,7 @@ export const keywordsStream = ({
   });
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
-      reject(new Error("Request timed out"));
+      reject(500);
     }, 10000); // 10 seconds
   });
 
@@ -146,9 +144,9 @@ export const keywordsStream = ({
         try {
           while (true) {
             const { done, value } = await reader.read();
-            // if (value === undefined && done === true && count === 0) {
-            //   throw new Error("Streaming error");
-            // }
+            if (value === undefined && done === true && count === 0) {
+              throw new Error("400");
+            }
             if (done || signal.aborted) {
               streamingDoneCallback && streamingDoneCallback();
               break;
@@ -175,7 +173,7 @@ export const keywordsStream = ({
       };
     })
     .catch((error) => {
-      throw error;
+      throw new Error(error);
     });
 };
 // export const keywordsStream = ({
@@ -277,7 +275,6 @@ export const keywordsApiStream = ({
         while (true) {
           const { done, value } = await reader.read();
           if (done || signal.aborted) {
-            console.log("Stream complete");
             break;
           }
           const message = decoder.decode(value);

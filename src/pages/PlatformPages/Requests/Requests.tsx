@@ -12,12 +12,12 @@ import {
 import { getRequestLogs, exportLogs } from "src/store/actions";
 import { LogItem } from "src/types";
 import { Add, Button, Close, Down, Export, Filter } from "src/components";
-import { SideBar, SideBarActive } from "src/components/Icons";
+import { AlphanumericKey, SideBar, SideBarActive } from "src/components/Icons";
 import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
-import { SidePanel } from "./SidePanel";
+import { SidePanel } from "./Sidepanel/SidePanel";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -27,7 +27,8 @@ import { Paginator } from "./Paginator";
 import { Popover } from "src/components/Dialogs";
 import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
-
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -76,6 +77,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   totalCount,
   loading,
 }) => {
+  const { enableScope, disableScope } = useHotkeysContext();
   useEffect(() => {
     getRequestLogs();
     if (!selectedRequest) {
@@ -91,6 +93,23 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const clearFilters = () => {
     setFilters([]);
   };
+  useEffect(() => {
+    if (filters.length > 0) enableScope("clear_filters");
+    else disableScope("clear_filters");
+    return () => {
+      disableScope("clear_filters");
+    };
+  }, [filters]);
+  useHotkeys(
+    "C",
+    () => {
+      if (loading) return;
+      clearFilters();
+    },
+    {
+      scopes: "clear_filters",
+    }
+  );
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -100,19 +119,30 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {!loading && filters.length > 0 === false && (
-              <FilterActions type="filter" />
-            )}
+            {filters.length > 0 === false && <FilterActions type="filter" />}
 
-            {!loading && filters.length > 0 && (
+            {filters.length > 0 && (
               <React.Fragment>
-                <Button
-                  variant="small-dashed"
-                  icon={Close}
-                  text="Clear filters"
-                  onClick={clearFilters}
-                  iconPosition="right"
-                />
+                <Tooltip
+                  side="bottom"
+                  sideOffset={8}
+                  align="start"
+                  delayDuration={1}
+                  content={
+                    <>
+                      <p className="caption text-gray-4">Clear filters</p>
+                      <AlphanumericKey value={"C"} />
+                    </>
+                  }
+                >
+                  <Button
+                    variant="small-dashed"
+                    icon={Close}
+                    text="Clear filters"
+                    onClick={clearFilters}
+                    iconPosition="right"
+                  />
+                </Tooltip>
               </React.Fragment>
             )}
           </div>
@@ -124,12 +154,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxs rounded-xs">
-            {!loading && (
+            {
               <React.Fragment>
                 <Filters />
                 {filters.length > 0 && <FilterActions type="add" />}
               </React.Fragment>
-            )}
+            }
           </div>
           <div className="flex flex-row items-center gap-xxs rounded-xs ">
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
@@ -201,13 +231,55 @@ const ExportPopOver = () => {
     { name: "JSON", value: ".json" },
   ];
   const [file, setFile] = useState(fileTypes[0].value);
+  const { enableScope, disableScope } = useHotkeysContext();
+  const [showDropdown, setShowDropdown] = useState(false);
+  useHotkeys(
+    "e",
+    () => {
+      setShowDropdown((prev) => !prev);
+    },
+    {
+      scopes: "exportLogs",
+    }
+  );
+  useEffect(() => {
+    enableScope("exportLogs");
+    return () => {
+      disableScope("exportLogs");
+    };
+  }, []);
+
   return (
     <Popover
       width="w-[320px]"
       padding=""
       align="end"
       sideOffset={4}
-      trigger={<Button variant="small" icon={Export} text="Export" />}
+      open={showDropdown}
+      setOpen={setShowDropdown}
+      trigger={
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">Export logs</p>
+                <AlphanumericKey value={"E"} />
+              </>
+            }
+          >
+            <Button
+              variant="small"
+              icon={Export}
+              text="Export"
+              onClick={() => setShowDropdown((prev) => !prev)}
+            />
+          </Tooltip>
+        </div>
+      }
     >
       <div className="flex-col gap-sm py-sm px-md">
         <div className="flex-col items-start gap-xxs self-stretch">

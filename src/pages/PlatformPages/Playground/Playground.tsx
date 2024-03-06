@@ -13,6 +13,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   appendMessage,
   getModels,
+  resetModelOptions,
   setPrompt,
   setSelectedLogs,
   streamPlaygroundResponse,
@@ -33,6 +34,8 @@ export default function Playground() {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const streamingStates = useTypedSelector((state) => state.streamingText);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getModels());
@@ -47,13 +50,27 @@ export default function Playground() {
   useHotkeys(
     "enter",
     () => {
+      if (isStreaming) return;
       dispatch(streamPlaygroundResponse());
     },
     {
       scopes: "playground",
       preventDefault: true,
+      // enableOnFormTags: true,
     }
   );
+  // useHotkeys(
+  //   "meta+enter",
+  //   () => {
+  //     if (isStreaming) return;
+  //     dispatch(streamPlaygroundResponse());
+  //   },
+  //   {
+  //     scopes: "playground",
+  //     preventDefault: true,
+  //     // enableOnFormTags: true,
+  //   }
+  // );
   return (
     <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] max-w-[100vw]">
       <TopBar />
@@ -95,6 +112,7 @@ const PromptInput = (selectedLogs) => {
       <TextAreaInput
         value={prompt}
         onChange={(e) => dispatch(setPrompt(e.target.value))}
+        placeholder="You are a helpful assistant."
       />
     </div>
   );
@@ -111,14 +129,15 @@ const MessageLists = () => {
     (state) => state.playground.isRightPanelOpen
   );
   const streamingStates = useTypedSelector((state) => state.streamingText);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   return (
     <div
       className="flex-col items-start gap-xxs  self-stretch  w-full"
       style={{
-        maxWidth: `calc(100vw - ${isLeftPanelOpen ? "240px" : "0px"} - ${
-          isRightPanelOpen ? "320px" : "0px"
-        })`,
+        maxWidth: `calc(100vw - 320px - ${
+          isLeftPanelOpen ? "240px" : "0px"
+        } - ${isRightPanelOpen ? "320px" : "0px"})`,
       }}
     >
       <AutoScrollContainer
@@ -143,9 +162,9 @@ const MessageLists = () => {
           icon={Add}
           ref={buttonRef}
           iconPosition="left"
-          disabled={streamingStates.some((state) => state.isLoading)}
+          disabled={isStreaming}
           onClick={() => {
-            if (streamingStates.some((state) => state.isLoading)) return;
+            if (isStreaming) return;
 
             dispatch(
               appendMessage({
@@ -168,6 +187,7 @@ const MessageLists = () => {
           variant="r4-primary"
           text="Submit"
           onClick={() => {
+            if (isStreaming) return;
             dispatch(streamPlaygroundResponse());
           }}
         />
@@ -177,26 +197,51 @@ const MessageLists = () => {
 };
 
 const RightPanel = () => {
+  const timestamp = useTypedSelector(
+    (state) => state.playground.breakdownData.timestamp
+  );
+  const streamingStates = useTypedSelector((state) => state.streamingText);
+  const [isReset, setIsReset] = useState(false);
   const tabGroups = [
     {
       value: "Session",
       buttonVariant: "text" as variantType,
-      content: <SessionPane />,
+      content: <SessionPane isReset={isReset} />,
     },
-    {
-      value: "Most recent",
+    timestamp && {
+      value: "Recent",
       buttonVariant: "text" as variantType,
       content: <MostRecentPane />,
     },
   ];
   const [tab, setTab] = useState(tabGroups[0].value);
+  const dispatch = useTypedDispatch();
+
   return (
     <Tabs
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
-      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2"
-      headerClassName="flex px-lg py-xxs items-center gap-sm self-stretch shadow-border-b shadow-gray-2"
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
+      headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
+      headerRight={
+        <Button
+          variant="text"
+          text="Reset"
+          textColor="text-gray-3"
+          textHoverColor="text-red"
+          textClickedColor="text-red"
+          onClick={() => {
+            if (streamingStates.some((item) => item.isLoading === true)) return;
+
+            setIsReset(true);
+            setTimeout(() => {
+              setIsReset(false);
+            }, 100);
+            dispatch(resetModelOptions());
+          }}
+        />
+      }
     />
   );
 };

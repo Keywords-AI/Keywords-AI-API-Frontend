@@ -15,14 +15,16 @@ import {
   Choice,
   Operator,
 } from "src/types";
-import { addFilter } from "src/store/actions";
+import { addFilter, deleteFilter, updateFilter } from "src/store/actions";
 import { InputFieldFilter } from "./FilterValueField";
 import { setFilterType, setCurrentFilter } from "src/store/actions";
 import { Modal } from "src/components/Dialogs";
 import { set, useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
-
+import store from "src/store/store";
+import { combineSlices } from "@reduxjs/toolkit";
+import { Value } from "@radix-ui/react-select";
 export function FilterActions({ type }: { type: string }) {
   // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
   // if (isLoading) return <></>;
@@ -37,6 +39,9 @@ export function FilterActions({ type }: { type: string }) {
   const currentFilter = useTypedSelector(
     (state: RootState) => state.requestLogs.currentFilter
   );
+  // const filters = useTypedSelector(
+  //   (state: RootState) => state.requestLogs.filters
+  // );
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(
     "f",
@@ -63,15 +68,15 @@ export function FilterActions({ type }: { type: string }) {
     }
   );
   const secondStepItems = filterType
-    ? filterOptions[filterType]?.value_choices?.map(
-        (valueChoice, index): Choice => {
+    ? filterOptions[filterType]?.value_choices
+        ?.map((valueChoice, index): Choice => {
           if (!valueChoice) return null;
           return {
             name: valueChoice.name,
             value: valueChoice.value,
           };
-        }
-      )
+        })
+        .sort((a: any, b: any) => a.name.localeCompare(b.name))
     : [];
   const loading = useTypedSelector((state) => state.requestLogs.loading);
   const selectMetric = (metric: keyof LogItem) => {
@@ -85,7 +90,58 @@ export function FilterActions({ type }: { type: string }) {
 
   const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
-      dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+      if (Array.isArray(filterValue) && filterValue.length > 0) {
+        dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+        const latestFilter = store.getState().requestLogs.currentFilter;
+        if (!latestFilter || !latestFilter.metric || !latestFilter.value)
+          return;
+        const filters = store.getState().requestLogs.filters;
+        const sameTypeFilter = filters.find(
+          (filter) => filter.metric === latestFilter.metric
+        );
+        if (sameTypeFilter) {
+          dispatch(
+            updateFilter({
+              display_name:
+                filterOptions[latestFilter.metric]?.display_name ?? "failed",
+              metric: filterType!,
+              operator:
+                (filterOptions[latestFilter.metric]?.operator_choices?.[0]
+                  ?.value as string) ?? "contains",
+              value: Array.from(
+                new Set([...sameTypeFilter.value, ...filterValue])
+              ),
+              id: sameTypeFilter.id,
+              value_field_type:
+                filterOptions[latestFilter.metric]?.value_field_type ??
+                "selection",
+            })
+          );
+
+          
+        } else {
+          dispatch(
+            addFilter({
+              display_name:
+                filterOptions[latestFilter.metric]?.display_name ?? "failed",
+              metric: filterType!,
+              operator:
+                (filterOptions[latestFilter.metric]?.operator_choices?.[0]
+                  ?.value as string) ?? "contains",
+              value: latestFilter.value,
+              id: currentFilter.id,
+              value_field_type:
+                filterOptions[latestFilter.metric]?.value_field_type ??
+                "selection",
+            })
+          );
+        }
+        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+      } else {
+        const latestFilter = store.getState().requestLogs.currentFilter;
+        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+        dispatch(deleteFilter(latestFilter.id));
+      }
     }
   };
   useEffect(() => {
@@ -129,7 +185,13 @@ export function FilterActions({ type }: { type: string }) {
       break;
     case "add":
       trigger = (
-        <DotsButton icon={Add} onClick={() => handleDropdownOpen(!start)} />
+        <DotsButton
+          icon={Add}
+          onClick={() => {
+            if (loading) return;
+            handleDropdownOpen(!start);
+          }}
+        />
       );
       break;
     default:

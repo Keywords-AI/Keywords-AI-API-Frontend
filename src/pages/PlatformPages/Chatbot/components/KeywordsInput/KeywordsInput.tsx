@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Terminate, Send } from "src/components/Icons";
 import { EditableBox } from "src/components/Inputs";
 import { Button, IconButton } from "src/components/Buttons";
@@ -13,6 +13,7 @@ export default function KeywordsInput() {
     register,
     handleSubmit,
     formState: { errors },
+    setFocus,
   } = useForm();
 
   const streamingText = useTypedSelector(
@@ -21,26 +22,26 @@ export default function KeywordsInput() {
   const streaming = useTypedSelector(
     (state) => state.streamingText[0].isLoading
   );
+  const editmessage = useTypedSelector((state) => state.chatbot.editMessage);
   const systemPrompt = useTypedSelector((state) => state.chatbot.customPrompt);
   const dispatch = useTypedDispatch();
   const [inputValue, setInputValue] = React.useState("");
-  // const onChange = (e) => {
-
-  // }
   const onKeyDown = (e) => {
+    if (e.shiftKey && e.key === "Enter") {
+    }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       e.target.form.requestSubmit();
     }
   };
   const onSubmit = async (data) => {
-    if (!streaming) {
+    if (!streaming && editmessage == null) {
       dispatch(sendMessage(data.message));
       setInputValue("");
     }
   };
   useEffect(() => {
-    console.log(errors);
+    errors && Object.keys(errors).length !== 0 && console.log(errors);
   }, [errors]);
 
   return (
@@ -59,7 +60,6 @@ export default function KeywordsInput() {
           "rounded-sm text-sm py-xxs px-xs " +
           (streaming ? "text-gray-3 bg-gray-2" : "bg-gray-1 ")
         }
-        focus={true}
         borderless={false}
         placeholder={streaming ? "Generating..." : "Send a message..."}
         onKeyDown={onKeyDown}

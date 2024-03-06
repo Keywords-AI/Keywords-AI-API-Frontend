@@ -143,7 +143,6 @@ const InputModal = ({
         data.filterValue = new Date().toISOString().slice(0, -8);
       }
     }
-    console.log(filterOption);
     dispatch(
       updateDashboardFilter({
         metric: filterOption.metric,

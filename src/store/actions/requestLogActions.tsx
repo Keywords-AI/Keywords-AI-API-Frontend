@@ -18,7 +18,8 @@ import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
 import { SentimentTag, StatusTag } from "src/components/Misc";
 import { Parser } from "@json2csv/plainjs";
-
+import { v4 as uuidv4 } from "uuid";
+import { setMessages, setModelOptions } from "./playgroundAction";
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -72,7 +73,6 @@ const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
     const lastMessage = messages.slice(-1)[0].content;
     if (lastMessage instanceof Array) {
-      console.log("lastMessage", lastMessage);
       return lastMessage.find((part) => part.type === "text").text;
     }
     return messages.slice(-1)[0].content;
@@ -114,6 +114,9 @@ function processFilters(filters: FilterObject[]): FilterParams {
     var values = filter.value.map((value) => {
       if (value === "true" || value === "false") {
         value = value === "true" ? true : false;
+      }
+      if (filter.value_field_type === "datetime-local") {
+        value = new Date(value as string).toISOString();
       }
       return value;
     });
@@ -165,6 +168,10 @@ export const updateFilter = (filter: FilterObject) => {
       type: UPDATE_FILTER,
       payload: filter,
     });
+    if (filter.value?.length === 0) {
+      dispatch(deleteFilter(filter.id));
+      return;
+    }
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -218,15 +225,26 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
-      time_to_first_token: (
-        <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
-      ),
+      time_to_first_token:
+        log.time_to_first_token && log.time_to_first_token != -1 ? (
+          <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+        ) : (
+          <span className="">{""}</span>
+        ),
       outputTokens: log.completion_tokens,
-      cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
-      allTokens: (
-        <span className="">{log.completion_tokens + log.prompt_tokens}</span>
+      cost: (
+        <span className="">{log.failed ? "" : `$${log.cost.toFixed(6)}`}</span>
       ),
-      latency: <span className="">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
+      allTokens: (
+        <span className="">
+          {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
+        </span>
+      ),
+      latency: (
+        <span className="">
+          {log.failed ? "" : `${log.latency.toFixed(3)}s`}
+        </span>
+      ), // + converts string to number
       apiKey: log.api_key,
       model: log.model,
       failed: log.failed,
@@ -237,6 +255,7 @@ export const processRequestLogs = (
         errorCode: log.status_code,
       },
       sentimentScore: log.sentiment_score,
+      warnings: log.warnings,
     };
   });
 };
@@ -304,6 +323,9 @@ export const filterParamsToFilterObjects = (
   filterOptions: RawFilterOptions
 ): FilterObject[] => {
   return Object.keys(filterParams).map((key): FilterObject => {
+    if (!filterOptions[key]) {
+      throw new Error("Invalid filter option");
+    }
     return {
       id: Math.random().toString(36).substring(2, 15),
       metric: key as keyof LogItem,
@@ -356,7 +378,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
 };
 
 export const updateLog = (id) => {
-  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
 
@@ -396,13 +417,11 @@ export const setCacheResponse = (
         request_content: requestContent,
         response_content: responseContent,
       };
-      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
@@ -414,7 +433,6 @@ export const setCacheResponse = (
       const deleteId = currentRequestLog.cached_responses.find(
         (e) => e.request_index === requestIndex
       ).id;
-      console.log("deleteId", deleteId);
       keywordsRequest({
         path: `api/cache/${deleteId}/`,
         method: "DELETE",
@@ -467,7 +485,6 @@ export const exportLogs = (format = ".csv") => {
     const state = getState();
     const filters = state.requestLogs.filters;
     const filterData = processFilters(filters);
-    console.log("format", format);
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",
@@ -490,5 +507,63 @@ export const exportLogs = (format = ".csv") => {
       a.download = "request_logs" + format;
       a.click();
     });
+  };
+};
+
+export const RestorePlaygroundStateFromLog = () => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const currentLog = getState().requestLogs.selectedRequest;
+    const prompt_messages = currentLog?.prompt_messages || [];
+    const completion_message = currentLog?.completion_message;
+    const systemPrompt = currentLog?.prompt_messages.find(
+      (item) => item.role === "[system]" || item.role === "system"
+    );
+    const playGroundState = {
+      systemPrompt: systemPrompt?.content || "",
+      model: currentLog?.model || "",
+      messages: [
+        ...prompt_messages,
+        completion_message,
+        { id: uuidv4(), role: "user", user_content: "" },
+      ].map((item: any) => {
+        const isUser = item.role === "user";
+
+        return {
+          id: uuidv4(),
+          role: item.role,
+          user_content: isUser ? item.content : null,
+          hiden: false,
+          responses: !isUser
+            ? [
+                {
+                  model: currentLog?.model,
+                  content: item.content,
+                  complete: true,
+                },
+                null,
+              ]
+            : null,
+        };
+      }),
+      options: {
+        maxLength: 4096,
+        temperature: 2.0,
+        topP: 0.9,
+        frequencyPenalty: 2.0,
+        presencePenalty: 2.0,
+      },
+    };
+    dispatch(setMessages(playGroundState.messages));
+    dispatch(
+      setModelOptions({
+        ...playGroundState.options,
+        models: [playGroundState.model, "none"],
+        temperature: playGroundState.options.temperature,
+        maximumLength: playGroundState.options.maxLength,
+        topP: playGroundState.options.topP,
+        frequencyPenalty: playGroundState.options.frequencyPenalty,
+        presencePenalty: playGroundState.options.presencePenalty,
+      })
+    );
   };
 };

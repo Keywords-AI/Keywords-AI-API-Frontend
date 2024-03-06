@@ -48,7 +48,7 @@ export default function Chatbot({ chatbot }) {
   }, [conversation]);
 
   return (
-    <div className="flex-row h-[calc(100vh-56px)] self-stretch">
+    <div className="flex-row h-[calc(100vh-56px)] w-[100vw]">
       <PanelChat />
       <Main />
     </div>
@@ -69,7 +69,7 @@ const Messages = () => {
       >
         <div className="flex h-[36px] items-center gap-xxs">
           <Logo />
-          <p className=" display-xs text-gray-5">Keywords AI</p>
+          <p className="display-xs text-gray-5">Keywords AI</p>
         </div>
         <p className="text-md-md text-gray-3">
           Connect to the best model for your prompts.
@@ -80,7 +80,7 @@ const Messages = () => {
     return (
       <AutoScrollContainer
         percentageThreshold={15}
-        className="flex-col items-center gap-xl self-stretch  px-xxxl  overflow-auto"
+        className="flex-col items-center gap-xl  px-xxxl overflow-y-auto flex-1 w-full "
       >
         {messages?.map((m, index) => {
           return <ChatMessage key={index} index={index} message={m} />;
@@ -95,6 +95,7 @@ const Messages = () => {
             }}
           />
         )}
+
         {StreamingObj.error != null && (
           <ChatMessage
             index={-2}
@@ -128,7 +129,8 @@ const Main = () => {
   return (
     <div
       aria-label="frame 754 "
-      className="flex-col pt-xl pb-lg justify-between items-center flex-1 self-stretch max-w-[calc(100dvw-248px)] gap-lg"
+      className="flex-col pt-xl pb-lg justify-between items-center gap-lg "
+      style={{ width: "calc(100vw - 248px)" }}
     >
       <Messages />
       <InputAndFooter />

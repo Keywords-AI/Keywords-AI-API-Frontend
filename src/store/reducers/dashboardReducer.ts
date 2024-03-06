@@ -41,6 +41,7 @@ import {
   SET_DASHBOARD_FILTERS,
   UPDATE_DASHBOARD_FILTER,
   DELETE_DASHBOARD_FILTER,
+  SET_AVG_TTFT_DATA,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -93,6 +94,7 @@ const initState = {
     // {total_cost, date_group}
   ],
   avgCostData: [],
+  ttftData: [],
   tokenCountData: [
     // {total_tokens, date_group}
   ],
@@ -129,6 +131,7 @@ const initState = {
   filterType: undefined,
   currentFilter: {
     id: "",
+    metric: undefined,
   },
   filters: [] as FilterObject[],
   filterOptions: {} as FilterParams,
@@ -240,6 +243,8 @@ export default function dashboardReducer(
       return { ...state, panelData: action.payload };
     case SET_MODEL_DATA:
       return { ...state, modelData: action.payload };
+    case SET_AVG_TTFT_DATA:
+      return { ...state, ttftData: action.payload };
     case SET_AVG_MODEL_DATA:
       return { ...state, avgModelData: action.payload };
     case SET_API_DATA:
@@ -323,8 +328,6 @@ export default function dashboardReducer(
           currDate - currDate.getTimezoneOffset() * 60 * 1000
         ).toISOString(),
       };
-    case SET_DASHBOARD_FILTER_OPTIONS:
-      return { ...state, filterOptions: action.payload };
 
     case ADD_DASHBOARD_FILTER:
       return { ...state, filters: [...state.filters, action.payload] };

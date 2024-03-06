@@ -15,6 +15,7 @@ import { models as MODELS } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { Redirect } from "src/components";
 import { Tag } from "src/components/Misc";
+import { useNavigate } from "react-router-dom";
 
 export const AlertsFallbackPage = () => {
   const { isFallbackEnabled, fallbackModels, systemFallbackEnabled, orgPlan } =
@@ -57,7 +58,7 @@ export const AlertsFallbackPage = () => {
     );
   }, [model1, model2, model3]);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription.plan_level;
+    const planLevel = state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   const models = MODELS.map((model) => {
@@ -122,6 +123,7 @@ export const AlertsFallbackPage = () => {
       updateOrganization({ system_fallback_enabled: !systemFallbackEnabled })
     );
   };
+  const navigate = useNavigate();
   return (
     <PageContent
       title="Alerts & Fallback"
@@ -215,8 +217,15 @@ export const AlertsFallbackPage = () => {
             subtitle="Automatically fallback to a system assigned model if fallback models are not responding or specified."
           />
           <div className="flex flex-row items-start justify-center pt-[3px]">
-        <Tag text= "Upgrade" backgroundColor="bg-primary/10" textColor="text-primary" border="shadow-transparent"/>
-
+            <Tag
+              text="Upgrade"
+              backgroundColor="bg-primary/10"
+              textColor="text-primary"
+              border="shadow-transparent"
+              onClick={() => {
+                navigate("/platform/api/plans");
+              }}
+            />
           </div>
         </div>
       )}
