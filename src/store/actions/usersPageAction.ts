@@ -11,6 +11,12 @@ export const SET_USERS_LOG_DATA_TIMERANGE = "SET_USERS_LOG_DATA_TIMERANGE";
 export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
   "SET_USERS_LOG_DATA_DISPLAY_COLUMNS";
 export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
+export const SET_IS_EMPTY = "SET_IS_EMPTY";
+
+export const setIsEmpty = (value: boolean) => ({
+  type: SET_IS_EMPTY,
+  payload: value,
+});
 
 export const setUsersLogDataDisplayColumns = (columns: string[]) => ({
   type: SET_USERS_LOG_DATA_DISPLAY_COLUMNS,
@@ -54,6 +60,7 @@ export const getUsersLogData = () => {
         )
       )
     );
+    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -73,13 +80,13 @@ export const filterUsersLogDataAction = (searchString: string) => {
         )
       );
     } else {
-      const { results: data, ...summary } = await fetchUsersLogData(
+      const data = await fetchUsersLogData(
         getSortFunction(
           getState().usersPage.sortKey,
           getState().usersPage.sortOrder
         )
       );
-      const filteredData = data.filter((data: any) => {
+      const filteredData = data.usersLogData.filter((data: any) => {
         return data.customerId
           .toLowerCase()
           .includes(searchString.toLowerCase());
@@ -90,6 +97,7 @@ export const filterUsersLogDataAction = (searchString: string) => {
       }
       dispatch(setUsersLogData(filteredData));
     }
+    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -134,7 +142,7 @@ const getSortFunction = (property: string, order: string) => {
   return (a: any, b: any) => sortFunctions[property](a, b, order);
 };
 
-const fetchUsersLogData = async (sortFunc) => {
+const fetchUsersLogData = async (sortFunc): any => {
   try {
     const {
       results: responseData,
@@ -145,18 +153,20 @@ const fetchUsersLogData = async (sortFunc) => {
       method: "GET",
       data: {},
     });
-    return responseData
-      .map((data: any) => {
-        return {
-          customerId: data.customer_identifier,
-          lastActive: new Date(data.last_active_timeframe).toISOString(),
-          activeFor:
-            data.active_days + (+data.active_days > 1 ? " days" : " day"),
-          requests: Math.round(data.request_per_day as number),
-          tokens: Math.round(data.tokens_per_day as number),
-        };
-      })
-      .sort(sortFunc);
+    return {
+      usersLogData: responseData
+        .map((data: any) => {
+          return {
+            customerId: data.customer_identifier,
+            lastActive: new Date(data.last_active_timeframe).toISOString(),
+            activeFor:
+              data.active_days + (+data.active_days > 1 ? " days" : " day"),
+            requests: Math.round(data.request_per_day as number),
+            tokens: Math.round(data.tokens_per_day as number),
+          };
+        })
+        .sort(sortFunc),
+    };
   } catch (error) {
     console.error(error);
   }
