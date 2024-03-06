@@ -152,8 +152,8 @@ const fetchUsersLogData = async (sortFunc) => {
           lastActive: new Date(data.last_active_timeframe).toISOString(),
           activeFor:
             data.active_days + (+data.active_days > 1 ? " days" : " day"),
-          requests: Math.round(data.request_per_day as number),
-          tokens: Math.round(data.tokens_per_day as number),
+          requests: Math.round(data.number_of_requests as number),
+          tokens: Math.round(data.total_tokens as number),
         };
       })
       .sort(sortFunc);
