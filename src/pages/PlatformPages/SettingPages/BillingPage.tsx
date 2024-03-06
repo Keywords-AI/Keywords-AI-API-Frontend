@@ -16,6 +16,7 @@ import { Billing, RootState } from "src/types";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { setPanelData } from "src/store/actions";
+import cn from "src/utilities/classMerge";
 
 export const viewBillTrigger = (item: any) => {
   // The complete stripe Invoice object
@@ -108,10 +109,10 @@ export const BillingPage = () => {
           variant="r4-gray-2"
           text="Edit"
           onClick={() =>
-            window.open(
-              "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000",
-              "_blank"
-            )
+            window.open(`https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${currentBillingData?.email ?? ''}`, "_blank")
+              // "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${}",
+              // "_blank"
+            // )
           }
           className="w-[60px] h-[36px]"
         />
