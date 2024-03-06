@@ -126,8 +126,7 @@ export const MetricPane = ({}) => {
         logItem?.time_to_first_token < 0
           ? "-"
           : ((
-              logItem?.time_to_first_token +
-              1 / logItem?.token_per_second
+              logItem?.latency
             ).toFixed(2) || "-") + "s"}
       </span>
     ),
