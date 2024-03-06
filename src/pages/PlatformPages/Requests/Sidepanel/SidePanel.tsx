@@ -149,7 +149,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       const currentIndex = pages.findIndex((p) => p!.value === tab);
       const nextIndex = (currentIndex - 1 + pages.length) % pages.length;
       const nextTab = pages[nextIndex];
-      console.log("nextTab", nextTab!.value);
       setTab(nextTab!.value);
     },
     {
@@ -163,7 +162,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       const currentIndex = pages.findIndex((p) => p!.value === tab);
       const nextIndex = (currentIndex + 1 + pages.length) % pages.length;
       const nextTab = pages[nextIndex];
-      console.log("nextTab", nextTab!.value);
       setTab(nextTab!.value);
     },
     {
