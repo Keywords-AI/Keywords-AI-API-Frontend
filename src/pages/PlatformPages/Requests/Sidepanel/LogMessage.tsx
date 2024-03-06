@@ -15,7 +15,12 @@ export default function LogMessage({ MessageContent }: Props) {
         {MessageContent}
       </p>
     ) : (
-      <p className={cn("w-full", "overflow-auto break-words select-text")}>
+      <p
+        className={cn(
+          "w-full",
+          "overflow-auto break-words select-text whitespace-pre-line"
+        )}
+      >
         {MessageContent}
       </p>
     );
@@ -25,7 +30,10 @@ export default function LogMessage({ MessageContent }: Props) {
         {MessageContent.map((content, index) => {
           if (content.type && content.type == "text") {
             return (
-              <p key={index} className="break-words overflow-auto select-text">
+              <p
+                key={index}
+                className="break-words overflow-auto select-text whitespace-pre-line "
+              >
                 {content.text}{" "}
               </p>
             );

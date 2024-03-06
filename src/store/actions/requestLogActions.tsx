@@ -23,6 +23,7 @@ import {
   setBreakDownData,
   setMessages,
   setModelOptions,
+  setPrompt,
 } from "./playgroundAction";
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
@@ -571,6 +572,7 @@ export const RestorePlaygroundStateFromLog = () => {
       },
     };
     dispatch(setMessages(playGroundState.messages));
+    dispatch(setPrompt(playGroundState.systemPrompt))
     dispatch(
       setModelOptions({
         ...playGroundState.options,

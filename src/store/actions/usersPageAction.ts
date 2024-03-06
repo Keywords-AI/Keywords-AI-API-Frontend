@@ -153,20 +153,18 @@ const fetchUsersLogData = async (sortFunc): any => {
       method: "GET",
       data: {},
     });
-    return {
-      usersLogData: responseData
-        .map((data: any) => {
-          return {
-            customerId: data.customer_identifier,
-            lastActive: new Date(data.last_active_timeframe).toISOString(),
-            activeFor:
-              data.active_days + (+data.active_days > 1 ? " days" : " day"),
-            requests: Math.round(data.request_per_day as number),
-            tokens: Math.round(data.tokens_per_day as number),
-          };
-        })
-        .sort(sortFunc),
-    };
+    return responseData
+      .map((data: any) => {
+        return {
+          customerId: data.customer_identifier,
+          lastActive: new Date(data.last_active_timeframe).toISOString(),
+          activeFor:
+            data.active_days + (+data.active_days > 1 ? " days" : " day"),
+          requests: Math.round(data.number_of_requests as number),
+          tokens: Math.round(data.total_tokens as number),
+        };
+      })
+      .sort(sortFunc);
   } catch (error) {
     console.error(error);
   }
