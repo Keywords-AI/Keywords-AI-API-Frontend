@@ -272,7 +272,6 @@ export default function DashboardFilter() {
                     dispatch(setDisplayType("total", setQueryParams, navigate));
                   }
 
-                  getDashboardData();
                 }}
                 value={currentMetric}
                 choices={[
@@ -365,11 +364,11 @@ export default function DashboardFilter() {
                     backgroundColor="bg-gray-2"
                     optionsWidth="w-[180px]"
                     value={currentType}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       dispatch(
                         setDisplayType(e.target.value, setQueryParams, navigate)
-                      )
-                    }
+                      );
+                    }}
                     choices={filteredtypeChoices}
                   />
                 </div>
@@ -390,15 +389,15 @@ export default function DashboardFilter() {
                 backgroundColor="bg-gray-2"
                 alignOffset={-40}
                 value={currentBreakdown}
-                onChange={(e) =>
+                onChange={(e) => {
                   dispatch(
                     setDisplayBreakdown(
                       e.target.value,
                       setQueryParams,
                       navigate
                     )
-                  )
-                }
+                  );
+                }}
                 choices={filteredBreakdownChoices}
               />
             </div>
