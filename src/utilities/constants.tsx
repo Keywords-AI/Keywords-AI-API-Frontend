@@ -689,23 +689,23 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ failed, errorCode }) => {
-      return <StatusTag statusCode={errorCode} />;
+    renderFunction: ({ cached, errorCode }) => {
+      return <StatusTag statusCode={errorCode} cached={cached} />;
     },
   },
-  {
-    name: "Cached",
-    retrievalKey: "cachedResponse",
-    renderFunction: (cached_response) =>
-      cached_response > 0 && (
-        <Tag
-          text={"Cached"}
-          backgroundColor="bg-primary/10"
-          textColor="text-primary"
-          border=""
-        />
-      ),
-  },
+  // {
+  //   name: "Cached",
+  //   retrievalKey: "cachedResponse",
+  //   renderFunction: (cached_response) =>
+  //     cached_response > 0 && (
+  //       <Tag
+  //         text={"Cached"}
+  //         backgroundColor="bg-primary/10"
+  //         textColor="text-primary"
+  //         border=""
+  //       />
+  //     ),
+  // },
   {
     name: "Sentiment",
     retrievalKey: "sentimentAnalysis",

@@ -1,5 +1,5 @@
 import { CopyButton } from "src/components/Buttons";
-import { Info } from "src/components/Icons";
+import { CheckAll, Info } from "src/components/Icons";
 import { ModelTag, StatusTag, Tag } from "src/components/Misc";
 import Tooltip from "src/components/Misc/Tooltip";
 import { Divider } from "src/components/Sections";
@@ -33,7 +33,10 @@ export const MetricPane = ({}) => {
         )}
       </span>
     ),
-    Status: StatusTag({ statusCode: logItem?.status_code }),
+    Status: StatusTag({
+      statusCode: logItem?.status_code,
+      cached: (logItem?.cached_responses.length || 0) > 0 || true,
+    }),
     "API key": (
       <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
         {logItem?.api_key || "N/A"}
@@ -52,13 +55,8 @@ export const MetricPane = ({}) => {
       ),
 
     Cached:
-      logItem?.cached_responses?.length || 0 > 0 ? (
-        <Tag
-          text={"Cached"}
-          backgroundColor="bg-primary/10"
-          textColor="text-primary"
-          border=""
-        />
+      (logItem?.cached_responses?.length || 0) > 0 || true ? (
+        <CheckAll />
       ) : (
         <span className="text-sm-regular text-gray-4">{"No"}</span>
       ),
@@ -110,11 +108,29 @@ export const MetricPane = ({}) => {
           : (logItem?.time_to_first_token?.toFixed(2) || "-") + "s"}
       </span>
     ),
-    Latency: (
+    TPOT: (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.failed ? "-" : (logItem?.latency.toFixed(3) || "-") + "s"}
+        {logItem?.failed ||
+        (logItem?.time_to_first_token &&
+          logItem?.latency &&
+          logItem?.time_to_first_token < 0)
+          ? "-"
+          : ((logItem?.latency! - logItem?.time_to_first_token!).toFixed(2) ||
+              "-") + "s"}
       </span>
     ),
+    "Generation time": (
+      <span className="text-sm-regular text-gray-4">
+        {logItem?.failed || (logItem?.latency && logItem?.latency < 0)
+          ? "-"
+          : (logItem?.latency?.toFixed(2) || "-") + "s"}
+      </span>
+    ),
+    // Latency: (
+    //   <span className="text-sm-regular text-gray-4">
+    //     {logItem?.failed ? "-" : (logItem?.latency.toFixed(3) || "-") + "s"}
+    //   </span>
+    // ),
     Speed: (
       <span className="text-sm-regular text-gray-4">
         {!logItem?.token_per_second || logItem?.token_per_second < 0
@@ -204,6 +220,63 @@ export const MetricPane = ({}) => {
                       <>
                         <span className="text-gray-4 caption">
                           Time to first generated token
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "TPOT" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          Average time to generate an output token
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "Generation time" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          TTFT + TPOT * (# output tokens)
+                        </span>
+                      </>
+                    }
+                  >
+                    <div>
+                      <Info />
+                    </div>
+                  </Tooltip>
+                )}
+                {key === "Speed" && (
+                  <Tooltip
+                    side="right"
+                    sideOffset={8}
+                    delayDuration={1}
+                    skipDelayDuration={1}
+                    content={
+                      <>
+                        <span className="text-gray-4 caption">
+                          # output tokens per second
                         </span>
                       </>
                     }

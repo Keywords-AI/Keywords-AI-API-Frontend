@@ -117,8 +117,6 @@ export function FilterActions({ type }: { type: string }) {
                 "selection",
             })
           );
-
-          
         } else {
           dispatch(
             addFilter({
@@ -268,7 +266,10 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
   const [operator, setOperator] = useState(filterOption?.operator_choices?.[0]);
   return (
     <Modal
-      title={`Filter by ${filterOption.display_name}`}
+      title={`Filter by ${
+        filterOption.display_name.charAt(0).toLowerCase() +
+        filterOption.display_name.slice(1)
+      }`}
       open={open}
       setOpen={(prev) => {
         if (prev === false) {
@@ -289,7 +290,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
               <Button
                 variant="r4-gray-2"
                 text={operator.name}
-                className="outline-none"
+                className="outline-none w-[150px]"
               />
             )}
             align="start"
@@ -304,6 +305,7 @@ export const InputModal = ({ filterOption, defaultOperator }) => {
           />
           <TextInput
             placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
+            width="w-full"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSubmit(onSubmit)();

@@ -77,13 +77,9 @@ function DashboardNotConnected({
   const display_type = new URLSearchParams(location.search).get("type");
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
-  useEffect(
-    () => {
-      getDashboardData();
-    },
-    [performance_param, breakdown_type],
-    shallowEqual
-  );
+  useEffect(() => {
+    getDashboardData();
+  }, [performance_param, breakdown_type, display_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -256,6 +252,7 @@ function DashboardNotConnected({
             <DotsButton
               icon={isPanel ? SideBarActive : SideBar}
               onClick={() => handleOpenPanel()}
+              active={isPanel}
             />
           </div>
         </div>
