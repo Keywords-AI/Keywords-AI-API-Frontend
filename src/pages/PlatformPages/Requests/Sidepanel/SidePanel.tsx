@@ -203,7 +203,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
           {!logItem?.failed &&
             logItem?.prompt_messages &&
-            logItem?.prompt_messages?.length > 0 && (
+            logItem?.prompt_messages?.length > 0 &&
+            logItem.completion_message && (
               <Tooltip
                 side="bottom"
                 sideOffset={8}

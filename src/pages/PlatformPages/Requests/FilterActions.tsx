@@ -206,7 +206,12 @@ export function FilterActions({ type }: { type: string }) {
               </>
             }
           >
-            <Button variant="small-dashed" icon={Filter} text="Filter" />
+            <Button
+              variant="small-dashed"
+              icon={Filter}
+              text="Filter"
+              active={start}
+            />
           </Tooltip>
         </div>
       );
