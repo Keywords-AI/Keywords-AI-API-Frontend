@@ -175,6 +175,10 @@ export default function DashboardFilter() {
               text={timeValueToName[currentTimeRange]}
               variant="small"
               icon={Down}
+              onClick={() => {
+                setShowDropdown((prev) => !prev);
+              }}
+              active={showDropdown}
               iconPosition="right"
             />
           </Tooltip>
@@ -188,6 +192,7 @@ export default function DashboardFilter() {
         optionsWidth="w-[120px]"
         useShortCut
         open={showDropdown}
+        setOpen={setShowDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
@@ -216,6 +221,7 @@ export default function DashboardFilter() {
                 variant="small"
                 text="Display"
                 icon={Display}
+                active={showPopover}
                 secIcon={Down}
                 secIconPosition="right"
                 onClick={() => {
@@ -271,7 +277,6 @@ export default function DashboardFilter() {
                   } else {
                     dispatch(setDisplayType("total", setQueryParams, navigate));
                   }
-
                 }}
                 value={currentMetric}
                 choices={[

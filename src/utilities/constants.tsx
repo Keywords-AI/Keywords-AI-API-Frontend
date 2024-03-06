@@ -685,11 +685,39 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
   },
+  // {
+  //   name: "Warnings",
+  //   retrievalKey: "warnings",
+  //   renderFunction: (warnings: any) => {
+  //     if (warnings?.length > 0 && warnings != "{}") {
+  //       return (
+  //         <Tag
+  //           icon={<Warning fill="fill-orange" size="sm" />}
+  //           backgroundColor="bg-orange/10 h-[24px]"
+  //           textColor="text-orange "
+  //           border=""
+  //         />
+  //       );
+  //     }
+  //   },
+  // },
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ cached, errorCode }) => {
-      return <StatusTag statusCode={errorCode} cached={cached} />;
+    renderFunction: ({ cached, errorCode, warnings }) => {
+      return (
+        <div className="flex gap-xxxs">
+          {warnings?.length > 0 && warnings != "{}" && (
+            <Tag
+              icon={<Warning fill="fill-orange" size="sm" />}
+              backgroundColor="bg-orange/10 h-[24px]"
+              textColor="text-orange "
+              border=""
+            />
+          )}
+          <StatusTag statusCode={errorCode} cached={cached} />
+        </div>
+      );
     },
   },
   // {
@@ -715,22 +743,6 @@ export const requestLogTagColumns: LogItemTag[] = [
       />
     ),
   },
-  {
-    name: "Warnings",
-    retrievalKey: "warnings",
-    renderFunction: (warnings: any) => {
-      if (warnings?.length > 0 && warnings != "{}") {
-        return (
-          <Tag
-            icon={<Warning fill="fill-orange" size="sm" />}
-            backgroundColor="bg-orange/10 h-[24px]"
-            textColor="text-orange "
-            border=""
-          />
-        );
-      }
-    },
-  },
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [
@@ -744,7 +756,6 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "model",
   "status",
   "cachedResponse",
-  "warnings",
 ];
 export const userTableColumns = [
   {

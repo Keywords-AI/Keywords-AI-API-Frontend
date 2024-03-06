@@ -56,7 +56,7 @@ export const MessageBox = forwardRef(
       <textarea
         ref={textAreaRef}
         onBlur={onBlur}
-        placeholder="Enter a message..."
+        placeholder="Enter a user message here"
         onChange={(e) => onChange(e.target.value)}
         rows={1}
         onKeyDown={(e) => onKeyDown && onKeyDown(e)}

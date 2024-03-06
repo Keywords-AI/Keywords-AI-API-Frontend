@@ -83,7 +83,7 @@ export const LogPane = ({}) => {
           if (!message.content) {
             return null;
           }
-
+          if (message.role === "system") return null;
           return (
             <div
               key={index}
