@@ -168,19 +168,35 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <ExportPopOver />
 
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            <DotsButton
-              icon={sidePanelOpen ? SideBarActive : SideBar}
-              onClick={() => {
-                if (totalCount === 0) return;
-                if (!selectedRequest) {
-                  setSelectedRequest(requestLogs?.[0]?.id);
-                }
-                if (sidePanelOpen) {
-                  setSelectedRequest(-1);
-                }
-                setSidePanelOpen(!sidePanelOpen);
-              }}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="center"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={">"} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={sidePanelOpen ? SideBarActive : SideBar}
+                  active={sidePanelOpen}
+                  onClick={() => {
+                    if (totalCount === 0) return;
+                    if (!selectedRequest) {
+                      setSelectedRequest(requestLogs?.[0]?.id);
+                    }
+                    if (sidePanelOpen) {
+                      setSelectedRequest(-1);
+                    }
+                    setSidePanelOpen(!sidePanelOpen);
+                  }}
+                />
+              </div>
+            </Tooltip>
           </div>
         </div>
         <div

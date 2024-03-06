@@ -477,6 +477,7 @@ export const getDashboardData = (postData) => {
             true,
             params.get("summary_type"),
             params.get("metric"),
+            params.get("type"),
             getState().dashboard.timeFrame
           );
           dispatch(setGroupByData(breakDowndata));
@@ -486,6 +487,7 @@ export const getDashboardData = (postData) => {
             false,
             params.get("summary_type"),
             params.get("metric"),
+            params.get("type"),
             getState().dashboard.timeFrame
           );
           dispatch(setGroupByData(breakDowndata));
@@ -750,15 +752,26 @@ export const fillMissingDate = (data, dateGroup, timeFrame) => {
   return newDataArray;
 };
 
-const processBreakDownData = (data, isModel, timeRange, metric, timeFrame) => {
+const processBreakDownData = (
+  data,
+  isModel,
+  timeRange,
+  metric,
+  type,
+  timeFrame
+) => {
   data = data.map((item) => {
     return { ...item, model: item.model || "Unknown model" };
   });
   const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
-  let returnData = [];
+  if (type === "average") {
+    metric = metric.replace("total", "average");
+  }
+  console.log("groupByDate", groupByDate, metric);
+  let returnData: any[] = [];
   Object.keys(groupByDate).forEach((key) => {
     const date_group = key;
-    let obj = {};
+    let obj: any = {};
     obj.date_group = date_group;
 
     groupByDate[key].forEach((item) => {

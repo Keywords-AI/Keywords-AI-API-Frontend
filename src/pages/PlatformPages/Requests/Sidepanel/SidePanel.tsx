@@ -132,7 +132,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
   );
   useHotkeys(
-    "M",
+    "left",
     () => {
       setDisplayLog(false);
     },
@@ -141,7 +141,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     }
   );
   useHotkeys(
-    "L",
+    "right",
     () => {
       if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
         return;
@@ -188,7 +188,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             content={
               <>
                 <p className="caption text-gray-4">Show metrics</p>
-                <AlphanumericKey value={"M"} />
+                <AlphanumericKey value={"←"} />
               </>
             }
           >
@@ -212,7 +212,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                 content={
                   <>
                     <p className="caption text-gray-4">Show log</p>
-                    <AlphanumericKey value={"L"} />
+                    <AlphanumericKey value={"→"} />
                   </>
                 }
               >
