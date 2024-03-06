@@ -33,6 +33,7 @@ export const SessionPane = forwardRef(
       watch,
       reset,
       register,
+      setValue,
       formState: { isDirty, dirtyFields },
     } = useForm();
     const dispatch = useTypedDispatch();
@@ -73,8 +74,15 @@ export const SessionPane = forwardRef(
     useEffect(() => {
       if (isReset || isPlaygroundReseted) {
         console.log("resetting");
-        reset();
         dispatch(defaultReset());
+        reset();
+        setValue("modela", ModelOptions.models[0]);
+        setValue("modelb", ModelOptions.models[1]);
+        setValue("temperature", ModelOptions.temperature);
+        setValue("maximumLength", ModelOptions.maximumLength);
+        setValue("topP", ModelOptions.topP);
+        setValue("frequencyPenalty", ModelOptions.frequencyPenalty);
+        setValue("presencePenalty", ModelOptions.presencePenalty);
       }
     }, [isReset, isPlaygroundReseted]);
 

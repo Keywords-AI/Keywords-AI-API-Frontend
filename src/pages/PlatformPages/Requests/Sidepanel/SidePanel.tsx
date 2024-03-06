@@ -54,40 +54,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const { enableScope, disableScope } = useHotkeysContext();
   const navigate = useNavigate();
 
-  const [completeInteraction, setCompleteInteraction] = useState<any[]>([]);
-  useEffect(() => {
-    setCompleteInteraction(
-      logItem?.prompt_messages
-        ? [
-            ...logItem.prompt_messages.concat([
-              { ...logItem?.completion_message },
-            ]),
-          ]
-        : []
-    );
-  }, [logItem]);
-  const systemPrompt = completeInteraction.find(
-    (item) => item.role === "[system]"
-  );
-  if (systemPrompt) {
-    setCompleteInteraction(
-      completeInteraction.filter((item) => item !== systemPrompt)
-    );
-  }
-  const searchContent = (keyword) => {
-    if (keyword === "") {
-      setCompleteInteraction(
-        logItem?.prompt_messages
-          ? [...logItem.prompt_messages.concat([logItem?.completion_message])]
-          : []
-      );
-      return;
-    }
-    const filteredInteraction = completeInteraction.filter((item) =>
-      item.content.toLowerCase().includes(keyword.toLowerCase())
-    );
-    setCompleteInteraction(filteredInteraction);
-  };
   useEffect(() => {
     enableScope("request_sidepanel");
     return () => {
@@ -138,6 +104,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     },
     {
       scopes: "request_sidepanel",
+      preventDefault: true,
     }
   );
   useHotkeys(
@@ -150,6 +117,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     },
     {
       scopes: "request_sidepanel",
+      preventDefault: true,
     }
   );
   useEffect(() => {
@@ -159,13 +127,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         block: "end",
       });
     }
-    // } else {
-    //   if (metricRef && metricRef.current) {
-    //     console.log("metricRef.current");
-    //     (metricRef.current as HTMLElement)?.scrollIntoView({
-    //       behavior: "smooth",
-    //     });
-    //   }
   }, [logItem]);
   return (
     <div
