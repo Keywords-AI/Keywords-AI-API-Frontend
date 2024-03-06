@@ -22,6 +22,7 @@ export type InputProps = {
 
 export interface SelectInputProps {
   open?: boolean;
+  setOpen?: (open: any) => void;
   title?: string;
   headLess?: boolean;
   height?: string;

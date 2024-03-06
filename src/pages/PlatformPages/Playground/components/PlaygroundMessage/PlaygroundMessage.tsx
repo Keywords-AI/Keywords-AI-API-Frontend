@@ -208,7 +208,7 @@ export function PlaygroundMessage({
                 title={
                   <div className="flex items-center gap-xxs">
                     <div className="text-sm-md text-gray-4">
-                      Response {index == 0 ? "A" : "B"}
+                      Assistant {index == 0 ? "A" : "B"}
                     </div>
                     <ModelTag model={response.model} />
                   </div>
@@ -399,7 +399,7 @@ export function StreamingMessage() {
                     title={
                       <div className="flex items-center gap-xxs">
                         <div className="text-sm-md text-gray-4">
-                          Response {index == 0 ? "A" : "B"}
+                          Assistant {index == 0 ? "A" : "B"}
                         </div>
                         {streamingState.model && (
                           <ModelTag model={streamingState.model} />

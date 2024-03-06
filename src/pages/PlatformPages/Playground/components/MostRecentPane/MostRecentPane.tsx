@@ -77,18 +77,18 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
           </span>
         ),
       },
-      {
-        title: (
-          <span className="text-sm-md text-gray-5">{"Prompt tokens"}</span>
-        ),
-        value: (
-          <span className="text-sm-regular text-gray-4">
-            {(
-              breakDownData.prompt_tokens + breakDownData.completion_tokens
-            ).toLocaleString()}
-          </span>
-        ),
-      },
+      // {
+      //   title: (
+      //     <span className="text-sm-md text-gray-5">{"All tokens"}</span>
+      //   ),
+      //   value: (
+      //     <span className="text-sm-regular text-gray-4">
+      //       {(
+      //         breakDownData.prompt_tokens + breakDownData.completion_tokens
+      //       ).toLocaleString()}
+      //     </span>
+      //   ),
+      // },
     ];
     const modealA = [
       {

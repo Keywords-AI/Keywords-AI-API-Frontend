@@ -253,9 +253,9 @@ export const processRequestLogs = (
       status: {
         cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
+        warnings: log.warnings,
       },
       sentimentScore: log.sentiment_score,
-      warnings: log.warnings,
     };
   });
 };

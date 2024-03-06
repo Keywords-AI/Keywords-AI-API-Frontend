@@ -72,6 +72,7 @@ export const SessionPane = forwardRef(
 
     useEffect(() => {
       if (isReset || isPlaygroundReseted) {
+        console.log("resetting");
         reset();
         dispatch(defaultReset());
       }
@@ -240,7 +241,7 @@ export const SessionPane = forwardRef(
               <SliderInput
                 label="Frequency penalty"
                 value={value}
-                min={0}
+                min={-2}
                 max={2}
                 disabled={isStreaming}
                 step={0.01}
@@ -258,7 +259,7 @@ export const SessionPane = forwardRef(
                 label="Presence penalty"
                 value={value}
                 disabled={isStreaming}
-                min={0}
+                min={-2}
                 max={2}
                 step={0.01}
                 onValueChange={onChange}

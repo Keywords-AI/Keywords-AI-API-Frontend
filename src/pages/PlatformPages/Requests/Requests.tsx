@@ -110,6 +110,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
       scopes: "clear_filters",
     }
   );
+  useHotkeys(
+    ".",
+    () => {
+      if (loading) return;
+      setSidePanelOpen(!sidePanelOpen);
+    },
+    {}
+  );
   if (firstTime) return <WelcomeState />;
   else
     return (
@@ -176,7 +184,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
               content={
                 <>
                   <p className="caption text-gray-4">Open right sidebar</p>
-                  <AlphanumericKey value={">"} />
+                  <AlphanumericKey value={"."} />
                 </>
               }
             >

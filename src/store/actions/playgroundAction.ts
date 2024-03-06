@@ -273,13 +273,13 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                 );
 
                 if (complete || singleChanel) {
-                  dispatch(
-                    appendMessage({
-                      id: uuidv4(),
-                      role: "user",
-                      user_content: "",
-                    })
-                  );
+                  // dispatch(
+                  //   appendMessage({
+                  //     id: uuidv4(),
+                  //     role: "user",
+                  //     user_content: "",
+                  //   })
+                  // );
                   // dispatch(resetSingleStreamingText(channel));
                 }
               } else if (channel == 1) {
@@ -297,13 +297,13 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                 );
 
                 if (complete || singleChanel) {
-                  dispatch(
-                    appendMessage({
-                      id: uuidv4(),
-                      role: "user",
-                      user_content: "",
-                    })
-                  );
+                  // dispatch(
+                  //   appendMessage({
+                  //     id: uuidv4(),
+                  //     role: "user",
+                  //     user_content: "",
+                  //   })
+                  // );
                 }
                 // dispatch(resetSingleStreamingText(channel));
               }
@@ -364,9 +364,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
 
 export const regeneratePlaygroundResponse = (channel) => {
   return async (dispatch, getState) => {
-    // remove user last message
-    getState().playground.messages.slice(-1)[0].role == "user" &&
-      dispatch(removeLastMessage());
+    // // remove user last message
+    // getState().playground.messages.slice(-1)[0].role == "user" &&
+    //   dispatch(removeLastMessage());
 
     const lastAssistantMessage = {
       ...getState().playground.messages.slice(-1)[0],
@@ -385,7 +385,7 @@ export const regeneratePlaygroundResponse = (channel) => {
     dispatch(removeLastMessage());
     await dispatch(streamPlaygroundResponse(channel));
     // remove last user message
-    dispatch(removeLastMessage());
+    // dispatch(removeLastMessage());
 
     [0, 1].forEach((_, c) => {
       if (c != channel) {
@@ -420,13 +420,13 @@ export const regeneratePlaygroundResponse = (channel) => {
             })
           );
         }
-        dispatch(
-          appendMessage({
-            id: uuidv4(),
-            role: "user",
-            user_content: "",
-          })
-        );
+        // dispatch(
+        //   appendMessage({
+        //     id: uuidv4(),
+        //     role: "user",
+        //     user_content: "",
+        //   })
+        // );
       }
     });
   };

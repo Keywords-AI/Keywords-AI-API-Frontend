@@ -67,6 +67,29 @@ export type ModelType = {
 };
 export const models: ModelType[] = [
   {
+    name: "GPT-4",
+    value: "gpt-4",
+    brand: "openai",
+    icon: OpenAI,
+    speed: 14,
+    max_context_window: 8192,
+    prompt_cost: "$0.0315",
+    completion_cost: "$0.063",
+    moderation: "Filtered",
+    model_size: 170,
+    mmlu_score: 86.5,
+    mt_bench_score: 8.99,
+    big_bench_score: 40,
+    input_cost: 30,
+    output_cost: 60,
+    rate_limit: 10000,
+    multilingual: 1,
+    streaming_support: 1,
+    function_call: 1,
+    weight: 1,
+  },
+  
+  {
     name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
     brand: "openai",
@@ -111,28 +134,6 @@ export const models: ModelType[] = [
     weight: 1,
   },
 
-  {
-    name: "GPT-4",
-    value: "gpt-4",
-    brand: "openai",
-    icon: OpenAI,
-    speed: 14,
-    max_context_window: 8192,
-    prompt_cost: "$0.0315",
-    completion_cost: "$0.063",
-    moderation: "Filtered",
-    model_size: 170,
-    mmlu_score: 86.5,
-    mt_bench_score: 8.99,
-    big_bench_score: 40,
-    input_cost: 30,
-    output_cost: 60,
-    rate_limit: 10000,
-    multilingual: 1,
-    streaming_support: 1,
-    function_call: 1,
-    weight: 1,
-  },
   {
     name: "GPT-4-1106-preview",
     value: "gpt-4-1106-preview",
@@ -685,11 +686,39 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
   },
+  // {
+  //   name: "Warnings",
+  //   retrievalKey: "warnings",
+  //   renderFunction: (warnings: any) => {
+  //     if (warnings?.length > 0 && warnings != "{}") {
+  //       return (
+  //         <Tag
+  //           icon={<Warning fill="fill-orange" size="sm" />}
+  //           backgroundColor="bg-orange/10 h-[24px]"
+  //           textColor="text-orange "
+  //           border=""
+  //         />
+  //       );
+  //     }
+  //   },
+  // },
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ cached, errorCode }) => {
-      return <StatusTag statusCode={errorCode} cached={cached} />;
+    renderFunction: ({ cached, errorCode, warnings }) => {
+      return (
+        <div className="flex gap-xxxs">
+          {warnings?.length > 0 && warnings != "{}" && (
+            <Tag
+              icon={<Warning fill="fill-orange" size="sm" />}
+              backgroundColor="bg-orange/10 h-[24px]"
+              textColor="text-orange "
+              border=""
+            />
+          )}
+          <StatusTag statusCode={errorCode} cached={cached} />
+        </div>
+      );
     },
   },
   // {
@@ -715,22 +744,6 @@ export const requestLogTagColumns: LogItemTag[] = [
       />
     ),
   },
-  {
-    name: "Warnings",
-    retrievalKey: "warnings",
-    renderFunction: (warnings: any) => {
-      if (warnings?.length > 0 && warnings != "{}") {
-        return (
-          <Tag
-            icon={<Warning fill="fill-orange" size="sm" />}
-            backgroundColor="bg-orange/10 h-[24px]"
-            textColor="text-orange "
-            border=""
-          />
-        );
-      }
-    },
-  },
 ];
 
 export const defaultRequestLogColumns: LogColumnKey[] = [
@@ -744,7 +757,6 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "model",
   "status",
   "cachedResponse",
-  "warnings",
 ];
 export const userTableColumns = [
   {

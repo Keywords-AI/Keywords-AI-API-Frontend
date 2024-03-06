@@ -35,7 +35,7 @@ export const MetricPane = ({}) => {
     ),
     Status: StatusTag({
       statusCode: logItem?.status_code,
-      cached: (logItem?.cached_responses.length || 0) > 0 || true,
+      cached: (logItem?.cached_responses.length || 0) > 0,
     }),
     "API key": (
       <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
@@ -55,7 +55,7 @@ export const MetricPane = ({}) => {
       ),
 
     Cached:
-      (logItem?.cached_responses?.length || 0) > 0 || true ? (
+      (logItem?.cached_responses?.length || 0) > 0 ? (
         <CheckAll />
       ) : (
         <span className="text-sm-regular text-gray-4">{"No"}</span>
@@ -111,19 +111,24 @@ export const MetricPane = ({}) => {
     TPOT: (
       <span className="text-sm-regular text-gray-4">
         {logItem?.failed ||
-        (logItem?.time_to_first_token &&
-          logItem?.latency &&
-          logItem?.time_to_first_token < 0)
+        !logItem?.token_per_second ||
+        (logItem?.token_per_second && logItem?.token_per_second < 0)
           ? "-"
-          : ((logItem?.latency! - logItem?.time_to_first_token!).toFixed(2) ||
-              "-") + "s"}
+          : ((1 / logItem?.token_per_second).toFixed(2) || "-") + "s"}
       </span>
     ),
     "Generation time": (
       <span className="text-sm-regular text-gray-4">
-        {logItem?.failed || (logItem?.latency && logItem?.latency < 0)
+        {logItem?.failed ||
+        !logItem?.time_to_first_token ||
+        !logItem?.token_per_second ||
+        logItem?.token_per_second < 0 ||
+        logItem?.time_to_first_token < 0
           ? "-"
-          : (logItem?.latency?.toFixed(2) || "-") + "s"}
+          : ((
+              logItem?.time_to_first_token +
+              1 / logItem?.token_per_second
+            ).toFixed(2) || "-") + "s"}
       </span>
     ),
     // Latency: (
