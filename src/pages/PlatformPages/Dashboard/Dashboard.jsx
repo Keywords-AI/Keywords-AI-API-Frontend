@@ -26,6 +26,7 @@ import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
+import { LoadingComponent } from "src/components/LoadingPage";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -200,9 +201,12 @@ function DashboardNotConnected({
   } else {
     filteredtypeChoices = typeChoices;
   }
-
-  // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-  if (firstTime !== undefined && firstTime) return <WelcomeState isDashboard />;
+  if (organization.loading) {
+    return <LoadingComponent />;
+  }
+  if (firstTime !== undefined && firstTime)
+    // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
+    return <WelcomeState isDashboard />;
   else
     return (
       <div className=" flex-col flex-1 self-stretch">

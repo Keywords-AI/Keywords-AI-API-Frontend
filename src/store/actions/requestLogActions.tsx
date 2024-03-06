@@ -19,7 +19,12 @@ import { updateUser } from "./userAction";
 import { SentimentTag, StatusTag } from "src/components/Misc";
 import { Parser } from "@json2csv/plainjs";
 import { v4 as uuidv4 } from "uuid";
-import { setMessages, setModelOptions } from "./playgroundAction";
+import {
+  setBreakDownData,
+  setMessages,
+  setModelOptions,
+  setPrompt,
+} from "./playgroundAction";
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -513,38 +518,43 @@ export const exportLogs = (format = ".csv") => {
 export const RestorePlaygroundStateFromLog = () => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const currentLog = getState().requestLogs.selectedRequest;
-    const prompt_messages = currentLog?.prompt_messages || [];
+    const prompt_messages =
+      currentLog?.prompt_messages.filter((item) => item.role !== "system") ||
+      [];
     const completion_message = currentLog?.completion_message;
     const systemPrompt = currentLog?.prompt_messages.find(
       (item) => item.role === "[system]" || item.role === "system"
     );
+    const length =
+      prompt_messages.length +
+      (completion_message && Object.keys(completion_message).length > 0
+        ? 1
+        : 0);
     const playGroundState = {
       systemPrompt: systemPrompt?.content || "",
       model: currentLog?.model || "",
-      messages: [
-        ...prompt_messages,
-        completion_message,
-        { id: uuidv4(), role: "user", user_content: "" },
-      ].map((item: any) => {
-        const isUser = item.role === "user";
+      messages: [...prompt_messages, completion_message].map(
+        (item: any, index) => {
+          const isUser = item.role === "user";
 
-        return {
-          id: uuidv4(),
-          role: item.role,
-          user_content: isUser ? item.content : null,
-          hiden: false,
-          responses: !isUser
-            ? [
-                {
-                  model: currentLog?.model,
-                  content: item.content,
-                  complete: true,
-                },
-                null,
-              ]
-            : null,
-        };
-      }),
+          return {
+            id: uuidv4(),
+            role: item.role,
+            user_content: isUser ? item.content : null,
+            hiden: false,
+            responses: !isUser
+              ? [
+                  {
+                    model: index == length - 1 ? currentLog?.model : "None",
+                    content: item.content,
+                    complete: true,
+                  },
+                  null,
+                ]
+              : null,
+          };
+        }
+      ),
       options: {
         maxLength: 4096,
         temperature: 2.0,
@@ -552,8 +562,17 @@ export const RestorePlaygroundStateFromLog = () => {
         frequencyPenalty: 2.0,
         presencePenalty: 2.0,
       },
+      breakDowData: {
+        prompt_tokens: currentLog?.prompt_tokens,
+        completion_tokens: currentLog?.completion_tokens,
+        total_tokens:
+          (currentLog?.prompt_tokens || 0) +
+          (currentLog?.completion_tokens || 0),
+        cost: currentLog?.cost,
+      },
     };
     dispatch(setMessages(playGroundState.messages));
+    dispatch(setPrompt(playGroundState.systemPrompt))
     dispatch(
       setModelOptions({
         ...playGroundState.options,
@@ -565,5 +584,12 @@ export const RestorePlaygroundStateFromLog = () => {
         presencePenalty: playGroundState.options.presencePenalty,
       })
     );
+    let breakdownData = { ...getState().playground.breakdownData };
+    breakdownData.prompt_tokens = playGroundState.breakDowData.prompt_tokens;
+    breakdownData.completion_tokens =
+      playGroundState.breakDowData.completion_tokens;
+    breakdownData.total_tokens = playGroundState.breakDowData.total_tokens;
+    breakdownData.cost = playGroundState.breakDowData.cost;
+    dispatch(setBreakDownData({ ...breakdownData }));
   };
 };

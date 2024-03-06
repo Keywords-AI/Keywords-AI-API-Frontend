@@ -35,6 +35,7 @@ export type LogItem = {
   status_code: number;
   warnings: string;
   token_per_second: number;
+  metadata: any;
 };
 
 export type DisplayLogItem = {
