@@ -59,91 +59,37 @@ const TopBar = () => {
   const handleReset = () => {
     dispatch(filterUsersLogDataAction(""));
   };
-  const sampleData = [
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-  ];
+
   const cardData = [
     {
       title: "Total users",
       number: aggregatedData.total_users.toLocaleString(),
-      chartData: sampleData,
+
       dataKey: "total",
     },
     {
       title: "Monthly active users",
       number: aggregatedData.monthly_active_users.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Daily active users",
       number: aggregatedData.daily_active_users.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
-    // {
-    //   title: "New users",
-    //   number: aggregatedData.new_users.toLocaleString(),
-    //   chartData: sampleData,
-    //   dataKey: "active",
-    // },
+    {
+      title: "New users",
+      number: aggregatedData.new_users.toLocaleString(),
+      dataKey: "active",
+    },
     {
       title: "Daily request per user",
       number: aggregatedData.daily_request_per_user.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Monthly cost per user",
       number: aggregatedData.monthly_cost_per_user.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
   ];
