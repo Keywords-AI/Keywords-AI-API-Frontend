@@ -27,7 +27,8 @@ export default function UsersPage({}: Props) {
     dispatch(getUsersLogData());
   }, []);
   const usersLogState = useTypedSelector((state) => state.usersPage);
-  const isEmpty = usersLogState.isEmpty;
+  const isEmpty =
+    (usersLogState.usersLogData?.length ?? 0) === 0 && !usersLogState.loading;
   return (
     <div
       className={cn(
