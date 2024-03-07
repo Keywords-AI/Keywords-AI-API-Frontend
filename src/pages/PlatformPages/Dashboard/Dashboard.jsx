@@ -34,6 +34,7 @@ import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 import { LoadingComponent } from "src/components/LoadingPage";
 import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -177,7 +178,9 @@ function DashboardNotConnected({
       },
     },
   ];
-
+  useHotkeys(".", () => {
+    handleOpenPanel();
+  });
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -267,8 +270,8 @@ function DashboardNotConnected({
               delayDuration={1}
               content={
                 <>
-                  <p className="caption text-gray-4">Timeline</p>
-                  <AlphanumericKey value={"T"} />
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={"."} />
                 </>
               }
             >
