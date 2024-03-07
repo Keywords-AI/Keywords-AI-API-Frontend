@@ -225,18 +225,33 @@ const RightPanel = () => {
   );
   const streamingStates = useTypedSelector((state) => state.streamingText);
   const [isReset, setIsReset] = useState(false);
+
   const tabGroups = [
     {
       value: "Session",
       buttonVariant: "text" as variantType,
       content: <SessionPane isReset={isReset} />,
+      // tooltip: (
+      //   <>
+      //     <p className="caption text-gray-4">Switch</p>
+      //     <AlphanumericKey value={"←"} />
+      //   </>
+      // ),
     },
-    timestamp && {
-      value: "Recent",
-      buttonVariant: "text" as variantType,
-      content: <MostRecentPane />,
-    },
-  ];
+    timestamp
+      ? {
+          value: "Recent",
+          buttonVariant: "text" as variantType,
+          content: <MostRecentPane />,
+          // tooltip: (
+          //   <>
+          //     <p className="caption text-gray-4">Enter to submit</p>
+          //     <AlphanumericKey value={"→"} />
+          //   </>
+          // ),
+        }
+      : null,
+  ].filter(Boolean);
   const { enableScope, disableScope } = useHotkeysContext();
   useEffect(() => {
     enableScope("rightPanel");
@@ -249,7 +264,11 @@ const RightPanel = () => {
     "right",
     () => {
       if (isStreaming) return;
-      // dispatch(toggleRightPanel());
+      const currentIndex = tabGroups.findIndex((p) => p!.value === tab);
+      const nextIndex =
+        (currentIndex + 1 + tabGroups.length) % tabGroups.length;
+      const nextTab = tabGroups[nextIndex];
+      setTab(nextTab!.value);
     },
     { scopes: "rightPanel", preventDefault: true }
   );
@@ -258,10 +277,18 @@ const RightPanel = () => {
     () => {
       if (isStreaming) return;
       // dispatch(toggleRightPanel());
+      const currentIndex = tabGroups.findIndex((p) => p!.value === tab);
+      const nextIndex =
+        (currentIndex - 1 + tabGroups.length) % tabGroups.length;
+      const nextTab = tabGroups[nextIndex];
+      setTab(nextTab!.value);
     },
     { scopes: "rightPanel", preventDefault: true }
   );
-  const [tab, setTab] = useState(tabGroups[0].value);
+  useEffect(() => {
+    if (!timestamp && tab === "Recent") setTab("Session");
+  }, [timestamp]);
+  const [tab, setTab] = useState(tabGroups[0]!.value);
   const dispatch = useTypedDispatch();
 
   return (
