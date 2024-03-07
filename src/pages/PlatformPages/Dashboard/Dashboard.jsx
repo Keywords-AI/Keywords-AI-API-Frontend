@@ -27,6 +27,7 @@ import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 import { LoadingComponent } from "src/components/LoadingPage";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -206,7 +207,14 @@ function DashboardNotConnected({
   }
   if (firstTime !== undefined && firstTime)
     // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-    return <WelcomeState isDashboard />;
+    return (
+      <WelcomeCard
+        pageTitle="Dashboard"
+        title="Send your first API call"
+        content="to view your dashboard.
+    Visualize latency, cost, and usage in production."
+      />
+    );
   else
     return (
       <div className=" flex-col flex-1 self-stretch">
