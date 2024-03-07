@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MetricCard from "src/components/Cards/MetricCard";
-import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
+import {
+  AlphanumericKey,
+  Display,
+  Down,
+  SideBar,
+  SideBarActive,
+} from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart, SentimentChart } from "src/components/Display";
@@ -28,6 +34,8 @@ import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 import { LoadingComponent } from "src/components/LoadingPage";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -171,7 +179,9 @@ function DashboardNotConnected({
       },
     },
   ];
-
+  useHotkeys(".", () => {
+    handleOpenPanel();
+  });
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -261,11 +271,26 @@ function DashboardNotConnected({
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            <DotsButton
-              icon={isPanel ? SideBarActive : SideBar}
-              onClick={() => handleOpenPanel()}
-              active={isPanel}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="center"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={"."} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={isPanel ? SideBarActive : SideBar}
+                  onClick={() => handleOpenPanel()}
+                  active={isPanel}
+                />
+              </div>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-row flex-1 self-stretch ">

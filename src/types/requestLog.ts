@@ -36,6 +36,7 @@ export type LogItem = {
   warnings: string;
   token_per_second: number;
   metadata: any;
+  organization: string;
 };
 
 export type DisplayLogItem = {
@@ -57,6 +58,7 @@ export type DisplayLogItem = {
     failed: boolean;
     errorCode: number;
   };
+  organization: string;
   sentimentAnalysis: any;
   cachedResponse: number;
   warnings: string;

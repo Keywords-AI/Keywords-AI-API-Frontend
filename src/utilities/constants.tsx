@@ -88,7 +88,7 @@ export const models: ModelType[] = [
     function_call: 1,
     weight: 1,
   },
-  
+
   {
     name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
@@ -685,6 +685,15 @@ export const requestLogTagColumns: LogItemTag[] = [
     name: "Model",
     retrievalKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
+  },
+  {
+    name: "Organization",
+    retrievalKey: "organization",
+    renderFunction: (org: string) => (
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
+        {org}
+      </span>
+    ),
   },
   // {
   //   name: "Warnings",
