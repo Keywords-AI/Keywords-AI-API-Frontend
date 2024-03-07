@@ -1,5 +1,6 @@
 export type welcomeCard = {
-    pageTitle: string;
-    title: string;
-    content: string;
-    };
+  pageTitle: string;
+  title: string;
+  content: any;
+  figure: any;
+};

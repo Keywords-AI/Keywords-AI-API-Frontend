@@ -28,6 +28,7 @@ import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 import { LoadingComponent } from "src/components/LoadingPage";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { DashboardPreview } from "src/components/Display/Figures";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -211,8 +212,14 @@ function DashboardNotConnected({
       <WelcomeCard
         pageTitle="Dashboard"
         title="Send your first API call"
-        content="to view your dashboard.
-    Visualize latency, cost, and usage in production."
+        content={
+          <>
+            to view your dashboard.
+            <br />
+            Visualize latency, cost, and usage in production.
+          </>
+        }
+        figure={<DashboardPreview />}
       />
     );
   else
