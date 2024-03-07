@@ -7,7 +7,14 @@ import {
   TopBar,
 } from "./components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
-import { Add, Copy, Divider, EnterKey, Pencil } from "src/components";
+import {
+  Add,
+  AlphanumericKey,
+  Copy,
+  Divider,
+  EnterKey,
+  Pencil,
+} from "src/components";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +34,7 @@ import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
 import { AutoScrollContainer } from "react-auto-scroll-container";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
+import Tooltip from "src/components/Misc/Tooltip";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -141,7 +149,7 @@ const MessageLists = () => {
       }}
     >
       <AutoScrollContainer
-        percentageThreshold={10}
+        percentageThreshold={5}
         behavior="instant"
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
@@ -183,14 +191,29 @@ const MessageLists = () => {
         />
       </AutoScrollContainer>
       <div className="flex items-start gap-xxs">
-        <Button
-          variant="r4-primary"
-          text="Submit"
-          onClick={() => {
-            if (isStreaming) return;
-            dispatch(streamPlaygroundResponse());
-          }}
-        />
+        <Tooltip
+          side="top"
+          sideOffset={8}
+          align="center"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Enter to submit</p>
+              <AlphanumericKey value={"↵"} />
+            </>
+          }
+        >
+          <div>
+            <Button
+              variant="r4-primary"
+              text="Submit"
+              onClick={() => {
+                if (isStreaming) return;
+                dispatch(streamPlaygroundResponse());
+              }}
+            />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );
@@ -214,6 +237,30 @@ const RightPanel = () => {
       content: <MostRecentPane />,
     },
   ];
+  const { enableScope, disableScope } = useHotkeysContext();
+  useEffect(() => {
+    enableScope("rightPanel");
+    return () => {
+      disableScope("rightPanel");
+    };
+  }, []);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
+  useHotkeys(
+    "right",
+    () => {
+      if (isStreaming) return;
+      // dispatch(toggleRightPanel());
+    },
+    { scopes: "rightPanel", preventDefault: true }
+  );
+  useHotkeys(
+    "left",
+    () => {
+      if (isStreaming) return;
+      // dispatch(toggleRightPanel());
+    },
+    { scopes: "rightPanel", preventDefault: true }
+  );
   const [tab, setTab] = useState(tabGroups[0].value);
   const dispatch = useTypedDispatch();
 
