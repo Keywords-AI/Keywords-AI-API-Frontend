@@ -1,4 +1,4 @@
-import { LogItem, RootState } from "src/types";
+import { LogItem, RootState, variantType } from "src/types";
 import {
   Button,
   CopyButton,
@@ -32,19 +32,15 @@ import LogMessage from "./LogMessage";
 import { LogPane } from "./LogPane";
 import { MetricPane } from "./MetricPane";
 import { set } from "react-hook-form";
+import { Tabs } from "src/components/Sections/Tabs/Tabs";
+import MetadataPane from "./MetadataPane";
 
 interface SidePanelProps {
   open: boolean;
 }
-const getMessageType = (role: string) => {
-  if (role === "[system]") {
-    return "System";
-  } else if (role === "user") {
-    return "User";
-  }
-  return "Response";
-};
+
 export const SidePanel = ({ open }: SidePanelProps) => {
+  const logRef = useRef(null);
   const logItem = useTypedSelector(
     (state) =>
       state.requestLogs.logs.find(
@@ -53,6 +49,65 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   );
   const { enableScope, disableScope } = useHotkeysContext();
   const navigate = useNavigate();
+  const pages = [
+    {
+      value: "Metric",
+      buttonVariant: "text" as variantType,
+      content: (
+        <div
+          className="flex-col items-start self-stretch "
+          aria-label="frame 1969"
+        >
+          <div ref={logRef}></div>
+          <MetricPane />
+        </div>
+      ),
+      tooltip: (
+        <>
+          <p className="caption text-gray-4">View metrics</p>
+          <AlphanumericKey value={"←"} />
+        </>
+      ),
+    },
+    !logItem?.failed && logItem?.prompt_messages?.length !== 0
+      ? {
+          value: "Log",
+          buttonVariant: "text" as variantType,
+          content: (
+            <div
+              className="flex-col items-start self-stretch "
+              aria-label="frame 1969"
+            >
+              <div ref={logRef}></div>
+              <LogPane />
+            </div>
+          ),
+          tooltip: (
+            <>
+              <p className="caption text-gray-4">View log</p>
+              <AlphanumericKey value={"→"} />
+            </>
+          ),
+        }
+      : null,
+    logItem?.metadata && Object.keys(logItem?.metadata).length > 0
+      ? {
+          value: "Metadata",
+          buttonVariant: "text" as variantType,
+          content: (
+            <div
+              className="flex-col items-start self-stretch "
+              aria-label="frame 1969"
+            >
+              <div ref={logRef}></div>
+              <MetadataPane />
+            </div>
+          ),
+        }
+      : null,
+  ].filter(Boolean);
+
+  const [tab, setTab] = useState(pages[0]!.value);
 
   useEffect(() => {
     enableScope("request_sidepanel");
@@ -61,25 +116,28 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     };
   }, []);
   const metricRef = useRef(null);
-  const logRef = useRef(null);
+
   const dispatch = useTypedDispatch();
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
-  const [displayLog, setDisplayLog] = useState(false);
   useEffect(() => {
     if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
-      setDisplayLog(false);
+      if (tab === "Log") setTab("Metric");
     }
-    if (displayLog) enableScope("request_sidepanel_log");
-    if (!displayLog) disableScope("request_sidepanel_log");
+
+    if (!logItem?.metadata || Object.keys(logItem?.metadata).length === 0) {
+      if (tab === "Metadata") setTab("Metric");
+    }
+    if (tab === "Log") enableScope("request_sidepanel_log");
+    if (tab !== "Log") disableScope("request_sidepanel_log");
     return () => {
       disableScope("request_sidepanel_log");
     };
-  }, [displayLog, logItem]);
+  }, [tab, logItem]);
   useHotkeys(
     "V",
     () => {
-      if (displayLog) dispatch(setJsonMode(!jsonMode));
+      if (tab === "Log") dispatch(setJsonMode(!jsonMode));
     },
     {
       scopes: "request_sidepanel_log",
@@ -88,7 +146,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useHotkeys(
     "P",
     () => {
-      if (displayLog) {
+      if (tab === "Log") {
         dispatch(RestorePlaygroundStateFromLog());
         navigate("/platform/playground");
       }
@@ -100,7 +158,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useHotkeys(
     "left",
     () => {
-      setDisplayLog(false);
+      const currentIndex = pages.findIndex((p) => p!.value === tab);
+      const nextIndex = (currentIndex - 1 + pages.length) % pages.length;
+      const nextTab = pages[nextIndex];
+      setTab(nextTab!.value);
     },
     {
       scopes: "request_sidepanel",
@@ -110,10 +171,10 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useHotkeys(
     "right",
     () => {
-      if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
-        return;
-      }
-      setDisplayLog(true);
+      const currentIndex = pages.findIndex((p) => p!.value === tab);
+      const nextIndex = (currentIndex + 1 + pages.length) % pages.length;
+      const nextTab = pages[nextIndex];
+      setTab(nextTab!.value);
     },
     {
       scopes: "request_sidepanel",
@@ -128,122 +189,69 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       });
     }
   }, [logItem]);
-  return (
-    <div
-      className={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 relative",
-        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
-        open ? "w-[400px]" : "w-0"
-      )}
-    >
-      <div
-        aria-label="table-keys-header"
-        className="flex px-lg py-xxs justify-between h-[44px] w-[inherit] items-center shadow-border-lb shadow-gray-2 fixed bg-gray-1 z-[10]"
-      >
-        <div className="flex items-center gap-sm ">
+
+  const headerRight = (
+    <div className="flex items-center">
+      {tab == "Log" && (
+        <>
           <Tooltip
             side="bottom"
-            sideOffset={8}
-            align="center"
+            sideOffset={5}
+            align="end"
             delayDuration={1}
             content={
               <>
-                <p className="caption text-gray-4">Show metrics</p>
-                <AlphanumericKey value={"←"} />
+                <p className="caption text-gray-4">Open in playground</p>
+                <AlphanumericKey value={"P"} />
               </>
             }
           >
-            <Button
-              variant="text"
-              text="Metrics"
-              active={!displayLog}
-              onClick={() => setDisplayLog(false)}
-              padding="py-0"
-            />
+            <div>
+              <DotsButton
+                icon={IconPlayground}
+                onClick={() => {
+                  dispatch(RestorePlaygroundStateFromLog());
+                  navigate("/platform/playground");
+                }}
+              />
+            </div>
           </Tooltip>
-
-          {!logItem?.failed &&
-            logItem?.prompt_messages &&
-            logItem?.prompt_messages?.length > 0 &&
-            logItem.completion_message && (
-              <Tooltip
-                side="bottom"
-                sideOffset={8}
-                align="center"
-                delayDuration={1}
-                content={
-                  <>
-                    <p className="caption text-gray-4">Show log</p>
-                    <AlphanumericKey value={"→"} />
-                  </>
-                }
-              >
-                <Button
-                  variant="text"
-                  text="Log"
-                  active={displayLog}
-                  onClick={() => setDisplayLog(true)}
-                  padding="py-0"
-                />
-              </Tooltip>
-            )}
-        </div>
-        <div className="flex items-center">
-          {displayLog && (
-            <>
-              <Tooltip
-                side="bottom"
-                sideOffset={5}
-                align="end"
-                delayDuration={1}
-                content={
-                  <>
-                    <p className="caption text-gray-4">Open in playground</p>
-                    <AlphanumericKey value={"P"} />
-                  </>
-                }
-              >
-                <div>
-                  <DotsButton
-                    icon={IconPlayground}
-                    onClick={() => {
-                      dispatch(RestorePlaygroundStateFromLog());
-                      navigate("/platform/playground");
-                    }}
-                  />
-                </div>
-              </Tooltip>
-              <Tooltip
-                side="bottom"
-                sideOffset={5}
-                align="end"
-                delayDuration={1}
-                content={
-                  <>
-                    <p className="caption text-gray-4">View mode</p>
-                    <AlphanumericKey value={"V"} />
-                  </>
-                }
-              >
-                <div>
-                  <DotsButton
-                    icon={Compare}
-                    onClick={() => dispatch(setJsonMode(!jsonMode))}
-                    active={jsonMode}
-                  />
-                </div>
-              </Tooltip>
-            </>
-          )}
-        </div>
-      </div>
-      <div
-        className="flex-col items-start self-stretch mt-[44px]"
-        aria-label="frame 1969"
-      >
-        <div ref={logRef}></div>
-        {displayLog ? <LogPane /> : <MetricPane />}
-      </div>
+          <Tooltip
+            side="bottom"
+            sideOffset={5}
+            align="end"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">View mode</p>
+                <AlphanumericKey value={"V"} />
+              </>
+            }
+          >
+            <div>
+              <DotsButton
+                icon={Compare}
+                onClick={() => dispatch(setJsonMode(!jsonMode))}
+                active={jsonMode}
+              />
+            </div>
+          </Tooltip>
+        </>
+      )}
     </div>
+  );
+  return (
+    <Tabs
+      rootClassName={cn(
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 ",
+        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
+        open ? "w-[400px]" : "w-0"
+      )}
+      headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1 "
+      tabs={pages}
+      value={tab}
+      onValueChange={(value) => setTab(value)}
+      headerRight={headerRight}
+    />
   );
 };

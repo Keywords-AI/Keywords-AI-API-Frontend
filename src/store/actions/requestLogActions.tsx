@@ -261,6 +261,7 @@ export const processRequestLogs = (
         warnings: log.warnings,
       },
       sentimentScore: log.sentiment_score,
+      organization: log.organization,
     };
   });
 };
@@ -556,11 +557,11 @@ export const RestorePlaygroundStateFromLog = () => {
         }
       ),
       options: {
-        maxLength: 4096,
-        temperature: 2.0,
-        topP: 0.9,
-        frequencyPenalty: 2.0,
-        presencePenalty: 2.0,
+        maxLength: currentLog?.full_request.max_tokens || 256,
+        temperature: currentLog?.full_request.temperature || 1,
+        topP: currentLog?.full_request.topP || 1.0,
+        frequencyPenalty: currentLog?.full_request.presence_penalty || 0,
+        presencePenalty: currentLog?.full_request.frequency_penalty || 0,
       },
       breakDowData: {
         prompt_tokens: currentLog?.prompt_tokens,
@@ -572,7 +573,7 @@ export const RestorePlaygroundStateFromLog = () => {
       },
     };
     dispatch(setMessages(playGroundState.messages));
-    dispatch(setPrompt(playGroundState.systemPrompt))
+    dispatch(setPrompt(playGroundState.systemPrompt));
     dispatch(
       setModelOptions({
         ...playGroundState.options,

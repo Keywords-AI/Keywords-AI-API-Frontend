@@ -42,6 +42,7 @@ export function FilterActions({ type }: { type: string }) {
   // const filters = useTypedSelector(
   //   (state: RootState) => state.requestLogs.filters
   // );
+
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(
     "f",
@@ -195,28 +196,31 @@ export function FilterActions({ type }: { type: string }) {
     default:
       trigger = (
         <div>
-          <Tooltip
-            side="bottom"
-            sideOffset={8}
-            align="start"
-            content={
-              <>
-                <p className="caption text-gray-4">Show filter options</p>
-                <AlphanumericKey value={"F"} />
-              </>
-            }
-          >
-            <Button
-              variant="small-dashed"
-              icon={Filter}
-              text="Filter"
-              active={start}
-            />
-          </Tooltip>
+          {!loading && (
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="start"
+              content={
+                <>
+                  <p className="caption text-gray-4">Show filter options</p>
+                  <AlphanumericKey value={"F"} />
+                </>
+              }
+            >
+              <Button
+                variant="small-dashed"
+                icon={Filter}
+                text="Filter"
+                active={start}
+              />
+            </Tooltip>
+          )}
         </div>
       );
       break;
   }
+
   return (
     <>
       {!filterType || (filterType && changeFieldType === "selection") ? (

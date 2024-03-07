@@ -7,7 +7,14 @@ import {
   TopBar,
 } from "./components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
-import { Add, Copy, Divider, EnterKey, Pencil } from "src/components";
+import {
+  Add,
+  AlphanumericKey,
+  Copy,
+  Divider,
+  EnterKey,
+  Pencil,
+} from "src/components";
 import { SelectInput, TextAreaInput } from "src/components/Inputs";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
@@ -27,6 +34,7 @@ import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
 import { AutoScrollContainer } from "react-auto-scroll-container";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
+import Tooltip from "src/components/Misc/Tooltip";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -141,7 +149,7 @@ const MessageLists = () => {
       }}
     >
       <AutoScrollContainer
-        percentageThreshold={10}
+        percentageThreshold={5}
         behavior="instant"
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
@@ -182,7 +190,7 @@ const MessageLists = () => {
           }}
         />
       </AutoScrollContainer>
-      <div className="flex items-start gap-xxs">
+      <div className="flex items-center gap-xs">
         <Button
           variant="r4-primary"
           text="Submit"
@@ -191,6 +199,21 @@ const MessageLists = () => {
             dispatch(streamPlaygroundResponse());
           }}
         />
+        <div className="flex gap-xxxs items-center">
+          <p className="caption text-gray-4 flex">Enter to submit</p>
+          <svg
+            width={8}
+            height={8}
+            viewBox="0 0 8 8"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.31429 0V2.97143C7.31429 4.61257 5.984 5.94286 4.34286 5.94286H1.75086L3.16343 7.35543L2.51429 8L0 5.48571L2.51429 2.97143L3.15886 3.616L1.75086 5.02857H4.34286C5.48571 5.02857 6.4 4.11429 6.4 2.97143V0H7.31429Z"
+              fill="#B1B3BC"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );
@@ -202,19 +225,70 @@ const RightPanel = () => {
   );
   const streamingStates = useTypedSelector((state) => state.streamingText);
   const [isReset, setIsReset] = useState(false);
+
   const tabGroups = [
     {
       value: "Session",
       buttonVariant: "text" as variantType,
       content: <SessionPane isReset={isReset} />,
+      tooltip: (
+        <>
+          <p className="caption text-gray-4">View session</p>
+          <AlphanumericKey value={"←"} />
+        </>
+      ),
     },
-    timestamp && {
-      value: "Recent",
-      buttonVariant: "text" as variantType,
-      content: <MostRecentPane />,
+    timestamp
+      ? {
+          value: "Recent",
+          buttonVariant: "text" as variantType,
+          content: <MostRecentPane />,
+          tooltip: (
+            <>
+              <p className="caption text-gray-4">View Recent</p>
+              <AlphanumericKey value={"→"} />
+            </>
+          ),
+        }
+      : null,
+  ].filter(Boolean);
+  const { enableScope, disableScope } = useHotkeysContext();
+  useEffect(() => {
+    enableScope("rightPanel");
+    return () => {
+      disableScope("rightPanel");
+    };
+  }, []);
+  const isStreaming = streamingStates.some((item) => item.isLoading === true);
+  useHotkeys(
+    "right",
+    () => {
+      if (isStreaming) return;
+      const currentIndex = tabGroups.findIndex((p) => p!.value === tab);
+      const nextIndex =
+        (currentIndex + 1 + tabGroups.length) % tabGroups.length;
+      const nextTab = tabGroups[nextIndex];
+      setTab(nextTab!.value);
     },
-  ];
-  const [tab, setTab] = useState(tabGroups[0].value);
+    { scopes: "rightPanel", preventDefault: true }
+  );
+  useHotkeys(
+    "left",
+    () => {
+      if (isStreaming) return;
+      // dispatch(toggleRightPanel());
+      const currentIndex = tabGroups.findIndex((p) => p!.value === tab);
+      const nextIndex =
+        (currentIndex - 1 + tabGroups.length) % tabGroups.length;
+      const nextTab = tabGroups[nextIndex];
+      setTab(nextTab!.value);
+    },
+    { scopes: "rightPanel", preventDefault: true }
+  );
+  useEffect(() => {
+    if (!timestamp && tab === "Recent") setTab("Session");
+  }, [timestamp]);
+  const [tab, setTab] = useState(tabGroups[0]!.value);
   const dispatch = useTypedDispatch();
 
   return (

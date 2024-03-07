@@ -35,7 +35,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
         ),
       },
       {
-        title: (
+        title: breakDownData.routing_time ? (
           <div className="flex items-center gap-xxs">
             <span className="text-sm-md text-gray-5">{"Routing time"}</span>
             <Tooltip
@@ -56,17 +56,17 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
               </div>
             </Tooltip>
           </div>
-        ),
-        value: (
+        ) : null,
+        value: breakDownData.routing_time ? (
           <span className="text-sm-regular text-gray-4">
             {breakDownData.routing_time.toFixed(2)}s
           </span>
-        ),
+        ) : null,
       },
-      {
-        title: <span className="text-sm-md text-gray-5">{"Status"}</span>,
-        value: <StatusTag statusCode={breakDownData.status} />,
-      },
+      // {
+      //   title: <span className="text-sm-md text-gray-5">{"Status"}</span>,
+      //   value: <StatusTag statusCode={breakDownData.status} />,
+      // },
       {
         title: (
           <span className="text-sm-md text-gray-5">{"Prompt tokens"}</span>
@@ -94,6 +94,10 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
       {
         title: <span className="text-sm-md text-gray-5">{"Model A"}</span>,
         value: <ModelTag model={modelLogs[0].model} />,
+      },
+      {
+        title: <span className="text-sm-md text-gray-5">{"Status"}</span>,
+        value: <StatusTag statusCode={modelLogs[0].status} />,
       },
       {
         title: (
@@ -145,7 +149,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
       {
         title: (
           <div className="flex items-center gap-xxs">
-            <span className="text-sm-md text-gray-5">{"Latency"}</span>
+            <span className="text-sm-md text-gray-5">{"Generation time"}</span>
             <Tooltip
               side="right"
               sideOffset={8}
@@ -176,6 +180,10 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
       {
         title: <span className="text-sm-md text-gray-5">{"Model B"}</span>,
         value: <ModelTag model={modelLogs[1].model} />,
+      },
+      {
+        title: <span className="text-sm-md text-gray-5">{"Status"}</span>,
+        value: <StatusTag statusCode={modelLogs[1].status} />,
       },
       {
         title: (
@@ -227,7 +235,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
       {
         title: (
           <div className="flex items-center gap-xxs">
-            <span className="text-sm-md text-gray-5">{"Latency"}</span>
+            <span className="text-sm-md text-gray-5">{"Generation time"}</span>
             <Tooltip
               side="right"
               sideOffset={8}
@@ -269,15 +277,18 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
 const LogCard = ({ displayObj }) => {
   return (
     <div className="flex-col px-lg py-md items-start gap-xs self-stretch">
-      {displayObj.map((item, index) => (
-        <div
-          key={index}
-          className="flex h-[24px] items-center justify-between self-stretch"
-        >
-          {item.title}
-          {item.value}
-        </div>
-      ))}
+      {displayObj.map((item, index) => {
+        if (!item.title) return null;
+        return (
+          <div
+            key={index}
+            className="flex items-center justify-between self-stretch"
+          >
+            {item.title}
+            {item.value}
+          </div>
+        );
+      })}
     </div>
   );
 };
