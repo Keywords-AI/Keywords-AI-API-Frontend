@@ -128,12 +128,12 @@ const TopBar = () => {
       chartData: sampleData,
       dataKey: "active",
     },
-    {
-      title: "New users",
-      number: aggregatedData.new_users.toLocaleString(),
-      chartData: sampleData,
-      dataKey: "active",
-    },
+    // {
+    //   title: "New users",
+    //   number: aggregatedData.new_users.toLocaleString(),
+    //   chartData: sampleData,
+    //   dataKey: "active",
+    // },
     {
       title: "Daily request per user",
       number: aggregatedData.daily_request_per_user.toLocaleString(),
@@ -227,7 +227,6 @@ const Table = () => {
           </div>
         );
       case "costs":
-        console.log("costs", value);
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number) >= 0 && value != null
