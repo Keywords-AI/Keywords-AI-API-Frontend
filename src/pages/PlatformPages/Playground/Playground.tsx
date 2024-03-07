@@ -190,30 +190,30 @@ const MessageLists = () => {
           }}
         />
       </AutoScrollContainer>
-      <div className="flex items-start gap-xxs">
-        <Tooltip
-          side="top"
-          sideOffset={8}
-          align="center"
-          delayDuration={1}
-          content={
-            <>
-              <p className="caption text-gray-4">Enter to submit</p>
-              <AlphanumericKey value={"↵"} />
-            </>
-          }
-        >
-          <div>
-            <Button
-              variant="r4-primary"
-              text="Submit"
-              onClick={() => {
-                if (isStreaming) return;
-                dispatch(streamPlaygroundResponse());
-              }}
+      <div className="flex items-center gap-xs">
+        <Button
+          variant="r4-primary"
+          text="Submit"
+          onClick={() => {
+            if (isStreaming) return;
+            dispatch(streamPlaygroundResponse());
+          }}
+        />
+        <div className="flex gap-xxxs items-center">
+          <p className="caption text-gray-4 flex">Enter to submit</p>
+          <svg
+            width={8}
+            height={8}
+            viewBox="0 0 8 8"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.31429 0V2.97143C7.31429 4.61257 5.984 5.94286 4.34286 5.94286H1.75086L3.16343 7.35543L2.51429 8L0 5.48571L2.51429 2.97143L3.15886 3.616L1.75086 5.02857H4.34286C5.48571 5.02857 6.4 4.11429 6.4 2.97143V0H7.31429Z"
+              fill="#B1B3BC"
             />
-          </div>
-        </Tooltip>
+          </svg>
+        </div>
       </div>
     </div>
   );
@@ -231,24 +231,24 @@ const RightPanel = () => {
       value: "Session",
       buttonVariant: "text" as variantType,
       content: <SessionPane isReset={isReset} />,
-      // tooltip: (
-      //   <>
-      //     <p className="caption text-gray-4">Switch</p>
-      //     <AlphanumericKey value={"←"} />
-      //   </>
-      // ),
+      tooltip: (
+        <>
+          <p className="caption text-gray-4">View session</p>
+          <AlphanumericKey value={"←"} />
+        </>
+      ),
     },
     timestamp
       ? {
           value: "Recent",
           buttonVariant: "text" as variantType,
           content: <MostRecentPane />,
-          // tooltip: (
-          //   <>
-          //     <p className="caption text-gray-4">Enter to submit</p>
-          //     <AlphanumericKey value={"→"} />
-          //   </>
-          // ),
+          tooltip: (
+            <>
+              <p className="caption text-gray-4">View Recent</p>
+              <AlphanumericKey value={"→"} />
+            </>
+          ),
         }
       : null,
   ].filter(Boolean);

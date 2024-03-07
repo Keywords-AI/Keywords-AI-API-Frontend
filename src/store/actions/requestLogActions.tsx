@@ -261,6 +261,7 @@ export const processRequestLogs = (
         warnings: log.warnings,
       },
       sentimentScore: log.sentiment_score,
+      organization: log.organization,
     };
   });
 };

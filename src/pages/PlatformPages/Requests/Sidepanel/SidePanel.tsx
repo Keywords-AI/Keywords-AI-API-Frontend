@@ -62,6 +62,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           <MetricPane />
         </div>
       ),
+      tooltip: (
+        <>
+          <p className="caption text-gray-4">View metrics</p>
+          <AlphanumericKey value={"←"} />
+        </>
+      ),
     },
     !logItem?.failed && logItem?.prompt_messages?.length !== 0
       ? {
@@ -75,6 +81,12 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               <div ref={logRef}></div>
               <LogPane />
             </div>
+          ),
+          tooltip: (
+            <>
+              <p className="caption text-gray-4">View log</p>
+              <AlphanumericKey value={"→"} />
+            </>
           ),
         }
       : null,
