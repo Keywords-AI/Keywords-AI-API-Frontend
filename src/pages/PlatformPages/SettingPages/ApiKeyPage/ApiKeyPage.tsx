@@ -193,11 +193,11 @@ export const ApiKeyPage = ({
       <PageParagraph
         heading={
           <p>
-            LLM provider keys
+            Bring your own models
             <span className="text-md-md text-gray-4"> (optional)</span>
           </p>
         }
-        subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API."
+        subheading="You can choose to use your own API keys from LLM providers."
       >
         <div className="flex-col items-start content-start gap-xxs self-stretch flex-1  ">
           {orderedVendors.map((vendorName, index) => {
