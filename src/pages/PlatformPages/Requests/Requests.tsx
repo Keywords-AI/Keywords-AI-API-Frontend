@@ -17,7 +17,7 @@ import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
-import { SidePanel } from "./Sidepanel/SidePanel";
+import { SidePanel } from "./Sidepanel/SidePanel.tsx";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
