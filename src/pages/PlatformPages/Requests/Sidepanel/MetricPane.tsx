@@ -33,10 +33,13 @@ export const MetricPane = ({}) => {
         )}
       </span>
     ),
-    Status: StatusTag({
-      statusCode: logItem?.status_code,
-      cached: (logItem?.cached_responses.length || 0) > 0,
-    }),
+    Status: (
+      <StatusTag
+        statusCode={logItem?.status_code}
+        cached={(logItem?.cached_responses.length || 0) > 0}
+        warning={(logItem?.warnings && logItem?.warnings != "{}") || false}
+      />
+    ),
     "API key": (
       <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
         {logItem?.api_key || "N/A"}
@@ -125,9 +128,7 @@ export const MetricPane = ({}) => {
         logItem?.token_per_second < 0 ||
         logItem?.time_to_first_token < 0
           ? "-"
-          : ((
-              logItem?.latency
-            ).toFixed(2) || "-") + "s"}
+          : ((logItem?.latency).toFixed(2) || "-") + "s"}
       </span>
     ),
     // Latency: (
