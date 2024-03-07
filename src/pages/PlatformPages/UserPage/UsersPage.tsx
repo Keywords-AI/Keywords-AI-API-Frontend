@@ -22,11 +22,11 @@ import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 type Props = {};
 
 export default function UsersPage({}: Props) {
-  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty)
+  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getUsersLogData());
-  }, []); 
+  }, []);
 
   return (
     <div
@@ -196,7 +196,7 @@ const Table = () => {
       case "customerId":
         return (
           <div className="flex text-sm-regular text-gray-4 items-center h-[20px]">
-            {value as string}
+            {value ? (value as string) : "-"}
           </div>
         );
       case "lastActive":
@@ -210,45 +210,41 @@ const Table = () => {
       case "activeFor":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value as string}
-          </div>
-        );
-      case "totalRequests":
-        return (
-          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {value ? (value as string) : "-"}
           </div>
         );
       case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
-          </div>
-        );
-
-      case "totalTokens":
-        return (
-          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "-"}
           </div>
         );
 
       case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "-"}
+          </div>
+        );
+      case "costs":
+        console.log("costs", value);
+        return (
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
+            {(value as number) >= 0 && value != null
+              ? "$" + (value as number).toFixed(2)
+              : "-"}
           </div>
         );
       case "sentiment":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value as string}
+            {value != null ? (value as number).toFixed(2) : "-"}
           </div>
         );
     }
   };
 
-  const LoadingRow = Array(40)
+  const LoadingRow = Array(10)
     .fill(null)
     .map((_, index) => (
       <div
@@ -277,7 +273,7 @@ const Table = () => {
     weekly: "Weekly",
     monthly: "Monthly",
     yearly: "Yearly",
-    total: "Total",
+    all: "Total",
   };
   const Header = (
     <div
@@ -297,7 +293,9 @@ const Table = () => {
               currentsortKey == column.value ? "text-gray-5" : "text-gray-4"
             )}
           >
-            {column.value == "requests" || column.value == "tokens"
+            {column.value == "requests" ||
+            column.value == "tokens" ||
+            column.value == "costs"
               ? timeValueToName[currentTimeRange] + " " + column.name
               : column.name}
           </div>

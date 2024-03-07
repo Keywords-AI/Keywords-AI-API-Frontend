@@ -18,7 +18,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     weekly: "Week",
     monthly: "Month",
     yearly: "Year",
-    total: "Total",
+    all: "Total",
   };
   const currentTimeRange = useTypedSelector(
     (state) => state.usersPage.timeRane
@@ -76,7 +76,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
           { name: "Year", value: "yearly", secText: "4" },
           {
             name: "Total",
-            value: "total",
+            value: "all",
             secText: "5",
           },
         ]}

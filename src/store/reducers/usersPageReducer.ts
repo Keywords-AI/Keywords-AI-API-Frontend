@@ -10,12 +10,12 @@ import {
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
-  lastActive: Date;
+  lastActive: string;
   activeFor: string;
-  totalRequests: number;
-  requestsPerDay: number;
-  totalTokens: number;
-  tokensPerDay: number;
+  requests: number;
+  tokens: number;
+  sentiment: number;
+  cost: number;
 };
 type State = {
   loading: boolean;
@@ -49,16 +49,16 @@ const initialState = {
   filteredUsersLogData: [],
   sortKey: "customerId",
   sortOrder: "asc",
-  timeRane: "total",
+  timeRane: "all",
   isEmpty: false,
   displayColumns: [
     "customerId",
     "lastActive",
     "activeFor",
-    "totalRequests",
     "requests",
-    "totalTokens",
     "tokens",
+    "costs",
+    "sentiment",
   ],
 };
 

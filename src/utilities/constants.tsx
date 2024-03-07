@@ -782,6 +782,10 @@ export const userTableColumns = [
     value: "tokens",
   },
   {
+    name: "costs",
+    value: "costs",
+  },
+  {
     name: "Avg sentiment",
     value: "sentiment",
   },

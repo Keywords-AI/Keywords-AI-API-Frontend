@@ -140,14 +140,16 @@ const getSortFunction = (property: string, order: string) => {
 const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
   try {
     const timeRange = getState().usersPage.timeRane;
-    console.log(timeRange);
     let params = new URLSearchParams();
-    // params.set("time_range", timeRange);
+    params.set("summary_type", timeRange);
+    console.log(params.toString());
+
     const { results: responseData, ...rest } = await keywordsRequest({
-      path: `api/users ${params.toString()}`,
+      path: `api/users/?${params.toString()}`,
       method: "GET",
       data: {},
     });
+    // console.log(responseData);
     return {
       ...rest,
       usersLogData: responseData
@@ -159,7 +161,8 @@ const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
               data.active_days + (+data.active_days > 1 ? " days" : " day"),
             requests: Math.round(data.number_of_requests as number),
             tokens: Math.round(data.total_tokens as number),
-            sentiment: data.sentiment || 0.1,
+            costs: data.total_cost,
+            sentiment: data.average_sentiment,
           };
         })
         .sort(sortFunc),
