@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
+import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
 import {
+  AlphanumericKey,
   CodeViewer,
   Delete,
   IconPlayground,
@@ -12,6 +14,7 @@ import {
 } from "src/components";
 import { Button, ButtonGroup, DotsButton } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
+import Tooltip from "src/components/Misc/Tooltip";
 import useForwardRef from "src/hooks/useForwardRef";
 import { getKeys } from "src/store/actions";
 import {
@@ -28,7 +31,9 @@ export function TopBar() {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
-
+  const isStreaming = store
+    .getState()
+    .streamingText.some((item) => item.isLoading);
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
 
@@ -51,6 +56,21 @@ export function TopBar() {
       time_stamp,
     };
   };
+  const { enableScope, disableScope } = useHotkeysContext();
+  useEffect(() => {
+    enableScope("playground_topBar");
+    return () => {
+      disableScope("playground_topBar");
+    };
+  }, []);
+  useHotkeys(
+    ".",
+    () => {
+      if (isStreaming) return;
+      dispatch(toggleRightPanel());
+    },
+    { scopes: "playground_topBar", preventDefault: true }
+  );
 
   return (
     <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
@@ -92,10 +112,26 @@ export function TopBar() {
           }}
         />
         <HorizontalDivier />
-        <DotsButton
-          icon={isRightPanelOpen ? SideBarActive : SideBar}
-          onClick={() => dispatch(toggleRightPanel())}
-        />
+        <Tooltip
+          side="bottom"
+          sideOffset={8}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Open right sidebar</p>
+              <AlphanumericKey value={"."} />
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={isRightPanelOpen ? SideBarActive : SideBar}
+              onClick={() => dispatch(toggleRightPanel())}
+              active={isRightPanelOpen}
+            />
+          </div>
+        </Tooltip>
       </div>
     </div>
   );

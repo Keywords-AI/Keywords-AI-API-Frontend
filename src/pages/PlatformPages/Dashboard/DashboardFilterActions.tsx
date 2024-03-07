@@ -173,7 +173,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
     }
     dispatch(setDashboardCurrentFilter({ metric: undefined, id: "" }));
   };
-
+  const loading = useTypedSelector((state) => state.dashboard.loading);
   let trigger: React.ReactNode;
   switch (type) {
     case "create":
@@ -187,19 +187,26 @@ export function DashboardFilterActions({ type }: { type: string }) {
     default:
       trigger = (
         <div>
-          <Tooltip
-            side="bottom"
-            sideOffset={8}
-            align="start"
-            content={
-              <>
-                <p className="caption text-gray-4">Show filter options</p>
-                <AlphanumericKey value={"F"} />
-              </>
-            }
-          >
-            <Button variant="small-dashed" icon={Filter} text="Filter" />
-          </Tooltip>
+          {!loading && (
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="start"
+              content={
+                <>
+                  <p className="caption text-gray-4">Show filter options</p>
+                  <AlphanumericKey value={"F"} />
+                </>
+              }
+            >
+              <Button
+                variant="small-dashed"
+                icon={Filter}
+                text="Filter"
+                active={start}
+              />
+            </Tooltip>
+          )}
         </div>
       );
       break;
