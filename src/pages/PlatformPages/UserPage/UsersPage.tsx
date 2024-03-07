@@ -156,20 +156,20 @@ const Table = () => {
       case "activeFor":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value ? (value as string) : "-"}
+            {value ? (value as string) : ""}
           </div>
         );
       case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : "-"}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
           </div>
         );
 
       case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : "-"}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
           </div>
         );
       case "costs":
@@ -177,13 +177,13 @@ const Table = () => {
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number) >= 0 && value != null
               ? "$" + (value as number).toFixed(2)
-              : "-"}
+              : ""}
           </div>
         );
       case "sentiment":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value != null ? (value as number).toFixed(2) : "-"}
+            {value != null ? (value as number).toFixed(2) : ""}
           </div>
         );
     }
