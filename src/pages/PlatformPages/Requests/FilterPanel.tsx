@@ -263,7 +263,7 @@ export function FilterPanel() {
           </div>
           <Divider color="bg-gray-3" />
           <span className="text-sm-regular text-gray-4">
-            Display Properties
+            Display properties
           </span>
           <div className="flex-row gap-xxxs flex-wrap">
             {requestLogColumns.map((metric) => {
@@ -283,6 +283,16 @@ export function FilterPanel() {
               if (metric.name === "Sentiment") {
                 return organization?.organization_subscription?.plan_level ??
                   0 > 1 ? (
+                  <CheckBoxButtonSmall
+                    key={metric.retrievalKey}
+                    {...register("display_properties")}
+                    text={metric.name}
+                    value={metric.retrievalKey}
+                    checked={checked}
+                  />
+                ) : null;
+              } else if (metric.name === "Organization") {
+                return user.is_admin ? (
                   <CheckBoxButtonSmall
                     key={metric.retrievalKey}
                     {...register("display_properties")}
