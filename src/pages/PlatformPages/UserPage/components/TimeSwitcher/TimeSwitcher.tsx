@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "src/components/Buttons";
 import { AlphanumericKey, Down } from "src/components/Icons/iconsDS";
 import { SelectInput } from "src/components/Inputs";
 import Tooltip from "src/components/Misc/Tooltip";
-import { setUsersLogDataTimeRange } from "src/store/actions/usersPageAction";
+import {
+  getUsersLogData,
+  setUsersLogDataTimeRange,
+} from "src/store/actions/usersPageAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
 export interface TimeSwitcherProps {}
@@ -15,11 +18,14 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     weekly: "Week",
     monthly: "Month",
     yearly: "Year",
-    total: "Total",
+    all: "Total",
   };
   const currentTimeRange = useTypedSelector(
     (state) => state.usersPage.timeRane
   );
+  useEffect(() => {
+    dispatch(getUsersLogData());
+  }, [currentTimeRange]);
   const [showDropdown, setShowDropdown] = useState(false);
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
@@ -70,7 +76,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
           { name: "Year", value: "yearly", secText: "4" },
           {
             name: "Total",
-            value: "total",
+            value: "all",
             secText: "5",
           },
         ]}
