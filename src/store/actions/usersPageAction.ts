@@ -54,7 +54,7 @@ export const getUsersLogData = () => {
   return async (dispatch: any, getState: any) => {
     dispatch(setUsersLogDataLoading(true));
     // API call
-    const data = await fetchUsersLogData(
+    let data = await fetchUsersLogData(
       getSortFunction(
         getState().usersPage.sortKey,
         getState().usersPage.sortOrder
@@ -62,6 +62,11 @@ export const getUsersLogData = () => {
       getState
     );
     dispatch(setUsersLogData(data.usersLogData));
+    data.aggregation_data.daily_request_per_user =
+      data.count === 0 ? 0 : data.aggregation_data.daily_requests / data.count;
+    data.monthly_cost_per_user =
+      data.count == 0 ? 0 : data.aggregation_data.monthly_cost / data.count;
+    data.aggregation_data.total_users = data.count;
     dispatch(setAggregationData(data.aggregation_data));
     dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
@@ -149,7 +154,6 @@ const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
       method: "GET",
       data: {},
     });
-    console.log(rest);
     // console.log(responseData);
     return {
       ...rest,
