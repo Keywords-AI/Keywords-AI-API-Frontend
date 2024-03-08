@@ -251,32 +251,34 @@ const Table = () => {
     </div>
   );
   return (
-    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start overflow-auto ">
+    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start ">
       <div aria-label="table" className="grid grid-flow-row w-full">
         {Header}
-        {isloading
-          ? LoadingRow
-          : data &&
-            data.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  aria-label="row"
-                  className="px-lg py-xxs grid gap-x-sm items-center h-[40px] "
-                  style={{
-                    gridTemplateColumns: templateString,
-                  }}
-                >
-                  {Object.entries(item)
-                    .filter((item) => displayColumns.includes(item[0]))
-                    .map(([key, value], i) => (
-                      <React.Fragment key={i}>
-                        {renderItem(key, value)}
-                      </React.Fragment>
-                    ))}
-                </div>
-              );
-            })}
+        <div className="flex-col w-full max-h-[calc(100dvh-282px)] overflow-auto ">
+          {isloading
+            ? LoadingRow
+            : data &&
+              data.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    aria-label="row"
+                    className="px-lg py-xxs grid gap-x-sm items-center h-[40px] "
+                    style={{
+                      gridTemplateColumns: templateString,
+                    }}
+                  >
+                    {Object.entries(item)
+                      .filter((item) => displayColumns.includes(item[0]))
+                      .map(([key, value], i) => (
+                        <React.Fragment key={i}>
+                          {renderItem(key, value)}
+                        </React.Fragment>
+                      ))}
+                  </div>
+                );
+              })}
+        </div>
       </div>
     </div>
   );
