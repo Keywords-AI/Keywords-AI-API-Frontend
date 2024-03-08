@@ -26,7 +26,8 @@ export const SignUp = connect(
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    signup(data);
+    data.invitation_code = "keywordsai";
+    signup(data, "keywordsai");
   };
   // Keywords666
   return (
@@ -43,8 +44,8 @@ export const SignUp = connect(
           onSubmit={handleSubmit(onSubmit)}
           className="flex-col justify-center items-center gap-md self-stretch"
         >
-          <div className="flex-col justify-center items-start gap-xs ">
-            <div className="flex items-center gap-xs ">
+          <div className="flex-col justify-center items-start gap-xs max-w-[420px]">
+            <div className="flex items-center gap-xs max-w-[420px]">
               <TextInput
                 title="First Name"
                 required
@@ -72,7 +73,7 @@ export const SignUp = connect(
               placeholder=""
               {...register("password")}
             />
-            <TextInput
+            {/* <TextInput
               title="Invitation Code"
               type="text"
               required
@@ -83,7 +84,7 @@ export const SignUp = connect(
               autoComplete="off"
               placeholder=""
               {...register("invitation_code")}
-            />
+            /> */}
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button

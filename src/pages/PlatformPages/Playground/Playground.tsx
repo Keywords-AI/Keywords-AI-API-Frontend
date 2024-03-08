@@ -230,25 +230,33 @@ const RightPanel = () => {
     {
       value: "Session",
       buttonVariant: "text" as variantType,
-      content: <SessionPane isReset={isReset} />,
-      tooltip: (
-        <>
-          <p className="caption text-gray-4">View session</p>
-          <AlphanumericKey value={"←"} />
-        </>
+      content: (
+        <div className="flex-col flex-1 self-stretch overflow-auto">
+          <SessionPane isReset={isReset} />
+        </div>
       ),
+      // tooltip: (
+      //   <>
+      //     <p className="caption text-gray-4">View session</p>
+      //     <AlphanumericKey value={"←"} />
+      //   </>
+      // ),
     },
     timestamp
       ? {
           value: "Recent",
           buttonVariant: "text" as variantType,
-          content: <MostRecentPane />,
-          tooltip: (
-            <>
-              <p className="caption text-gray-4">View Recent</p>
-              <AlphanumericKey value={"→"} />
-            </>
+          content: (
+            <div className="flex-col flex-1 self-stretch overflow-auto">
+              <MostRecentPane />
+            </div>
           ),
+          // tooltip: (
+          //   <>
+          //     <p className="caption text-gray-4">View Recent</p>
+          //     <AlphanumericKey value={"→"} />
+          //   </>
+          // ),
         }
       : null,
   ].filter(Boolean);

@@ -55,19 +55,19 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       buttonVariant: "text" as variantType,
       content: (
         <div
-          className="flex-col items-start self-stretch "
+          className="flex-col items-start self-stretch overflow-auto "
           aria-label="frame 1969"
         >
           <div ref={logRef}></div>
           <MetricPane />
         </div>
       ),
-      tooltip: (
-        <>
-          <p className="caption text-gray-4">View metrics</p>
-          <AlphanumericKey value={"←"} />
-        </>
-      ),
+      // tooltip: (
+      //   <>
+      //     <p className="caption text-gray-4">View metrics</p>
+      //     <AlphanumericKey value={"←"} />
+      //   </>
+      // ),
     },
     !logItem?.failed && logItem?.prompt_messages?.length !== 0
       ? {
@@ -75,19 +75,19 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           buttonVariant: "text" as variantType,
           content: (
             <div
-              className="flex-col items-start self-stretch "
+              className="flex-col items-start self-stretch overflow-auto"
               aria-label="frame 1969"
             >
               <div ref={logRef}></div>
               <LogPane />
             </div>
           ),
-          tooltip: (
-            <>
-              <p className="caption text-gray-4">View log</p>
-              <AlphanumericKey value={"→"} />
-            </>
-          ),
+          // tooltip: (
+          //   <>
+          //     <p className="caption text-gray-4">View log</p>
+          //     <AlphanumericKey value={"→"} />
+          //   </>
+          // ),
         }
       : null,
     logItem?.metadata && Object.keys(logItem?.metadata).length > 0
@@ -96,7 +96,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           buttonVariant: "text" as variantType,
           content: (
             <div
-              className="flex-col items-start self-stretch "
+              className="flex-col items-start self-stretch overflow-auto"
               aria-label="frame 1969"
             >
               <div ref={logRef}></div>
