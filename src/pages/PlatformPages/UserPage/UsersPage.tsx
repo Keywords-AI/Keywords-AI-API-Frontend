@@ -22,13 +22,12 @@ import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 type Props = {};
 
 export default function UsersPage({}: Props) {
+  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getUsersLogData());
   }, []);
-  const usersLogState = useTypedSelector((state) => state.usersPage);
-  const isEmpty =
-    (usersLogState.usersLogData?.length ?? 0) === 0 && !usersLogState.loading;
+
   return (
     <div
       className={cn(
@@ -60,109 +59,55 @@ const TopBar = () => {
   const handleReset = () => {
     dispatch(filterUsersLogDataAction(""));
   };
-  const sampleData = [
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-    {
-      active: 150,
-      total: 200,
-    },
-    {
-      active: 120,
-      total: 180,
-    },
-    {
-      active: 80,
-      total: 150,
-    },
-    {
-      active: 200,
-      total: 250,
-    },
-  ];
+
   const cardData = [
     {
       title: "Total users",
-      number: aggregatedData.total_count.toLocaleString(),
-      chartData: sampleData,
+      number: aggregatedData.total_users.toLocaleString(),
+
       dataKey: "total",
     },
     {
       title: "Monthly active users",
       number: aggregatedData.monthly_active_users.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Daily active users",
       number: aggregatedData.daily_active_users.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "New users",
       number: aggregatedData.new_users.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Daily request per user",
       number: aggregatedData.daily_request_per_user.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
     {
       title: "Monthly cost per user",
       number: aggregatedData.monthly_cost_per_user.toLocaleString(),
-      chartData: sampleData,
       dataKey: "active",
     },
   ];
   return (
     <>
-      {/* <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
+      <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
         {cardData.map((item, index) => (
           <MetricCardFocus
             key={index}
             title={item.title}
             number={item.number}
-            chartData={item.chartData}
-            dataKey={item.dataKey}
+            // chartData={item.chartData}
+            // dataKey={item.dataKey}
             width="flex-1"
           />
         ))}
       </div>
-      <Divider /> */}
+      <Divider />
       <div
         aria-label="frame 1944"
         className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
@@ -170,7 +115,7 @@ const TopBar = () => {
         <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
-          {/* <TimeSwitcher /> */}
+          <TimeSwitcher />
           <DisplayPopover />
         </div>
       </div>
@@ -197,7 +142,7 @@ const Table = () => {
       case "customerId":
         return (
           <div className="flex text-sm-regular text-gray-4 items-center h-[20px]">
-            {value as string}
+            {value ? (value as string) : "-"}
           </div>
         );
       case "lastActive":
@@ -211,45 +156,40 @@ const Table = () => {
       case "activeFor":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value as string}
-          </div>
-        );
-      case "totalRequests":
-        return (
-          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {value ? (value as string) : ""}
           </div>
         );
       case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
-          </div>
-        );
-
-      case "totalTokens":
-        return (
-          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
           </div>
         );
 
       case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number).toLocaleString()}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
+          </div>
+        );
+      case "costs":
+        return (
+          <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
+            {(value as number) >= 0 && value != null
+              ? "$" + (value as number).toFixed(2)
+              : ""}
           </div>
         );
       case "sentiment":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value as string}
+            {value != null ? (value as number).toFixed(2) : ""}
           </div>
         );
     }
   };
 
-  const LoadingRow = Array(40)
+  const LoadingRow = Array(10)
     .fill(null)
     .map((_, index) => (
       <div
@@ -278,7 +218,7 @@ const Table = () => {
     weekly: "Weekly",
     monthly: "Monthly",
     yearly: "Yearly",
-    total: "Total",
+    all: "Total",
   };
   const Header = (
     <div
@@ -298,7 +238,9 @@ const Table = () => {
               currentsortKey == column.value ? "text-gray-5" : "text-gray-4"
             )}
           >
-            {column.value == "requests" || column.value == "tokens"
+            {column.value == "requests" ||
+            column.value == "tokens" ||
+            column.value == "costs"
               ? timeValueToName[currentTimeRange] + " " + column.name
               : column.name}
           </div>

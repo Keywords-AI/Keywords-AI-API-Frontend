@@ -9,6 +9,10 @@ import {
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
@@ -47,7 +51,7 @@ export const PlansPage = connect(
   mapDispatchToProps
 )(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
-  const [teamPrice, setTeamPrice] = useState("29");
+  const [teamPrice, setTeamPrice] = useState("79");
   const models = Object.keys(useSelector((state) => state.models.models));
   const remaining = models.length || 20;
   const cards = [
@@ -56,17 +60,17 @@ export const PlansPage = connect(
       plan: "starter",
       subtitle: "Best for solo builders.",
       price: 0,
-      billFrequency: "",
+      billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
-        "10,000 API requests",
-        "1 developer seat",
-        "1 proxy API key",
-        "Usage analytics",
-        "Status monitoring",
-        "Dynamic LLM router",
-        "OpenAI models",
-        "Email support",
+        "10k requests / month",
+        "2 seats",
+        // "1 proxy API key",
+        "Community support",
+        // "Status monitoring",
+        // "Dynamic LLM router",
+        // "OpenAI models",
+        // "Email support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
@@ -76,79 +80,79 @@ export const PlansPage = connect(
         },
       },
       buttonParams: {
-        buttonText: "Get started",
-        buttonVariant: "r4-primary",
+        buttonText: "Get started free",
+        buttonVariant: "r4-black",
         buttonOnClick: () => {
           createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
         },
       },
     },
     {
-      title: "Team",
+      title: "Pro",
       plan: "team",
-      subtitle: "Best for startups and teams.",
+      subtitle: "Best for early stage startups.",
       price: teamPrice,
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
-        "Unlimited API requests",
-        "Unlimited seats",
-        "Unlimited proxy keys",
-        "Advanced usage analytics",
-        "Admin roles",
-        "Advanced model fallback",
-        `Mistral, Anthropic, and ${remaining} more models`,
-        "CTO priority support",
+        "1M requests / month",
+        "5 seats",
+        "Custom evaluations",
+        "Founders 24/7 support",
+        // "Admin roles",
+        // "Advanced model fallback",
+        // `Mistral, Anthropic, and ${remaining} more models`,
+        // "CTO priority support",
       ],
       downgradeParams: {
-        buttonText: "Downgrade to team",
+        buttonText: "Downgrade to Pro",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([
-              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
             ]);
           } else {
             createPaymentSession([
-              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
             ]);
           }
         },
       },
       buttonParams: {
-        buttonText: "Upgrade to Team",
-        buttonVariant: "r4-primary",
+        buttonText: "Upgrade to Pro",
+        buttonVariant: "r4-white",
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([
-              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
             ]);
           } else {
             createPaymentSession([
-              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
             ]);
           }
         },
       },
     },
     {
-      title: "Custom",
+      title: "Team",
       plan: "custom",
-      subtitle: "Fully tailored for your use case.",
-      featureTitle: "Everything in Team, plus",
+      subtitle: "Built for scaling.",
+      featureTitle: "Everything in Pro, plus",
       features: [
-        "Testing playground",
-        "Integration assistance",
-        "Use-case optimization",
+        "Unlimited request",
+        "Unlimited seats",
+        "Fine-tuning",
         "Increased rate limit",
-        "Volume discount",
+        "SOC 2 compliance",
       ],
       downgradeParams: {
-        buttonText: "Book a demo",
+        buttonText: "Talk to founders",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
@@ -156,7 +160,7 @@ export const PlansPage = connect(
         },
       },
       buttonParams: {
-        buttonText: "Book a demo",
+        buttonText: "Talk to founders",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
@@ -186,7 +190,7 @@ export const PlansPage = connect(
 
   const handleSwitchChange = (checked) => {
     setIsYearly(checked);
-    setTeamPrice(checked ? "29" : "39");
+    setTeamPrice(checked ? "79" : "99");
   };
 
   return (
@@ -208,7 +212,7 @@ export const PlansPage = connect(
           />
           <div>
             <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary"> (35% off) </span>
+            <span className="text-sm-md text-primary"> (20% off) </span>
           </div>
         </div>
         <div className="flex flex-row gap-sm self-stretch">
