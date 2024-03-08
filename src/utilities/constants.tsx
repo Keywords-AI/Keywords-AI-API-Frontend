@@ -673,6 +673,15 @@ export const requestLogColumns: LogItemColumn[] = [
 
 export const requestLogTagColumns: LogItemTag[] = [
   {
+    name: "Organization",
+    retrievalKey: "organization",
+    renderFunction: (org: string) => (
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
+        {org}
+      </span>
+    ),
+  },
+  {
     name: "API key",
     retrievalKey: "apiKey",
     renderFunction: (key: string) => (
@@ -686,15 +695,7 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
   },
-  {
-    name: "Organization",
-    retrievalKey: "organization",
-    renderFunction: (org: string) => (
-      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
-        {org}
-      </span>
-    ),
-  },
+
   // {
   //   name: "Warnings",
   //   retrievalKey: "warnings",
