@@ -24,3 +24,16 @@ export const LOCAL_TEST_KEY = envVars?.LOCAL_TEST_KEY || "";
 export const DEMO_ENV = window.location.hostname === "demo.keywordsai.co";
 export const DEMO_EMAIL = envVars?.DEMO_EMAIL || "demo@keywordsai.co";
 export const DEMO_PASSWORD = envVars?.DEMO_PASSWORD || "ycw24";
+export const STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY =
+  envVars?.STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY ||
+  "keywords_ai_api_pro_plan_monthly_flat";
+export const STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY =
+  envVars?.STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY ||
+  "keywords_ai_api_pro_plan_monthly_usage";
+
+export const STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY =
+  envVars?.STRIPE_TEAM_YEAR_FLAT_LOOKUP_KEY ||
+  "keywords_ai_api_pro_plan_yearly_flat";
+export const STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY =
+  envVars?.STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY ||
+  "keywords_ai_api_pro_plan_yearly_usage";
