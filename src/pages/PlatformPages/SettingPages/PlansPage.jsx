@@ -60,17 +60,17 @@ export const PlansPage = connect(
       plan: "starter",
       subtitle: "Best for solo builders.",
       price: 0,
-      billFrequency: "",
+      billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
-        "10,000 API requests",
-        "1 developer seat",
-        "1 proxy API key",
-        "Usage analytics",
-        "Status monitoring",
-        "Dynamic LLM router",
-        "OpenAI models",
-        "Email support",
+        "10k requests / month",
+        "2 seats",
+        // "1 proxy API key",
+        "Community support",
+        // "Status monitoring",
+        // "Dynamic LLM router",
+        // "OpenAI models",
+        // "Email support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
@@ -88,24 +88,24 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Pro",
+      title: "Team",
       plan: "team",
-      subtitle: "Best for startups and teams.",
+      subtitle: "Best for early stage startups.",
       price: teamPrice,
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
-        "Unlimited API requests",
-        "Unlimited seats",
-        "Unlimited proxy keys",
-        "Advanced usage analytics",
-        "Admin roles",
-        "Advanced model fallback",
-        `Mistral, Anthropic, and ${remaining} more models`,
-        "CTO priority support",
+        "1M requests / month",
+        "5 seats",
+        "Custom evaluations",
+        "Founders 24/7 support",
+        // "Admin roles",
+        // "Advanced model fallback",
+        // `Mistral, Anthropic, and ${remaining} more models`,
+        // "CTO priority support",
       ],
       downgradeParams: {
-        buttonText: "Downgrade to team",
+        buttonText: "Downgrade to Pro",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
@@ -122,7 +122,7 @@ export const PlansPage = connect(
         },
       },
       buttonParams: {
-        buttonText: "Upgrade to Team",
+        buttonText: "Upgrade to Pro",
         buttonVariant: "r4-primary",
         buttonOnClick: () => {
           if (isYearly) {
@@ -142,17 +142,17 @@ export const PlansPage = connect(
     {
       title: "Custom",
       plan: "custom",
-      subtitle: "Fully tailored for your use case.",
-      featureTitle: "Everything in Team, plus",
+      subtitle: "Built for scaling.",
+      featureTitle: "Everything in Pro, plus",
       features: [
-        "Testing playground",
-        "Integration assistance",
-        "Use-case optimization",
+        "Unlimited request",
+        "Unlimited seats",
+        "Fine-tuning",
         "Increased rate limit",
-        "Volume discount",
+        "SOC 2 compliance",
       ],
       downgradeParams: {
-        buttonText: "Book a demo",
+        buttonText: "Talk to founders",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
@@ -160,7 +160,7 @@ export const PlansPage = connect(
         },
       },
       buttonParams: {
-        buttonText: "Book a demo",
+        buttonText: "Talk to founders",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link

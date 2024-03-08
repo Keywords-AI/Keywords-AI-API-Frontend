@@ -77,7 +77,7 @@ export const StartWithPlan = () => {
       },
     },
     {
-      title: "Pro",
+      title: "Team",
       plan: "team",
       subtitle: "Best for early stage startups.",
       price: teamPrice,
