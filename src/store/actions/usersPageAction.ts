@@ -92,7 +92,6 @@ export const filterUsersLogDataAction = (searchString: string) => {
       }
       dispatch(setUsersLogData(filteredData));
     }
-    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
   };
 };

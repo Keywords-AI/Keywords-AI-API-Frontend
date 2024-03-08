@@ -6,7 +6,6 @@ import {
   SET_USERS_LOG_DATA_SORT,
   SET_USERS_LOG_DATA_TIMERANGE,
   SET_AGGREGATION_DATA,
-  SET_IS_EMPTY,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
@@ -33,7 +32,6 @@ type State = {
   sortOrder: string;
   timeRane: string;
   displayColumns: string[];
-  isEmpty: boolean;
 };
 const initialState = {
   loading: true,
@@ -64,11 +62,6 @@ const initialState = {
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
-    case SET_IS_EMPTY:
-      return {
-        ...state,
-        isEmpty: action.payload,
-      };
     case SET_USERS_LOG_DATA_DISPLAY_COLUMNS:
       return {
         ...state,

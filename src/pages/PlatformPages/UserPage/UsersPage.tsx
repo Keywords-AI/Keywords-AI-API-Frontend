@@ -19,6 +19,8 @@ import { TitleAuth } from "src/components/Titles";
 import { Button, Right } from "src/components";
 import { userTableColumns } from "src/utilities/constants";
 import MetricCardFocus from "src/components/Cards/MetricCardFocus";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { UsersPagePreview } from "src/components/Display/Figures";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -27,7 +29,6 @@ export default function UsersPage({}: Props) {
   useEffect(() => {
     dispatch(getUsersLogData());
   }, []);
-
   return (
     <div
       className={cn(
@@ -281,28 +282,41 @@ const Table = () => {
 
 const EmptyState = () => {
   return (
-    <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline outline-1 outline-gray-3  rounded-md">
-      <TitleAuth
-        title="Welcome to Keywords AI!"
-        subtitle={
-          "Add the customer_identifier parameter to your API calls to view user metrics."
-        }
-        textAlign="text-center"
-      />
-      <div className="flex justify-center items-center gap-xs">
-        <Button
-          variant="r4-black"
-          text="View docs"
-          icon={Right}
-          iconPosition="right"
-          onClick={() =>
-            window.open(
-              "https://docs.keywordsai.co/api-usage/request-params#extra-parameters-for-monitoring",
-              "_blank"
-            )
-          }
-        />
-      </div>
-    </div>
+    <WelcomeCard
+      pageTitle="USER INSIGHTS"
+      beta
+      title={`Add parameter “customer_identifier”`}
+      content={
+        <>
+          to view user metrics.
+          <br />
+          View usage by user, analyze unit economics, and get more insights.
+        </>
+      }
+      figure={<UsersPagePreview />}
+    />
+    // <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline outline-1 outline-gray-3  rounded-md">
+    //   <TitleAuth
+    //     title="Welcome to Keywords AI!"
+    //     subtitle={
+    //       "Add the customer_identifier parameter to your API calls to view user metrics."
+    //     }
+    //     textAlign="text-center"
+    //   />
+    //   <div className="flex justify-center items-center gap-xs">
+    //     <Button
+    //       variant="r4-black"
+    //       text="View docs"
+    //       icon={Right}
+    //       iconPosition="right"
+    //       onClick={() =>
+    //         window.open(
+    //           "https://docs.keywordsai.co/api-usage/request-params#extra-parameters-for-monitoring",
+    //           "_blank"
+    //         )
+    //       }
+    //     />
+    //   </div>
+    // </div>
   );
 };
