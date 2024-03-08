@@ -19,6 +19,8 @@ import { TitleAuth } from "src/components/Titles";
 import { Button, Right } from "src/components";
 import { userTableColumns } from "src/utilities/constants";
 import MetricCardFocus from "src/components/Cards/MetricCardFocus";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { UsersPagePreview } from "src/components/Display/Figures";
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -27,11 +29,10 @@ export default function UsersPage({}: Props) {
   useEffect(() => {
     dispatch(getUsersLogData());
   }, []);
-
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 ",
+        "flex-col items-start self-stretch flex-1 h-[calc(100dvh-52px)] bg-gray-1 ",
         isEmpty ? "p-lg" : ""
       )}
       aria-label="frame 1733"
@@ -162,14 +163,14 @@ const Table = () => {
       case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "0"}
           </div>
         );
 
       case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "0"}
           </div>
         );
       case "costs":
@@ -177,7 +178,7 @@ const Table = () => {
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number) >= 0 && value != null
               ? "$" + (value as number).toFixed(2)
-              : ""}
+              : "$0"}
           </div>
         );
       case "sentiment":
@@ -248,7 +249,7 @@ const Table = () => {
     </div>
   );
   return (
-    <div className="flex-col w-full max-h-[calc(100vh-157px)] items-start overflow-auto ">
+    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start overflow-auto ">
       <div aria-label="table" className="grid grid-flow-row w-full">
         {Header}
         {isloading
@@ -281,28 +282,41 @@ const Table = () => {
 
 const EmptyState = () => {
   return (
-    <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline outline-1 outline-gray-3  rounded-md">
-      <TitleAuth
-        title="Welcome to Keywords AI!"
-        subtitle={
-          "Add the customer_identifier parameter to your API calls to view user metrics."
-        }
-        textAlign="text-center"
-      />
-      <div className="flex justify-center items-center gap-xs">
-        <Button
-          variant="r4-black"
-          text="View docs"
-          icon={Right}
-          iconPosition="right"
-          onClick={() =>
-            window.open(
-              "https://docs.keywordsai.co/api-usage/request-params#extra-parameters-for-monitoring",
-              "_blank"
-            )
-          }
-        />
-      </div>
-    </div>
+    <WelcomeCard
+      pageTitle="USER INSIGHTS"
+      beta
+      title={`Add parameter “customer_identifier”`}
+      content={
+        <>
+          to view user metrics.
+          <br />
+          View usage by user, analyze unit economics, and get more insights.
+        </>
+      }
+      figure={<UsersPagePreview />}
+    />
+    // <div className="flex-col justify-center items-center gap-md flex-1 self-stretch outline outline-1 outline-gray-3  rounded-md">
+    //   <TitleAuth
+    //     title="Welcome to Keywords AI!"
+    //     subtitle={
+    //       "Add the customer_identifier parameter to your API calls to view user metrics."
+    //     }
+    //     textAlign="text-center"
+    //   />
+    //   <div className="flex justify-center items-center gap-xs">
+    //     <Button
+    //       variant="r4-black"
+    //       text="View docs"
+    //       icon={Right}
+    //       iconPosition="right"
+    //       onClick={() =>
+    //         window.open(
+    //           "https://docs.keywordsai.co/api-usage/request-params#extra-parameters-for-monitoring",
+    //           "_blank"
+    //         )
+    //       }
+    //     />
+    //   </div>
+    // </div>
   );
 };

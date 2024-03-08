@@ -345,7 +345,7 @@ export const MetricPane = ({}) => {
       <Divider />
       {/* <Classification /> */}
       {/* <Divider /> */}
-      {logItem?.metadata && Object.keys(logItem?.metadata).length > 0 && (
+      {/* {logItem?.metadata && Object.keys(logItem?.metadata).length > 0 && (
         <>
           <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch ">
             <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
@@ -360,7 +360,7 @@ export const MetricPane = ({}) => {
           </div>
           <Divider />
         </>
-      )}
+      )} */}
     </>
   );
 };
