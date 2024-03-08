@@ -136,8 +136,9 @@ export const StartWithPlan = () => {
       price: "",
       title: "Team",
       plan: "custom",
-      subtitle: "Fully tailored for your use case.",
-      featureTitle: "Everything in Team, plus",
+      subtitle: "Best for high-growth teams.",
+      featureTitle: "Everything in Pro, plus",
+      billFrequency: "Billed annually",
       features: [
         "Unlimited request",
         "Unlimited seats",
@@ -150,7 +151,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://zcal.co/keywords-ai/demos", "_blank");
         },
       },
       buttonParams: {
@@ -158,7 +159,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://zcal.co/keywords-ai/demos", "_blank");
         },
       },
     },

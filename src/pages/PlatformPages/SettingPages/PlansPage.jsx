@@ -142,8 +142,10 @@ export const PlansPage = connect(
     {
       title: "Team",
       plan: "custom",
+      price: 499,
       subtitle: "Built for scaling.",
       featureTitle: "Everything in Pro, plus",
+      billFrequency: "Billed annually",
       features: [
         "Unlimited request",
         "Unlimited seats",
