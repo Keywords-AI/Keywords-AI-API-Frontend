@@ -10,7 +10,6 @@ const LeftNavitationLayout = ({ sectionName }) => {
   const pages = settingChildren
     .map((child) => child.path)
     .filter((child) => child.length > 0);
-  console.log("pages", pages);
   const currPath = window.location.pathname.split("/").pop();
   const nextIndex = pages.findIndex((child) => child === currPath);
   const navigate = useNavigate();
