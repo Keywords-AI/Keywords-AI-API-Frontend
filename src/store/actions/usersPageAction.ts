@@ -149,6 +149,7 @@ const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
       method: "GET",
       data: {},
     });
+    console.log(rest);
     // console.log(responseData);
     return {
       ...rest,
