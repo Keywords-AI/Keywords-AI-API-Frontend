@@ -281,7 +281,7 @@ function DashboardNotConnected({
             <Tooltip
               side="bottom"
               sideOffset={8}
-              align="center"
+              align="end"
               delayDuration={1}
               content={
                 <>

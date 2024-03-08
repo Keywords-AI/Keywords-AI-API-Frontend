@@ -127,7 +127,7 @@ export const SessionPane = forwardRef(
               return (
                 <Combobox
                   title="Model A"
-                  value={value}
+                  value={value }
                   width="w-[256px]"
                   height="h-[50vh]"
                   onChange={onChange}

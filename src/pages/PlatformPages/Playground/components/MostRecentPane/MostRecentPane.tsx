@@ -282,7 +282,7 @@ const LogCard = ({ displayObj }) => {
         return (
           <div
             key={index}
-            className="flex items-center justify-between self-stretch"
+            className="flex items-center justify-between self-stretch h-[24px]"
           >
             {item.title}
             {item.value}

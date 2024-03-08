@@ -29,11 +29,10 @@ export default function UsersPage({}: Props) {
   useEffect(() => {
     dispatch(getUsersLogData());
   }, []);
-
   return (
     <div
       className={cn(
-        "flex-col items-start self-stretch flex-1 h-[calc(100vh-52px)] bg-gray-1 ",
+        "flex-col items-start self-stretch flex-1 h-[calc(100dvh-52px)] bg-gray-1 ",
         isEmpty ? "p-lg" : ""
       )}
       aria-label="frame 1733"
@@ -164,14 +163,14 @@ const Table = () => {
       case "requests":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "0"}
           </div>
         );
 
       case "tokens":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {(value as number) >= 0 ? (value as number).toLocaleString() : ""}
+            {(value as number) >= 0 ? (value as number).toLocaleString() : "0"}
           </div>
         );
       case "costs":
@@ -179,7 +178,7 @@ const Table = () => {
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
             {(value as number) >= 0 && value != null
               ? "$" + (value as number).toFixed(2)
-              : ""}
+              : "$0"}
           </div>
         );
       case "sentiment":
@@ -250,7 +249,7 @@ const Table = () => {
     </div>
   );
   return (
-    <div className="flex-col w-full max-h-[calc(100vh-157px)] items-start overflow-auto ">
+    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start overflow-auto ">
       <div aria-label="table" className="grid grid-flow-row w-full">
         {Header}
         {isloading
