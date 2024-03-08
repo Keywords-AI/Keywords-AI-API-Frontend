@@ -4,4 +4,5 @@ export type welcomeCard = {
   content: any;
   figure: any;
   beta?: boolean;
+  doclink?: string;
 };

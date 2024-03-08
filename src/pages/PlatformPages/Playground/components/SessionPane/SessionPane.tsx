@@ -113,7 +113,7 @@ export const SessionPane = forwardRef(
     return (
       <>
         <div
-          className="flex-col px-lg py-md items-start gap-xs self-stretch"
+          className="flex-col px-lg py-md items-start gap-xs self-stretch "
           ref={ref}
         >
           <Controller
@@ -127,7 +127,7 @@ export const SessionPane = forwardRef(
               return (
                 <Combobox
                   title="Model A"
-                  value={value }
+                  value={value}
                   width="w-[256px]"
                   height="h-[50vh]"
                   onChange={onChange}
