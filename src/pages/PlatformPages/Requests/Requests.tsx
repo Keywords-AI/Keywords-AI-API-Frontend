@@ -123,6 +123,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   if (firstTime)
     return (
       <WelcomeCard
+        doclink="https://docs.keywordsai.co/platform-features/requests-log"
         pageTitle="Logs"
         title="Send your first API call"
         content={

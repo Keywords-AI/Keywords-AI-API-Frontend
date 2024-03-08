@@ -21,6 +21,8 @@ import { userTableColumns } from "src/utilities/constants";
 import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { UsersPagePreview } from "src/components/Display/Figures";
+import { SentimentTag } from "src/components/Misc";
+
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -80,7 +82,7 @@ const TopBar = () => {
     },
     {
       title: "New users",
-      number: aggregatedData.new_users.toLocaleString(),
+      number: "+" + aggregatedData.new_users.toLocaleString(),
       dataKey: "active",
     },
     {
@@ -90,7 +92,7 @@ const TopBar = () => {
     },
     {
       title: "Monthly cost per user",
-      number: aggregatedData.monthly_cost_per_user.toLocaleString(),
+      number: "$" + aggregatedData.monthly_cost_per_user.toLocaleString(),
       dataKey: "active",
     },
   ];
@@ -184,7 +186,7 @@ const Table = () => {
       case "sentiment":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value != null ? (value as number).toFixed(2) : ""}
+            <SentimentTag sentiment_score={value as number} />
           </div>
         );
     }

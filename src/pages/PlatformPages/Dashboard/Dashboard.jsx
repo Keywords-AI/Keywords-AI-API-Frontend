@@ -222,6 +222,7 @@ function DashboardNotConnected({
       <WelcomeCard
         pageTitle="Dashboard"
         title="Send your first API call"
+        doclink="https://docs.keywordsai.co/platform-features/dashboard"
         content={
           <>
             to view your dashboard.
