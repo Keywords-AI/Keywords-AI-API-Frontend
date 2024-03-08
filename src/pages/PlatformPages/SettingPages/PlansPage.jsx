@@ -88,7 +88,7 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Team",
+      title: "Pro",
       plan: "team",
       subtitle: "Best for early stage startups.",
       price: teamPrice,
@@ -140,7 +140,7 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Custom",
+      title: "Team",
       plan: "custom",
       subtitle: "Built for scaling.",
       featureTitle: "Everything in Pro, plus",
