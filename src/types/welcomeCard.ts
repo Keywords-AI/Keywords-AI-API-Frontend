@@ -3,4 +3,5 @@ export type welcomeCard = {
   title: string;
   content: any;
   figure: any;
+  beta?: boolean;
 };

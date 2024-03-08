@@ -30,6 +30,7 @@ import { getQueryParam } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard.js";
+import { RequestPreview } from "src/components/Display/Figures.js";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -122,16 +123,16 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   if (firstTime)
     return (
       <WelcomeCard
-        pageTitle="Dashboard"
+        pageTitle="Logs"
         title="Send your first API call"
         content={
           <>
-            to view your dashboard.
+            to view your request logs.
             <br />
-            Visualize latency, cost, and usage in production.
+            Trace user sessions and debug with ease.
           </>
         }
-        figure={<DashboardPreview />}
+        figure={<RequestPreview />}
       />
     );
   else
