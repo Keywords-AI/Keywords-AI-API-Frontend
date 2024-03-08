@@ -39,7 +39,7 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
-      {isEmpty || true ? (
+      {isEmpty ? (
         <EmptyState />
       ) : (
         <>
