@@ -230,7 +230,11 @@ const RightPanel = () => {
     {
       value: "Session",
       buttonVariant: "text" as variantType,
-      content: <SessionPane isReset={isReset} />,
+      content: (
+        <div className="flex-col flex-1 self-stretch overflow-auto">
+          <SessionPane isReset={isReset} />
+        </div>
+      ),
       // tooltip: (
       //   <>
       //     <p className="caption text-gray-4">View session</p>
@@ -242,7 +246,11 @@ const RightPanel = () => {
       ? {
           value: "Recent",
           buttonVariant: "text" as variantType,
-          content: <MostRecentPane />,
+          content: (
+            <div className="flex-col flex-1 self-stretch overflow-auto">
+              <MostRecentPane />
+            </div>
+          ),
           // tooltip: (
           //   <>
           //     <p className="caption text-gray-4">View Recent</p>
