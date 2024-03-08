@@ -20,7 +20,9 @@ export type variantType =
   | "icon"
   | "footer"
   | "small-dashed"
-  | "small-select";
+  | "small-select"
+  | "big-white"
+  | "big-black";
 
 export type ButtonProps = {
   active?: boolean;
