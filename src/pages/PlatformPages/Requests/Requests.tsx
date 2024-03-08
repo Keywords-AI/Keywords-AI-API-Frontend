@@ -29,6 +29,8 @@ import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
+import WelcomeCard from "src/components/Cards/WelcomeCard.js";
+import { RequestPreview } from "src/components/Display/Figures.js";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -118,7 +120,21 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
-  if (firstTime) return <WelcomeState />;
+  if (firstTime)
+    return (
+      <WelcomeCard
+        pageTitle="Logs"
+        title="Send your first API call"
+        content={
+          <>
+            to view your request logs.
+            <br />
+            Trace user sessions and debug with ease.
+          </>
+        }
+        figure={<RequestPreview />}
+      />
+    );
   else
     return (
       <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
