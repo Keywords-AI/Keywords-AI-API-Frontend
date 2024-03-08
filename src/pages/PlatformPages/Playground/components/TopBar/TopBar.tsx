@@ -141,7 +141,7 @@ const HorizontalDivier = () => {
   return (
     <div
       aria-label="vertical divier"
-      className="w-[1px] h-full rounded-xs bg-gray-2"
+      className="w-[1px] self-stretch rounded-xs bg-gray-2"
     ></div>
   );
 };

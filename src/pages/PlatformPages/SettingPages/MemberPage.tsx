@@ -11,6 +11,7 @@ import cn from "src/utilities/classMerge";
 import { Dots, Down } from "src/components";
 import { capitalize } from "src/utilities/stringProcessing";
 import { useNavigate } from "react-router-dom";
+import { set } from "react-hook-form";
 
 export const MemberPage = () => {
   const organization = useTypedSelector(
@@ -256,32 +257,43 @@ const MemberActions = ({ user, role, id, pending }: OrgUser) => {
         setDeleteModalOpen(true);
       },
     });
-
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="flex justify-end items-center gap-[10px] flex-1">
       {pending && (
         <p className="text-sm-regular text-primary text-center">Pending</p>
       )}
-      <SelectInput
-        headLess={true}
-        choices={choices}
-        disabled={role === "owner"}
-        trigger={() => <DotsButton icon={Dots} disabled={role === "owner"} />}
-        defaultValue={role}
-        // Yeah, of course you cannot edit yourself
-        placeholder={isOwner ? "Owner" : "Member"}
-        align="end"
-        sideOffset={4}
-        alignOffset={0}
-        // triggerProps={{
-        //   first_name: user?.first_name,
-        //   last_name: user?.last_name,
-        //   pending: !isOwner && pending,
-        //   disabled: isOwner || isSelf,
-        //   isSelf,
-        //   selected: isSelf ? "You" : capitalize(role),
-        // }}
-      />
+      {role !== "owner" && (
+        <SelectInput
+          open={open}
+          setOpen={setOpen}
+          headLess={true}
+          choices={choices}
+          disabled={role === "owner"}
+          trigger={() => (
+            <DotsButton
+              icon={Dots}
+              disabled={role === "owner"}
+              onClick={() => setOpen((p) => !p)}
+              active={open}
+            />
+          )}
+          defaultValue={role}
+          // Yeah, of course you cannot edit yourself
+          placeholder={isOwner ? "Owner" : "Member"}
+          align="end"
+          sideOffset={4}
+          alignOffset={0}
+          // triggerProps={{
+          //   first_name: user?.first_name,
+          //   last_name: user?.last_name,
+          //   pending: !isOwner && pending,
+          //   disabled: isOwner || isSelf,
+          //   isSelf,
+          //   selected: isSelf ? "You" : capitalize(role),
+          // }}
+        />
+      )}
       <Modal
         title={"Remove member"}
         subtitle={"Are you sure you want to remove this member?"}
@@ -355,21 +367,24 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
   }
 
   const isSelf = currUser?.email === user?.email;
-
+  const [open, setOpen] = React.useState(false);
   return (
     <>
       <SelectInput
         headLess={true}
+        open={open}
+        setOpen={setOpen}
         choices={choices}
         disabled={
           role === "owner" ||
           isSelf ||
           currUser.organization_role.role === "member"
         }
-        trigger={() => (
+        trigger={(selected) => (
           <Button
             variant="text"
             text={capitalize(role)}
+            active={open}
             icon={
               role === "owner" ||
               isSelf ||
@@ -383,6 +398,7 @@ export const RoleActions = ({ user, role, id, pending }: OrgUser) => {
               isSelf ||
               currUser.organization_role.role === "member"
             }
+            onClick={() => setOpen((p) => !p)}
           />
         )}
         defaultValue={role}

@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   setBreakDownData,
   setMessages,
+  setModelLogData,
   setModelOptions,
   setPrompt,
 } from "./playgroundAction";
@@ -559,12 +560,22 @@ export const RestorePlaygroundStateFromLog = () => {
       options: {
         maxLength: currentLog?.full_request.max_tokens || 256,
         temperature: currentLog?.full_request.temperature || 1,
-        topP: currentLog?.full_request.topP || 1.0,
+        topP: currentLog?.full_request.top_p || 1.0,
         frequencyPenalty: currentLog?.full_request.presence_penalty || 0,
         presencePenalty: currentLog?.full_request.frequency_penalty || 0,
       },
+      modelLog: {
+        model: currentLog?.model,
+        completion_tokens: currentLog?.completion_tokens,
+        cost: currentLog?.cost,
+        ttft: currentLog?.time_to_first_token,
+        latency: currentLog?.latency,
+        status: currentLog?.status_code,
+      },
       breakDowData: {
         prompt_tokens: currentLog?.prompt_tokens,
+        timestamp: currentLog?.timestamp,
+        routing_time: currentLog?.routing_time,
         completion_tokens: currentLog?.completion_tokens,
         total_tokens:
           (currentLog?.prompt_tokens || 0) +
@@ -592,5 +603,32 @@ export const RestorePlaygroundStateFromLog = () => {
     breakdownData.total_tokens = playGroundState.breakDowData.total_tokens;
     breakdownData.cost = playGroundState.breakDowData.cost;
     dispatch(setBreakDownData({ ...breakdownData }));
+    let newModelLogdata = [
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+    ];
+    newModelLogdata[0] = {
+      model: playGroundState.modelLog.model || "",
+      completion_tokens: playGroundState.modelLog.completion_tokens || 0,
+      cost: playGroundState.modelLog.cost || 0,
+      ttft: playGroundState.modelLog.ttft || 0,
+      latency: playGroundState.modelLog.latency || 0,
+      status: playGroundState.modelLog.status || -1,
+    };
+    dispatch(setModelLogData(newModelLogdata));
   };
 };
