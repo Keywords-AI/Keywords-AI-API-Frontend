@@ -13,10 +13,13 @@ export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
 export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
 export const SET_IS_EMPTY = "SET_IS_EMPTY";
 
-export const setAggregationData = (data: any) => ({
+export const setAggregationData = (data: any) => {
+  data.daily_request_per_user = data.daily_requests / (data.daily_active_users || 1);
+  data.monthly_cost_per_user = data.monthly_cost / (data.monthly_active_users || 1);
+  return {
   type: SET_AGGREGATION_DATA,
   payload: data,
-});
+}};
 export const setIsEmpty = (value: boolean) => ({
   type: SET_IS_EMPTY,
   payload: value,
