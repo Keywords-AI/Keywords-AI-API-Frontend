@@ -11,6 +11,16 @@ export const SET_USERS_LOG_DATA_TIMERANGE = "SET_USERS_LOG_DATA_TIMERANGE";
 export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
   "SET_USERS_LOG_DATA_DISPLAY_COLUMNS";
 export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
+export const SET_IS_EMPTY = "SET_IS_EMPTY";
+
+export const setAggregationData = (data: any) => ({
+  type: SET_AGGREGATION_DATA,
+  payload: data,
+});
+export const setIsEmpty = (value: boolean) => ({
+  type: SET_IS_EMPTY,
+  payload: value,
+});
 
 export const setUsersLogDataDisplayColumns = (columns: string[]) => ({
   type: SET_USERS_LOG_DATA_DISPLAY_COLUMNS,
@@ -44,16 +54,16 @@ export const getUsersLogData = () => {
   return async (dispatch: any, getState: any) => {
     dispatch(setUsersLogDataLoading(true));
     // API call
-    dispatch(
-      setUsersLogData(
-        await fetchUsersLogData(
-          getSortFunction(
-            getState().usersPage.sortKey,
-            getState().usersPage.sortOrder
-          )
-        )
-      )
+    const data = await fetchUsersLogData(
+      getSortFunction(
+        getState().usersPage.sortKey,
+        getState().usersPage.sortOrder
+      ),
+      getState
     );
+    dispatch(setUsersLogData(data.usersLogData));
+    dispatch(setAggregationData(data.aggregation_data));
+    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -61,25 +71,17 @@ export const getUsersLogData = () => {
 export const filterUsersLogDataAction = (searchString: string) => {
   return async (dispatch: any, getState: any) => {
     dispatch(setUsersLogDataLoading(true));
+    const data = await fetchUsersLogData(
+      getSortFunction(
+        getState().usersPage.sortKey,
+        getState().usersPage.sortOrder
+      ),
+      getState
+    );
     if (searchString === "") {
-      dispatch(
-        setUsersLogData(
-          await fetchUsersLogData(
-            getSortFunction(
-              getState().usersPage.sortKey,
-              getState().usersPage.sortOrder
-            )
-          )
-        )
-      );
+      dispatch(setUsersLogData(data.usersLogData));
     } else {
-      const { results: data, ...summary } = await fetchUsersLogData(
-        getSortFunction(
-          getState().usersPage.sortKey,
-          getState().usersPage.sortOrder
-        )
-      );
-      const filteredData = data.filter((data: any) => {
+      const filteredData = data.usersLogData.filter((data: any) => {
         return data.customerId
           .toLowerCase()
           .includes(searchString.toLowerCase());
@@ -90,6 +92,7 @@ export const filterUsersLogDataAction = (searchString: string) => {
       }
       dispatch(setUsersLogData(filteredData));
     }
+    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -134,29 +137,36 @@ const getSortFunction = (property: string, order: string) => {
   return (a: any, b: any) => sortFunctions[property](a, b, order);
 };
 
-const fetchUsersLogData = async (sortFunc) => {
+const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
   try {
-    const {
-      results: responseData,
-      aggregation_data,
-      ...rest
-    } = await keywordsRequest({
-      path: `api/users`,
+    const timeRange = getState().usersPage.timeRane;
+    let params = new URLSearchParams();
+    params.set("summary_type", timeRange);
+    console.log(params.toString());
+
+    const { results: responseData, ...rest } = await keywordsRequest({
+      path: `api/users/?${params.toString()}`,
       method: "GET",
       data: {},
     });
-    return responseData
-      .map((data: any) => {
-        return {
-          customerId: data.customer_identifier,
-          lastActive: new Date(data.last_active_timeframe).toISOString(),
-          activeFor:
-            data.active_days + (+data.active_days > 1 ? " days" : " day"),
-          requests: Math.round(data.number_of_requests as number),
-          tokens: Math.round(data.total_tokens as number),
-        };
-      })
-      .sort(sortFunc);
+    // console.log(responseData);
+    return {
+      ...rest,
+      usersLogData: responseData
+        .map((data: any) => {
+          return {
+            customerId: data.customer_identifier,
+            lastActive: new Date(data.last_active_timeframe).toISOString(),
+            activeFor:
+              data.active_days + (+data.active_days > 1 ? " days" : " day"),
+            requests: Math.round(data.number_of_requests as number),
+            tokens: Math.round(data.total_tokens as number),
+            costs: data.total_cost,
+            sentiment: data.average_sentiment,
+          };
+        })
+        .sort(sortFunc),
+    };
   } catch (error) {
     console.error(error);
   }

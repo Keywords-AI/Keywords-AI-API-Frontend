@@ -9,6 +9,10 @@ import {
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
@@ -47,7 +51,7 @@ export const PlansPage = connect(
   mapDispatchToProps
 )(({ organization, createPaymentSession }) => {
   const [isYearly, setIsYearly] = useState(true);
-  const [teamPrice, setTeamPrice] = useState("29");
+  const [teamPrice, setTeamPrice] = useState("79");
   const models = Object.keys(useSelector((state) => state.models.models));
   const remaining = models.length || 20;
   const cards = [
@@ -84,7 +88,7 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Team",
+      title: "Pro",
       plan: "team",
       subtitle: "Best for startups and teams.",
       price: teamPrice,
@@ -106,13 +110,13 @@ export const PlansPage = connect(
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([
-              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
             ]);
           } else {
             createPaymentSession([
-              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
             ]);
           }
         },
@@ -123,13 +127,13 @@ export const PlansPage = connect(
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([
-              STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
             ]);
           } else {
             createPaymentSession([
-              STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-              STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+              STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
             ]);
           }
         },
@@ -186,7 +190,7 @@ export const PlansPage = connect(
 
   const handleSwitchChange = (checked) => {
     setIsYearly(checked);
-    setTeamPrice(checked ? "29" : "39");
+    setTeamPrice(checked ? "79" : "99");
   };
 
   return (
@@ -208,7 +212,7 @@ export const PlansPage = connect(
           />
           <div>
             <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary"> (35% off) </span>
+            <span className="text-sm-md text-primary"> (20% off) </span>
           </div>
         </div>
         <div className="flex flex-row gap-sm self-stretch">

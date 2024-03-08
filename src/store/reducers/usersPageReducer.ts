@@ -6,22 +6,23 @@ import {
   SET_USERS_LOG_DATA_SORT,
   SET_USERS_LOG_DATA_TIMERANGE,
   SET_AGGREGATION_DATA,
+  SET_IS_EMPTY,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
-  lastActive: Date;
+  lastActive: string;
   activeFor: string;
-  totalRequests: number;
-  requestsPerDay: number;
-  totalTokens: number;
-  tokensPerDay: number;
+  requests: number;
+  tokens: number;
+  sentiment: number;
+  cost: number;
 };
 type State = {
   loading: boolean;
   usersLogData: UserLogData[];
   filteredUsersLogData: UserLogData[];
   aggregationData: {
-    total_count: number;
+    total_users: number;
     monthly_active_users: number;
     daily_active_users: number;
     new_users: number;
@@ -32,12 +33,13 @@ type State = {
   sortOrder: string;
   timeRane: string;
   displayColumns: string[];
+  isEmpty: boolean;
 };
 const initialState = {
   loading: true,
   usersLogData: [],
   aggregationData: {
-    total_count: 0,
+    total_users: 0,
     monthly_active_users: 0,
     daily_active_users: 0,
     new_users: 0,
@@ -47,20 +49,26 @@ const initialState = {
   filteredUsersLogData: [],
   sortKey: "customerId",
   sortOrder: "asc",
-  timeRane: "total",
+  timeRane: "all",
+  isEmpty: false,
   displayColumns: [
     "customerId",
     "lastActive",
     "activeFor",
-    "totalRequests",
     "requests",
-    "totalTokens",
     "tokens",
+    "costs",
+    "sentiment",
   ],
 };
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
+    case SET_IS_EMPTY:
+      return {
+        ...state,
+        isEmpty: action.payload,
+      };
     case SET_USERS_LOG_DATA_DISPLAY_COLUMNS:
       return {
         ...state,
