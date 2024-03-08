@@ -30,6 +30,7 @@ export function Forbidden() {
             iconSize="xs"
             icon={Right}
             iconPosition="right"
+            onClick={()=>{window.open("mailto:team@keywordsai.co")}}
           />
         </div>
       </div>
