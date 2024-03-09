@@ -11,6 +11,7 @@ type Props = {};
 
 export default function DashboardFilterLeft({}: Props) {
   const filters = useTypedSelector((state) => state.dashboard.filters);
+  const isAdmin = useTypedSelector((state) => state.user.is_admin);
   const { enableScope, disableScope } = useHotkeysContext();
   const loading = useTypedSelector((state) => state.dashboard.loading);
   const dispatch = useTypedDispatch();
@@ -31,6 +32,7 @@ export default function DashboardFilterLeft({}: Props) {
       scopes: "clear_filters",
     }
   );
+  if (!isAdmin) return null;
   return (
     <div className="flex items-center gap-xxs">
       {filters.length > 0 === false && <DashboardFilterActions type="filter" />}
