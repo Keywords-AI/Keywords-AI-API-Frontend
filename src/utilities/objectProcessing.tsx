@@ -277,6 +277,7 @@ export const addMissingDate = (
     acc[key] = 0;
     return acc;
   }, {});
+
   const handleDailyCase = (): void => {
     const now = new Date();
     for (let hour = 0; hour < 24; hour++) {
@@ -374,6 +375,40 @@ export const addMissingDate = (
             : { date_group: dateString, ...defaultFields }
         );
         currDay.setDate(currDay.getDate() + 7);
+      }
+      break;
+    case "quarterly":
+      const currentYear = new Date(currntTimeRange).getFullYear();
+      const currentQuarter = Math.floor(
+        (new Date(currntTimeRange).getMonth() + 3) / 3
+      );
+      const quarterStartMonth = (currentQuarter - 1) * 3;
+      const quarterStartDate = new Date(currentYear, quarterStartMonth, 1);
+      const quarterEndMonth = quarterStartMonth + 2;
+      const quarterEndDate = new Date(currentYear, quarterEndMonth + 1, 0);
+      const step = new Date(quarterStartDate);
+      while (step <= quarterEndDate) {
+        const dayString = formatDateUnit(step);
+
+        const found = data.find((d) => {
+          const qWeekStart = new Date(step);
+          qWeekStart.setDate(qWeekStart.getDate() - qWeekStart.getDay());
+          qWeekStart.setHours(0, 0, 0, 0);
+          const qWeekEnd = new Date(step);
+          qWeekEnd.setDate(qWeekEnd.getDate() + 6);
+          qWeekEnd.setHours(23, 59, 59, 999);
+          const date = localeUtc(d.date_group);
+          return (
+            date.getTime() >= qWeekStart.getTime() &&
+            date.getTime() <= qWeekEnd.getTime()
+          );
+        });
+        newDataArray.push(
+          found
+            ? { ...found, date_group: dayString }
+            : { date_group: dayString, ...defaultFields }
+        );
+        step.setDate(step.getDate() + 7);
       }
       break;
 

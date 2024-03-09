@@ -615,6 +615,7 @@ export const getDashboardData = (postData) => {
         // console.log(`Time taken for process: ${endTime2 - endTime} ms`); // Time difference in milliseconds
       })
       .catch((error) => {
+        dispatch(setDashboardLoading(false));
         console.log("error", error);
       });
   };
@@ -777,7 +778,6 @@ const processBreakDownData = (
   } else if (["p50", "p90", "p95", "p99"].includes(type)) {
     metric = metric.split("_")[1] + "_" + type.replace("p", "p_");
   }
-  console.log("metric", metric);
   let returnData: any[] = [];
   Object.keys(groupByDate).forEach((key) => {
     const date_group = key;

@@ -119,6 +119,7 @@ export default function DashboardFilter() {
     weekly: "Week",
     monthly: "Month",
     yearly_by_week: "Year",
+    quarterly: "Quarter",
   };
   const filteredBreakdownChoices =
     currentType === "all"
@@ -200,7 +201,8 @@ export default function DashboardFilter() {
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
           { name: "Month", value: "monthly", secText: "3" },
-          { name: "Year", value: "yearly_by_week", secText: "4" },
+          { name: "Quarter", value: "quarterly", secText: "4" },
+          { name: "Year", value: "yearly_by_week", secText: "5" },
         ]}
         handleSelected={handleTimePeriodSelection}
       />
@@ -301,42 +303,42 @@ export default function DashboardFilter() {
                     icon: Metrics.average_ttft.icon,
                     secText: "3",
                   },
-                  {
-                    name: Metrics.average_tpot.name,
-                    value: Metrics.average_tpot.value,
-                    icon: Metrics.average_tpot.icon,
-                    secText: "4",
-                  },
+                  // {
+                  //   name: Metrics.average_tpot.name,
+                  //   value: Metrics.average_tpot.value,
+                  //   icon: Metrics.average_tpot.icon,
+                  //   secText: "4",
+                  // },
                   {
                     name: Metrics.average_latency.name,
                     value: Metrics.average_latency.value,
                     icon: Metrics.average_latency.icon,
-                    secText: "5",
+                    secText: "4",
                   },
 
                   {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "6",
+                    secText: "5",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "7",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "8",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "9",
+                    secText: "8",
                   },
                 ]}
               />
