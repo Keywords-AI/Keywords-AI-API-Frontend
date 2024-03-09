@@ -293,6 +293,19 @@ const RightPanel = () => {
     },
     { scopes: "rightPanel", preventDefault: true }
   );
+  useHotkeys(
+    "r",
+    () => {
+      if (streamingStates.some((item) => item.isLoading === true)) return;
+
+      setIsReset(true);
+      setTimeout(() => {
+        setIsReset(false);
+      }, 100);
+      dispatch(resetModelOptions());
+    },
+    { scopes: "rightPanel", preventDefault: true }
+  );
   useEffect(() => {
     if (!timestamp && tab === "Recent") setTab("Session");
   }, [timestamp]);
@@ -307,22 +320,38 @@ const RightPanel = () => {
       rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
       headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
       headerRight={
-        <Button
-          variant="text"
-          text="Reset"
-          textColor="text-gray-3"
-          textHoverColor="text-red"
-          textClickedColor="text-red"
-          onClick={() => {
-            if (streamingStates.some((item) => item.isLoading === true)) return;
+        <Tooltip
+          side="top"
+          sideOffset={2}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Reset settings</p>
+              <AlphanumericKey value={"R"} />
+            </>
+          }
+        >
+          <div>
+            <Button
+              variant="text"
+              text="Reset"
+              textColor="text-gray-3"
+              textHoverColor="text-red"
+              textClickedColor="text-red"
+              onClick={() => {
+                if (streamingStates.some((item) => item.isLoading === true))
+                  return;
 
-            setIsReset(true);
-            setTimeout(() => {
-              setIsReset(false);
-            }, 100);
-            dispatch(resetModelOptions());
-          }}
-        />
+                setIsReset(true);
+                setTimeout(() => {
+                  setIsReset(false);
+                }, 100);
+                dispatch(resetModelOptions());
+              }}
+            />
+          </div>
+        </Tooltip>
       }
     />
   );

@@ -96,6 +96,16 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     setFilters([]);
   };
   useEffect(() => {
+    const intervalId = setInterval(() => {
+      // rotate the token every 1 minutes
+      if (!loading) {
+        console.log("fetching logs");
+        getRequestLogs();
+      }
+    }, 1000 * 60);
+    return () => clearInterval(intervalId);
+  }, [loading]);
+  useEffect(() => {
     if (filters.length > 0) enableScope("clear_filters");
     else disableScope("clear_filters");
     return () => {
