@@ -300,6 +300,11 @@ export default function dashboardReducer(
           updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
           break;
+        case "yearly_by_week":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
+          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+          break;
         case "monthly":
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setHours(12, 0, 0, 0);
@@ -309,6 +314,11 @@ export default function dashboardReducer(
           updatedTimeFrame = new Date(currTime);
           updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+          break;
+        case "quarterly":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
+          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset * 3);
           break;
         default:
           updatedTimeFrame = new Date(currTime);

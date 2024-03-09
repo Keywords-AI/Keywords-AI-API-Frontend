@@ -15,6 +15,7 @@ type KeywordsFetchRequestConfig = {
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
   dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
   hideError?: boolean; // Optional flag to hide error notifications
+  errorHandling?: (status: number) => void // Optional error handling function
 };
 
 /**
@@ -42,6 +43,7 @@ export const keywordsRequest = async ({
   credentials = "same-origin",
   dispatch,
   hideError = false,
+  errorHandling = (status: number) => {},
 }: KeywordsFetchRequestConfig): Promise<any> => {
   try {
     const headers: Record<string, string> = {
@@ -73,6 +75,7 @@ export const keywordsRequest = async ({
       if (dispatch && typeof dispatch === "function" && !hideError) {
         dispatch(handleApiResponseErrors(error, status));
       }
+      errorHandling(status);
       throw new Error(error.detail || "Request failed");
     }
   } catch (error: Error | any) {

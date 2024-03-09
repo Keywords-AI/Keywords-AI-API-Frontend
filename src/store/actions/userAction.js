@@ -35,7 +35,6 @@ export const getUser = () => {
     })
       .then(async (res) => {
         if (res.ok) {
-          const data = await res.json();
           const { organization, ...user } = data;
           // Set the user object itself
           dispatch({ type: SET_USER, payload: user });
@@ -59,6 +58,7 @@ export const getUser = () => {
         } else if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
+          window.location = "/login";
         }
       })
       .catch((error) => console.log(error.message));
