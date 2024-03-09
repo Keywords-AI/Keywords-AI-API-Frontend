@@ -149,7 +149,7 @@ export default function DashboardFilter() {
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      {user.is_admin &&  <Button
+      {user.is_superadmin &&  <Button
         variant="small"
         text="Show admins"
         active={show_admins}
