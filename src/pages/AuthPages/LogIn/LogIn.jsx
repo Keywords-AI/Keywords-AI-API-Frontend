@@ -109,8 +109,8 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button text={"Sign in"} variant={"r4-primary"} width={"w-full"} />
-            {/* <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
-              width="w-full" onClick={() => googleLogin()} type="button" /> */}
+            <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
+              width="w-full" onClick={() => googleLogin()} type="button" />
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}

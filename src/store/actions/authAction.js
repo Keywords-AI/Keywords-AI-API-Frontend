@@ -152,7 +152,6 @@ export const googleAuthJWT = () => {
   fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, {
     method: "POST",
     headers: headers,
-    body: params,
     credentials: "include",
   })
     // axios.post(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, params, headers)
