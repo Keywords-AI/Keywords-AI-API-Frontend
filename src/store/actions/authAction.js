@@ -309,28 +309,24 @@ export const activateUser = (
   };
 };
 
-export const resendActivationEmail = (email, handleSuccess, handleError) => {
+export const resendActivationEmail = (email) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}auth/users/resend_activation/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
-    })
-      .then(async (res) => {
-        if (res.ok) {
+    keywordsRequest(
+      {
+        path: "auth/users/resend_activation/", 
+        method: "POST",
+        data: { email: email },
+        auth: false,
+      }
+    )
+      .then((jsonData) => {
           dispatch(
             dispatchNotification({
               type: "success",
               title: "The activation link has been sent to your email!",
             })
           );
-        } else if (res.status === 400) {
-          const responseJson = await res.text();
-          handleError(responseJson);
-        }
-      })
+        })
       .catch((error) => console.log(error));
   };
 };
