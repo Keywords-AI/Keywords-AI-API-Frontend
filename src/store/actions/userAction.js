@@ -56,10 +56,12 @@ export const getUser = () => {
           dispatch(setCustomPromptFile(data.current_file));
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
-        } else if (res.status === 401 && res.status == 403) {
+        } else {
+        if (res.status === 401 && res.status == 403) {
           const data = await res.text();
           dispatch({ type: SET_USER, payload: {} });
-        }
+          window.location = "/login";
+        }}
       })
       .catch((error) => console.log(error.message));
   };

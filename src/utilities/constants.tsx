@@ -569,12 +569,13 @@ export const Metrics = {
     unit: "requests",
   },
   average_latency: {
-    name: "Latency",
+    name: "Generation time",
     value: "average_latency",
     icon: Speed,
     unit: "s",
   },
   average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed, unit: "s" },
+  average_tpot: { name: "TPOT", value: "average_tpot", icon: Speed, unit: "s" },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
@@ -594,7 +595,7 @@ export const Metrics = {
     unit: "tokens",
   },
   total_cost: {
-    name: "Total cost",
+    name: "Cost",
     value: "total_cost",
     icon: Cost,
     unit: "$",
@@ -606,25 +607,25 @@ export const Metrics = {
     unit: "errors",
   },
   latency_p_50: {
-    name: "Latency p50",
+    name: "Generation time p50",
     value: "latency_p_50",
     icon: Speed,
     unit: "s",
   },
   latency_p_90: {
-    name: "Latency p90",
+    name: "Generation time p90",
     value: "latency_p_90",
     icon: Speed,
     unit: "s",
   },
   latency_p_95: {
-    name: "Latency p95",
+    name: "Generation time p95",
     value: "latency_p_95",
     icon: Speed,
     unit: "s",
   },
   latency_p_99: {
-    name: "Latency p99",
+    name: "Generation time p99",
     value: "latency_p_99",
     icon: Speed,
     unit: "s",

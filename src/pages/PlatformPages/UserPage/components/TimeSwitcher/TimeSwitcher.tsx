@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Button } from "src/components/Buttons";
 import { AlphanumericKey, Down } from "src/components/Icons/iconsDS";
 import { SelectInput } from "src/components/Inputs";
@@ -27,6 +29,10 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     dispatch(getUsersLogData());
   }, [currentTimeRange]);
   const [showDropdown, setShowDropdown] = useState(false);
+  useHotkeys("t", () => {
+    setShowDropdown(!showDropdown);
+  }),
+    { preventDefault: true };
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <Button
@@ -57,6 +63,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
               variant="small"
               icon={Down}
               iconPosition="right"
+              active={showDropdown}
             />
           </Tooltip>
         )}
@@ -68,6 +75,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
         gap="gap-xxs"
         optionsWidth="w-[120px]"
         useShortCut
+        setOpen={setShowDropdown}
         open={showDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },

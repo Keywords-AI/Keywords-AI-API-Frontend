@@ -95,7 +95,10 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
-  } else if (currentMetric === "average_latency") {
+  } else if (
+    currentMetric === "average_latency" ||
+    currentMetric === "average_ttft"
+  ) {
     filteredtypeChoices = [
       { name: "Avg per request", value: "average", secText: "1" },
       { name: "P50", value: "p50", secText: "2" },
@@ -116,7 +119,8 @@ export default function DashboardFilter() {
     daily: "Day",
     weekly: "Week",
     monthly: "Month",
-    yearly: "Year",
+    yearly_by_week: "Year",
+    quarterly: "Quarter",
   };
   const filteredBreakdownChoices =
     currentType === "all"
@@ -207,7 +211,8 @@ export default function DashboardFilter() {
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
           { name: "Month", value: "monthly", secText: "3" },
-          { name: "Year", value: "yearly", secText: "4" },
+          { name: "Quarter", value: "quarterly", secText: "4" },
+          { name: "Year", value: "yearly_by_week", secText: "5" },
         ]}
         handleSelected={handleTimePeriodSelection}
       />
@@ -303,17 +308,24 @@ export default function DashboardFilter() {
                     secText: "2",
                   },
                   {
-                    name: Metrics.average_latency.name,
-                    value: Metrics.average_latency.value,
-                    icon: Metrics.average_latency.icon,
-                    secText: "3",
-                  },
-                  {
                     name: Metrics.average_ttft.name,
                     value: Metrics.average_ttft.value,
                     icon: Metrics.average_ttft.icon,
+                    secText: "3",
+                  },
+                  // {
+                  //   name: Metrics.average_tpot.name,
+                  //   value: Metrics.average_tpot.value,
+                  //   icon: Metrics.average_tpot.icon,
+                  //   secText: "4",
+                  // },
+                  {
+                    name: Metrics.average_latency.name,
+                    value: Metrics.average_latency.value,
+                    icon: Metrics.average_latency.icon,
                     secText: "4",
                   },
+
                   {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
