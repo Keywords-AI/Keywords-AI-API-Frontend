@@ -54,6 +54,7 @@ import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
 import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
+import ResendActivation from "./pages/AuthPages/ResendActivation";
 
 const mapStateToProps = (state) => {
   return {
@@ -134,11 +135,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "dashboard",
           element: <Dashboard />,
         },
-        {
-          path: "sentiment",
-          element: <Sentiment />,
-        },
-
+        { path: "users", element: <UsersPage /> },
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
@@ -152,8 +149,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         { path: "chatbot", element: <Chatbot /> },
         { path: "loading", element: <LoadingPage /> },
         { path: "cache", element: <CachePage /> },
-        { path: "users", element: <UsersPage /> },
         { path: "customers", element: <CustomerPage /> },
+        {
+          path: "sentiment",
+          element: <Sentiment />,
+        },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
@@ -184,6 +184,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           element: <ResetPassword />,
         },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
+        { path: "resend-activation", element: <ResendActivation /> },
         {
           path: "onboarding",
           element: isUserLoggedIn ? (

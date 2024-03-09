@@ -29,7 +29,7 @@ export const AlertsFallbackPage = () => {
   const dispatch = useTypedDispatch();
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
-
+  const [alertsEnabled, setAlertsEnabled] = React.useState(true);
   const [systemEnable, setSystemEnable] = React.useState(systemFallbackEnabled);
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
@@ -116,7 +116,12 @@ export const AlertsFallbackPage = () => {
     //   })
     // );
   };
-
+  const handleAlertsFallbackToggle = () => {
+    setAlertsEnabled(!alertsEnabled);
+    dispatch(
+      updateOrganization({ fallback_model_enabled: !isFallbackEnabled })
+    );
+  };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
     dispatch(
@@ -135,11 +140,15 @@ export const AlertsFallbackPage = () => {
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          <IconButton
+          {/* <IconButton
             icon={Redirect}
             onClick={() =>
               window.open("https://status.keywordsai.co", "_blank")
             }
+          /> */}
+          <SwitchButton 
+            checked={alertsEnabled}
+            onCheckedChange={handleAlertsFallbackToggle}
           />
         </div>
       </div>
@@ -220,6 +229,7 @@ export const AlertsFallbackPage = () => {
             <Tag
               text="Upgrade"
               backgroundColor="bg-primary/10"
+              className="cursor-pointer"
               textColor="text-primary"
               border="shadow-transparent"
               onClick={() => {

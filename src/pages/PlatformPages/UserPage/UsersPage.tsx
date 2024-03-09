@@ -21,6 +21,8 @@ import { userTableColumns } from "src/utilities/constants";
 import MetricCardFocus from "src/components/Cards/MetricCardFocus";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { UsersPagePreview } from "src/components/Display/Figures";
+import { SentimentTag } from "src/components/Misc";
+
 type Props = {};
 
 export default function UsersPage({}: Props) {
@@ -80,7 +82,7 @@ const TopBar = () => {
     },
     {
       title: "New users",
-      number: aggregatedData.new_users.toLocaleString(),
+      number: "+" + aggregatedData.new_users.toLocaleString(),
       dataKey: "active",
     },
     {
@@ -90,7 +92,7 @@ const TopBar = () => {
     },
     {
       title: "Monthly cost per user",
-      number: aggregatedData.monthly_cost_per_user.toLocaleString(),
+      number: "$" + aggregatedData.monthly_cost_per_user.toLocaleString(),
       dataKey: "active",
     },
   ];
@@ -184,7 +186,7 @@ const Table = () => {
       case "sentiment":
         return (
           <div className="flex text-sm-regular text-gray-5  items-center h-[20px]">
-            {value != null ? (value as number).toFixed(2) : ""}
+            <SentimentTag sentiment_score={value as number} />
           </div>
         );
     }
@@ -249,32 +251,34 @@ const Table = () => {
     </div>
   );
   return (
-    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start overflow-auto ">
+    <div className="flex-col w-full max-h-[calc(100dvh-236px)] items-start ">
       <div aria-label="table" className="grid grid-flow-row w-full">
         {Header}
-        {isloading
-          ? LoadingRow
-          : data &&
-            data.map((item, index) => {
-              return (
-                <div
-                  key={index}
-                  aria-label="row"
-                  className="px-lg py-xxs grid gap-x-sm items-center h-[40px] "
-                  style={{
-                    gridTemplateColumns: templateString,
-                  }}
-                >
-                  {Object.entries(item)
-                    .filter((item) => displayColumns.includes(item[0]))
-                    .map(([key, value], i) => (
-                      <React.Fragment key={i}>
-                        {renderItem(key, value)}
-                      </React.Fragment>
-                    ))}
-                </div>
-              );
-            })}
+        <div className="flex-col w-full max-h-[calc(100dvh-282px)] overflow-auto ">
+          {isloading
+            ? LoadingRow
+            : data &&
+              data.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    aria-label="row"
+                    className="px-lg py-xxs grid gap-x-sm items-center h-[40px] "
+                    style={{
+                      gridTemplateColumns: templateString,
+                    }}
+                  >
+                    {Object.entries(item)
+                      .filter((item) => displayColumns.includes(item[0]))
+                      .map(([key, value], i) => (
+                        <React.Fragment key={i}>
+                          {renderItem(key, value)}
+                        </React.Fragment>
+                      ))}
+                  </div>
+                );
+              })}
+        </div>
       </div>
     </div>
   );

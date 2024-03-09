@@ -47,6 +47,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
+  ttftData: state.dashboard.ttftData,
   firstTime: !state.organization?.has_api_call,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
@@ -67,6 +68,7 @@ function DashboardNotConnected({
   promptTokenCountData,
   completionTokenCountData,
   costData,
+  ttftData,
   getDashboardData,
   firstTime,
   organization,
@@ -121,17 +123,34 @@ function DashboardNotConnected({
         getDashboardData();
       },
     },
+    // {
+    //   title: Metrics.average_latency.name,
+    //   number: `${summary.average_latency?.toFixed(2) || 0}`,
+    //   chartData: latencyData,
+    //   dataKey: Metrics.average_latency.value,
+    //   unit: true,
+    //   onClick: () => {
+    //     dispatch(setDisplayType("average", setQueryParams, navigate));
+    //     dispatch(
+    //       setDisplayMetric(
+    //         Metrics.average_latency.value,
+    //         setQueryParams,
+    //         navigate
+    //       )
+    //     );
+    //   },
+    // },
     {
-      title: Metrics.average_latency.name,
-      number: `${summary.average_latency?.toFixed(2) || 0}`,
-      chartData: latencyData,
-      dataKey: Metrics.average_latency.value,
+      title: Metrics.average_ttft.name,
+      number: `${summary.average_ttft?.toFixed(2) || 0}`,
+      chartData: ttftData,
+      dataKey: Metrics.average_ttft.value,
       unit: true,
       onClick: () => {
         dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
-            Metrics.average_latency.value,
+            Metrics.average_ttft.value,
             setQueryParams,
             navigate
           )
@@ -222,6 +241,7 @@ function DashboardNotConnected({
       <WelcomeCard
         pageTitle="Dashboard"
         title="Send your first API call"
+        doclink="https://docs.keywordsai.co/platform-features/dashboard"
         content={
           <>
             to view your dashboard.
