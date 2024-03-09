@@ -297,18 +297,22 @@ export default function dashboardReducer(
       switch (state.displayFilter.timeRange) {
         case "yearly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
           break;
         case "monthly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
           break;
         case "weekly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
           break;
         default:
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
       return {
