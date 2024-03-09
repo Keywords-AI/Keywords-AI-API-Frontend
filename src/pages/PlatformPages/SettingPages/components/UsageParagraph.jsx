@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
-import { Plus, Edit, Delete, Arrow, BackArrow, ForwardArrow } from "src/assets/svgs.jsx"
-import KeywordsBarChart from "src/components/KeywordsBarChart/KeywordsBarChart.jsx";
+import { Plus, Edit, Delete, Arrow, BackArrow, ForwardArrow } from "src/assets/svgs"
+import KeywordsBarChart from "src/components/KeywordsBarChart/KeywordsBarChart";
 import { connect } from 'react-redux';
 import { fetchUsageData } from 'src/store/actions/usageData';
 import ProgressBar from "src/components/ProgressBar/ProgressBar";

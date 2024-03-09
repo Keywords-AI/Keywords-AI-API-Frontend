@@ -33,7 +33,7 @@ export const viewBillTrigger = (item: any) => {
 };
 
 export const BillingPage = () => {
-  // Fetching action is handled in PanelNavigation.jsx
+  // Fetching action is handled in PanelNavigation
   const billings = useTypedSelector((state) => state.billings.billings);
   const currentBilling = useTypedSelector(
     (state) => state.billings.currentBilling
