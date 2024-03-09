@@ -118,7 +118,7 @@ export default function DashboardFilter() {
     daily: "Day",
     weekly: "Week",
     monthly: "Month",
-    yearly: "Year",
+    yearly_by_week: "Year",
   };
   const filteredBreakdownChoices =
     currentType === "all"
@@ -200,7 +200,7 @@ export default function DashboardFilter() {
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
           { name: "Month", value: "monthly", secText: "3" },
-          { name: "Year", value: "yearly", secText: "4" },
+          { name: "Year", value: "yearly_by_week", secText: "4" },
         ]}
         handleSelected={handleTimePeriodSelection}
       />

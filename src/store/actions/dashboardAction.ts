@@ -445,6 +445,7 @@ export const getDashboardData = (postData) => {
     // const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
+    params.set("timezone_offset", timeOffset.toString());
     const date = new Date(getState().dashboard.timeFrame);
 
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
@@ -516,7 +517,13 @@ export const getDashboardData = (postData) => {
         }
         dispatch(
           setAvgTtftData(
-            sliceChartData(dataList, "date_group", Metrics.average_ttft.value)
+            sliceChartData(dataList, "date_group", [
+              Metrics.average_ttft.value,
+              Metrics.ttft_p_50.value,
+              Metrics.ttft_p_90.value,
+              Metrics.ttft_p_95.value,
+              Metrics.ttft_p_99.value,
+            ])
           )
         );
         dispatch(
@@ -613,144 +620,144 @@ export const getDashboardData = (postData) => {
   };
 };
 
-export const fillMissingDate = (data, dateGroup, timeFrame) => {
-  const newDataArray = [];
+// export const fillMissingDate = (data, dateGroup, timeFrame) => {
+//   const newDataArray = [];
 
-  // const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
+//   // const formatTimeUnit = (unit) => unit.toString().padStart(2, "0");
 
-  // localeUTC: given a UTC timestamp, return the UTC time when the local time is the same as the given timestamp
-  const localeUtc = (dateStr) => {
-    const date = new Date(dateStr);
-    return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-  };
-  const handleDailyCase = () => {
-    const now = new Date(timeFrame);
+//   // localeUTC: given a UTC timestamp, return the UTC time when the local time is the same as the given timestamp
+//   const localeUtc = (dateStr) => {
+//     const date = new Date(dateStr);
+//     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+//   };
+//   const handleDailyCase = () => {
+//     const now = new Date(timeFrame);
 
-    // BE gives UTC strings, Date() converts to local timezone
-    // The hours are accurate, but the date is not
-    for (let hour = 0; hour < 24; hour++) {
-      const hourString = formatTimeUnit(hour);
-      const found = data.find((d) => {
-        const date = new Date(d.date_group);
-        const foundDate = date.getHours() === hour;
-        return foundDate;
-      });
-      newDataArray.push(
-        found
-          ? { ...found, date_group: hourString }
-          : {
-              date_group: hourString,
-              number_of_requests: 0,
-              total_cost: 0,
-              total_tokens: 0,
-              error_count: 0,
-              average_latency: 0,
-              api_key: data.api_key,
-              model: data.model,
-            }
-      );
-    }
-  };
-  switch (dateGroup) {
-    case "daily":
-      handleDailyCase();
-      break;
+//     // BE gives UTC strings, Date() converts to local timezone
+//     // The hours are accurate, but the date is not
+//     for (let hour = 0; hour < 24; hour++) {
+//       const hourString = formatTimeUnit(hour);
+//       const found = data.find((d) => {
+//         const date = new Date(d.date_group);
+//         const foundDate = date.getHours() === hour;
+//         return foundDate;
+//       });
+//       newDataArray.push(
+//         found
+//           ? { ...found, date_group: hourString }
+//           : {
+//               date_group: hourString,
+//               number_of_requests: 0,
+//               total_cost: 0,
+//               total_tokens: 0,
+//               error_count: 0,
+//               average_latency: 0,
+//               api_key: data.api_key,
+//               model: data.model,
+//             }
+//       );
+//     }
+//   };
+//   switch (dateGroup) {
+//     case "daily":
+//       handleDailyCase();
+//       break;
 
-    case "weekly":
-      for (let day = 0; day < 7; day++) {
-        const dayDate = new Date(timeFrame);
-        // Adjust the start date based on the current day of the week
-        dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
-        const dateString = formatDateUnit(dayDate);
-        const found = data.find(
-          (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
-        );
-        newDataArray.push(
-          found
-            ? { ...found, date_group: dateString }
-            : {
-                date_group: dateString,
-                number_of_requests: 0,
-                total_cost: 0,
-                total_tokens: 0,
-                error_count: 0,
-                average_latency: 0,
-                api_key: data.api_key,
-                model: data.model,
-              }
-        );
-      }
-      break;
-    case "monthly":
-      const now = new Date(timeFrame);
-      // Get the number of days in the current month
-      const daysInMonth = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        0
-      ).getDate();
+//     case "weekly":
+//       for (let day = 0; day < 7; day++) {
+//         const dayDate = new Date(timeFrame);
+//         // Adjust the start date based on the current day of the week
+//         dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+//         const dateString = formatDateUnit(dayDate);
+//         const found = data.find(
+//           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
+//         );
+//         newDataArray.push(
+//           found
+//             ? { ...found, date_group: dateString }
+//             : {
+//                 date_group: dateString,
+//                 number_of_requests: 0,
+//                 total_cost: 0,
+//                 total_tokens: 0,
+//                 error_count: 0,
+//                 average_latency: 0,
+//                 api_key: data.api_key,
+//                 model: data.model,
+//               }
+//         );
+//       }
+//       break;
+//     case "monthly":
+//       const now = new Date(timeFrame);
+//       // Get the number of days in the current month
+//       const daysInMonth = new Date(
+//         now.getFullYear(),
+//         now.getMonth() + 1,
+//         0
+//       ).getDate();
 
-      for (let day = 1; day <= daysInMonth; day++) {
-        // Format the date string as MM/DD/YYYY
-        let date = new Date(now.getFullYear(), now.getMonth(), day);
-        const dayString = formatDateUnit(date);
+//       for (let day = 1; day <= daysInMonth; day++) {
+//         // Format the date string as MM/DD/YYYY
+//         let date = new Date(now.getFullYear(), now.getMonth(), day);
+//         const dayString = formatDateUnit(date);
 
-        const found = data.find((d) => {
-          const date = localeUtc(d.date_group);
-          return date.getDate() === day && date.getMonth() === now.getMonth();
-        });
+//         const found = data.find((d) => {
+//           const date = localeUtc(d.date_group);
+//           return date.getDate() === day && date.getMonth() === now.getMonth();
+//         });
 
-        newDataArray.push(
-          found
-            ? { ...found, date_group: dayString }
-            : {
-                date_group: dayString,
-                number_of_requests: 0,
-                total_cost: 0,
-                total_tokens: 0,
-                error_count: 0,
-                average_latency: 0,
-                api_key: data.api_key,
-                model: data.model,
-              }
-        );
-      }
-      break;
+//         newDataArray.push(
+//           found
+//             ? { ...found, date_group: dayString }
+//             : {
+//                 date_group: dayString,
+//                 number_of_requests: 0,
+//                 total_cost: 0,
+//                 total_tokens: 0,
+//                 error_count: 0,
+//                 average_latency: 0,
+//                 api_key: data.api_key,
+//                 model: data.model,
+//               }
+//         );
+//       }
+//       break;
 
-    case "yearly":
-      for (let month = 0; month < 12; month++) {
-        // The start and end date will be offset by the timezone
-        // This will lead of offset in the month
-        // So we need to know the month in UTC.
-        const monthString = digitToMonth(month);
-        const found = data.find((d) => {
-          const date = localeUtc(d.date_group);
-          return date.getMonth() === month;
-        });
-        newDataArray.push(
-          found
-            ? { ...found, date_group: monthString }
-            : {
-                date_group: monthString,
-                number_of_requests: 0,
-                total_cost: 0,
-                total_tokens: 0,
-                error_count: 0,
-                average_latency: 0,
-                api_key: data.api_key,
-                model: data.model,
-              }
-        );
-      }
-      break;
-    default:
-      // Default case logic (if needed)
-      handleDailyCase();
-      break;
-  }
+//     case "yearly":
+//       for (let month = 0; month < 12; month++) {
+//         // The start and end date will be offset by the timezone
+//         // This will lead of offset in the month
+//         // So we need to know the month in UTC.
+//         const monthString = digitToMonth(month);
+//         const found = data.find((d) => {
+//           const date = localeUtc(d.date_group);
+//           return date.getMonth() === month;
+//         });
+//         newDataArray.push(
+//           found
+//             ? { ...found, date_group: monthString }
+//             : {
+//                 date_group: monthString,
+//                 number_of_requests: 0,
+//                 total_cost: 0,
+//                 total_tokens: 0,
+//                 error_count: 0,
+//                 average_latency: 0,
+//                 api_key: data.api_key,
+//                 model: data.model,
+//               }
+//         );
+//       }
+//       break;
+//     default:
+//       // Default case logic (if needed)
+//       handleDailyCase();
+//       break;
+//   }
 
-  return newDataArray;
-};
+//   return newDataArray;
+// };
 
 const processBreakDownData = (
   data,
@@ -763,10 +770,14 @@ const processBreakDownData = (
   data = data.map((item) => {
     return { ...item, model: item.model || "Unknown model" };
   });
+
   const groupByDate = _.groupBy(data, ({ date_group }) => date_group);
   if (type === "average") {
     metric = metric.replace("total", "average");
+  } else if (["p50", "p90", "p95", "p99"].includes(type)) {
+    metric = metric.split("_")[1] + "_" + type.replace("p", "p_");
   }
+  console.log("metric", metric);
   let returnData: any[] = [];
   Object.keys(groupByDate).forEach((key) => {
     const date_group = key;
