@@ -7,10 +7,9 @@ import {
   setFilterType,
   updateFilter,
   setCurrentFilter,
-  deleteFilter,
 } from "src/store/actions";
 import { useForm } from "react-hook-form";
-import { TextInput, TextInputSmall } from "src/components/Inputs";
+import { SelectInput, TextInput, TextInputSmall } from "src/components/Inputs";
 import { Modal } from "src/components/Dialogs";
 import { useLocation } from "react-router-dom";
 
@@ -53,6 +52,9 @@ export const InputFieldFilter = ({
         padding="py-xxxs px-xxs"
         type={filterOption.value_field_type}
         defaultValue={defaultValue as string}
+        step={
+          filterOption.value_field_type === "number" ? "0.00001" : undefined
+        }
       />
       <Button variant="small" text="Apply" onClick={onSubmit} />
       <Button
@@ -60,7 +62,7 @@ export const InputFieldFilter = ({
         text="Cancel"
         type="button"
         onClick={() =>
-          dispatch(dispatch(setCurrentFilter({ metric: undefined, id: "" })))
+          dispatch(setCurrentFilter({ metric: undefined, id: "" }))
         }
       />
     </div>
@@ -134,16 +136,22 @@ const InputModal = ({
   const dispatch = useTypedDispatch();
   const onSubmit = (data) => {
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    if (filterOption.metric === "timestamp") {
+      if (!data.filterValue) {
+        data.filterValue = new Date().toISOString().slice(0, -8);
+      }
+    }
     dispatch(
       addFilter({
         metric: filterOption.metric,
         value: [data.filterValue],
-        operator: defaultOperator,
+        operator: filterOption.operator,
         value_field_type: filterOption.value_field_type,
         display_name: filterOption.display_name,
         id: Math.random().toString(36).substring(2, 15),
       })
     );
+    setOpen(false);
   };
   const location = useLocation();
   useEffect(() => {
@@ -166,6 +174,27 @@ const InputModal = ({
         onSubmit={handleSubmit(onSubmit)}
         className="flex-col items-center gap-md self-stretch"
       >
+        {/*
+          <SelectInput
+            headLess
+            trigger={() => (
+              <Button
+                variant="r4-gray-2"
+                text={operator.name}
+                className="outline-none"
+              />
+            )}
+            align="start"
+            choices={filterOption.operator_choices}
+            onChange={(e) => {
+              const value = e.target.value;
+              setOperator(
+                filterOption.operator_choices.find((e) => e.value === value)
+              );
+            }}
+            // multiple={true}
+          /> */}
+
         <TextInput
           placeholder={`Enter ${filterOption.display_name.toLowerCase()} to search`}
           onKeyDown={(e) => {
@@ -176,6 +205,9 @@ const InputModal = ({
           }}
           {...register("filterValue")}
           type={filterOption.value_field_type}
+          step={
+            filterOption.value_field_type === "number" ? "0.00001" : undefined
+          }
         />
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">

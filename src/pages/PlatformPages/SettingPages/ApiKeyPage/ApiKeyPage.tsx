@@ -28,7 +28,8 @@ import { useTypedSelector } from "src/store/store";
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
   vendors: state.integration.vendors,
-  apiKeyLimit: state.organization?.organization_subscription.api_key_limit ?? 0,
+  apiKeyLimit:
+    state.organization?.organization_subscription?.api_key_limit ?? 0,
 });
 
 const mapDispatchToProps = {
@@ -91,19 +92,32 @@ export const ApiKeyPage = ({
   }, [apiKey.keyList]);
   const orderedVendors = [
     "OpenAI",
+    "Azure OpenAI",
     "Anthropic",
     "Cohere",
     "AI21 Labs",
     "Google",
   ];
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription.plan_level;
+    const planLevel =
+      state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   return (
     <PageContent
       title="API Keys"
-      subtitle="Read the documentation on using our API here."
+      subtitle={
+        <p>
+          Read the{" "}
+          <a
+            className="text-primary cursor-pointer"
+            onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
+          >
+            documentation
+          </a>{" "}
+          on using our API.
+        </p>
+      }
     >
       <PageParagraph
         heading="Manage proxy keys"
@@ -177,8 +191,13 @@ export const ApiKeyPage = ({
       </Modal>
       <Divider />
       <PageParagraph
-        heading="LLM provider keys"
-        subheading="You can choose to add your provider API keys for direct integration, utilizing your own credits. By default, you will be using our provider API keys when calling our API."
+        heading={
+          <p>
+            Bring your own models
+            <span className="text-md-md text-gray-4"> (optional)</span>
+          </p>
+        }
+        subheading="You can choose to use your own API keys from LLM providers."
       >
         <div className="flex-col items-start content-start gap-xxs self-stretch flex-1  ">
           {orderedVendors.map((vendorName, index) => {

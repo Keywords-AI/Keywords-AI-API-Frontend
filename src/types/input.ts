@@ -22,8 +22,10 @@ export type InputProps = {
 
 export interface SelectInputProps {
   open?: boolean;
+  setOpen?: (open: any) => void;
   title?: string;
   headLess?: boolean;
+  height?: string;
   choices?: Choice[];
   handleSelected?: (value: string | number) => void;
   placeholder?: string;
@@ -58,12 +60,15 @@ export interface SelectInputProps {
 export type TextInputProps = {
   title?: string;
   name?: string;
+  step?: string;
   errors?: any;
   required?: boolean;
   type?: React.HTMLInputTypeAttribute | undefined;
   icon?: any;
   value?: string | number | readonly string[] | undefined; // Add value prop
   onChange?: React.ChangeEventHandler<HTMLInputElement> | undefined; // Add onChange prop
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
   placeholder?: string;
   disabled?: boolean;
   width?: string;
@@ -74,4 +79,5 @@ export type TextInputProps = {
   register?: UseFormRegister<any>;
   validationSchema?: any;
   dollarSign?: boolean;
+  inputSyle?: { [key: string]: string };
 };

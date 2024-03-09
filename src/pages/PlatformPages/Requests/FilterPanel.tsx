@@ -6,13 +6,7 @@ import { Button, CheckBoxButtonSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { Divider } from "src/components/Sections";
 import { Operator, RootState } from "src/types";
-import {
-  updateUser,
-  getRequestLogs,
-  setFilters,
-  addFilter,
-  setCurrentFilter,
-} from "src/store/actions";
+import { updateUser, getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
@@ -54,10 +48,16 @@ export function FilterPanel() {
   const organization = useTypedSelector(
     (state: RootState) => state.organization
   );
-  const displayColumns =
-    user.display_properties.length > 0 ? user.display_properties : showColumns;
+  const displayColumns = showColumns;
   const { register, handleSubmit, watch } = useForm();
   const displayProperties = watch("display_properties");
+  useEffect(() => {
+    if (user?.display_properties.length > 0) {
+      dispatch(
+        setDisplayColumns(checkBoxFieldToList(user?.display_properties))
+      );
+    }
+  }, [user]);
   useEffect(() => {
     if (displayProperties) {
       dispatch(setDisplayColumns(checkBoxFieldToList(displayProperties)));
@@ -79,7 +79,7 @@ export function FilterPanel() {
           <Tooltip
             side="bottom"
             sideOffset={8}
-            align="center"
+            align="end"
             content={
               <>
                 <p className="caption text-gray-4">Show display options</p>
@@ -91,6 +91,7 @@ export function FilterPanel() {
               variant="small"
               text="Display"
               icon={Display}
+              active={showPopover}
               secIcon={Down}
               secIconPosition="right"
               onClick={() => setShowPopover((prev) => !prev)}
@@ -102,7 +103,7 @@ export function FilterPanel() {
       setOpen={setShowPopover}
       padding="px-sm py-xs"
       side="bottom"
-      sideOffset={5}
+      sideOffset={4}
       align="end"
       width="w-[320px]"
     >
@@ -112,6 +113,7 @@ export function FilterPanel() {
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Grouping</span>
               <SelectInput
+                useShortCut
                 headLess
                 align="end"
                 icon={Down}
@@ -119,16 +121,20 @@ export function FilterPanel() {
                 gap="gap-xxs"
                 backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
-                optionsWidth="w-[120px]"
+                optionsWidth="w-[140px]"
                 defaultValue={user.group_by || ""}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "API key", value: "organization_key__name" },
-                  { name: "Model", value: "model" },
-                  { name: "Status", value: "failed" },
+                  {
+                    name: "API key",
+                    value: "organization_key__name",
+                    secText: "1",
+                  },
+                  { name: "Model", value: "model", secText: "2" },
+                  { name: "Status", value: "failed", secText: "3" },
                   // { name: "Cached", value: "cached" },
-                  { name: "Sentiment", value: "sentiment_score" },
-                  { name: "No grouping", value: "" },
+                  { name: "Sentiment", value: "sentiment_score", secText: "4" },
+                  { name: "No grouping", value: "", secText: "5" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -143,6 +149,7 @@ export function FilterPanel() {
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Ordering</span>
               <SelectInput
+                useShortCut
                 headLess
                 align="end"
                 icon={Down}
@@ -154,11 +161,11 @@ export function FilterPanel() {
                 defaultValue={user.sort_by || ""}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "Default", value: "" },
-                  { name: "Date", value: "-timestamp" },
-                  { name: "Cost", value: "-cost" },
-                  { name: "Latency", value: "-latency" },
-                  { name: "TTFT", value: "-time_to_first_token" }
+                  { name: "Default", value: "", secText: "1" },
+                  { name: "Date", value: "-timestamp", secText: "2" },
+                  { name: "Cost", value: "-cost", secText: "3" },
+                  { name: "Latency", value: "-latency", secText: "4" },
+                  { name: "TTFT", value: "-time_to_first_token", secText: "5" },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -256,7 +263,7 @@ export function FilterPanel() {
           </div>
           <Divider color="bg-gray-3" />
           <span className="text-sm-regular text-gray-4">
-            Display Properties
+            Display properties
           </span>
           <div className="flex-row gap-xxxs flex-wrap">
             {requestLogColumns.map((metric) => {
@@ -274,8 +281,18 @@ export function FilterPanel() {
             {requestLogTagColumns.map((metric) => {
               const checked = displayColumns.includes(metric.retrievalKey);
               if (metric.name === "Sentiment") {
-                return organization?.organization_subscription.plan_level >
-                  1 ? (
+                return organization?.organization_subscription?.plan_level ??
+                  0 > 1 ? (
+                  <CheckBoxButtonSmall
+                    key={metric.retrievalKey}
+                    {...register("display_properties")}
+                    text={metric.name}
+                    value={metric.retrievalKey}
+                    checked={checked}
+                  />
+                ) : null;
+              } else if (metric.name === "Organization") {
+                return user.is_admin ? (
                   <CheckBoxButtonSmall
                     key={metric.retrievalKey}
                     {...register("display_properties")}

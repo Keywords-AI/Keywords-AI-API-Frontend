@@ -6,7 +6,7 @@ export type OrganizationRole = {
   access_level: number;
   role: string;
   pending: boolean;
-  user: number;
+  user: any;
   organization: number;
 };
 
@@ -14,8 +14,9 @@ export type SystemPrompt = {
   role: string;
   content: string;
 };
-    
+
 export type User = {
+  loading: boolean;
   id: number | null;
   sort_by: string;
   time_range_type: string;
@@ -23,7 +24,7 @@ export type User = {
   organization_role: OrganizationRole;
   has_product_access: boolean;
   is_organization_admin: boolean;
-  time_range_types: Choice[],
+  time_range_types: Choice[];
   last_login: null;
   email: string;
   placeholder: boolean;
@@ -37,6 +38,7 @@ export type User = {
   is_active: boolean;
   active_subscription: boolean;
   is_admin: boolean;
+  is_superadmin: boolean;
   last_conversation: number;
   plans: any[];
   file_prompt: SystemPrompt;
@@ -62,4 +64,5 @@ export type User = {
   profile_color: string;
   group_by: string;
   request_log_filters: FilterParams;
+  dashboard_filters: FilterParams;
 };

@@ -14,13 +14,15 @@ import { PageContent } from "src/components/Sections";
 import { ModelType, models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
+import { useTypedSelector } from "src/store/store";
 
 const RightDrawerContent = ({
-  name,
+  model_name,
   speed,
   max_context_window,
   model_size,
   mmlu_score,
+
   mt_bench_score,
   big_bench_score,
   input_cost,
@@ -34,7 +36,9 @@ const RightDrawerContent = ({
   const DisplayObj = [
     {
       label: "Model",
-      value: <span className="text-sm-regular text-gray-4">{name || "-"}</span>,
+      value: (
+        <span className="text-sm-regular text-gray-4">{model_name || "-"}</span>
+      ),
     },
     {
       label: "Speed",
@@ -71,7 +75,7 @@ const RightDrawerContent = ({
       label: "Language support",
       value: (
         <span className="text-sm-regular text-gray-4">
-          {language_support || "language support"}
+          {multilingual || "language support"}
         </span>
       ),
     },
@@ -87,7 +91,7 @@ const RightDrawerContent = ({
       label: "Prompt pricing",
       value: (
         <span className="text-sm-regular text-gray-5">
-          ${(prompt_pricing || 0.2134).toLocaleString()}
+          ${(input_cost / 1000) || 0.2134}
           <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
         </span>
       ),
@@ -96,7 +100,7 @@ const RightDrawerContent = ({
       label: "Completion pricing",
       value: (
         <span className="text-sm-regular text-gray-5">
-          ${(completion_pricing || 0.2134).toLocaleString()}
+          ${output_cost / 1000 || 0.2134}
           <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
         </span>
       ),
@@ -105,7 +109,7 @@ const RightDrawerContent = ({
       label: "Rate limit",
       value: (
         <span className="text-sm-regular text-gray-4">
-          {rate_limit || "10K"} RPM
+          {rate_limit.toLocaleString() || "10K"} RPM
         </span>
       ),
     },
@@ -127,47 +131,49 @@ const RightDrawerContent = ({
   );
 };
 
-const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
+const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
   const [hoveredIndex, setHoveredIndex] = React.useState(-1);
   const [clickedIndex, setClickedIndex] = React.useState(-1);
-
   const isRowHighlighted = (index) => {
     return index === hoveredIndex || index === clickedIndex;
   };
 
   const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
-
   const handleRowClick = (index) => {
     setClickedIndex(index);
     setIsSidePanelOpen(true); // Open the side panel
   };
   // const activated = hover;
+  const templateString = "320px 180px 180px 80px 80px ";
   const activated = hoveredIndex >= 0;
   return (
     <div className="flex flex-row w-full">
       <div className={cn("flex-col w-[800px] items-start bg-gray-1")}>
         <div
           aria-label="table-header"
-          className="flex flex-row py-xs items-start self-stretch shadow-border-b shadow-gray-2"
+          className="grid py-xs shadow-border-b shadow-gray-2"
+          style={{
+            gridTemplateColumns: templateString,
+          }}
         >
-          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+          <div className="items-center self-stretch text-gray-4 text-sm-md">
             Model
           </div>
-          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+          <div className="items-center self-stretch text-gray-4 text-sm-md">
             Prompt
           </div>
-          <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
+          <div className="items-center self-stretch text-gray-4 text-sm-md">
             Completion
           </div>
-          <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-md">
+          <div className="items-center self-stretch text-gray-4 text-sm-md">
             Context
           </div>
-          <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-md">
+          <div className="items-center self-stretch text-gray-4 text-sm-md">
             Rate limit
           </div>
-          <div className="flex w-[100px] items-center self-stretch text-gray-4 text-sm-md">
+          {/* <div className="items-center self-stretch text-gray-4 text-sm-md">
             Moderation
-          </div>
+          </div> */}
         </div>
         {ModelItems.map((item, index) => (
           <Drawer
@@ -177,20 +183,23 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
               <div
                 key={index}
                 className={cn(
-                  "flex min-w-[200px] py-xxs items-center self-stretch shadow-border-b shadow-gray-2",
+                  "grid  py-xxs  shadow-border-b shadow-gray-2",
                   // index === hoveredIndex && "bg-gray-2"
                   isRowHighlighted(index) && "bg-gray-2"
                 )}
+                style={{
+                  gridTemplateColumns: templateString,
+                }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(-1)}
                 onClick={() => handleRowClick(index)}
               >
-                <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
-                  <ModelTag model={item.value} />
+                <div className="flex w-[210px] items-center self-stretch text-gray-4 text-sm-md">
+                  <ModelTag model={item.model_name} />
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.prompt_cost}
+                    ${(item.input_cost * 1.05 / 1000).toFixed(6)}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -199,7 +208,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    {item.completion_cost}
+                    ${(item.output_cost * 1.05 / 1000).toFixed(6)}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
@@ -210,34 +219,35 @@ const ModelsTable = ({ ModelItems }: { ModelItems: ModelType[] }) => {
                   {item.max_context_window}
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
-                  {item.rate_limit}
+                  {item.rate_limit.toLocaleString()}
                 </div>
-                <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
+                {/* <div className="flex w-fit items-center self-stretch text-gray-4 text-sm-md">
                   <Tag
-                    text={item.moderation}
+                    text={item.company.moderation}
                     textColor={
-                      item.moderation == "Filtered"
+                      item.company.moderation == "Filtered"
                         ? "text-success"
                         : "text-error"
                     }
                     backgroundColor={
-                      item.moderation == "Filtered" ? "bg-success/10" : ""
+                      item.company.moderation == "Filtered"
+                        ? "bg-success/10"
+                        : ""
                     }
                     border=""
                   />
-                </div>
+                </div> */}
               </div>
             }
           >
-            <RightDrawerContent {...models.find((m) => m.name === item.name)} />
+            <RightDrawerContent {...item} />
           </Drawer>
         ))}
       </div>
     </div>
   );
 };
-export default function Modelspage() {
-  console.log(models.length, "models");
+export default function ModelsPage() {
   const a = [
     {
       name: "gpt-4",
@@ -393,9 +403,14 @@ export default function Modelspage() {
       moderation: "Filtered",
     },
   ];
-  console.log(a.length, "a");
+  const models = Object.values(
+    useTypedSelector((state) => state.models.models)
+  );
   return (
-    <PageContent title="Models" subtitle="">
+    <PageContent
+      title="Models"
+      subtitle="Browse models currently supported by Keywords AI. "
+    >
       <span className="text-md-medium">Supported models</span>
       <ModelsTable ModelItems={models} />
     </PageContent>

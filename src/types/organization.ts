@@ -17,7 +17,13 @@ export type Organization = {
     organization_model_presets: any[];
     owner: any;
     users: OrgUser[];
-    organization_subscription: any;
+    organization_subscription: {
+        id: number;
+        subscription_bool: boolean;
+        plan_level: number;
+        plan: string;
+        [key: string]: any;
+    } | null;
     active_subscription: boolean;
     unique_organization_id: string;
     organization_size: number; // From the survey

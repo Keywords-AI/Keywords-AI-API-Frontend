@@ -9,7 +9,7 @@ import {
   clearNotifications,
 } from "src/store/actions";
 import "src/components/styles/index.css";
-import { retrieveAccessToken } from "./utilities/authorization";
+import { accessMap, retrieveAccessToken } from "./utilities/authorization";
 import { refreshToken } from "src/store/actions";
 const Playground = lazy(() =>
   import("./pages/PlatformPages/Playground/Playground")
@@ -22,13 +22,18 @@ import { FullScreenLayout } from "./layouts/FullScreenLayout";
 import { Unauthenticated } from "./pages/AuthPages/Unauthenticated";
 import LeftNavigationLayout from "./layouts/LeftNavigationLayout";
 import { settingChildren } from "./pages/PlatformPages/SettingPages/SettingPages";
+
 import { qaChildren } from "./pages/PlatformPages/QaPages/QaPages";
 import { ForgotPassword } from "./pages/AuthPages/ForgotPassword";
 import { ResetPassword } from "./pages/AuthPages/ResetPassword";
 import { Unauthorized } from "./pages/AuthPages/Unauthorized";
 import { OnboardingPage } from "./pages/AuthPages/Onboarding/OnboardingPage";
 import ActivationPage from "./pages/AuthPages/ActivationPage";
-import { Dashboard } from "./pages/PlatformPages/Dashboard/Dashboard";
+const Dashboard = lazy(() =>
+  import("./pages/PlatformPages/Dashboard/Dashboard").then((module) => ({
+    default: module.Dashboard,
+  }))
+);
 import EmailConfirmation from "./pages/AuthPages/EmailConfirmation";
 import { AcceptInvitation } from "./pages/AuthPages/AcceptInvitation";
 import { REDIRECT_URI } from "./utilities/navigation";
@@ -36,9 +41,20 @@ import { useNavigate } from "react-router-dom";
 import { AUTH_ENABLED } from "src/env";
 import { StartWithPlan } from "./pages/AuthPages/Onboarding/Plans";
 import { GetStarted } from "./pages/AuthPages/Onboarding/GetStarted";
-import { Requests } from "./pages/PlatformPages/Requests/Requests";
+const Requests = lazy(() =>
+  import("./pages/PlatformPages/Requests/Requests").then((module) => ({
+    default: module.Requests,
+  }))
+);
 import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
+import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
+import posthog from "posthog-js";
+import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
+import DemoWelcome from "./pages/MISC/DemoWelcome";
+import { LoadingPage } from "./components/LoadingPage";
+import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
+import ResendActivation from "./pages/AuthPages/ResendActivation";
 
 const mapStateToProps = (state) => {
   return {
@@ -54,6 +70,7 @@ const mapDispatchToProps = {
 
 const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
+  const hasAccess = user.loading ? true : user.is_admin ? true : false;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   useEffect(() => {
     getUser();
@@ -61,6 +78,9 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const location = useLocation();
   useEffect(() => {
     clearNotifications();
+    // accessMap(999, location.pathname)
+    //   ? console.log("has access")
+    //   : console.log("No access");
   }, [location]);
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -69,22 +89,33 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
+
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
-    if (organization?.id) {
+    const onOnboradingPage = window.location.pathname.includes("/onboarding");
+
+    if (organization.id && !organization?.loading) {
       // The init state of org is not empty, but the id is null
-      const onOnboradingPage = window.location.pathname.includes("/onboarding");
       if (!onOnboradingPage && !organization?.active_subscription) {
         // navigate to onboarding page if user hasn't onboarded
         navigate("/onboarding");
       }
     }
-    if (!organization) {
+    if (!organization?.id && !organization?.loading) {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded
       navigate("/onboarding");
     }
+
+    if (user.id) {
+      posthog.identify(user.id, {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      });
+    }
   }, [user]);
+
   // comment the 2 lines below to switch between logged in/out states
   const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
@@ -93,33 +124,40 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
       path: REDIRECT_URI, // "/platform"
       element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
       children: [
-        { path: "playground", element: <Playground /> },
-        { path: "chatbot", element: <Chatbot /> },
         { path: "requests", element: <Requests /> },
-        { path: "cache", element: <CachePage /> },
+        { path: "playground", element: <Playground /> },
         {
           path: "api",
           element: <LeftNavigationLayout sectionName={"setting"} />,
           children: settingChildren,
         },
         {
-          path: "qa-wall",
-          element: <LeftNavigationLayout sectionName={"qa-wall"} />,
-          children: qaChildren,
-        },
-
-        {
           path: "dashboard",
           element: <Dashboard />,
         },
+        { path: "users", element: <UsersPage /> },
+        {
+          path: REDIRECT_URI,
+          element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
+        },
+      ],
+    },
+    {
+      path: REDIRECT_URI, // "/These pages are only accessible to admin users."
+      element: hasAccess ? <NavigationLayout /> : <Navigate to="/forbidden" />,
+      children: [
+        { path: "chatbot", element: <Chatbot /> },
+        { path: "loading", element: <LoadingPage /> },
+        { path: "cache", element: <CachePage /> },
+        { path: "customers", element: <CustomerPage /> },
         {
           path: "sentiment",
           element: <Sentiment />,
         },
-
         {
-          path: REDIRECT_URI,
-          element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
+          path: "qa-wall",
+          element: <LeftNavigationLayout sectionName={"qa-wall"} />,
+          children: qaChildren,
         },
       ],
     },
@@ -138,6 +176,16 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         { path: "accept/:code?", element: <AcceptInvitation /> },
         {
+          path: "forgot-password",
+          element: <ForgotPassword />,
+        },
+        {
+          path: "forgot-password/reset/confirm/:uid?/:token?",
+          element: <ResetPassword />,
+        },
+        { path: "activate/:uid?/:token?", element: <ActivationPage /> },
+        { path: "resend-activation", element: <ResendActivation /> },
+        {
           path: "onboarding",
           element: isUserLoggedIn ? (
             <OnboardingPage /> //If user logged in and is at root, redirect to platform, then platform will redirect to dashboard
@@ -152,6 +200,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         {
           path: "onboarding/get-started",
           element: <GetStarted />,
+        },
+        {
+          path: "/platform/demo",
+          element: <DemoWelcome />,
         },
         {
           path: "",
@@ -176,14 +228,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           element: <Unauthenticated />,
         },
         {
-          path: "forgot-password",
-          element: <ForgotPassword />,
-        },
-        {
-          path: "forgot-password/reset/confirm/:uid?/:token?",
-          element: <ResetPassword />,
-        },
-        {
           path: "unauthorized",
           element: <Unauthorized />,
         },
@@ -191,8 +235,12 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "email-confirmation/:email?",
           element: <EmailConfirmation />,
         },
-        { path: "activate/:uid?/:token?", element: <ActivationPage /> },
       ],
+    },
+    {
+      path: "forbidden",
+      element: <FullScreenLayout />,
+      children: [{ path: "", element: <Forbidden /> }],
     },
     {
       path: "*",
@@ -203,7 +251,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
 
   const element = useRoutes(routes);
 
-  return <Suspense fallback={<div></div>}>{element}</Suspense>;
+  return <Suspense fallback={<LoadingPage />}>{element}</Suspense>;
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes);

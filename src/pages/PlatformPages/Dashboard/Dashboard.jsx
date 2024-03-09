@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MetricCard from "src/components/Cards/MetricCard";
-import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
+import {
+  AlphanumericKey,
+  Display,
+  Down,
+  SideBar,
+  SideBarActive,
+} from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart, SentimentChart } from "src/components/Display";
@@ -25,8 +31,15 @@ import cn from "src/utilities/classMerge";
 import { WelcomeState } from "src/components/Sections";
 import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
+import DashboardFilterLeft from "./DashboardFilterLeft";
+import { LoadingComponent } from "src/components/LoadingPage";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { DashboardPreview } from "src/components/Display/Figures";
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const mapStateToProps = (state) => ({
+  user: state.user,
   summary: state.dashboard.summary,
   organization: state.organization,
   firstName: state.user.first_name,
@@ -34,6 +47,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
+  ttftData: state.dashboard.ttftData,
   firstTime: !state.organization?.has_api_call,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
@@ -54,10 +68,11 @@ function DashboardNotConnected({
   promptTokenCountData,
   completionTokenCountData,
   costData,
+  ttftData,
   getDashboardData,
   firstTime,
   organization,
-  modelData,
+  user,
   modelColors,
   keyColors,
 }) {
@@ -72,15 +87,12 @@ function DashboardNotConnected({
   const performance_param = new URLSearchParams(location.search).get("metric");
   const breakdown_type =
     new URLSearchParams(location.search).get("breakdown") || "none";
+  const display_type = new URLSearchParams(location.search).get("type");
   const summary_type =
     new URLSearchParams(location.search).get("summary_type") || "daily";
-  useEffect(
-    () => {
-      getDashboardData();
-    },
-    [performance_param, breakdown_type],
-    shallowEqual
-  );
+  useEffect(() => {
+    getDashboardData();
+  }, [performance_param, breakdown_type, display_type]);
 
   const handleOpenPanel = () => {
     setIsPanel((prevIsPanel) => !prevIsPanel);
@@ -100,6 +112,7 @@ function DashboardNotConnected({
       chartData: requestCountData,
       dataKey: Metrics.number_of_requests.value,
       onClick: () => {
+        dispatch(setDisplayType("total", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
             Metrics.number_of_requests.value,
@@ -110,16 +123,34 @@ function DashboardNotConnected({
         getDashboardData();
       },
     },
+    // {
+    //   title: Metrics.average_latency.name,
+    //   number: `${summary.average_latency?.toFixed(2) || 0}`,
+    //   chartData: latencyData,
+    //   dataKey: Metrics.average_latency.value,
+    //   unit: true,
+    //   onClick: () => {
+    //     dispatch(setDisplayType("average", setQueryParams, navigate));
+    //     dispatch(
+    //       setDisplayMetric(
+    //         Metrics.average_latency.value,
+    //         setQueryParams,
+    //         navigate
+    //       )
+    //     );
+    //   },
+    // },
     {
-      title: Metrics.average_latency.name,
-      number: `${summary.average_latency?.toFixed(2) || 0}`,
-      chartData: latencyData,
-      dataKey: Metrics.average_latency.value,
+      title: Metrics.average_ttft.name,
+      number: `${summary.average_ttft?.toFixed(2) || 0}`,
+      chartData: ttftData,
+      dataKey: Metrics.average_ttft.value,
       unit: true,
       onClick: () => {
+        dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
-            Metrics.average_latency.value,
+            Metrics.average_ttft.value,
             setQueryParams,
             navigate
           )
@@ -158,7 +189,7 @@ function DashboardNotConnected({
     },
     {
       title: Metrics.total_cost.name,
-      number: `$${summary.total_cost?.toFixed(3) || 0}`,
+      number: `$${summary.total_cost?.toFixed(4) || 0}`,
       chartData: costData,
       dataKey: Metrics.total_cost.value,
       onClick: () => {
@@ -168,7 +199,9 @@ function DashboardNotConnected({
       },
     },
   ];
-
+  useHotkeys(".", () => {
+    handleOpenPanel();
+  });
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -199,9 +232,26 @@ function DashboardNotConnected({
   } else {
     filteredtypeChoices = typeChoices;
   }
-
-  // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-  if (firstTime !== undefined && firstTime) return <WelcomeState isDashboard />;
+  if (organization.loading) {
+    return <LoadingComponent />;
+  }
+  if (firstTime !== undefined && firstTime)
+    // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
+    return (
+      <WelcomeCard
+        pageTitle="Dashboard"
+        title="Send your first API call"
+        doclink="https://docs.keywordsai.co/platform-features/dashboard"
+        content={
+          <>
+            to view your dashboard.
+            <br />
+            Visualize latency, cost, and usage in production.
+          </>
+        }
+        figure={<DashboardPreview />}
+      />
+    );
   else
     return (
       <div className=" flex-col flex-1 self-stretch">
@@ -222,9 +272,9 @@ function DashboardNotConnected({
             />
           ))}
         </div>
-        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full">
+        <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full h-[52px]">
           <div>
-            {breakdown_type !== "none" && (
+            {/* {breakdown_type !== "none" && (
               <div className="flex items-center content-center gap-xs flex-wrap">
                 {colorData &&
                   Object.keys(colorData).map((name, index) => (
@@ -242,15 +292,32 @@ function DashboardNotConnected({
                     </div>
                   ))}
               </div>
-            )}
+            )} */}
+            {(user.is_admin || user.is_superadmin) && <DashboardFilterLeft />}
           </div>
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            <DotsButton
-              icon={isPanel ? SideBarActive : SideBar}
-              onClick={() => handleOpenPanel()}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="end"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={"."} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={isPanel ? SideBarActive : SideBar}
+                  onClick={() => handleOpenPanel()}
+                  active={isPanel}
+                />
+              </div>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-row flex-1 self-stretch ">

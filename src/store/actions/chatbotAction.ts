@@ -2,6 +2,7 @@ import apiConfig from "src/services/apiConfig";
 import { getCookie } from "src/services/getCookie";
 import { retrieveAccessToken } from "src/utilities/authorization";
 import { keywordsStream, keywordsRequest } from "src/utilities/requests";
+import { v4 as uuidv4 } from "uuid";
 import {
   ChatMessage,
   ConversationMessage,
@@ -30,7 +31,14 @@ export const CREATE_MESSAGE = "CREATE_MESSAGE";
 export const DELETE_MESSAGE = "DELETE_MESSAGE";
 export const REMOVE_LAST_MESSAGE = "REMOVE_LAST_MESSAGE";
 export const SET_MESSAGE_CONTENT = "SET_MESSAGE_CONTENT";
+export const SET_EDIT_MESSAGE = "SET_EDIT_MESSAGE";
 
+export const setEditMessage = (id) => {
+  return {
+    type: SET_EDIT_MESSAGE,
+    payload: id,
+  };
+};
 export const setMessageContent = (id, content) => {
   return {
     type: SET_MESSAGE_CONTENT,
@@ -216,6 +224,7 @@ export const readStreamChunk = (chunk: string) => {
   return (dispatch: TypedDispatch) => {
     try {
       const data = JSON.parse(chunk);
+      console.log(data)
       const textBit = data.choices?.[0].delta.content;
       if (textBit) {
         dispatch({
@@ -239,7 +248,7 @@ export const sendMessage = (msgText?: string) => {
           conversation: conversation_id,
           role: "user",
           content: msgText,
-          model: null,
+          model: "",
         })
       );
     }
@@ -248,7 +257,10 @@ export const sendMessage = (msgText?: string) => {
     const sessionMessages = messages.map((item) => {
       return { role: item.role, content: item.content };
     });
-    const messagesToSend = sessionMessages;
+    const messagesToSend = [
+     
+      ...sessionMessages,
+    ];
     dispatch({ type: SEND_STREAMINGTEXT_REQUEST });
     keywordsStream({
       data: { messages: messagesToSend, stream: true },
@@ -272,7 +284,7 @@ export const sendMessage = (msgText?: string) => {
       },
     })
       .then((abortController) => {
-        console.log(abortController);
+        // console.log(abortController);
       })
       .catch((err) => {
         console.log(err);

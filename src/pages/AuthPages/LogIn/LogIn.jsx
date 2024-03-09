@@ -4,7 +4,7 @@ import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
 import { Button } from "src/components/Buttons/Button";
-import { login, googleLogin } from "src/store/actions";
+import { login, googleLogin, resendActivationEmail } from "src/store/actions";
 import { connect } from "react-redux";
 import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
@@ -16,9 +16,10 @@ const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
   googleLogin,
+  resendActivationEmail
 };
 
-const LogIn = ({ login, googleLogin, user }) => {
+const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -67,7 +68,7 @@ const LogIn = ({ login, googleLogin, user }) => {
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <div className="flex-col items-start gap-xxs self-stretch">
-        <BackButton text="Home" link={"/"} />
+        <BackButton text="Home" link={"https://keywordsai.co/"} />
       </div>
       <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
@@ -115,6 +116,12 @@ const LogIn = ({ login, googleLogin, user }) => {
               onClick={() => navigate("/forgot-password")}
             >
               Forgot password?
+            </p>
+            <p
+              className="caption text-gray-4 self-stretch hover:cursor-pointer"
+              onClick={() => navigate("/resend-activation")}
+            >
+              Not activated? Resend activation link
             </p>
           </div>
         </form>

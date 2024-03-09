@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from "react";
-import { UseFormRegister, useForm } from "react-hook-form";
-import { Close, Down } from "src/components";
-import { SelectInput, TextInputSmall } from "src/components/Inputs";
 import {
   RequestFilters as RequestFiltersType,
   FilterObject,
@@ -9,12 +5,6 @@ import {
   RequestFilter as RequestFilterType,
 } from "src/types";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import {
-  getRequestLogs,
-  setFilters,
-  setFilterOpen,
-  setCurrentFilter,
-} from "src/store/actions";
 import { RequstFilter } from "./RequestFilter";
 
 export const Filters = () => {
@@ -30,14 +20,13 @@ export const Filters = () => {
   const models = useTypedSelector(
     (state: RootState) => state.requestLogs.models
   );
-
   return (
-    <div className="flex-row gap-xxxs items-center">
+    <>
       {filters.map((filter, index) => (
         <div key={filter.id} className="flex flex-row items-center gap-[2px]">
           <RequstFilter filter={filter} />
         </div>
       ))}
-    </div>
+    </>
   );
 };

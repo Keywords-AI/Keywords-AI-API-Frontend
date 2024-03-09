@@ -67,6 +67,29 @@ export type ModelType = {
 };
 export const models: ModelType[] = [
   {
+    name: "GPT-4",
+    value: "gpt-4",
+    brand: "openai",
+    icon: OpenAI,
+    speed: 14,
+    max_context_window: 8192,
+    prompt_cost: "$0.0315",
+    completion_cost: "$0.063",
+    moderation: "Filtered",
+    model_size: 170,
+    mmlu_score: 86.5,
+    mt_bench_score: 8.99,
+    big_bench_score: 40,
+    input_cost: 30,
+    output_cost: 60,
+    rate_limit: 10000,
+    multilingual: 1,
+    streaming_support: 1,
+    function_call: 1,
+    weight: 1,
+  },
+
+  {
     name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
     brand: "openai",
@@ -111,28 +134,6 @@ export const models: ModelType[] = [
     weight: 1,
   },
 
-  {
-    name: "GPT-4",
-    value: "gpt-4",
-    brand: "openai",
-    icon: OpenAI,
-    speed: 14,
-    max_context_window: 8192,
-    prompt_cost: "$0.0315",
-    completion_cost: "$0.063",
-    moderation: "Filtered",
-    model_size: 170,
-    mmlu_score: 86.5,
-    mt_bench_score: 8.99,
-    big_bench_score: 40,
-    input_cost: 30,
-    output_cost: 60,
-    rate_limit: 10000,
-    multilingual: 1,
-    streaming_support: 1,
-    function_call: 1,
-    weight: 1,
-  },
   {
     name: "GPT-4-1106-preview",
     value: "gpt-4-1106-preview",
@@ -543,7 +544,8 @@ export const models: ModelType[] = [
     weight: 0.5,
   },
 ];
-
+export const ChartTooltipOuterStyle =
+  "flex flex-col items-start shadow-border shadow-gray-3 gap-xs py-xs px-sm bg-gray-2 rounded-sm w-[280px]";
 export const colorTagsClasses = [
   "#F55656",
   "#FFB340",
@@ -564,21 +566,97 @@ export const Metrics = {
     name: "Request",
     value: "number_of_requests",
     icon: Quality,
+    unit: "requests",
   },
-  average_latency: { name: "Latency", value: "average_latency", icon: Speed },
+  average_latency: {
+    name: "Latency",
+    value: "average_latency",
+    icon: Speed,
+    unit: "s",
+  },
+  average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed, unit: "s" },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
     icon: Tokens,
+    unit: "tokens",
   },
   total_completion_tokens: {
     name: "Output tokens",
     value: "total_completion_tokens",
     icon: Tokens,
+    unit: "tokens",
   },
-  total_tokens: { name: "All tokens", value: "total_tokens", icon: Tokens },
-  total_cost: { name: "Total cost", value: "total_cost", icon: Cost },
-  error_count: { name: "Errors", value: "error_count", icon: Warning },
+  total_tokens: {
+    name: "All tokens",
+    value: "total_tokens",
+    icon: Tokens,
+    unit: "tokens",
+  },
+  total_cost: {
+    name: "Total cost",
+    value: "total_cost",
+    icon: Cost,
+    unit: "$",
+  },
+  error_count: {
+    name: "Errors",
+    value: "error_count",
+    icon: Warning,
+    unit: "errors",
+  },
+  latency_p_50: {
+    name: "Latency p50",
+    value: "latency_p_50",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_90: {
+    name: "Latency p90",
+    value: "latency_p_90",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_95: {
+    name: "Latency p95",
+    value: "latency_p_95",
+    icon: Speed,
+    unit: "s",
+  },
+  latency_p_99: {
+    name: "Latency p99",
+    value: "latency_p_99",
+    icon: Speed,
+    unit: "s",
+  },
+  ttft_p_50: { name: "TTFT p50", value: "ttft_p_50", icon: Speed, unit: "s" },
+  ttft_p_90: { name: "TTFT p90", value: "ttft_p_90", icon: Speed, unit: "s" },
+  ttft_p_95: { name: "TTFT p95", value: "ttft_p_95", icon: Speed, unit: "s" },
+  ttft_p_99: { name: "TTFT p99", value: "ttft_p_99", icon: Speed, unit: "s" },
+  average_cost: {
+    name: "Average cost",
+    value: "average_cost",
+    icon: Cost,
+    unit: "$",
+  },
+  average_tokens: {
+    name: "Average tokens",
+    value: "average_tokens",
+    icon: Tokens,
+    unit: "tokens",
+  },
+  average_completion_tokens: {
+    name: "Average output tokens",
+    value: "average_completion_tokens",
+    icon: Tokens,
+    unit: "output tokens",
+  },
+  average_prompt_tokens: {
+    name: "Average prompt tokens",
+    value: "average_prompt_tokens",
+    icon: Tokens,
+    unit: "prompt tokens",
+  },
 };
 
 export const requestLogColumns: LogItemColumn[] = [
@@ -586,6 +664,7 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Prompt", retrievalKey: "prompt", width: "160px" },
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },
+  { name: "TTFT", retrievalKey: "time_to_first_token", width: "64px" },
   { name: "Latency", retrievalKey: "latency", width: "64px" },
   { name: "Prompt tokens", retrievalKey: "promptTokens", width: "100px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "100px" },
@@ -593,6 +672,15 @@ export const requestLogColumns: LogItemColumn[] = [
 ];
 
 export const requestLogTagColumns: LogItemTag[] = [
+  {
+    name: "Organization",
+    retrievalKey: "organization",
+    renderFunction: (org: string) => (
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
+        {org}
+      </span>
+    ),
+  },
   {
     name: "API key",
     retrievalKey: "apiKey",
@@ -607,26 +695,55 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (model: string) => <ModelTag model={model} />,
   },
+
+  // {
+  //   name: "Warnings",
+  //   retrievalKey: "warnings",
+  //   renderFunction: (warnings: any) => {
+  //     if (warnings?.length > 0 && warnings != "{}") {
+  //       return (
+  //         <Tag
+  //           icon={<Warning fill="fill-orange" size="sm" />}
+  //           backgroundColor="bg-orange/10 h-[24px]"
+  //           textColor="text-orange "
+  //           border=""
+  //         />
+  //       );
+  //     }
+  //   },
+  // },
   {
     name: "Status",
     retrievalKey: "status",
-    renderFunction: ({ failed, errorCode }) => (
-      <StatusTag failed={failed} errorCode={errorCode} />
-    ),
+    renderFunction: ({ cached, errorCode, warnings }) => {
+      return (
+        <div className="flex gap-xxxs">
+          {warnings?.length > 0 && warnings != "{}" && (
+            <Tag
+              icon={<Warning fill="fill-orange" size="sm" />}
+              backgroundColor="bg-orange/10 h-[24px]"
+              textColor="text-orange "
+              border=""
+            />
+          )}
+          <StatusTag statusCode={errorCode} cached={cached} />
+        </div>
+      );
+    },
   },
-  {
-    name: "Cached",
-    retrievalKey: "cachedResponse",
-    renderFunction: (cached_response) =>
-      cached_response > 0 && (
-        <Tag
-          text={"Cached"}
-          backgroundColor="bg-primary/10"
-          textColor="text-primary"
-          border=""
-        />
-      ),
-  },
+  // {
+  //   name: "Cached",
+  //   retrievalKey: "cachedResponse",
+  //   renderFunction: (cached_response) =>
+  //     cached_response > 0 && (
+  //       <Tag
+  //         text={"Cached"}
+  //         backgroundColor="bg-primary/10"
+  //         textColor="text-primary"
+  //         border=""
+  //       />
+  //     ),
+  // },
   {
     name: "Sentiment",
     retrievalKey: "sentimentAnalysis",
@@ -649,4 +766,37 @@ export const defaultRequestLogColumns: LogColumnKey[] = [
   "apiKey",
   "model",
   "status",
+  "cachedResponse",
+];
+export const userTableColumns = [
+  {
+    name: "Customer ID",
+    value: "customerId",
+  },
+  {
+    name: "Last active",
+    value: "lastActive",
+  },
+  {
+    name: "Active for",
+    value: "activeFor",
+  },
+
+  {
+    name: "requests",
+    value: "requests",
+  },
+
+  {
+    name: "tokens",
+    value: "tokens",
+  },
+  {
+    name: "costs",
+    value: "costs",
+  },
+  {
+    name: "Avg sentiment",
+    value: "sentiment",
+  },
 ];

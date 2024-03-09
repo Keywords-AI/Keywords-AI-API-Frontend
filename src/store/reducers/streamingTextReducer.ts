@@ -10,6 +10,8 @@ import {
   SEND_STREAMINGTEXT2_FAILURE,
   SEND_STREAMINGTEXT2_PARTIAL,
   ABORT_STREAMINGTEXT2_REQUEST,
+  RESET_STREAMINGTEXT,
+  RESET_SINGLE_STREAMINGTEXT,
 } from "../actions/streamingTextAction";
 
 type StreamingState = {
@@ -49,7 +51,7 @@ const streamingTextReducer = (
         if (index === 0) {
           return {
             ...item,
-            streamingText: "",
+            streamingText: "\u200B",
             abort: false,
             isLoading: true,
             error: null,
@@ -58,13 +60,26 @@ const streamingTextReducer = (
         }
         return item;
       });
-
+    case RESET_SINGLE_STREAMINGTEXT:
+      return state.map((item, index) => {
+        if (index === payload) {
+          return {
+            ...item,
+            streamingText: "",
+            isLoading: false,
+            error: null,
+            abort: false,
+            model: null,
+          };
+        }
+        return item;
+      });
     case SEND_STREAMINGTEXT2_REQUEST:
       return state.map((item, index) => {
         if (index === 1) {
           return {
             ...item,
-            streamingText: "",
+            streamingText: "\u200B",
             abort: false,
             isLoading: true,
             error: null,
@@ -168,7 +183,8 @@ const streamingTextReducer = (
         }
         return item;
       });
-
+    case RESET_STREAMINGTEXT:
+      return initialState;
     default:
       return state;
   }

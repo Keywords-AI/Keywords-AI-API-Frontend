@@ -26,10 +26,10 @@ import { RootState } from "src/types";
 import { Metrics } from "src/utilities/constants";
 import { useForm } from "react-hook-form";
 import Tooltip from "src/components/Misc/Tooltip";
-import { Info } from "src/components/Icons";
+
 const typeChoices = [
   { name: "Total", value: "total", secText: "1" },
-  { name: "Average", value: "average", secText: "2" },
+  { name: "Avg per request", value: "average", secText: "2" },
 ];
 
 const breakdownChoices = [
@@ -47,7 +47,8 @@ export default function DashboardFilter() {
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const user = useTypedSelector((state: RootState) => state.user);
+  const show_admins = new URLSearchParams(location.search).get("show_admins") === "true";
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     dispatch(getDashboardData());
@@ -65,6 +66,13 @@ export default function DashboardFilter() {
     (state: RootState) => state.dashboard.displayFilter.breakDown
   );
   useEffect(() => {
+    if (
+      (currentMetric === "average_latency" ||
+        currentMetric == "average_ttft") &&
+      currentType === "all"
+    ) {
+      dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
+    }
     dispatch(setDisplayMetric(currentMetric, setQueryParams, navigate));
     dispatch(setDisplayType(currentType, setQueryParams, navigate));
     dispatch(setDisplayBreakdown(currentBreakdown, setQueryParams, navigate));
@@ -74,7 +82,11 @@ export default function DashboardFilter() {
       disableScope("dashboard");
     };
   }, []);
-
+  useEffect(() => {
+    if (currentMetric === "average_latency" && currentType === "all") {
+      dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
+    }
+  }, [currentMetric, currentType]);
   let filteredtypeChoices: any[] = [];
   if (
     currentMetric === "number_of_requests" ||
@@ -83,6 +95,20 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
+  } else if (currentMetric === "average_latency") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+      { name: "P50", value: "p50", secText: "2" },
+      { name: "P90", value: "p90", secText: "3" },
+      { name: "P95", value: "p95", secText: "4" },
+      { name: "P99", value: "p99", secText: "5" },
+      { name: "All", value: "all", secText: "6" },
+      // { name: "Total", value: "total", secText: "7" },
+    ];
+  } else if (currentMetric === "average_ttft") {
+    filteredtypeChoices = [
+      { name: "Avg per request", value: "average", secText: "1" },
+    ];
   } else {
     filteredtypeChoices = typeChoices;
   }
@@ -92,7 +118,10 @@ export default function DashboardFilter() {
     monthly: "Month",
     yearly: "Year",
   };
-  const filteredBreakdownChoices = breakdownChoices;
+  const filteredBreakdownChoices =
+    currentType === "all"
+      ? breakdownChoices.filter((e) => e.value == "none")
+      : breakdownChoices;
 
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
@@ -120,6 +149,15 @@ export default function DashboardFilter() {
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
+      {user.is_superadmin &&  <Button
+        variant="small"
+        text="Show admins"
+        active={show_admins}
+        onClick={() => {
+          setQueryParams({ show_admins: !show_admins }, navigate);
+          dispatch(getDashboardData());
+        }}
+      />}
       <Button
         variant="small"
         text="Today"
@@ -147,6 +185,10 @@ export default function DashboardFilter() {
               text={timeValueToName[currentTimeRange]}
               variant="small"
               icon={Down}
+              onClick={() => {
+                setShowDropdown((prev) => !prev);
+              }}
+              active={showDropdown}
               iconPosition="right"
             />
           </Tooltip>
@@ -160,6 +202,7 @@ export default function DashboardFilter() {
         optionsWidth="w-[120px]"
         useShortCut
         open={showDropdown}
+        setOpen={setShowDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
@@ -188,6 +231,7 @@ export default function DashboardFilter() {
                 variant="small"
                 text="Display"
                 icon={Display}
+                active={showPopover}
                 secIcon={Down}
                 secIconPosition="right"
                 onClick={() => {
@@ -233,7 +277,16 @@ export default function DashboardFilter() {
                   if (noAverageDataMetrics.includes(e.target.value)) {
                     dispatch(setDisplayType("total", setQueryParams, navigate));
                   }
-                  getDashboardData();
+                  if (
+                    e.target.value === Metrics.average_latency.value ||
+                    e.target.value === Metrics.average_ttft.value
+                  ) {
+                    dispatch(
+                      setDisplayType("average", setQueryParams, navigate)
+                    );
+                  } else {
+                    dispatch(setDisplayType("total", setQueryParams, navigate));
+                  }
                 }}
                 value={currentMetric}
                 choices={[
@@ -256,39 +309,44 @@ export default function DashboardFilter() {
                     secText: "3",
                   },
                   {
+                    name: Metrics.average_ttft.name,
+                    value: Metrics.average_ttft.value,
+                    icon: Metrics.average_ttft.icon,
+                    secText: "4",
+                  },
+                  {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "4",
+                    secText: "5",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                 ]}
               />
             </div>
             {currentMetric !== Metrics.number_of_requests.value &&
-              currentMetric !== Metrics.error_count.value &&
-              currentMetric !== Metrics.average_latency.value && (
+              currentMetric !== Metrics.error_count.value && (
                 <div className="flex justify-between items-center self-stretch ">
                   <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
                     Type
-                    <Tooltip
+                    {/* <Tooltip
                       side="right"
                       sideOffset={8}
                       delayDuration={1}
@@ -305,7 +363,7 @@ export default function DashboardFilter() {
                       <div>
                         <Info />
                       </div>
-                    </Tooltip>
+                    </Tooltip> */}
                   </span>
                   <SelectInput
                     {...register("type")}
@@ -321,11 +379,11 @@ export default function DashboardFilter() {
                     backgroundColor="bg-gray-2"
                     optionsWidth="w-[180px]"
                     value={currentType}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       dispatch(
                         setDisplayType(e.target.value, setQueryParams, navigate)
-                      )
-                    }
+                      );
+                    }}
                     choices={filteredtypeChoices}
                   />
                 </div>
@@ -346,15 +404,15 @@ export default function DashboardFilter() {
                 backgroundColor="bg-gray-2"
                 alignOffset={-40}
                 value={currentBreakdown}
-                onChange={(e) =>
+                onChange={(e) => {
                   dispatch(
                     setDisplayBreakdown(
                       e.target.value,
                       setQueryParams,
                       navigate
                     )
-                  )
-                }
+                  );
+                }}
                 choices={filteredBreakdownChoices}
               />
             </div>

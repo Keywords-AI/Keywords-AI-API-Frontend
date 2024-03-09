@@ -105,6 +105,7 @@ export const keywordsStream = ({
   apiKey,
   dispatch,
 }: StreamingParams) => {
+  console.log("data", data);
   const headers = {
     "Content-Type": "application/json",
   };
@@ -121,18 +122,18 @@ export const keywordsStream = ({
   });
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
-      reject(new Error("Request timed out"));
+      reject(500);
     }, 10000); // 10 seconds
   });
 
-  return Promise.race([fetchPromise, timeoutPromise]).then(
-    async (stream: any) => {
+  return Promise.race([fetchPromise, timeoutPromise])
+    .then(async (stream: any) => {
       if (!stream.ok) {
         const errors = await stream.json();
         if (dispatch && typeof dispatch === "function") {
           dispatch(handleApiResponseErrors(errors, stream.status));
         }
-        throw new Error("Stream response error");
+        throw new Error(JSON.stringify(errors));
       }
       const reader = stream?.body.getReader();
       const decoder = new TextDecoder();
@@ -140,14 +141,19 @@ export const keywordsStream = ({
       const signal = abortController.signal;
 
       // Start reading the stream
-      (async () => {
+      await (async () => {
+        let count = 0;
         try {
           while (true) {
             const { done, value } = await reader.read();
+            if (value === undefined && done === true && count === 0) {
+              throw new Error("400");
+            }
             if (done || signal.aborted) {
               streamingDoneCallback && streamingDoneCallback();
               break;
             }
+
             const message = decoder.decode(value);
             // Splitting the returned text chunck with the delimiter
             for (const line of message.split("---")) {
@@ -156,17 +162,21 @@ export const keywordsStream = ({
                 readStreamLine(line);
               }
             }
+
+            count++;
           }
         } catch (e) {
-          console.error("Stream error:", e);
+          throw e;
         }
       })();
       // Return a function to abort the stream from outside
       return () => {
         abortController.abort();
       };
-    }
-  );
+    })
+    .catch((error) => {
+      throw new Error(error);
+    });
 };
 // export const keywordsStream = ({
 //   path = "api/generate/",
@@ -267,7 +277,6 @@ export const keywordsApiStream = ({
         while (true) {
           const { done, value } = await reader.read();
           if (done || signal.aborted) {
-            console.log("Stream complete");
             break;
           }
           const message = decoder.decode(value);

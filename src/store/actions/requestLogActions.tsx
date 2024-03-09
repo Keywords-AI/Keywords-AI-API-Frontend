@@ -16,9 +16,16 @@ import {
 } from "src/types";
 import { formatISOToReadableDate } from "src/utilities/stringProcessing";
 import { updateUser } from "./userAction";
-import { get } from "react-hook-form";
 import { SentimentTag, StatusTag } from "src/components/Misc";
-
+import { Parser } from "@json2csv/plainjs";
+import { v4 as uuidv4 } from "uuid";
+import {
+  setBreakDownData,
+  setMessages,
+  setModelLogData,
+  setModelOptions,
+  setPrompt,
+} from "./playgroundAction";
 export const GET_REQUEST_LOGS = "GET_REQUEST_LOGS";
 export const START_GET_REQUEST_LOGS = "START_GET_REQUEST_LOGS";
 export const SET_REQUEST_LOGS = "SET_REQUEST_LOGS";
@@ -40,7 +47,14 @@ export const DELETE_FILTER = "DELETE_FILTER";
 export const UPDATE_FILTER = "UPDATE_FILTER";
 export const SET_CURRENT_FILTER = "SET_CURRENT_FILTER";
 export const SET_SELECTED_REQUEST_CONTENT = "SET_SELECTED_REQUEST_CONTENT";
+export const SET_JSON_MODE = "SET_JSON_MODE";
 
+export const setJsonMode = (jsonMode: boolean) => {
+  return {
+    type: SET_JSON_MODE,
+    payload: jsonMode,
+  };
+};
 export const startGetRequestLogs = () => {
   return {
     type: START_GET_REQUEST_LOGS,
@@ -61,8 +75,12 @@ export const setselectRequestContent = (data) => {
     payload: data,
   };
 };
-const getLastUserText = (messages: ChatMessage[]) => {
+const getLastUserText = (messages: ChatMessage[]): string => {
   if (messages?.length && messages.length > 0) {
+    const lastMessage = messages.slice(-1)[0].content;
+    if (lastMessage instanceof Array) {
+      return lastMessage.find((part) => part.type === "text").text;
+    }
     return messages.slice(-1)[0].content;
   }
   return "";
@@ -103,6 +121,9 @@ function processFilters(filters: FilterObject[]): FilterParams {
       if (value === "true" || value === "false") {
         value = value === "true" ? true : false;
       }
+      if (filter.value_field_type === "datetime-local") {
+        value = new Date(value as string).toISOString();
+      }
       return value;
     });
     filter.metric &&
@@ -140,6 +161,7 @@ export const deleteFilter = (filterId: string) => {
       type: DELETE_FILTER,
       payload: filterId,
     });
+    dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -152,6 +174,10 @@ export const updateFilter = (filter: FilterObject) => {
       type: UPDATE_FILTER,
       payload: filter,
     });
+    if (filter.value?.length === 0) {
+      dispatch(deleteFilter(filter.id));
+      return;
+    }
     const state = getState();
     const filters = state.requestLogs.filters;
     dispatch(applyPostFilters(filters));
@@ -174,7 +200,7 @@ export const processGroupingTitle = (
   metric?: string
 ): React.ReactNode => {
   if (typeof value === "boolean") {
-    return <StatusTag failed={value} />;
+    return <StatusTag statusCode={value} />;
   }
   if (metric === "sentiment_score") {
     return <SentimentTag sentiment_score={value as number} showScore={false} />;
@@ -205,22 +231,38 @@ export const processRequestLogs = (
         </span>
       ),
       promptTokens: log.prompt_tokens,
+      time_to_first_token:
+        log.time_to_first_token && log.time_to_first_token != -1 ? (
+          <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
+        ) : (
+          <span className="">{""}</span>
+        ),
       outputTokens: log.completion_tokens,
-      cost: <span className="">{`$${log.cost.toFixed(6)}`}</span>,
-      allTokens: (
-        <span className="">{log.completion_tokens + log.prompt_tokens}</span>
+      cost: (
+        <span className="">{log.failed ? "" : `$${log.cost.toFixed(6)}`}</span>
       ),
-      latency: <span className="">{`${log.latency.toFixed(3)}s`}</span>, // + converts string to number
+      allTokens: (
+        <span className="">
+          {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
+        </span>
+      ),
+      latency: (
+        <span className="">
+          {log.failed ? "" : `${log.latency.toFixed(3)}s`}
+        </span>
+      ), // + converts string to number
       apiKey: log.api_key,
-      model: log.model,
+      model: log.cached_responses.length > 0 ? "None" : log.model,
       failed: log.failed,
       organizationKey: log.organization_key__name,
       sentimentAnalysis: log.sentiment_analysis,
       status: {
-        failed: log.status_code >= 300,
+        cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
+        warnings: log.warnings,
       },
       sentimentScore: log.sentiment_score,
+      organization: log.organization,
     };
   });
 };
@@ -288,6 +330,9 @@ export const filterParamsToFilterObjects = (
   filterOptions: RawFilterOptions
 ): FilterObject[] => {
   return Object.keys(filterParams).map((key): FilterObject => {
+    if (!filterOptions[key]) {
+      throw new Error("Invalid filter option");
+    }
     return {
       id: Math.random().toString(36).substring(2, 15),
       metric: key as keyof LogItem,
@@ -299,7 +344,7 @@ export const filterParamsToFilterObjects = (
   });
 };
 
-export const getRequestLogs = (postData?: any, exporting=false) => {
+export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const params = new URLSearchParams(window.location.search);
     if (postData) {
@@ -309,7 +354,7 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
     keywordsRequest({
       path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
       method: postData ? "POST" : "GET",
-      data: {filters: postData, exporting: exporting},
+      data: { filters: postData, exporting: exporting },
     }).then((data) => {
       const results = data.results;
       dispatch(
@@ -340,12 +385,12 @@ export const getRequestLogs = (postData?: any, exporting=false) => {
 };
 
 export const updateLog = (id) => {
-  console.log("id", id);
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
 
-    dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    dispatch(getRequestLogs());
+    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
+    // dispatch(getRequestLogs());
+
     dispatch(
       setselectRequestContent(
         getState().requestLogs.logs.find((log) => log.id === id)
@@ -379,13 +424,11 @@ export const setCacheResponse = (
         request_content: requestContent,
         response_content: responseContent,
       };
-      console.log("requestbody", body);
       keywordsRequest({
         path: `api/caches/`,
         method: "POST",
         data: body,
       }).then((data) => {
-        console.log("data", data);
         const currentRequestLog = getState().requestLogs.selectedRequest;
         if (!currentRequestLog) {
           throw new Error("No request log selected");
@@ -397,7 +440,6 @@ export const setCacheResponse = (
       const deleteId = currentRequestLog.cached_responses.find(
         (e) => e.request_index === requestIndex
       ).id;
-      console.log("deleteId", deleteId);
       keywordsRequest({
         path: `api/cache/${deleteId}/`,
         method: "DELETE",
@@ -445,7 +487,7 @@ export const setSecondFilter = (filter: string) => {
   };
 };
 
-export const exportLogs = () => {
+export const exportLogs = (format = ".csv") => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const state = getState();
     const filters = state.requestLogs.filters;
@@ -453,16 +495,140 @@ export const exportLogs = () => {
     keywordsRequest({
       path: `api/request-logs/`,
       method: "POST",
-      data: {filters: filterData, exporting: true},
+      data: { filters: filterData, exporting: true },
     }).then((data) => {
-      const jsonData = JSON.stringify(data);
-      const blob = new Blob([jsonData], { type: "application/json" });
+      let exportData: string;
+      let blob: Blob;
+      if (format === ".json") {
+        exportData = JSON.stringify(data);
+        blob = new Blob([exportData], { type: "text/json" });
+      } else if (format === ".csv") {
+        exportData = new Parser().parse(data);
+        blob = new Blob([exportData], { type: "text/csv" });
+      } else {
+        throw new Error("Invalid format");
+      }
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "request_logs.json";
+      a.download = "request_logs" + format;
       a.click();
     });
   };
+};
 
+export const RestorePlaygroundStateFromLog = () => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    const currentLog = getState().requestLogs.selectedRequest;
+    const prompt_messages =
+      currentLog?.prompt_messages.filter((item) => item.role !== "system") ||
+      [];
+    const completion_message = currentLog?.completion_message;
+    const systemPrompt = currentLog?.prompt_messages.find(
+      (item) => item.role === "[system]" || item.role === "system"
+    );
+    const length =
+      prompt_messages.length +
+      (completion_message && Object.keys(completion_message).length > 0
+        ? 1
+        : 0);
+    const playGroundState = {
+      systemPrompt: systemPrompt?.content || "",
+      model: currentLog?.model || "",
+      messages: [...prompt_messages, completion_message].map(
+        (item: any, index) => {
+          const isUser = item.role === "user";
+
+          return {
+            id: uuidv4(),
+            role: item.role,
+            user_content: isUser ? item.content : null,
+            hiden: false,
+            responses: !isUser
+              ? [
+                  {
+                    model: index == length - 1 ? currentLog?.model : "None",
+                    content: item.content,
+                    complete: true,
+                  },
+                  null,
+                ]
+              : null,
+          };
+        }
+      ),
+      options: {
+        maxLength: currentLog?.full_request.max_tokens || 256,
+        temperature: currentLog?.full_request.temperature || 1,
+        topP: currentLog?.full_request.top_p || 1.0,
+        frequencyPenalty: currentLog?.full_request.presence_penalty || 0,
+        presencePenalty: currentLog?.full_request.frequency_penalty || 0,
+      },
+      modelLog: {
+        model: currentLog?.model,
+        completion_tokens: currentLog?.completion_tokens,
+        cost: currentLog?.cost,
+        ttft: currentLog?.time_to_first_token,
+        latency: currentLog?.latency,
+        status: currentLog?.status_code,
+      },
+      breakDowData: {
+        prompt_tokens: currentLog?.prompt_tokens,
+        timestamp: currentLog?.timestamp,
+        routing_time: currentLog?.routing_time,
+        completion_tokens: currentLog?.completion_tokens,
+        total_tokens:
+          (currentLog?.prompt_tokens || 0) +
+          (currentLog?.completion_tokens || 0),
+        cost: currentLog?.cost,
+      },
+    };
+    dispatch(setMessages(playGroundState.messages));
+    dispatch(setPrompt(playGroundState.systemPrompt));
+    dispatch(
+      setModelOptions({
+        ...playGroundState.options,
+        models: [playGroundState.model, "none"],
+        temperature: playGroundState.options.temperature,
+        maximumLength: playGroundState.options.maxLength,
+        topP: playGroundState.options.topP,
+        frequencyPenalty: playGroundState.options.frequencyPenalty,
+        presencePenalty: playGroundState.options.presencePenalty,
+      })
+    );
+    let breakdownData = { ...getState().playground.breakdownData };
+    breakdownData.prompt_tokens = playGroundState.breakDowData.prompt_tokens;
+    breakdownData.completion_tokens =
+      playGroundState.breakDowData.completion_tokens;
+    breakdownData.total_tokens = playGroundState.breakDowData.total_tokens;
+    breakdownData.cost = playGroundState.breakDowData.cost;
+    dispatch(setBreakDownData({ ...breakdownData }));
+    let newModelLogdata = [
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+    ];
+    newModelLogdata[0] = {
+      model: playGroundState.modelLog.model || "",
+      completion_tokens: playGroundState.modelLog.completion_tokens || 0,
+      cost: playGroundState.modelLog.cost || 0,
+      ttft: playGroundState.modelLog.ttft || 0,
+      latency: playGroundState.modelLog.latency || 0,
+      status: playGroundState.modelLog.status || -1,
+    };
+    dispatch(setModelLogData(newModelLogdata));
+  };
 };

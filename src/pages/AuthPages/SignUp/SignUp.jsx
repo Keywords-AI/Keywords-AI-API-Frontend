@@ -26,19 +26,16 @@ export const SignUp = connect(
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    if (data.invitation_code !== "keywordsai_ycw24") {
-      alert("Invitation code is invalid");
-      return;
-    }
-    signup(data);
+    data.invitation_code = "keywordsai";
+    signup(data, "keywordsai");
   };
   // Keywords666
   return (
     <div className="flex-col items-center gap-xxxl justify-center self-stretch">
       <div className="flex-col items-start gap-xxs self-stretch">
-        <BackButton text="Home" link={"/"} />
+        <BackButton text="Home" link={"https://keywordsai.co/"} />
       </div>
-      <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
+      <div className=" flex-col max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
           title={"Create an account"}
           subtitle={`Sign up to retrieve a free trial API key.`}
@@ -47,21 +44,19 @@ export const SignUp = connect(
           onSubmit={handleSubmit(onSubmit)}
           className="flex-col justify-center items-center gap-md self-stretch"
         >
-          <div className="flex-col justify-center items-start gap-xs self-stretch">
-            <div className="flex items-center gap-xs self-stretch ">
+          <div className="flex-col justify-center items-start gap-xs max-w-[420px]">
+            <div className="flex items-center gap-xs max-w-[420px]">
               <TextInput
                 title="First Name"
                 required
                 placeholder="First Name"
                 {...register("first_name")}
-                width="w-[204px]"
               />
               <TextInput
                 title="Last Name"
                 required
                 placeholder="Last Name"
                 {...register("last_name")}
-                width="w-[204px]"
               />
             </div>
             <TextInput
@@ -78,13 +73,18 @@ export const SignUp = connect(
               placeholder=""
               {...register("password")}
             />
-            <TextInput
+            {/* <TextInput
               title="Invitation Code"
-              type="password"
+              type="text"
               required
+              inputSyle={{
+                WebkitTextSecurity: "disc", // For Webkit browsers (Chrome, Safari)
+                textSecurity: "disc", // For Firefox
+              }}
+              autoComplete="off"
               placeholder=""
               {...register("invitation_code")}
-            />
+            /> */}
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
