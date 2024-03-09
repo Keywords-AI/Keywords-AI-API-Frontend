@@ -137,7 +137,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useHotkeys(
     "V",
     () => {
-      if (tab === "Log") dispatch(setJsonMode(!jsonMode));
+      if (tab === "Log" || tab === "Metadata") dispatch(setJsonMode(!jsonMode));
     },
     {
       scopes: "request_sidepanel_log",
@@ -193,50 +193,50 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const headerRight = (
     <div className="flex items-center">
       {tab == "Log" && (
-        <>
-          <Tooltip
-            side="bottom"
-            sideOffset={5}
-            align="end"
-            delayDuration={1}
-            content={
-              <>
-                <p className="caption text-gray-4">Open in playground</p>
-                <AlphanumericKey value={"P"} />
-              </>
-            }
-          >
-            <div>
-              <DotsButton
-                icon={IconPlayground}
-                onClick={() => {
-                  dispatch(RestorePlaygroundStateFromLog());
-                  navigate("/platform/playground");
-                }}
-              />
-            </div>
-          </Tooltip>
-          <Tooltip
-            side="bottom"
-            sideOffset={5}
-            align="end"
-            delayDuration={1}
-            content={
-              <>
-                <p className="caption text-gray-4">View mode</p>
-                <AlphanumericKey value={"V"} />
-              </>
-            }
-          >
-            <div>
-              <DotsButton
-                icon={Compare}
-                onClick={() => dispatch(setJsonMode(!jsonMode))}
-                active={jsonMode}
-              />
-            </div>
-          </Tooltip>
-        </>
+        <Tooltip
+          side="bottom"
+          sideOffset={5}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Open in playground</p>
+              <AlphanumericKey value={"P"} />
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={IconPlayground}
+              onClick={() => {
+                dispatch(RestorePlaygroundStateFromLog());
+                navigate("/platform/playground");
+              }}
+            />
+          </div>
+        </Tooltip>
+      )}
+      {(tab == "Log" || tab == "Metadata") && (
+        <Tooltip
+          side="bottom"
+          sideOffset={5}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">View mode</p>
+              <AlphanumericKey value={"V"} />
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={Compare}
+              onClick={() => dispatch(setJsonMode(!jsonMode))}
+              active={jsonMode}
+            />
+          </div>
+        </Tooltip>
       )}
     </div>
   );
