@@ -321,7 +321,7 @@ const RightPanel = () => {
       headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
       headerRight={
         <Tooltip
-          side="top"
+          side="bottom"
           sideOffset={2}
           align="end"
           delayDuration={1}
