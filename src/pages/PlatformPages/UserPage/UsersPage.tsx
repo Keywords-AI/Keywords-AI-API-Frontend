@@ -226,7 +226,7 @@ const Table = () => {
   const Header = (
     <div
       aria-label="table header"
-      className="px-lg py-xs grid gap-x-sm bg-gray-2 h-[44px]"
+      className="px-lg py-xs grid gap-x-sm bg-gray-1 h-[44px] shadow-border-b shadow-gray-2"
       style={{
         gridTemplateColumns: templateString,
       }}
