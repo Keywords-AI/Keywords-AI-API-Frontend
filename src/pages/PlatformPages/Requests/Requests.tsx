@@ -29,8 +29,8 @@ import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
-import WelcomeCard from "src/components/Cards/WelcomeCard.js";
-import { RequestPreview } from "src/components/Display/Figures.js";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { RequestPreview } from "src/components/Display/Figures";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,

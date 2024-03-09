@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import useFetch from "src/hooks/useFetch";
 import usePost from "src/hooks/usePost";
-import { Plus, Edit, PureDelete } from "src/assets/svgs.jsx"
-import { CreateForm, DeleteForm, EditForm } from "./APIKeyForms.jsx";
+import { Plus, Edit, PureDelete } from "src/assets/svgs"
+import { CreateForm, DeleteForm, EditForm } from "./APIKeyForms";
 import { connect } from 'react-redux';
 import { fetchUsageData } from 'src/store/actions/usageData';
-import ListDisplay from "src/components/ListDisplay/ListDisplay.jsx";
-import { retrieveContext } from "src/utilities/utilities.js";
-import Popup from "src/components/Popup/Popup.jsx";
+import ListDisplay from "src/components/ListDisplay/ListDisplay";
+import { retrieveContext } from "src/utilities/utilities";
+import Popup from "src/components/Popup/Popup";
 
 const mapStateToProps = (state) => {
     return {

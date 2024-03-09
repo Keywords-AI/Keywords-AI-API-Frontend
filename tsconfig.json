@@ -18,6 +18,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/pages/PlatformPages/Playground/components/PlaygroundMessage.bak"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
