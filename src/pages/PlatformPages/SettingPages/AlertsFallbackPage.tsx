@@ -229,6 +229,7 @@ export const AlertsFallbackPage = () => {
             <Tag
               text="Upgrade"
               backgroundColor="bg-primary/10"
+              className="cursor-pointer"
               textColor="text-primary"
               border="shadow-transparent"
               onClick={() => {
