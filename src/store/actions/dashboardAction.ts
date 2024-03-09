@@ -441,11 +441,12 @@ export const getDashboardData = (postData) => {
     if (params.get("type") === null) {
       params.set("type", getState().dashboard.displayFilter.type);
     }
+
     // const startTime = performance.now();
     const currDate = new Date();
     const timeOffset = currDate.getTimezoneOffset() / 60;
-    params.set("timezone_offset", timeOffset);
     const date = new Date(getState().dashboard.timeFrame);
+
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     keywordsRequest({
       path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
@@ -492,10 +493,9 @@ export const getDashboardData = (postData) => {
           );
           dispatch(setGroupByData(breakDowndata));
         }
-
-        const dataList = fillMissingDate(
+        const dataList = addMissingDate(
           data?.data,
-          params.get("summary_type"),
+          params.get("summary_type")!,
           getState().dashboard.timeFrame
         );
 
@@ -767,7 +767,6 @@ const processBreakDownData = (
   if (type === "average") {
     metric = metric.replace("total", "average");
   }
-  console.log("groupByDate", groupByDate, metric);
   let returnData: any[] = [];
   Object.keys(groupByDate).forEach((key) => {
     const date_group = key;

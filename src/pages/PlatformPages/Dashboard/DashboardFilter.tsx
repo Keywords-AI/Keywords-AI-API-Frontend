@@ -94,7 +94,10 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
-  } else if (currentMetric === "average_latency") {
+  } else if (
+    currentMetric === "average_latency" ||
+    currentMetric === "average_ttft"
+  ) {
     filteredtypeChoices = [
       { name: "Avg per request", value: "average", secText: "1" },
       { name: "P50", value: "p50", secText: "2" },
@@ -293,40 +296,47 @@ export default function DashboardFilter() {
                     secText: "2",
                   },
                   {
-                    name: Metrics.average_latency.name,
-                    value: Metrics.average_latency.value,
-                    icon: Metrics.average_latency.icon,
-                    secText: "3",
-                  },
-                  {
                     name: Metrics.average_ttft.name,
                     value: Metrics.average_ttft.value,
                     icon: Metrics.average_ttft.icon,
+                    secText: "3",
+                  },
+                  {
+                    name: Metrics.average_tpot.name,
+                    value: Metrics.average_tpot.value,
+                    icon: Metrics.average_tpot.icon,
                     secText: "4",
                   },
+                  {
+                    name: Metrics.average_latency.name,
+                    value: Metrics.average_latency.value,
+                    icon: Metrics.average_latency.icon,
+                    secText: "5",
+                  },
+
                   {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "8",
+                    secText: "9",
                   },
                 ]}
               />

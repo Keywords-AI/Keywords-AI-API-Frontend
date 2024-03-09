@@ -569,12 +569,13 @@ export const Metrics = {
     unit: "requests",
   },
   average_latency: {
-    name: "Latency",
+    name: "Generation time",
     value: "average_latency",
     icon: Speed,
     unit: "s",
   },
   average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed, unit: "s" },
+  average_tpot: { name: "TPOT", value: "average_tpot", icon: Speed, unit: "s" },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
@@ -594,7 +595,7 @@ export const Metrics = {
     unit: "tokens",
   },
   total_cost: {
-    name: "Total cost",
+    name: "Cost",
     value: "total_cost",
     icon: Cost,
     unit: "$",
