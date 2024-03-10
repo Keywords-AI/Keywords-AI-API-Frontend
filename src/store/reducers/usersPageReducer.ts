@@ -6,6 +6,8 @@ import {
   SET_USERS_LOG_DATA_SORT,
   SET_USERS_LOG_DATA_TIMERANGE,
   SET_AGGREGATION_DATA,
+  SET_SIDEPANEL,
+  SET_SELECTED_USER,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
@@ -17,8 +19,10 @@ type UserLogData = {
   cost: number;
 };
 type State = {
+  selectedID: string | null;
   loading: boolean;
   usersLogData: UserLogData[];
+  sidepanel: boolean;
   filteredUsersLogData: UserLogData[];
   aggregationData: {
     total_users: number;
@@ -34,8 +38,10 @@ type State = {
   displayColumns: string[];
 };
 const initialState = {
+  selectedID: null,
   loading: true,
   usersLogData: [],
+  sidepanel: false,
   aggregationData: {
     total_users: 0,
     monthly_active_users: 0,
@@ -46,7 +52,7 @@ const initialState = {
   },
   filteredUsersLogData: [],
   sortKey: "customerId",
-  sortOrder: "asc",
+  sortOrder: "desc",
   timeRane: "all",
   isEmpty: false,
   displayColumns: [
@@ -62,6 +68,16 @@ const initialState = {
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
+    case SET_SELECTED_USER:
+      return {
+        ...state,
+        selectedID: action.payload,
+      };
+    case SET_SIDEPANEL:
+      return {
+        ...state,
+        sidepanel: action.payload,
+      };
     case SET_USERS_LOG_DATA_DISPLAY_COLUMNS:
       return {
         ...state,
