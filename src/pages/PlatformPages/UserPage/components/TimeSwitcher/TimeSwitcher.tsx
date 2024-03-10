@@ -29,6 +29,9 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     dispatch(getUsersLogData());
   }, [currentTimeRange]);
   const [showDropdown, setShowDropdown] = useState(false);
+  useEffect(() => {
+    console.log("showDropdown", showDropdown);
+  }, [showDropdown]);
   useHotkeys("t", () => {
     setShowDropdown(!showDropdown);
   }),

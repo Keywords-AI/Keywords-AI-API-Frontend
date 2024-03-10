@@ -1,6 +1,7 @@
 import { TypedDispatch, RootState } from "src/types";
 import { keywordsRequest } from "src/utilities/requests";
 import { Parser } from "@json2csv/plainjs";
+import { set } from "react-hook-form";
 
 export const SET_USERS_LOG_DATA = "SET_USERS_LOG_DATA";
 export const SET_USERS_LOG_DATA_LOADING = "SET_USERS_LOG_DATA_LOADING";
@@ -12,14 +13,29 @@ export const SET_USERS_LOG_DATA_DISPLAY_COLUMNS =
   "SET_USERS_LOG_DATA_DISPLAY_COLUMNS";
 export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
 export const SET_IS_EMPTY = "SET_IS_EMPTY";
+export const SET_SIDEPANEL = "SET_SIDEPANEL";
+export const SET_SELECTED_USER = "SET_SELECTED_USER";
 
-export const setAggregationData = (data: any) => {
-  data.daily_request_per_user = data.daily_requests / (data.daily_active_users || 1);
-  data.monthly_cost_per_user = data.monthly_cost / (data.monthly_active_users || 1);
+export const setSelectedUser = (id) => {
   return {
-  type: SET_AGGREGATION_DATA,
-  payload: data,
-}};
+    type: SET_SELECTED_USER,
+    payload: id,
+  };
+};
+export const toggleSidePanel = (value: boolean) => ({
+  type: SET_SIDEPANEL,
+  payload: value,
+});
+export const setAggregationData = (data: any) => {
+  data.daily_request_per_user =
+    data.daily_requests / (data.daily_active_users || 1);
+  data.monthly_cost_per_user =
+    data.monthly_cost / (data.monthly_active_users || 1);
+  return {
+    type: SET_AGGREGATION_DATA,
+    payload: data,
+  };
+};
 export const setIsEmpty = (value: boolean) => ({
   type: SET_IS_EMPTY,
   payload: value,
