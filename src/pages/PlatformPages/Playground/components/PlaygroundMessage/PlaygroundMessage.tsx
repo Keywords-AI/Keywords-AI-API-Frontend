@@ -206,7 +206,7 @@ export function PlaygroundMessage({
             >
               <MessageHeader
                 title={
-                  <div className="flex items-center gap-xxs">
+                  <div className="flex items-center gap-xxs h-[28px]">
                     <div className="text-sm-md text-gray-4">
                       Assistant {index == 0 ? "A" : "B"}
                     </div>
@@ -397,7 +397,7 @@ export function StreamingMessage() {
                   <MessageHeader
                     streaming
                     title={
-                      <div className="flex items-center gap-xxs">
+                      <div className="flex items-center gap-xxs h-[28px]">
                         <div className="text-sm-md text-gray-4">
                           Assistant {index == 0 ? "A" : "B"}
                         </div>
