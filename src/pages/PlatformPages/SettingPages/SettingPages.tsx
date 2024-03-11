@@ -13,13 +13,10 @@ import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 import ModelsPage from "./Modelspage";
-<<<<<<< HEAD
 import Admin from "./AdminPage";
-=======
 import { UserSettings } from "./UserSettingsPage";
 import { WebhookPage } from "./WebhookPage";
 
->>>>>>> main
 const pages: PreProcessPage[] = [
   {
     title: "General",
