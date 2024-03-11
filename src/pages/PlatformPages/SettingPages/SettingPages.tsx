@@ -9,11 +9,13 @@ import { IntegrationsPage } from "./IntegrationsPage";
 import { generateChild } from "src/utilities/objectProcessing";
 import { AlertsFallbackPage } from "./AlertsFallbackPage";
 import { ModelRouterPage } from "./ModelRouterPage";
-import { UserSettings } from "./UserSettingsPage";
 import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 import ModelsPage from "./Modelspage";
+import { UserSettings } from "./UserSettingsPage";
+import { WebhookPage } from "./WebhookPage";
+
 const pages: PreProcessPage[] = [
   {
     title: "General",
@@ -52,6 +54,10 @@ const pages: PreProcessPage[] = [
   {
     title: "API Keys",
     page: <ApiKeyPage />,
+  },
+  {
+    title: "Webhooks",
+    page: <WebhookPage />,
   },
   {
     title: "Alerts & Fallback",
