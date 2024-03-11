@@ -9,8 +9,6 @@ import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
 import { Divider } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
-import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import userReducer from "src/store/reducers/userReducer";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
