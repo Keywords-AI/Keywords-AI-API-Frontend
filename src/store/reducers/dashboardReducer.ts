@@ -42,6 +42,7 @@ import {
   UPDATE_DASHBOARD_FILTER,
   DELETE_DASHBOARD_FILTER,
   SET_AVG_TTFT_DATA,
+  SET_TPS_DATA,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -137,6 +138,7 @@ const initState = {
   filterOptions: {} as FilterParams,
   avgModelData: [],
   apiData: [],
+  tpsData: [],
   avgApiData: [],
   displayFilter: loadFilter(),
   groupByData: [],
@@ -211,6 +213,8 @@ export default function dashboardReducer(
   action
 ): DashboardState {
   switch (action.type) {
+    case SET_TPS_DATA:
+      return { ...state, tpsData: action.payload };
     case SET_DASHBOARD_LOADING:
       return { ...state, loading: action.payload };
     case SET_DASHBOARD_DATA:

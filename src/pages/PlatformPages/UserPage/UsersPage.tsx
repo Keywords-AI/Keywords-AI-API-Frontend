@@ -77,11 +77,12 @@ const TopBar = () => {
   const aggregatedData = useTypedSelector(
     (state) => state.usersPage.aggregationData
   );
+  const isAdmin = useTypedSelector((state) => state.user.is_admin);
   const handleSearch = (searchString: string) => {
     dispatch(filterUsersLogDataAction(searchString));
   };
   const handleReset = () => {
-    dispatch(filterUsersLogDataAction(""));
+    // dispatch(filterUsersLogDataAction(""));
   };
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
@@ -89,7 +90,7 @@ const TopBar = () => {
   useHotkeys(
     ".",
     () => {
-      
+      if (!isAdmin) return;
       dispatch(toggleSidePanel(!isSidePanelOpen));
     },
     { preventDefault: true }
@@ -151,26 +152,28 @@ const TopBar = () => {
           <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
           <TimeSwitcher />
           <DisplayPopover />
-          <Tooltip
-            side="bottom"
-            sideOffset={8}
-            align="end"
-            delayDuration={1}
-            content={
-              <>
-                <p className="caption text-gray-4">Open right sidebar</p>
-                <AlphanumericKey value={"."} />
-              </>
-            }
-          >
-            <div>
-              <DotsButton
-                icon={isSidePanelOpen ? SideBarActive : SideBar}
-                onClick={() => dispatch(toggleSidePanel(!isSidePanelOpen))}
-                active={isSidePanelOpen}
-              />
-            </div>
-          </Tooltip>
+          {isAdmin && (
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="end"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={"."} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={isSidePanelOpen ? SideBarActive : SideBar}
+                  onClick={() => dispatch(toggleSidePanel(!isSidePanelOpen))}
+                  active={isSidePanelOpen}
+                />
+              </div>
+            </Tooltip>
+          )}
         </div>
       </div>
     </>
