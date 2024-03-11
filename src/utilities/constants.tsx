@@ -594,6 +594,36 @@ export const Metrics = {
     icon: Tokens,
     unit: "tokens",
   },
+  average_tps:{
+    name: "Speed",
+    value: "average_tps",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_50:{
+    name: "Speed p50",
+    value: "tps_p_50",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_90:{
+    name: "Speed p90",
+    value: "tps_p_90",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_95:{
+    name: "Speed p95",
+    value: "tps_p_95",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_99:{
+    name: "Speed p99",
+    value: "tps_p_99",
+    icon: Speed,
+    unit: "tps",
+  },
   total_cost: {
     name: "Cost",
     value: "total_cost",

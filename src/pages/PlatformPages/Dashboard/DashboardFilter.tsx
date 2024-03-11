@@ -48,7 +48,8 @@ export default function DashboardFilter() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useTypedSelector((state: RootState) => state.user);
-  const show_admins = new URLSearchParams(location.search).get("show_admins") === "true";
+  const show_admins =
+    new URLSearchParams(location.search).get("show_admins") === "true";
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     dispatch(getDashboardData());
@@ -97,7 +98,8 @@ export default function DashboardFilter() {
     );
   } else if (
     currentMetric === "average_latency" ||
-    currentMetric === "average_ttft"
+    currentMetric === "average_ttft" ||
+    currentMetric === "average_tps"
   ) {
     filteredtypeChoices = [
       { name: "Avg per request", value: "average", secText: "1" },
@@ -107,10 +109,6 @@ export default function DashboardFilter() {
       { name: "P99", value: "p99", secText: "5" },
       { name: "All", value: "all", secText: "6" },
       // { name: "Total", value: "total", secText: "7" },
-    ];
-  } else if (currentMetric === "average_ttft") {
-    filteredtypeChoices = [
-      { name: "Avg per request", value: "average", secText: "1" },
     ];
   } else {
     filteredtypeChoices = typeChoices;
@@ -153,15 +151,17 @@ export default function DashboardFilter() {
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      {user.is_superadmin &&  <Button
-        variant="small"
-        text="Show admins"
-        active={show_admins}
-        onClick={() => {
-          setQueryParams({ show_admins: !show_admins }, navigate);
-          dispatch(getDashboardData());
-        }}
-      />}
+      {user.is_superadmin && (
+        <Button
+          variant="small"
+          text="Show admins"
+          active={show_admins}
+          onClick={() => {
+            setQueryParams({ show_admins: !show_admins }, navigate);
+            dispatch(getDashboardData());
+          }}
+        />
+      )}
       <Button
         variant="small"
         text="Today"
@@ -284,7 +284,8 @@ export default function DashboardFilter() {
                   }
                   if (
                     e.target.value === Metrics.average_latency.value ||
-                    e.target.value === Metrics.average_ttft.value
+                    e.target.value === Metrics.average_ttft.value ||
+                    e.target.value === Metrics.average_tps.value
                   ) {
                     dispatch(
                       setDisplayType("average", setQueryParams, navigate)
@@ -313,42 +314,42 @@ export default function DashboardFilter() {
                     icon: Metrics.average_ttft.icon,
                     secText: "3",
                   },
-                  // {
-                  //   name: Metrics.average_tpot.name,
-                  //   value: Metrics.average_tpot.value,
-                  //   icon: Metrics.average_tpot.icon,
-                  //   secText: "4",
-                  // },
+
                   {
                     name: Metrics.average_latency.name,
                     value: Metrics.average_latency.value,
                     icon: Metrics.average_latency.icon,
                     secText: "4",
                   },
-
+                  {
+                    name: Metrics.average_tps.name,
+                    value: Metrics.average_tps.value,
+                    icon: Metrics.average_tps.icon,
+                    secText: "5",
+                  },
                   {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "8",
+                    secText: "6",
                   },
                 ]}
               />
