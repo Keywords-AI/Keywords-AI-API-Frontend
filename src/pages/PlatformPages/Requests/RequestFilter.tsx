@@ -167,6 +167,7 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
           bgColor="bg-gray-2"
           hoverColor="bg-gray-3"
           onClick={() => dispatch(deleteFilter(filter.id))}
+          className="h-[24px] w-[24px]"
         />
       }
     </div>
