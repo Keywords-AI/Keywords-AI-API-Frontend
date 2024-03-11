@@ -46,6 +46,7 @@ export const SET_KEY_COLORS = "SET_KEY_COLORS";
 export const RESET_TIME_FRAME_OFFSET = "RESET_TIME_FRAME_OFFSET";
 export const SET_DASHBOARD_LOADING = "SET_DASHBOARD_LOADING";
 export const SET_AVG_TTFT_DATA = "SET_AVG_TTFT_DATA";
+export const SET_TPS_DATA = "SET_TPS_DATA";
 //==============================================================================
 export const SET_DASHBOARD_FILTER_OPEN = "SET_DASHBOARD_FILTER_OPEN";
 export const SET_DASHBOARD_SECOND_FILTER = "SET_DASHBOARD_SECOND_FILTER";
@@ -171,6 +172,12 @@ export const setDashboardSecondFilter = (filter) => {
 };
 //==============================================================================
 
+export const setTpsData = (data) => {
+  return {
+    type: SET_TPS_DATA,
+    payload: data,
+  };
+};
 export const setAvgTtftData = (data) => {
   return {
     type: SET_AVG_TTFT_DATA,
@@ -586,6 +593,17 @@ export const getDashboardData = (postData) => {
               "latency_p_90",
               "latency_p_95",
               "latency_p_99",
+            ])
+          )
+        );
+        dispatch(
+          setTpsData(
+            sliceChartData(dataList, "date_group", [
+              Metrics.average_tps.value,
+              Metrics.tps_p_50.value,
+              Metrics.tps_p_90.value,
+              Metrics.tps_p_95.value,
+              Metrics.tps_p_99.value,
             ])
           )
         );
