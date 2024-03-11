@@ -14,6 +14,7 @@ import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 import ModelsPage from "./Modelspage";
+import Admin from "./AdminPage";
 const pages: PreProcessPage[] = [
   {
     title: "General",
@@ -70,6 +71,12 @@ const userPages = [
     // forAdmin: true,
     page: <UserSettings />,
   },
+
+  {
+    title: "Admin",
+    forAdmin: true,
+    page:<Admin/>,
+  }
 ];
 
 const processedOrgPages = pages.map((page, index) => {

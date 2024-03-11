@@ -264,7 +264,7 @@ export const TitleCard = ({
         </div>
       </div>
       <div className="flex flex-col items-start">
-        <span className="text-left text-md-medium ">{companyName}</span>
+        <span className="text-left text-md-medium">{companyName}</span>
         {/* <span className="text-sm-regular text-gray-4 text-center">
           {modelCount} models activated
         </span> */}
