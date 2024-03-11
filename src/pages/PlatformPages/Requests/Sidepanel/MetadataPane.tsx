@@ -46,7 +46,7 @@ export default function MetadataPane({}: Props) {
                 <CopyButton text={JSON.stringify(logItem?.metadata) || ""} />
               </div>
               <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-gray-4  text-sm-regular rounded-sm ">
-                <p className="break-all  flex self-stretch text-wrap max-h-[400px] overflow-auto whitespace-pre-wrap select-text w-full">
+                <p className="break-all  flex self-stretch text-wrap max-h-[400px] overflow-auto whitespace-pre-wrap select-text w-full font-roboto-mono">
                   {JSON.stringify(logItem?.metadata)}
                   {/* {`{
   "name": "John Doe",
