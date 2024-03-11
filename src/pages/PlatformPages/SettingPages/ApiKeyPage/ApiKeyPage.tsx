@@ -110,7 +110,7 @@ export const ApiKeyPage = ({
         <p>
           Read the{" "}
           <a
-            className="text-primary cursor-pointer"
+            className="text-primary cursor-pointer hover:text-primary-2"
             onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
           >
             documentation
@@ -138,6 +138,7 @@ export const ApiKeyPage = ({
                     text="Upgrade"
                     padding="p-0"
                     textColor="text-primary"
+                    textClickedColor="text-primary-2"
                     onClick={() => {
                       navigate("/platform/api/plans");
                     }}
