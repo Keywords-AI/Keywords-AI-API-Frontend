@@ -84,7 +84,12 @@ export default function DashboardFilter() {
     };
   }, []);
   useEffect(() => {
-    if (currentMetric === "average_latency" && currentType === "all") {
+    if (
+      (currentMetric === "average_latency" ||
+        currentMetric == "average_ttft" ||
+        currentMetric == "average_tps") &&
+      currentType === "all"
+    ) {
       dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
     }
   }, [currentMetric, currentType]);

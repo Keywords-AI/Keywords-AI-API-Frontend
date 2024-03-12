@@ -37,13 +37,14 @@ const LeftNavitationLayout = ({ sectionName }) => {
     },
     { scopes: "leftNav" }
   );
-  const PlatformDrawerMemo = React.memo(PanelNavigation);
+  // const PlatformDrawerMemo = React.memo(PanelNavigation);
+  useEffect(() => {}, []);
   return (
     <div
       aria-label="setting-pages"
       className="flex-row self-stretch flex-1 max-h-[calc(100vh-54px)] overflow-auto"
     >
-      <PlatformDrawerMemo sectionName={sectionName} />
+      <PanelNavigation sectionName={sectionName} />
       <Outlet />
     </div>
   );
