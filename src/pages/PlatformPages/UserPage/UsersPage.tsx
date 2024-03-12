@@ -8,8 +8,8 @@ import {
 } from "./components";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import {
+  addUserLogFilter,
   exportUserLogs,
-  filterUsersLogDataAction,
   getUsersLogData,
   setSelectedUser,
   toggleSidePanel,
@@ -79,10 +79,20 @@ const TopBar = () => {
   );
   const isAdmin = useTypedSelector((state) => state.user.is_admin);
   const handleSearch = (searchString: string) => {
-    dispatch(filterUsersLogDataAction(searchString));
+    const randomId = Math.random().toString(36).substring(2, 15);
+    dispatch(
+      addUserLogFilter({
+        display_name: "Customer identifier",
+        metric: "customer_identifier",
+        value: [searchString],
+        id: randomId,
+        operator: "icontains",
+        value_field_type: "text",
+      })
+    );
   };
   const handleReset = () => {
-    dispatch(filterUsersLogDataAction(""));
+    // dispatch(filterUsersLogDataAction(""));
   };
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel

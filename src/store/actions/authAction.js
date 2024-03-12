@@ -78,14 +78,14 @@ export const logout = (
   }
 ) => {
   return (dispatch) => {
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("access");
+    eraseCookie("access");
+    eraseCookie("refresh");
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
     })
       .then(async (res) => {
-        localStorage.removeItem("refresh");
-        localStorage.removeItem("access");
-        eraseCookie("access");
-        eraseCookie("refresh");
         postLogout();
         dispatch(
           dispatchNotification({
@@ -203,11 +203,11 @@ export const resetPassword = (
       auth: false,
     })
       .then((responseJson) => {
-          dispatch(
-            dispatchNotification({
-              title: "Link sent to your email inbox via team@keywordsai.co",
-            })
-          );
+        dispatch(
+          dispatchNotification({
+            title: "Link sent to your email inbox via team@keywordsai.co",
+          })
+        );
       })
       .catch((error) => handleError(error));
   };
@@ -311,22 +311,20 @@ export const activateUser = (
 
 export const resendActivationEmail = (email) => {
   return (dispatch) => {
-    keywordsRequest(
-      {
-        path: "auth/users/resend_activation/", 
-        method: "POST",
-        data: { email: email },
-        auth: false,
-      }
-    )
+    keywordsRequest({
+      path: "auth/users/resend_activation/",
+      method: "POST",
+      data: { email: email },
+      auth: false,
+    })
       .then((jsonData) => {
-          dispatch(
-            dispatchNotification({
-              type: "success",
-              title: "The activation link has been sent to your email!",
-            })
-          );
-        })
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "The activation link has been sent to your email!",
+          })
+        );
+      })
       .catch((error) => console.log(error));
   };
 };
