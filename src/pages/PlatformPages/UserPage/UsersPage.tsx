@@ -82,7 +82,7 @@ const TopBar = () => {
     dispatch(filterUsersLogDataAction(searchString));
   };
   const handleReset = () => {
-    // dispatch(filterUsersLogDataAction(""));
+    dispatch(filterUsersLogDataAction(""));
   };
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
