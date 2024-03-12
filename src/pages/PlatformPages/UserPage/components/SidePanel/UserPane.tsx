@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, forwardRef, ForwardedRef } from "react";
 import { ModelTag } from "src/components/Misc";
 import { useTypedSelector } from "src/store/store";
 
 type Props = {};
 
-export default function UserPane({}: Props) {
+const UserPane = forwardRef((props: Props, ref: ForwardedRef<HTMLDivElement>) => {
   const userLogs = useTypedSelector((state) => state.usersPage.usersLogData);
   const selectedID = useTypedSelector((state) => state.usersPage.selectedID);
   const selectedUser = selectedID
@@ -111,13 +111,15 @@ export default function UserPane({}: Props) {
   ];
 
   return (
-    <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+    <div className="flex-col py-sm px-lg items-start gap-xs self-stretch" ref={ref}>
       {displayObj.map((item, index) => (
-        <div className="flex h-md justify-between items-center self-stretch">
+        <div className="flex h-md justify-between items-center self-stretch" key={index}>
           {item.title}
           {item.value}
         </div>
       ))}
     </div>
   );
-}
+});
+
+export default UserPane;

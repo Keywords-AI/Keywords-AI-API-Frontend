@@ -16,6 +16,8 @@ import {
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
+import { Tag } from "src/components/Misc";
+import TextSwitchButton from "src/components/Buttons/TextSwitchBUtton";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -63,15 +65,12 @@ export const PlansPage = connect(
       billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
+        "$10 free LLM credits",
         "10k requests / month",
         "2 seats",
-        // "1 proxy API key",
         "Community support",
-        // "Status monitoring",
-        // "Dynamic LLM router",
-        // "OpenAI models",
-        // "Email support",
       ],
+      plan: "starter",
       downgradeParams: {
         buttonText: "Downgrade to starter",
         buttonVariant: "r4-gray-2",
@@ -88,21 +87,31 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Pro",
+      title: isYearly ? (
+        <div className="flex  items-center gap-xxs">
+          Pro
+          <Tag
+            text="-20%"
+            textColor="text-success"
+            border=""
+            borderRadious="rounded-sm"
+            backgroundColor="bg-success/10"
+          />
+        </div>
+      ) : (
+        "Pro"
+      ),
       plan: "team",
       subtitle: "Best for early stage startups.",
       price: teamPrice,
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
+        "$100 free LLM credits",
         "1M requests / month",
         "5 seats",
         "Custom evaluations",
         "Founders 24/7 support",
-        // "Admin roles",
-        // "Advanced model fallback",
-        // `Mistral, Anthropic, and ${remaining} more models`,
-        // "CTO priority support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to Pro",
@@ -206,16 +215,23 @@ export const PlansPage = connect(
       }
     >
       <div className="flex flex-col w-full items-center gap-sm">
-        <div className="flex justify-center items-center gap-xs">
-          <span className="text-sm-md text-gray-4">Monthly</span>
-          <SwitchButton
-            onCheckedChange={handleSwitchChange}
+        <div className={`flex items-center gap-xxs`}>
+          {isYearly && <div className="w-[46px] h-[4px]"></div>}
+          <TextSwitchButton
             checked={isYearly}
+            leftValue="Monthly"
+            rightValue="Annually"
+            onCheckedChange={handleSwitchChange}
           />
-          <div>
-            <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary"> (20% off) </span>
-          </div>
+          {isYearly && (
+            <Tag
+              text="-20%"
+              textColor="text-success"
+              border=""
+              borderRadious="rounded-sm"
+              backgroundColor="bg-success/10"
+            />
+          )}
         </div>
         <div className="flex flex-row gap-sm self-stretch">
           {cards.map((card, index) => {
