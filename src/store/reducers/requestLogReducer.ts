@@ -56,7 +56,7 @@ const initState: StateType = {
   nextPageUrl: null,
   lastPageUrl: null,
   selectedRequest: undefined,
-  sidePanelOpen: false,
+  sidePanelOpen: true,
   jsonMode: false,
   displayColumns: defaultRequestLogColumns,
   filterOpen: false,
