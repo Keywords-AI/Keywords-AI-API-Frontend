@@ -16,9 +16,15 @@ import {
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
+import { Tag } from "src/components/Misc";
+import TextSwitchButton from "src/components/Buttons/TextSwitchBUtton";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
+  name: state.billings?.currentSubscription,
+  renewal_date: state.billings?.currentSubscription?.renewal_date,
+  amount: state.billings?.currentSubscription?.amount,
+  interval: state.billings?.currentSubscription?.interval,
 });
 
 const mapDispatchToProps = {
@@ -28,23 +34,30 @@ const mapDispatchToProps = {
 const Subheading = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ userCount = 4, price = 29, newMonth = "January 11, 2024" }) => {
-  const { name, renewal_date, amount, interval } = useTypedSelector(
-    (state) => state.billings?.currentSubscription || {}
-  );
-  return (
-    <div>
-      You’re currently on the{" "}
-      <span className="text-gray-5">{`${name} ${interval}`}ly</span> plan. Your
-      organization of
-      <span className="text-gray-5">{" " + userCount}</span>
-      {" users costs "}
-      <span className="text-gray-5">{amount} </span>
-      {" per month, and will renew on "}
-      <span className="text-gray-5">{renewal_date}</span>
-    </div>
-  );
-});
+)(
+  ({
+    userCount = 4,
+    price = 29,
+    newMonth = "January 11, 2024",
+    name,
+    renewal_date,
+    amount,
+    interval,
+  }) => {
+    return (
+      <div>
+        You’re currently on the{" "}
+        <span className="text-gray-5">{`${name} ${interval}`}ly</span> plan.
+        Your organization of
+        <span className="text-gray-5">{" " + userCount}</span>
+        {" users costs "}
+        <span className="text-gray-5">{amount} </span>
+        {" per month, and will renew on "}
+        <span className="text-gray-5">{renewal_date}</span>
+      </div>
+    );
+  }
+);
 
 export const PlansPage = connect(
   mapStateToProps,
@@ -63,14 +76,10 @@ export const PlansPage = connect(
       billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
+        "$10 free LLM credits",
         "10k requests / month",
         "2 seats",
-        // "1 proxy API key",
         "Community support",
-        // "Status monitoring",
-        // "Dynamic LLM router",
-        // "OpenAI models",
-        // "Email support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
@@ -88,21 +97,31 @@ export const PlansPage = connect(
       },
     },
     {
-      title: "Pro",
+      title: isYearly ? (
+        <div className="flex  items-center gap-xxs">
+          Pro
+          <Tag
+            text="-20%"
+            textColor="text-success"
+            border=""
+            borderRadious="rounded-sm"
+            backgroundColor="bg-success/10"
+          />
+        </div>
+      ) : (
+        "Pro"
+      ),
       plan: "team",
       subtitle: "Best for early stage startups.",
       price: teamPrice,
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
+        "$100 free LLM credits",
         "1M requests / month",
         "5 seats",
         "Custom evaluations",
         "Founders 24/7 support",
-        // "Admin roles",
-        // "Advanced model fallback",
-        // `Mistral, Anthropic, and ${remaining} more models`,
-        // "CTO priority support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to Pro",
@@ -206,16 +225,23 @@ export const PlansPage = connect(
       }
     >
       <div className="flex flex-col w-full items-center gap-sm">
-        <div className="flex justify-center items-center gap-xs">
-          <span className="text-sm-md text-gray-4">Monthly</span>
-          <SwitchButton
-            onCheckedChange={handleSwitchChange}
+        <div className={`flex items-center gap-xxs`}>
+          {isYearly && <div className="w-[46px] h-[4px]"></div>}
+          <TextSwitchButton
             checked={isYearly}
+            leftValue="Monthly"
+            rightValue="Annually"
+            onCheckedChange={handleSwitchChange}
           />
-          <div>
-            <span className="text-sm-md text-gray-4">Yearly</span>
-            <span className="text-sm-md text-primary"> (20% off) </span>
-          </div>
+          {isYearly && (
+            <Tag
+              text="-20%"
+              textColor="text-success"
+              border=""
+              borderRadious="rounded-sm"
+              backgroundColor="bg-success/10"
+            />
+          )}
         </div>
         <div className="flex flex-row gap-sm self-stretch">
           {cards.map((card, index) => {

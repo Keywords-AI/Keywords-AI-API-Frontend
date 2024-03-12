@@ -15,7 +15,7 @@ type KeywordsFetchRequestConfig = {
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
   dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
   hideError?: boolean; // Optional flag to hide error notifications
-  errorHandling?: (status: number) => void // Optional error handling function
+  errorHandling?: (status: number) => void; // Optional error handling function
 };
 
 /**
@@ -169,6 +169,7 @@ export const keywordsStream = ({
             count++;
           }
         } catch (e) {
+          console.error("Stream error:", e);
           throw e;
         }
       })();
