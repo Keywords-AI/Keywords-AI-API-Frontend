@@ -18,13 +18,18 @@ import { Tag } from "src/components/Misc";
 import { useNavigate } from "react-router-dom";
 
 export const AlertsFallbackPage = () => {
-  const { isFallbackEnabled, fallbackModels, systemFallbackEnabled, orgPlan } =
-    useTypedSelector((state: RootState) => ({
-      isFallbackEnabled: state.organization?.fallback_model_enabled,
-      fallbackModels: state.organization?.fallback_models,
-      systemFallbackEnabled: state.organization?.system_fallback_enabled,
-      orgPlan: state.organization?.organization_subscription?.plan,
-    }));
+  const isFallbackEnabled = useTypedSelector(
+    (state: RootState) => state.organization?.fallback_model_enabled
+  );
+  const fallbackModels = useTypedSelector(
+    (state: RootState) => state.organization?.fallback_models
+  );
+  const systemFallbackEnabled = useTypedSelector(
+    (state: RootState) => state.organization?.system_fallback_enabled
+  );
+  const orgPlan = useTypedSelector(
+    (state: RootState) => state.organization?.organization_subscription?.plan
+  );
 
   const dispatch = useTypedDispatch();
   const [fallbackEnabled, setFallbackEnabled] =
@@ -58,7 +63,8 @@ export const AlertsFallbackPage = () => {
     );
   }, [model1, model2, model3]);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription?.plan_level || 0;
+    const planLevel =
+      state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   const models = MODELS.map((model) => {
@@ -146,7 +152,7 @@ export const AlertsFallbackPage = () => {
               window.open("https://status.keywordsai.co", "_blank")
             }
           /> */}
-          <SwitchButton 
+          <SwitchButton
             checked={alertsEnabled}
             onCheckedChange={handleAlertsFallbackToggle}
           />
