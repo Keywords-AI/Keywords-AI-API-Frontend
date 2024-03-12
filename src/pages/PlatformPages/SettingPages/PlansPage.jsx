@@ -21,6 +21,10 @@ import TextSwitchButton from "src/components/Buttons/TextSwitchBUtton";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
+  name: state.billings?.currentSubscription,
+  renewal_date: state.billings?.currentSubscription?.renewal_date,
+  amount: state.billings?.currentSubscription?.amount,
+  interval: state.billings?.currentSubscription?.interval,
 });
 
 const mapDispatchToProps = {
@@ -30,23 +34,30 @@ const mapDispatchToProps = {
 const Subheading = connect(
   mapStateToProps,
   mapDispatchToProps
-)(({ userCount = 4, price = 29, newMonth = "January 11, 2024" }) => {
-  const { name, renewal_date, amount, interval } = useTypedSelector(
-    (state) => state.billings?.currentSubscription || {}
-  );
-  return (
-    <div>
-      You’re currently on the{" "}
-      <span className="text-gray-5">{`${name} ${interval}`}ly</span> plan. Your
-      organization of
-      <span className="text-gray-5">{" " + userCount}</span>
-      {" users costs "}
-      <span className="text-gray-5">{amount} </span>
-      {" per month, and will renew on "}
-      <span className="text-gray-5">{renewal_date}</span>
-    </div>
-  );
-});
+)(
+  ({
+    userCount = 4,
+    price = 29,
+    newMonth = "January 11, 2024",
+    name,
+    renewal_date,
+    amount,
+    interval,
+  }) => {
+    return (
+      <div>
+        You’re currently on the{" "}
+        <span className="text-gray-5">{`${name} ${interval}`}ly</span> plan.
+        Your organization of
+        <span className="text-gray-5">{" " + userCount}</span>
+        {" users costs "}
+        <span className="text-gray-5">{amount} </span>
+        {" per month, and will renew on "}
+        <span className="text-gray-5">{renewal_date}</span>
+      </div>
+    );
+  }
+);
 
 export const PlansPage = connect(
   mapStateToProps,
@@ -70,7 +81,6 @@ export const PlansPage = connect(
         "2 seats",
         "Community support",
       ],
-      plan: "starter",
       downgradeParams: {
         buttonText: "Downgrade to starter",
         buttonVariant: "r4-gray-2",
