@@ -80,12 +80,12 @@ export const logout = (
   return (dispatch) => {
     localStorage.removeItem("refresh");
     localStorage.removeItem("access");
-    eraseCookie("access");
-    eraseCookie("refresh");
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
     })
       .then(async (res) => {
+        eraseCookie("access");
+        eraseCookie("refresh");
         postLogout();
         dispatch(
           dispatchNotification({
