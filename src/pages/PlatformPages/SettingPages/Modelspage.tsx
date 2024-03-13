@@ -199,20 +199,20 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    ${(item.input_cost * 1.05 / 1000).toFixed(6)}
+                    ${(item.input_cost).toFixed(6)}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
-                    / 1K tokens
+                    / 1M tokens
                   </span>
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    ${(item.output_cost * 1.05 / 1000).toFixed(6)}
+                    ${(item.output_cost).toFixed(6)}
                   </span>
                   <span className=" text-gray-4 text-sm-regular">
                     {" "}
-                    / 1K tokens
+                    / 1M tokens
                   </span>
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
