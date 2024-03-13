@@ -26,7 +26,7 @@ export const getVendors = () => {
 export const getIntegrations = () => {
   return (dispatch: TypedDispatch) => {
     keywordsRequest({
-      path: "vendor_integration/integrations",
+      path: "vendor_integration/integrations/",
       dispatch,
     })
       .then((data) => {
@@ -108,7 +108,6 @@ export const setIntegration = (vendorName, data) => {
 
 export const verifyKey = (data, callback = () => {}) => {
   return (dispatch: TypedDispatch) => {
-    
     keywordsRequest({
       path: "vendor_integration/validate-api-key/",
       data,

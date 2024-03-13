@@ -31,7 +31,6 @@ export const StartWithPlan = () => {
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
     // If subscribed users stumbled on this page, redirect them
-    console.log("organization", organization);
     if (organization?.active_subscription) {
       if (organization?.onboarded) {
         navigate(REDIRECT_URI);
@@ -151,7 +150,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://zcal.co/keywords-ai/demos", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
       buttonParams: {
@@ -159,7 +158,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://zcal.co/keywords-ai/demos", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
     },

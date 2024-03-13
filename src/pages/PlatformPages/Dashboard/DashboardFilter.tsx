@@ -84,7 +84,12 @@ export default function DashboardFilter() {
     };
   }, []);
   useEffect(() => {
-    if (currentMetric === "average_latency" && currentType === "all") {
+    if (
+      (currentMetric === "average_latency" ||
+        currentMetric == "average_ttft" ||
+        currentMetric == "average_tps") &&
+      currentType === "all"
+    ) {
       dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
     }
   }, [currentMetric, currentType]);
@@ -349,7 +354,7 @@ export default function DashboardFilter() {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "6",
+                    secText: "9",
                   },
                 ]}
               />

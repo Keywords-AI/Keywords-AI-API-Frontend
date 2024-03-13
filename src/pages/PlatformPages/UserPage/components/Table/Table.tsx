@@ -11,6 +11,7 @@ import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { userTableColumns } from "src/utilities/constants";
 import { getQueryParam } from "src/utilities/navigation";
+import { Paginator } from "../Paginator";
 
 const TableRow = ({ item, index, isNavigating }) => {
   const templateString = "1fr 140px 100px 140px 120px 120px 120px ";
@@ -301,6 +302,9 @@ export const Table = () => {
                 />
               ))}
         </div>
+      </div>
+      <div className="flex flex-1 p-lg">
+        <Paginator />
       </div>
     </div>
   );

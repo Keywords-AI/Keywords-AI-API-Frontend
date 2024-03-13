@@ -78,9 +78,6 @@ export const LogPane = ({}) => {
 
       <div className="flex-col px-lg pt-sm pb-md gap-sm self-stretch items-start">
         {completeInteraction.map((message, index) => {
-          if (!message.content) {
-            return null;
-          }
           if (message.role === "system") return null;
           return (
             <div

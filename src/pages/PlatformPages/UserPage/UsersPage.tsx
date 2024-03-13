@@ -8,8 +8,8 @@ import {
 } from "./components";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import {
+  addUserLogFilter,
   exportUserLogs,
-  filterUsersLogDataAction,
   getUsersLogData,
   setSelectedUser,
   toggleSidePanel,
@@ -36,11 +36,11 @@ import { DotsButton } from "src/components/Buttons";
 import { toggleRightPanel } from "src/store/actions";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Table } from "./components/Table/Table";
+import { Paginator } from "../Requests/Paginator";
 
 type Props = {};
 
 export default function UsersPage({}: Props) {
-  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
   const dispatch = useTypedDispatch();
   useEffect(() => {
     dispatch(getUsersLogData());
@@ -48,6 +48,7 @@ export default function UsersPage({}: Props) {
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
   );
+  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
 
   return (
     <div
@@ -79,10 +80,20 @@ const TopBar = () => {
   );
   const isAdmin = useTypedSelector((state) => state.user.is_admin);
   const handleSearch = (searchString: string) => {
-    dispatch(filterUsersLogDataAction(searchString));
+    const randomId = Math.random().toString(36).substring(2, 15);
+    dispatch(
+      addUserLogFilter({
+        display_name: "Customer identifier",
+        metric: "customer_identifier",
+        value: [searchString],
+        id: randomId,
+        operator: "icontains",
+        value_field_type: "text",
+      })
+    );
   };
   const handleReset = () => {
-    dispatch(filterUsersLogDataAction(""));
+    // dispatch(filterUsersLogDataAction(""));
   };
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel

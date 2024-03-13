@@ -12,7 +12,7 @@ export default function LogMessage({ MessageContent }: Props) {
   if (typeof MessageContent === "string") {
     return jsonMode ? (
       <p className="break-words max-w-full text-wrap text-gray-4 text-sm-regular font-roboto-mono whitespace-pre-wrap select-text">
-        {MessageContent}
+        {MessageContent + "\u200B"}
       </p>
     ) : (
       <p
@@ -21,7 +21,7 @@ export default function LogMessage({ MessageContent }: Props) {
           "overflow-auto break-words select-text whitespace-pre-line"
         )}
       >
-        {MessageContent}
+        {MessageContent + "\u200B"}
       </p>
     );
   } else if (Array.isArray(MessageContent)) {
@@ -34,7 +34,7 @@ export default function LogMessage({ MessageContent }: Props) {
                 key={index}
                 className="break-words overflow-auto select-text whitespace-pre-line "
               >
-                {content.text}{" "}
+                {content.text + "\u200B"}{" "}
               </p>
             );
           } else if (

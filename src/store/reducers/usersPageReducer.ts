@@ -8,6 +8,13 @@ import {
   SET_AGGREGATION_DATA,
   SET_SIDEPANEL,
   SET_SELECTED_USER,
+  SET_USERLOG_FILTER_OPTIONS,
+  ADD_USERLOG_FILTER,
+  UPDATE_USERLOG_FILTER,
+  DELETE_USERLOG_FILTER,
+  SET_USERLOG_FILTERS,
+  SET_CURRENT_USERLOG_FILTER,
+  SET_USERLOG_FILTER_TYPE,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
@@ -23,7 +30,6 @@ type State = {
   loading: boolean;
   usersLogData: UserLogData[];
   sidepanel: boolean;
-  filteredUsersLogData: UserLogData[];
   aggregationData: {
     total_users: number;
     monthly_active_users: number;
@@ -36,8 +42,20 @@ type State = {
   sortOrder: string;
   timeRane: string;
   displayColumns: string[];
+  isEmpty: boolean;
+  filters: any[];
+  filterType: undefined;
+  currentFilter: {
+    id: string;
+  };
+  count: number;
+  previous: any;
+  next: any;
 };
-const initialState = {
+const initialState: State = {
+  count: 0,
+  previous: null,
+  next: null,
   selectedID: null,
   loading: true,
   usersLogData: [],
@@ -50,7 +68,6 @@ const initialState = {
     daily_request_per_user: 0,
     monthly_cost_per_user: 0,
   },
-  filteredUsersLogData: [],
   sortKey: "customerId",
   sortOrder: "desc",
   timeRane: "all",
@@ -64,10 +81,20 @@ const initialState = {
     "costs",
     "sentiment",
   ],
+  filters: [],
+  filterType: undefined,
+  currentFilter: {
+    id: "",
+  },
 };
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
+    case SET_USERLOG_FILTER_OPTIONS:
+      return {
+        ...state,
+        ...action.payload,
+      };
     case SET_SELECTED_USER:
       return {
         ...state,
@@ -112,6 +139,42 @@ const usersPageReducer = (state = initialState, action: any): State => {
       return {
         ...state,
         loading: action.payload,
+      };
+    // ===================================filters=================================
+    case ADD_USERLOG_FILTER:
+      return {
+        ...state,
+        filters: [...state.filters, action.payload],
+      };
+    case UPDATE_USERLOG_FILTER:
+      return {
+        ...state,
+        filters: state.filters.map((filter) => {
+          if (filter.id === action.payload.id) {
+            return action.payload;
+          }
+          return filter;
+        }),
+      };
+    case DELETE_USERLOG_FILTER:
+      return {
+        ...state,
+        filters: state.filters.filter((filter) => filter.id !== action.payload),
+      };
+    case SET_USERLOG_FILTERS:
+      return {
+        ...state,
+        filters: action.payload,
+      };
+    case SET_CURRENT_USERLOG_FILTER:
+      return {
+        ...state,
+        currentFilter: action.payload,
+      };
+    case SET_USERLOG_FILTER_TYPE:
+      return {
+        ...state,
+        filterType: action.payload,
       };
     default:
       return state;
