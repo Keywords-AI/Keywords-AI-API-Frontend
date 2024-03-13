@@ -31,7 +31,6 @@ export const StartWithPlan = () => {
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
     // If subscribed users stumbled on this page, redirect them
-    console.log("organization", organization);
     if (organization?.active_subscription) {
       if (organization?.onboarded) {
         navigate(REDIRECT_URI);

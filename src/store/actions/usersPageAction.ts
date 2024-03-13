@@ -205,34 +205,6 @@ export const getUsersLogData = (postData?: any) => {
   };
 };
 
-// export const filterUsersLogDataAction = (searchString: string) => {
-//   return async (dispatch: any, getState: any) => {
-//     dispatch(setUsersLogDataLoading(true));
-//     const data = await fetchUsersLogData(
-//       getSortFunction(
-//         getState().usersPage.sortKey,
-//         getState().usersPage.sortOrder
-//       ),
-//       getState
-//     );
-//     if (searchString === "") {
-//       dispatch(setUsersLogData(data.usersLogData));
-//     } else {
-//       const filteredData = data.usersLogData.filter((data: any) => {
-//         return data.customerId
-//           .toLowerCase()
-//           .includes(searchString.toLowerCase());
-//       });
-//       if (filteredData.length === 0) {
-//         dispatch(setUsersLogDataLoading(false));
-//         return;
-//       }
-//       dispatch(setUsersLogData(filteredData));
-//     }
-//     dispatch(setUsersLogDataLoading(false));
-//   };
-// };
-
 const sortFunctions = {
   customerId: (a: any, b: any, order: string) => {
     const result = a.customerId.localeCompare(b.customerId);
@@ -280,9 +252,10 @@ const fetchUsersLogData = async (
 ): Promise<any> => {
   try {
     const timeRange = getState().usersPage.timeRane;
-    let params = new URLSearchParams();
+    let params = new URLSearchParams(window.location.search);
     params.set("summary_type", timeRange);
     console.log("postData", postData);
+    console.log("params", params.toString());
     const { results: responseData, ...rest } = await keywordsRequest({
       path: `api/users/?${params.toString()}`,
       method: "GET",

@@ -36,13 +36,13 @@ import { DotsButton } from "src/components/Buttons";
 import { toggleRightPanel } from "src/store/actions";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Table } from "./components/Table/Table";
+import { Paginator } from "../Requests/Paginator";
 
 type Props = {};
 
 export default function UsersPage({}: Props) {
   const dispatch = useTypedDispatch();
   useEffect(() => {
-    console.log("UsersPage");
     dispatch(getUsersLogData());
   }, []);
   const isSidePanelOpen = useTypedSelector(

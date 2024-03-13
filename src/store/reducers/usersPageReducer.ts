@@ -48,8 +48,14 @@ type State = {
   currentFilter: {
     id: string;
   };
+  count: number;
+  previous: any;
+  next: any;
 };
 const initialState: State = {
+  count: 0,
+  previous: null,
+  next: null,
   selectedID: null,
   loading: true,
   usersLogData: [],
