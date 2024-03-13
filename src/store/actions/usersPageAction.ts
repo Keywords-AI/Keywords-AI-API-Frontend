@@ -23,7 +23,7 @@ export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
 export const SET_IS_EMPTY = "SET_IS_EMPTY";
 export const SET_SIDEPANEL = "SET_SIDEPANEL";
 export const SET_SELECTED_USER = "SET_SELECTED_USER";
-export const SET_FILTER_OPTIONS = "SET_FILTER_OPTIONS";
+export const SET_USERLOG_FILTER_OPTIONS = "SET_USERLOG_FILTER_OPTIONS";
 
 // ===================================filters===================================
 export const ADD_USERLOG_FILTER = "ADD_USERLOG_FILTER";
@@ -121,9 +121,9 @@ export const updateUserlogFilter = (filter: FilterObject) => {
   };
 };
 // ======================================================================
-export const setFilterOptions = (data) => {
+export const setUserLogFilterOptions = (data) => {
   return {
-    type: SET_FILTER_OPTIONS,
+    type: SET_USERLOG_FILTER_OPTIONS,
     payload: data,
   };
 };
@@ -200,7 +200,7 @@ export const getUsersLogData = (postData?: any) => {
     dispatch(setUsersLogData(usersLogData));
     dispatch(setAggregationData(aggregation_data));
     dispatch(setIsEmpty(usersLogData.length === 0));
-    dispatch(setFilterOptions(rest));
+    dispatch(setUserLogFilterOptions(rest));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -282,14 +282,13 @@ const fetchUsersLogData = async (
     const timeRange = getState().usersPage.timeRane;
     let params = new URLSearchParams();
     params.set("summary_type", timeRange);
-    console.log(params.toString());
-    console.log(postData);
+    console.log("postData", postData);
     const { results: responseData, ...rest } = await keywordsRequest({
       path: `api/users/?${params.toString()}`,
       method: "GET",
       data: { filters: postData },
     });
-    // console.log(responseData);
+    console.log("responseData", responseData);
     return {
       ...rest,
       usersLogData: responseData
@@ -317,7 +316,7 @@ export const exportUserLogs = (format = ".csv") => {
     const state = getState();
     try {
       const { results: responseData, ...rest } = await keywordsRequest({
-        path: `api/users`,
+        path: `api/users/`,
         method: "GET",
         data: { exporting: true },
       });

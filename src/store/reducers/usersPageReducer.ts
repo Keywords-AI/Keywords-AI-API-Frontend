@@ -8,7 +8,7 @@ import {
   SET_AGGREGATION_DATA,
   SET_SIDEPANEL,
   SET_SELECTED_USER,
-  SET_FILTER_OPTIONS,
+  SET_USERLOG_FILTER_OPTIONS,
   ADD_USERLOG_FILTER,
   UPDATE_USERLOG_FILTER,
   DELETE_USERLOG_FILTER,
@@ -84,7 +84,7 @@ const initialState: State = {
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
-    case SET_FILTER_OPTIONS:
+    case SET_USERLOG_FILTER_OPTIONS:
       return {
         ...state,
         ...action.payload,

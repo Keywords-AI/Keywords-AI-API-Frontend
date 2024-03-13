@@ -40,14 +40,15 @@ import { Table } from "./components/Table/Table";
 type Props = {};
 
 export default function UsersPage({}: Props) {
-  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
   const dispatch = useTypedDispatch();
   useEffect(() => {
+    console.log("UsersPage");
     dispatch(getUsersLogData());
   }, []);
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
   );
+  const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
 
   return (
     <div
