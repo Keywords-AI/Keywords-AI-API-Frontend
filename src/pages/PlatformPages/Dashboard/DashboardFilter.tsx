@@ -354,7 +354,7 @@ export default function DashboardFilter() {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "6",
+                    secText: "9",
                   },
                 ]}
               />

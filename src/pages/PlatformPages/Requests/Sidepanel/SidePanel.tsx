@@ -69,7 +69,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       //   </>
       // ),
     },
-    !logItem?.failed && logItem?.prompt_messages?.length !== 0
+    logItem?.prompt_messages?.length !== 0
       ? {
           value: "Log",
           buttonVariant: "text" as variantType,
@@ -121,7 +121,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
   useEffect(() => {
-    if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
+    if (logItem?.prompt_messages?.length === 0) {
       if (tab === "Log") setTab("Metric");
     }
 

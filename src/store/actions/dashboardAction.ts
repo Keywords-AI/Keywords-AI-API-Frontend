@@ -457,7 +457,7 @@ export const getDashboardData = (postData) => {
 
     params.set("date", date.toISOString()); // format: yyyy-mm-dd
     keywordsRequest({
-      path: `api/dashboard${postData ? "/" : ""}?${params.toString()}`,
+      path: `api/dashboard/?${params.toString()}`,
       method: postData ? "POST" : "GET",
       data: { filters: postData },
     })

@@ -17,7 +17,7 @@ import {
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
 import { Tag } from "src/components/Misc";
-import TextSwitchButton from "src/components/Buttons/TextSwitchBUtton";
+import TextSwitchButton from "src/components/Buttons/TextSwitchButton";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -76,7 +76,7 @@ export const PlansPage = connect(
       billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
-        "$10 free LLM credits",
+        // "$10 free LLM credits",
         "10k requests / month",
         "2 seats",
         "Community support",
@@ -117,7 +117,7 @@ export const PlansPage = connect(
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
-        "$100 free LLM credits",
+        // "$100 free LLM credits",
         "1M requests / month",
         "5 seats",
         "Custom evaluations",

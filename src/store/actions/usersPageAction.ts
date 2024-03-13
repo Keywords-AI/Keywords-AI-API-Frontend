@@ -1,7 +1,15 @@
-import { TypedDispatch, RootState } from "src/types";
+import {
+  TypedDispatch,
+  RootState,
+  LogItem,
+  FilterObject,
+  CurrentFilterObject,
+  FilterParams,
+} from "src/types";
 import { keywordsRequest } from "src/utilities/requests";
 import { Parser } from "@json2csv/plainjs";
 import { set } from "react-hook-form";
+import { updateUser } from "./userAction";
 
 export const SET_USERS_LOG_DATA = "SET_USERS_LOG_DATA";
 export const SET_USERS_LOG_DATA_LOADING = "SET_USERS_LOG_DATA_LOADING";
@@ -15,7 +23,110 @@ export const SET_AGGREGATION_DATA = "SET_AGGREGATION_DATA";
 export const SET_IS_EMPTY = "SET_IS_EMPTY";
 export const SET_SIDEPANEL = "SET_SIDEPANEL";
 export const SET_SELECTED_USER = "SET_SELECTED_USER";
+export const SET_USERLOG_FILTER_OPTIONS = "SET_USERLOG_FILTER_OPTIONS";
 
+// ===================================filters===================================
+export const ADD_USERLOG_FILTER = "ADD_USERLOG_FILTER";
+export const DELETE_USERLOG_FILTER = "DELETE_USERLOG_FILTER";
+export const UPDATE_USERLOG_FILTER = "UPDATE_USERLOG_FILTER";
+export const SET_CURRENT_USERLOG_FILTER = "SET_CURRENT_USERLOG_FILTER";
+export const SET_CURRENT_USERLOG_FILTER_TYPE =
+  "SET_CURRENT_USERLOG_FILTER_TYPE";
+export const SET_USERLOG_FILTERS = "SET_USERLOG_FILTERS";
+export const SET_USERLOG_FILTER_TYPE = "SET_USERLOG_FILTER_TYPE";
+// ===============================filters=======================================
+export const setUserLogFilterType = (
+  filterType: keyof LogItem | undefined
+) => ({
+  type: SET_USERLOG_FILTER_TYPE,
+  payload: filterType,
+});
+export const setUserLogFilters = (filters: FilterObject[]) => ({
+  type: SET_USERLOG_FILTERS,
+  payload: filters,
+});
+export const setCurrentUserLogFilter = (filter: CurrentFilterObject) => ({
+  type: SET_CURRENT_USERLOG_FILTER,
+  payload: filter,
+});
+function processFilters(filters: FilterObject[]): FilterParams {
+  return filters.reduce((acc: FilterParams, filter): FilterParams => {
+    if (!(filter.value instanceof Array)) {
+      filter.value = [filter.value];
+    }
+    var values = filter.value.map((value) => {
+      if (value === "true" || value === "false") {
+        value = value === "true" ? true : false;
+      }
+      if (filter.value_field_type === "datetime-local") {
+        value = new Date(value as string).toISOString();
+      }
+      return value;
+    });
+    filter.metric &&
+      (acc[filter.metric] = {
+        value: values,
+        operator: filter.operator,
+      });
+    return acc;
+  }, {});
+}
+export const applyUserlogPostFilters = (filters: FilterObject[]) => {
+  return (dispatch: TypedDispatch) => {
+    const postData = processFilters(filters);
+    // TODO
+    dispatch(updateUser({ user_page_filter: postData }, undefined, true));
+    dispatch(getUsersLogData(postData));
+  };
+};
+
+export const addUserLogFilter = (filter: FilterObject) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: ADD_USERLOG_FILTER,
+      payload: filter,
+    });
+    const state = getState();
+    const filters = state.usersPage.filters;
+    dispatch(applyUserlogPostFilters(filters));
+  };
+};
+
+export const deleteUserLogFilter = (filterId: string) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: DELETE_USERLOG_FILTER,
+      payload: filterId,
+    });
+    dispatch(setCurrentUserLogFilter({ metric: undefined, id: "" }));
+    const state = getState();
+    const filters = state.usersPage.filters;
+    dispatch(applyUserlogPostFilters(filters));
+  };
+};
+
+export const updateUserlogFilter = (filter: FilterObject) => {
+  return (dispatch: TypedDispatch, getState: () => RootState) => {
+    dispatch({
+      type: UPDATE_USERLOG_FILTER,
+      payload: filter,
+    });
+    if (filter.value?.length === 0) {
+      dispatch(deleteUserLogFilter(filter.id));
+      return;
+    }
+    const state = getState();
+    const filters = state.usersPage.filters;
+    dispatch(applyUserlogPostFilters(filters));
+  };
+};
+// ======================================================================
+export const setUserLogFilterOptions = (data) => {
+  return {
+    type: SET_USERLOG_FILTER_OPTIONS,
+    payload: data,
+  };
+};
 export const setSelectedUser = (id) => {
   return {
     type: SET_SELECTED_USER,
@@ -69,8 +180,12 @@ export const setUsersLogDataLoading = (loading: boolean) => ({
   payload: loading,
 });
 
-export const getUsersLogData = () => {
+export const getUsersLogData = (postData?: any) => {
   return async (dispatch: any, getState: any) => {
+    const params = new URLSearchParams(window.location.search);
+    if (postData) {
+      params.set("page", "1");
+    }
     dispatch(setUsersLogDataLoading(true));
     // API call
     const data = await fetchUsersLogData(
@@ -78,39 +193,14 @@ export const getUsersLogData = () => {
         getState().usersPage.sortKey,
         getState().usersPage.sortOrder
       ),
-      getState
+      getState,
+      postData
     );
-    dispatch(setUsersLogData(data.usersLogData));
-    dispatch(setAggregationData(data.aggregation_data));
-    dispatch(setIsEmpty(getState().usersPage.usersLogData.length === 0));
-    dispatch(setUsersLogDataLoading(false));
-  };
-};
-
-export const filterUsersLogDataAction = (searchString: string) => {
-  return async (dispatch: any, getState: any) => {
-    dispatch(setUsersLogDataLoading(true));
-    const data = await fetchUsersLogData(
-      getSortFunction(
-        getState().usersPage.sortKey,
-        getState().usersPage.sortOrder
-      ),
-      getState
-    );
-    if (searchString === "") {
-      dispatch(setUsersLogData(data.usersLogData));
-    } else {
-      const filteredData = data.usersLogData.filter((data: any) => {
-        return data.customerId
-          .toLowerCase()
-          .includes(searchString.toLowerCase());
-      });
-      if (filteredData.length === 0) {
-        dispatch(setUsersLogDataLoading(false));
-        return;
-      }
-      dispatch(setUsersLogData(filteredData));
-    }
+    const { usersLogData, aggregation_data, ...rest } = data;
+    dispatch(setUsersLogData(usersLogData));
+    dispatch(setAggregationData(aggregation_data));
+    dispatch(setIsEmpty(usersLogData.length === 0));
+    dispatch(setUserLogFilterOptions(rest));
     dispatch(setUsersLogDataLoading(false));
   };
 };
@@ -155,19 +245,23 @@ const getSortFunction = (property: string, order: string) => {
   return (a: any, b: any) => sortFunctions[property](a, b, order);
 };
 
-const fetchUsersLogData = async (sortFunc, getState): Promise<any> => {
+const fetchUsersLogData = async (
+  sortFunc,
+  getState,
+  postData
+): Promise<any> => {
   try {
     const timeRange = getState().usersPage.timeRane;
-    let params = new URLSearchParams();
+    let params = new URLSearchParams(window.location.search);
     params.set("summary_type", timeRange);
-    console.log(params.toString());
-
+    console.log("postData", postData);
+    console.log("params", params.toString());
     const { results: responseData, ...rest } = await keywordsRequest({
       path: `api/users/?${params.toString()}`,
       method: "GET",
-      data: {},
+      data: { filters: postData },
     });
-    // console.log(responseData);
+    console.log("responseData", responseData);
     return {
       ...rest,
       usersLogData: responseData
@@ -195,7 +289,7 @@ export const exportUserLogs = (format = ".csv") => {
     const state = getState();
     try {
       const { results: responseData, ...rest } = await keywordsRequest({
-        path: `api/users`,
+        path: `api/users/`,
         method: "GET",
         data: { exporting: true },
       });
