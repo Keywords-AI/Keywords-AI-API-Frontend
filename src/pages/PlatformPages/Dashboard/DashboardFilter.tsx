@@ -156,7 +156,7 @@ export default function DashboardFilter() {
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      {user.is_superadmin && (
+      {/* {user.is_superadmin && (
         <Button
           variant="small"
           text="Show admins"
@@ -166,7 +166,7 @@ export default function DashboardFilter() {
             dispatch(getDashboardData());
           }}
         />
-      )}
+      )} */}
       <Button
         variant="small"
         text="Today"

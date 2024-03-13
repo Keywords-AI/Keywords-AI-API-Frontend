@@ -27,10 +27,10 @@ export function WebhookPage() {
     >
       <WebhookTable />
       <Modal
-        trigger={<Button variant="r4-primary" text="Create Webhook" />}
+        trigger={<Button variant="r4-primary" text="Create new webhook" />}
         open={open}
         setOpen={setOpen}
-        title="Create Webhook"
+        title="Create new webhook"
         subtitle="Define a new webhook for Keywords AI to send the request log data to."
       >
         <CreateWebhookForm
