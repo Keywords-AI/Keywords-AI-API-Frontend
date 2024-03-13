@@ -32,9 +32,9 @@ import { useEffect, useRef, useState } from "react";
 import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
-import { AutoScrollContainer } from "react-auto-scroll-container";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import Tooltip from "src/components/Misc/Tooltip";
+import { AutoScrollContainer } from "src/components/Misc/ScrollContainer";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -149,8 +149,9 @@ const MessageLists = () => {
       }}
     >
       <AutoScrollContainer
-        percentageThreshold={5}
-        behavior="instant"
+        percentageThreshold={15}
+        behavior="smooth"
+        active={isStreaming}
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
         {messages.map((message, index) => {
