@@ -296,10 +296,26 @@ export const addMissingDate = (
     case "daily":
       handleDailyCase();
       break;
+    // case "weekly":
+    //   for (let day = 0; day < 7; day++) {
+    //     const dayDate = new Date(currntTimeRange);
+    //     dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+    //     const dateString = formatDateUnit(dayDate);
+    //     const found = data.find(
+    //       (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
+    //     );
+    //     newDataArray.push(
+    //       found
+    //         ? { ...found, date_group: dateString }
+    //         : { date_group: dateString, ...defaultFields }
+    //     );
+    //   }
+    //   break;
     case "weekly":
       for (let day = 0; day < 7; day++) {
         const dayDate = new Date(currntTimeRange);
-        dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+        // Adjust the calculation to make Monday the first day of the week
+        dayDate.setDate(dayDate.getDate() - ((dayDate.getDay() + 6) % 7) + day);
         const dateString = formatDateUnit(dayDate);
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
