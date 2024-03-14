@@ -30,7 +30,7 @@ export function WebhookPage() {
         trigger={<Button variant="r4-primary" text="Create Webhook" />}
         open={open}
         setOpen={setOpen}
-        title="Create Webhook"
+        title="Create webhook"
         subtitle="Define a new webhook for Keywords AI to send the request log data to."
       >
         <CreateWebhookForm
