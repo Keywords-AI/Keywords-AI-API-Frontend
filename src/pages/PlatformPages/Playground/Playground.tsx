@@ -150,7 +150,7 @@ const MessageLists = () => {
     >
       <AutoScrollContainer
         percentageThreshold={15}
-        behavior="smooth"
+        behavior="auto"
         active={isStreaming}
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
