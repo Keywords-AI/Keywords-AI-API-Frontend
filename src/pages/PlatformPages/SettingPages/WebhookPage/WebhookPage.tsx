@@ -20,6 +20,7 @@ export function WebhookPage() {
   const editingWebhook = useTypedSelector(
     (state) => state.webhook.editingWebhook
   );
+  const webhooks = useTypedSelector((state) => state.webhook.webhooks);
 
   return (
     <PageContent
@@ -42,7 +43,7 @@ export function WebhookPage() {
             </span>
           }
         />
-        <WebhookTable />
+        {webhooks.length !==0 && <WebhookTable />}
         <Modal
           trigger={<Button variant="r4-primary" text="Create new webhook" />}
           open={open}
