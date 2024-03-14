@@ -18,6 +18,7 @@ import { SwitchButton } from "src/components/Buttons";
 import { useTypedSelector } from "src/store/store";
 import { Tag } from "src/components/Misc";
 import TextSwitchButton from "src/components/Buttons/TextSwitchButton";
+import { PricingTable } from "src/components/Tables";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -168,7 +169,6 @@ export const PlansPage = connect(
       features: [
         "Unlimited request",
         "Unlimited seats",
-        "Fine-tuning",
         "Increased rate limit",
         "SOC 2 compliance",
       ],
@@ -264,6 +264,9 @@ export const PlansPage = connect(
             );
           })}
         </div>
+        {/* <div className="flex flex-col gap-xl items-center self-stretch w-full">
+          <PricingTable />
+        </div> */}
       </div>
     </PageContent>
   );
