@@ -1,4 +1,4 @@
-import { UPDATE_USER, SET_USER } from "src/store/actions";
+import { UPDATE_USER, SET_USER, SET_USER_FAILED } from "src/store/actions";
 import { User } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
@@ -65,12 +65,17 @@ const initialState: User = {
   request_log_filters: {},
 };
 
-export default function userReducer(state = initialState, action: PayloadAction<any>): User {
+export default function userReducer(
+  state = initialState,
+  action: PayloadAction<any>
+): User {
   switch (action.type) {
     case UPDATE_USER:
       return { ...state, ...action.payload };
     case SET_USER:
       return { loading: false, ...action.payload };
+    case SET_USER_FAILED:
+      return { ...state, failed: true, loading: false };
     default:
       return state;
   }

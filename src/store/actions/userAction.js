@@ -21,18 +21,22 @@ import { keywordsRequest } from "src/utilities/requests";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
-
+export const SET_USER_FAILED = "SET_USER_FAILED";
 export const getUser = () => {
   return (dispatch) => {
     console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
+    const timeout = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Request timed out")), 5000)
+    );
     getCSRF();
-    fetch(`${apiConfig.apiURL}auth/users/me/`, {
+    const request = fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${retrieveAccessToken()}`,
       },
-    })
+    });
+    Promise.race([timeout, request])
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
@@ -59,12 +63,15 @@ export const getUser = () => {
         } else {
           if (res.status === 401 && res.status == 403) {
             const data = await res.text();
-            dispatch({ type: SET_USER, payload: {} });
+            dispatch({ type: SET_USER_FAILED });
             window.location = "/login";
           }
         }
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        console.log(error);
+        dispatch({ type: SET_USER_FAILED });
+      });
   };
 };
 
