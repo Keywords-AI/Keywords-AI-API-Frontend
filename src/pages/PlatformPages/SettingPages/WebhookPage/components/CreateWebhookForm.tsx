@@ -26,7 +26,7 @@ export function CreateWebhookForm(
       onSubmit={handleSubmit(onSubmit)}
     >
       <TextInput title="Name" placeholder="Provide a name for this webhook" {...register("name")}/>
-      <TextInput title="URL" placeholder="Provide the full URL to the endpoint Keywords AI shoud call" {...register("url")}/>
+      <TextInput title="URL" placeholder="Provide the full URL to the endpoint Keywords AI should call" {...register("url")}/>
       <SelectInput
       title="Event type" 
       width="w-full"

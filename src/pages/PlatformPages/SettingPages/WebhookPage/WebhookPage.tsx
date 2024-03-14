@@ -26,21 +26,18 @@ export function WebhookPage() {
       title="Webhooks"
       subtitle="Subscribe to events in your organization."
     >
-      <div className="flex-col gap-sm items-start">
-        <TitleStaticSubheading
-          title={"Manage webhooks"}
-          subtitle={
-            <span>
-              Read the{" "}
-              <a
-                className="text-primary cursor-pointer"
-                href="https://docs.keywordsai.co/"
-              >
-                documentation
-              </a>{" "}
-              on using webhooks.
-            </span>
-          }
+      <WebhookTable />
+      <Modal
+        trigger={<Button variant="r4-primary" text="Create Webhook" />}
+        open={open}
+        setOpen={setOpen}
+        title="Create webhook"
+        subtitle="Define a new webhook for Keywords AI to send the request log data to."
+      >
+        <CreateWebhookForm
+          handleClose={(e: any) => {
+            setOpen(false);
+          }}
         />
         <WebhookTable />
         <Modal
