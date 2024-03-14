@@ -9,11 +9,15 @@ import { IntegrationsPage } from "./IntegrationsPage";
 import { generateChild } from "src/utilities/objectProcessing";
 import { AlertsFallbackPage } from "./AlertsFallbackPage";
 import { ModelRouterPage } from "./ModelRouterPage";
-import { UserSettings } from "./UserSettingsPage";
 import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 import ModelsPage from "./Modelspage";
+import Admin from "./AdminPage";
+import { UserSettings } from "./UserSettingsPage";
+import { WebhookPage } from "./WebhookPage";
+import store from "src/store/store";
+
 const pages: PreProcessPage[] = [
   {
     title: "General",
@@ -54,6 +58,10 @@ const pages: PreProcessPage[] = [
     page: <ApiKeyPage />,
   },
   {
+    title: "Webhooks",
+    page: <WebhookPage />,
+  },
+  {
     title: "Alerts & Fallback",
     forOrgAdmin: true,
     page: <AlertsFallbackPage />,
@@ -70,6 +78,12 @@ const userPages = [
     // forAdmin: true,
     page: <UserSettings />,
   },
+
+  {
+    title: "Admin",
+    forAdmin: true,
+    page: <Admin />,
+  },
 ];
 
 const processedOrgPages = pages.map((page, index) => {
@@ -82,7 +96,7 @@ const processedUserPages: Page[] = userPages.map((page, index) => {
 
 export const sections = [
   {
-    title: "Organization",
+    title:  "Organization",
     pages: processedOrgPages,
     icon: <Building />,
   },

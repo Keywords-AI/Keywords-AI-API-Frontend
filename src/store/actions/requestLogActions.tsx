@@ -352,7 +352,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
     }
     dispatch(startGetRequestLogs());
     keywordsRequest({
-      path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
+      path: `api/request-logs/?${params.toString()}`,
       method: postData ? "POST" : "GET",
       data: { filters: postData, exporting: exporting },
     }).then((data) => {

@@ -16,6 +16,7 @@ export type SystemPrompt = {
 };
 
 export type User = {
+  failed: boolean;
   loading: boolean;
   id: number | null;
   sort_by: string;

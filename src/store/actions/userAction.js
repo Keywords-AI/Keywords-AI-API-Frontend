@@ -26,7 +26,7 @@ export const getUser = () => {
   return (dispatch) => {
     console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
     getCSRF();
-    fetch(`${apiConfig.apiURL}auth/users/me`, {
+    fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -56,9 +56,12 @@ export const getUser = () => {
           dispatch(setCustomPromptFile(data.current_file));
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
-        } else if (res.status === 401 && res.status == 403) {
-          const data = await res.text();
-          dispatch({ type: SET_USER, payload: {} });
+        } else {
+          if (res.status === 401 && res.status == 403) {
+            const data = await res.text();
+            dispatch({ type: SET_USER, payload: {} });
+            window.location = "/login";
+          }
         }
       })
       .catch((error) => console.log(error.message));

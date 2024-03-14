@@ -33,7 +33,7 @@ export const viewBillTrigger = (item: any) => {
 };
 
 export const BillingPage = () => {
-  // Fetching action is handled in PanelNavigation.jsx
+  // Fetching action is handled in PanelNavigation
   const billings = useTypedSelector((state) => state.billings.billings);
   const currentBilling = useTypedSelector(
     (state) => state.billings.currentBilling
@@ -108,10 +108,16 @@ export const BillingPage = () => {
         <Button
           variant="r4-gray-2"
           text="Edit"
-          onClick={() =>
-            window.open(`https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${currentBillingData?.email ?? ''}`, "_blank")
-              // "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${}",
-              // "_blank"
+          onClick={
+            () =>
+              window.open(
+                `https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${
+                  currentBillingData?.email ?? ""
+                }`,
+                "_blank"
+              )
+            // "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${}",
+            // "_blank"
             // )
           }
           className="w-[60px] h-[36px]"
@@ -126,7 +132,7 @@ export const BillingPage = () => {
               You can see your payment history below. For questions about
               billing, contact{" "}
               <a
-                className="text-primary cursor-pointer"
+                className="text-primary cursor-pointer hover:text-primary-2"
                 href="mailto:team@keywordsai.co"
               >
                 team@keywordsai.co

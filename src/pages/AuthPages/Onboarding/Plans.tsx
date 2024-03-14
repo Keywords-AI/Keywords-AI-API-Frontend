@@ -31,7 +31,6 @@ export const StartWithPlan = () => {
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
     // If subscribed users stumbled on this page, redirect them
-    console.log("organization", organization);
     if (organization?.active_subscription) {
       if (organization?.onboarded) {
         navigate(REDIRECT_URI);
@@ -136,8 +135,9 @@ export const StartWithPlan = () => {
       price: "",
       title: "Team",
       plan: "custom",
-      subtitle: "Fully tailored for your use case.",
-      featureTitle: "Everything in Team, plus",
+      subtitle: "Best for high-growth teams.",
+      featureTitle: "Everything in Pro, plus",
+      billFrequency: "Billed annually",
       features: [
         "Unlimited request",
         "Unlimited seats",
@@ -150,7 +150,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
       buttonParams: {
@@ -158,7 +158,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
     },

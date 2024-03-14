@@ -48,7 +48,8 @@ export default function DashboardFilter() {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useTypedSelector((state: RootState) => state.user);
-  const show_admins = new URLSearchParams(location.search).get("show_admins") === "true";
+  const show_admins =
+    new URLSearchParams(location.search).get("show_admins") === "true";
   const handleTimePeriodSelection = (selectedValue) => {
     dispatch(setDisplayTimeRange(selectedValue, setQueryParams, navigate));
     dispatch(getDashboardData());
@@ -83,7 +84,12 @@ export default function DashboardFilter() {
     };
   }, []);
   useEffect(() => {
-    if (currentMetric === "average_latency" && currentType === "all") {
+    if (
+      (currentMetric === "average_latency" ||
+        currentMetric == "average_ttft" ||
+        currentMetric == "average_tps") &&
+      currentType === "all"
+    ) {
       dispatch(setDisplayBreakdown("none", setQueryParams, navigate));
     }
   }, [currentMetric, currentType]);
@@ -95,7 +101,11 @@ export default function DashboardFilter() {
     filteredtypeChoices = typeChoices.filter(
       (choice) => choice.value !== "average"
     );
-  } else if (currentMetric === "average_latency") {
+  } else if (
+    currentMetric === "average_latency" ||
+    currentMetric === "average_ttft" ||
+    currentMetric === "average_tps"
+  ) {
     filteredtypeChoices = [
       { name: "Avg per request", value: "average", secText: "1" },
       { name: "P50", value: "p50", secText: "2" },
@@ -105,10 +115,6 @@ export default function DashboardFilter() {
       { name: "All", value: "all", secText: "6" },
       // { name: "Total", value: "total", secText: "7" },
     ];
-  } else if (currentMetric === "average_ttft") {
-    filteredtypeChoices = [
-      { name: "Avg per request", value: "average", secText: "1" },
-    ];
   } else {
     filteredtypeChoices = typeChoices;
   }
@@ -116,7 +122,8 @@ export default function DashboardFilter() {
     daily: "Day",
     weekly: "Week",
     monthly: "Month",
-    yearly: "Year",
+    yearly_by_week: "Year",
+    quarterly: "Quarter",
   };
   const filteredBreakdownChoices =
     currentType === "all"
@@ -149,15 +156,17 @@ export default function DashboardFilter() {
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      {user.is_superadmin &&  <Button
-        variant="small"
-        text="Show admins"
-        active={show_admins}
-        onClick={() => {
-          setQueryParams({ show_admins: !show_admins }, navigate);
-          dispatch(getDashboardData());
-        }}
-      />}
+      {user.is_superadmin && (
+        <Button
+          variant="small"
+          text="Show admins"
+          active={show_admins}
+          onClick={() => {
+            setQueryParams({ show_admins: !show_admins }, navigate);
+            dispatch(getDashboardData());
+          }}
+        />
+      )}
       <Button
         variant="small"
         text="Today"
@@ -207,7 +216,8 @@ export default function DashboardFilter() {
           { name: "Day", value: "daily", secText: "1" },
           { name: "Week", value: "weekly", secText: "2" },
           { name: "Month", value: "monthly", secText: "3" },
-          { name: "Year", value: "yearly", secText: "4" },
+          { name: "Quarter", value: "quarterly", secText: "4" },
+          { name: "Year", value: "yearly_by_week", secText: "5" },
         ]}
         handleSelected={handleTimePeriodSelection}
       />
@@ -279,7 +289,8 @@ export default function DashboardFilter() {
                   }
                   if (
                     e.target.value === Metrics.average_latency.value ||
-                    e.target.value === Metrics.average_ttft.value
+                    e.target.value === Metrics.average_ttft.value ||
+                    e.target.value === Metrics.average_tps.value
                   ) {
                     dispatch(
                       setDisplayType("average", setQueryParams, navigate)
@@ -303,40 +314,47 @@ export default function DashboardFilter() {
                     secText: "2",
                   },
                   {
-                    name: Metrics.average_latency.name,
-                    value: Metrics.average_latency.value,
-                    icon: Metrics.average_latency.icon,
-                    secText: "3",
-                  },
-                  {
                     name: Metrics.average_ttft.name,
                     value: Metrics.average_ttft.value,
                     icon: Metrics.average_ttft.icon,
+                    secText: "3",
+                  },
+
+                  {
+                    name: Metrics.average_latency.name,
+                    value: Metrics.average_latency.value,
+                    icon: Metrics.average_latency.icon,
                     secText: "4",
+                  },
+                  {
+                    name: Metrics.average_tps.name,
+                    value: Metrics.average_tps.value,
+                    icon: Metrics.average_tps.icon,
+                    secText: "5",
                   },
                   {
                     name: Metrics.total_prompt_tokens.name,
                     value: Metrics.total_prompt_tokens.value,
                     icon: Metrics.total_prompt_tokens.icon,
-                    secText: "5",
+                    secText: "6",
                   },
                   {
                     name: Metrics.total_completion_tokens.name,
                     value: Metrics.total_completion_tokens.value,
                     icon: Metrics.total_completion_tokens.icon,
-                    secText: "6",
+                    secText: "7",
                   },
                   {
                     name: Metrics.total_tokens.name,
                     value: Metrics.total_tokens.value,
                     icon: Metrics.total_tokens.icon,
-                    secText: "7",
+                    secText: "8",
                   },
                   {
                     name: Metrics.total_cost.name,
                     value: Metrics.total_cost.value,
                     icon: Metrics.total_cost.icon,
-                    secText: "8",
+                    secText: "9",
                   },
                 ]}
               />

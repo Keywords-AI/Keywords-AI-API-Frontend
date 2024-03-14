@@ -29,8 +29,8 @@ import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
-import WelcomeCard from "src/components/Cards/WelcomeCard.js";
-import { RequestPreview } from "src/components/Display/Figures.js";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { RequestPreview } from "src/components/Display/Figures";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -95,16 +95,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const clearFilters = () => {
     setFilters([]);
   };
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // rotate the token every 1 minutes
-      if (!loading) {
-        console.log("fetching logs");
-        getRequestLogs();
-      }
-    }, 1000 * 60);
-    return () => clearInterval(intervalId);
-  }, [loading]);
+
   useEffect(() => {
     if (filters.length > 0) enableScope("clear_filters");
     else disableScope("clear_filters");
