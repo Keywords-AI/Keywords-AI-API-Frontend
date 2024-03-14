@@ -303,6 +303,7 @@ const ExportPopOver = () => {
               icon={Export}
               text="Export"
               onClick={() => setShowDropdown((prev) => !prev)}
+              active={showDropdown}
             />
           </Tooltip>
         </div>

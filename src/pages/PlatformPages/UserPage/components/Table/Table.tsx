@@ -14,7 +14,7 @@ import { getQueryParam } from "src/utilities/navigation";
 import { Paginator } from "../Paginator";
 
 const TableRow = ({ item, index, isNavigating }) => {
-  const templateString = "400px 140px 100px 140px 120px 120px 120px ";
+  const templateString = "200px 140px 100px 140px 120px 120px 120px ";
   const dispatch = useTypedDispatch();
   const displayColumns = useTypedSelector(
     (state) => state.usersPage.displayColumns
@@ -160,7 +160,7 @@ const TableRow = ({ item, index, isNavigating }) => {
 };
 
 export const Table = () => {
-  const templateString = "1fr 140px 100px 140px 120px 120px 120px ";
+  const templateString = "200px 140px 100px 140px 120px 120px 120px ";
   const data = useTypedSelector((state) => state.usersPage.usersLogData);
   const displayColumns = useTypedSelector(
     (state) => state.usersPage.displayColumns
