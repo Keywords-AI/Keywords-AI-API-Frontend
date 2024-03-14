@@ -14,7 +14,7 @@ import { getQueryParam } from "src/utilities/navigation";
 import { Paginator } from "../Paginator";
 
 const TableRow = ({ item, index, isNavigating }) => {
-  const templateString = "1fr 140px 100px 140px 120px 120px 120px ";
+  const templateString = "400px 140px 100px 140px 120px 120px 120px ";
   const dispatch = useTypedDispatch();
   const displayColumns = useTypedSelector(
     (state) => state.usersPage.displayColumns
@@ -36,8 +36,10 @@ const TableRow = ({ item, index, isNavigating }) => {
     switch (name) {
       case "customerId":
         return (
-          <div className="flex text-sm-regular text-gray-4 items-center h-[20px]">
-            {value ? (value as string) : "-"}
+          <div className="flex text-sm-regular text-gray-4 items-center h-[20px]  ">
+            <span className="overflow-ellipsis overflow-hidden whitespace-nowrap">
+              {value ? (value as string) : "-"}
+            </span>
           </div>
         );
       case "lastActive":
@@ -126,8 +128,8 @@ const TableRow = ({ item, index, isNavigating }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className={cn(
-        "px-lg py-xxs grid gap-x-sm items-center h-[40px] cursor-pointer relative shrink-0",
-        hover && !isNavigating && "bg-gray-2"
+        "px-lg py-xxs grid gap-x-sm items-center h-[40px] cursor-pointer relative w-full",
+        (hover || selectedID == item.customerId) && !isNavigating && "bg-gray-2"
       )}
       style={{
         gridTemplateColumns: templateString,
@@ -288,7 +290,7 @@ export const Table = () => {
         className="grid grid-flow-row w-full overflow-x-auto"
       >
         {Header}
-        <div className="flex-col w-full max-h-[calc(100dvh-282px)] overflow-auto ">
+        <div className="flex-col w-full h-full overflow-auto ">
           {isloading
             ? LoadingRows
             : data &&
@@ -297,14 +299,13 @@ export const Table = () => {
                   key={index}
                   item={item}
                   index={index}
-                  hover={setHover}
                   isNavigating={isNavigating}
                 />
               ))}
+          <div className="flex flex-1 p-lg">
+            <Paginator />
+          </div>
         </div>
-      </div>
-      <div className="flex flex-1 p-lg">
-        <Paginator />
       </div>
     </div>
   );
