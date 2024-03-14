@@ -48,11 +48,11 @@ export const createOrganization = (organization, callback = () => {}) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          dispatch(
-            dispatchNotification({
-              title: "Organization created successfully!",
-            })
-          );
+          // dispatch(
+          //   dispatchNotification({
+          //     title: "Organization created successfully!",
+          //   })
+          // );
           return res.json();
         } else {
           if (res.status === 409) {

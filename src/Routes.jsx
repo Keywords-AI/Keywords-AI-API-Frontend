@@ -198,10 +198,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
             <Navigate to="/login" />
           ),
         },
-        {
-          path: "onboarding/plans",
-          element: <StartWithPlan />,
-        },
+        // {
+        //   path: "onboarding/plans",
+        //   element: <StartWithPlan />,
+        // },
         {
           path: "onboarding/get-started",
           element: <GetStarted />,
