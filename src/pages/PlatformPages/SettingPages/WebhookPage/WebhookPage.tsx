@@ -9,6 +9,7 @@ import {
   DeleteWebhookForm,
 } from "./components";
 import { setDeletingWebhook } from "src/store/actions";
+import { TitleStaticSubheading } from "src/components/Titles";
 
 export function WebhookPage() {
   const [open, setOpen] = useState(false);
@@ -30,7 +31,7 @@ export function WebhookPage() {
         trigger={<Button variant="r4-primary" text="Create Webhook" />}
         open={open}
         setOpen={setOpen}
-        title="Create Webhook"
+        title="Create webhook"
         subtitle="Define a new webhook for Keywords AI to send the request log data to."
       >
         <CreateWebhookForm
@@ -38,21 +39,35 @@ export function WebhookPage() {
             setOpen(false);
           }}
         />
-      </Modal>
-      <Modal
-        open={Boolean(deletingWebhook)}
-        setOpen={() => {
-          dispatch(setDeletingWebhook(null));
-        }}
-        title="Delete Webhook"
-        subtitle={`Are you sure you want to delete the webhook "${deletingWebhook?.name}"?`}
-      >
-        <DeleteWebhookForm
-          handleClose={(e: any) => {
+        <WebhookTable />
+        <Modal
+          trigger={<Button variant="r4-primary" text="Create new webhook" />}
+          open={open}
+          setOpen={setOpen}
+          title="Create Webhook"
+          subtitle="Define a new webhook for Keywords AI to send the request log data to."
+        >
+          <CreateWebhookForm
+            handleClose={(e: any) => {
+              setOpen(false);
+            }}
+          />
+        </Modal>
+        <Modal
+          open={Boolean(deletingWebhook)}
+          setOpen={() => {
             dispatch(setDeletingWebhook(null));
           }}
-        />
-      </Modal>
+          title="Delete Webhook"
+          subtitle={`Are you sure you want to delete the webhook "${deletingWebhook?.name}"?`}
+        >
+          <DeleteWebhookForm
+            handleClose={(e: any) => {
+              dispatch(setDeletingWebhook(null));
+            }}
+          />
+        </Modal>
+      </div>
     </PageContent>
   );
 }

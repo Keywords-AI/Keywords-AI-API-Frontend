@@ -160,7 +160,9 @@ const TopBar = () => {
       >
         <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
-          <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          {isAdmin && (
+            <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          )}
           <TimeSwitcher />
           <DisplayPopover />
           {isAdmin && (

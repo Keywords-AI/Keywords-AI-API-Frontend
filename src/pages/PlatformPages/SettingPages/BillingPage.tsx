@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { LineTable, SettingTable } from "src/components/Tables";
 import { Button, DotsButton, IconButton } from "src/components/Buttons";
-import { Search } from "src/components/Icons";
+import { Info, Search } from "src/components/Icons";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import {
   processBillingList,
@@ -17,6 +17,7 @@ import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { TitleStaticSubheading } from "src/components/Titles";
 import { setPanelData } from "src/store/actions";
 import cn from "src/utilities/classMerge";
+import Tooltip from "src/components/Misc/Tooltip";
 
 export const viewBillTrigger = (item: any) => {
   // The complete stripe Invoice object
@@ -64,10 +65,51 @@ export const BillingPage = () => {
       title="Billing"
       subtitle="Manage your billing information and invoices."
     >
-      {/* <PageParagraph heading="Available credits">
-        <span className="text-md-medium text-gray-5">$86.99</span>
+      <PageParagraph
+        heading="Available credits"
+        subheading={"Credits expiring in 29 days."}
+      >
+        <Tooltip
+          side="right"
+          sideOffset={-1}
+          align="center"
+          delayDuration={1}
+          className="flex-col w-[280px] py-xs px-sm items-start gap-xs rounded-md outline outline-1 outline-gray-3 bg-gray-2"
+          content={
+            <>
+              <div className="flex justify-between items-center self-stretch">
+                <p className="text-sm-md text-gray-5">Total credits</p>
+                <p className="text-sm-md text-gray-5">${"86.99"}</p>
+              </div>
+
+              <div className="flex-col items-start gap-xxs self-stretch">
+                <div className="flex justify-between items-center self-stretch">
+                  <div className="flex items-center gap-xxs">
+                    <div className="w-[8px] h-[8px] bg-primary rounde-[2px]" />
+                    <p className="caption text-gray-4">Non-expiring</p>
+                  </div>
+                  <p className="caption text-gray-4">${"76.99"}</p>
+                </div>
+              </div>
+              <div className="flex-col items-start gap-xxs self-stretch">
+                <div className="flex justify-between items-center self-stretch">
+                  <div className="flex items-center gap-xxs">
+                    <div className="w-[8px] h-[8px] bg-red rounde-[2px]" />
+                    <p className="caption text-gray-4">Expiring in 7 days</p>
+                  </div>
+                  <p className="caption text-gray-4">${"10.00"}</p>
+                </div>
+              </div>
+            </>
+          }
+        >
+          <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2">
+            <span className=" text-gray-5 text-sm-md">${"86.99"}</span>
+            <Info />
+          </div>
+        </Tooltip>
       </PageParagraph>
-      <Divider /> */}
+      <Divider />
       <PageParagraph
         heading="Current plan"
         subheading={
