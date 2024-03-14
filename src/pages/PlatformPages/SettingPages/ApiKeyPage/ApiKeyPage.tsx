@@ -121,7 +121,7 @@ export const ApiKeyPage = ({
     >
       <PageParagraph
         heading="Manage proxy keys"
-        subheading="Your secret Keywords AI proxy keys are listed below. Please note that we do not display your API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
+        subheading="Your secret Keywords AI proxy keys are listed below. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
         {prevKey.length > 0 && (
           <LineTable
