@@ -178,7 +178,7 @@ export const MetricPane = ({}) => {
           <Divider />
         </>
       )}
-      <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+      <div className="flex-col py-sm pt-[18px] px-lg items-start gap-xs self-stretch">
         {Object.keys(displayObj).map((key, index) => {
           return (
             <div

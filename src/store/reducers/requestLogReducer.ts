@@ -23,8 +23,21 @@ import {
 import { LogItem } from "src/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { LogColumnKey } from "src/types";
-import { defaultRequestLogColumns } from "src/utilities/constants";
+
 import { FilterObject, RawFilterOptions, CurrentFilterObject } from "src/types";
+
+const defaultRequestLogColumns: LogColumnKey[] = [
+  "time",
+  "prompt",
+  "response",
+  "cost",
+  "latency",
+  "allTokens",
+  "apiKey",
+  "model",
+  "status",
+  "cachedResponse",
+];
 
 type StateType = {
   logs: LogItem[];

@@ -108,7 +108,7 @@ export const keywordsStream = ({
   apiKey,
   dispatch,
 }: StreamingParams) => {
-  console.log("data", data);
+  // console.log("data", data);
   const headers = {
     "Content-Type": "application/json",
   };
