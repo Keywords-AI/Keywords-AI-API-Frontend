@@ -28,80 +28,81 @@ type RequestFilterValueFieldType = {
   ) => React.ReactNode;
 };
 
-const RequestFilterValueFields: RequestFilterValueFieldType = {
-  text: (filterToUpdate, filterOption, onChange) => {
-    return <InputFieldUpdateFilter filter={filterToUpdate} />;
-  },
-  number: (filterToUpdate, filterOption, onChange) => {
-    return <InputFieldUpdateFilter filter={filterToUpdate} />;
-  },
-  "datetime-local": (filterToUpdate, filterOption, onChange) => {
-    return (
-      <InputFieldUpdateFilter
-        filter={{
-          ...filterToUpdate,
-          value: filterToUpdate.value.map((item) =>
-            new Date(item as string).toLocaleString("en-US", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            })
-          ),
-        }}
-      />
-    );
-  },
-  selection: (filterToUpdate, filterOption, onChange) => {
-    const [open, setOpen] = React.useState<boolean | undefined>(false);
-    if (!filterOption || !filterOption.value_choices) {
-      return null;
-    }
-
-    const dispatch = useTypedDispatch();
-    const handleOpen = (opening: boolean | undefined) => {
-      if (opening) {
-        dispatch(setCurrentFilter(filterToUpdate));
-      }
-      setOpen(opening);
-    };
-    let displayChoice =
-      filterOption.value_choices.find((choice) => {
-        const choiceValue = choice?.value.toString();
-        return filterToUpdate.value?.[0]?.toString() === choiceValue;
-      })?.name ?? filterOption.display_name;
-    if (filterToUpdate.value && filterToUpdate.value.length > 1) {
-      displayChoice = `${filterToUpdate.value.length} items`;
-    }
-    return (
-      <SelectInputMenu
-        trigger={
-          <Button variant="small-select" text={displayChoice as string} />
-        }
-        open={open}
-        setOpen={handleOpen}
-        onChange={onChange}
-        value={filterToUpdate.value as string[]}
-        align="start"
-        items={
-          [...filterOption?.value_choices].sort((a: any, b: any) =>
-            a?.name.localeCompare(b.name)
-          ) || []
-        }
-        multiple={true}
-      />
-    );
-  },
-};
-
 export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const dispatch = useTypedDispatch();
   const [operator, setOperator] = React.useState(filter.operator);
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
+  console.log("RequstFilter", filter.display_name);
+  const RequestFilterValueFields: RequestFilterValueFieldType = {
+    text: (filterToUpdate, filterOption, onChange) => {
+      return <InputFieldUpdateFilter filter={filterToUpdate} />;
+    },
+    number: (filterToUpdate, filterOption, onChange) => {
+      return <InputFieldUpdateFilter filter={filterToUpdate} />;
+    },
+    "datetime-local": (filterToUpdate, filterOption, onChange) => {
+      return (
+        <InputFieldUpdateFilter
+          filter={{
+            ...filterToUpdate,
+            value: filterToUpdate.value.map((item) =>
+              new Date(item as string).toLocaleString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })
+            ),
+          }}
+        />
+      );
+    },
+    selection: (filterToUpdate, filterOption, onChange) => {
+      const [open, setOpen] = React.useState<boolean | undefined>(false);
+      if (!filterOption || !filterOption.value_choices) {
+        return null;
+      }
+
+      const dispatch = useTypedDispatch();
+      const handleOpen = (opening: boolean | undefined) => {
+        if (opening) {
+          dispatch(setCurrentFilter(filterToUpdate));
+        }
+        if (!opening) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+        setOpen(opening);
+      };
+      let displayChoice =
+        filterOption.value_choices.find((choice) => {
+          const choiceValue = choice?.value.toString();
+          return filterToUpdate.value?.[0]?.toString() === choiceValue;
+        })?.name ?? filterOption.display_name;
+      if (filterToUpdate.value && filterToUpdate.value.length > 1) {
+        displayChoice = `${filterToUpdate.value.length} items`;
+      }
+      return (
+        <SelectInputMenu
+          trigger={
+            <Button variant="small-select" text={displayChoice as string} />
+          }
+          open={open}
+          setOpen={handleOpen}
+          onChange={onChange}
+          value={filterToUpdate.value as string[]}
+          align="start"
+          items={
+            [...filterOption?.value_choices].sort((a: any, b: any) =>
+              a?.name.localeCompare(b.name)
+            ) || []
+          }
+          multiple={true}
+        />
+      );
+    },
+  };
   const filterOption = filterOptions[filter.metric || "failed"];
   const RequstFilterValueField =
     RequestFilterValueFields[filterOption?.value_field_type || "selection"];
@@ -158,7 +159,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
             })
           );
         }
-        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
       })}
       {
         <DotsButton

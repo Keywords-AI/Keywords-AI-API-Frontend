@@ -80,7 +80,8 @@ export const createOrganization = (organization, callback = () => {}) => {
         }
       })
       .then((responseJson) => {
-        dispatch(setOrg(responseJson));
+        console.log("responseJson", responseJson);
+        // dispatch(setOrg(responseJson));
         callback();
       });
   };
@@ -322,9 +323,10 @@ export const changeRole = (id: number, roleName: string) => {
 };
 
 export const UpdateOrgSubscription = (newPlan: string) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const id = getState().organization.organization_subscription.id;
     await keywordsRequest({
-      path: `payment/organization-subscriptions/`,
+      path: `payment/organization-subscriptions/${id}/`,
       method: "PATCH",
       data: { plan: newPlan || "free" },
     });

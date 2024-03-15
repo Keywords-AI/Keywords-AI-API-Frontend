@@ -57,10 +57,7 @@ export const OnboardingPage = () => {
     // <OptimizeCosts />,
   ];
   useEffect(() => {
-    if (organization?.onboarded) {
-      console.log("onboarded", organization?.onboarded);
-      navigate(REDIRECT_URI);
-    } else if (organization?.curr_onboarding_step > formfields.length) {
+    if (organization?.curr_onboarding_step >= formfields.length) {
       navigate("/platform");
     }
   }, [organization]);
