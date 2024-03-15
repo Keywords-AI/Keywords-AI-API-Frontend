@@ -102,8 +102,15 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
 
     if (organization.id && !organization?.loading) {
       // The init state of org is not empty, but the id is null
-      if (!onOnboradingPage && !organization?.active_subscription) {
+      if (
+        !onOnboradingPage &&
+        !organization?.organization_subscription?.subscription_bool
+      ) {
         // navigate to onboarding page if user hasn't onboarded
+        console.log(
+          "Navigating to onboarding",
+          organization?.organization_subscription?.subscription_bool
+        );
         navigate("/onboarding");
       }
     }

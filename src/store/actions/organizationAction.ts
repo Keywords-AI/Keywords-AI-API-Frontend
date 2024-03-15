@@ -320,3 +320,14 @@ export const changeRole = (id: number, roleName: string) => {
       .catch((error) => {});
   };
 };
+
+export const UpdateOrgSubscription = (newPlan: string) => {
+  return async (dispatch) => {
+    await keywordsRequest({
+      path: `payment/organization-subscriptions/`,
+      method: "PATCH",
+      data: { plan: newPlan || "free" },
+    });
+    dispatch(getUser());
+  };
+};

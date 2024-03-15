@@ -250,7 +250,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               ...modelParams[channel],
             },
             dispatch: dispatch,
-            path: "api/playground/ask/",
+            path: "api/playground/ask2/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =
@@ -316,8 +316,11 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             },
           });
         } catch (error: any) {
-          console.log("error", error);
-          let displayError = { errorText: "An error occurred", errorCode: 404 };
+          console.log("playg", error.message);
+          let displayError = {
+            errorText: error.message || "An error occurred",
+            errorCode: 404,
+          };
           if (!isNaN(parseFloat(error.message))) {
             displayError.errorCode = +error.message;
           }

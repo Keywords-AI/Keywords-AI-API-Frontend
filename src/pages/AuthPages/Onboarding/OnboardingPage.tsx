@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { logout, updateOrganization } from "src/store/actions";
+import {
+  UpdateOrgSubscription,
+  logout,
+  updateOrganization,
+} from "src/store/actions";
 import { CreateOrganization } from "./CreateOrganization";
 import { Button } from "src/components/Buttons";
 import { Left, Right } from "src/components/Icons";
@@ -42,7 +46,9 @@ export const OnboardingPage = () => {
       })
     );
   };
-  const handleSkipInvite = () => {};
+  const handleSkipInvite = () => {
+    dispatch(UpdateOrgSubscription("starter"));
+  };
   const formfields = [
     <CreateOrganization />,
     <InviteTeam stepNumber={2} />,
@@ -53,7 +59,7 @@ export const OnboardingPage = () => {
   useEffect(() => {
     if (organization?.onboarded) {
       console.log("onboarded", organization?.onboarded);
-      // navigate(REDIRECT_URI);
+      navigate(REDIRECT_URI);
     } else if (organization?.curr_onboarding_step > formfields.length) {
       navigate("/platform");
     }
@@ -95,16 +101,14 @@ export const OnboardingPage = () => {
                 buttonAction: () => {
                   dispatch(
                     updateOrganization(
-                      { curr_onboarding_step: index + 2 },
+                      { curr_onboarding_step: index + 1 },
                       () => {},
                       true
                     )
                   );
                   if (index + 1 == formfields.length) {
-                    // end of forms to fill
-                    // if (!organization?.active_subscription) {
-                    //   navigate("/onboarding/plans");
-                    // }
+                    dispatch(UpdateOrgSubscription("starter"));
+                    // give user starter subscription
                     setQueryParams({ curr_step: index + 2 }, navigate);
                   } else {
                     setQueryParams({ curr_step: index + 2 }, navigate);
