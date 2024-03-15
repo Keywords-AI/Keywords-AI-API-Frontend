@@ -103,6 +103,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     if (organization.id && !organization?.loading) {
       // The init state of org is not empty, but the id is null
       if (
+        !organization?.loading &&
         !onOnboradingPage &&
         !organization?.organization_subscription?.subscription_bool
       ) {
