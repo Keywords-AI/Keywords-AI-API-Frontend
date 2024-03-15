@@ -146,8 +146,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filters.length > 0 === false && <FilterActions type="filter" />}
-
+            {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
+            <FilterActions type="filter" />
             {filters.length > 0 && !loading && (
               <React.Fragment>
                 <Tooltip
@@ -184,7 +184,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {filters.length > 0 && <FilterActions type="add" />}
+                {<FilterActions type="add" />}
               </React.Fragment>
             }
           </div>

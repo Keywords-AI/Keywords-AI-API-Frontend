@@ -20,7 +20,7 @@ export function WebhookTable() {
   return (
     <LineTable
       rows={processedWebhooks}
-      headers={["Name", "URL", "Event Type", ""]}
+      headers={["Label", "URL", "Event Type", ""]}
       columnNames={["name", "url", "event_type", "actions"]}
       headerLayout="grid-cols-[120px,1fr,120px,56px]"
       rowLayout="grid-cols-[120px,1fr,120px,56px]"

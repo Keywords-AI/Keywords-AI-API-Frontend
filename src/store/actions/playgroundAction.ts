@@ -157,8 +157,14 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const currentModels = playground.currentModels;
     const messages = playground.messages;
+    const lastMessage = messages.slice(-1)[0];
+    if (
+      lastMessage.role == "user" &&
+      lastMessage.user_content.replace(/\s/g, "") == ""
+    ) {
+      return;
+    }
     const systemPrompt = playground.prompt;
     const modelOptions = playground.modelOptions;
 
@@ -244,7 +250,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               ...modelParams[channel],
             },
             dispatch: dispatch,
-            path: "api/playground/ask/",
+            path: "api/playground/ask2/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =
@@ -310,8 +316,11 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             },
           });
         } catch (error: any) {
-          console.log("error", error);
-          let displayError = { errorText: "An error occurred", errorCode: 404 };
+          console.log("playg", error.message);
+          let displayError = {
+            errorText: error.message || "An error occurred",
+            errorCode: 404,
+          };
           if (!isNaN(parseFloat(error.message))) {
             displayError.errorCode = +error.message;
           }

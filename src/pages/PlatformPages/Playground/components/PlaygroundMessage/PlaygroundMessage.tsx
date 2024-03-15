@@ -211,6 +211,9 @@ export function PlaygroundMessage({
                       Assistant {index == 0 ? "A" : "B"}
                     </div>
                     <ModelTag model={response.model} />
+                    {isError && (
+                      <StatusTag statusCode={errorObj.errorCode || 500} />
+                    )}
                   </div>
                 }
                 regenCallback={() =>
@@ -226,11 +229,13 @@ export function PlaygroundMessage({
                 showRegen={id == lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
-              {isError ? (
-                <StatusTag statusCode={errorObj.errorCode || 500} />
-              ) : (
+              {
                 <div className="flex self-stretch flex-1">
-                  {response.content ? (
+                  {isError ? (
+                    <div className="flex items-start px-xxs py-xxxs gap-[10px] w-full bg-gray-2 rounded-sm text-sm-regular text-red">
+                      {errorObj.errorText}
+                    </div>
+                  ) : response.content ? (
                     <MessageBox
                       defaultValue={response.content}
                       onChange={(val) =>
@@ -283,7 +288,7 @@ export function PlaygroundMessage({
                     </span>
                   )}
                 </div>
-              )}
+              }
             </div>
           );
         })}
