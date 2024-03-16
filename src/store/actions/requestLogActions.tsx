@@ -361,7 +361,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
       dispatch(setFilterOptions(data.filters_data));
-      dispatch(setRequestLogs(results));
+
       const state = getState();
       const userFilters = state.user?.request_log_filters;
       if (!userFilters) {
@@ -380,6 +380,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
         type: SET_FILTERS,
         payload: filters,
       });
+      dispatch(setRequestLogs(results));
     });
   };
 };

@@ -178,7 +178,6 @@ export function FilterActions({ type }: { type: string }) {
     // }
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
-
   let trigger: React.ReactNode;
   switch (type) {
     case "create":
@@ -218,6 +217,11 @@ export function FilterActions({ type }: { type: string }) {
                 className={filterLength ? "hidden" : ""}
                 disabled={loading}
                 active={start}
+                onClick={() => {
+                  console.log("click");
+                  if (loading) return;
+                  handleDropdownOpen(!start);
+                }}
               />
             </Tooltip>
           )}
@@ -235,7 +239,13 @@ export function FilterActions({ type }: { type: string }) {
           setOpen={handleDropdownOpen}
           onChange={selectFilterValue}
           align="start"
-          items={filterType ? secondStepItems || [] : firstStepItems}
+          items={
+            !loading
+              ? filterType
+                ? secondStepItems || []
+                : firstStepItems
+              : []
+          }
           multiple={filterType ? true : false}
         />
       ) : (
