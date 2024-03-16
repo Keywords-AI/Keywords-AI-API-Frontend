@@ -51,7 +51,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const navigate = useNavigate();
   const pages = [
     {
-      value: "Metric",
+      value: "Metrics",
       buttonVariant: "text" as variantType,
       content: (
         <div
@@ -122,11 +122,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   useEffect(() => {
     if (logItem?.prompt_messages?.length === 0) {
-      if (tab === "Log") setTab("Metric");
+      if (tab === "Log") setTab("Metrics");
     }
 
     if (!logItem?.metadata || Object.keys(logItem?.metadata).length === 0) {
-      if (tab === "Metadata") setTab("Metric");
+      if (tab === "Metadata") setTab("Metrics");
     }
     if (tab === "Log") enableScope("request_sidepanel_log");
     if (tab !== "Log") disableScope("request_sidepanel_log");

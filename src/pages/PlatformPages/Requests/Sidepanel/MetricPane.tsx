@@ -95,13 +95,14 @@ export const MetricPane = ({}) => {
         {logItem?.failed ? "-" : "$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
-    "Routing time": (
-      <span className="text-sm-regular text-gray-4">
-        {logItem?.failed
-          ? "-"
-          : (logItem?.routing_time.toFixed(3) || "-") + "s"}
-      </span>
-    ),
+    "Routing time":
+      logItem?.routing_time > 0 ? (
+        <span className="text-sm-regular text-gray-4">
+          {logItem?.failed || logItem?.routing_time <= 0
+            ? "-"
+            : (logItem?.routing_time.toFixed(3) || "-") + "s"}
+        </span>
+      ) : null,
 
     TTFT: (
       <span className="text-sm-regular text-gray-4">
@@ -180,6 +181,7 @@ export const MetricPane = ({}) => {
       )}
       <div className="flex-col py-sm pt-[18px] px-lg items-start gap-xs self-stretch">
         {Object.keys(displayObj).map((key, index) => {
+          if (!displayObj[key]) return null;
           return (
             <div
               className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs"

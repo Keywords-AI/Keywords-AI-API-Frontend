@@ -275,7 +275,7 @@ const ExportPopOver = () => {
       disableScope("exportLogs");
     };
   }, []);
-
+  const [inputDropdown, setInputDropdown] = useState(false);
   return (
     <Popover
       width="w-[320px]"
@@ -326,9 +326,12 @@ const ExportPopOver = () => {
                 text={fileTypes.filter((item) => item.value === file)[0].name}
                 iconPosition="right"
                 icon={Down}
+                active={inputDropdown}
               />
             )}
             align="end"
+            open={inputDropdown}
+            setOpen={setInputDropdown}
             defaultValue={fileTypes[0].value}
             choices={fileTypes}
             onChange={(e) => setFile(e.target.value)}
