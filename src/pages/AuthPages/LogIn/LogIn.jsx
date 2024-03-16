@@ -49,6 +49,7 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
   }, [])
   useEffect(() => {
     if (isLoggedIn(user)) {
+      console.log("user is logged in");
       const next = new URLSearchParams(location.search).get("next");
       if (next) {
         navigate(next);
