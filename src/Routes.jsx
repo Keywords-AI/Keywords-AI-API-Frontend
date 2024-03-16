@@ -100,18 +100,16 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
-    if (organization.id && !organization?.loading) {
+    if (organization.id) {
       // The init state of org is not empty, but the id is null
+      console.log(!onOnboradingPage &&
+        !organization?.onboarded)
       if (
-        !organization?.loading &&
         !onOnboradingPage &&
-        !organization?.organization_subscription?.subscription_bool
+        !organization?.onboarded
       ) {
         // navigate to onboarding page if user hasn't onboarded
-        console.log(
-          "Navigating to onboarding",
-          organization?.organization_subscription?.subscription_bool
-        );
+        console.log("Tried navigating")
         navigate("/onboarding");
       }
     }
