@@ -787,18 +787,7 @@ export const requestLogTagColumns: LogItemTag[] = [
   },
 ];
 
-export const defaultRequestLogColumns: LogColumnKey[] = [
-  "time",
-  "prompt",
-  "response",
-  "cost",
-  "latency",
-  "allTokens",
-  "apiKey",
-  "model",
-  "status",
-  "cachedResponse",
-];
+
 export const userTableColumns = [
   {
     name: "Customer ID",

@@ -49,7 +49,8 @@ export default function UsersPage({}: Props) {
     (state) => state.usersPage.sidepanel
   );
   const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
-
+  const total_users = useTypedSelector((state) => state.usersPage.aggregationData.total_users);
+  console.log("total",total_users);
   return (
     <div
       className={cn(
@@ -58,7 +59,7 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
-      {isEmpty ? (
+      {total_users === 0 ? (
         <EmptyState />
       ) : (
         <>
@@ -160,7 +161,9 @@ const TopBar = () => {
       >
         <ExportPopOver exportAction={exportUserLogs} />
         <div className="flex  items-center gap-xxs">
-          <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          {isAdmin && (
+            <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
+          )}
           <TimeSwitcher />
           <DisplayPopover />
           {isAdmin && (

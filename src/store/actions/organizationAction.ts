@@ -48,11 +48,11 @@ export const createOrganization = (organization, callback = () => {}) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          dispatch(
-            dispatchNotification({
-              title: "Organization created successfully!",
-            })
-          );
+          // dispatch(
+          //   dispatchNotification({
+          //     title: "Organization created successfully!",
+          //   })
+          // );
           return res.json();
         } else {
           if (res.status === 409) {
@@ -80,7 +80,8 @@ export const createOrganization = (organization, callback = () => {}) => {
         }
       })
       .then((responseJson) => {
-        dispatch(setOrg(responseJson));
+        console.log("responseJson", responseJson);
+        // dispatch(setOrg(responseJson));
         callback();
       });
   };
@@ -318,5 +319,17 @@ export const changeRole = (id: number, roleName: string) => {
         );
       })
       .catch((error) => {});
+  };
+};
+
+export const UpdateOrgSubscription = (newPlan: string) => {
+  return async (dispatch, getState) => {
+    const id = getState().organization.organization_subscription.id;
+    await keywordsRequest({
+      path: `payment/organization-subscriptions/${id}/`,
+      method: "PATCH",
+      data: { plan: newPlan || "free" },
+    });
+    dispatch(getUser());
   };
 };

@@ -88,7 +88,9 @@ export function FilterActions({ type }: { type: string }) {
       })
     );
   };
-
+  const filterLength = useTypedSelector(
+    (state) => state.requestLogs.filters.length
+  );
   const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
       if (Array.isArray(filterValue) && filterValue.length > 0) {
@@ -135,7 +137,6 @@ export function FilterActions({ type }: { type: string }) {
             })
           );
         }
-        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
       } else {
         const latestFilter = store.getState().requestLogs.currentFilter;
         dispatch(setCurrentFilter({ metric: undefined, id: "" }));
@@ -152,28 +153,29 @@ export function FilterActions({ type }: { type: string }) {
   const handleDropdownOpen = (open) => {
     open ? disableScope("dashboard") : enableScope("dashboard");
     if (loading) return;
+    if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     setStart(open);
-    if (
-      currentFilter?.metric &&
-      currentFilter.value &&
-      currentFilter.value.length > 0
-    ) {
-      dispatch(
-        addFilter({
-          display_name:
-            filterOptions[currentFilter.metric]?.display_name ?? "failed",
-          metric: filterType!,
-          operator:
-            (filterOptions[currentFilter.metric]?.operator_choices?.[0]
-              ?.value as string) ?? "contains",
-          value: currentFilter.value,
-          id: currentFilter.id,
-          value_field_type:
-            filterOptions[currentFilter.metric]?.value_field_type ??
-            "selection",
-        })
-      );
-    }
+    // if (
+    //   currentFilter?.metric &&
+    //   currentFilter.value &&
+    //   currentFilter.value.length > 0
+    // ) {
+    //   dispatch(
+    //     addFilter({
+    //       display_name:
+    //         filterOptions[currentFilter.metric]?.display_name ?? "failed",
+    //       metric: filterType!,
+    //       operator:
+    //         (filterOptions[currentFilter.metric]?.operator_choices?.[0]
+    //           ?.value as string) ?? "contains",
+    //       value: currentFilter.value,
+    //       id: currentFilter.id,
+    //       value_field_type:
+    //         filterOptions[currentFilter.metric]?.value_field_type ??
+    //         "selection",
+    //     })
+    //   );
+    // }
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
 
@@ -186,6 +188,7 @@ export function FilterActions({ type }: { type: string }) {
       trigger = (
         <DotsButton
           icon={Add}
+          className={filterLength ? "" : "hidden"}
           onClick={() => {
             if (loading) return;
             handleDropdownOpen(!start);
@@ -196,7 +199,7 @@ export function FilterActions({ type }: { type: string }) {
     default:
       trigger = (
         <div>
-          {!loading && (
+          {true && (
             <Tooltip
               side="bottom"
               sideOffset={8}
@@ -212,6 +215,8 @@ export function FilterActions({ type }: { type: string }) {
                 variant="small-dashed"
                 icon={Filter}
                 text="Filter"
+                className={filterLength ? "hidden" : ""}
+                disabled={loading}
                 active={start}
               />
             </Tooltip>

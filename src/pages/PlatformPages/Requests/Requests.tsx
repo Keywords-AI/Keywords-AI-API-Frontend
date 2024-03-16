@@ -31,6 +31,7 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { RequestPreview } from "src/components/Display/Figures";
+import cn from "src/utilities/classMerge.js";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -145,8 +146,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filters.length > 0 === false && <FilterActions type="filter" />}
-
+            {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
+            <FilterActions type="filter" />
             {filters.length > 0 && !loading && (
               <React.Fragment>
                 <Tooltip
@@ -183,7 +184,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {filters.length > 0 && <FilterActions type="add" />}
+                {<FilterActions type="add" />}
               </React.Fragment>
             }
           </div>
@@ -232,28 +233,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           <div
             aria-label="scroll-control"
             ref={tableRef}
-            className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
+            className={cn(
+              "flex-col  h-full items-start gap-lg ",
+              sidePanelOpen ? "w-[calc(100%-400px)]" : "w-full"
+            )}
           >
             <RequestLogTable />
-            {filters.length > 0 && (
-              <div className="flex-row py-lg justify-center items-center w-full">
-                <div className="flex-row gap-sm items-center">
-                  <span className="text-sm-md">
-                    {totalCount - count} entries hidden by filter
-                  </span>
-                  <Button
-                    variant="small-dashed"
-                    text="Clear filters"
-                    onClick={clearFilters}
-                    iconPosition="right"
-                    icon={Close}
-                  />
-                </div>
-              </div>
-            )}
-            <div className="relative left-lg">
-              <Paginator />
-            </div>
           </div>
           <SidePanel open={sidePanelOpen} />
         </div>
@@ -318,6 +303,7 @@ const ExportPopOver = () => {
               icon={Export}
               text="Export"
               onClick={() => setShowDropdown((prev) => !prev)}
+              active={showDropdown}
             />
           </Tooltip>
         </div>

@@ -72,6 +72,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
   const hasAccess = user.loading ? true : user.is_admin ? true : false;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
+  const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
   useEffect(() => {
     getUser();
   }, []);
@@ -92,12 +93,23 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
 
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
+    if (user.loading) return;
+
+    if (user.failed || !isLoggedIn(user)) {
+      window.location.href = "https://keywordsai.co/";
+    }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
-    if (organization.id && !organization?.loading) {
+    if (organization.id) {
       // The init state of org is not empty, but the id is null
-      if (!onOnboradingPage && !organization?.active_subscription) {
+      console.log(!onOnboradingPage &&
+        !organization?.onboarded)
+      if (
+        !onOnboradingPage &&
+        !organization?.onboarded
+      ) {
         // navigate to onboarding page if user hasn't onboarded
+        console.log("Tried navigating")
         navigate("/onboarding");
       }
     }
@@ -117,7 +129,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   }, [user]);
 
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
   const routes = [
     {
@@ -193,10 +204,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
             <Navigate to="/login" />
           ),
         },
-        {
-          path: "onboarding/plans",
-          element: <StartWithPlan />,
-        },
+        // {
+        //   path: "onboarding/plans",
+        //   element: <StartWithPlan />,
+        // },
         {
           path: "onboarding/get-started",
           element: <GetStarted />,
