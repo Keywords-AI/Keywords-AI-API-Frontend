@@ -62,7 +62,7 @@ export const BillingPage = () => {
   }, [billings, currentBilling]);
   let expireDays = -1;
   const expireDateUTC = new Date(
-    organization?.organization_subscription?.credits?.[0].expire_at
+    organization?.organization_subscription?.credits?.[0]?.expire_at
   );
   const timezoneOffset = new Date().getTimezoneOffset() * 60000;
   const expireDate = new Date(expireDateUTC.getTime() - timezoneOffset);
