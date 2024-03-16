@@ -22,7 +22,7 @@ import { PricingTable } from "src/components/Tables";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
-  name: state.billings?.currentSubscription,
+  name: state.billings?.currentSubscription?.name,
   renewal_date: state.billings?.currentSubscription?.renewal_date,
   amount: state.billings?.currentSubscription?.amount,
   interval: state.billings?.currentSubscription?.interval,
@@ -52,7 +52,7 @@ const Subheading = connect(
         Your organization of
         <span className="text-gray-5">{" " + userCount}</span>
         {" users costs "}
-        <span className="text-gray-5">{amount} </span>
+        <span className="text-gray-5">{amount}</span>
         {" per month, and will renew on "}
         <span className="text-gray-5">{renewal_date}</span>
       </div>
@@ -225,7 +225,7 @@ export const PlansPage = connect(
       }
     >
       <div className="flex flex-col w-full items-center gap-sm">
-        <div className={`flex items-center gap-xxs`}>
+        {/* <div className={`flex items-center gap-xxs`}>
           {isYearly && <div className="w-[46px] h-[4px]"></div>}
           <TextSwitchButton
             checked={isYearly}
@@ -242,8 +242,8 @@ export const PlansPage = connect(
               backgroundColor="bg-success/10"
             />
           )}
-        </div>
-        <div className="flex flex-row gap-sm self-stretch">
+        </div> */}
+        {/* <div className="flex flex-row gap-sm self-stretch">
           {cards.map((card, index) => {
             return (
               <SmallPricingCard
@@ -263,10 +263,10 @@ export const PlansPage = connect(
               />
             );
           })}
-        </div>
-        {/* <div className="flex flex-col gap-xl items-center self-stretch w-full">
-          <PricingTable />
         </div> */}
+        <div className="flex flex-col gap-xl items-center self-stretch w-full">
+          <PricingTable />
+        </div>
       </div>
     </PageContent>
   );
