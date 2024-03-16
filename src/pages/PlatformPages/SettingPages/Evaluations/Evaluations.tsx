@@ -156,7 +156,8 @@ const EvalCard = ({
     <div
       className={cn(
         "flex-col py-xxs px-xs items-start gap-xxxs self-stretch bg-gray-1 shadow-border  rounded-sm cursor-pointer",
-        open || hover ? "bg-gray-2 shadow-gray-3" : "bg-gray-1 shadow-gray-2"
+        "hover:bg-gray-2 hover:shadow-gray-3",
+        open ? "bg-gray-2 shadow-gray-3" : "bg-gray-1 shadow-gray-2"
       )}
       onClick={() => setOpen(true)}
       onMouseEnter={() => setHover(true)}
@@ -194,7 +195,10 @@ const EvalCard = ({
           />
         </div>
       </div>
-      <div aria-label="subtitle" className="max-w-[400px] caption w-full">
+      <div
+        aria-label="subtitle"
+        className="max-w-[400px] caption w-full text-gray-4"
+      >
         {subtitle}
       </div>
     </div>
