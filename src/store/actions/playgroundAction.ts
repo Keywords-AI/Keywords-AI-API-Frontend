@@ -250,7 +250,7 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               ...modelParams[channel],
             },
             dispatch: dispatch,
-            path: "api/playground/ask2/",
+            path: "api/playground/ask/",
             readStreamLine: (line) => dispatch(readStreamChunk(line, channel)),
             streamingDoneCallback: () => {
               const streamingText =

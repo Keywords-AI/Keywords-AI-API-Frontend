@@ -7,10 +7,11 @@ import { WebhookActions } from "./WebhookActions";
 export function WebhookTable() {
   const webhooks = useTypedSelector((state) => state.webhook.webhooks);
   const renderActions = (webhook: any) => {
-
     return <WebhookActions webhook={webhook} />;
   };
-  const [processedWebhooks, setProcessedWebhooks] = useState(processWebhooks(webhooks, renderActions));
+  const [processedWebhooks, setProcessedWebhooks] = useState(
+    processWebhooks(webhooks, renderActions)
+  );
 
   useEffect(() => {
     setProcessedWebhooks(processWebhooks(webhooks, renderActions));

@@ -95,23 +95,21 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     if (user.loading) return;
 
-    if (user.failed || !isLoggedIn(user)) {
-      window.location.href = "https://keywordsai.co/";
-    }
+    // if (user.failed || !isLoggedIn(user)) {
+    //   window.location.href = "https://keywordsai.co/";
+    // }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
-    if (organization.id && !organization?.loading) {
+    if (organization.id) {
       // The init state of org is not empty, but the id is null
+      console.log(!onOnboradingPage &&
+        !organization?.onboarded)
       if (
-        !organization?.loading &&
         !onOnboradingPage &&
-        !organization?.organization_subscription?.subscription_bool
+        !organization?.onboarded
       ) {
         // navigate to onboarding page if user hasn't onboarded
-        console.log(
-          "Navigating to onboarding",
-          organization?.organization_subscription?.subscription_bool
-        );
+        console.log("Tried navigating")
         navigate("/onboarding");
       }
     }

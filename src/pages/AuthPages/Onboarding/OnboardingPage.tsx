@@ -18,6 +18,7 @@ import cn from "src/utilities/classMerge";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { createSelector } from "reselect";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
+import { RootState } from "src/types";
 
 export const OnboardingPage = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ export const OnboardingPage = () => {
   );
   const dispatch = useTypedDispatch();
   const orgUserSelector = createSelector(
-    (state) => state.organization,
+    (state: RootState) => state.organization,
     (state) => state.user,
     (organization, user) => ({ organization, user })
   ); // Memoize the selector
@@ -51,14 +52,17 @@ export const OnboardingPage = () => {
   };
   const formfields = [
     <CreateOrganization />,
-    <InviteTeam stepNumber={2} />,
+    // <InviteTeam stepNumber={2} />,
     // <IdentifyUseCase />,
     // <PrioritizeObj />,
     // <OptimizeCosts />,
   ];
   useEffect(() => {
-    if (organization?.curr_onboarding_step >= formfields.length) {
+    if (organization?.onboarded) {
       navigate("/platform");
+    } else {
+      const loadStep = organization?.curr_onboarding_step > formfields.length? formfields.length: organization?.curr_onboarding_step
+      setQueryParams({ curr_step: loadStep }, navigate);
     }
   }, [organization]);
   return (
@@ -105,6 +109,7 @@ export const OnboardingPage = () => {
                   );
                   if (index + 1 == formfields.length) {
                     dispatch(UpdateOrgSubscription("starter"));
+                    dispatch(updateOrganization({onboarded: true}))
                     // give user starter subscription
                     setQueryParams({ curr_step: index + 2 }, navigate);
                   } else {

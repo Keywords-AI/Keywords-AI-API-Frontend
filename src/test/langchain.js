@@ -2,57 +2,18 @@ import { ChatOpenAI as ChatOpenAITest } from "@langchain/openai"
 // import { ChatOpenAI } from "langchain/chat_models/openai"
 import { ConversationChain } from "langchain/chains"
 
-// const chat = new ChatOpenAITest({
-//     configuration: {
-//         baseURL: "https://api-test.keywordsai.co/api/",
-//         apiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7"
-//     },
-//     openAIApiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7",
-//     modelName: "gpt-3.5-turbo",
-// })
-
-// async function main() {
-//     const response = await chat.invoke("Hi")
-//     console.log(response)
-// }
-
-// main()
-
-const socketAiModelTest = (socket, event, model) => {
-    const keywordsAI =  new ChatOpenAITest({
-        configuration: {
-            baseURL: "https://api-test.keywordsai.co/api/",
-            apiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7"
-        },
-        openAIApiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7",
-        modelName: model || modelName,
-        streaming: true,
-        callbacks: [
-        //   {
-        //     handleLLMNewToken(token) {
-        //       socket.emit(`${event} start`, token);
-        //     }
-        //   }
-        ]
-    })
-    return keywordsAI;
-}
 
 const keywordsAI =  new ChatOpenAITest({
     configuration: {
-        baseURL: "https://api-test.keywordsai.co/api/",
-        apiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7"
+        baseURL: "https://api.keywordsai.co/api/",
     },
-    openAIApiKey: "DvAVh1YZ.HAJoxEesOEwNyAGi56fSMa4KEnZyEtP7",
-    modelName: "gpt-3.5-turbo" || modelName,
+    openAIApiKey: "<En5XoPkf.kSEt4KS23UCjttnqhCzlN5tz5niou2H2>",
+    modelName: "gpt-3.5-turbo",
     streaming: true,
-    callbacks: [
-    //   {
-    //     handleLLMNewToken(token) {
-    //       socket.emit(`${event} start`, token);
-    //     }
-    //   }
-    ]
+    modelKwargs: {
+        customer_identifier: "123456"
+    }
+    
 })
 
 
@@ -61,7 +22,8 @@ const chain = new ConversationChain({
 })
 
 async function main() {
-    const response = await chain.call({input: "Hi"})
+    // const response = await chain.call({input: "Hi"})
+    const response = await keywordsAI.invoke("Hi")
     console.log(response)
 }
 
