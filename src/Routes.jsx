@@ -95,9 +95,9 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     if (user.loading) return;
 
-    if (user.failed || !isLoggedIn(user)) {
-      window.location.href = "https://keywordsai.co/";
-    }
+    // if (user.failed || !isLoggedIn(user)) {
+    //   window.location.href = "https://keywordsai.co/";
+    // }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
     if (organization.id) {
