@@ -16,7 +16,7 @@ const mapStateToProps = (state) => ({ user: state.user });
 const mapDispatchToProps = {
   login,
   googleLogin,
-  resendActivationEmail
+  resendActivationEmail,
 };
 
 const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
@@ -25,13 +25,12 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      
       await login(data);
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     if (DEMO_ENV) {
       if (DEMO_EMAIL === "" || DEMO_PASSWORD === "") {
         console.log("error", "Demo credentials not set");
@@ -42,22 +41,21 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
         email: DEMO_EMAIL,
         password: DEMO_PASSWORD,
       };
-      console.log("login with demo credentials")
+      console.log("login with demo credentials");
       login(demoCredentials);
       return;
     }
-  }, [])
-  useEffect(() => {
-    if (isLoggedIn(user)) {
-      console.log("user is logged in");
-      const next = new URLSearchParams(location.search).get("next");
-      if (next) {
-        navigate(next);
-      } else {
-        navigate(REDIRECT_URI);
-      }
-    }
-  }, [user]);
+  }, []);
+  // useEffect(() => {
+  //   if (isLoggedIn(user)) {
+  //     const next = new URLSearchParams(location.search).get("next");
+  //     if (next) {
+  //       navigate(next);
+  //     } else {
+  //       navigate(REDIRECT_URI);
+  //     }
+  //   }
+  // }, [user]);
   const {
     register,
     handleSubmit,

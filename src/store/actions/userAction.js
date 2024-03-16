@@ -61,7 +61,7 @@ export const getUser = () => {
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
         } else {
-          console.log(await res.text());
+          // console.log(await res.text());
           const data = await res.text();
           dispatch({ type: SET_USER_FAILED });
           // window.location = "https://keywordsai.co/";
