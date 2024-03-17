@@ -36,8 +36,11 @@ export const UserSettings = () => {
     ) {
       return;
     }
-    console.log(data);
     dispatch(updateUser({ first_name: firstName, last_name: lastName }));
+    if (document.activeElement) {
+      // @ts-ignore
+      document.activeElement.blur();
+    }
   };
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
