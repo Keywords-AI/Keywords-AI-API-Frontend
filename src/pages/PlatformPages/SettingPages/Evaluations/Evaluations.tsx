@@ -51,7 +51,7 @@ export default function Evaluations({}: Props) {
                 {...(EvalData.contextPrecision as any)}
                 updatedTime={new Date()}
                 model={orgnization?.context_precision_eval?.model || "auto"}
-                selected={orgnization?.context_precision_eval?.metric}
+                selected={orgnization?.context_precision_eval?.metrics}
                 isEnable={orgnization?.context_precision_eval?.enabled || false}
                 evalName="context_precision_eval"
               />
@@ -74,7 +74,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.faithfulness as any)}
                   updatedTime={new Date()}
                   model={orgnization?.faithfulness_eval?.model || "auto"}
-                  selected={orgnization?.faithfulness_eval?.metric}
+                  selected={orgnization?.faithfulness_eval?.metrics}
                   isEnable={orgnization?.faithfulness_eval?.enabled || false}
                   evalName="faithfulness_eval"
                 />
@@ -82,7 +82,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
                   model={orgnization?.flesch_kincaid_eval?.model || "auto"}
-                  selected={orgnization?.flesch_kincaid_eval?.metric}
+                  selected={orgnization?.flesch_kincaid_eval?.metrics}
                   isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
                   evalName="flesch_kincaid_eval"
                 />
@@ -91,7 +91,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.answerRelevance as any)}
                   updatedTime={new Date()}
                   model={orgnization?.answer_relevance_eval?.model || "auto"}
-                  selected={orgnization?.answer_relevance_eval?.metric}
+                  selected={orgnization?.answer_relevance_eval?.metrics}
                   isEnable={
                     orgnization?.answer_relevance_eval?.enabled || false
                   }
@@ -113,7 +113,7 @@ export default function Evaluations({}: Props) {
                 {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
                 model={orgnization?.sentiment_analysis_eval?.model || "auto"}
-                selected={orgnization?.sentiment_analysis_eval?.metric}
+                selected={orgnization?.sentiment_analysis_eval?.metrics}
                 isEnable={
                   orgnization?.sentiment_analysis_eval?.enabled || false
                 }

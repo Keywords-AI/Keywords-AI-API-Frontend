@@ -79,19 +79,19 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           ),
         }
       : null,
-    {
-      value: "Eval",
-      buttonVariant: "text" as variantType,
-      content: (
-        <div
-          className="flex-col items-start self-stretch overflow-auto"
-          aria-label="frame 1969"
-        >
-          <div ref={logRef}></div>
-          <EvalPane />
-        </div>
-      ),
-    },
+    // {
+    //   value: "Eval",
+    //   buttonVariant: "text" as variantType,
+    //   content: (
+    //     <div
+    //       className="flex-col items-start self-stretch overflow-auto"
+    //       aria-label="frame 1969"
+    //     >
+    //       <div ref={logRef}></div>
+    //       <EvalPane />
+    //     </div>
+    //   ),
+    // },
   ].filter(Boolean);
 
   const [tab, setTab] = useState(pages[0]!.value);

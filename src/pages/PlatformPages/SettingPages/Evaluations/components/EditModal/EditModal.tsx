@@ -35,7 +35,10 @@ export function EditModal({
   model,
   selectedMetric,
 }: EditModalProps) {
-  const [isEnableState, setIsEnableState] = React.useState(isEnable);
+  const [isEnableState, setIsEnableState] = React.useState(false);
+  useEffect(() => {
+    setIsEnableState(isEnable);
+  }, [isEnable]);
   const {
     register,
     watch,
@@ -48,15 +51,15 @@ export function EditModal({
   );
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      setCurrentMetric(value.metric);
+      setCurrentMetric(value.metrics);
     });
     return () => subscription.unsubscribe();
   }, [watch]);
   const onSubmit = (data: any) => {
-    console.log(data, isEnableState);
     dispatch(
       updateOrgEvalOptions(evalName, { ...data, enabled: isEnableState })
     );
+    setOpen(false);
   };
   const models = [
     {
@@ -72,7 +75,6 @@ export function EditModal({
       value: "gpt-3.5-turbo",
     },
   ];
-
   const handleCancel = () => {
     // Ensure setOpen is properly received from props
     setOpen(false); // Ensure setOpen function is properly called
@@ -115,7 +117,7 @@ export function EditModal({
           <p className="text-sm-regular text-gray-4">Metric</p>
           <SelectInputSmall
             headLess
-            {...register("metric")}
+            {...register("metrics")}
             choices={metrics}
             width="w-[200px]"
             defaultValue={selectedMetric || metrics[0].value}
