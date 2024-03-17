@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { DotsButton } from "src/components/Buttons";
 import { EditModal } from "./components";
 import cn from "src/utilities/classMerge";
+import { EvalData } from "./data";
 type Props = {};
 
 export default function Evaluations({}: Props) {
@@ -19,12 +20,12 @@ export default function Evaluations({}: Props) {
       }
       subtitle={"Monitor performance in production."}
     >
-      <PageParagraph
+      {/* <PageParagraph
         heading={"Custom evaluations"}
         subheading={"Add your own custom evaluations."}
       >
         <Button variant="r4-primary" text="Add custom eval" />
-      </PageParagraph>
+      </PageParagraph> */}
       <PageParagraph
         heading={"Pre-built evaluations"}
         subheading={
@@ -43,7 +44,14 @@ export default function Evaluations({}: Props) {
           content={{
             trigger: <div className="text-sm-md text-gray-4">Retrieval</div>,
             triggerClassName: "",
-            content: <div></div>,
+            content: (
+              <EvalCard
+                {...(EvalData.contextPrecision as any)}
+                updatedTime={new Date()}
+                model={"gpt-4"}
+                isEnable={false}
+              />
+            ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
             className: "",
           }}
@@ -59,45 +67,23 @@ export default function Evaluations({}: Props) {
             content: (
               <div className="flex-col gap-xxs">
                 <EvalCard
-                  title="Faithfulness"
-                  subtitle={
-                    "How grounded is the generated answer on the retrieved contexts."
-                  }
+                  {...(EvalData.faithfulness as any)}
                   updatedTime={new Date()}
                   model={"gpt-4"}
                   isEnable={false}
                 />
                 <EvalCard
-                  title="Flesch–Kincaid Readability"
-                  subtitle={
-                    "How easy it is to understand an by considering factors like sentence length and word complexity."
-                  }
+                  {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
                   model={"auto"}
                   isEnable
                 />
+
                 <EvalCard
-                  title="LLM-based Faithfulness"
-                  subtitle={
-                    "How grounded is the generated answer on the retrieved contexts."
-                  }
+                  {...(EvalData.answerRelevance as any)}
                   updatedTime={new Date()}
                   model={"gpt-4"}
                   isEnable={false}
-                />
-                <EvalCard
-                  title="LLM-based Answer Relevance"
-                  subtitle={
-                    "Consistency of the generated answer based on the reference ground truth answers."
-                  }
-                  updatedTime={new Date()}
-                  model={"gpt-4"}
-                  isEnable={false}
-                  description={
-                    "Consistency of the generated answer based on the reference ground truth answers."
-                  }
-                  inputText={"User message"}
-                  outputText={"Sentiment"}
                 />
               </div>
             ),
@@ -112,14 +98,10 @@ export default function Evaluations({}: Props) {
             triggerClassName: "",
             content: (
               <EvalCard
-                title="Sentiment"
-                subtitle={"Overall emotion of user message."}
+                {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
                 model={"gpt-4"}
                 isEnable={false}
-                description={"Overall emotion of user message."}
-                inputText={"User message"}
-                outputText={"Sentiment"}
               />
             ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
@@ -138,7 +120,8 @@ type EvalCardProps = {
   model: string;
   isEnable: boolean;
   inputText?: string;
-  outputText?: string;
+  outputs?: any;
+  metrics: any[];
 };
 const EvalCard = ({
   title,
@@ -148,59 +131,61 @@ const EvalCard = ({
   model,
   isEnable,
   inputText,
-  outputText,
+  outputs,
+  metrics,
 }: EvalCardProps) => {
   const [open, setOpen] = React.useState(false);
-  const [hover, setHover] = React.useState(false);
   return (
-    <div
-      className={cn(
-        "flex-col py-xxs px-xs items-start gap-xxxs self-stretch bg-gray-1 shadow-border  rounded-sm cursor-pointer",
-        "hover:bg-gray-2 hover:shadow-gray-3",
-        open ? "bg-gray-2 shadow-gray-3" : "bg-gray-1 shadow-gray-2"
-      )}
-      onClick={() => setOpen(true)}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
-      <div
-        aria-label="top row"
-        className="flex justify-between items-center self-stretch"
-      >
-        <div className="flex items-center gap-xxs text-sm-md text-gray-5">
-          {title}
-        </div>
-        <div className="flex items-center gap-xxs">
-          <p className=" text-gray-4 caption">
-            Updated {format(new Date(updatedTime), "M/dd/yyyy")}
-          </p>
-          <div className="flex items-center gap-xxxs">
-            <ModelTag model={model} />
-            <Tag
-              text={isEnable ? "Enabled" : "Disabled"}
-              border="border-none"
-              backgroundColor={isEnable ? "bg-success/10" : "bg-red/10"}
-              textColor={isEnable ? "text-success" : "text-red"}
-              icon={isEnable ? <Check fill="fill-success" /> : null}
-            />
+    <EditModal
+      trigger={
+        <div
+          className={cn(
+            "flex-col py-xxs px-xs items-start gap-xxxs self-stretch bg-gray-1 shadow-border  rounded-sm cursor-pointer",
+            "hover:bg-gray-2 hover:shadow-gray-3",
+            "bg-gray-1 shadow-gray-2"
+          )}
+          onClick={() => setOpen(true)}
+        >
+          <div
+            aria-label="top row"
+            className="flex justify-between items-center self-stretch"
+          >
+            <div className="flex items-center gap-xxs text-sm-md text-gray-5">
+              {title}
+            </div>
+            <div className="flex items-center gap-xs">
+              <div className="flex items-center gap-xxs">
+                <p className=" text-gray-4 caption">
+                  Updated {format(new Date(updatedTime), "M/dd/yyyy")}
+                </p>
+                <div className="flex items-center gap-xxxs">
+                  <ModelTag model={model} />
+                  <Tag
+                    text={isEnable ? "Enabled" : "Disabled"}
+                    border="border-none"
+                    backgroundColor={isEnable ? "bg-success/10" : "bg-red/10"}
+                    textColor={isEnable ? "text-success" : "text-red"}
+                    icon={isEnable ? <Check fill="fill-success" /> : null}
+                  />
+                </div>
+              </div>
+              <Pencil size="sm" />
+            </div>
           </div>
-          <EditModal
-            open={open}
-            setOpen={setOpen}
-            title={title}
-            subtitle={description}
-            isEnable={isEnable}
-            inputText={inputText}
-            outputText={outputText}
-          />
+          <div
+            aria-label="subtitle"
+            className="max-w-[400px] caption w-full text-gray-4"
+          >
+            {subtitle}
+          </div>
         </div>
-      </div>
-      <div
-        aria-label="subtitle"
-        className="max-w-[400px] caption w-full text-gray-4"
-      >
-        {subtitle}
-      </div>
-    </div>
+      }
+      title={title}
+      subtitle={description}
+      isEnable={isEnable}
+      inputText={inputText}
+      outputs={outputs}
+      metrics={metrics}
+    />
   );
 };
