@@ -25,9 +25,9 @@ export const SET_USER_FAILED = "SET_USER_FAILED";
 export const getUser = () => {
   return (dispatch) => {
     console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
-    const timeout = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Request timed out")), 20000)
-    );
+    // const timeout = new Promise((_, reject) =>
+    //   setTimeout(() => reject(new Error("Request timed out")), 20000)
+    // );
     getCSRF();
     const request = fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "GET",
