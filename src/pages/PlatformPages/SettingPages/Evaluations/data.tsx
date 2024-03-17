@@ -60,19 +60,19 @@ export const EvalData = {
     metrics: [
       {
         name: "LLM-based Faithfulness",
-        value: "LLM_based_faithfulness",
+        value: "llm",
       },
       {
         name: "ROUGE-L Precision",
-        value: "ROUGE-L_precision",
+        value: "rouge",
       },
       {
         name: "Token Overlap Precision",
-        value: "Token_overlap_precision",
+        value: "token",
       },
       {
         name: "BLEU",
-        value: "BLEU",
+        value: "bleu",
       },
     ],
     inputText: `Question: 
@@ -81,11 +81,11 @@ export const EvalData = {
       Retrieved context: Paris is the capital of France and also the largest city in the country.
       Lyon is a major city in France.`,
     outputs: {
-      LLM_based_faithfulness: `LLM_based_faithfulness: 0.0
+      llm: `LLM_based_faithfulness: 0.0
         LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
-      "ROUGE-L_precision": `rouge_faithfulness: 0.5`,
-      Token_overlap_precision: `token_overlap_faithfulness: 0.5`,
-      BLEU: `bleu_faithfulness': 0.37`,
+      rouge: `rouge_faithfulness: 0.5`,
+      token: `token_overlap_faithfulness: 0.5`,
+      bleu: `bleu_faithfulness': 0.37`,
     },
   },
   fleschKincaidReadability: {

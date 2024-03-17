@@ -5,8 +5,9 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { Divider } from "src/components/Sections";
 import { useTypedSelector } from "src/store/store";
 import { RequestParams } from "./RequestParams";
-import { Evaluation } from "./Evaluation";
-import { useState } from "react";
+
+import Accordion from "src/components/Sections/Accordion/Accordion";
+import MetadataPane from "./MetadataPane";
 
 export const MetricPane = ({}) => {
   const logItem = useTypedSelector(
@@ -338,31 +339,34 @@ export const MetricPane = ({}) => {
         })}
       </div>
       <Divider />
-      <RequestParams {...logItem?.full_request} />
+      {logItem?.metadata && Object.keys(logItem?.metadata || {}).length > 0 && (
+        <Accordion
+          className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md "
+          defaultOpen
+          content={{
+            trigger: (
+              <div className="text-sm-md text-gray-4">Custom metadata</div>
+            ),
+            triggerClassName: "",
+            content: <MetadataPane />,
+            contentClassName: "flex-col items-start gap-sm self-stretch",
+          }}
+        />
+      )}
+
       <Divider />
-      <Evaluation
-        sentimentScore={logItem?.sentiment_score}
-        groundnessScore={logItem?.groundness}
+      <Accordion
+        className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md "
+        defaultOpen
+        content={{
+          trigger: (
+            <div className="text-sm-md text-gray-4">Request parameters</div>
+          ),
+          triggerClassName: "",
+          content: <RequestParams {...logItem?.full_request} />,
+          contentClassName: "flex-col items-start gap-sm self-stretch",
+        }}
       />
-      <Divider />
-      {/* <Classification /> */}
-      {/* <Divider /> */}
-      {/* {logItem?.metadata && Object.keys(logItem?.metadata).length > 0 && (
-        <>
-          <div className="flex-col py-sm px-lg items-start gap-xxxs self-stretch ">
-            <div className="flex justify-between items-center self-stretch text-sm-md text-gray-5">
-              Metadata
-              <CopyButton text={JSON.stringify(logItem?.metadata) || ""} />
-            </div>
-            <div className="flex items-start gap-[10px] self-stretch py-xxxs px-xxs bg-gray-2 text-gray-4  text-sm-regular rounded-sm ">
-              <p className="break-all  flex self-stretch text-wrap max-h-[400px] overflow-auto whitespace-pre-wrap select-text">
-                {JSON.stringify(logItem?.metadata)}
-              </p>
-            </div>
-          </div>
-          <Divider />
-        </>
-      )} */}
     </>
   );
 };

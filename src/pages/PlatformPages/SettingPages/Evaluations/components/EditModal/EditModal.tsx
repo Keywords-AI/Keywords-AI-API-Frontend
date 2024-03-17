@@ -5,9 +5,11 @@ import { Modal } from "src/components/Dialogs";
 import { SelectInputSmall } from "src/components/Inputs";
 import { Tag } from "src/components/Misc/Tag";
 import Accordion from "src/components/Sections/Accordion/Accordion";
-import { useTypedSelector } from "src/store/store";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useDispatch } from "react-redux";
+import { updateOrgEvalOptions } from "src/store/actions";
 export interface EditModalProps {
   title: string;
   subtitle?: string;
@@ -16,6 +18,9 @@ export interface EditModalProps {
   outputs?: any;
   metrics: any[];
   trigger: any;
+  evalName: string;
+  model: string;
+  selectedMetric: string;
 }
 
 export function EditModal({
@@ -26,6 +31,9 @@ export function EditModal({
   outputs,
   metrics,
   trigger,
+  evalName,
+  model,
+  selectedMetric,
 }: EditModalProps) {
   const [isEnableState, setIsEnableState] = React.useState(isEnable);
   const {
@@ -34,18 +42,21 @@ export function EditModal({
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const dispatch = useTypedDispatch();
   const [currentMetric, setCurrentMetric] = React.useState(
     metrics.length > 0 ? metrics[0].value : ""
   );
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log(value, name, type);
       setCurrentMetric(value.metric);
     });
     return () => subscription.unsubscribe();
   }, [watch]);
   const onSubmit = (data: any) => {
     console.log(data, isEnableState);
+    dispatch(
+      updateOrgEvalOptions(evalName, { ...data, enabled: isEnableState })
+    );
   };
   const models = [
     {
@@ -95,7 +106,7 @@ export function EditModal({
           headLess
           choices={models}
           width="w-[200px]"
-          defaultValue={"auto"}
+          defaultValue={model || "auto"}
           icon={Down}
         />
       </div>
@@ -107,7 +118,7 @@ export function EditModal({
             {...register("metric")}
             choices={metrics}
             width="w-[200px]"
-            defaultValue={metrics[0].value}
+            defaultValue={selectedMetric || metrics[0].value}
             icon={Down}
           />
         </div>

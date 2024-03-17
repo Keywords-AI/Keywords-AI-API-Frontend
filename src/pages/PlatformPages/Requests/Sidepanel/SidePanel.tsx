@@ -34,6 +34,7 @@ import { MetricPane } from "./MetricPane";
 import { set } from "react-hook-form";
 import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import MetadataPane from "./MetadataPane";
+import EvalPane from "./EvalPane";
 
 interface SidePanelProps {
   open: boolean;
@@ -62,12 +63,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           <MetricPane />
         </div>
       ),
-      // tooltip: (
-      //   <>
-      //     <p className="caption text-gray-4">View metrics</p>
-      //     <AlphanumericKey value={"←"} />
-      //   </>
-      // ),
     },
     logItem?.prompt_messages?.length !== 0
       ? {
@@ -82,29 +77,21 @@ export const SidePanel = ({ open }: SidePanelProps) => {
               <LogPane />
             </div>
           ),
-          // tooltip: (
-          //   <>
-          //     <p className="caption text-gray-4">View log</p>
-          //     <AlphanumericKey value={"→"} />
-          //   </>
-          // ),
         }
       : null,
-    logItem?.metadata && Object.keys(logItem?.metadata).length > 0
-      ? {
-          value: "Metadata",
-          buttonVariant: "text" as variantType,
-          content: (
-            <div
-              className="flex-col items-start self-stretch overflow-auto"
-              aria-label="frame 1969"
-            >
-              <div ref={logRef}></div>
-              <MetadataPane />
-            </div>
-          ),
-        }
-      : null,
+    {
+      value: "Eval",
+      buttonVariant: "text" as variantType,
+      content: (
+        <div
+          className="flex-col items-start self-stretch overflow-auto"
+          aria-label="frame 1969"
+        >
+          <div ref={logRef}></div>
+          <EvalPane />
+        </div>
+      ),
+    },
   ].filter(Boolean);
 
   const [tab, setTab] = useState(pages[0]!.value);
@@ -125,9 +112,6 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       if (tab === "Log") setTab("Metrics");
     }
 
-    if (!logItem?.metadata || Object.keys(logItem?.metadata).length === 0) {
-      if (tab === "Metadata") setTab("Metrics");
-    }
     if (tab === "Log") enableScope("request_sidepanel_log");
     if (tab !== "Log") disableScope("request_sidepanel_log");
     return () => {

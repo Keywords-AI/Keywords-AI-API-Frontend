@@ -7,7 +7,7 @@ export const RequestParams = ({
   stop_sequence,
 }) => {
   return (
-    <div className="flex-col py-sm px-lg items-start gap-xs self-stretch">
+    <div className="flex-col  items-start gap-xs self-stretch">
       <div className="flex h-[24px] justify-between items-center self-stretch">
         <div className="flex items-center gap-xxs text-gray-5 text-sm-md ">
           Temperature

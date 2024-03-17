@@ -8,9 +8,11 @@ import { DotsButton } from "src/components/Buttons";
 import { EditModal } from "./components";
 import cn from "src/utilities/classMerge";
 import { EvalData } from "./data";
+import { useTypedSelector } from "src/store/store";
 type Props = {};
 
 export default function Evaluations({}: Props) {
+  const orgnization = useTypedSelector((state) => state.organization);
   return (
     <PageContent
       title={
@@ -48,8 +50,10 @@ export default function Evaluations({}: Props) {
               <EvalCard
                 {...(EvalData.contextPrecision as any)}
                 updatedTime={new Date()}
-                model={"gpt-4"}
-                isEnable={false}
+                model={orgnization?.context_precision_eval?.model || "auto"}
+                selected={orgnization?.context_precision_eval?.metric}
+                isEnable={orgnization?.context_precision_eval?.enabled || false}
+                evalName="context_precision_eval"
               />
             ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
@@ -69,21 +73,29 @@ export default function Evaluations({}: Props) {
                 <EvalCard
                   {...(EvalData.faithfulness as any)}
                   updatedTime={new Date()}
-                  model={"gpt-4"}
-                  isEnable={false}
+                  model={orgnization?.faithfulness_eval?.model || "auto"}
+                  selected={orgnization?.faithfulness_eval?.metric}
+                  isEnable={orgnization?.faithfulness_eval?.enabled || false}
+                  evalName="faithfulness_eval"
                 />
                 <EvalCard
                   {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
-                  model={"auto"}
-                  isEnable
+                  model={orgnization?.flesch_kincaid_eval?.model || "auto"}
+                  selected={orgnization?.flesch_kincaid_eval?.metric}
+                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
+                  evalName="flesch_kincaid_eval"
                 />
 
                 <EvalCard
                   {...(EvalData.answerRelevance as any)}
                   updatedTime={new Date()}
-                  model={"gpt-4"}
-                  isEnable={false}
+                  model={orgnization?.answer_relevance_eval?.model || "auto"}
+                  selected={orgnization?.answer_relevance_eval?.metric}
+                  isEnable={
+                    orgnization?.answer_relevance_eval?.enabled || false
+                  }
+                  evalName="answer_relevance_eval"
                 />
               </div>
             ),
@@ -100,8 +112,12 @@ export default function Evaluations({}: Props) {
               <EvalCard
                 {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
-                model={"gpt-4"}
-                isEnable={false}
+                model={orgnization?.sentiment_analysis_eval?.model || "auto"}
+                selected={orgnization?.sentiment_analysis_eval?.metric}
+                isEnable={
+                  orgnization?.sentiment_analysis_eval?.enabled || false
+                }
+                evalName="sentiment_analysis_eval"
               />
             ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
@@ -118,10 +134,12 @@ type EvalCardProps = {
   description?: string;
   updatedTime: Date;
   model: string;
+  selected: string;
   isEnable: boolean;
   inputText?: string;
   outputs?: any;
   metrics: any[];
+  evalName: string;
 };
 const EvalCard = ({
   title,
@@ -129,14 +147,19 @@ const EvalCard = ({
   description,
   updatedTime,
   model,
+  selected,
   isEnable,
   inputText,
   outputs,
   metrics,
+  evalName,
 }: EvalCardProps) => {
   const [open, setOpen] = React.useState(false);
   return (
     <EditModal
+      evalName={evalName}
+      model={model}
+      selectedMetric={selected}
       trigger={
         <div
           className={cn(
