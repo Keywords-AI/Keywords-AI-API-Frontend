@@ -216,7 +216,7 @@ export const processRequestLogs = (
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
     return {
-      id: log.id,
+      ...log,
       time: (
         <span className="text-gray-4">
           {formatISOToReadableDate(log.timestamp)}
@@ -246,6 +246,8 @@ export const processRequestLogs = (
           {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
         </span>
       ),
+      organizationKey: log.organization_key__name,
+      sentimentAnalysis: log.sentiment_analysis,
       latency: (
         <span className="">
           {log.failed ? "" : `${log.latency.toFixed(3)}s`}
@@ -254,8 +256,6 @@ export const processRequestLogs = (
       apiKey: log.api_key,
       model: log.cached_responses.length > 0 ? "None" : log.model,
       failed: log.failed,
-      organizationKey: log.organization_key__name,
-      sentimentAnalysis: log.sentiment_analysis,
       status: {
         cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
