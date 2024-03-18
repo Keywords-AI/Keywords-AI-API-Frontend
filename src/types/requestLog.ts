@@ -37,6 +37,7 @@ export type LogItem = {
   token_per_second: number;
   metadata: any;
   organization: string;
+  evlaution: any;
 };
 
 export type DisplayLogItem = {
