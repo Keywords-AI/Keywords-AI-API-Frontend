@@ -63,6 +63,7 @@ export const getUser = () => {
         } else {
           // console.log(await res.text());
           const data = await res.text();
+          console.log("data", data);
           dispatch({ type: SET_USER_FAILED });
           // window.location = "https://keywordsai.co/";
         }
