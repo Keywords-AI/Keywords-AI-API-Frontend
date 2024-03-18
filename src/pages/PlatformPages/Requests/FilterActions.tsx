@@ -33,11 +33,13 @@ export function FilterActions({ type }: { type: string }) {
   const filterOptions = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOptions
   );
-  const filterType = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter?.metric
-  );
+
   const currentFilter = useTypedSelector(
     (state: RootState) => state.requestLogs.currentFilter
+  );
+  const filterType = currentFilter.metric;
+  const filterLength = useTypedSelector(
+    (state) => state.requestLogs.filters.length
   );
   // const filters = useTypedSelector(
   //   (state: RootState) => state.requestLogs.filters
@@ -88,26 +90,31 @@ export function FilterActions({ type }: { type: string }) {
       })
     );
   };
-  const filterLength = useTypedSelector(
-    (state) => state.requestLogs.filters.length
-  );
+
   const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
       if (Array.isArray(filterValue) && filterValue.length > 0) {
-        dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+        dispatch(
+          setCurrentFilter({
+            ...store.getState().requestLogs.currentFilter,
+            value: filterValue,
+          })
+        );
         const latestFilter = store.getState().requestLogs.currentFilter;
         if (!latestFilter || !latestFilter.metric || !latestFilter.value)
           return;
+        console.log("selectfiltervalue");
         const filters = store.getState().requestLogs.filters;
         const sameTypeFilter = filters.find(
           (filter) => filter.metric === latestFilter.metric
         );
+        const filterOptions = store.getState().requestLogs.filterOptions;
         if (sameTypeFilter) {
           dispatch(
             updateFilter({
               display_name:
                 filterOptions[latestFilter.metric]?.display_name ?? "failed",
-              metric: filterType!,
+              metric: latestFilter.metric!,
               operator:
                 (filterOptions[latestFilter.metric]?.operator_choices?.[0]
                   ?.value as string) ?? "contains",
@@ -125,12 +132,12 @@ export function FilterActions({ type }: { type: string }) {
             addFilter({
               display_name:
                 filterOptions[latestFilter.metric]?.display_name ?? "failed",
-              metric: filterType!,
+              metric: latestFilter.metric,
               operator:
                 (filterOptions[latestFilter.metric]?.operator_choices?.[0]
                   ?.value as string) ?? "contains",
               value: latestFilter.value,
-              id: currentFilter.id,
+              id: latestFilter.id,
               value_field_type:
                 filterOptions[latestFilter.metric]?.value_field_type ??
                 "selection",
@@ -152,30 +159,9 @@ export function FilterActions({ type }: { type: string }) {
   }, []);
   const handleDropdownOpen = (open) => {
     open ? disableScope("dashboard") : enableScope("dashboard");
-    if (loading) return;
-    if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+    // if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     setStart(open);
-    // if (
-    //   currentFilter?.metric &&
-    //   currentFilter.value &&
-    //   currentFilter.value.length > 0
-    // ) {
-    //   dispatch(
-    //     addFilter({
-    //       display_name:
-    //         filterOptions[currentFilter.metric]?.display_name ?? "failed",
-    //       metric: filterType!,
-    //       operator:
-    //         (filterOptions[currentFilter.metric]?.operator_choices?.[0]
-    //           ?.value as string) ?? "contains",
-    //       value: currentFilter.value,
-    //       id: currentFilter.id,
-    //       value_field_type:
-    //         filterOptions[currentFilter.metric]?.value_field_type ??
-    //         "selection",
-    //     })
-    //   );
-    // }
+
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
   let trigger: React.ReactNode;
@@ -218,7 +204,6 @@ export function FilterActions({ type }: { type: string }) {
                 disabled={loading}
                 active={start}
                 onClick={() => {
-                  console.log("click");
                   if (loading) return;
                   handleDropdownOpen(!start);
                 }}
@@ -239,13 +224,7 @@ export function FilterActions({ type }: { type: string }) {
           setOpen={handleDropdownOpen}
           onChange={selectFilterValue}
           align="start"
-          items={
-            !loading
-              ? filterType
-                ? secondStepItems || []
-                : firstStepItems
-              : []
-          }
+          items={filterType ? secondStepItems || [] : firstStepItems}
           multiple={filterType ? true : false}
         />
       ) : (

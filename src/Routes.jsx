@@ -111,7 +111,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
 
     if (organization.id) {
       // The init state of org is not empty, but the id is null
-      console.log(!onOnboradingPage && !organization?.onboarded);
       if (!onOnboradingPage && !organization?.onboarded) {
         // navigate to onboarding page if user hasn't onboarded
         console.log("Tried navigating");
