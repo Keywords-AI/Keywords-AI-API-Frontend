@@ -81,7 +81,7 @@ export default function Evaluations({}: Props) {
                 <EvalCard
                   {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
-                  model={orgnization?.flesch_kincaid_eval?.model || "auto"}
+                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
                   selected={orgnization?.flesch_kincaid_eval?.metrics}
                   isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
                   evalName="flesch_kincaid_eval"
@@ -112,7 +112,7 @@ export default function Evaluations({}: Props) {
               <EvalCard
                 {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
-                model={orgnization?.sentiment_analysis_eval?.model || "auto"}
+                model={orgnization?.sentiment_analysis_eval?.model || "None"}
                 selected={orgnization?.sentiment_analysis_eval?.metrics}
                 isEnable={
                   orgnization?.sentiment_analysis_eval?.enabled || false
@@ -155,6 +155,7 @@ const EvalCard = ({
   evalName,
 }: EvalCardProps) => {
   const [open, setOpen] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
   return (
     <EditModal
       evalName={evalName}
@@ -167,7 +168,12 @@ const EvalCard = ({
             "hover:bg-gray-2 hover:shadow-gray-3",
             "bg-gray-1 shadow-gray-2"
           )}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true);
+            setHover(false);
+          }}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
         >
           <div
             aria-label="top row"
@@ -192,7 +198,7 @@ const EvalCard = ({
                   />
                 </div>
               </div>
-              <Pencil size="sm" />
+              <Pencil size="sm" active={hover} />
             </div>
           </div>
           <div

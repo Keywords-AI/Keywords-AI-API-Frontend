@@ -147,6 +147,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxxs">
             {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
+
             {<FilterActions type="filter" />}
             {filters.length > 0 && !loading && (
               <React.Fragment>
@@ -184,7 +185,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {<FilterActions type="add" />}
+                {/* {<FilterActions type="add" />} */}
               </React.Fragment>
             }
           </div>

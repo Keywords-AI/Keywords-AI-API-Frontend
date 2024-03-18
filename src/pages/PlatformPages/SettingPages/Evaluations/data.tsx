@@ -10,11 +10,20 @@ export const EvalData = {
       </div>
     ),
     metrics: [],
-    inputText: `Question: 
-      What is the capital of France?
-      
-      Retrieved context: Paris is the capital of France and also the largest city in the country.
-      Lyon is a major city in France.`,
+    inputText: (
+      <div className="text-sm-regular text-gray-4">
+        <p className="text-sm-md text-gray-4">Question:</p>
+        <p className="text-sm-regular text-gray-4">
+          What is the capital of France?
+        </p>
+        <br />
+        <p className="text-sm-md text-gray-4">Retrieved context:</p>
+        <p className="text-sm-regular text-gray-4">
+          {`Paris is the capital of France and also the largest city in the country.
+          Lyon is a major city in France.`}
+        </p>
+      </div>
+    ),
     outputs: "LLM_based_context_precision: 0.5",
   },
   faithfulness: {
@@ -75,11 +84,24 @@ export const EvalData = {
         value: "bleu",
       },
     ],
-    inputText: `Question: 
-      What is the capital of France?
-      
-      Retrieved context: Paris is the capital of France and also the largest city in the country.
-      Lyon is a major city in France.`,
+    inputText: (
+      <div>
+        <p className="text-sm-md text-gray-4">Question:</p>
+        <p className="text-sm-regular text-gray-4">
+          Who wrote 'Romeo and Juliet'?
+        </p>
+        <br />
+        <p className="text-sm-md text-gray-4">Retrieved context:</p>
+        <p className="text-sm-regular text-gray-4">
+          William Shakespeare is the author of 'Romeo and Juliet'.
+        </p>
+        <br />
+        <p className="text-sm-md text-gray-4">Answer:</p>
+        <p className="text-sm-regular text-gray-4">
+          William Shakespeare wrote 'Romeo and Juliet'. He is born in Ireland.
+        </p>
+      </div>
+    ),
     outputs: {
       llm: `LLM_based_faithfulness: 0.0
         LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
@@ -124,8 +146,12 @@ export const EvalData = {
         value: "flesch_kincaid_grade_level",
       },
     ],
-    inputText: `Answer:
-      The cat sat on the mat.`,
+    inputText: (
+      <div>
+        <p className="text-sm-md text-gray-4">Answer:</p>
+        <p className="text-sm-regular text-gray-4">The cat sat on the mat.</p>
+      </div>
+    ),
     outputs: {
       flesch_reading_ease: `flesch_reading_ease: 100`,
       flesch_kincaid_grade_level: `flesch_kincaid_grade_level: 0`,
@@ -160,10 +186,19 @@ export const EvalData = {
       </div>
     ),
     metrics: [],
-    inputText: `Question:
-      Who wrote 'Romeo and Juliet'?
-      Retrieved context:
-      William Shakespeare wrote 'Romeo and Juliet'.`,
+    inputText: (
+      <div>
+        <p className="text-sm-md text-gray-4">Question:</p>
+        <p className="text-sm-regular text-gray-4">
+          Who wrote 'Romeo and Juliet'?
+        </p>
+        <br />
+        <p className="text-sm-md text-gray-4">Retrieved context:</p>
+        <p className="text-sm-regular text-gray-4">
+          William Shakespeare is the author of 'Romeo and Juliet'.
+        </p>
+      </div>
+    ),
     outputs: `LLM_based_answer_relevance: 1.0
     LLM_based_answer_relevance_reasoning: The answer is relevant to the question and completely answers the question by correctly identifying Shakespeare as the author of 'Romeo and Juliet'`,
   },
@@ -186,8 +221,16 @@ export const EvalData = {
       </div>
     ),
     metrics: [],
-    inputText: `Text:
-      Four score and seven years ago our fathers brought forth on this continent a new nation, conceived in liberty and dedicated to the proposition that all men are created equal.`,
+    inputText: (
+      <div>
+        <p className="text-sm-md text-gray-4">Text:</p>
+        <p className="text-sm-regular text-gray-4">
+          Four score and seven years ago our fathers brought forth on this
+          continent a new nation, conceived in liberty and dedicated to the
+          proposition that all men are created equal.
+        </p>
+      </div>
+    ),
     outputs: `sentiment_score: 0.2 
       sentiment: positive`,
   },

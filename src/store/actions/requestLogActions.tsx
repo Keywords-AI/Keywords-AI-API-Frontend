@@ -180,6 +180,7 @@ export const updateFilter = (filter: FilterObject) => {
     }
     const state = getState();
     const filters = state.requestLogs.filters;
+    console.log("here");
     dispatch(applyPostFilters(filters));
   };
 };
@@ -374,6 +375,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
       const currentFilterType = state.requestLogs.currentFilter.id;
       if (currentFilterType) {
         // If we are currently editing a filter, do no refresh the filters
+        dispatch(setRequestLogs(results));
         return;
       }
       dispatch({

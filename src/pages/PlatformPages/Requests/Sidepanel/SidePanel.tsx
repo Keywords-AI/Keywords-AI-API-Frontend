@@ -79,19 +79,23 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           ),
         }
       : null,
-    // {
-    //   value: "Eval",
-    //   buttonVariant: "text" as variantType,
-    //   content: (
-    //     <div
-    //       className="flex-col items-start self-stretch overflow-auto"
-    //       aria-label="frame 1969"
-    //     >
-    //       <div ref={logRef}></div>
-    //       <EvalPane />
-    //     </div>
-    //   ),
-    // },
+    logItem?.evlaution &&
+    typeof logItem?.evlaution === "object" &&
+    Object.keys(logItem?.evlaution).length !== 0
+      ? {
+          value: "Eval",
+          buttonVariant: "text" as variantType,
+          content: (
+            <div
+              className="flex-col items-start self-stretch overflow-auto"
+              aria-label="frame 1969"
+            >
+              <div ref={logRef}></div>
+              <EvalPane />
+            </div>
+          ),
+        }
+      : null,
   ].filter(Boolean);
 
   const [tab, setTab] = useState(pages[0]!.value);
@@ -110,6 +114,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useEffect(() => {
     if (logItem?.prompt_messages?.length === 0) {
       if (tab === "Log") setTab("Metrics");
+    }
+    if (
+      logItem?.evlaution &&
+      typeof logItem?.evlaution === "object" &&
+      Object.keys(logItem?.evlaution).length === 0
+    ) {
+      if (tab === "Eval") setTab("Metrics");
     }
 
     if (tab === "Log") enableScope("request_sidepanel_log");
