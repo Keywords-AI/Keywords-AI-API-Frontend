@@ -162,7 +162,7 @@ export default function FilterControl() {
             dispatch(setCurrentFilter({ metric: undefined, id: "" }));
           }
 
-          dispatch(getRequestLogs());
+          // dispatch(getRequestLogs());
         }}
       />
       <FilterPanel />

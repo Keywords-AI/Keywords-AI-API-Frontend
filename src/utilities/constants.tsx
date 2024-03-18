@@ -557,8 +557,30 @@ export const colorTagsClasses = [
   "#FF6482",
   "#B59469",
 ];
+export const textColorClasses = [
+  "text-[#F55656]",
+  "text-[#FFB340]",
+  "text-[#FFD426]",
+  "text-[#31DE4B]",
+  "text-[#66D4CF]",
+  "text-[#5DE6FF]",
+  "text-[#DA8FFF]",
+  "text-[#FF6482]",
+  "text-[#B59469]",
+];
+export const backgroundColorClasses = [
+  "bg-[rgba(245,86,86,0.1)]", // rgba(245, 86, 86, 0.1)
+  "bg-[rgba(255,179,64,0.1)]", // rgba(255, 179, 64, 0.1)
+  "bg-[rgba(255,212,38,0.1)]", // rgba(255, 212, 38, 0.1)
+  "bg-[rgba(49,222,75,0.1)]", // rgba(49, 222, 75, 0.1)
+  "bg-[rgba(102,212,207,0.1)]", // rgba(102, 212, 207, 0.1)
+  "bg-[rgba(93,230,255,0.1)]", // rgba(93, 230, 255, 0.1)
+  "bg-[rgba(218,143,255,0.1)]", // rgba(218, 143, 255, 0.1)
+  "bg-[rgba(255,100,130,0.1)]", // rgba(255, 100, 130, 0.1)
+  "bg-[rgba(181,148,105,0.1)]", // rgba(181, 148, 105, 0.1)
+];
 export const randomColor = () => {
-  return colors[Math.floor(Math.random() * colors.length)];
+  return backgroundColorClasses[Math.floor(Math.random() * colors.length)];
 };
 
 export const Metrics = {
@@ -594,31 +616,31 @@ export const Metrics = {
     icon: Tokens,
     unit: "tokens",
   },
-  average_tps:{
+  average_tps: {
     name: "Speed",
     value: "average_tps",
     icon: Speed,
     unit: "tps",
   },
-  tps_p_50:{
+  tps_p_50: {
     name: "Speed p50",
     value: "tps_p_50",
     icon: Speed,
     unit: "tps",
   },
-  tps_p_90:{
+  tps_p_90: {
     name: "Speed p90",
     value: "tps_p_90",
     icon: Speed,
     unit: "tps",
   },
-  tps_p_95:{
+  tps_p_95: {
     name: "Speed p95",
     value: "tps_p_95",
     icon: Speed,
     unit: "tps",
   },
-  tps_p_99:{
+  tps_p_99: {
     name: "Speed p99",
     value: "tps_p_99",
     icon: Speed,
@@ -786,7 +808,6 @@ export const requestLogTagColumns: LogItemTag[] = [
     ),
   },
 ];
-
 
 export const userTableColumns = [
   {

@@ -27,9 +27,9 @@ function PromptLogsNotConnected({
   getRequestLogs,
 }: PromptLogsProps) {
   const [selectedLog, setSelectedLog] = useState<number>(-1);
-  useEffect(() => {
-    getRequestLogs();
-  }, []);
+  // useEffect(() => {
+  //   getRequestLogs();
+  // }, []);
   const handleClick = (index: number, prompt: string) => {
     setSelectedLog(index);
     setPrompt(prompt);

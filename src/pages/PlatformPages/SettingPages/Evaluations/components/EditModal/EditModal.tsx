@@ -44,11 +44,13 @@ export function EditModal({
     watch,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm();
   const dispatch = useTypedDispatch();
   const [currentMetric, setCurrentMetric] = React.useState(
     metrics.length > 0 ? metrics[0].value : ""
   );
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       setCurrentMetric(value.metrics);
@@ -80,10 +82,16 @@ export function EditModal({
     setOpen(false); // Ensure setOpen function is properly called
   };
   const [open, setOpen] = React.useState(false);
+  useEffect(() => {
+    console.log("open", selectedMetric);
+    setCurrentMetric(selectedMetric);
+  }, [open]);
   return (
     <Modal
       open={open}
-      setOpen={setOpen}
+      setOpen={(open) => {
+        setOpen(open);
+      }}
       trigger={trigger}
       title={
         <div className="flex justify-between items-center self-stretch">
@@ -101,17 +109,20 @@ export function EditModal({
       subtitle={subtitle}
     >
       <Divider />
-      <div className="flex justify-between items-center self-stretch">
-        <p className="text-sm-regular text-gray-4">Model</p>
-        <SelectInputSmall
-          {...register("model")}
-          headLess
-          choices={models}
-          width="w-[200px]"
-          defaultValue={model || "auto"}
-          icon={Down}
-        />
-      </div>
+      {evalName != "sentiment_analysis_eval" &&
+        evalName != "flesch_kincaid_eval" && (
+          <div className="flex justify-between items-center self-stretch">
+            <p className="text-sm-regular text-gray-4">Model</p>
+            <SelectInputSmall
+              {...register("model")}
+              headLess
+              choices={models}
+              width="w-[200px]"
+              defaultValue={model || "auto"}
+              icon={Down}
+            />
+          </div>
+        )}
       {metrics.length > 0 && (
         <div className="flex justify-between items-center self-stretch">
           <p className="text-sm-regular text-gray-4">Metric</p>
