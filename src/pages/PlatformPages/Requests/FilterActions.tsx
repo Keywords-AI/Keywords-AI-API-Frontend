@@ -158,13 +158,42 @@ export function FilterActions({ type }: { type: string }) {
     };
   }, []);
   const handleDropdownOpen = (open) => {
-    open ? disableScope("dashboard") : enableScope("dashboard");
+    // open ? disableScope("dashboard") : enableScope("dashboard");
     // if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     setStart(open);
 
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
-  let trigger: React.ReactNode;
+
+  let trigger: React.ReactNode = (
+    <div>
+      <Tooltip
+        side="bottom"
+        sideOffset={8}
+        align="start"
+        content={
+          <>
+            <p className="caption text-gray-4">Show filter options</p>
+            <AlphanumericKey value={"F"} />
+          </>
+        }
+      >
+        <div>
+          <Button
+            variant="small-dashed"
+            icon={Filter}
+            text="Filter"
+            disabled={loading}
+            active={start}
+            onClick={() => {
+              if (loading) return;
+              handleDropdownOpen(!start);
+            }}
+          />
+        </div>
+      </Tooltip>
+    </div>
+  );
   switch (type) {
     case "create":
       trigger = <Button variant="small" icon={Add} text="Create" />;
@@ -173,44 +202,12 @@ export function FilterActions({ type }: { type: string }) {
       trigger = (
         <DotsButton
           icon={Add}
-          className={filterLength ? "" : "hidden"}
+          className={filterLength == 0 ? "hidden" : ""}
           onClick={() => {
             if (loading) return;
             handleDropdownOpen(!start);
           }}
         />
-      );
-      break;
-    default:
-      trigger = (
-        <div>
-          {true && (
-            <Tooltip
-              side="bottom"
-              sideOffset={8}
-              align="start"
-              content={
-                <>
-                  <p className="caption text-gray-4">Show filter options</p>
-                  <AlphanumericKey value={"F"} />
-                </>
-              }
-            >
-              <Button
-                variant="small-dashed"
-                icon={Filter}
-                text="Filter"
-                className={filterLength ? "hidden" : ""}
-                disabled={loading}
-                active={start}
-                onClick={() => {
-                  if (loading) return;
-                  handleDropdownOpen(!start);
-                }}
-              />
-            </Tooltip>
-          )}
-        </div>
       );
       break;
   }
@@ -219,6 +216,7 @@ export function FilterActions({ type }: { type: string }) {
     <>
       {!filterType || (filterType && changeFieldType === "selection") ? (
         <SelectInputMenu
+          anchor={type == "Filter" ? <div></div> : undefined}
           trigger={trigger}
           open={start}
           setOpen={handleDropdownOpen}
