@@ -78,11 +78,11 @@ const expiryOptions = [
 const EnvironmentOptions = [
   {
     name: "Test",
-    value: "test",
+    value: true,
   },
   {
     name: "Prod",
-    value: "prod",
+    value: false,
   },
 ];
 const unitOptions = [
@@ -136,9 +136,10 @@ const CreateFormNotConnected = React.forwardRef(
     } = useForm();
     const onSubmit = (data) => {
       const name = data.name || "New Key";
+      data.name = name
       setNewKeyName!(name);
       if (!showMore) {
-        createApiKey!({ name: name, expiry_date: data.expiry_date });
+        createApiKey!(data);
         return;
       }
 
@@ -193,9 +194,9 @@ const CreateFormNotConnected = React.forwardRef(
               <SelectInput
                 title={"Environment"}
                 optionsWidth={"w-[120px]"}
-                {...register("environment")}
+                {...register("is_test")}
                 // onKeyDown={handleEnter}
-                placeholder={"Test"}
+                defaultValue={true}
                 //This corresponds to the 'Never' option
                 // defaultValue={
                 //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
