@@ -106,7 +106,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     }
   );
   useEffect(() => {
-    // getRequestLogs(); 
+    // getRequestLogs();
     if (!selectedRequest) {
       setSelectedRequest(requestLogs?.[0]?.id);
     }
