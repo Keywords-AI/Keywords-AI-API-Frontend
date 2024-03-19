@@ -110,7 +110,7 @@ export function FilterPanel() {
       <div className={"flex flex-col gap-xxs items-end"}>
         <div className="flex flex-col items-start gap-xs self-stretch">
           <div className="flex flex-col items-start gap-xs self-stretch">
-            <div className="flex justify-between items-center self-stretch ">
+            {/* <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Grouping</span>
               <SelectInput
                 useShortCut
@@ -145,7 +145,7 @@ export function FilterPanel() {
                   }
                 }}
               />
-            </div>
+            </div> */}
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Ordering</span>
               <SelectInput

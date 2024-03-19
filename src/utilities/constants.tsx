@@ -748,7 +748,7 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (data: any) => {
       const { model, routed } = data;
-      return routed === "routed" ? (
+      return routed? (
         <RoutedModelTag model={model} />
       ) : (
         <ModelTag model={model} />
