@@ -158,7 +158,7 @@ export default function EvalPane({}: Props) {
   ];
   return (
     <>
-      <div className=" flex-col py-sm px-lg items-start gap-xs self-stretch">
+      <div className=" flex-col pt-[18px] pb-sm px-lg items-start gap-xs self-stretch">
         {displayObj.map((obj, index) => {
           return (
             <div

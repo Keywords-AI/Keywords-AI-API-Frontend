@@ -30,15 +30,15 @@ export default function Evaluations({}: Props) {
       </PageParagraph> */}
       <PageParagraph
         heading={"Pre-built evaluations"}
-        subheading={
-          <div>
-            Read the{" "}
-            <a className="text-primary" href="https://docs.keywordsai.co/">
-              documentation
-            </a>{" "}
-            on eval metrics.
-          </div>
-        }
+        // subheading={
+        //   <div>
+        //     Read the{" "}
+        //     <a className="text-primary hover:text-primary-2 cursor-pointer" href="https://docs.keywordsai.co/">
+        //       documentation
+        //     </a>{" "}
+        //     on eval metrics.
+        //   </div>
+        // }
       >
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"

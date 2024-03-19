@@ -786,7 +786,7 @@ export const requestLogTagColumns: LogItemTag[] = [
               border=""
             />
           )}
-          <StatusTag statusCode={errorCode} cached={cached} />
+          <StatusTag statusCode={errorCode} cached={cached} table={true}/>
         </div>
       );
     },

@@ -110,33 +110,38 @@ export function EditModal({
       subtitle={subtitle}
     >
       <Divider />
-      {evalName != "sentiment_analysis_eval" &&
-        evalName != "flesch_kincaid_eval" && (
+      <div className="flex flex-col justify-center items-start gap-xs self-stretch">
+        {metrics.length > 0 && (
           <div className="flex justify-between items-center self-stretch">
-            <p className="text-sm-regular text-gray-4">Model</p>
+            <p className="text-sm-md text-gray-5">Metric</p>
             <SelectInputSmall
-              {...register("model")}
               headLess
-              choices={models}
+              {...register("metrics")}
+              choices={metrics}
               width="w-[200px]"
-              defaultValue={model || "auto"}
+              defaultValue={selectedMetric || metrics[0].value}
               icon={Down}
+              border="shadow-border shadow-gray-3"
             />
           </div>
         )}
-      {metrics.length > 0 && (
-        <div className="flex justify-between items-center self-stretch">
-          <p className="text-sm-regular text-gray-4">Metric</p>
-          <SelectInputSmall
-            headLess
-            {...register("metrics")}
-            choices={metrics}
-            width="w-[200px]"
-            defaultValue={selectedMetric || metrics[0].value}
-            icon={Down}
-          />
-        </div>
-      )}
+        {evalName != "sentiment_analysis_eval" &&
+          evalName != "flesch_kincaid_eval" && (
+            <div className="flex justify-between items-center self-stretch">
+              <p className="text-sm-md text-gray-5">Model</p>
+              <SelectInputSmall
+                {...register("model")}
+                headLess
+                choices={models}
+                width="w-[200px]"
+                defaultValue={model || "auto"}
+                icon={Down}
+                border="shadow-border shadow-gray-3"
+              />
+            </div>
+          )}
+      </div>
+
       <Accordion
         className="flex-col items-start gap-xs self-stretch"
         defaultOpen
