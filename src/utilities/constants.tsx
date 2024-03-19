@@ -18,7 +18,7 @@ import {
   LogItemTag,
   RequestFilter,
 } from "src/types";
-import { ModelTag, StatusTag, Tag } from "src/components/Misc";
+import { ModelTag, RoutedModelTag, StatusTag, Tag } from "src/components/Misc";
 import { SentimentTag } from "src/components/Misc";
 import React from "react";
 
@@ -746,7 +746,14 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Model",
     retrievalKey: "model",
-    renderFunction: (model: string) => <ModelTag model={model} />,
+    renderFunction: (data: any) => {
+      const { model, routed } = data;
+      return routed === "routed" ? (
+        <RoutedModelTag model={model} />
+      ) : (
+        <ModelTag model={model} />
+      );
+    },
   },
 
   // {

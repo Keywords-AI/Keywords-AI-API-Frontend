@@ -18,6 +18,7 @@ import * as _ from "lodash";
 import {
   deleMessageByIndex,
   regeneratePlaygroundResponse,
+  setFocusIndex,
   setMessageByIndex,
   setMessageResponseByIndex,
   streamPlaygroundResponse,
@@ -41,9 +42,11 @@ export interface PlaygroundMessageProps {
   responses?: Reponse[];
   isLast: boolean;
   hidden: boolean;
+  index: number;
 }
 
 export function PlaygroundMessage({
+  index,
   id,
   role,
   user_content,
@@ -54,6 +57,7 @@ export function PlaygroundMessage({
   const messageLength = useTypedSelector(
     (state: RootState) => state.playground.messages.length
   );
+
   const lastResponseMessageId = useTypedSelector(
     (state) =>
       state.playground.messages.findLast(
@@ -65,6 +69,7 @@ export function PlaygroundMessage({
   );
   const isReset = useTypedSelector((state) => state.playground.isReseted);
   const streamingState = useTypedSelector((state) => state.streamingText);
+
   useEffect(() => {
     if (streamingState.some((state) => state.isLoading)) setIsFocused(false);
   }, [streamingState]);
@@ -87,6 +92,15 @@ export function PlaygroundMessage({
     }
   }, [messageLength]);
   const dispatch = useTypedDispatch();
+  const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
+  const usermessageBoxRef = useRef(null);
+  useEffect(() => {
+    if (focusIndex == index) {
+      usermessageBoxRef &&
+        usermessageBoxRef.current &&
+        usermessageBoxRef.current.focus();
+    }
+  }, [focusIndex]);
   const handleSend = async (event) => {
     event.stopPropagation();
     // if (streaming || textContent.length < 1) return;
@@ -139,6 +153,8 @@ export function PlaygroundMessage({
         />
         <div className="flex self-stretch flex-1">
           <MessageBox
+            index={index}
+            ref={usermessageBoxRef}
             value={messageValue}
             onChange={handleChange}
             blur={!isFocused}
@@ -238,6 +254,7 @@ export function PlaygroundMessage({
                     </div>
                   ) : response.content ? (
                     <MessageBox
+                      index={index}
                       defaultValue={response.content}
                       onChange={(val) =>
                         setResponseValue((prev) => {
@@ -280,6 +297,7 @@ export function PlaygroundMessage({
                           responseValue[index] + "\u200B"
                         );
                         setIsFocused(false);
+                        dispatch(setFocusIndex(-1));
                       }}
                       blur={!isFocused}
                     />

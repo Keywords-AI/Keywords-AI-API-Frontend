@@ -156,8 +156,8 @@ export const BillingPage = () => {
                   </p>
                 </div>
               </div>
-              <div className="flex-col items-start gap-xxs self-stretch">
-                {closestExpiringDays > -1 && (
+              {closestExpiringDays > -1 && (
+                <div className="flex-col items-start gap-xxs self-stretch ">
                   <div className="flex justify-between items-center self-stretch">
                     <div className="flex items-center gap-xxs">
                       <div className="w-[8px] h-[8px] bg-red rounde-[2px]" />
@@ -171,8 +171,8 @@ export const BillingPage = () => {
                         : "-"}
                     </p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </>
           }
         >
