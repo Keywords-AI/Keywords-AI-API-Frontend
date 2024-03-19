@@ -60,35 +60,24 @@ export const createWebhook = (webhook: any) => {
 };
 
 export const deleteWebhook = (webhook: Webhook) => {
-  return async (dispatch: TypedDispatch) => {
-    const webhookId = webhook.id;
-    dispatch({ type: DELETE_WEBHOOK, payload: webhook });
-    try {
-      const responseJson = await keywordsRequest({
-        method: "DELETE",
-        path: `user/webhook/${webhookId}`,
-        dispatch,
-      });
-      dispatch(
-        dispatchNotification({ title: "Webhook deleted successfully!" })
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    return async (dispatch: TypedDispatch) => {
+        const webhookId = webhook.id;
+        dispatch({ type: DELETE_WEBHOOK, payload: webhook });
+        try {
+            const responseJson = await keywordsRequest({method:"DELETE", path: `user/webhook/${webhookId}/`, dispatch});
+            dispatch(dispatchNotification({ title: "Webhook deleted successfully!" }));
+        } catch (e) {
+            console.error(e);
+        }
+    };
 };
 
 export const editWebhook = (webhook: any) => {
-  return async (dispatch: TypedDispatch) => {
-    const responseJson = await keywordsRequest({
-      method: "PATCH",
-      path: `user/webhook/${webhook.id}`,
-      data: webhook,
-      dispatch,
-    });
-    dispatch({ type: EDIT_WEBHOOK, payload: responseJson });
-  };
-};
+    return async (dispatch: TypedDispatch) => {
+        const responseJson = await keywordsRequest({method:"PATCH", path: `user/webhook/${webhook.id}/`, data: webhook, dispatch});
+        dispatch({ type: EDIT_WEBHOOK, payload: responseJson });
+    };
+}
 
 export const setEditingWebhook = (webhook: any) => {
   return (dispatch: TypedDispatch) => {

@@ -15,6 +15,7 @@ export function CreateWebhookForm(
   const { register, handleSubmit} = useForm();
   const dispatch = useTypedDispatch();
   const organizationId = useTypedSelector((state: RootState) => state.organization?.id);
+  const apiKeys = useTypedSelector((state: RootState) => state.apiKey.keyList);
   const onSubmit = (data: any) => {
     data.organization = organizationId;
     dispatch(createWebhook(data));
@@ -37,6 +38,20 @@ export function CreateWebhookForm(
         { value: "request_log", name: "New request log" },
       ]} 
       {...register("event_type")}
+      />
+      <SelectInput
+      title="API Key" 
+      width="w-full"
+      align="start"
+      placeholder="Select an API Key to associate with"
+      defaultValue={undefined}
+      choices={apiKeys.map((key)=>{
+        return {
+          name: key.name,
+          value: key.id,
+        }
+      })} 
+      {...register("organization_key")}
       />
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
