@@ -33,7 +33,9 @@ export default function FilterControl() {
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const timeRange = new URLSearchParams(location.search).get("time_range_type");
+  const urlParams = new URLSearchParams(location.search)
+  const timeRange = urlParams.get("time_range_type");
+  const is_test = urlParams.get("is_test") === "true"? true:false;
   const currentMetric = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.metric
   );
@@ -112,16 +114,23 @@ export default function FilterControl() {
     }) !== undefined;
   const inputRef = useRef<HTMLInputElement>(null);
   const [hoverTestMode, setHoverTestMode] = useState(false);
-
+  
   return (
     <div className="flex flex-row gap-xxs items-center">
-      <div className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2" 
+      <div className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer" 
       onMouseEnter={() => setHoverTestMode(true)}
       onMouseLeave={() => setHoverTestMode(false)}
+      onClick={()=>{
+        setQueryParams({is_test: !is_test}, navigate);
+        dispatch(getRequestLogs())
+      }}
       >
        {!hoverTestMode && <span className="text-gray-4 text-sm-regular">Test mode</span>}
        {hoverTestMode && <span className="text-gray-5 text-sm-regular">Test mode</span>}
-        <SwitchButton /> 
+        <SwitchButton
+        hovered={hoverTestMode}
+        checked={is_test}
+        /> 
       </div>
       <div className="w-[1px] h-[28px] bg-gray-2"></div> 
       <div className="flex-row gap-xxs rounded-xs items-center">
