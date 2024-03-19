@@ -25,10 +25,20 @@ import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 import store from "src/store/store";
 import { combineSlices } from "@reduxjs/toolkit";
 import { Value } from "@radix-ui/react-select";
-export function FilterActions({ type }: { type: string }) {
+export function FilterActions({
+  type,
+  start,
+  setStart,
+  hidden,
+}: {
+  type: string;
+  start: boolean;
+  setStart: (prev: any) => void;
+  hidden?: boolean;
+}) {
   // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
   // if (isLoading) return <></>;
-  const [start, setStart] = useState<boolean | undefined>(false);
+
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOptions
@@ -46,17 +56,7 @@ export function FilterActions({ type }: { type: string }) {
   // );
 
   const { enableScope, disableScope } = useHotkeysContext();
-  useHotkeys(
-    "f",
-    () => {
-      if (loading) return;
-      setStart((prev) => !prev);
-    },
-    {
-      scopes: "dashboard",
-      preventDefault: true,
-    }
-  );
+
   const changeFieldType =
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
   const firstStepItems = Object.keys(filterOptions).map(
@@ -103,7 +103,6 @@ export function FilterActions({ type }: { type: string }) {
         const latestFilter = store.getState().requestLogs.currentFilter;
         if (!latestFilter || !latestFilter.metric || !latestFilter.value)
           return;
-        console.log("selectfiltervalue");
         const filters = store.getState().requestLogs.filters;
         const sameTypeFilter = filters.find(
           (filter) => filter.metric === latestFilter.metric
@@ -151,12 +150,7 @@ export function FilterActions({ type }: { type: string }) {
       }
     }
   };
-  useEffect(() => {
-    enableScope("dashboard");
-    return () => {
-      disableScope("dashboard");
-    };
-  }, []);
+
   const handleDropdownOpen = (open) => {
     // open ? disableScope("dashboard") : enableScope("dashboard");
     // if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
@@ -211,7 +205,7 @@ export function FilterActions({ type }: { type: string }) {
       );
       break;
   }
-
+  if (hidden) trigger = <div></div>;
   return (
     <>
       {!filterType || (filterType && changeFieldType === "selection") ? (

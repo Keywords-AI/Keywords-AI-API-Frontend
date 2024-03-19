@@ -79,9 +79,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           ),
         }
       : null,
-    logItem?.evlaution &&
-    typeof logItem?.evlaution === "object" &&
-    Object.keys(logItem?.evlaution).length !== 0
+    logItem?.evaluations &&
+    typeof logItem?.evaluations === "object" &&
+    Object.keys(logItem?.evaluations).length !== 0
       ? {
           value: "Eval",
           buttonVariant: "text" as variantType,
@@ -116,9 +116,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       if (tab === "Log") setTab("Metrics");
     }
     if (
-      logItem?.evlaution &&
-      typeof logItem?.evlaution === "object" &&
-      Object.keys(logItem?.evlaution).length === 0
+      logItem?.evaluations &&
+      typeof logItem?.evaluations === "object" &&
+      Object.keys(logItem?.evaluations).length === 0
     ) {
       if (tab === "Eval") setTab("Metrics");
     }

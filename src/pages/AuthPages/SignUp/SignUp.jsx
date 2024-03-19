@@ -38,7 +38,7 @@ export const SignUp = connect(
       <div className=" flex-col max-w-[420px] items-center gap-lg justify-center ">
         <TitleAuth
           title={"Create an account"}
-          subtitle={`Sign up to retrieve a free trial API key.`}
+          subtitle={`Sign up to get $15 in model credits.`}
         />
         <form
           onSubmit={handleSubmit(onSubmit)}

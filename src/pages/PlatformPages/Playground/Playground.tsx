@@ -7,6 +7,7 @@ import {
   TopBar,
 } from "./components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
+import { v4 as uuidv4 } from "uuid";
 import {
   Add,
   AlphanumericKey,
@@ -21,6 +22,7 @@ import {
   appendMessage,
   getModels,
   resetModelOptions,
+  setFocusIndex,
   setPrompt,
   setSelectedLogs,
   streamPlaygroundResponse,
@@ -128,6 +130,21 @@ const PromptInput = (selectedLogs) => {
 connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 
 const MessageLists = () => {
+  useHotkeys(
+    "a",
+    () => {
+      if (isStreaming) return;
+      dispatch(
+        appendMessage({
+          id: uuidv4(),
+          role: "user",
+          user_content: "",
+        })
+      );
+      dispatch(setFocusIndex(messages.length));
+    },
+    { scopes: "playground", preventDefault: true }
+  );
   const messages = useTypedSelector((state) => state.playground.messages);
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -157,6 +174,7 @@ const MessageLists = () => {
         {messages.map((message, index) => {
           return (
             <PlaygroundMessage
+              index={index}
               key={index}
               id={index}
               isLast={index === messages.length - 1}
@@ -165,31 +183,40 @@ const MessageLists = () => {
           );
         })}
         <StreamingMessage />
-        <Button
-          variant="small"
-          text="Add message"
-          icon={Add}
-          ref={buttonRef}
-          iconPosition="left"
-          disabled={isStreaming}
-          onClick={() => {
-            if (isStreaming) return;
-
-            dispatch(
-              appendMessage({
-                id: messages.length,
-                role: "user",
-                user_content: "",
-              })
-            );
-            // buttonRef &&
-            //   buttonRef.current &&
-            //   (buttonRef.current as HTMLButtonElement).scrollIntoView({
-            //     behavior: "instant",
-            //     block: "end",
-            //   });
-          }}
-        />
+        <Tooltip
+          side="bottom"
+          sideOffset={8}
+          align="start"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Add message</p>
+              <AlphanumericKey value={"A"} />
+            </>
+          }
+        >
+          <div>
+            <Button
+              variant="small"
+              text="Add message"
+              icon={Add}
+              ref={buttonRef}
+              iconPosition="left"
+              disabled={isStreaming}
+              onClick={() => {
+                if (isStreaming) return;
+                dispatch(
+                  appendMessage({
+                    id: uuidv4(),
+                    role: "user",
+                    user_content: "",
+                  })
+                );
+                dispatch(setFocusIndex(messages.length));
+              }}
+            />
+          </div>
+        </Tooltip>
       </AutoScrollContainer>
       <div className="flex items-center gap-xs">
         <Button

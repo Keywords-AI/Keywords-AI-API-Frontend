@@ -1,3 +1,4 @@
+import { set } from "date-fns";
 import {
   useEffect,
   useRef,
@@ -6,6 +7,7 @@ import {
   ForwardedRef,
   useImperativeHandle,
 } from "react";
+import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 
 export interface MessageBoxProps {
@@ -18,6 +20,7 @@ export interface MessageBoxProps {
   disabled?: boolean;
   onBlur?: () => void;
   blur?: boolean;
+  index: number;
 }
 
 export const MessageBox = forwardRef(
@@ -31,10 +34,12 @@ export const MessageBox = forwardRef(
       onFoucs,
       disabled,
       blur,
+      index,
     }: MessageBoxProps,
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
     const setHeight = () => {
       if (!textAreaRef.current) return;
       const target = textAreaRef.current;
@@ -55,7 +60,9 @@ export const MessageBox = forwardRef(
     return (
       <textarea
         ref={textAreaRef}
-        onBlur={onBlur}
+        onBlur={() => {
+          onBlur && onBlur();
+        }}
         placeholder="Enter a user message here"
         onChange={(e) => onChange(e.target.value)}
         rows={1}

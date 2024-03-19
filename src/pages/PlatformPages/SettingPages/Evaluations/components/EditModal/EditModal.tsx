@@ -6,7 +6,7 @@ import { SelectInputSmall } from "src/components/Inputs";
 import { Tag } from "src/components/Misc/Tag";
 import Accordion from "src/components/Sections/Accordion/Accordion";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useDispatch } from "react-redux";
 import { updateOrgEvalOptions } from "src/store/actions";
@@ -63,6 +63,7 @@ export function EditModal({
     );
     setOpen(false);
   };
+
   const models = [
     {
       name: "Auto-select",
@@ -83,9 +84,9 @@ export function EditModal({
   };
   const [open, setOpen] = React.useState(false);
   useEffect(() => {
-    console.log("open", selectedMetric);
     setCurrentMetric(selectedMetric);
-  }, [open]);
+    console.log("selectedMetric", selectedMetric);
+  }, [open, selectedMetric]);
   return (
     <Modal
       open={open}
