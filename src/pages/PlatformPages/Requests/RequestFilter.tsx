@@ -34,7 +34,6 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
   const filterOptions = useTypedSelector(
     (state) => state.requestLogs.filterOptions
   );
-  console.log("RequstFilter", filter.display_name);
   const RequestFilterValueFields: RequestFilterValueFieldType = {
     text: (filterToUpdate, filterOption, onChange) => {
       return <InputFieldUpdateFilter filter={filterToUpdate} />;
@@ -145,13 +144,15 @@ export const RequstFilter = ({ filter }: { filter: FilterObject }) => {
         }}
       />
       {RequstFilterValueField(filter, filterOption!, (values) => {
+        console.log("RequstFilterValueField");
         const currentFilter = Filters.find(
           (currFilter) => currFilter.id === filter.id
         );
-        if (values.toString() === currentFilter?.value?.toString()) return;
+        // if (values.toString() === currentFilter?.value?.toString()) return;
         if (values.length === 0) {
           dispatch(deleteFilter(filter.id));
         } else {
+          console.log("updateFilter", values);
           dispatch(
             updateFilter({
               ...filter,

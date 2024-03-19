@@ -180,6 +180,7 @@ export const updateFilter = (filter: FilterObject) => {
     }
     const state = getState();
     const filters = state.requestLogs.filters;
+    console.log("here");
     dispatch(applyPostFilters(filters));
   };
 };
@@ -216,7 +217,7 @@ export const processRequestLogs = (
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
     return {
-      id: log.id,
+      ...log,
       time: (
         <span className="text-gray-4">
           {formatISOToReadableDate(log.timestamp)}
@@ -246,6 +247,8 @@ export const processRequestLogs = (
           {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
         </span>
       ),
+      organizationKey: log.organization_key__name,
+      sentimentAnalysis: log.sentiment_analysis,
       latency: (
         <span className="">
           {log.failed ? "" : `${log.latency.toFixed(3)}s`}
@@ -254,8 +257,6 @@ export const processRequestLogs = (
       apiKey: log.api_key,
       model: log.cached_responses.length > 0 ? "None" : log.model,
       failed: log.failed,
-      organizationKey: log.organization_key__name,
-      sentimentAnalysis: log.sentiment_analysis,
       status: {
         cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
@@ -361,7 +362,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
       dispatch(setFilterOptions(data.filters_data));
-      dispatch(setRequestLogs(results));
+
       const state = getState();
       const userFilters = state.user?.request_log_filters;
       if (!userFilters) {
@@ -374,12 +375,14 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
       const currentFilterType = state.requestLogs.currentFilter.id;
       if (currentFilterType) {
         // If we are currently editing a filter, do no refresh the filters
+        dispatch(setRequestLogs(results));
         return;
       }
       dispatch({
         type: SET_FILTERS,
         payload: filters,
       });
+      dispatch(setRequestLogs(results));
     });
   };
 };

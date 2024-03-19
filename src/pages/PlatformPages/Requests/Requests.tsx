@@ -147,7 +147,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         >
           <div className="flex flex-row items-center gap-xxxs">
             {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
-            <FilterActions type="filter" />
+
+            {<FilterActions type="filter" />}
             {filters.length > 0 && !loading && (
               <React.Fragment>
                 <Tooltip
@@ -184,7 +185,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {<FilterActions type="add" />}
+                {/* {<FilterActions type="add" />} */}
               </React.Fragment>
             }
           </div>
@@ -275,7 +276,7 @@ const ExportPopOver = () => {
       disableScope("exportLogs");
     };
   }, []);
-
+  const [inputDropdown, setInputDropdown] = useState(false);
   return (
     <Popover
       width="w-[320px]"
@@ -326,9 +327,12 @@ const ExportPopOver = () => {
                 text={fileTypes.filter((item) => item.value === file)[0].name}
                 iconPosition="right"
                 icon={Down}
+                active={inputDropdown}
               />
             )}
             align="end"
+            open={inputDropdown}
+            setOpen={setInputDropdown}
             defaultValue={fileTypes[0].value}
             choices={fileTypes}
             onChange={(e) => setFile(e.target.value)}

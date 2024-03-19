@@ -11,7 +11,6 @@ import cn from "src/utilities/classMerge";
 import { Dots, Down } from "src/components";
 import { capitalize } from "src/utilities/stringProcessing";
 import { useNavigate } from "react-router-dom";
-import { set } from "react-hook-form";
 
 export const MemberPage = () => {
   const organization = useTypedSelector(

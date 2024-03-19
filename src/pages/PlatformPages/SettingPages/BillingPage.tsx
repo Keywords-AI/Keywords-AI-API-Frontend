@@ -45,6 +45,7 @@ export const BillingPage = () => {
   const user = useTypedSelector((state) => state.user);
   const dispatch = useTypedDispatch();
   const [bilingData, setBillingData] = React.useState<Billing[]>([]);
+  const organization = useTypedSelector((state) => state.organization);
   const [currentBillingData, setCurrentBillingData] =
     React.useState<Billing>(null); // [currentBilling, setCurrentBilling
   const [canceling, setCanceling] = React.useState(false);
@@ -59,7 +60,63 @@ export const BillingPage = () => {
       );
     }
   }, [billings, currentBilling]);
-  console.log("currentBillingData", bilingData);
+  let expireDays = -1;
+  const expireDateUTC = new Date(
+    organization?.organization_subscription?.credits?.[0]?.expire_at
+  );
+  const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+  const expireDate = new Date(expireDateUTC.getTime() - timezoneOffset);
+  if (expireDate) {
+    if (expireDate < new Date()) {
+      expireDays = -1;
+    } else {
+      const currentDate = new Date();
+      const timeDifference = expireDate.getTime() - currentDate.getTime();
+      const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+      expireDays = Math.max(daysDifference, -1);
+    }
+  }
+  const totalAmount = organization?.organization_subscription?.credits?.reduce(
+    (acc, credit) => acc + credit.amount,
+    0
+  );
+  const closestExpiringCredit =
+    organization?.organization_subscription?.credits?.reduce(
+      (closestCredit, credit) => {
+        const expireDateUTC = new Date(credit.expire_at);
+        const timezoneOffset = new Date().getTimezoneOffset() * 60000;
+        const expireDate = new Date(expireDateUTC.getTime() - timezoneOffset);
+        if (
+          !closestCredit ||
+          (expireDate && expireDate < closestCredit.expireDate)
+        ) {
+          return { expireDate, amount: credit.amount };
+        }
+        return closestCredit;
+      },
+      null
+    );
+
+  const nonExpiringCreditsSum = organization?.organization_subscription?.credits
+    ?.filter((credit) => !credit.expire_at)
+    ?.reduce((sum, credit) => sum + credit.amount, 0);
+
+  const closestExpiringDays =
+    closestExpiringCredit && closestExpiringCredit.expireDate
+      ? Math.ceil(
+          (closestExpiringCredit.expireDate.getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : -1;
+
+  const closestExpiringAmount = closestExpiringCredit
+    ? closestExpiringCredit.amount.toFixed(2)
+    : "-";
+
+  const expireDaysText =
+    closestExpiringDays > -1
+      ? `Credits expiring in ${closestExpiringDays} days.`
+      : "Credits are expired.";
   return (
     <PageContent
       title="Billing"
@@ -67,7 +124,9 @@ export const BillingPage = () => {
     >
       <PageParagraph
         heading="Available credits"
-        subheading={"Credits expiring in 29 days."}
+        subheading={`Credits expiring in ${
+          expireDays > -1 ? expireDate : "0"
+        } days.`}
       >
         <Tooltip
           side="right"
@@ -79,7 +138,9 @@ export const BillingPage = () => {
             <>
               <div className="flex justify-between items-center self-stretch">
                 <p className="text-sm-md text-gray-5">Total credits</p>
-                <p className="text-sm-md text-gray-5">${"86.99"}</p>
+                <p className="text-sm-md text-gray-5">
+                  {totalAmount ? "$" + parseInt(totalAmount).toFixed(2) : "-"}
+                </p>
               </div>
 
               <div className="flex-col items-start gap-xxs self-stretch">
@@ -88,23 +149,37 @@ export const BillingPage = () => {
                     <div className="w-[8px] h-[8px] bg-primary rounde-[2px]" />
                     <p className="caption text-gray-4">Non-expiring</p>
                   </div>
-                  <p className="caption text-gray-4">${"76.99"}</p>
+                  <p className="caption text-gray-4">
+                    {nonExpiringCreditsSum
+                      ? "$" + parseInt(nonExpiringCreditsSum).toFixed(2)
+                      : "-"}
+                  </p>
                 </div>
               </div>
               <div className="flex-col items-start gap-xxs self-stretch">
-                <div className="flex justify-between items-center self-stretch">
-                  <div className="flex items-center gap-xxs">
-                    <div className="w-[8px] h-[8px] bg-red rounde-[2px]" />
-                    <p className="caption text-gray-4">Expiring in 7 days</p>
+                {closestExpiringDays > -1 && (
+                  <div className="flex justify-between items-center self-stretch">
+                    <div className="flex items-center gap-xxs">
+                      <div className="w-[8px] h-[8px] bg-red rounde-[2px]" />
+                      <p className="caption text-gray-4">
+                        Expiring in {closestExpiringDays} days
+                      </p>
+                    </div>
+                    <p className="caption text-gray-4">
+                      {closestExpiringAmount
+                        ? "$" + parseInt(closestExpiringAmount).toFixed(2)
+                        : "-"}
+                    </p>
                   </div>
-                  <p className="caption text-gray-4">${"10.00"}</p>
-                </div>
+                )}
               </div>
             </>
           }
         >
           <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2">
-            <span className=" text-gray-5 text-sm-md">${"86.99"}</span>
+            <span className=" text-gray-5 text-sm-md">
+              {totalAmount ? "$" + parseInt(totalAmount).toFixed(2) : "-"}
+            </span>
             <Info />
           </div>
         </Tooltip>

@@ -17,6 +17,7 @@ import Admin from "./AdminPage";
 import { UserSettings } from "./UserSettingsPage";
 import { WebhookPage } from "./WebhookPage";
 import store from "src/store/store";
+import Evaluations from "./Evaluations/Evaluations";
 
 const pages: PreProcessPage[] = [
   {
@@ -67,6 +68,10 @@ const pages: PreProcessPage[] = [
     page: <AlertsFallbackPage />,
   },
   {
+    title: "Evaluations",
+    page: <Evaluations />,
+  },
+  {
     title: "Models",
     page: <ModelsPage />,
   },
@@ -96,7 +101,7 @@ const processedUserPages: Page[] = userPages.map((page, index) => {
 
 export const sections = [
   {
-    title:  "Organization",
+    title: "Organization",
     pages: processedOrgPages,
     icon: <Building />,
   },

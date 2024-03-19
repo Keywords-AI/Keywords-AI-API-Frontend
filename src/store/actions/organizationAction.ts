@@ -333,3 +333,31 @@ export const UpdateOrgSubscription = (newPlan: string) => {
     dispatch(getUser());
   };
 };
+
+export const updateOrgEvalOptions = (evalName: string, data: any) => {
+  return async (dispatch, getState) => {
+    const organization = getState().organization;
+    console.log("evalName", evalName, evalName.replace("_", "-"));
+    if (organization[evalName] === null) {
+      await keywordsRequest({
+        path: `user/${evalName.replace(/_/g, "-")}s/`,
+        method: "POST",
+        data: { ...data, organization: organization.id },
+      });
+    } else {
+      // Update the organization state
+      console.log(
+        "path",
+        `user/${evalName.replace(/_/g, "-")}/${organization[evalName].id}/`
+      );
+      await keywordsRequest({
+        path: `user/${evalName.replace(/_/g, "-")}/${
+          organization[evalName].id
+        }/`,
+        method: "PATCH",
+        data: data,
+      });
+    }
+    dispatch(getUser());
+  };
+};

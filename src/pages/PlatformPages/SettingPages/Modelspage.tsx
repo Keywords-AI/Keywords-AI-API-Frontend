@@ -15,6 +15,7 @@ import { ModelType, models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
 import { useTypedSelector } from "src/store/store";
+import { parse } from "postcss";
 
 const RightDrawerContent = ({
   model_name,
@@ -204,7 +205,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                       : `$${
                           Number.isInteger(item.input_cost)
                             ? item.input_cost
-                            : item.input_cost.toFixed(3)
+                            : parseFloat(item.input_cost.toFixed(3))
                         }`}
                   </span>
                   {item.input_cost !== 0 && (
@@ -223,7 +224,7 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                       : `$${
                           Number.isInteger(item.output_cost)
                             ? item.output_cost
-                            : item.output_cost.toFixed(3)
+                            : parseFloat(item.output_cost.toFixed(3))
                         }`}
                   </span>
                   {item.output_cost !== 0 && (

@@ -7,6 +7,7 @@ import {
   isLoggedIn,
   updateUser,
   clearNotifications,
+  validateToken,
 } from "src/store/actions";
 import "src/components/styles/index.css";
 import { accessMap, retrieveAccessToken } from "./utilities/authorization";
@@ -83,7 +84,15 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     //   ? console.log("has access")
     //   : console.log("No access");
   }, [location]);
+
   useEffect(() => {
+    const validateLogin = async () => {
+      let result = await validateToken();
+      if (!result) {
+        navigate("/login");
+      }
+    };
+    validateLogin();
     const intervalId = setInterval(() => {
       // rotate the token every 10 minutes
       setAuthToken(refreshToken());
@@ -95,21 +104,16 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
     if (user.loading) return;
 
-    if (user.failed || !isLoggedIn(user)) {
-      window.location.href = "https://keywordsai.co/";
-    }
+    // if (user.failed || !isLoggedIn(user)) {
+    //   window.location.href = "https://keywordsai.co/";
+    // }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
     if (organization.id) {
       // The init state of org is not empty, but the id is null
-      console.log(!onOnboradingPage &&
-        !organization?.onboarded)
-      if (
-        !onOnboradingPage &&
-        !organization?.onboarded
-      ) {
+      if (!onOnboradingPage && !organization?.onboarded) {
         // navigate to onboarding page if user hasn't onboarded
-        console.log("Tried navigating")
+        console.log("Tried navigating");
         navigate("/onboarding");
       }
     }
