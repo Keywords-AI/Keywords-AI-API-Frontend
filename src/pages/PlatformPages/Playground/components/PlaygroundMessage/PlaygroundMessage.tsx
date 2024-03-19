@@ -10,6 +10,7 @@ import {
   OpenAI,
   Pencil,
   Refresh,
+  Remove,
 } from "src/components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { ModelTag, StatusTag, Tag } from "src/components/Misc";
@@ -335,7 +336,7 @@ const MessageHeader = ({
           )}
           <CopyButton text={content} />
           <DotsButton
-            icon={Delete}
+            icon={Remove}
             onClick={(e) => deleteCallback && deleteCallback(e)}
           />
         </div>

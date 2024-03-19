@@ -103,6 +103,7 @@ export const ApiKeyPage = ({
       state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
+  console.log("prevKey", prevKey);
   return (
     <PageContent
       title="API Keys"
