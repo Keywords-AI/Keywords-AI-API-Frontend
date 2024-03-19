@@ -52,7 +52,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const navigate = useNavigate();
   const pages = [
     {
-      value: "Metrics",
+      value: "Metadata",
       buttonVariant: "text" as variantType,
       content: (
         <div
