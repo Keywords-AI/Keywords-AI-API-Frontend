@@ -22,6 +22,7 @@ import {
   RESET_MODEL_OPTIONS,
   RESET_PLAYGROUND,
   DEFAULT_RESET,
+  SET_FOCUS_INDEX,
 } from "../actions/playgroundAction";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
@@ -83,11 +84,14 @@ const initialState = {
   isRightPanelOpen: true,
   selectedLogs: "",
   isReseted: false,
+  focusIndex: 0,
 };
 
 // Reducer
 const playgroundReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_FOCUS_INDEX:
+      return { ...state, focusIndex: action.payload };
     case DEFAULT_RESET:
       return {
         ...state,

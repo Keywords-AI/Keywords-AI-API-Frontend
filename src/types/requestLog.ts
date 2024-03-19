@@ -37,7 +37,7 @@ export type LogItem = {
   token_per_second: number;
   metadata: any;
   organization: string;
-  evlaution: any;
+  evaluations: any;
 };
 
 export type DisplayLogItem = {
@@ -78,7 +78,7 @@ export type LogItemColumn = {
 export type LogItemTag = {
   name: string;
   retrievalKey: keyof DisplayLogItem;
-  renderFunction: (columnValue: any) => React.ReactNode;
+  renderFunction: (columnValue: any, extra?: any) => React.ReactNode;
 };
 
 export type FilterType = LogColumnKey | LogTagKey;

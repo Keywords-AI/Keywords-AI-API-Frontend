@@ -180,7 +180,6 @@ export const updateFilter = (filter: FilterObject) => {
     }
     const state = getState();
     const filters = state.requestLogs.filters;
-    console.log("here");
     dispatch(applyPostFilters(filters));
   };
 };
@@ -255,7 +254,10 @@ export const processRequestLogs = (
         </span>
       ), // + converts string to number
       apiKey: log.api_key,
-      model: log.cached_responses.length > 0 ? "None" : log.model,
+      model: {
+        model: log.cached_responses.length > 0 ? "None" : log.model,
+        routed: log.routing_time > 0,
+      },
       failed: log.failed,
       status: {
         cached: log.cached_responses.length > 0,
@@ -347,6 +349,7 @@ export const filterParamsToFilterObjects = (
 
 export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
+    console.log("getRequestLogs");
     const params = new URLSearchParams(window.location.search);
     if (postData) {
       params.set("page", "1");
