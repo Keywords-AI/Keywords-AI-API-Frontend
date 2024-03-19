@@ -75,6 +75,16 @@ const expiryOptions = [
   },
 ];
 
+const EnvironmentOptions = [
+  {
+    name: "Test",
+    value: "test",
+  },
+  {
+    name: "Prod",
+    value: "prod",
+  },
+];
 const unitOptions = [
   // 'Never' represented by a far future date in the specified format
   {
@@ -157,7 +167,7 @@ const CreateFormNotConnected = React.forwardRef(
       >
         {!apiKey?.apiKey ? (
           <React.Fragment>
-            <div className="grid gap-xs grid-cols-[1fr,160px]">
+            <div className="grid gap-xs grid-cols-[1fr,120px]">
               <TextInput
                 title={"Name"}
                 width={"w-full"}
@@ -168,7 +178,7 @@ const CreateFormNotConnected = React.forwardRef(
                 // onKeyDown={handleEnter}
                 placeholder={"test key 1"}
               />
-              <SelectInput
+              {/* <SelectInput
                 title={"Expiry"}
                 optionsWidth={"w-[160px]"}
                 {...register("expiry_date")}
@@ -179,6 +189,18 @@ const CreateFormNotConnected = React.forwardRef(
                   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
                 }
                 choices={expiryOptions}
+              /> */}
+              <SelectInput
+                title={"Environment"}
+                optionsWidth={"w-[120px]"}
+                {...register("environment")}
+                // onKeyDown={handleEnter}
+                placeholder={"Test"}
+                //This corresponds to the 'Never' option
+                // defaultValue={
+                //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+                // }
+                choices={EnvironmentOptions}
               />
             </div>
             <div className="flex-col justify-center items-start gap-xs self-stretch">
@@ -192,10 +214,10 @@ const CreateFormNotConnected = React.forwardRef(
                 onClick={() => setShowMore((prev) => !prev)}
                 padding="py-xxs"
               />
-              <div className="flex-col items-start justify-center gap-md self-stretch">
+              <div className="flex-col justify-center gap-md self-stretch">
                 {showMore && (
                   <>
-                    <div className="flex items-center gap-xs self-stretch">
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
                       <TextInput
                         title={"Rate limit"}
                         width={"w-full"}
@@ -207,28 +229,44 @@ const CreateFormNotConnected = React.forwardRef(
                       />
                       <SelectInput
                         title={"Unit"}
-                        optionsWidth={"w-[160px]"}
+                        optionsWidth={"w-[120px]"}
                         {...register("unit", {
                           value: currentUnit,
                           onChange: (e) => setCurrentUnit(e.target.value),
                         })}
                         // onKeyDown={handleEnter}
                         placeholder={"per minute"}
-                        width="w-[160px]"
+                        width="w-[120px]"
                         //This corresponds to the 'Never' option
                         choices={unitOptions}
                       />
                     </div>
-                    <TextInput
-                      title={"Spending limit"}
-                      width={"w-full"}
-                      {...register("spending_limit")}
-                      // onKeyDown={handleEnter}
-                      placeholder={"100"}
-                      type="number"
-                      defaultValue={200}
-                      dollarSign
-                    />
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Spending limit"}
+                        width={"w-full"}
+                        {...register("spending_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"100"}
+                        type="number"
+                        defaultValue={200}
+                        dollarSign
+                      />
+                      <SelectInput
+                        title={"Expiry"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("expiry_date")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"Key-1"}
+                        //This corresponds to the 'Never' option
+                        defaultValue={
+                          new Date("3000-12-31T23:59:59Z")
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                        choices={expiryOptions}
+                      />
+                    </div>
                   </>
                 )}
                 <div

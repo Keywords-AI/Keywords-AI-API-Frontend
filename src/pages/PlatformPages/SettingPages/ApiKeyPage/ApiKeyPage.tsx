@@ -60,7 +60,7 @@ export const ApiKeyPage = ({
   const navigate = useNavigate();
   const editingTrigger = (key: ApiKey, active: boolean) => {
     return (
-      <div className="flex-row w-full justify-end gap-xxs">
+      <div className="flex-row w-full justify-end items-center gap-xxs">
         <StateTag text={active ? "Active" : "Expired"} ok={active} />
         <APIKeyActions
           modifyingKey={key}

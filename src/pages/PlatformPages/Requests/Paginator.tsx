@@ -63,7 +63,7 @@ export const Paginator = () => {
           headLess
           padding="px-xxs py-xxxs"
           gap="gap-xxs"
-          textColor="text-gray-5"
+          // textColor="text-gray-5"
           icon={Down}
           defaultValue={"100"}
           {...register("page_size")}
