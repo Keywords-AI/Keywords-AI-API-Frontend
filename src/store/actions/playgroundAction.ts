@@ -42,7 +42,13 @@ export const SET_MODEL_LOG_DATA = "SET_MODEL_LOG_DATA";
 export const RESET_MODEL_OPTIONS = "RESET_MODEL_OPTIONS";
 export const RESET_PLAYGROUND = "RESET_PLAYGROUND";
 export const DEFAULT_RESET = "DEFAULT_RESET";
+export const SET_FOCUS_INDEX = "SET_FOCUS_INDEX";
+
 // Action Creator
+export const setFocusIndex = (index) => ({
+  type: SET_FOCUS_INDEX,
+  payload: index,
+});
 export const defaultReset = () => ({
   type: DEFAULT_RESET,
 });

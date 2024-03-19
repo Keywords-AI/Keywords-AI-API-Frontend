@@ -340,21 +340,23 @@ export const MetricPane = ({}) => {
       </div>
       <Divider />
       {logItem?.metadata && Object.keys(logItem?.metadata || {}).length > 0 && (
-        <Accordion
-          className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md "
-          defaultOpen
-          content={{
-            trigger: (
-              <div className="text-sm-md text-gray-4">Custom metadata</div>
-            ),
-            triggerClassName: "",
-            content: <MetadataPane />,
-            contentClassName: "flex-col items-start gap-sm self-stretch",
-          }}
-        />
+        <>
+          <Accordion
+            className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md"
+            defaultOpen
+            content={{
+              trigger: (
+                <div className="text-sm-md text-gray-4">Custom metadata</div>
+              ),
+              triggerClassName: "flex flex-1 items-center gap-xxs",
+              content: <MetadataPane />,
+              contentClassName: "flex-col items-start gap-sm self-stretch",
+            }}
+          />
+          <Divider />
+        </>
       )}
 
-      <Divider />
       <Accordion
         className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md "
         defaultOpen
@@ -362,7 +364,7 @@ export const MetricPane = ({}) => {
           trigger: (
             <div className="text-sm-md text-gray-4">Request parameters</div>
           ),
-          triggerClassName: "",
+          triggerClassName: "flex flex-1 items-center gap-xxs",
           content: <RequestParams {...logItem?.full_request} />,
           contentClassName: "flex-col items-start gap-sm self-stretch",
         }}

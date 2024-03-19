@@ -38,7 +38,7 @@ export const APIKeyActions = ({
         //     icon={Dots}
         //     onClick={() => setOpen(true)}
         // />
-        <DotsButton onClick={() => setOpen(true)} />
+        <DotsButton onClick={() => setOpen(true)} active={open} />
       }
       width="min-w-0"
       open={open}
