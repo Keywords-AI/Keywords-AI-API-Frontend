@@ -43,7 +43,7 @@ export const deleteWebhook = (webhook: Webhook) => {
         const webhookId = webhook.id;
         dispatch({ type: DELETE_WEBHOOK, payload: webhook });
         try {
-            const responseJson = await keywordsRequest({method:"DELETE", path: `user/webhook/${webhookId}`, dispatch});
+            const responseJson = await keywordsRequest({method:"DELETE", path: `user/webhook/${webhookId}/`, dispatch});
             dispatch(dispatchNotification({ title: "Webhook deleted successfully!" }));
         } catch (e) {
             console.error(e);
@@ -53,7 +53,7 @@ export const deleteWebhook = (webhook: Webhook) => {
 
 export const editWebhook = (webhook: any) => {
     return async (dispatch: TypedDispatch) => {
-        const responseJson = await keywordsRequest({method:"PATCH", path: `user/webhook/${webhook.id}`, data: webhook, dispatch});
+        const responseJson = await keywordsRequest({method:"PATCH", path: `user/webhook/${webhook.id}/`, data: webhook, dispatch});
         dispatch({ type: EDIT_WEBHOOK, payload: responseJson });
     };
 }
