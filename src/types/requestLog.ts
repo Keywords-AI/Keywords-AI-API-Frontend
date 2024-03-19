@@ -22,11 +22,7 @@ export type LogItem = {
   time_to_first_token: number;
   aggregation_data: any;
   organization_key__name: string;
-  sentiment_analysis: {
-    sentiment_score: number;
-    // sentiment_magnitude: mag,
-    language: string;
-  };
+  sentiment_analysis: any;
   cached_responses: any[];
   error_code: number;
   routing_time: number;
@@ -37,7 +33,19 @@ export type LogItem = {
   token_per_second: number;
   metadata: any;
   organization: string;
-  evaluations: any;
+  evaluations: {
+    answer_relevance?: any;
+    context_precision?: any;
+    faithfulness?: any;
+    flesch_kincaid?: any;
+    sentiment_analysis?: {
+      sentiment_score: number;
+      sentiment_magnitude: number;
+      language: string;
+    }
+    // sentiment_magnitude: mag,
+    language: string;
+  };
 };
 
 export type DisplayLogItem = {

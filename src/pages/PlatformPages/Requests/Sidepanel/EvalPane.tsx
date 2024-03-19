@@ -21,40 +21,40 @@ export default function EvalPane({}: Props) {
   );
   const contextPrecision = isNaN(
     parseFloat(
-      logItem?.evaluations.context_precision?.LLM_based_context_precision
+      logItem?.evaluations?.context_precision?.LLM_based_context_precision
     )
   )
     ? null
     : parseFloat(
-        logItem?.evaluations.context_precision?.LLM_based_context_precision
+        logItem?.evaluations?.context_precision?.LLM_based_context_precision
       );
 
   const faithfulness = isNaN(
-    parseFloat(logItem?.evaluations.faithfulness?.LLM_based_faithfulness)
+    parseFloat(logItem?.evaluations?.faithfulness?.LLM_based_faithfulness)
   )
     ? null
     : parseFloat(logItem?.evaluations.faithfulness?.LLM_based_faithfulness);
 
   const readability = isNaN(
-    parseFloat(logItem?.evaluations.flesch_kincaid?.flesch_reading_ease)
+    parseFloat(logItem?.evaluations?.flesch_kincaid?.flesch_reading_ease)
   )
     ? null
-    : parseFloat(logItem?.evaluations.flesch_kincaid?.flesch_reading_ease);
+    : parseFloat(logItem?.evaluations?.flesch_kincaid?.flesch_reading_ease);
 
   const relevance = isNaN(
     parseFloat(
-      logItem?.evaluations.answer_relevance?.LLM_based_answer_relevance
+      logItem?.evaluations?.answer_relevance?.LLM_based_answer_relevance
     )
   )
     ? null
     : parseFloat(
-        logItem?.evaluations.answer_relevance?.LLM_based_answer_relevance
+        logItem?.evaluations?.answer_relevance?.LLM_based_answer_relevance
       );
   const sentiment = isNaN(
-    parseFloat(logItem?.evaluations.sentiment_analysis.sentiment_score)
+    parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score)
   )
     ? null
-    : parseFloat(logItem?.evaluations.sentiment_analysis.sentiment_score);
+    : parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score);
 
   const topics = ["topic1", "topic2"];
   const displayObj = [
