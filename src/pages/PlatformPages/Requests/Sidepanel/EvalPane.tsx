@@ -55,7 +55,7 @@ export default function EvalPane({}: Props) {
   )
     ? null
     : parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score);
-
+  const cost = logItem?.evaluations?.cost;
   const topics = ["topic1", "topic2"];
   const displayObj = [
     {
@@ -158,7 +158,7 @@ export default function EvalPane({}: Props) {
   ];
   return (
     <>
-      <div className=" flex-col pt-[18px] pb-sm px-lg items-start gap-xs self-stretch">
+      <div className=" flex-col pt-[18px] pb-sm px-lg items-start gap-xs self-stretch outline-none">
         {displayObj.map((obj, index) => {
           return (
             <div
@@ -189,6 +189,13 @@ export default function EvalPane({}: Props) {
             </div>
           );
         })}
+      </div>
+      <Divider />
+      <div className="flexcol py-sm px-lg items-start gap-xxxs self-stretch">
+        <div className="flex h-[24px] justify-between items-center self-stretch">
+          <div className="text-sm-md text-gray-5">{"Eval cost"}</div>
+          <p className="text-sm-regular text-gray-4">${cost?.toFixed(4)}</p>
+        </div>
       </div>
     </>
   );

@@ -31,7 +31,7 @@ const defaultRequestLogColumns: LogColumnKey[] = [
   "prompt",
   "response",
   "cost",
-  "latency",
+  "time_to_first_token",
   "allTokens",
   "apiKey",
   "model",

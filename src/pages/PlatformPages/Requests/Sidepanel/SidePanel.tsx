@@ -16,6 +16,7 @@ import {
   Copy,
   IconPlayground,
   Info,
+  Pencil,
 } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
@@ -113,14 +114,14 @@ export const SidePanel = ({ open }: SidePanelProps) => {
 
   useEffect(() => {
     if (logItem?.prompt_messages?.length === 0) {
-      if (tab === "Log") setTab("Metrics");
+      if (tab === "Log") setTab("Metadata");
     }
     if (
       logItem?.evaluations &&
       typeof logItem?.evaluations === "object" &&
       Object.keys(logItem?.evaluations).length === 0
     ) {
-      if (tab === "Eval") setTab("Metrics");
+      if (tab === "Eval") setTab("Metadata");
     }
 
     if (tab === "Log") enableScope("request_sidepanel_log");
@@ -132,7 +133,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   useHotkeys(
     "V",
     () => {
-      if (tab === "Log" || tab === "Metadata") dispatch(setJsonMode(!jsonMode));
+      if (tab === "Log") dispatch(setJsonMode(!jsonMode));
     },
     {
       scopes: "request_sidepanel_log",
@@ -232,6 +233,15 @@ export const SidePanel = ({ open }: SidePanelProps) => {
             />
           </div>
         </Tooltip>
+      )}
+      {tab == "Eval" && (
+        <DotsButton
+          icon={Pencil}
+          onClick={() => {
+            dispatch(RestorePlaygroundStateFromLog());
+            navigate("/platform/api/evaluations");
+          }}
+        />
       )}
     </div>
   );
