@@ -68,6 +68,7 @@ export function FilterPanel() {
   }, [displayProperties]);
   useEffect(() => {
     enableScope("request_log");
+    setQueryParams({ sort_by: "-timestamp" }, navigate);
     return () => {
       disableScope("request_log");
     };
@@ -110,7 +111,7 @@ export function FilterPanel() {
       <div className={"flex flex-col gap-xxs items-end"}>
         <div className="flex flex-col items-start gap-xs self-stretch">
           <div className="flex flex-col items-start gap-xs self-stretch">
-            <div className="flex justify-between items-center self-stretch ">
+            {/* <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Grouping</span>
               <SelectInput
                 useShortCut
@@ -145,7 +146,7 @@ export function FilterPanel() {
                   }
                 }}
               />
-            </div>
+            </div> */}
             <div className="flex justify-between items-center self-stretch ">
               <span className="text-sm-regular text-gray-4">Ordering</span>
               <SelectInput
@@ -157,15 +158,29 @@ export function FilterPanel() {
                 gap="gap-xxs"
                 backgroundColor="bg-gray-2"
                 width="min-w-[140px]"
-                optionsWidth="w-[120px]"
-                defaultValue={user.sort_by || ""}
+                optionsWidth="w-[180px]"
+                defaultValue={user.sort_by || "-timestamp"}
                 choices={[
                   // Value will be the db column name of request log
-                  { name: "Default", value: "", secText: "1" },
-                  { name: "Date", value: "-timestamp", secText: "2" },
-                  { name: "Cost", value: "-cost", secText: "3" },
-                  { name: "Latency", value: "-latency", secText: "4" },
-                  { name: "TTFT", value: "-time_to_first_token", secText: "5" },
+                  { name: "Default", value: "-timestamp", secText: "1" },
+                  { name: "Cost", value: "-cost", secText: "2" },
+                  { name: "TTFT", value: "-time_to_first_token", secText: "3" },
+                  { name: "Generation time", value: "-latency", secText: "4" },
+                  // {
+                  //   name: "Input tokens",
+                  //   value: "-input_tokens",
+                  //   secText: "5",
+                  // },
+                  // {
+                  //   name: "Output tokens",
+                  //   value: "-output_tokens",
+                  //   secText: "6",
+                  // },
+                  // {
+                  //   name: "All tokens",
+                  //   value: "-all_tokens",
+                  //   secText: "7",
+                  // },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;

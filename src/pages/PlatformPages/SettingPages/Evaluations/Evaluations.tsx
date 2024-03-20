@@ -30,15 +30,15 @@ export default function Evaluations({}: Props) {
       </PageParagraph> */}
       <PageParagraph
         heading={"Pre-built evaluations"}
-        subheading={
-          <div>
-            Read the{" "}
-            <a className="text-primary" href="https://docs.keywordsai.co/">
-              documentation
-            </a>{" "}
-            on eval metrics.
-          </div>
-        }
+        // subheading={
+        //   <div>
+        //     Read the{" "}
+        //     <a className="text-primary hover:text-primary-2 cursor-pointer" href="https://docs.keywordsai.co/">
+        //       documentation
+        //     </a>{" "}
+        //     on eval metrics.
+        //   </div>
+        // }
       >
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
@@ -51,7 +51,7 @@ export default function Evaluations({}: Props) {
                 {...(EvalData.contextPrecision as any)}
                 updatedTime={new Date()}
                 model={orgnization?.context_precision_eval?.model || "auto"}
-                selected={orgnization?.context_precision_eval?.metrics}
+                selected={orgnization?.context_precision_eval?.metric}
                 isEnable={orgnization?.context_precision_eval?.enabled || false}
                 evalName="context_precision_eval"
               />
@@ -74,7 +74,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.faithfulness as any)}
                   updatedTime={new Date()}
                   model={orgnization?.faithfulness_eval?.model || "auto"}
-                  selected={orgnization?.faithfulness_eval?.metrics}
+                  selected={orgnization?.faithfulness_eval?.metric}
                   isEnable={orgnization?.faithfulness_eval?.enabled || false}
                   evalName="faithfulness_eval"
                 />
@@ -82,7 +82,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
                   model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                  selected={orgnization?.flesch_kincaid_eval?.metrics}
+                  selected={orgnization?.flesch_kincaid_eval?.metric}
                   isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
                   evalName="flesch_kincaid_eval"
                 />
@@ -91,7 +91,7 @@ export default function Evaluations({}: Props) {
                   {...(EvalData.answerRelevance as any)}
                   updatedTime={new Date()}
                   model={orgnization?.answer_relevance_eval?.model || "auto"}
-                  selected={orgnization?.answer_relevance_eval?.metrics}
+                  selected={orgnization?.answer_relevance_eval?.metric}
                   isEnable={
                     orgnization?.answer_relevance_eval?.enabled || false
                   }
@@ -113,7 +113,7 @@ export default function Evaluations({}: Props) {
                 {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
                 model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                selected={orgnization?.sentiment_analysis_eval?.metrics}
+                selected={orgnization?.sentiment_analysis_eval?.metric}
                 isEnable={
                   orgnization?.sentiment_analysis_eval?.enabled || false
                 }

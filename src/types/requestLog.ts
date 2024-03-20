@@ -19,14 +19,11 @@ export type LogItem = {
   category: string;
   organization_key: string; // The ID of the key
   api_key: string;
+  tokens_per_second: number;
   time_to_first_token: number;
   aggregation_data: any;
   organization_key__name: string;
-  sentiment_analysis: {
-    sentiment_score: number;
-    // sentiment_magnitude: mag,
-    language: string;
-  };
+  sentiment_analysis: any;
   cached_responses: any[];
   error_code: number;
   routing_time: number;
@@ -37,7 +34,20 @@ export type LogItem = {
   token_per_second: number;
   metadata: any;
   organization: string;
-  evlaution: any;
+  evaluations: {
+    cost: number;
+    answer_relevance?: any;
+    context_precision?: any;
+    faithfulness?: any;
+    flesch_kincaid?: any;
+    sentiment_analysis?: {
+      sentiment_score: number;
+      sentiment_magnitude: number;
+      language: string;
+    };
+    // sentiment_magnitude: mag,
+    language: string;
+  };
 };
 
 export type DisplayLogItem = {
@@ -51,6 +61,8 @@ export type DisplayLogItem = {
   time_to_first_token: number;
   outputTokens: number;
   allTokens: React.ReactNode;
+  tokens_per_output_token: number;
+  tokens_per_second: number;
   organizationKey: string; //ID of the key
   apiKey: string;
   model: string;
@@ -78,7 +90,7 @@ export type LogItemColumn = {
 export type LogItemTag = {
   name: string;
   retrievalKey: keyof DisplayLogItem;
-  renderFunction: (columnValue: any) => React.ReactNode;
+  renderFunction: (columnValue: any, extra?: any) => React.ReactNode;
 };
 
 export type FilterType = LogColumnKey | LogTagKey;

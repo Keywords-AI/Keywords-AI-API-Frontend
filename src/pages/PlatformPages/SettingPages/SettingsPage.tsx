@@ -46,6 +46,9 @@ export const SettingPage = ({
     if (currName != organization?.name) {
       setOrgName(data.name || organization?.name);
       updateOrganization(data);
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
     }
   };
 
@@ -68,6 +71,7 @@ export const SettingPage = ({
     >
       <PageParagraph heading="General">
         <form
+          action="https://api.keywordsai.co/hello"
           className="flex-col gap-sm items-start self-stretch"
           onSubmit={handleSubmit(onSubmit)}
         >

@@ -139,6 +139,7 @@ export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
     const postData = processFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
+    console.log("applyPostFilters");
     dispatch(getRequestLogs(postData));
   };
 };
@@ -180,7 +181,6 @@ export const updateFilter = (filter: FilterObject) => {
     }
     const state = getState();
     const filters = state.requestLogs.filters;
-    console.log("here");
     dispatch(applyPostFilters(filters));
   };
 };
@@ -231,7 +231,9 @@ export const processRequestLogs = (
           {concatMessages([log.completion_message])}
         </span>
       ),
+      tokens_per_output_token: (1 / log.tokens_per_second).toFixed(3),
       promptTokens: log.prompt_tokens,
+      tokens_per_second: log.tokens_per_second.toFixed(3),
       time_to_first_token:
         log.time_to_first_token && log.time_to_first_token != -1 ? (
           <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
@@ -255,7 +257,10 @@ export const processRequestLogs = (
         </span>
       ), // + converts string to number
       apiKey: log.api_key,
-      model: log.cached_responses.length > 0 ? "None" : log.model,
+      model: {
+        model: log.cached_responses.length > 0 ? "None" : log.model,
+        routed: log.routing_time > 0,
+      },
       failed: log.failed,
       status: {
         cached: log.cached_responses.length > 0,
@@ -347,6 +352,7 @@ export const filterParamsToFilterObjects = (
 
 export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
+    console.log("getRequestLogs");
     const params = new URLSearchParams(window.location.search);
     if (postData) {
       params.set("page", "1");
@@ -390,9 +396,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
 export const updateLog = (id) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
-
-    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    // dispatch(getRequestLogs());
 
     dispatch(
       setselectRequestContent(

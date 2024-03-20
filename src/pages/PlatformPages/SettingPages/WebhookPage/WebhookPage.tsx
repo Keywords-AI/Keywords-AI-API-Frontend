@@ -34,8 +34,8 @@ export function WebhookPage() {
             <span>
               Read the{" "}
               <a
-                className="text-primary cursor-pointer"
-                href="https://docs.keywordsai.co/"
+                className="text-primary hover:text-primary-2 cursor-pointer"
+                href="https://docs.keywordsai.co/api-features/webhooks"
               >
                 documentation
               </a>{" "}

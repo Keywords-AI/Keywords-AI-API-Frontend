@@ -40,7 +40,7 @@ const pages: PreProcessPage[] = [
   //   page: <IntegrationsPage />,
   // },
   // {
-  //   title: "Model Router",
+  //   title: "Model Router"
   //   forOrgAdmin: true,
   //   page: <ModelRouterPage />,
   // },

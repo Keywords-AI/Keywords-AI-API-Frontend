@@ -34,7 +34,7 @@ export const WebhookActions = ({
       sideOffset={8}
       align="end"
       trigger={
-        <DotsButton onClick={() => setOpen(true)} />
+        <DotsButton onClick={() => setOpen(true)} active={open} />
       }
       width="min-w-0"
       open={open}

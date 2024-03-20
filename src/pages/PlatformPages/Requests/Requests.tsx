@@ -82,7 +82,31 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
 }) => {
   const { enableScope, disableScope } = useHotkeysContext();
   useEffect(() => {
-    getRequestLogs();
+    enableScope("dashboard");
+    return () => {
+      disableScope("dashboard");
+    };
+  }, []);
+  const [start, setStart] = useState<boolean>(false);
+  const [smallstart, setSmallStart] = useState<boolean>(false);
+  useHotkeys(
+    "f",
+    () => {
+      if (loading) return;
+      if (filters.length > 0) {
+        // if (start === true && smallstart === false) return;
+        setSmallStart((prev) => !prev);
+      } else {
+        setStart((prev) => !prev);
+      }
+    },
+    {
+      scopes: "dashboard",
+      preventDefault: true,
+    }
+  );
+  useEffect(() => {
+    // getRequestLogs();
     if (!selectedRequest) {
       setSelectedRequest(requestLogs?.[0]?.id);
     }
@@ -148,7 +172,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           <div className="flex flex-row items-center gap-xxxs">
             {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
 
-            {<FilterActions type="filter" />}
+            {
+              <FilterActions
+                type="filter"
+                start={start}
+                setStart={setStart}
+                hidden={filters.length > 0}
+              />
+            }
             {filters.length > 0 && !loading && (
               <React.Fragment>
                 <Tooltip
@@ -185,7 +216,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {/* {<FilterActions type="add" />} */}
+                {
+                  <FilterActions
+                    type="add"
+                    start={smallstart}
+                    setStart={setSmallStart}
+                    hidden={filters.length == 0}
+                  />
+                }
               </React.Fragment>
             }
           </div>
