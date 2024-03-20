@@ -182,13 +182,13 @@ export const Table = () => {
     .map((_, index) => (
       <div
         key={index}
-        className="px-lg py-xxs grid gap-x-sm bg-gray-1"
+        className="px-lg py-xxs grid gap-x-sm bg-gray-1 w-full"
         style={{
           gridTemplateColumns: templateString,
         }}
       >
         <SkeletonTheme baseColor="#1E1E23" highlightColor="#23232B">
-          {Array(8)
+          {Array(templateString.split(" ").length)
             .fill(null)
             .map((_, idx) => (
               <Skeleton duration={3} key={idx} className="h-[24px]" />

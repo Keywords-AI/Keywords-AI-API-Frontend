@@ -91,6 +91,8 @@ export function EditModal({
     <Modal
       open={open}
       setOpen={(open) => {
+        setIsEnableState(isEnable);
+        setCurrentMetric(selectedMetric);
         setOpen(open);
       }}
       trigger={trigger}

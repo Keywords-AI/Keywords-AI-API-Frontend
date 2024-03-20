@@ -37,20 +37,23 @@ import { toggleRightPanel } from "src/store/actions";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Table } from "./components/Table/Table";
 import { Paginator } from "../Requests/Paginator";
+import { LoadingComponent } from "src/components/LoadingPage";
+import { setQueryParams } from "src/utilities/navigation";
 
 type Props = {};
 
 export default function UsersPage({}: Props) {
   const dispatch = useTypedDispatch();
-  useEffect(() => {
-    dispatch(getUsersLogData());
-  }, []);
+
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
   );
   const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
-  const total_users = useTypedSelector((state) => state.usersPage.aggregationData.total_users);
-  console.log("total",total_users);
+  useEffect(() => {
+    console.log("fetching user data");
+    dispatch(getUsersLogData());
+  }, []);
+
   return (
     <div
       className={cn(
@@ -59,7 +62,7 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
-      {total_users === 0 ? (
+      {isEmpty ? (
         <EmptyState />
       ) : (
         <>

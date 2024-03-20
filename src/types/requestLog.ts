@@ -35,7 +35,7 @@ export type LogItem = {
   metadata: any;
   organization: string;
   evaluations: {
-    cost: number;
+    evaluation_cost: any;
     answer_relevance?: any;
     context_precision?: any;
     faithfulness?: any;
@@ -45,6 +45,7 @@ export type LogItem = {
       sentiment_magnitude: number;
       language: string;
     };
+    topic_analysis: any;
     // sentiment_magnitude: mag,
     language: string;
   };
