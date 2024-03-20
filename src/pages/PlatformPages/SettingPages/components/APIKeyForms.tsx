@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "src/components/Dialogs";
 import cn from "src/utilities/classMerge";
 import { useTypedSelector } from "src/store/store";
+import Accordion from "src/components/Sections/Accordion/Accordion";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -136,7 +137,7 @@ const CreateFormNotConnected = React.forwardRef(
     } = useForm();
     const onSubmit = (data) => {
       const name = data.name || "New Key";
-      data.name = name
+      data.name = name;
       setNewKeyName!(name);
       if (!showMore) {
         createApiKey!(data);
@@ -204,8 +205,73 @@ const CreateFormNotConnected = React.forwardRef(
                 choices={EnvironmentOptions}
               />
             </div>
+            <Accordion
+              className={
+                "flex-col justify-center items-start gap-xs self-stretch"
+              }
+              // value={accordion2}
+              // onValueChange={setAccordion2}
+              content={{
+                trigger: "More options",
+                content: (
+                  <div className="flex-col justify-center gap-md self-stretch">
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Rate limit"}
+                        width={"w-full"}
+                        {...register("rate_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"None"}
+                        type="number"
+                        pseudoElementClass="special-input"
+                      />
+                      <SelectInput
+                        title={"Unit"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("unit", {
+                          value: currentUnit,
+                          onChange: (e) => setCurrentUnit(e.target.value),
+                        })}
+                        // onKeyDown={handleEnter}
+                        placeholder={"per minute"}
+                        width="w-[120px]"
+                        //This corresponds to the 'Never' option
+                        choices={unitOptions}
+                      />
+                    </div>
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Spending limit"}
+                        width={"w-full"}
+                        {...register("spending_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"100"}
+                        type="number"
+                        defaultValue={200}
+                        dollarSign
+                      />
+                      <SelectInput
+                        title={"Expiry"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("expiry_date")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"Key-1"}
+                        //This corresponds to the 'Never' option
+                        defaultValue={
+                          new Date("3000-12-31T23:59:59Z")
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                        choices={expiryOptions}
+                      />
+                    </div>
+                  </div>
+                ),
+                contentClassName: "flex-col justify-center gap-md self-stretch",
+              }}
+            />
             <div className="flex-col justify-center items-start gap-xs self-stretch">
-              <Button
+              {/* <Button
                 icon={showMore ? Up : Down}
                 variant="text"
                 type="button"
@@ -214,9 +280,9 @@ const CreateFormNotConnected = React.forwardRef(
                 iconSize="xxs"
                 onClick={() => setShowMore((prev) => !prev)}
                 padding="py-xxs"
-              />
+              /> */}
               <div className="flex-col justify-center gap-md self-stretch">
-                {showMore && (
+                {/* {showMore && (
                   <>
                     <div className="grid gap-xs grid-cols-[1fr,120px]">
                       <TextInput
@@ -269,7 +335,7 @@ const CreateFormNotConnected = React.forwardRef(
                       />
                     </div>
                   </>
-                )}
+                )} */}
                 <div
                   className={cn(
                     "flex-row self-stretch items-center",
@@ -479,17 +545,58 @@ const EditFormNotConnected = ({
             choices={expiryOptions}
           />
         </div>
+        <Accordion
+          className={"flex-col justify-center items-start gap-xs self-stretch"}
+          // value={accordion2}
+          // onValueChange={setAccordion2}
+          content={{
+            trigger: "More options",
+            content: (
+              <div className="flex-col justify-center gap-md self-stretch">
+                <div className="grid gap-xs grid-cols-[1fr,120px]">
+                  <TextInput
+                    title={"Rate limit"}
+                    width={"w-full"}
+                    {...register("rate_limit")}
+                    // onKeyDown={handleEnter}
+                    placeholder={"None"}
+                    type="number"
+                    defaultValue={editingKey?.rate_limit}
+                    pseudoElementClass="special-input"
+                  />
+                  <SelectInput
+                    title={"Unit"}
+                    optionsWidth={"w-[120px]"}
+                    {...register("unit", {
+                      value: currentUnit,
+                      onChange: (e) => setCurrentUnit(e.target.value),
+                    })}
+                    // onKeyDown={handleEnter}
+                    placeholder={"per minute"}
+                    width="w-[120px]"
+                    //This corresponds to the 'Never' option
+                    choices={unitOptions}
+                  />
+                </div>
+
+                <TextInput
+                  title={"Spending limit"}
+                  width={"w-full"}
+                  {...register("spending_limit")}
+                  // onKeyDown={handleEnter}
+                  placeholder={"100"}
+                  type="number"
+                  dollarSign
+                  defaultValue={editingKey?.spending_limit}
+                />
+              </div>
+            ),
+            contentClassName: "flex-col justify-center gap-md self-stretch",
+          }}
+        />
         <div className="flex-col justify-center items-start gap-xs self-stretch">
-          <Button
-            icon={Down}
-            variant="text"
-            type="button"
-            text="More options"
-            onClick={() => setShowMore((prev) => !prev)}
-            padding="py-xxxs"
-          />
           <div className="flex-col items-start justify-center gap-md self-stretch">
-            {showMore && (
+            {/* {showMore && (
               <>
                 <div className="flex items-center gap-xs self-stretch">
                   <TextInput
@@ -527,7 +634,7 @@ const EditFormNotConnected = ({
                   defaultValue={editingKey?.spending_limit}
                 />
               </>
-            )}
+            )} */}
             <div
               className={cn(
                 "flex-row self-stretch items-center",

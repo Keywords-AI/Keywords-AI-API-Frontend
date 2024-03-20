@@ -84,6 +84,35 @@ export default function EvalPane({}) {
           <p className="text-sm-regular text-gray-4">N/A</p>
         ),
     },
+
+    {
+      key: "Relevance",
+      // tooltip:
+      //   "Consistency of the generated answer based on the reference ground truth answers.",
+      value:
+        relevance != null || relevance != undefined ? (
+          <Tag
+            border=""
+            text={relevance.toFixed(2)}
+            textColor={
+              relevance > 0.85
+                ? "text-green"
+                : relevance < 0.65
+                ? "text-red"
+                : "text-yellow"
+            }
+            backgroundColor={
+              relevance > 0.85
+                ? "bg-green/10"
+                : relevance < 0.65
+                ? "bg-red/10"
+                : "bg-yellow/10"
+            }
+          />
+        ) : (
+          <p className="text-sm-regular text-gray-4">N/A</p>
+        ),
+    },
     {
       key: "Readability",
       // tooltip:
@@ -95,22 +124,6 @@ export default function EvalPane({}) {
             text={readability >= 0 ? "Easy" : "Difficult"}
             textColor={readability >= 0 ? "text-green" : "text-red"}
             backgroundColor={readability >= 0 ? "bg-green/10" : "bg-red/10"}
-          />
-        ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
-        ),
-    },
-    {
-      key: "Relevance",
-      // tooltip:
-      //   "Consistency of the generated answer based on the reference ground truth answers.",
-      value:
-        relevance != null || relevance != undefined ? (
-          <Tag
-            border=""
-            text={relevance.toFixed(2)}
-            textColor={"text-yellow"}
-            backgroundColor={"bg-yellow/10"}
           />
         ) : (
           <p className="text-sm-regular text-gray-4">N/A</p>
@@ -134,7 +147,7 @@ export default function EvalPane({}) {
             {topics[0] && topics[0].labels[0] && (
               <Tag
                 border=""
-                text={topics[0].labels[0].toString()}
+                text={topics[0].labels[0].split("/")[1]}
                 textColor={"text-mint"}
                 backgroundColor={"bg-mint/10"}
               />
@@ -143,7 +156,7 @@ export default function EvalPane({}) {
             {topics[1] && topics[1].labels[0] && (
               <Tag
                 border=""
-                text={topics[1].labels[0].toString()}
+                text={topics[1].labels[0].split("/")[1]}
                 textColor={"text-purple"}
                 backgroundColor={"bg-purple/10"}
               />
