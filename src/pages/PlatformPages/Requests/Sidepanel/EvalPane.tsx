@@ -48,7 +48,7 @@ export default function EvalPane({}) {
   )
     ? null
     : parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score);
-  const cost = logItem?.evaluations?.evaluation_cost || logItem.evaluation_cost;
+  const cost = logItem.evaluation_cost;
   const topics = logItem?.evaluations?.topic_analysis?.results || [];
   const displayObj = [
     {
