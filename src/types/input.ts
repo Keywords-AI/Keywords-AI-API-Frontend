@@ -72,6 +72,7 @@ export type TextInputProps = {
   placeholder?: string;
   disabled?: boolean;
   width?: string;
+  height?: string;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   action?: React.ReactNode;
   defaultValue?: string | number | readonly string[] | undefined;

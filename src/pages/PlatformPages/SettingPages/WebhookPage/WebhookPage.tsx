@@ -36,6 +36,8 @@ export function WebhookPage() {
               <a
                 className="text-primary hover:text-primary-2 cursor-pointer"
                 href="https://docs.keywordsai.co/api-features/webhooks"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 documentation
               </a>{" "}

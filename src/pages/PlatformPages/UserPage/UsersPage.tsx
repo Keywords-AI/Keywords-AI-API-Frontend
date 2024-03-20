@@ -49,11 +49,18 @@ export default function UsersPage({}: Props) {
     (state) => state.usersPage.sidepanel
   );
   const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
+<<<<<<< HEAD
   useEffect(() => {
     console.log("fetching user data");
     dispatch(getUsersLogData());
   }, []);
 
+=======
+  const total_users = useTypedSelector(
+    (state) => state.usersPage.aggregationData.total_users
+  );
+  console.log("total", total_users);
+>>>>>>> main
   return (
     <div
       className={cn(
@@ -62,9 +69,13 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
+<<<<<<< HEAD
       {isEmpty ? (
         <EmptyState />
       ) : (
+=======
+      {total_users !== 0 ? (
+>>>>>>> main
         <>
           <TopBar />
           <div className="flex flex-1 self-stretch">
@@ -72,6 +83,8 @@ export default function UsersPage({}: Props) {
             {isSidePanelOpen && <SidePanel />}
           </div>
         </>
+      ) : (
+        <EmptyState />
       )}
     </div>
   );
