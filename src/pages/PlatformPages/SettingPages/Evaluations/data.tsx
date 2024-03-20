@@ -40,8 +40,9 @@ export const EvalData = {
           <strong className="text-sm-md text-gray-5">
             LLM-based Faithfulness
           </strong>{" "}
-          is where LLM is prompted to evaluate the whole Generated Answer and
-          outputs a judgement of 1.0 or 0.0.
+          is where LLM is prompted to evaluate the faithfulness of each
+          statement in the generated answer and output an average score between
+          0.0 and 1.0.
         </p>
         <br />
         <p>
@@ -106,7 +107,8 @@ export const EvalData = {
       llm: `LLM_based_faithfulness: 0.0
         LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
       rouge: `rouge_faithfulness: 0.5`,
-      token: `token_overlap_faithfulness: 0.5`,
+      token: `LLM_based_faithfulness: 0.5,
+      LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
       bleu: `bleu_faithfulness': 0.37`,
     },
   },
