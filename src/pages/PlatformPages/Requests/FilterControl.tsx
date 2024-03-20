@@ -9,12 +9,14 @@ import {
   Close,
 } from "src/components/Icons";
 import { Button, IconButton, SwitchButton } from "src/components/Buttons";
-import { useTypedSelector, useTypedDispatch } from "src/store/store";
+import store, { useTypedSelector, useTypedDispatch } from "src/store/store";
 import {
   getRequestLogs,
   addFilter,
   setCurrentFilter,
   setFilters,
+  updateFilter,
+  deleteFilter,
 } from "src/store/actions";
 import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -33,9 +35,9 @@ export default function FilterControl() {
   const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const urlParams = new URLSearchParams(location.search)
+  const urlParams = new URLSearchParams(location.search);
   const timeRange = urlParams.get("time_range_type");
-  const is_test = urlParams.get("is_test") === "true"? true:false;
+  const is_test = urlParams.get("is_test") === "true" ? true : false;
   const currentMetric = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.metric
   );
@@ -114,25 +116,27 @@ export default function FilterControl() {
     }) !== undefined;
   const inputRef = useRef<HTMLInputElement>(null);
   const [hoverTestMode, setHoverTestMode] = useState(false);
-  
+
   return (
     <div className="flex flex-row gap-xxs items-center">
-      <div className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer" 
-      onMouseEnter={() => setHoverTestMode(true)}
-      onMouseLeave={() => setHoverTestMode(false)}
-      onClick={()=>{
-        setQueryParams({is_test: !is_test}, navigate);
-        dispatch(getRequestLogs())
-      }}
+      <div
+        className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
+        onMouseEnter={() => setHoverTestMode(true)}
+        onMouseLeave={() => setHoverTestMode(false)}
+        onClick={() => {
+          setQueryParams({ is_test: !is_test }, navigate);
+          dispatch(getRequestLogs());
+        }}
       >
-       {!hoverTestMode && <span className="text-gray-4 text-sm-regular">Test mode</span>}
-       {hoverTestMode && <span className="text-gray-5 text-sm-regular">Test mode</span>}
-        <SwitchButton
-        hovered={hoverTestMode}
-        checked={is_test}
-        /> 
+        {!hoverTestMode && (
+          <span className="text-gray-4 text-sm-regular">Test mode</span>
+        )}
+        {hoverTestMode && (
+          <span className="text-gray-5 text-sm-regular">Test mode</span>
+        )}
+        <SwitchButton hovered={hoverTestMode} checked={is_test} />
       </div>
-      <div className="w-[1px] h-[28px] bg-gray-2"></div> 
+      <div className="w-[1px] h-[28px] bg-gray-2"></div>
       <div className="flex-row gap-xxs rounded-xs items-center">
         <TextInputSmall
           placeholder="Search prompt..."
@@ -160,30 +164,58 @@ export default function FilterControl() {
             if (active) {
               // deactivate
 
-              dispatch(setFilters([]));
+              const latestTimeFilter = store
+                .getState()
+                .requestLogs.filters.find(
+                  (item) => item.metric === "timestamp"
+                );
+              if (!latestTimeFilter) return;
+              // dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+              dispatch(deleteFilter(latestTimeFilter.id));
             } else {
               // activate
-              dispatch(
-                setFilters(
-                  filters.filter((filter) => filter.metric !== "timestamp")
-                )
-              );
+
               let today = new Date();
               today.setHours(0, 0, 0, 0);
-              dispatch(
-                addFilter({
-                  metric: "timestamp",
-                  value: [toLocalISOString(today)],
-                  operator: "gte" as Operator,
-                  value_field_type: "datetime-local",
-                  display_name: "Time",
-                  id: Math.random().toString(36).substring(2, 15),
-                })
+              const filters = store.getState().requestLogs.filters;
+              const sameTypeFilter = filters.find(
+                (filter) => filter.metric === "timestamp"
               );
-              dispatch(setCurrentFilter({ metric: undefined, id: "" }));
+              const filterOptions = store.getState().requestLogs.filterOptions;
+              if (sameTypeFilter) {
+                dispatch(
+                  updateFilter({
+                    display_name:
+                      filterOptions["timestamp"]?.display_name ?? "failed",
+                    metric: "timestamp",
+                    operator:
+                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                        ?.value as string) ?? "contains",
+                    value: Array.from(new Set([toLocalISOString(today)])),
+                    id: sameTypeFilter.id,
+                    value_field_type:
+                      filterOptions["timestamp"]?.value_field_type ??
+                      "selection",
+                  })
+                );
+              } else {
+                dispatch(
+                  addFilter({
+                    display_name:
+                      filterOptions["timestamp"]?.display_name ?? "failed",
+                    metric: "timestamp",
+                    operator:
+                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                        ?.value as string) ?? "contains",
+                    value: [toLocalISOString(today)],
+                    id: Math.random().toString(36).substring(2, 15),
+                    value_field_type:
+                      filterOptions["timestamp"]?.value_field_type ??
+                      "selection",
+                  })
+                );
+              }
             }
-
-            // dispatch(getRequestLogs());
           }}
         />
         <FilterPanel />

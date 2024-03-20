@@ -718,8 +718,14 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },
   { name: "TTFT", retrievalKey: "time_to_first_token", width: "64px" },
-  { name: "Latency", retrievalKey: "latency", width: "64px" },
-  { name: "Prompt tokens", retrievalKey: "promptTokens", width: "100px" },
+  { name: "TPOT", retrievalKey: "tokens_per_output_token", width: "64px" },
+  { name: "Generation time", retrievalKey: "latency", width: "100px" },
+  {
+    name: "Speed",
+    retrievalKey: "tokens_per_second",
+    width: "64px",
+  },
+  { name: "Input tokens", retrievalKey: "promptTokens", width: "100px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "100px" },
   { name: "All tokens", retrievalKey: "allTokens", width: "72px" },
 ];
@@ -748,7 +754,7 @@ export const requestLogTagColumns: LogItemTag[] = [
     retrievalKey: "model",
     renderFunction: (data: any) => {
       const { model, routed } = data;
-      return routed? (
+      return routed ? (
         <RoutedModelTag model={model} />
       ) : (
         <ModelTag model={model} />
@@ -786,7 +792,7 @@ export const requestLogTagColumns: LogItemTag[] = [
               border=""
             />
           )}
-          <StatusTag statusCode={errorCode} cached={cached} table={true}/>
+          <StatusTag statusCode={errorCode} cached={cached} table={true} />
         </div>
       );
     },

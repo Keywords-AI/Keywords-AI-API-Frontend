@@ -139,6 +139,7 @@ export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
     const postData = processFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
+    console.log("applyPostFilters");
     dispatch(getRequestLogs(postData));
   };
 };
@@ -230,7 +231,9 @@ export const processRequestLogs = (
           {concatMessages([log.completion_message])}
         </span>
       ),
+      tokens_per_output_token: (1 / log.tokens_per_second).toFixed(3),
       promptTokens: log.prompt_tokens,
+      tokens_per_second: log.tokens_per_second.toFixed(3),
       time_to_first_token:
         log.time_to_first_token && log.time_to_first_token != -1 ? (
           <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
@@ -393,9 +396,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
 export const updateLog = (id) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
-
-    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    // dispatch(getRequestLogs());
 
     dispatch(
       setselectRequestContent(

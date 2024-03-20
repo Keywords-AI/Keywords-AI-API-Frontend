@@ -8,6 +8,8 @@ import { RequestParams } from "./RequestParams";
 
 import Accordion from "src/components/Sections/Accordion/Accordion";
 import MetadataPane from "./MetadataPane";
+import { useEffect, useState } from "react";
+import cn from "src/utilities/classMerge";
 
 export const MetricPane = ({}) => {
   const logItem = useTypedSelector(
@@ -125,10 +127,9 @@ export const MetricPane = ({}) => {
     "Generation time": (
       <span className="text-sm-regular text-gray-4">
         {logItem?.failed ||
-        !logItem?.time_to_first_token ||
-        !logItem?.token_per_second ||
-        logItem?.token_per_second < 0 ||
-        logItem?.time_to_first_token < 0
+        !logItem?.latency ||
+        logItem?.latency < 0 ||
+        logItem?.latency < 0
           ? "-"
           : ((logItem?.latency).toFixed(2) || "-") + "s"}
       </span>
@@ -146,6 +147,8 @@ export const MetricPane = ({}) => {
       </span>
     ),
   };
+  const [accordion1, setAccordion1] = useState("open");
+  const [accordion2, setAccordion2] = useState("open");
   return (
     <>
       {logItem?.failed && (
@@ -342,8 +345,13 @@ export const MetricPane = ({}) => {
       {logItem?.metadata && Object.keys(logItem?.metadata || {}).length > 0 && (
         <>
           <Accordion
-            className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md"
+            className={cn(
+              "flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm ",
+              accordion1 === "open" ? "pb-md" : "pb-sm"
+            )}
             defaultOpen
+            value={accordion1}
+            onValueChange={setAccordion1}
             content={{
               trigger: (
                 <div className="text-sm-md text-gray-4">Custom metadata</div>
@@ -358,8 +366,13 @@ export const MetricPane = ({}) => {
       )}
 
       <Accordion
-        className="flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm pb-md "
+        className={cn(
+          "flex-col items-center justify-center gap-xxs self-stretch px-lg pt-sm ",
+          accordion2 === "open" ? "pb-md" : "pb-sm"
+        )}
         defaultOpen
+        value={accordion2}
+        onValueChange={setAccordion2}
         content={{
           trigger: (
             <div className="text-sm-md text-gray-4">Request parameters</div>
