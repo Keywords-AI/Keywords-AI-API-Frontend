@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import { Check, Divider, Down, Pencil } from "src/components";
-import { Button, CopyButton, DotsButton } from "src/components/Buttons";
+import {
+  Button,
+  CopyButton,
+  DotsButton,
+  SwitchButton,
+} from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import { SelectInputSmall } from "src/components/Inputs";
 import { Tag } from "src/components/Misc/Tag";
@@ -63,7 +68,7 @@ export function EditModal({
     );
     setOpen(false);
   };
-
+  const [hoverTestMode, setHoverTestMode] = React.useState(false);
   const models = [
     {
       name: "Auto-select",
@@ -96,15 +101,35 @@ export function EditModal({
       trigger={trigger}
       title={
         <div className="flex justify-between items-center self-stretch">
-          {title}{" "}
-          <Tag
-            text={isEnableState ? "Enabled" : "Disabled"}
-            border="border-none cursor-pointer"
-            backgroundColor={isEnableState ? "bg-success/10" : "bg-red/10"}
-            textColor={isEnableState ? "text-success" : "text-red"}
-            icon={isEnableState ? <Check fill="fill-success" /> : null}
+          <div className="flex flex-row items-center gap-xxs">
+            {title}{" "}
+            <Tag
+              text={isEnableState ? "Enabled" : "Disabled"}
+              border="border-none cursor-pointer"
+              backgroundColor={isEnableState ? "bg-success/10" : "bg-red/10"}
+              textColor={isEnableState ? "text-success" : "text-red"}
+              icon={isEnableState ? <Check fill="fill-success" /> : null}
+              onClick={() => setIsEnableState((p) => !p)}
+            />
+          </div>
+          <div
+            className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
+            onMouseEnter={() => setHoverTestMode(true)}
+            onMouseLeave={() => setHoverTestMode(false)}
             onClick={() => setIsEnableState((p) => !p)}
-          />
+          >
+            {!hoverTestMode && (
+              <span className="text-gray-4 text-sm-regular">
+                {isEnableState ? "On" : "Off"}{" "}
+              </span>
+            )}
+            {hoverTestMode && (
+              <span className="text-gray-5 text-sm-regular">
+                {isEnableState ? "On" : "Off"}
+              </span>
+            )}
+            <SwitchButton hovered={hoverTestMode} checked={isEnableState} />
+          </div>
         </div>
       }
       subtitle={subtitle}
@@ -191,3 +216,4 @@ export function EditModal({
     </Modal>
   );
 }
+
