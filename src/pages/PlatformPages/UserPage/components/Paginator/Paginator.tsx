@@ -24,12 +24,13 @@ export const Paginator = () => {
   const startRowNumber = (currentPage - 1) * pageSize + 1;
   const endRowNumber =
     currentPage * page_size > count ? count : currentPage * pageSize;
-  useEffect(() => {
-    if (page_size) {
-      setQueryParams({ page_size }, navigate);
-      dispatch(getUsersLogData());
-    }
-  }, [page_size]);
+  // useEffect(() => {
+  //   if (page_size) {
+  //     setQueryParams({ page_size }, navigate);
+  //     dispatch(getUsersLogData());
+  //   }
+  // }, [page_size]);
+
   const hanleNextPage = () => {
     if (next) {
       const params = new URLSearchParams(next.split("?")[1]);

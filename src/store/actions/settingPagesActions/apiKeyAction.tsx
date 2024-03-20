@@ -33,7 +33,7 @@ export const processKey = (
   // const expireDate = new Date(new Date().setDate(new Date().getDate() - 1));  // for testing expired key
 
   let active = true;
-  if (expireDate === "Infinite") {
+  if (expireDate === "Infinite" || key.expiry_date === null) {
     active = true;
   } else if (expireDate < today) {
     active = false;

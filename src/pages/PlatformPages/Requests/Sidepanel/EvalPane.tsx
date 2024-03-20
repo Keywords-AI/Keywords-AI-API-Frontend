@@ -5,19 +5,12 @@ import { useTypedSelector } from "src/store/store";
 import { SentimentTag, Tag } from "src/components/Misc";
 import { Toolbar } from "@radix-ui/react-toolbar";
 import Tooltip from "src/components/Misc/Tooltip";
-import {
-  backgroundColorClasses,
-  textColorClasses,
-} from "src/utilities/constants";
 
-type Props = {};
-
-export default function EvalPane({}: Props) {
-  const logItem = useTypedSelector(
-    (state) =>
-      state.requestLogs.logs.find(
-        (log) => log.id === state.requestLogs?.selectedRequest?.id
-      ) || state.requestLogs.selectedRequest
+export default function EvalPane({}) {
+  const logItem = useTypedSelector((state) =>
+    state.requestLogs.logs.find(
+      (log) => log.id === state.requestLogs?.selectedRequest?.id
+    )
   );
   const contextPrecision = isNaN(
     parseFloat(
@@ -55,8 +48,8 @@ export default function EvalPane({}: Props) {
   )
     ? null
     : parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score);
-  const cost = logItem?.evaluations?.cost;
-  const topics = ["topic1", "topic2"];
+  const cost = logItem?.evaluations?.evaluation_cost || logItem.evaluation_cost;
+  const topics = logItem?.evaluations?.topic_analysis?.results || [];
   const displayObj = [
     {
       key: "Context Precision",
@@ -91,6 +84,35 @@ export default function EvalPane({}: Props) {
           <p className="text-sm-regular text-gray-4">N/A</p>
         ),
     },
+
+    {
+      key: "Relevance",
+      // tooltip:
+      //   "Consistency of the generated answer based on the reference ground truth answers.",
+      value:
+        relevance != null || relevance != undefined ? (
+          <Tag
+            border=""
+            text={relevance.toFixed(2)}
+            textColor={
+              relevance > 0.85
+                ? "text-green"
+                : relevance < 0.65
+                ? "text-red"
+                : "text-yellow"
+            }
+            backgroundColor={
+              relevance > 0.85
+                ? "bg-green/10"
+                : relevance < 0.65
+                ? "bg-red/10"
+                : "bg-yellow/10"
+            }
+          />
+        ) : (
+          <p className="text-sm-regular text-gray-4">N/A</p>
+        ),
+    },
     {
       key: "Readability",
       // tooltip:
@@ -108,22 +130,6 @@ export default function EvalPane({}: Props) {
         ),
     },
     {
-      key: "Relevance",
-      // tooltip:
-      //   "Consistency of the generated answer based on the reference ground truth answers.",
-      value:
-        relevance != null || relevance != undefined ? (
-          <Tag
-            border=""
-            text={relevance.toFixed(2)}
-            textColor={"text-yellow"}
-            backgroundColor={"bg-yellow/10"}
-          />
-        ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
-        ),
-    },
-    {
       key: "Sentiment",
       // tooltip: "Overall emotion of user message.",
       value:
@@ -133,28 +139,33 @@ export default function EvalPane({}: Props) {
           <p className="text-sm-regular text-gray-4">N/A</p>
         ),
     },
-    // {
-    //   key: "Topics",
-    //   value:
-    //     topics.length > 0 ? (
-    //       <div className="flex items-center gap-xxxs">
-    //         <Tag
-    //           border=""
-    //           text={topics[0].toString()}
-    //           textColor={"text-mint"}
-    //           backgroundColor={"bg-mint/10"}
-    //         />
-    //         <Tag
-    //           border=""
-    //           text={topics[1].toString()}
-    //           textColor={"text-purple"}
-    //           backgroundColor={"bg-purple/10"}
-    //         />
-    //       </div>
-    //     ) : (
-    //       <p className="text-sm-regular text-gray-4">N/A</p>
-    //     ),
-    // },
+    {
+      key: "Topics",
+      value:
+        topics.length > 0 ? (
+          <div className="flex items-center gap-xxxs">
+            {topics[0] && topics[0].labels[0] && (
+              <Tag
+                border=""
+                text={topics[0].labels[0].split("/")[1]}
+                textColor={"text-mint"}
+                backgroundColor={"bg-mint/10"}
+              />
+            )}
+
+            {topics[1] && topics[1].labels[0] && (
+              <Tag
+                border=""
+                text={topics[1].labels[0].split("/")[1]}
+                textColor={"text-purple"}
+                backgroundColor={"bg-purple/10"}
+              />
+            )}
+          </div>
+        ) : (
+          <p className="text-sm-regular text-gray-4">N/A</p>
+        ),
+    },
   ];
   return (
     <>

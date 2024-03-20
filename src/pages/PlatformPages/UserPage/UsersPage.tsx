@@ -37,22 +37,30 @@ import { toggleRightPanel } from "src/store/actions";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Table } from "./components/Table/Table";
 import { Paginator } from "../Requests/Paginator";
+import { LoadingComponent } from "src/components/LoadingPage";
+import { setQueryParams } from "src/utilities/navigation";
 
 type Props = {};
 
 export default function UsersPage({}: Props) {
   const dispatch = useTypedDispatch();
-  useEffect(() => {
-    dispatch(getUsersLogData());
-  }, []);
+
   const isSidePanelOpen = useTypedSelector(
     (state) => state.usersPage.sidepanel
   );
   const isEmpty = useTypedSelector((state) => state.usersPage.isEmpty);
+<<<<<<< HEAD
+  useEffect(() => {
+    console.log("fetching user data");
+    dispatch(getUsersLogData());
+  }, []);
+
+=======
   const total_users = useTypedSelector(
     (state) => state.usersPage.aggregationData.total_users
   );
   console.log("total", total_users);
+>>>>>>> main
   return (
     <div
       className={cn(
@@ -61,7 +69,13 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
+<<<<<<< HEAD
+      {isEmpty ? (
+        <EmptyState />
+      ) : (
+=======
       {total_users !== 0 ? (
+>>>>>>> main
         <>
           <TopBar />
           <div className="flex flex-1 self-stretch">

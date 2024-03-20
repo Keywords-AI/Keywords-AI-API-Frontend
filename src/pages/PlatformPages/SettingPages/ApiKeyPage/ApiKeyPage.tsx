@@ -58,7 +58,7 @@ export const ApiKeyPage = ({
 }: ApiKeyPageProps) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const navigate = useNavigate();
-  const editingTrigger = (key: ApiKey, active: boolean) => {
+  const editingTrigger = (key: ApiKey, active: any) => {
     return (
       <div className="flex-row w-full justify-end items-center gap-xxs">
         <StateTag text={active ? "Active" : "Expired"} ok={active} />
@@ -103,7 +103,6 @@ export const ApiKeyPage = ({
       state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
-  console.log("prevKey", prevKey);
   return (
     <PageContent
       title="API Keys"

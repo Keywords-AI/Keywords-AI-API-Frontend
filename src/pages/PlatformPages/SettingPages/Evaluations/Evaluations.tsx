@@ -91,10 +91,8 @@ export default function Evaluations({}: Props) {
       >
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: <div className="text-sm-md text-gray-4">Retrieval</div>,
-            triggerClassName: "",
+            trigger: "Retrieval",
             content: (
               <EvalCard
                 {...(EvalData.contextPrecision as any)}
@@ -111,12 +109,8 @@ export default function Evaluations({}: Props) {
         />
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: (
-              <div className="text-sm-md text-gray-4">Text generation</div>
-            ),
-            triggerClassName: "",
+            trigger: "Text generation",
             content: (
               <div className="flex-col gap-xxs">
                 <EvalCard
@@ -126,14 +120,6 @@ export default function Evaluations({}: Props) {
                   selected={orgnization?.faithfulness_eval?.metric}
                   isEnable={orgnization?.faithfulness_eval?.enabled || false}
                   evalName="faithfulness_eval"
-                />
-                <EvalCard
-                  {...(EvalData.fleschKincaidReadability as any)}
-                  updatedTime={new Date()}
-                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                  selected={orgnization?.flesch_kincaid_eval?.metric}
-                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
-                  evalName="flesch_kincaid_eval"
                 />
 
                 <EvalCard
@@ -146,6 +132,14 @@ export default function Evaluations({}: Props) {
                   }
                   evalName="answer_relevance_eval"
                 />
+                <EvalCard
+                  {...(EvalData.fleschKincaidReadability as any)}
+                  updatedTime={new Date()}
+                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
+                  selected={orgnization?.flesch_kincaid_eval?.metric}
+                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
+                  evalName="flesch_kincaid_eval"
+                />
               </div>
             ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
@@ -153,10 +147,8 @@ export default function Evaluations({}: Props) {
         />
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: <div className="text-sm-md text-gray-4">Other</div>,
-            triggerClassName: "",
+            trigger: "Other",
             content: (
               <EvalCard
                 {...(EvalData.sentiment as any)}
