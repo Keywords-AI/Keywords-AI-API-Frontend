@@ -90,7 +90,6 @@ export function EditModal({
   const [open, setOpen] = React.useState(false);
   useEffect(() => {
     setCurrentMetric(selectedMetric);
-    console.log("selectedMetric", selectedMetric);
   }, [open, selectedMetric]);
   return (
     <Modal
@@ -137,7 +136,7 @@ export function EditModal({
       subtitle={subtitle}
     >
       <Divider />
-      <div className="flex flex-col justify-center items-start gap-xs self-stretch">
+      <div className="flex flex-col justify-center items-start gap-xs self-stretch ">
         {metrics.length > 0 && (
           <div className="flex justify-between items-center self-stretch">
             <p className="text-sm-md text-gray-5">Metric</p>
@@ -218,4 +217,3 @@ export function EditModal({
     </Modal>
   );
 }
-

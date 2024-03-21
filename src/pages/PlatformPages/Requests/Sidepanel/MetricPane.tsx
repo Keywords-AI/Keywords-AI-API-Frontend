@@ -18,6 +18,9 @@ export const MetricPane = ({}) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
+
+  const [accordion1, setAccordion1] = useState("open");
+  const [accordion2, setAccordion2] = useState("open");
   const displayObj = {
     "Request ID": (
       <span className="text-sm-regular text-gray-4">{logItem?.id || "-"}</span>
@@ -147,8 +150,7 @@ export const MetricPane = ({}) => {
       </span>
     ),
   };
-  const [accordion1, setAccordion1] = useState("open");
-  const [accordion2, setAccordion2] = useState("open");
+  if (!logItem) return null;
   return (
     <>
       {logItem?.failed && (

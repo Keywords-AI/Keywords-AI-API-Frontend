@@ -189,7 +189,7 @@ export default function FilterControl() {
                       filterOptions["timestamp"]?.display_name ?? "failed",
                     metric: "timestamp",
                     operator:
-                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                      (filterOptions["timestamp"]?.operator_choices?.[1]
                         ?.value as string) ?? "contains",
                     value: Array.from(new Set([toLocalISOString(today)])),
                     id: sameTypeFilter.id,
@@ -205,7 +205,7 @@ export default function FilterControl() {
                       filterOptions["timestamp"]?.display_name ?? "failed",
                     metric: "timestamp",
                     operator:
-                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                      (filterOptions["timestamp"]?.operator_choices?.[1]
                         ?.value as string) ?? "contains",
                     value: [toLocalISOString(today)],
                     id: Math.random().toString(36).substring(2, 15),

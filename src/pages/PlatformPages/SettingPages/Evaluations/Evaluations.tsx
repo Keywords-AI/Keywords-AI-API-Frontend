@@ -229,7 +229,7 @@ const EvalCard = ({
                   Updated {format(new Date(updatedTime), "M/dd/yyyy")}
                 </p>
                 <div className="flex items-center gap-xxxs">
-                  <ModelTag model={model} />
+                  {isEnable && <ModelTag model={model} />}
                   <Tag
                     text={isEnable ? "Enabled" : "Disabled"}
                     border="border-none"
