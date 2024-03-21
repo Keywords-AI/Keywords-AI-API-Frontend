@@ -78,47 +78,18 @@ export const BillingPage = () => {
   }
   const totalAmount = organization?.organization_subscription?.credits?.length
     ? organization?.organization_subscription?.credits?.reduce(
-        (acc, credit) => acc + credit.amount,
-        0
+        (acc, credit) => {
+          if (
+            credit.expire_at != null &&
+            new Date(credit.expire_at) < new Date()
+          )
+            return acc;
+          return acc + parseFloat(credit.amount.toFixed(2));
+        },
+        0.0
       )
     : null;
-  const closestExpiringCredit =
-    organization?.organization_subscription?.credits?.reduce(
-      (closestCredit, credit) => {
-        const expireDateUTC = new Date(credit.expire_at);
-        const timezoneOffset = new Date().getTimezoneOffset() * 60000;
-        const expireDate = new Date(expireDateUTC.getTime() - timezoneOffset);
-        if (
-          !closestCredit ||
-          (expireDate && expireDate < closestCredit.expireDate)
-        ) {
-          return { expireDate, amount: credit.amount };
-        }
-        return closestCredit;
-      },
-      null
-    );
 
-  const nonExpiringCreditsSum = organization?.organization_subscription?.credits
-    ?.filter((credit) => !credit.expire_at)
-    ?.reduce((sum, credit) => sum + credit.amount, 0);
-
-  const closestExpiringDays =
-    closestExpiringCredit && closestExpiringCredit.expireDate
-      ? Math.ceil(
-          (closestExpiringCredit.expireDate.getTime() - new Date().getTime()) /
-            (1000 * 60 * 60 * 24)
-        )
-      : -1;
-
-  const closestExpiringAmount = closestExpiringCredit
-    ? closestExpiringCredit.amount.toFixed(2)
-    : "-";
-
-  const expireDaysText =
-    closestExpiringDays > -1
-      ? `Credits expiring in ${closestExpiringDays} days.`
-      : "Credits are expired.";
   return (
     <PageContent
       title="Billing"
@@ -141,42 +112,55 @@ export const BillingPage = () => {
               <div className="flex justify-between items-center self-stretch">
                 <p className="text-sm-md text-gray-5">Total credits</p>
                 <p className="text-sm-md text-gray-5">
-                  {totalAmount != null
-                    ? "$" + parseInt(totalAmount).toFixed(2)
-                    : "-"}
+                  {totalAmount != null ? "$" + totalAmount : "-"}
                 </p>
               </div>
 
-              <div className="flex-col items-start gap-xxs self-stretch">
-                <div className="flex justify-between items-center self-stretch">
-                  <div className="flex items-center gap-xxs">
-                    <div className="w-[8px] h-[8px] bg-primary rounde-[2px]" />
-                    <p className="caption text-gray-4">Non-expiring</p>
-                  </div>
-                  <p className="caption text-gray-4">
-                    {nonExpiringCreditsSum
-                      ? "$" + parseInt(nonExpiringCreditsSum).toFixed(2)
-                      : "-"}
-                  </p>
-                </div>
-              </div>
-              {closestExpiringDays > -1 && (
-                <div className="flex-col items-start gap-xxs self-stretch ">
-                  <div className="flex justify-between items-center self-stretch">
-                    <div className="flex items-center gap-xxs">
-                      <div className="w-[8px] h-[8px] bg-red rounde-[2px]" />
-                      <p className="caption text-gray-4">
-                        Expiring in {closestExpiringDays} days
-                      </p>
-                    </div>
-                    <p className="caption text-gray-4">
-                      {closestExpiringAmount
-                        ? "$" + parseInt(closestExpiringAmount).toFixed(2)
-                        : "-"}
-                    </p>
-                  </div>
-                </div>
-              )}
+              {organization?.organization_subscription?.credits?.length > 0 &&
+                organization?.organization_subscription?.credits?.map(
+                  (credit, index) => {
+                    if (
+                      credit.expire_at &&
+                      new Date(credit.expire_at) < new Date()
+                    )
+                      return null;
+                    const daysUntil =
+                      credit.expire_at == null
+                        ? -1
+                        : Math.ceil(
+                            (new Date(credit.expire_at).getTime() -
+                              new Date().getTime()) /
+                              (1000 * 60 * 60 * 24)
+                          );
+                    return (
+                      <div
+                        key={index}
+                        className="flex-col items-start gap-xxs self-stretch"
+                      >
+                        <div className="flex justify-between items-center self-stretch">
+                          <div className="flex items-center gap-xxs">
+                            <div
+                              className={cn(
+                                "w-[8px] h-[8px] rounded-[2px]",
+                                daysUntil >= 0 ? "bg-red" : "bg-primary"
+                              )}
+                            />
+                            <p className="caption text-gray-4">
+                              {daysUntil >= 0
+                                ? `Expiring in ${daysUntil} days`
+                                : `Non-expiring`}
+                            </p>
+                          </div>
+                          <p className="caption text-gray-4">
+                            {credit.amount != null
+                              ? "$" + credit.amount.toFixed(2)
+                              : "-"}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
             </>
           }
         >
@@ -195,12 +179,20 @@ export const BillingPage = () => {
         heading="Current plan"
         subheading={
           <div className="flex-col items-start gap-xxs">
-            <p>{`${currentSubscription?.name} ${currentSubscription?.interval}`}</p>
-            <p>{`${
-              currentSubscription?.amount
-            } per ${currentSubscription?.interval.toLowerCase()} - renews on ${
-              currentSubscription?.renewal_date
-            }`}</p>
+            {currentSubscription?.name ? (
+              <p>{`${currentSubscription?.name} ${currentSubscription?.interval}`}</p>
+            ) : (
+              <p>Free</p>
+            )}
+            {currentSubscription?.amount ? (
+              <p>{`${
+                currentSubscription?.amount
+              } per ${currentSubscription?.interval.toLowerCase()} - renews on ${
+                currentSubscription?.renewal_date
+              }`}</p>
+            ) : (
+              <p>$0 per month</p>
+            )}
           </div>
         }
       >
@@ -213,40 +205,44 @@ export const BillingPage = () => {
         )}
       </PageParagraph>
       <Divider />
-      <PageParagraph heading="Billing details">
-        <div className="flex-col items-start gap-xxs flex-1 self-stretch">
-          <div className="flex items-center gap-md  ">
-            <p className="flex text-sm-md text-gray-5 w-[40px]">Name</p>
-            <p className="flex text-sm-regular text-gray-4">
-              {currentBillingData?.name}
-            </p>
-          </div>
-          <div className="flex items-center gap-md flex-1 self-stretch">
-            <p className="flex text-sm-md text-gray-5 w-[40px]">Email</p>
-            <p className="flex text-sm-regular text-gray-4">
-              {currentBillingData?.email}
-            </p>
-          </div>
-        </div>
-        <Button
-          variant="r4-gray-2"
-          text="Edit"
-          onClick={
-            () =>
-              window.open(
-                `https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${
-                  currentBillingData?.email ?? ""
-                }`,
-                "_blank"
-              )
-            // "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${}",
-            // "_blank"
-            // )
-          }
-          className="w-[60px] h-[36px]"
-        />
-      </PageParagraph>
-      <Divider />
+      {currentBillingData?.name && (
+        <>
+          <PageParagraph heading="Billing details">
+            <div className="flex-col items-start gap-xxs flex-1 self-stretch">
+              <div className="flex items-center gap-md  ">
+                <p className="flex text-sm-md text-gray-5 w-[40px]">Name</p>
+                <p className="flex text-sm-regular text-gray-4">
+                  {currentBillingData?.name}
+                </p>
+              </div>
+              <div className="flex items-center gap-md flex-1 self-stretch">
+                <p className="flex text-sm-md text-gray-5 w-[40px]">Email</p>
+                <p className="flex text-sm-regular text-gray-4">
+                  {currentBillingData?.email}
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="r4-gray-2"
+              text="Edit"
+              onClick={
+                () =>
+                  window.open(
+                    `https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${
+                      currentBillingData?.email ?? ""
+                    }`,
+                    "_blank"
+                  )
+                // "https://billing.stripe.com/p/login/00g6oWaA61O62Gs000?prefilled_email=${}",
+                // "_blank"
+                // )
+              }
+              className="w-[60px] h-[36px]"
+            />
+          </PageParagraph>
+          <Divider />
+        </>
+      )}
       <PageParagraph
         heading="Payment history"
         subheading={

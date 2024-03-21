@@ -32,6 +32,7 @@ import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { RequestPreview } from "src/components/Display/Figures";
 import cn from "src/utilities/classMerge.js";
+import { s } from "vite/dist/node/types.d-FdqQ54oU.js";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -146,6 +147,9 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
+  const urlParams = new URLSearchParams(location.search);
+  const is_test = urlParams.get("is_test") === "true" ? true : false;
+
   if (firstTime)
     return (
       <WelcomeCard
@@ -165,6 +169,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   else
     return (
       <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+        {is_test && <div className="flex flex-row py-xxs px-lg items-center gap-xxs self-stretch bg-primary relative">
+          <span className="text-sm-md text-gray-5">Test environment </span>
+          <span className="text-sm-regular text-gray-5 absolute left-[489px] top-[8px]">Requests through Playground and API keys with environment = “Test”.</span>
+          </div>}
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
@@ -268,13 +276,13 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         </div>
         <div
           aria-label="table"
-          className="flex-row flex-grow self-stretch items-start overflow-hidden"
+          className="flex-row flex-grow self-stretch items-start overflow-hidden "
         >
           <div
             aria-label="scroll-control"
             ref={tableRef}
             className={cn(
-              "flex-col  h-full items-start gap-lg ",
+              "flex-col  h-full items-start gap-lg flex-1 self-stretch ",
               sidePanelOpen ? "w-[calc(100%-400px)]" : "w-full"
             )}
           >

@@ -27,6 +27,7 @@ import { toLocalISOString } from "src/utilities/stringProcessing";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Switch } from "@radix-ui/react-switch";
 import Tooltip from "src/components/Misc/Tooltip";
+import cn from "src/utilities/classMerge";
 const typeChoices = [
   { name: "Total", value: "total" },
   { name: "Average", value: "average" },
@@ -140,7 +141,7 @@ export default function FilterControl() {
         }
       >
         <div
-          className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
+          className={cn ("flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer", is_test ? "bg-gray-2" : "" )}
           onMouseEnter={() => setHoverTestMode(true)}
           onMouseLeave={() => setHoverTestMode(false)}
           onClick={() => {
@@ -148,11 +149,14 @@ export default function FilterControl() {
             dispatch(getRequestLogs());
           }}
         >
-          {!hoverTestMode && (
-            <span className="text-gray-4 text-sm-regular">Test mode</span>
+          {!hoverTestMode && !is_test && (
+            <span className="text-gray-4 text-sm-regular">Test env</span>
           )}
-          {hoverTestMode && (
-            <span className="text-gray-5 text-sm-regular">Test mode</span>
+          {hoverTestMode && !is_test && (
+            <span className="text-gray-5 text-sm-regular">Test env</span>
+          )}
+          {is_test && (
+            <span className="text-primary text-sm-md">Test env</span>
           )}
           <SwitchButton hovered={hoverTestMode} checked={is_test} />
         </div>
@@ -211,7 +215,7 @@ export default function FilterControl() {
                       filterOptions["timestamp"]?.display_name ?? "failed",
                     metric: "timestamp",
                     operator:
-                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                      (filterOptions["timestamp"]?.operator_choices?.[1]
                         ?.value as string) ?? "contains",
                     value: Array.from(new Set([toLocalISOString(today)])),
                     id: sameTypeFilter.id,
@@ -227,7 +231,7 @@ export default function FilterControl() {
                       filterOptions["timestamp"]?.display_name ?? "failed",
                     metric: "timestamp",
                     operator:
-                      (filterOptions["timestamp"]?.operator_choices?.[0]
+                      (filterOptions["timestamp"]?.operator_choices?.[1]
                         ?.value as string) ?? "contains",
                     value: [toLocalISOString(today)],
                     id: Math.random().toString(36).substring(2, 15),
