@@ -263,6 +263,7 @@ const CreateFormNotConnected = React.forwardRef(
                             .split("T")[0]
                         }
                         choices={expiryOptions}
+                        buttonPadding="py-xxs px-xxs"
                       />
                     </div>
                   </div>
@@ -617,6 +618,7 @@ const EditFormNotConnected = ({
                         .split("T")[0]
                     }
                     choices={expiryOptions}
+                    buttonPadding="py-xxs px-xxs"
                   />
                 </div>
               </div>

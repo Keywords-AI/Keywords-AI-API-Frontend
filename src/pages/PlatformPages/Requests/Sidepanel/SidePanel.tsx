@@ -235,13 +235,27 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         </Tooltip>
       )}
       {tab == "Eval" && (
-        <DotsButton
-          icon={Pencil}
-          onClick={() => {
-            dispatch(RestorePlaygroundStateFromLog());
-            navigate("/platform/api/evaluations");
-          }}
-        />
+        <Tooltip
+          side="bottom"
+          sideOffset={5}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Eval settings</p>
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={Pencil}
+              onClick={() => {
+                dispatch(RestorePlaygroundStateFromLog());
+                navigate("/platform/api/evaluations");
+              }}
+            />
+          </div>
+        </Tooltip>
       )}
     </div>
   );

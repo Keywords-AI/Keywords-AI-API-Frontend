@@ -55,6 +55,7 @@ export interface SelectInputProps {
   trigger?: React.FC<any>;
   triggerProps?: object;
   useShortCut?: boolean;
+  buttonPadding?: string;
 }
 
 export type TextInputProps = {
