@@ -77,10 +77,9 @@ const pages: PreProcessPage[] = [
   },
 ];
 
-const userPages = [
+const userPages: PreProcessPage[] = [
   {
     title: "Settings",
-    // forAdmin: true,
     page: <UserSettings />,
   },
 
