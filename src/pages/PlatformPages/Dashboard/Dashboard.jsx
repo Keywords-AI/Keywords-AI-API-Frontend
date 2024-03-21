@@ -235,7 +235,7 @@ function DashboardNotConnected({
   if (organization.loading) {
     return <LoadingComponent />;
   }
-  if (firstTime !== undefined && firstTime)
+  if ((firstTime !== undefined && firstTime))
     // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
     return (
       <WelcomeCard

@@ -171,7 +171,7 @@ export function EditModal({
 
       <Accordion
         className="flex-col items-start gap-xs self-stretch"
-        defaultOpen
+        // defaultOpen
         content={{
           trigger: <div className="text-sm-md text-gray-4">Example usage</div>,
           triggerClassName: "",

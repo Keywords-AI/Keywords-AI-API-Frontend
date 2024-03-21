@@ -140,7 +140,7 @@ export default function EvalPane({}) {
         ),
     },
     {
-      key: "Topics",
+      key: "Topic",
       value:
         topics.length > 0 ? (
           <div className="flex items-center gap-xxxs">

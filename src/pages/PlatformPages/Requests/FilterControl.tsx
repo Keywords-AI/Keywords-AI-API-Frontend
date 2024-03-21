@@ -26,6 +26,7 @@ import { FilterPanel } from "./FilterPanel";
 import { toLocalISOString } from "src/utilities/stringProcessing";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Switch } from "@radix-ui/react-switch";
+import Tooltip from "src/components/Misc/Tooltip";
 const typeChoices = [
   { name: "Total", value: "total" },
   { name: "Average", value: "average" },
@@ -75,6 +76,13 @@ export default function FilterControl() {
       preventDefault: true,
     }
   );
+  useHotkeys(
+    "M",
+    () => {
+      setQueryParams({ is_test: !is_test }, navigate);
+    },
+    {}
+  );
   const onSubmit = (e: any) => {
     const randomId = Math.random().toString(36).substring(2, 15);
     dispatch(
@@ -119,23 +127,37 @@ export default function FilterControl() {
 
   return (
     <div className="flex flex-row gap-xxs items-center">
-      <div
-        className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
-        onMouseEnter={() => setHoverTestMode(true)}
-        onMouseLeave={() => setHoverTestMode(false)}
-        onClick={() => {
-          setQueryParams({ is_test: !is_test }, navigate);
-          dispatch(getRequestLogs());
-        }}
+      <Tooltip
+        side="bottom"
+        sideOffset={8}
+        align="end"
+        delayDuration={1}
+        content={
+          <>
+            <p className="caption text-gray-4">Switch mode</p>
+            <AlphanumericKey value={"M"} />
+          </>
+        }
       >
-        {!hoverTestMode && (
-          <span className="text-gray-4 text-sm-regular">Test mode</span>
-        )}
-        {hoverTestMode && (
-          <span className="text-gray-5 text-sm-regular">Test mode</span>
-        )}
-        <SwitchButton hovered={hoverTestMode} checked={is_test} />
-      </div>
+        <div
+          className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
+          onMouseEnter={() => setHoverTestMode(true)}
+          onMouseLeave={() => setHoverTestMode(false)}
+          onClick={() => {
+            setQueryParams({ is_test: !is_test }, navigate);
+            dispatch(getRequestLogs());
+          }}
+        >
+          {!hoverTestMode && (
+            <span className="text-gray-4 text-sm-regular">Test mode</span>
+          )}
+          {hoverTestMode && (
+            <span className="text-gray-5 text-sm-regular">Test mode</span>
+          )}
+          <SwitchButton hovered={hoverTestMode} checked={is_test} />
+        </div>
+      </Tooltip>
+
       <div className="w-[1px] h-[28px] bg-gray-2"></div>
       <div className="flex-row gap-xxs rounded-xs items-center">
         <TextInputSmall

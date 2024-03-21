@@ -231,6 +231,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
               {count} / {totalCount}
             </div>
+            <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <ExportPopOver />
 
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
