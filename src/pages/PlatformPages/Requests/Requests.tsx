@@ -168,10 +168,15 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   else
     return (
       <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
-        {is_test && <div className="flex flex-row py-xxs px-lg items-center gap-xxs self-stretch bg-primary relative">
-          <span className="text-sm-md text-gray-5">Test environment </span>
-          <span className="text-sm-regular text-gray-5 absolute left-[489px] top-[8px]">Requests through Playground and API keys with environment = “Test”.</span>
-          </div>}
+        {is_test && (
+          <div className="flex flex-row py-xs px-lg items-center gap-xxs self-stretch bg-primary relative">
+            <span className="text-sm-md text-gray-5">Test environment </span>
+            <span className="text-sm-regular text-gray-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              Requests through Playground and API keys with environment =
+              “Test”.
+            </span>
+          </div>
+        )}
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"

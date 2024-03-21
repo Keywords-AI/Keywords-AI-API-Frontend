@@ -78,9 +78,10 @@ export default function FilterControl() {
     }
   );
   useHotkeys(
-    "M",
+    "S",
     () => {
       setQueryParams({ is_test: !is_test }, navigate);
+      dispatch(getRequestLogs());
     },
     {}
   );
@@ -131,12 +132,12 @@ export default function FilterControl() {
       <Tooltip
         side="bottom"
         sideOffset={8}
-        align="end"
+        align="center"
         delayDuration={1}
         content={
           <>
-            <p className="caption text-gray-4">Switch mode</p>
-            <AlphanumericKey value={"M"} />
+            <p className="caption text-gray-4">Switch environment</p>
+            <AlphanumericKey value={"S"} />
           </>
         }
       >

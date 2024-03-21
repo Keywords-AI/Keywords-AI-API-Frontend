@@ -10,6 +10,8 @@ import Accordion from "src/components/Sections/Accordion/Accordion";
 import MetadataPane from "./MetadataPane";
 import { useEffect, useState } from "react";
 import cn from "src/utilities/classMerge";
+import { useDispatch } from "react-redux";
+import { dispatchNotification } from "src/store/actions";
 
 export const MetricPane = ({}) => {
   const logItem = useTypedSelector(
@@ -20,10 +22,10 @@ export const MetricPane = ({}) => {
   );
   const displayObj = {
     "Request ID": (
-      <span className="text-sm-regular text-gray-4">{logItem?.id || "-"}</span>
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">{logItem?.id || "-"}</span>
     ),
     "Created at": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
         {new Date(logItem?.timestamp || "Aug 25, 8:03 PM").toLocaleString(
           "en-US",
           {
@@ -44,12 +46,12 @@ export const MetricPane = ({}) => {
       />
     ),
     "API key": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
         {logItem?.api_key || "N/A"}
       </span>
     ),
     "Customer ID": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
@@ -64,25 +66,25 @@ export const MetricPane = ({}) => {
       (logItem?.cached_responses?.length || 0) > 0 ? (
         <CheckAll />
       ) : (
-        <span className="text-sm-regular text-gray-4">{"No"}</span>
+        <span className="text-sm-regular text-gray-4 hover:text-gray-5">{"No"}</span>
       ),
 
     "Prompt tokens": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : (
@@ -94,13 +96,13 @@ export const MetricPane = ({}) => {
       </span>
     ),
     Cost: (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed ? "-" : "$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
     "Routing time":
       logItem?.routing_time > 0 ? (
-        <span className="text-sm-regular text-gray-4">
+        <span className="text-sm-regular text-gray-4 hover:text-gray-5">
           {logItem?.failed || logItem?.routing_time <= 0
             ? "-"
             : (logItem?.routing_time.toFixed(3) || "-") + "s"}
@@ -108,7 +110,7 @@ export const MetricPane = ({}) => {
       ) : null,
 
     TTFT: (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed ||
         (logItem?.time_to_first_token && logItem?.time_to_first_token < 0)
           ? "-"
@@ -116,7 +118,7 @@ export const MetricPane = ({}) => {
       </span>
     ),
     TPOT: (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed ||
         !logItem?.token_per_second ||
         (logItem?.token_per_second && logItem?.token_per_second < 0)
@@ -125,7 +127,7 @@ export const MetricPane = ({}) => {
       </span>
     ),
     "Generation time": (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {logItem?.failed ||
         !logItem?.latency ||
         logItem?.latency < 0 ||
@@ -140,7 +142,7 @@ export const MetricPane = ({}) => {
     //   </span>
     // ),
     Speed: (
-      <span className="text-sm-regular text-gray-4">
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
         {!logItem?.token_per_second || logItem?.token_per_second < 0
           ? "-"
           : (logItem?.token_per_second?.toFixed(3) || "-") + "T/s"}
@@ -149,6 +151,11 @@ export const MetricPane = ({}) => {
   };
   const [accordion1, setAccordion1] = useState("open");
   const [accordion2, setAccordion2] = useState("open");
+  const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
+  };
   return (
     <>
       {logItem?.failed && (
@@ -197,6 +204,7 @@ export const MetricPane = ({}) => {
                     ? logItem?.status_code
                     : displayObj[key].props.children;
                 navigator.clipboard.writeText(text);
+                onSubmit();
               }}
               key={index}
             >

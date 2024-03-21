@@ -5,6 +5,8 @@ import { useTypedSelector } from "src/store/store";
 import { SentimentTag, Tag } from "src/components/Misc";
 import { Toolbar } from "@radix-ui/react-toolbar";
 import Tooltip from "src/components/Misc/Tooltip";
+import { useDispatch } from "react-redux";
+import { dispatchNotification } from "src/store/actions";
 
 export default function EvalPane({}) {
   const logItem = useTypedSelector((state) =>
@@ -65,7 +67,7 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
     {
@@ -81,7 +83,7 @@ export default function EvalPane({}) {
             backgroundColor={faithfulness >= 0.85 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
 
@@ -110,7 +112,7 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
     {
@@ -126,12 +128,11 @@ export default function EvalPane({}) {
             backgroundColor={readability >= 0 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
     {
       key: "Sentiment",
-      // tooltip: "Overall emotion of user message.",
       value:
         sentiment != null || sentiment != undefined ? (
           <SentimentTag sentiment_score={sentiment} />
@@ -163,17 +164,31 @@ export default function EvalPane({}) {
             )}
           </div>
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
   ];
+  const dispatch = useDispatch();
+  const onSubmit = () => {
+    dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
+  };
   return (
     <>
       <div className=" flex-col pt-[18px] pb-sm px-lg items-start gap-xs self-stretch outline-none">
         {displayObj.map((obj, index) => {
           return (
             <div
-              className="flex h-[24px] justify-between items-center self-stretch bg-[rgb(245,86,86)/0.1] "
+              className=" cursor-pointer flex h-[24px] justify-between items-center self-stretch bg-[rgb(245,86,86)/0.1] "
+              onClick={() => {
+                const text =
+                  obj.key == "Readability"
+                    ? logItem?.evaluations?.flesch_kincaid?.flesch_reading_ease
+                    : obj.key == "Sentiment"
+                    ? logItem?.evaluations?.sentiment_analysis?.sentiment_score
+                    : obj.value.props.children;
+                navigator.clipboard.writeText(text);
+                onSubmit();
+              }}
               key={index}
             >
               {obj["tooltip"] ? (
@@ -205,7 +220,15 @@ export default function EvalPane({}) {
       <div className="flexcol py-sm px-lg items-start gap-xxxs self-stretch">
         <div className="flex h-[24px] justify-between items-center self-stretch">
           <div className="text-sm-md text-gray-5">{"Eval cost"}</div>
-          <p className="text-sm-regular text-gray-4">${cost?.toFixed(4)}</p>
+          <p
+            className="text-sm-regular text-gray-4 hover:text-gray-5 cursor-pointer"
+            onClick={() => {
+              navigator.clipboard.writeText(cost?.toFixed(4).toString());
+              onSubmit();
+            }}
+          >
+            ${cost?.toFixed(4)}
+          </p>
         </div>
       </div>
     </>
