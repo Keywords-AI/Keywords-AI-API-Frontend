@@ -22,6 +22,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   setBreakDownData,
   setMessages,
+  setModelLogData,
   setModelOptions,
   setPrompt,
 } from "./playgroundAction";
@@ -138,6 +139,7 @@ export const applyPostFilters = (filters: FilterObject[]) => {
   return (dispatch: TypedDispatch) => {
     const postData = processFilters(filters);
     dispatch(updateUser({ request_log_filters: postData }, undefined, true));
+    console.log("applyPostFilters");
     dispatch(getRequestLogs(postData));
   };
 };
@@ -215,7 +217,7 @@ export const processRequestLogs = (
 ): DisplayLogItem[] => {
   return requestLogs.map((log) => {
     return {
-      id: log.id,
+      ...log,
       time: (
         <span className="text-gray-4">
           {formatISOToReadableDate(log.timestamp)}
@@ -229,7 +231,9 @@ export const processRequestLogs = (
           {concatMessages([log.completion_message])}
         </span>
       ),
+      tokens_per_output_token: (1 / log.tokens_per_second).toFixed(3),
       promptTokens: log.prompt_tokens,
+      tokens_per_second: log.tokens_per_second.toFixed(3),
       time_to_first_token:
         log.time_to_first_token && log.time_to_first_token != -1 ? (
           <span className="">{`${log.time_to_first_token.toFixed(3)}s`}</span>
@@ -245,22 +249,26 @@ export const processRequestLogs = (
           {log.failed ? "" : log.completion_tokens + log.prompt_tokens}
         </span>
       ),
+      organizationKey: log.organization_key__name,
+      sentimentAnalysis: log.sentiment_analysis,
       latency: (
         <span className="">
           {log.failed ? "" : `${log.latency.toFixed(3)}s`}
         </span>
       ), // + converts string to number
       apiKey: log.api_key,
-      model: log.cached_responses.length > 0 ? "None" : log.model,
+      model: {
+        model: log.cached_responses.length > 0 ? "None" : log.model,
+        routed: log.routing_time > 0,
+      },
       failed: log.failed,
-      organizationKey: log.organization_key__name,
-      sentimentAnalysis: log.sentiment_analysis,
       status: {
         cached: log.cached_responses.length > 0,
         errorCode: log.status_code,
         warnings: log.warnings,
       },
       sentimentScore: log.sentiment_score,
+      organization: log.organization,
     };
   });
 };
@@ -344,13 +352,14 @@ export const filterParamsToFilterObjects = (
 
 export const getRequestLogs = (postData?: any, exporting = false) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
+    console.log("getRequestLogs");
     const params = new URLSearchParams(window.location.search);
     if (postData) {
       params.set("page", "1");
     }
     dispatch(startGetRequestLogs());
     keywordsRequest({
-      path: `api/request-logs${postData ? "/" : ""}?${params.toString()}`,
+      path: `api/request-logs/?${params.toString()}`,
       method: postData ? "POST" : "GET",
       data: { filters: postData, exporting: exporting },
     }).then((data) => {
@@ -359,7 +368,7 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
         setPagination(data.count, data.previous, data.next, data.total_count)
       );
       dispatch(setFilterOptions(data.filters_data));
-      dispatch(setRequestLogs(results));
+
       const state = getState();
       const userFilters = state.user?.request_log_filters;
       if (!userFilters) {
@@ -372,12 +381,15 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
       const currentFilterType = state.requestLogs.currentFilter.id;
       if (currentFilterType) {
         // If we are currently editing a filter, do no refresh the filters
+
+        dispatch(setRequestLogs(results));
         return;
       }
       dispatch({
         type: SET_FILTERS,
         payload: filters,
       });
+      dispatch(setRequestLogs(results));
     });
   };
 };
@@ -385,9 +397,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
 export const updateLog = (id) => {
   return (dispatch: TypedDispatch, getState: () => RootState) => {
     const filters = getState().requestLogs.filters;
-
-    // dispatch(applyPostFilters(filters)); // Refetch to trigger the update display hooks
-    // dispatch(getRequestLogs());
 
     dispatch(
       setselectRequestContent(
@@ -558,12 +567,22 @@ export const RestorePlaygroundStateFromLog = () => {
       options: {
         maxLength: currentLog?.full_request.max_tokens || 256,
         temperature: currentLog?.full_request.temperature || 1,
-        topP: currentLog?.full_request.topP || 1.0,
+        topP: currentLog?.full_request.top_p || 1.0,
         frequencyPenalty: currentLog?.full_request.presence_penalty || 0,
         presencePenalty: currentLog?.full_request.frequency_penalty || 0,
       },
+      modelLog: {
+        model: currentLog?.model,
+        completion_tokens: currentLog?.completion_tokens,
+        cost: currentLog?.cost,
+        ttft: currentLog?.time_to_first_token,
+        latency: currentLog?.latency,
+        status: currentLog?.status_code,
+      },
       breakDowData: {
         prompt_tokens: currentLog?.prompt_tokens,
+        timestamp: currentLog?.timestamp,
+        routing_time: currentLog?.routing_time,
         completion_tokens: currentLog?.completion_tokens,
         total_tokens:
           (currentLog?.prompt_tokens || 0) +
@@ -591,5 +610,32 @@ export const RestorePlaygroundStateFromLog = () => {
     breakdownData.total_tokens = playGroundState.breakDowData.total_tokens;
     breakdownData.cost = playGroundState.breakDowData.cost;
     dispatch(setBreakDownData({ ...breakdownData }));
+    let newModelLogdata = [
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+      {
+        model: "",
+        completion_tokens: 0,
+        cost: 0,
+        ttft: 0,
+        latency: 0,
+        status: -1,
+      },
+    ];
+    newModelLogdata[0] = {
+      model: playGroundState.modelLog.model || "",
+      completion_tokens: playGroundState.modelLog.completion_tokens || 0,
+      cost: playGroundState.modelLog.cost || 0,
+      ttft: playGroundState.modelLog.ttft || 0,
+      latency: playGroundState.modelLog.latency || 0,
+      status: playGroundState.modelLog.status || -1,
+    };
+    dispatch(setModelLogData(newModelLogdata));
   };
 };

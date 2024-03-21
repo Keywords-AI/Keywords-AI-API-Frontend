@@ -25,36 +25,38 @@ import { useHotkeysContext, useHotkeys } from "react-hotkeys-hook";
 import store from "src/store/store";
 import { combineSlices } from "@reduxjs/toolkit";
 import { Value } from "@radix-ui/react-select";
-export function FilterActions({ type }: { type: string }) {
+export function FilterActions({
+  type,
+  start,
+  setStart,
+  hidden,
+}: {
+  type: string;
+  start: boolean;
+  setStart: (prev: any) => void;
+  hidden?: boolean;
+}) {
   // const isLoading = useTypedSelector((state) => state.requestLogs.loading);
   // if (isLoading) return <></>;
-  const [start, setStart] = useState<boolean | undefined>(false);
+
   const dispatch = useTypedDispatch();
   const filterOptions = useTypedSelector(
     (state: RootState) => state.requestLogs.filterOptions
   );
-  const filterType = useTypedSelector(
-    (state: RootState) => state.requestLogs.currentFilter?.metric
-  );
+
   const currentFilter = useTypedSelector(
     (state: RootState) => state.requestLogs.currentFilter
+  );
+  const filterType = currentFilter.metric;
+  const filterLength = useTypedSelector(
+    (state) => state.requestLogs.filters.length
   );
   // const filters = useTypedSelector(
   //   (state: RootState) => state.requestLogs.filters
   // );
 
   const { enableScope, disableScope } = useHotkeysContext();
-  useHotkeys(
-    "f",
-    () => {
-      if (loading) return;
-      setStart((prev) => !prev);
-    },
-    {
-      scopes: "dashboard",
-      preventDefault: true,
-    }
-  );
+
   const changeFieldType =
     filterOptions?.[filterType ?? "failed"]?.value_field_type ?? "selection";
   const firstStepItems = Object.keys(filterOptions).map(
@@ -92,7 +94,12 @@ export function FilterActions({ type }: { type: string }) {
   const selectFilterValue = (filterValue: string[] | number[]) => {
     if (filterValue) {
       if (Array.isArray(filterValue) && filterValue.length > 0) {
-        dispatch(setCurrentFilter({ ...currentFilter, value: filterValue }));
+        dispatch(
+          setCurrentFilter({
+            ...store.getState().requestLogs.currentFilter,
+            value: filterValue,
+          })
+        );
         const latestFilter = store.getState().requestLogs.currentFilter;
         if (!latestFilter || !latestFilter.metric || !latestFilter.value)
           return;
@@ -100,12 +107,13 @@ export function FilterActions({ type }: { type: string }) {
         const sameTypeFilter = filters.find(
           (filter) => filter.metric === latestFilter.metric
         );
+        const filterOptions = store.getState().requestLogs.filterOptions;
         if (sameTypeFilter) {
           dispatch(
             updateFilter({
               display_name:
                 filterOptions[latestFilter.metric]?.display_name ?? "failed",
-              metric: filterType!,
+              metric: latestFilter.metric!,
               operator:
                 (filterOptions[latestFilter.metric]?.operator_choices?.[0]
                   ?.value as string) ?? "contains",
@@ -123,19 +131,18 @@ export function FilterActions({ type }: { type: string }) {
             addFilter({
               display_name:
                 filterOptions[latestFilter.metric]?.display_name ?? "failed",
-              metric: filterType!,
+              metric: latestFilter.metric,
               operator:
                 (filterOptions[latestFilter.metric]?.operator_choices?.[0]
                   ?.value as string) ?? "contains",
               value: latestFilter.value,
-              id: currentFilter.id,
+              id: latestFilter.id,
               value_field_type:
                 filterOptions[latestFilter.metric]?.value_field_type ??
                 "selection",
             })
           );
         }
-        dispatch(setCurrentFilter({ metric: undefined, id: "" }));
       } else {
         const latestFilter = store.getState().requestLogs.currentFilter;
         dispatch(setCurrentFilter({ metric: undefined, id: "" }));
@@ -143,41 +150,44 @@ export function FilterActions({ type }: { type: string }) {
       }
     }
   };
-  useEffect(() => {
-    enableScope("dashboard");
-    return () => {
-      disableScope("dashboard");
-    };
-  }, []);
+
   const handleDropdownOpen = (open) => {
-    open ? disableScope("dashboard") : enableScope("dashboard");
-    if (loading) return;
+    // open ? disableScope("dashboard") : enableScope("dashboard");
+    // if (!open) dispatch(setCurrentFilter({ metric: undefined, id: "" }));
     setStart(open);
-    if (
-      currentFilter?.metric &&
-      currentFilter.value &&
-      currentFilter.value.length > 0
-    ) {
-      dispatch(
-        addFilter({
-          display_name:
-            filterOptions[currentFilter.metric]?.display_name ?? "failed",
-          metric: filterType!,
-          operator:
-            (filterOptions[currentFilter.metric]?.operator_choices?.[0]
-              ?.value as string) ?? "contains",
-          value: currentFilter.value,
-          id: currentFilter.id,
-          value_field_type:
-            filterOptions[currentFilter.metric]?.value_field_type ??
-            "selection",
-        })
-      );
-    }
+
     dispatch(setCurrentFilter({ metric: undefined, id: "" }));
   };
 
-  let trigger: React.ReactNode;
+  let trigger: React.ReactNode = (
+    <div>
+      <Tooltip
+        side="bottom"
+        sideOffset={8}
+        align="start"
+        content={
+          <>
+            <p className="caption text-gray-4">Show filter options</p>
+            <AlphanumericKey value={"F"} />
+          </>
+        }
+      >
+        <div>
+          <Button
+            variant="small-dashed"
+            icon={Filter}
+            text="Filter"
+            disabled={loading}
+            active={start}
+            onClick={() => {
+              if (loading) return;
+              handleDropdownOpen(!start);
+            }}
+          />
+        </div>
+      </Tooltip>
+    </div>
+  );
   switch (type) {
     case "create":
       trigger = <Button variant="small" icon={Add} text="Create" />;
@@ -186,6 +196,7 @@ export function FilterActions({ type }: { type: string }) {
       trigger = (
         <DotsButton
           icon={Add}
+          className={filterLength == 0 ? "hidden" : ""}
           onClick={() => {
             if (loading) return;
             handleDropdownOpen(!start);
@@ -193,38 +204,13 @@ export function FilterActions({ type }: { type: string }) {
         />
       );
       break;
-    default:
-      trigger = (
-        <div>
-          {!loading && (
-            <Tooltip
-              side="bottom"
-              sideOffset={8}
-              align="start"
-              content={
-                <>
-                  <p className="caption text-gray-4">Show filter options</p>
-                  <AlphanumericKey value={"F"} />
-                </>
-              }
-            >
-              <Button
-                variant="small-dashed"
-                icon={Filter}
-                text="Filter"
-                active={start}
-              />
-            </Tooltip>
-          )}
-        </div>
-      );
-      break;
   }
-
+  if (hidden) trigger = <div></div>;
   return (
     <>
       {!filterType || (filterType && changeFieldType === "selection") ? (
         <SelectInputMenu
+          anchor={type == "Filter" ? <div></div> : undefined}
           trigger={trigger}
           open={start}
           setOpen={handleDropdownOpen}

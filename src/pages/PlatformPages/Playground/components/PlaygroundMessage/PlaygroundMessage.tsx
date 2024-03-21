@@ -10,6 +10,7 @@ import {
   OpenAI,
   Pencil,
   Refresh,
+  Remove,
 } from "src/components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
 import { ModelTag, StatusTag, Tag } from "src/components/Misc";
@@ -17,8 +18,10 @@ import * as _ from "lodash";
 import {
   deleMessageByIndex,
   regeneratePlaygroundResponse,
+  setFocusIndex,
   setMessageByIndex,
   setMessageResponseByIndex,
+  setMessageRole,
   streamPlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
@@ -40,9 +43,11 @@ export interface PlaygroundMessageProps {
   responses?: Reponse[];
   isLast: boolean;
   hidden: boolean;
+  index: number;
 }
 
 export function PlaygroundMessage({
+  index,
   id,
   role,
   user_content,
@@ -53,6 +58,7 @@ export function PlaygroundMessage({
   const messageLength = useTypedSelector(
     (state: RootState) => state.playground.messages.length
   );
+
   const lastResponseMessageId = useTypedSelector(
     (state) =>
       state.playground.messages.findLast(
@@ -64,6 +70,7 @@ export function PlaygroundMessage({
   );
   const isReset = useTypedSelector((state) => state.playground.isReseted);
   const streamingState = useTypedSelector((state) => state.streamingText);
+
   useEffect(() => {
     if (streamingState.some((state) => state.isLoading)) setIsFocused(false);
   }, [streamingState]);
@@ -86,6 +93,15 @@ export function PlaygroundMessage({
     }
   }, [messageLength]);
   const dispatch = useTypedDispatch();
+  const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
+  const usermessageBoxRef = useRef(null);
+  useEffect(() => {
+    if (focusIndex == index) {
+      usermessageBoxRef &&
+        usermessageBoxRef.current &&
+        usermessageBoxRef.current.focus();
+    }
+  }, [focusIndex]);
   const handleSend = async (event) => {
     event.stopPropagation();
     // if (streaming || textContent.length < 1) return;
@@ -124,7 +140,16 @@ export function PlaygroundMessage({
     contentSection = (
       <>
         <MessageHeader
-          title={<div className="text-sm-md text-gray-4">User</div>}
+          title={
+            <div
+              // onClick={() => {
+              //   dispatch(setMessageRole(id, "assistant"));
+              // }}
+              className="text-sm-md text-gray-4"
+            >
+              User
+            </div>
+          }
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
@@ -138,6 +163,8 @@ export function PlaygroundMessage({
         />
         <div className="flex self-stretch flex-1">
           <MessageBox
+            index={index}
+            ref={usermessageBoxRef}
             value={messageValue}
             onChange={handleChange}
             blur={!isFocused}
@@ -162,23 +189,6 @@ export function PlaygroundMessage({
             }}
             // disabled={!isFocused}
           />
-          {/* {isFocused && (
-            <div
-              className="flex justify-end gap-xxs self-stretch "
-              onMouseDown={(e) => e.preventDefault()}
-            >
-              <Button
-                variant="small"
-                text="Send message"
-                icon={EnterKey}
-                iconSize="md"
-                iconPosition="right"
-                onClick={handleSend}
-                disabled={false}
-                iconHoverFill="fill-gray-5"
-              />
-            </div>
-          )} */}
         </div>
       </>
     );
@@ -192,8 +202,8 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          if (response.content == "\u200B")
-            response.content = `{"errorText":"errorText"}`;
+          // if (response.content == "\u200B")
+          //   response.content = `{"errorText":"errorText"}`;
           const isError = response.content.includes("errorText");
           const errorObj = isError ? JSON.parse(response.content) : null;
           return (
@@ -206,11 +216,14 @@ export function PlaygroundMessage({
             >
               <MessageHeader
                 title={
-                  <div className="flex items-center gap-xxs">
+                  <div className="flex items-center gap-xxs h-[28px]">
                     <div className="text-sm-md text-gray-4">
                       Assistant {index == 0 ? "A" : "B"}
                     </div>
                     <ModelTag model={response.model} />
+                    {isError && (
+                      <StatusTag statusCode={errorObj.errorCode || 500} />
+                    )}
                   </div>
                 }
                 regenCallback={() =>
@@ -226,12 +239,15 @@ export function PlaygroundMessage({
                 showRegen={id == lastResponseMessageId && !isError}
                 content={response.content || ""}
               />
-              {isError ? (
-                <StatusTag statusCode={errorObj.errorCode || 500} />
-              ) : (
+              {
                 <div className="flex self-stretch flex-1">
-                  {response.content ? (
+                  {isError ? (
+                    <div className="flex items-start px-xxs py-xxxs gap-[10px] w-full bg-gray-2 rounded-sm text-sm-regular text-red">
+                      {errorObj.errorText}
+                    </div>
+                  ) : response.content ? (
                     <MessageBox
+                      index={index}
                       defaultValue={response.content}
                       onChange={(val) =>
                         setResponseValue((prev) => {
@@ -274,6 +290,7 @@ export function PlaygroundMessage({
                           responseValue[index] + "\u200B"
                         );
                         setIsFocused(false);
+                        dispatch(setFocusIndex(-1));
                       }}
                       blur={!isFocused}
                     />
@@ -283,7 +300,7 @@ export function PlaygroundMessage({
                     </span>
                   )}
                 </div>
-              )}
+              }
             </div>
           );
         })}
@@ -319,7 +336,10 @@ const MessageHeader = ({
 }) => {
   return (
     <div className="flex justify-between items-center self-stretch">
-      <div className="flex items-center gap-xxs">{title}</div>
+      <div className="flex items-center gap-xxs">
+        {title}
+        {streaming && <p className="caption text-primary">Generating...</p>}
+      </div>
       {!streaming && (
         <div className="flex items-center">
           {showRegen && (
@@ -330,7 +350,7 @@ const MessageHeader = ({
           )}
           <CopyButton text={content} />
           <DotsButton
-            icon={Delete}
+            icon={Remove}
             onClick={(e) => deleteCallback && deleteCallback(e)}
           />
         </div>
@@ -397,7 +417,7 @@ export function StreamingMessage() {
                   <MessageHeader
                     streaming
                     title={
-                      <div className="flex items-center gap-xxs">
+                      <div className="flex items-center gap-xxs h-[28px]">
                         <div className="text-sm-md text-gray-4">
                           Assistant {index == 0 ? "A" : "B"}
                         </div>

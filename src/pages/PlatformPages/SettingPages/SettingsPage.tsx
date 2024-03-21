@@ -9,8 +9,6 @@ import { setOrgName, updateOrganization } from "src/store/actions";
 import { dispatchNotification } from "src/store/actions";
 import { Divider } from "src/components/Sections";
 import { TitleStaticSubheading } from "src/components/Titles";
-import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import userReducer from "src/store/reducers/userReducer";
 
 const mapStateToProps = (state) => ({
   organization: state.organization,
@@ -48,6 +46,9 @@ export const SettingPage = ({
     if (currName != organization?.name) {
       setOrgName(data.name || organization?.name);
       updateOrganization(data);
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
     }
   };
 
@@ -70,6 +71,7 @@ export const SettingPage = ({
     >
       <PageParagraph heading="General">
         <form
+          action="https://api.keywordsai.co/hello"
           className="flex-col gap-sm items-start self-stretch"
           onSubmit={handleSubmit(onSubmit)}
         >

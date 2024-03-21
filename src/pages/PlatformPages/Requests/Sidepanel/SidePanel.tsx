@@ -16,6 +16,7 @@ import {
   Copy,
   IconPlayground,
   Info,
+  Pencil,
 } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useEffect, useRef, useState } from "react";
@@ -34,6 +35,7 @@ import { MetricPane } from "./MetricPane";
 import { set } from "react-hook-form";
 import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import MetadataPane from "./MetadataPane";
+import EvalPane from "./EvalPane";
 
 interface SidePanelProps {
   open: boolean;
@@ -51,11 +53,11 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const navigate = useNavigate();
   const pages = [
     {
-      value: "Metric",
+      value: "Metadata",
       buttonVariant: "text" as variantType,
       content: (
         <div
-          className="flex-col items-start self-stretch "
+          className="flex-col items-start self-stretch overflow-auto "
           aria-label="frame 1969"
         >
           <div ref={logRef}></div>
@@ -63,13 +65,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         </div>
       ),
     },
-    !logItem?.failed && logItem?.prompt_messages?.length !== 0
+    logItem?.prompt_messages?.length !== 0
       ? {
           value: "Log",
           buttonVariant: "text" as variantType,
           content: (
             <div
-              className="flex-col items-start self-stretch "
+              className="flex-col items-start self-stretch overflow-auto"
               aria-label="frame 1969"
             >
               <div ref={logRef}></div>
@@ -78,17 +80,19 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           ),
         }
       : null,
-    logItem?.metadata && Object.keys(logItem?.metadata).length > 0
+    logItem?.evaluations &&
+    typeof logItem?.evaluations === "object" &&
+    Object.keys(logItem?.evaluations).length !== 0
       ? {
-          value: "Metadata",
+          value: "Eval",
           buttonVariant: "text" as variantType,
           content: (
             <div
-              className="flex-col items-start self-stretch "
+              className="flex-col items-start self-stretch overflow-auto"
               aria-label="frame 1969"
             >
               <div ref={logRef}></div>
-              <MetadataPane />
+              <EvalPane />
             </div>
           ),
         }
@@ -109,13 +113,17 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const jsonMode = useTypedSelector((state) => state.requestLogs.jsonMode);
 
   useEffect(() => {
-    if (logItem?.failed || logItem?.prompt_messages?.length === 0) {
-      if (tab === "Log") setTab("Metric");
+    if (logItem?.prompt_messages?.length === 0) {
+      if (tab === "Log") setTab("Metadata");
+    }
+    if (
+      logItem?.evaluations &&
+      typeof logItem?.evaluations === "object" &&
+      Object.keys(logItem?.evaluations).length === 0
+    ) {
+      if (tab === "Eval") setTab("Metadata");
     }
 
-    if (!logItem?.metadata || Object.keys(logItem?.metadata).length === 0) {
-      if (tab === "Metadata") setTab("Metric");
-    }
     if (tab === "Log") enableScope("request_sidepanel_log");
     if (tab !== "Log") disableScope("request_sidepanel_log");
     return () => {
@@ -181,50 +189,59 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   const headerRight = (
     <div className="flex items-center">
       {tab == "Log" && (
-        <>
-          <Tooltip
-            side="bottom"
-            sideOffset={5}
-            align="end"
-            delayDuration={1}
-            content={
-              <>
-                <p className="caption text-gray-4">Open in playground</p>
-                <AlphanumericKey value={"P"} />
-              </>
-            }
-          >
-            <div>
-              <DotsButton
-                icon={IconPlayground}
-                onClick={() => {
-                  dispatch(RestorePlaygroundStateFromLog());
-                  navigate("/platform/playground");
-                }}
-              />
-            </div>
-          </Tooltip>
-          <Tooltip
-            side="bottom"
-            sideOffset={5}
-            align="end"
-            delayDuration={1}
-            content={
-              <>
-                <p className="caption text-gray-4">View mode</p>
-                <AlphanumericKey value={"V"} />
-              </>
-            }
-          >
-            <div>
-              <DotsButton
-                icon={Compare}
-                onClick={() => dispatch(setJsonMode(!jsonMode))}
-                active={jsonMode}
-              />
-            </div>
-          </Tooltip>
-        </>
+        <Tooltip
+          side="bottom"
+          sideOffset={5}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Open in playground</p>
+              <AlphanumericKey value={"P"} />
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={IconPlayground}
+              onClick={() => {
+                dispatch(RestorePlaygroundStateFromLog());
+                navigate("/platform/playground");
+              }}
+            />
+          </div>
+        </Tooltip>
+      )}
+      {(tab == "Log" || tab == "Metadata") && (
+        <Tooltip
+          side="bottom"
+          sideOffset={5}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">View mode</p>
+              <AlphanumericKey value={"V"} />
+            </>
+          }
+        >
+          <div>
+            <DotsButton
+              icon={Compare}
+              onClick={() => dispatch(setJsonMode(!jsonMode))}
+              active={jsonMode}
+            />
+          </div>
+        </Tooltip>
+      )}
+      {tab == "Eval" && (
+        <DotsButton
+          icon={Pencil}
+          onClick={() => {
+            dispatch(RestorePlaygroundStateFromLog());
+            navigate("/platform/api/evaluations");
+          }}
+        />
       )}
     </div>
   );
@@ -235,7 +252,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         "shadow-gray-2 bg-gray-1 overflow-x-hidden",
         open ? "w-[400px]" : "w-0"
       )}
-      headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1 "
+      headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1  h-[44px]"
       tabs={pages}
       value={tab}
       onValueChange={(value) => setTab(value)}

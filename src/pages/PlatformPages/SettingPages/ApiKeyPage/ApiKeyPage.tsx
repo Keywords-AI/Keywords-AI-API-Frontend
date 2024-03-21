@@ -58,9 +58,9 @@ export const ApiKeyPage = ({
 }: ApiKeyPageProps) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const navigate = useNavigate();
-  const editingTrigger = (key: ApiKey, active: boolean) => {
+  const editingTrigger = (key: ApiKey, active: any) => {
     return (
-      <div className="flex-row w-full justify-end gap-xxs">
+      <div className="flex-row w-full justify-end items-center gap-xxs">
         <StateTag text={active ? "Active" : "Expired"} ok={active} />
         <APIKeyActions
           modifyingKey={key}
@@ -110,7 +110,7 @@ export const ApiKeyPage = ({
         <p>
           Read the{" "}
           <a
-            className="text-primary cursor-pointer"
+            className="text-primary cursor-pointer hover:text-primary-2"
             onClick={() => window.open("https://docs.keywordsai.co", "_blank")}
           >
             documentation
@@ -121,7 +121,7 @@ export const ApiKeyPage = ({
     >
       <PageParagraph
         heading="Manage proxy keys"
-        subheading="Your secret Keywords AI proxy keys are listed below. Please note that we do not display your API keys again after you generate them. Do not share your API key with others, or expose it in the browser or other client-side code. "
+        subheading="Your secret Keywords AI proxy keys are listed below. Do not share your API key with others, or expose it in the browser or other client-side code. "
       >
         {prevKey.length > 0 && (
           <LineTable
@@ -138,6 +138,7 @@ export const ApiKeyPage = ({
                     text="Upgrade"
                     padding="p-0"
                     textColor="text-primary"
+                    textClickedColor="text-primary-2"
                     onClick={() => {
                       navigate("/platform/api/plans");
                     }}

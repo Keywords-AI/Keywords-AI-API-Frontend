@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MetricCard from "src/components/Cards/MetricCard";
-import { Display, Down, SideBar, SideBarActive } from "src/components/Icons";
+import {
+  AlphanumericKey,
+  Display,
+  Down,
+  SideBar,
+  SideBarActive,
+} from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
 import { DashboardChart, SentimentChart } from "src/components/Display";
@@ -27,6 +33,10 @@ import DashboardFilter from "./DashboardFilter";
 import { color } from "@uiw/react-codemirror";
 import DashboardFilterLeft from "./DashboardFilterLeft";
 import { LoadingComponent } from "src/components/LoadingPage";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { DashboardPreview } from "src/components/Display/Figures";
+import Tooltip from "src/components/Misc/Tooltip";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -37,6 +47,7 @@ const mapStateToProps = (state) => ({
   latencyData: state.dashboard.latencyData,
   tokenCountData: state.dashboard.tokenCountData,
   costData: state.dashboard.costData,
+  ttftData: state.dashboard.ttftData,
   firstTime: !state.organization?.has_api_call,
   promptTokenCountData: state.dashboard.promptTokenCountData,
   completionTokenCountData: state.dashboard.completionTokenCountData,
@@ -57,6 +68,7 @@ function DashboardNotConnected({
   promptTokenCountData,
   completionTokenCountData,
   costData,
+  ttftData,
   getDashboardData,
   firstTime,
   organization,
@@ -111,17 +123,34 @@ function DashboardNotConnected({
         getDashboardData();
       },
     },
+    // {
+    //   title: Metrics.average_latency.name,
+    //   number: `${summary.average_latency?.toFixed(2) || 0}`,
+    //   chartData: latencyData,
+    //   dataKey: Metrics.average_latency.value,
+    //   unit: true,
+    //   onClick: () => {
+    //     dispatch(setDisplayType("average", setQueryParams, navigate));
+    //     dispatch(
+    //       setDisplayMetric(
+    //         Metrics.average_latency.value,
+    //         setQueryParams,
+    //         navigate
+    //       )
+    //     );
+    //   },
+    // },
     {
-      title: Metrics.average_latency.name,
-      number: `${summary.average_latency?.toFixed(2) || 0}`,
-      chartData: latencyData,
-      dataKey: Metrics.average_latency.value,
+      title: Metrics.average_ttft.name,
+      number: `${summary.average_ttft?.toFixed(2) || 0}`,
+      chartData: ttftData,
+      dataKey: Metrics.average_ttft.value,
       unit: true,
       onClick: () => {
         dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
           setDisplayMetric(
-            Metrics.average_latency.value,
+            Metrics.average_ttft.value,
             setQueryParams,
             navigate
           )
@@ -170,7 +199,9 @@ function DashboardNotConnected({
       },
     },
   ];
-
+  useHotkeys(".", () => {
+    handleOpenPanel();
+  });
   const currentMetric = useSelector(
     (state) => state.dashboard.displayFilter.metric
   );
@@ -204,9 +235,23 @@ function DashboardNotConnected({
   if (organization.loading) {
     return <LoadingComponent />;
   }
-  if (firstTime !== undefined && firstTime)
+  if ((firstTime !== undefined && firstTime))
     // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
-    return <WelcomeState isDashboard />;
+    return (
+      <WelcomeCard
+        pageTitle="Dashboard"
+        title="Send your first API call"
+        doclink="https://docs.keywordsai.co/platform-features/dashboard"
+        content={
+          <>
+            to view your dashboard.
+            <br />
+            Visualize latency, cost, and usage in production.
+          </>
+        }
+        figure={<DashboardPreview />}
+      />
+    );
   else
     return (
       <div className=" flex-col flex-1 self-stretch">
@@ -253,11 +298,26 @@ function DashboardNotConnected({
           <div className="flex items-center gap-xxs">
             <DashboardFilter />
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
-            <DotsButton
-              icon={isPanel ? SideBarActive : SideBar}
-              onClick={() => handleOpenPanel()}
-              active={isPanel}
-            />
+            <Tooltip
+              side="bottom"
+              sideOffset={8}
+              align="end"
+              delayDuration={1}
+              content={
+                <>
+                  <p className="caption text-gray-4">Open right sidebar</p>
+                  <AlphanumericKey value={"."} />
+                </>
+              }
+            >
+              <div>
+                <DotsButton
+                  icon={isPanel ? SideBarActive : SideBar}
+                  onClick={() => handleOpenPanel()}
+                  active={isPanel}
+                />
+              </div>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-row flex-1 self-stretch ">

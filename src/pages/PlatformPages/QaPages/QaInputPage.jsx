@@ -11,17 +11,19 @@ import {
   SelectCheckBoxMenu,
 } from "src/components/Inputs";
 import { NavBar, PageContent, PageParagraph } from "src/components/Sections";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { CheckBoxButton } from "src/components/Buttons";
 import ModelPresetCard from "src/components/Cards/ModelPresetCard";
 import React from "react";
 import EditBox from "src/components/Inputs/EditBox";
+import { DateTimePicker } from "src/components/Inputs/TImePicker/TimepickerPopOver";
 
 export const QaInputPage = () => {
   const {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => console.log(data);
@@ -126,6 +128,11 @@ export const QaInputPage = () => {
         <div className="w-[400px] h-[200px] border border-gray-5">
           <EditBox {...register("edtibaleBox")} value="init value" />
         </div>
+        <Controller
+          control={control}
+          name="date"
+          render={({ field }) => <DateTimePicker {...field} />}
+        />
       </form>
     </PageContent>
   );

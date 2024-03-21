@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Button } from "src/components/Buttons";
 import { AlphanumericKey, Down } from "src/components/Icons/iconsDS";
 import { SelectInput } from "src/components/Inputs";
 import Tooltip from "src/components/Misc/Tooltip";
-import { setUsersLogDataTimeRange } from "src/store/actions/usersPageAction";
+import {
+  getUsersLogData,
+  setUsersLogDataTimeRange,
+} from "src/store/actions/usersPageAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
 export interface TimeSwitcherProps {}
@@ -15,12 +20,18 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     weekly: "Week",
     monthly: "Month",
     yearly: "Year",
-    total: "Total",
+    all: "Total",
   };
   const currentTimeRange = useTypedSelector(
     (state) => state.usersPage.timeRane
   );
+
   const [showDropdown, setShowDropdown] = useState(false);
+
+  useHotkeys("t", () => {
+    setShowDropdown(!showDropdown);
+  }),
+    { preventDefault: true };
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       <Button
@@ -29,6 +40,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
         active={currentTimeRange === "daily"}
         onClick={() => {
           dispatch(setUsersLogDataTimeRange("daily"));
+          dispatch(getUsersLogData());
         }}
       />
       <SelectInput
@@ -51,6 +63,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
               variant="small"
               icon={Down}
               iconPosition="right"
+              active={showDropdown}
             />
           </Tooltip>
         )}
@@ -62,6 +75,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
         gap="gap-xxs"
         optionsWidth="w-[120px]"
         useShortCut
+        setOpen={setShowDropdown}
         open={showDropdown}
         choices={[
           { name: "Day", value: "daily", secText: "1" },
@@ -70,12 +84,13 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
           { name: "Year", value: "yearly", secText: "4" },
           {
             name: "Total",
-            value: "total",
+            value: "all",
             secText: "5",
           },
         ]}
         handleSelected={(value) => {
           dispatch(setUsersLogDataTimeRange(value as string));
+          dispatch(getUsersLogData());
         }}
       />
     </div>

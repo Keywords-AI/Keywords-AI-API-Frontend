@@ -29,6 +29,10 @@ import { useTypedDispatch } from "src/store/store";
 import { getQueryParam } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
+import WelcomeCard from "src/components/Cards/WelcomeCard";
+import { RequestPreview } from "src/components/Display/Figures";
+import cn from "src/utilities/classMerge.js";
+import { s } from "vite/dist/node/types.d-FdqQ54oU.js";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -79,7 +83,31 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
 }) => {
   const { enableScope, disableScope } = useHotkeysContext();
   useEffect(() => {
-    getRequestLogs();
+    enableScope("dashboard");
+    return () => {
+      disableScope("dashboard");
+    };
+  }, []);
+  const [start, setStart] = useState<boolean>(false);
+  const [smallstart, setSmallStart] = useState<boolean>(false);
+  useHotkeys(
+    "f",
+    () => {
+      if (loading) return;
+      if (filters.length > 0) {
+        // if (start === true && smallstart === false) return;
+        setSmallStart((prev) => !prev);
+      } else {
+        setStart((prev) => !prev);
+      }
+    },
+    {
+      scopes: "dashboard",
+      preventDefault: true,
+    }
+  );
+  useEffect(() => {
+    // getRequestLogs();
     if (!selectedRequest) {
       setSelectedRequest(requestLogs?.[0]?.id);
     }
@@ -93,6 +121,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const clearFilters = () => {
     setFilters([]);
   };
+
   useEffect(() => {
     if (filters.length > 0) enableScope("clear_filters");
     else disableScope("clear_filters");
@@ -118,17 +147,52 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
-  if (firstTime) return <WelcomeState />;
+  const urlParams = new URLSearchParams(location.search);
+  const is_test = urlParams.get("is_test") === "true" ? true : false;
+
+  if (firstTime)
+    return (
+      <WelcomeCard
+        doclink="https://docs.keywordsai.co/platform-features/requests-log"
+        pageTitle="Logs"
+        title="Send your first API call"
+        content={
+          <>
+            to view your request logs.
+            <br />
+            Trace user sessions and debug with ease.
+          </>
+        }
+        figure={<RequestPreview />}
+      />
+    );
   else
     return (
       <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+        {is_test && (
+          <div className="flex flex-row py-xs px-lg items-center gap-xxs self-stretch bg-primary relative">
+            <span className="text-sm-md text-gray-5">Test environment </span>
+            <span className="text-sm-regular text-gray-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              Requests through Playground and API keys with environment =
+              “Test”.
+            </span>
+          </div>
+        )}
         <div
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
           <div className="flex flex-row items-center gap-xxxs">
-            {filters.length > 0 === false && <FilterActions type="filter" />}
+            {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
 
+            {
+              <FilterActions
+                type="filter"
+                start={start}
+                setStart={setStart}
+                hidden={filters.length > 0}
+              />
+            }
             {filters.length > 0 && !loading && (
               <React.Fragment>
                 <Tooltip
@@ -165,7 +229,14 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             {
               <React.Fragment>
                 <Filters />
-                {filters.length > 0 && <FilterActions type="add" />}
+                {
+                  <FilterActions
+                    type="add"
+                    start={smallstart}
+                    setStart={setSmallStart}
+                    hidden={filters.length == 0}
+                  />
+                }
               </React.Fragment>
             }
           </div>
@@ -173,6 +244,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="flex flex-row items-center gap-xxxs rounded-xs text-sm-regular text-gray-4">
               {count} / {totalCount}
             </div>
+            <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <ExportPopOver />
 
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
@@ -209,33 +281,17 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         </div>
         <div
           aria-label="table"
-          className="flex-row flex-grow self-stretch items-start overflow-hidden"
+          className="flex-row flex-grow self-stretch items-start overflow-hidden "
         >
           <div
             aria-label="scroll-control"
             ref={tableRef}
-            className="flex-col flex-grow max-h-full items-start overflow-auto gap-lg pb-lg"
+            className={cn(
+              "flex-col  h-full items-start gap-lg flex-1 self-stretch ",
+              sidePanelOpen ? "w-[calc(100%-400px)]" : "w-full"
+            )}
           >
             <RequestLogTable />
-            {filters.length > 0 && (
-              <div className="flex-row py-lg justify-center items-center w-full">
-                <div className="flex-row gap-sm items-center">
-                  <span className="text-sm-md">
-                    {totalCount - count} entries hidden by filter
-                  </span>
-                  <Button
-                    variant="small-dashed"
-                    text="Clear filters"
-                    onClick={clearFilters}
-                    iconPosition="right"
-                    icon={Close}
-                  />
-                </div>
-              </div>
-            )}
-            <div className="relative left-lg">
-              <Paginator />
-            </div>
           </div>
           <SidePanel open={sidePanelOpen} />
         </div>
@@ -272,7 +328,7 @@ const ExportPopOver = () => {
       disableScope("exportLogs");
     };
   }, []);
-
+  const [inputDropdown, setInputDropdown] = useState(false);
   return (
     <Popover
       width="w-[320px]"
@@ -300,6 +356,7 @@ const ExportPopOver = () => {
               icon={Export}
               text="Export"
               onClick={() => setShowDropdown((prev) => !prev)}
+              active={showDropdown}
             />
           </Tooltip>
         </div>
@@ -322,9 +379,12 @@ const ExportPopOver = () => {
                 text={fileTypes.filter((item) => item.value === file)[0].name}
                 iconPosition="right"
                 icon={Down}
+                active={inputDropdown}
               />
             )}
             align="end"
+            open={inputDropdown}
+            setOpen={setInputDropdown}
             defaultValue={fileTypes[0].value}
             choices={fileTypes}
             onChange={(e) => setFile(e.target.value)}

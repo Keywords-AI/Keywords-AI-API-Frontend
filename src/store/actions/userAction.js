@@ -21,18 +21,22 @@ import { keywordsRequest } from "src/utilities/requests";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
-
+export const SET_USER_FAILED = "SET_USER_FAILED";
 export const getUser = () => {
   return (dispatch) => {
     console.log("SANITY ", SANITY_CHECK, FETCH_ENDPOINT);
+    // const timeout = new Promise((_, reject) =>
+    //   setTimeout(() => reject(new Error("Request timed out")), 20000)
+    // );
     getCSRF();
-    fetch(`${apiConfig.apiURL}auth/users/me`, {
+    const request = fetch(`${apiConfig.apiURL}auth/users/me/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${retrieveAccessToken()}`,
       },
-    })
+    });
+    request
       .then(async (res) => {
         if (res.ok) {
           const data = await res.json();
@@ -56,12 +60,19 @@ export const getUser = () => {
           dispatch(setCustomPromptFile(data.current_file));
           dispatch(getConversation(data.last_conversation));
           // ---------End Chatbot Actions---------
-        } else if (res.status === 401 && res.status == 403) {
+        } else {
+          // console.log(await res.text());
           const data = await res.text();
-          dispatch({ type: SET_USER, payload: {} });
+          console.log("data", data);
+          dispatch({ type: SET_USER_FAILED });
+          // window.location = "https://keywordsai.co/";
         }
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        // window.location = "/login";
+        console.log("error", error);
+        dispatch({ type: SET_USER_FAILED });
+      });
   };
 };
 

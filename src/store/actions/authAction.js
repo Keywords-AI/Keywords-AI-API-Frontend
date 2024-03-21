@@ -78,12 +78,12 @@ export const logout = (
   }
 ) => {
   return (dispatch) => {
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("access");
     fetch(`${apiConfig.apiURL}auth/logout/`, {
       method: "POST",
     })
       .then(async (res) => {
-        localStorage.removeItem("refresh");
-        localStorage.removeItem("access");
         eraseCookie("access");
         eraseCookie("refresh");
         postLogout();
@@ -202,11 +202,11 @@ export const resetPassword = (
       auth: false,
     })
       .then((responseJson) => {
-          dispatch(
-            dispatchNotification({
-              title: "Link sent to your email inbox via team@keywordsai.co",
-            })
-          );
+        dispatch(
+          dispatchNotification({
+            title: "Link sent to your email inbox via team@keywordsai.co",
+          })
+        );
       })
       .catch((error) => handleError(error));
   };
@@ -308,27 +308,21 @@ export const activateUser = (
   };
 };
 
-export const resendActivationEmail = (email, handleSuccess, handleError) => {
+export const resendActivationEmail = (email) => {
   return (dispatch) => {
-    fetch(`${apiConfig.apiURL}auth/users/resend_activation/`, {
+    keywordsRequest({
+      path: "auth/users/resend_activation/",
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email }),
+      data: { email: email },
+      auth: false,
     })
-      .then(async (res) => {
-        if (res.ok) {
-          dispatch(
-            dispatchNotification({
-              type: "success",
-              title: "The activation link has been sent to your email!",
-            })
-          );
-        } else if (res.status === 400) {
-          const responseJson = await res.text();
-          handleError(responseJson);
-        }
+      .then((jsonData) => {
+        dispatch(
+          dispatchNotification({
+            type: "success",
+            title: "The activation link has been sent to your email!",
+          })
+        );
       })
       .catch((error) => console.log(error));
   };

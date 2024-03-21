@@ -85,6 +85,15 @@ export const SessionPane = forwardRef(
         setValue("presencePenalty", ModelOptions.presencePenalty);
       }
     }, [isReset, isPlaygroundReseted]);
+    useEffect(() => {
+      setValue("modela", ModelOptions.models[0]);
+      setValue("modelb", ModelOptions.models[1]);
+      setValue("temperature", ModelOptions.temperature);
+      setValue("maximumLength", ModelOptions.maximumLength);
+      setValue("topP", ModelOptions.topP);
+      setValue("frequencyPenalty", ModelOptions.frequencyPenalty);
+      setValue("presencePenalty", ModelOptions.presencePenalty);
+    }, []);
 
     useEffect(() => {
       watch((value, { name, type }) => {
@@ -104,7 +113,7 @@ export const SessionPane = forwardRef(
     return (
       <>
         <div
-          className="flex-col px-lg py-md items-start gap-xs self-stretch"
+          className="flex-col px-lg py-md items-start gap-xs self-stretch "
           ref={ref}
         >
           <Controller

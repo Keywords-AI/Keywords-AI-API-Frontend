@@ -264,7 +264,6 @@ export const addMissingDate = (
 ): DataItem[] => {
   if (!data) return [];
   const newDataArray: DataItem[] = [];
-
   const localeUtc = (dateStr: string): Date => {
     const date = new Date(dateStr);
     return new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
@@ -278,6 +277,7 @@ export const addMissingDate = (
     acc[key] = 0;
     return acc;
   }, {});
+
   const handleDailyCase = (): void => {
     const now = new Date();
     for (let hour = 0; hour < 24; hour++) {
@@ -296,10 +296,26 @@ export const addMissingDate = (
     case "daily":
       handleDailyCase();
       break;
+    // case "weekly":
+    //   for (let day = 0; day < 7; day++) {
+    //     const dayDate = new Date(currntTimeRange);
+    //     dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+    //     const dateString = formatDateUnit(dayDate);
+    //     const found = data.find(
+    //       (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
+    //     );
+    //     newDataArray.push(
+    //       found
+    //         ? { ...found, date_group: dateString }
+    //         : { date_group: dateString, ...defaultFields }
+    //     );
+    //   }
+    //   break;
     case "weekly":
       for (let day = 0; day < 7; day++) {
         const dayDate = new Date(currntTimeRange);
-        dayDate.setDate(dayDate.getDate() - dayDate.getDay() + day);
+        // Adjust the calculation to make Monday the first day of the week
+        dayDate.setDate(dayDate.getDate() - ((dayDate.getDay() + 6) % 7) + day);
         const dateString = formatDateUnit(dayDate);
         const found = data.find(
           (d) => localeUtc(d.date_group).getDate() === dayDate.getDate()
@@ -346,6 +362,72 @@ export const addMissingDate = (
         );
       }
       break;
+    case "yearly_by_week":
+      const currDay = new Date(currntTimeRange);
+      currDay.setMonth(0); // Set month to January
+      currDay.setDate(1); // Set day to 1st
+      for (let week = 0; week < 52; week++) {
+        const dateString = `${
+          currDay.getMonth() + 1
+        }/${currDay.getDate()}/${currDay.getFullYear().toString().slice(-2)}`;
+        const found = data.find((d) => {
+          const date = localeUtc(d.date_group);
+          const weekStart = new Date(currDay);
+          weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+          weekStart.setHours(0, 0, 0, 0);
+
+          // Get the end of the week for currDay
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekEnd.getDate() + 6);
+          weekEnd.setHours(23, 59, 59, 999);
+          return (
+            date.getTime() >= weekStart.getTime() &&
+            date.getTime() <= weekEnd.getTime()
+          );
+        });
+        newDataArray.push(
+          found
+            ? { ...found, date_group: dateString }
+            : { date_group: dateString, ...defaultFields }
+        );
+        currDay.setDate(currDay.getDate() + 7);
+      }
+      break;
+    case "quarterly":
+      const currentYear = new Date(currntTimeRange).getFullYear();
+      const currentQuarter = Math.floor(
+        (new Date(currntTimeRange).getMonth() + 3) / 3
+      );
+      const quarterStartMonth = (currentQuarter - 1) * 3;
+      const quarterStartDate = new Date(currentYear, quarterStartMonth, 1);
+      const quarterEndMonth = quarterStartMonth + 2;
+      const quarterEndDate = new Date(currentYear, quarterEndMonth + 1, 0);
+      const step = new Date(quarterStartDate);
+      while (step <= quarterEndDate) {
+        const dayString = formatDateUnit(step);
+
+        const found = data.find((d) => {
+          const qWeekStart = new Date(step);
+          qWeekStart.setDate(qWeekStart.getDate() - qWeekStart.getDay());
+          qWeekStart.setHours(0, 0, 0, 0);
+          const qWeekEnd = new Date(step);
+          qWeekEnd.setDate(qWeekEnd.getDate() + 6);
+          qWeekEnd.setHours(23, 59, 59, 999);
+          const date = localeUtc(d.date_group);
+          return (
+            date.getTime() >= qWeekStart.getTime() &&
+            date.getTime() <= qWeekEnd.getTime()
+          );
+        });
+        newDataArray.push(
+          found
+            ? { ...found, date_group: dayString }
+            : { date_group: dayString, ...defaultFields }
+        );
+        step.setDate(step.getDate() + 7);
+      }
+      break;
+
     default:
       handleDailyCase();
       break;

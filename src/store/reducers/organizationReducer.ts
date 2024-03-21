@@ -31,11 +31,16 @@ const initState: Organization = {
   preset_models: [],
   preset_opiton: "",
   dynamic_routing_enabled: false,
-  curr_onboarding_step: 0,
+  curr_onboarding_step: 1,
   onboarded: false,
   fallback_model_enabled: false,
   fallback_models: [],
   system_fallback_enabled: false,
+  context_precision_eval: null,
+  faithfulness_eval: null,
+  flesch_kincaid_eval: null,
+  answer_relevance_eval: null,
+  sentiment_analysis_eval: null,
 };
 
 export default function organizationReducer(

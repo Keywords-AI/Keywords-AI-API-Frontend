@@ -40,7 +40,7 @@ export const addMember = (member) => {
 
 export const createOrganization = (organization, callback = () => {}) => {
   // organization {name, organization_size}
-  return (dispatch) => {
+  return (dispatch, getState) => {
     keywordsFetch({
       path: "user/organizations/",
       method: "POST",
@@ -48,11 +48,12 @@ export const createOrganization = (organization, callback = () => {}) => {
     })
       .then(async (res) => {
         if (res.ok) {
-          dispatch(
-            dispatchNotification({
-              title: "Organization created successfully!",
-            })
-          );
+          // dispatch(
+          //   dispatchNotification({
+          //     title: "Organization created successfully!",
+          //   })
+          // );
+
           return res.json();
         } else {
           if (res.status === 409) {
@@ -80,7 +81,10 @@ export const createOrganization = (organization, callback = () => {}) => {
         }
       })
       .then((responseJson) => {
-        dispatch(setOrg(responseJson));
+        dispatch(setOrg({ ...responseJson }));
+        dispatch(getUser());
+        // dispatch(UpdateOrgSubscription("starter"));
+
         callback();
       });
   };
@@ -318,5 +322,45 @@ export const changeRole = (id: number, roleName: string) => {
         );
       })
       .catch((error) => {});
+  };
+};
+
+export const UpdateOrgSubscription = (newPlan: string) => {
+  return async (dispatch, getState) => {
+    const id = getState().organization.organization_subscription.id;
+    await keywordsRequest({
+      path: `payment/organization-subscriptions/${id}/`,
+      method: "PATCH",
+      data: { plan: newPlan || "free" },
+    });
+    dispatch(getUser());
+  };
+};
+
+export const updateOrgEvalOptions = (evalName: string, data: any) => {
+  return async (dispatch, getState) => {
+    const organization = getState().organization;
+    console.log("evalName", evalName, evalName.replace("_", "-"));
+    if (organization[evalName] === null) {
+      await keywordsRequest({
+        path: `user/${evalName.replace(/_/g, "-")}s/`,
+        method: "POST",
+        data: { ...data, organization: organization.id },
+      });
+    } else {
+      // Update the organization state
+      console.log(
+        "path",
+        `user/${evalName.replace(/_/g, "-")}/${organization[evalName].id}/`
+      );
+      await keywordsRequest({
+        path: `user/${evalName.replace(/_/g, "-")}/${
+          organization[evalName].id
+        }/`,
+        method: "PATCH",
+        data: data,
+      });
+    }
+    dispatch(getUser());
   };
 };

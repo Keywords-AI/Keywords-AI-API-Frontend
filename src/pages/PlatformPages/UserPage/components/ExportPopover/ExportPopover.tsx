@@ -43,7 +43,7 @@ export default function ExportPopOver({ exportAction }) {
           <Tooltip
             side="bottom"
             sideOffset={8}
-            align="center"
+            align="start"
             delayDuration={1}
             content={
               <>
@@ -57,6 +57,7 @@ export default function ExportPopOver({ exportAction }) {
               icon={Export}
               text="Export"
               onClick={() => setShowDropdown((prev) => !prev)}
+              active={showDropdown}
             />
           </Tooltip>
         </div>

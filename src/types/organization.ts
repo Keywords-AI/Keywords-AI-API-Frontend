@@ -15,6 +15,7 @@ export type Organization = {
     id: number | null;
     name: string;
     organization_model_presets: any[];
+    sample_percentage: number;
     owner: any;
     users: OrgUser[];
     organization_subscription: {
@@ -41,4 +42,10 @@ export type Organization = {
     fallback_models: string[];
     system_fallback_enabled: boolean;
     api_key_limit: number;
+    context_precision_eval: any;
+    faithfulness_eval: any;
+    flesch_kincaid_eval: any;
+    answer_relevance_eval: any;
+    sentiment_analysis_eval: any;
+    
 } | null;

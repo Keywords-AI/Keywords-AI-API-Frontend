@@ -277,15 +277,18 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
 const LogCard = ({ displayObj }) => {
   return (
     <div className="flex-col px-lg py-md items-start gap-xs self-stretch">
-      {displayObj.map((item, index) => (
-        <div
-          key={index}
-          className="flex items-center justify-between self-stretch"
-        >
-          {item.title}
-          {item.value}
-        </div>
-      ))}
+      {displayObj.map((item, index) => {
+        if (!item.title) return null;
+        return (
+          <div
+            key={index}
+            className="flex items-center justify-between self-stretch h-[24px]"
+          >
+            {item.title}
+            {item.value}
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import {
   TopBar,
 } from "./components";
 import { Button, CopyButton, DotsButton } from "src/components/Buttons";
+import { v4 as uuidv4 } from "uuid";
 import {
   Add,
   AlphanumericKey,
@@ -21,6 +22,7 @@ import {
   appendMessage,
   getModels,
   resetModelOptions,
+  setFocusIndex,
   setPrompt,
   setSelectedLogs,
   streamPlaygroundResponse,
@@ -32,9 +34,9 @@ import { useEffect, useRef, useState } from "react";
 import SliderInput from "src/components/Inputs/SliderInput";
 import { useForm, Controller } from "react-hook-form";
 import { variantType } from "src/types";
-import { AutoScrollContainer } from "react-auto-scroll-container";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import Tooltip from "src/components/Misc/Tooltip";
+import { AutoScrollContainer } from "src/components/Misc/ScrollContainer";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -128,6 +130,21 @@ const PromptInput = (selectedLogs) => {
 connect(mapStateToProps, mapDispatchToProps)(PromptInput);
 
 const MessageLists = () => {
+  useHotkeys(
+    "a",
+    () => {
+      if (isStreaming) return;
+      dispatch(
+        appendMessage({
+          id: uuidv4(),
+          role: "user",
+          user_content: "",
+        })
+      );
+      dispatch(setFocusIndex(messages.length));
+    },
+    { scopes: "playground", preventDefault: true }
+  );
   const messages = useTypedSelector((state) => state.playground.messages);
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -149,13 +166,15 @@ const MessageLists = () => {
       }}
     >
       <AutoScrollContainer
-        percentageThreshold={5}
-        behavior="instant"
+        percentageThreshold={15}
+        behavior="auto"
+        active={isStreaming}
         className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
       >
         {messages.map((message, index) => {
           return (
             <PlaygroundMessage
+              index={index}
               key={index}
               id={index}
               isLast={index === messages.length - 1}
@@ -164,56 +183,65 @@ const MessageLists = () => {
           );
         })}
         <StreamingMessage />
-        <Button
-          variant="small"
-          text="Add message"
-          icon={Add}
-          ref={buttonRef}
-          iconPosition="left"
-          disabled={isStreaming}
-          onClick={() => {
-            if (isStreaming) return;
-
-            dispatch(
-              appendMessage({
-                id: messages.length,
-                role: "user",
-                user_content: "",
-              })
-            );
-            // buttonRef &&
-            //   buttonRef.current &&
-            //   (buttonRef.current as HTMLButtonElement).scrollIntoView({
-            //     behavior: "instant",
-            //     block: "end",
-            //   });
-          }}
-        />
-      </AutoScrollContainer>
-      <div className="flex items-start gap-xxs">
         <Tooltip
-          side="top"
+          side="bottom"
           sideOffset={8}
-          align="center"
+          align="start"
           delayDuration={1}
           content={
             <>
-              <p className="caption text-gray-4">Enter to submit</p>
-              <AlphanumericKey value={"↵"} />
+              <p className="caption text-gray-4">Add message</p>
+              <AlphanumericKey value={"A"} />
             </>
           }
         >
           <div>
             <Button
-              variant="r4-primary"
-              text="Submit"
+              variant="small"
+              text="Add message"
+              icon={Add}
+              ref={buttonRef}
+              iconPosition="left"
+              disabled={isStreaming}
               onClick={() => {
                 if (isStreaming) return;
-                dispatch(streamPlaygroundResponse());
+                dispatch(
+                  appendMessage({
+                    id: uuidv4(),
+                    role: "user",
+                    user_content: "",
+                  })
+                );
+                dispatch(setFocusIndex(messages.length));
               }}
             />
           </div>
         </Tooltip>
+      </AutoScrollContainer>
+      <div className="flex items-center gap-xs">
+        <Button
+          variant="r4-primary"
+          text="Submit"
+          onClick={() => {
+            if (isStreaming) return;
+            dispatch(streamPlaygroundResponse());
+          }}
+        />
+        <div className="flex gap-xxxs items-center">
+          <p className="caption text-gray-4 flex">Enter to submit</p>
+          <svg
+            width={8}
+            height={8}
+            viewBox="0 0 8 8"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.31429 0V2.97143C7.31429 4.61257 5.984 5.94286 4.34286 5.94286H1.75086L3.16343 7.35543L2.51429 8L0 5.48571L2.51429 2.97143L3.15886 3.616L1.75086 5.02857H4.34286C5.48571 5.02857 6.4 4.11429 6.4 2.97143V0H7.31429Z"
+              fill="#B1B3BC"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );
@@ -230,10 +258,14 @@ const RightPanel = () => {
     {
       value: "Session",
       buttonVariant: "text" as variantType,
-      content: <SessionPane isReset={isReset} />,
+      content: (
+        <div className="flex-col flex-1 self-stretch overflow-auto">
+          <SessionPane isReset={isReset} />
+        </div>
+      ),
       // tooltip: (
       //   <>
-      //     <p className="caption text-gray-4">Switch</p>
+      //     <p className="caption text-gray-4">View session</p>
       //     <AlphanumericKey value={"←"} />
       //   </>
       // ),
@@ -242,10 +274,14 @@ const RightPanel = () => {
       ? {
           value: "Recent",
           buttonVariant: "text" as variantType,
-          content: <MostRecentPane />,
+          content: (
+            <div className="flex-col flex-1 self-stretch overflow-auto">
+              <MostRecentPane />
+            </div>
+          ),
           // tooltip: (
           //   <>
-          //     <p className="caption text-gray-4">Enter to submit</p>
+          //     <p className="caption text-gray-4">View Recent</p>
           //     <AlphanumericKey value={"→"} />
           //   </>
           // ),
@@ -285,6 +321,19 @@ const RightPanel = () => {
     },
     { scopes: "rightPanel", preventDefault: true }
   );
+  useHotkeys(
+    "r",
+    () => {
+      if (streamingStates.some((item) => item.isLoading === true)) return;
+
+      setIsReset(true);
+      setTimeout(() => {
+        setIsReset(false);
+      }, 100);
+      dispatch(resetModelOptions());
+    },
+    { scopes: "rightPanel", preventDefault: true }
+  );
   useEffect(() => {
     if (!timestamp && tab === "Recent") setTab("Session");
   }, [timestamp]);
@@ -299,22 +348,38 @@ const RightPanel = () => {
       rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
       headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
       headerRight={
-        <Button
-          variant="text"
-          text="Reset"
-          textColor="text-gray-3"
-          textHoverColor="text-red"
-          textClickedColor="text-red"
-          onClick={() => {
-            if (streamingStates.some((item) => item.isLoading === true)) return;
+        <Tooltip
+          side="bottom"
+          sideOffset={2}
+          align="end"
+          delayDuration={1}
+          content={
+            <>
+              <p className="caption text-gray-4">Reset settings</p>
+              <AlphanumericKey value={"R"} />
+            </>
+          }
+        >
+          <div>
+            <Button
+              variant="text"
+              text="Reset"
+              textColor="text-gray-3"
+              textHoverColor="text-red"
+              textClickedColor="text-red"
+              onClick={() => {
+                if (streamingStates.some((item) => item.isLoading === true))
+                  return;
 
-            setIsReset(true);
-            setTimeout(() => {
-              setIsReset(false);
-            }, 100);
-            dispatch(resetModelOptions());
-          }}
-        />
+                setIsReset(true);
+                setTimeout(() => {
+                  setIsReset(false);
+                }, 100);
+                dispatch(resetModelOptions());
+              }}
+            />
+          </div>
+        </Tooltip>
       }
     />
   );

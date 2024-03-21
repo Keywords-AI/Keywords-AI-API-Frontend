@@ -18,7 +18,7 @@ import {
   LogItemTag,
   RequestFilter,
 } from "src/types";
-import { ModelTag, StatusTag, Tag } from "src/components/Misc";
+import { ModelTag, RoutedModelTag, StatusTag, Tag } from "src/components/Misc";
 import { SentimentTag } from "src/components/Misc";
 import React from "react";
 
@@ -88,7 +88,7 @@ export const models: ModelType[] = [
     function_call: 1,
     weight: 1,
   },
-  
+
   {
     name: "GPT-3.5-turbo",
     value: "gpt-3.5-turbo",
@@ -557,8 +557,30 @@ export const colorTagsClasses = [
   "#FF6482",
   "#B59469",
 ];
+export const textColorClasses = [
+  "text-[#F55656]",
+  "text-[#FFB340]",
+  "text-[#FFD426]",
+  "text-[#31DE4B]",
+  "text-[#66D4CF]",
+  "text-[#5DE6FF]",
+  "text-[#DA8FFF]",
+  "text-[#FF6482]",
+  "text-[#B59469]",
+];
+export const backgroundColorClasses = [
+  "bg-[rgba(245,86,86,0.1)]", // rgba(245, 86, 86, 0.1)
+  "bg-[rgba(255,179,64,0.1)]", // rgba(255, 179, 64, 0.1)
+  "bg-[rgba(255,212,38,0.1)]", // rgba(255, 212, 38, 0.1)
+  "bg-[rgba(49,222,75,0.1)]", // rgba(49, 222, 75, 0.1)
+  "bg-[rgba(102,212,207,0.1)]", // rgba(102, 212, 207, 0.1)
+  "bg-[rgba(93,230,255,0.1)]", // rgba(93, 230, 255, 0.1)
+  "bg-[rgba(218,143,255,0.1)]", // rgba(218, 143, 255, 0.1)
+  "bg-[rgba(255,100,130,0.1)]", // rgba(255, 100, 130, 0.1)
+  "bg-[rgba(181,148,105,0.1)]", // rgba(181, 148, 105, 0.1)
+];
 export const randomColor = () => {
-  return colors[Math.floor(Math.random() * colors.length)];
+  return backgroundColorClasses[Math.floor(Math.random() * colors.length)];
 };
 
 export const Metrics = {
@@ -569,12 +591,13 @@ export const Metrics = {
     unit: "requests",
   },
   average_latency: {
-    name: "Latency",
+    name: "Generation time",
     value: "average_latency",
     icon: Speed,
     unit: "s",
   },
   average_ttft: { name: "TTFT", value: "average_ttft", icon: Speed, unit: "s" },
+  average_tpot: { name: "TPOT", value: "average_tpot", icon: Speed, unit: "s" },
   total_prompt_tokens: {
     name: "Prompt tokens",
     value: "total_prompt_tokens",
@@ -593,8 +616,38 @@ export const Metrics = {
     icon: Tokens,
     unit: "tokens",
   },
+  average_tps: {
+    name: "Speed",
+    value: "average_tps",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_50: {
+    name: "Speed p50",
+    value: "tps_p_50",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_90: {
+    name: "Speed p90",
+    value: "tps_p_90",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_95: {
+    name: "Speed p95",
+    value: "tps_p_95",
+    icon: Speed,
+    unit: "tps",
+  },
+  tps_p_99: {
+    name: "Speed p99",
+    value: "tps_p_99",
+    icon: Speed,
+    unit: "tps",
+  },
   total_cost: {
-    name: "Total cost",
+    name: "Cost",
     value: "total_cost",
     icon: Cost,
     unit: "$",
@@ -606,25 +659,25 @@ export const Metrics = {
     unit: "errors",
   },
   latency_p_50: {
-    name: "Latency p50",
+    name: "Generation time p50",
     value: "latency_p_50",
     icon: Speed,
     unit: "s",
   },
   latency_p_90: {
-    name: "Latency p90",
+    name: "Generation time p90",
     value: "latency_p_90",
     icon: Speed,
     unit: "s",
   },
   latency_p_95: {
-    name: "Latency p95",
+    name: "Generation time p95",
     value: "latency_p_95",
     icon: Speed,
     unit: "s",
   },
   latency_p_99: {
-    name: "Latency p99",
+    name: "Generation time p99",
     value: "latency_p_99",
     icon: Speed,
     unit: "s",
@@ -665,13 +718,28 @@ export const requestLogColumns: LogItemColumn[] = [
   { name: "Response", retrievalKey: "response", width: "160px" },
   { name: "Cost", retrievalKey: "cost", width: "76px" },
   { name: "TTFT", retrievalKey: "time_to_first_token", width: "64px" },
-  { name: "Latency", retrievalKey: "latency", width: "64px" },
-  { name: "Prompt tokens", retrievalKey: "promptTokens", width: "100px" },
+  { name: "TPOT", retrievalKey: "tokens_per_output_token", width: "64px" },
+  { name: "Generation time", retrievalKey: "latency", width: "100px" },
+  {
+    name: "Speed",
+    retrievalKey: "tokens_per_second",
+    width: "64px",
+  },
+  { name: "Input tokens", retrievalKey: "promptTokens", width: "100px" },
   { name: "Output tokens", retrievalKey: "outputTokens", width: "100px" },
   { name: "All tokens", retrievalKey: "allTokens", width: "72px" },
 ];
 
 export const requestLogTagColumns: LogItemTag[] = [
+  {
+    name: "Organization",
+    retrievalKey: "organization",
+    renderFunction: (org: string) => (
+      <span className="caption text-gray-4 mr-xxxs whitespace-nowrap">
+        {org}
+      </span>
+    ),
+  },
   {
     name: "API key",
     retrievalKey: "apiKey",
@@ -684,8 +752,16 @@ export const requestLogTagColumns: LogItemTag[] = [
   {
     name: "Model",
     retrievalKey: "model",
-    renderFunction: (model: string) => <ModelTag model={model} />,
+    renderFunction: (data: any) => {
+      const { model, routed } = data;
+      return routed ? (
+        <RoutedModelTag model={model} />
+      ) : (
+        <ModelTag model={model} />
+      );
+    },
   },
+
   // {
   //   name: "Warnings",
   //   retrievalKey: "warnings",
@@ -716,7 +792,7 @@ export const requestLogTagColumns: LogItemTag[] = [
               border=""
             />
           )}
-          <StatusTag statusCode={errorCode} cached={cached} />
+          <StatusTag statusCode={errorCode} cached={cached} table={true} />
         </div>
       );
     },
@@ -746,18 +822,6 @@ export const requestLogTagColumns: LogItemTag[] = [
   },
 ];
 
-export const defaultRequestLogColumns: LogColumnKey[] = [
-  "time",
-  "prompt",
-  "response",
-  "cost",
-  "latency",
-  "allTokens",
-  "apiKey",
-  "model",
-  "status",
-  "cachedResponse",
-];
 export const userTableColumns = [
   {
     name: "Customer ID",
@@ -781,8 +845,12 @@ export const userTableColumns = [
     name: "tokens",
     value: "tokens",
   },
-  // {
-  //   name: "Sentiment",
-  //   value: "sentiment",
-  // },
+  {
+    name: "costs",
+    value: "costs",
+  },
+  {
+    name: "Avg sentiment",
+    value: "sentiment",
+  },
 ];

@@ -18,18 +18,23 @@ import { Tag } from "src/components/Misc";
 import { useNavigate } from "react-router-dom";
 
 export const AlertsFallbackPage = () => {
-  const { isFallbackEnabled, fallbackModels, systemFallbackEnabled, orgPlan } =
-    useTypedSelector((state: RootState) => ({
-      isFallbackEnabled: state.organization?.fallback_model_enabled,
-      fallbackModels: state.organization?.fallback_models,
-      systemFallbackEnabled: state.organization?.system_fallback_enabled,
-      orgPlan: state.organization?.organization_subscription?.plan,
-    }));
+  const isFallbackEnabled = useTypedSelector(
+    (state: RootState) => state.organization?.fallback_model_enabled
+  );
+  const fallbackModels = useTypedSelector(
+    (state: RootState) => state.organization?.fallback_models
+  );
+  const systemFallbackEnabled = useTypedSelector(
+    (state: RootState) => state.organization?.system_fallback_enabled
+  );
+  const orgPlan = useTypedSelector(
+    (state: RootState) => state.organization?.organization_subscription?.plan
+  );
 
   const dispatch = useTypedDispatch();
   const [fallbackEnabled, setFallbackEnabled] =
     React.useState(isFallbackEnabled);
-
+  const [alertsEnabled, setAlertsEnabled] = React.useState(true);
   const [systemEnable, setSystemEnable] = React.useState(systemFallbackEnabled);
   useEffect(() => {
     setFallbackEnabled(isFallbackEnabled);
@@ -58,7 +63,8 @@ export const AlertsFallbackPage = () => {
     );
   }, [model1, model2, model3]);
   const isFreeUser = useTypedSelector((state: RootState) => {
-    const planLevel = state.organization?.organization_subscription?.plan_level || 0;
+    const planLevel =
+      state.organization?.organization_subscription?.plan_level || 0;
     return planLevel < 2;
   });
   const models = MODELS.map((model) => {
@@ -116,7 +122,12 @@ export const AlertsFallbackPage = () => {
     //   })
     // );
   };
-
+  const handleAlertsFallbackToggle = () => {
+    setAlertsEnabled(!alertsEnabled);
+    dispatch(
+      updateOrganization({ fallback_model_enabled: !isFallbackEnabled })
+    );
+  };
   const handleSystemFallbackToggle = () => {
     setSystemEnable(!systemEnable);
     dispatch(
@@ -135,11 +146,15 @@ export const AlertsFallbackPage = () => {
           subtitle="Subscribe to system status and get notified via email when an LLM outage is detected."
         />
         <div className="flex flex-row items-start justify-center pt-[3px]">
-          <IconButton
+          {/* <IconButton
             icon={Redirect}
             onClick={() =>
               window.open("https://status.keywordsai.co", "_blank")
             }
+          /> */}
+          <SwitchButton
+            checked={alertsEnabled}
+            onCheckedChange={handleAlertsFallbackToggle}
           />
         </div>
       </div>
@@ -220,6 +235,7 @@ export const AlertsFallbackPage = () => {
             <Tag
               text="Upgrade"
               backgroundColor="bg-primary/10"
+              className="cursor-pointer"
               textColor="text-primary"
               border="shadow-transparent"
               onClick={() => {

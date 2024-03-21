@@ -7,6 +7,10 @@ import {
   STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
   STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+  STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
 } from "src/env";
 import { SwitchButton } from "src/components/Buttons";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
@@ -27,7 +31,6 @@ export const StartWithPlan = () => {
   const { organization, user } = useTypedSelector(memoSelector);
   useEffect(() => {
     // If subscribed users stumbled on this page, redirect them
-    console.log("organization", organization);
     if (organization?.active_subscription) {
       if (organization?.onboarded) {
         navigate(REDIRECT_URI);
@@ -37,25 +40,25 @@ export const StartWithPlan = () => {
     }
   }, [organization]);
   const [isYearly, setIsYearly] = useState(true);
-  const [teamPrice, setTeamPrice] = useState("29");
+  const [teamPrice, setTeamPrice] = useState("79");
 
   const cards: PricingCardParams[] = [
     {
-      title: "Starter",
+      title: "Free",
       plan: "starter",
       subtitle: "Best for solo builders.",
       price: "0",
       billFrequency: "Free forever",
       featureTitle: "Starter plan features",
       features: [
-        "10,000 API requests",
-        "1 developer seat",
-        "1 proxy API key",
-        "Usage analytics",
-        "Status monitoring",
-        "Dynamic LLM router",
-        "OpenAI credits support",
-        "Email support",
+        "10k requests / month",
+        "2 seats",
+        // "1 proxy API key",
+        "Community support",
+        // "Status monitoring",
+        // "Dynamic LLM router",
+        // "OpenAI models",
+        // "Email support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to starter",
@@ -73,21 +76,17 @@ export const StartWithPlan = () => {
       },
     },
     {
-      title: "Team",
+      title: "Pro",
       plan: "team",
-      subtitle: "Best for startups and teams.",
+      subtitle: "Best for early stage startups.",
       price: teamPrice,
       billFrequency: isYearly ? "Billed annually" : "Billed monthly",
       featureTitle: "Everything in Starter, plus",
       features: [
-        "Unlimited API requests",
-        "Unlimited seats",
-        "Unlimited proxy keys",
-        "Advanced usage analytics",
-        "Advanced model fallback",
-        "Priority model access",
-        "Admin roles",
-        "CTO priority support",
+        "1M requests / month",
+        "5 seats",
+        "Custom evaluations",
+        "Founders 24/7 support",
       ],
       downgradeParams: {
         buttonText: "Downgrade to team",
@@ -96,15 +95,15 @@ export const StartWithPlan = () => {
           if (isYearly) {
             dispatch(
               createPaymentSession([
-                STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-                STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+                STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+                STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
               ])
             );
           } else {
             dispatch(
               createPaymentSession([
-                STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-                STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+                STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+                STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
               ])
             );
           }
@@ -117,15 +116,15 @@ export const StartWithPlan = () => {
           if (isYearly) {
             dispatch(
               createPaymentSession([
-                STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY,
-                STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY,
+                STRIPE_PRO_YEARLY_FLAT_LOOKUP_KEY,
+                STRIPE_PRO_YEARLY_USAGE_LOOKUP_KEY,
               ])
             );
           } else {
             dispatch(
               createPaymentSession([
-                STRIPE_TEAM_MONTHLY_FLAT_LOOKUP_KEY,
-                STRIPE_TEAM_MONTHLY_USAGE_LOOKUP_KEY,
+                STRIPE_PRO_MONTHLY_FLAT_LOOKUP_KEY,
+                STRIPE_PRO_MONTHLY_USAGE_LOOKUP_KEY,
               ])
             );
           }
@@ -134,23 +133,24 @@ export const StartWithPlan = () => {
     },
     {
       price: "",
-      title: "Custom",
+      title: "Team",
       plan: "custom",
-      subtitle: "Fully tailored for your use case.",
-      featureTitle: "Everything in Team, plus",
+      subtitle: "Best for high-growth teams.",
+      featureTitle: "Everything in Pro, plus",
+      billFrequency: "Billed annually",
       features: [
-        "Testing playground",
-        "Integration assistance",
-        "Use-case optimization",
+        "Unlimited request",
+        "Unlimited seats",
+        "Fine-tuning",
         "Increased rate limit",
-        "Volume discount",
+        "SOC 2 compliance",
       ],
       downgradeParams: {
-        buttonText: "Book a demo",
+        buttonText: "Talk to founders",
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
       buttonParams: {
@@ -158,7 +158,7 @@ export const StartWithPlan = () => {
         buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           // To update to the correct link
-          window.open("https://keywordsai.co", "_blank");
+          window.open("https://cal.com/keywordsai/demo", "_blank");
         },
       },
     },
@@ -188,7 +188,7 @@ export const StartWithPlan = () => {
 
   const handleSwitchChange = (checked: boolean) => {
     setIsYearly(checked);
-    setTeamPrice(checked ? "29" : "39");
+    setTeamPrice(checked ? "79" : "99");
   };
 
   return (
@@ -208,7 +208,7 @@ export const StartWithPlan = () => {
             />
             <div>
               <span className="text-sm-md text-gray-4">Yearly</span>
-              <span className="text-sm-md text-primary"> (35% off) </span>
+              <span className="text-sm-md text-primary"> (20% off) </span>
             </div>
           </div>
           <div className="flex flex-row gap-sm self-stretch">

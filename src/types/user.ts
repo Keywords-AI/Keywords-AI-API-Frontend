@@ -16,6 +16,7 @@ export type SystemPrompt = {
 };
 
 export type User = {
+  failed: boolean;
   loading: boolean;
   id: number | null;
   sort_by: string;
@@ -38,6 +39,7 @@ export type User = {
   is_active: boolean;
   active_subscription: boolean;
   is_admin: boolean;
+  is_superadmin: boolean;
   last_conversation: number;
   plans: any[];
   file_prompt: SystemPrompt;

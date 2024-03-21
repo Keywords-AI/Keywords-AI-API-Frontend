@@ -15,6 +15,7 @@ type KeywordsFetchRequestConfig = {
   credentials?: RequestCredentials; // Credentials policy for the request, defaults to "same-origin"
   dispatch?: TypedDispatch | undefined; // Optional Redux dispatch function, requried for notifications
   hideError?: boolean; // Optional flag to hide error notifications
+  errorHandling?: (status: number) => void; // Optional error handling function
 };
 
 /**
@@ -42,6 +43,7 @@ export const keywordsRequest = async ({
   credentials = "same-origin",
   dispatch,
   hideError = false,
+  errorHandling = (status: number) => {},
 }: KeywordsFetchRequestConfig): Promise<any> => {
   try {
     const headers: Record<string, string> = {
@@ -73,6 +75,7 @@ export const keywordsRequest = async ({
       if (dispatch && typeof dispatch === "function" && !hideError) {
         dispatch(handleApiResponseErrors(error, status));
       }
+      errorHandling(status);
       throw new Error(error.detail || "Request failed");
     }
   } catch (error: Error | any) {
@@ -105,7 +108,7 @@ export const keywordsStream = ({
   apiKey,
   dispatch,
 }: StreamingParams) => {
-  console.log("data", data);
+  // console.log("data", data);
   const headers = {
     "Content-Type": "application/json",
   };
@@ -122,7 +125,7 @@ export const keywordsStream = ({
   });
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => {
-      reject(500);
+      throw new Error("Request timed out");
     }, 10000); // 10 seconds
   });
 
@@ -131,9 +134,9 @@ export const keywordsStream = ({
       if (!stream.ok) {
         const errors = await stream.json();
         if (dispatch && typeof dispatch === "function") {
-          dispatch(handleApiResponseErrors(errors, stream.status));
+          // dispatch(handleApiResponseErrors(errors, stream.status));
         }
-        throw new Error(JSON.stringify(errors));
+        throw new Error(errors.error);
       }
       const reader = stream?.body.getReader();
       const decoder = new TextDecoder();
@@ -166,6 +169,7 @@ export const keywordsStream = ({
             count++;
           }
         } catch (e) {
+          console.error("Stream error:", e);
           throw e;
         }
       })();
@@ -259,42 +263,46 @@ export const keywordsApiStream = ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then(async (stream: any) => {
-    if (!stream.ok) {
-      const errors = await stream.json();
-      if (dispatch && typeof dispatch === "function") {
-        dispatch(handleApiResponseErrors(errors, stream.status));
+  })
+    .then(async (stream: any) => {
+      if (!stream.ok) {
+        const errors = await stream.json();
+        if (dispatch && typeof dispatch === "function") {
+          dispatch(handleApiResponseErrors(errors, stream.status));
+        }
+        throw new Error("Stream response error");
       }
-      throw new Error("Stream response error");
-    }
-    const reader = stream?.body.getReader();
-    const decoder = new TextDecoder();
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    // Start reading the stream
-    (async () => {
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done || signal.aborted) {
-            break;
-          }
-          const message = decoder.decode(value);
-          // Splitting the returned text chunck with the delimiter
-          for (const line of message.split("---")) {
-            // Line is a JSON string
-            if (readStreamLine && typeof readStreamLine === "function") {
-              readStreamLine(line);
+      const reader = stream?.body.getReader();
+      const decoder = new TextDecoder();
+      const abortController = new AbortController();
+      const signal = abortController.signal;
+      // Start reading the stream
+      (async () => {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done || signal.aborted) {
+              break;
+            }
+            const message = decoder.decode(value);
+            // Splitting the returned text chunck with the delimiter
+            for (const line of message.split("---")) {
+              // Line is a JSON string
+              if (readStreamLine && typeof readStreamLine === "function") {
+                readStreamLine(line);
+              }
             }
           }
+        } catch (e) {
+          console.error("Stream error:", e);
         }
-      } catch (e) {
-        console.error("Stream error:", e);
-      }
-    })();
-    // Return a function to abort the stream from outside
-    return () => {
-      abortController.abort();
-    };
-  });
+      })();
+      // Return a function to abort the stream from outside
+      return () => {
+        abortController.abort();
+      };
+    })
+    .catch((error) => {
+      console.error("Stream error:", error);
+    });
 };

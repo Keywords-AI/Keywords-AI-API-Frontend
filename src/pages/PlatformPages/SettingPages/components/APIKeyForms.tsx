@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "src/components/Dialogs";
 import cn from "src/utilities/classMerge";
 import { useTypedSelector } from "src/store/store";
+import Accordion from "src/components/Sections/Accordion/Accordion";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -75,6 +76,16 @@ const expiryOptions = [
   },
 ];
 
+const EnvironmentOptions = [
+  {
+    name: "Test",
+    value: true,
+  },
+  {
+    name: "Prod",
+    value: false,
+  },
+];
 const unitOptions = [
   // 'Never' represented by a far future date in the specified format
   {
@@ -126,9 +137,10 @@ const CreateFormNotConnected = React.forwardRef(
     } = useForm();
     const onSubmit = (data) => {
       const name = data.name || "New Key";
+      data.name = name;
       setNewKeyName!(name);
       if (!showMore) {
-        createApiKey!({ name: name, expiry_date: data.expiry_date });
+        createApiKey!(data);
         return;
       }
 
@@ -157,7 +169,7 @@ const CreateFormNotConnected = React.forwardRef(
       >
         {!apiKey?.apiKey ? (
           <React.Fragment>
-            <div className="grid gap-xs grid-cols-[1fr,160px]">
+            <div className="grid gap-xs grid-cols-[1fr,120px]">
               <TextInput
                 title={"Name"}
                 width={"w-full"}
@@ -168,7 +180,7 @@ const CreateFormNotConnected = React.forwardRef(
                 // onKeyDown={handleEnter}
                 placeholder={"test key 1"}
               />
-              <SelectInput
+              {/* <SelectInput
                 title={"Expiry"}
                 optionsWidth={"w-[160px]"}
                 {...register("expiry_date")}
@@ -179,23 +191,31 @@ const CreateFormNotConnected = React.forwardRef(
                   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
                 }
                 choices={expiryOptions}
+              /> */}
+              <SelectInput
+                title={"Environment"}
+                optionsWidth={"w-[120px]"}
+                {...register("is_test")}
+                // onKeyDown={handleEnter}
+                defaultValue={false}
+                //This corresponds to the 'Never' option
+                // defaultValue={
+                //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+                // }
+                choices={EnvironmentOptions}
               />
             </div>
-            <div className="flex-col justify-center items-start gap-xs self-stretch">
-              <Button
-                icon={showMore ? Up : Down}
-                variant="text"
-                type="button"
-                text="More options"
-                justification="justify-center"
-                iconSize="xxs"
-                onClick={() => setShowMore((prev) => !prev)}
-                padding="py-xxs"
-              />
-              <div className="flex-col items-start justify-center gap-md self-stretch">
-                {showMore && (
-                  <>
-                    <div className="flex items-center gap-xs self-stretch">
+            <Accordion
+              className={
+                "flex-col justify-center items-start gap-xs self-stretch"
+              }
+              // value={accordion2}
+              // onValueChange={setAccordion2}
+              content={{
+                trigger: "More options",
+                content: (
+                  <div className="flex-col justify-center gap-md self-stretch">
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
                       <TextInput
                         title={"Rate limit"}
                         width={"w-full"}
@@ -207,30 +227,115 @@ const CreateFormNotConnected = React.forwardRef(
                       />
                       <SelectInput
                         title={"Unit"}
-                        optionsWidth={"w-[160px]"}
+                        optionsWidth={"w-[120px]"}
                         {...register("unit", {
                           value: currentUnit,
                           onChange: (e) => setCurrentUnit(e.target.value),
                         })}
                         // onKeyDown={handleEnter}
                         placeholder={"per minute"}
-                        width="w-[160px]"
+                        width="w-[120px]"
                         //This corresponds to the 'Never' option
                         choices={unitOptions}
                       />
                     </div>
-                    <TextInput
-                      title={"Spending limit"}
-                      width={"w-full"}
-                      {...register("spending_limit")}
-                      // onKeyDown={handleEnter}
-                      placeholder={"100"}
-                      type="number"
-                      defaultValue={200}
-                      dollarSign
-                    />
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Spending limit"}
+                        width={"w-full"}
+                        {...register("spending_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"100"}
+                        type="number"
+                        defaultValue={200}
+                        dollarSign
+                      />
+                      <SelectInput
+                        title={"Expiry"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("expiry_date")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"Key-1"}
+                        //This corresponds to the 'Never' option
+                        defaultValue={
+                          new Date("3000-12-31T23:59:59Z")
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                        choices={expiryOptions}
+                      />
+                    </div>
+                  </div>
+                ),
+                contentClassName: "flex-col justify-center gap-md self-stretch",
+              }}
+            />
+            <div className="flex-col justify-center items-start gap-xs self-stretch">
+              {/* <Button
+                icon={showMore ? Up : Down}
+                variant="text"
+                type="button"
+                text="More options"
+                justification="justify-center"
+                iconSize="xxs"
+                onClick={() => setShowMore((prev) => !prev)}
+                padding="py-xxs"
+              /> */}
+              <div className="flex-col justify-center gap-md self-stretch">
+                {/* {showMore && (
+                  <>
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Rate limit"}
+                        width={"w-full"}
+                        {...register("rate_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"None"}
+                        type="number"
+                        pseudoElementClass="special-input"
+                      />
+                      <SelectInput
+                        title={"Unit"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("unit", {
+                          value: currentUnit,
+                          onChange: (e) => setCurrentUnit(e.target.value),
+                        })}
+                        // onKeyDown={handleEnter}
+                        placeholder={"per minute"}
+                        width="w-[120px]"
+                        //This corresponds to the 'Never' option
+                        choices={unitOptions}
+                      />
+                    </div>
+                    <div className="grid gap-xs grid-cols-[1fr,120px]">
+                      <TextInput
+                        title={"Spending limit"}
+                        width={"w-full"}
+                        {...register("spending_limit")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"100"}
+                        type="number"
+                        defaultValue={200}
+                        dollarSign
+                      />
+                      <SelectInput
+                        title={"Expiry"}
+                        optionsWidth={"w-[120px]"}
+                        {...register("expiry_date")}
+                        // onKeyDown={handleEnter}
+                        placeholder={"Key-1"}
+                        //This corresponds to the 'Never' option
+                        defaultValue={
+                          new Date("3000-12-31T23:59:59Z")
+                            .toISOString()
+                            .split("T")[0]
+                        }
+                        choices={expiryOptions}
+                      />
+                    </div>
                   </>
-                )}
+                )} */}
                 <div
                   className={cn(
                     "flex-row self-stretch items-center",
@@ -390,10 +495,12 @@ const EditFormNotConnected = ({
     editingKey?.name || "New Key"
   );
   const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
+  const [currentEnv, setcurrentEnv] = useState(editingKey?.is_test ?? false);
   console.log("currentUnit", currentUnit);
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
+      setcurrentEnv(editingKey.is_test);
     }
   }, [editingKey]);
   const {
@@ -416,7 +523,7 @@ const EditFormNotConnected = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <React.Fragment>
-        <div className="grid gap-xs grid-cols-[1fr,160px]">
+        <div className="grid gap-xs grid-cols-[1fr,120px]">
           <TextInput
             title={"Name"}
             width={"w-full"}
@@ -427,9 +534,9 @@ const EditFormNotConnected = ({
             // onKeyDown={handleEnter}
             placeholder={"test key 1"}
           />
-          <SelectInput
+          {/* <SelectInput
             title={"Expiry"}
-            optionsWidth={"w-[160px]"}
+            optionsWidth={"w-[120px]"}
             {...register("expiry_date")}
             // onKeyDown={handleEnter}
             placeholder={"Key-1"}
@@ -438,19 +545,88 @@ const EditFormNotConnected = ({
               new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
             }
             choices={expiryOptions}
+          /> */}
+          <SelectInput
+            title={"Environment"}
+            optionsWidth={"w-[120px]"}
+            {...register("is_test", {value: currentEnv, onChange: ()=>{ setcurrentEnv(!currentEnv)}})}
+            choices={EnvironmentOptions}
+            value={currentEnv}
+            // onKeyDown={handleEnter}
+            //This corresponds to the 'Never' option
+            // defaultValue={
+            //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
+            // }
           />
         </div>
+        <Accordion
+          className={"flex-col justify-center items-start gap-xs self-stretch"}
+          // value={accordion2}
+          // onValueChange={setAccordion2}
+          content={{
+            trigger: "More options",
+            content: (
+              <div className="flex-col justify-center gap-md self-stretch">
+                <div className="grid gap-xs grid-cols-[1fr,120px]">
+                  <TextInput
+                    title={"Rate limit"}
+                    width={"w-full"}
+                    {...register("rate_limit")}
+                    // onKeyDown={handleEnter}
+                    placeholder={"None"}
+                    type="number"
+                    defaultValue={editingKey?.rate_limit}
+                    pseudoElementClass="special-input"
+                  />
+                  <SelectInput
+                    title={"Unit"}
+                    optionsWidth={"w-[120px]"}
+                    {...register("unit", {
+                      value: currentUnit,
+                      onChange: (e) => setCurrentUnit(e.target.value),
+                    })}
+                    // onKeyDown={handleEnter}
+                    placeholder={"per minute"}
+                    width="w-[120px]"
+                    //This corresponds to the 'Never' option
+                    choices={unitOptions}
+                  />
+                </div>
+
+                <div className="grid gap-xs grid-cols-[1fr,120px]">
+                  <TextInput
+                    title={"Spending limit"}
+                    width={"w-full"}
+                    {...register("spending_limit")}
+                    // onKeyDown={handleEnter}
+                    placeholder={"100"}
+                    type="number"
+                    defaultValue={200}
+                    dollarSign
+                  />
+                  <SelectInput
+                    title={"Expiry"}
+                    optionsWidth={"w-[120px]"}
+                    {...register("expiry_date")}
+                    // onKeyDown={handleEnter}
+                    placeholder={"Key-1"}
+                    //This corresponds to the 'Never' option
+                    defaultValue={
+                      new Date("3000-12-31T23:59:59Z")
+                        .toISOString()
+                        .split("T")[0]
+                    }
+                    choices={expiryOptions}
+                  />
+                </div>
+              </div>
+            ),
+            contentClassName: "flex-col justify-center gap-md self-stretch",
+          }}
+        />
         <div className="flex-col justify-center items-start gap-xs self-stretch">
-          <Button
-            icon={Down}
-            variant="text"
-            type="button"
-            text="More options"
-            onClick={() => setShowMore((prev) => !prev)}
-            padding="py-xxxs"
-          />
           <div className="flex-col items-start justify-center gap-md self-stretch">
-            {showMore && (
+            {/* {showMore && (
               <>
                 <div className="flex items-center gap-xs self-stretch">
                   <TextInput
@@ -488,7 +664,7 @@ const EditFormNotConnected = ({
                   defaultValue={editingKey?.spending_limit}
                 />
               </>
-            )}
+            )} */}
             <div
               className={cn(
                 "flex-row self-stretch items-center",

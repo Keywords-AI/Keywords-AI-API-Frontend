@@ -7,6 +7,7 @@ import {
   isLoggedIn,
   updateUser,
   clearNotifications,
+  validateToken,
 } from "src/store/actions";
 import "src/components/styles/index.css";
 import { accessMap, retrieveAccessToken } from "./utilities/authorization";
@@ -50,10 +51,13 @@ import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
 import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
 import posthog from "posthog-js";
-import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
+const UsersPage = lazy(() =>
+  import("./pages/PlatformPages/UserPage/UsersPage")
+);
 import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
+import ResendActivation from "./pages/AuthPages/ResendActivation";
 
 const mapStateToProps = (state) => {
   return {
@@ -71,6 +75,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
   const hasAccess = user.loading ? true : user.is_admin ? true : false;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
+  const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
   useEffect(() => {
     getUser();
   }, []);
@@ -81,24 +86,39 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     //   ? console.log("has access")
     //   : console.log("No access");
   }, [location]);
+
   useEffect(() => {
+    const validateLogin = async () => {
+      let result = await validateToken();
+      if (!result) {
+        navigate("/login");
+      }
+    };
+    validateLogin();
     const intervalId = setInterval(() => {
       // rotate the token every 10 minutes
       setAuthToken(refreshToken());
     }, 1000 * 10 * 60);
     return () => clearInterval(intervalId);
   }, [authToken]);
+
   useEffect(() => {
     // Distinct between org is empty because of loading vs org is empty because user doesn't have org
+    if (user.loading) return;
+
+    // if (user.failed || !isLoggedIn(user)) {
+    //   window.location.href = "https://keywordsai.co/";
+    // }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
-    if (organization.id && !organization?.loading) {
-      // The init state of org is not empty, but the id is null
-      if (!onOnboradingPage && !organization?.active_subscription) {
-        // navigate to onboarding page if user hasn't onboarded
-        navigate("/onboarding");
-      }
-    }
+    // if (organization.id) {
+    //   // The init state of org is not empty, but the id is null
+    //   if (!onOnboradingPage && !organization?.id && !organization?.loading) {
+    //     // navigate to onboarding page if user hasn't onboarded
+    //     console.log("Tried navigating");
+    //     navigate("/onboarding");
+    //   }
+    // }
     if (!organization?.id && !organization?.loading) {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded
@@ -115,7 +135,6 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   }, [user]);
 
   // comment the 2 lines below to switch between logged in/out states
-  const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
 
   const routes = [
     {
@@ -133,11 +152,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: "dashboard",
           element: <Dashboard />,
         },
-        {
-          path: "sentiment",
-          element: <Sentiment />,
-        },
-
+        { path: "users", element: <UsersPage /> },
         {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
@@ -151,8 +166,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         { path: "chatbot", element: <Chatbot /> },
         { path: "loading", element: <LoadingPage /> },
         { path: "cache", element: <CachePage /> },
-        { path: "users", element: <UsersPage /> },
         { path: "customers", element: <CustomerPage /> },
+        {
+          path: "sentiment",
+          element: <Sentiment />,
+        },
         {
           path: "qa-wall",
           element: <LeftNavigationLayout sectionName={"qa-wall"} />,
@@ -183,6 +201,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           element: <ResetPassword />,
         },
         { path: "activate/:uid?/:token?", element: <ActivationPage /> },
+        { path: "resend-activation", element: <ResendActivation /> },
         {
           path: "onboarding",
           element: isUserLoggedIn ? (
@@ -191,10 +210,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
             <Navigate to="/login" />
           ),
         },
-        {
-          path: "onboarding/plans",
-          element: <StartWithPlan />,
-        },
+        // {
+        //   path: "onboarding/plans",
+        //   element: <StartWithPlan />,
+        // },
         {
           path: "onboarding/get-started",
           element: <GetStarted />,

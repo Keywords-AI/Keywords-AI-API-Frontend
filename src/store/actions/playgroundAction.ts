@@ -42,7 +42,14 @@ export const SET_MODEL_LOG_DATA = "SET_MODEL_LOG_DATA";
 export const RESET_MODEL_OPTIONS = "RESET_MODEL_OPTIONS";
 export const RESET_PLAYGROUND = "RESET_PLAYGROUND";
 export const DEFAULT_RESET = "DEFAULT_RESET";
+export const SET_FOCUS_INDEX = "SET_FOCUS_INDEX";
+
 // Action Creator
+
+export const setFocusIndex = (index) => ({
+  type: SET_FOCUS_INDEX,
+  payload: index,
+});
 export const defaultReset = () => ({
   type: DEFAULT_RESET,
 });
@@ -157,8 +164,14 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const currentModels = playground.currentModels;
     const messages = playground.messages;
+    const lastMessage = messages.slice(-1)[0];
+    if (
+      lastMessage.role == "user" &&
+      lastMessage.user_content.replace(/\s/g, "") == ""
+    ) {
+      return;
+    }
     const systemPrompt = playground.prompt;
     const modelOptions = playground.modelOptions;
 
@@ -310,8 +323,11 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
             },
           });
         } catch (error: any) {
-          console.log("error", error);
-          let displayError = { errorText: "An error occurred", errorCode: 404 };
+          console.log("playg", error.message);
+          let displayError = {
+            errorText: error.message || "An error occurred",
+            errorCode: 404,
+          };
           if (!isNaN(parseFloat(error.message))) {
             displayError.errorCode = +error.message;
           }
@@ -592,6 +608,37 @@ const readStreamChunk = (chunk: string, channel: number) => {
       //     })
       //   );
       // }
+    }
+  };
+};
+
+export const setMessageRole = (id, role) => {
+  return (dispatch, getState) => {
+    const messages = getState().playground.messages;
+    const message = messages.find((message) => message.id === id);
+    if (!message) return;
+    if (message.role === role) return;
+    if (role === "user") {
+      dispatch(setMessageByIndex({ id, role: "user", user_content: "" }));
+    } else if (role === "assistant") {
+      dispatch(
+        setMessageByIndex({
+          index: message.id,
+          content: {
+            id,
+            role: "assistant",
+            user_content: "",
+            responses: [
+              {
+                model: "None",
+                content: message.user_content || "\u200B",
+                complete: true,
+              },
+            ],
+          },
+        })
+      );
+      dispatch(setChannelMode(true));
     }
   };
 };

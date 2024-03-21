@@ -17,6 +17,8 @@ import cachePageReducer from "./cachePageReducer";
 import modelReducer from "./modelReducer";
 import usersPageReducer from "./usersPageReducer";
 import customersPageReducer from "./customersPageReducer";
+import { webhookReducer } from "./webhookReducer";
+
 const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
   return {
     user: userReducer(state.user, action),
@@ -37,6 +39,7 @@ const rootReducer = (state: any = {}, action: PayloadAction<any>) => {
     models: modelReducer(state.models, action),
     usersPage: usersPageReducer(state.usersPage, action),
     customersPage: customersPageReducer(state.customersPage, action),
+    webhook: webhookReducer(state.webhook, action),
   };
 };
 

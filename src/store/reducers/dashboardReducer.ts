@@ -42,6 +42,7 @@ import {
   UPDATE_DASHBOARD_FILTER,
   DELETE_DASHBOARD_FILTER,
   SET_AVG_TTFT_DATA,
+  SET_TPS_DATA,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -137,6 +138,7 @@ const initState = {
   filterOptions: {} as FilterParams,
   avgModelData: [],
   apiData: [],
+  tpsData: [],
   avgApiData: [],
   displayFilter: loadFilter(),
   groupByData: [],
@@ -211,6 +213,8 @@ export default function dashboardReducer(
   action
 ): DashboardState {
   switch (action.type) {
+    case SET_TPS_DATA:
+      return { ...state, tpsData: action.payload };
     case SET_DASHBOARD_LOADING:
       return { ...state, loading: action.payload };
     case SET_DASHBOARD_DATA:
@@ -297,18 +301,32 @@ export default function dashboardReducer(
       switch (state.displayFilter.timeRange) {
         case "yearly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
+          updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+          break;
+        case "yearly_by_week":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
           break;
         case "monthly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
           break;
         case "weekly":
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+          break;
+        case "quarterly":
+          updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
+          updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset * 3);
           break;
         default:
           updatedTimeFrame = new Date(currTime);
+          updatedTimeFrame.setHours(12, 0, 0, 0);
           updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
       }
       return {

@@ -9,11 +9,16 @@ import { IntegrationsPage } from "./IntegrationsPage";
 import { generateChild } from "src/utilities/objectProcessing";
 import { AlertsFallbackPage } from "./AlertsFallbackPage";
 import { ModelRouterPage } from "./ModelRouterPage";
-import { UserSettings } from "./UserSettingsPage";
 import { Navigate } from "react-router-dom";
 import { REDIRECT_URI } from "src/utilities/navigation";
 import { PlansPage } from "./PlansPage";
 import ModelsPage from "./Modelspage";
+import Admin from "./AdminPage";
+import { UserSettings } from "./UserSettingsPage";
+import { WebhookPage } from "./WebhookPage";
+import store from "src/store/store";
+import Evaluations from "./Evaluations/Evaluations";
+
 const pages: PreProcessPage[] = [
   {
     title: "General",
@@ -35,7 +40,7 @@ const pages: PreProcessPage[] = [
   //   page: <IntegrationsPage />,
   // },
   // {
-  //   title: "Model Router",
+  //   title: "Model Router"
   //   forOrgAdmin: true,
   //   page: <ModelRouterPage />,
   // },
@@ -54,9 +59,17 @@ const pages: PreProcessPage[] = [
     page: <ApiKeyPage />,
   },
   {
+    title: "Webhooks",
+    page: <WebhookPage />,
+  },
+  {
     title: "Alerts & Fallback",
     forOrgAdmin: true,
     page: <AlertsFallbackPage />,
+  },
+  {
+    title: "Evaluations",
+    page: <Evaluations />,
   },
   {
     title: "Models",
@@ -64,11 +77,16 @@ const pages: PreProcessPage[] = [
   },
 ];
 
-const userPages = [
+const userPages: PreProcessPage[] = [
   {
     title: "Settings",
-    // forAdmin: true,
     page: <UserSettings />,
+  },
+
+  {
+    title: "Admin",
+    forKeywordsAdmin: true,
+    page: <Admin />,
   },
 ];
 

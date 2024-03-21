@@ -15,6 +15,7 @@ import { ModelType, models } from "src/utilities/constants";
 import cn from "src/utilities/classMerge";
 import { Drawer } from "src/components/Dialogs/Drawer";
 import { useTypedSelector } from "src/store/store";
+import { parse } from "postcss";
 
 const RightDrawerContent = ({
   model_name,
@@ -91,7 +92,7 @@ const RightDrawerContent = ({
       label: "Prompt pricing",
       value: (
         <span className="text-sm-regular text-gray-5">
-          ${(input_cost / 1000) || 0.2134}
+          ${input_cost / 1000 || 0.2134}
           <span className=" text-gray-4 text-sm-regular"> / 1K tokens</span>
         </span>
       ),
@@ -199,21 +200,39 @@ const ModelsTable = ({ ModelItems }: { ModelItems: any }) => {
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    ${(item.input_cost * 1.05 / 1000).toFixed(6)}
+                    {item.input_cost === 0
+                      ? "Free"
+                      : `$${
+                          Number.isInteger(item.input_cost)
+                            ? item.input_cost
+                            : parseFloat(item.input_cost.toFixed(3))
+                        }`}
                   </span>
-                  <span className=" text-gray-4 text-sm-regular">
-                    {" "}
-                    / 1K tokens
-                  </span>
+                  {item.input_cost !== 0 && (
+                    <span className=" text-gray-4 text-sm-regular">
+                      {" "}
+                      / 1M tokens
+                    </span>
+                  )}
                 </div>
                 <div className="flex w-[180px] items-center self-stretch text-gray-4 text-sm-md">
                   <span className="text-gray-5 text-sm-regular">
-                    ${(item.output_cost * 1.05 / 1000).toFixed(6)}
+                    {/* ${(item.output_cost).toFixed(3)} */}
+                    {/* $ {Number.isInteger(item.output_cost) ? (item.output_cost) : (item.output_cost).toFixed(3)} */}
+                    {item.output_cost === 0
+                      ? "Free"
+                      : `$${
+                          Number.isInteger(item.output_cost)
+                            ? item.output_cost
+                            : parseFloat(item.output_cost.toFixed(3))
+                        }`}
                   </span>
-                  <span className=" text-gray-4 text-sm-regular">
-                    {" "}
-                    / 1K tokens
-                  </span>
+                  {item.output_cost !== 0 && (
+                    <span className=" text-gray-4 text-sm-regular">
+                      {" "}
+                      / 1M tokens
+                    </span>
+                  )}
                 </div>
                 <div className="flex w-[80px] items-center self-stretch text-gray-4 text-sm-regular">
                   {item.max_context_window}

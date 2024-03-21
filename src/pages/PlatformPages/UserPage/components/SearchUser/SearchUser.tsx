@@ -6,13 +6,10 @@ import { useForm } from "react-hook-form";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import Tooltip from "src/components/Misc/Tooltip";
 export default function SearchUser({ handleSearch, handleReset }) {
-  const { register } = useForm();
+  const { register, reset } = useForm();
   const [searchText, setSearchText] = useState("");
   const { enableScope, disableScope } = useHotkeysContext();
-  useHotkeys("s", () => {}, {
-    scopes: "log_actions",
-    preventDefault: true,
-  });
+
   useEffect(() => {
     enableScope("small_search_prompt");
     return () => {
@@ -22,6 +19,8 @@ export default function SearchUser({ handleSearch, handleReset }) {
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch(searchText);
+      reset();
+      setSearchText("");
     }
   };
   const inputRef = useRef<HTMLInputElement>(null);
