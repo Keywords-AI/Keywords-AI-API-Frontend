@@ -197,7 +197,7 @@ const CreateFormNotConnected = React.forwardRef(
                 optionsWidth={"w-[120px]"}
                 {...register("is_test")}
                 // onKeyDown={handleEnter}
-                defaultValue={true}
+                defaultValue={false}
                 //This corresponds to the 'Never' option
                 // defaultValue={
                 //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
@@ -549,7 +549,7 @@ const EditFormNotConnected = ({
             optionsWidth={"w-[120px]"}
             {...register("is_test")}
             // onKeyDown={handleEnter}
-            defaultValue={true}
+            defaultValue={false}
             //This corresponds to the 'Never' option
             // defaultValue={
             //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
