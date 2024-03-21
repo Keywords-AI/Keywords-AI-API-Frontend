@@ -621,6 +621,22 @@ export const setMessageRole = (id, role) => {
     if (role === "user") {
       dispatch(setMessageByIndex({ id, role: "user", user_content: "" }));
     } else if (role === "assistant") {
+      const responsesa =
+        getState().playground.modelOptions.models[0] != "none"
+          ? {
+              model: getState().playground.modelOptions.models[0],
+              content: message.user_content || "\u200B",
+              complete: true,
+            }
+          : null;
+      const responsesb =
+        getState().playground.modelOptions.models[1] != "none"
+          ? {
+              model: getState().playground.modelOptions.models[1],
+              content: message.user_content || "\u200B",
+              complete: true,
+            }
+          : null;
       dispatch(
         setMessageByIndex({
           index: message.id,
@@ -628,13 +644,7 @@ export const setMessageRole = (id, role) => {
             id,
             role: "assistant",
             user_content: "",
-            responses: [
-              {
-                model: "None",
-                content: message.user_content || "\u200B",
-                complete: true,
-              },
-            ],
+            responses: [responsesa, responsesb],
           },
         })
       );

@@ -142,9 +142,9 @@ export function PlaygroundMessage({
         <MessageHeader
           title={
             <div
-              // onClick={() => {
-              //   dispatch(setMessageRole(id, "assistant"));
-              // }}
+              onClick={() => {
+                dispatch(setMessageRole(id, "assistant"));
+              }}
               className="text-sm-md text-gray-4"
             >
               User
