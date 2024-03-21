@@ -51,7 +51,9 @@ import { Sentiment } from "./pages/PlatformPages/Sentiment";
 import CachePage from "./pages/CachePage/CachePage";
 import { Forbidden } from "./pages/AuthPages/NotFound/Forbidden";
 import posthog from "posthog-js";
-import UsersPage from "./pages/PlatformPages/UserPage/UsersPage";
+const UsersPage = lazy(() =>
+  import("./pages/PlatformPages/UserPage/UsersPage")
+);
 import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
@@ -109,14 +111,14 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     // }
     const onOnboradingPage = window.location.pathname.includes("/onboarding");
 
-    if (organization.id) {
-      // The init state of org is not empty, but the id is null
-      if (!onOnboradingPage && !organization?.onboarded) {
-        // navigate to onboarding page if user hasn't onboarded
-        console.log("Tried navigating");
-        navigate("/onboarding");
-      }
-    }
+    // if (organization.id) {
+    //   // The init state of org is not empty, but the id is null
+    //   if (!onOnboradingPage && !organization?.id && !organization?.loading) {
+    //     // navigate to onboarding page if user hasn't onboarded
+    //     console.log("Tried navigating");
+    //     navigate("/onboarding");
+    //   }
+    // }
     if (!organization?.id && !organization?.loading) {
       // If user doesn't have org, fetching the user will make org null
       // navigate to dashboard if user has onboarded

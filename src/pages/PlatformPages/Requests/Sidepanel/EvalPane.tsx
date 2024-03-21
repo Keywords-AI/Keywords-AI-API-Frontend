@@ -44,11 +44,19 @@ export default function EvalPane({}) {
         logItem?.evaluations?.answer_relevance?.LLM_based_answer_relevance
       );
   const sentiment = isNaN(
-    parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score)
+    parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score as any)
   )
     ? null
+<<<<<<< HEAD
+    : parseFloat(
+        logItem?.evaluations?.sentiment_analysis?.sentiment_score as any
+      );
+  const cost =
+    logItem?.evaluations?.evaluation_cost || logItem?.evaluation_cost;
+=======
     : parseFloat(logItem?.evaluations?.sentiment_analysis?.sentiment_score);
   const cost = logItem.evaluation_cost;
+>>>>>>> main
   const topics = logItem?.evaluations?.topic_analysis?.results || [];
   const displayObj = [
     {

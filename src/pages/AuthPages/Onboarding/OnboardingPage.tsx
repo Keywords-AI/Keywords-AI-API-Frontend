@@ -58,38 +58,29 @@ export const OnboardingPage = () => {
     // <OptimizeCosts />,
   ];
   useEffect(() => {
-    if (organization?.onboarded) {
+    if (organization?.id) {
       navigate("/platform");
-    } else {
-      const loadStep = organization?.curr_onboarding_step > formfields.length? formfields.length: organization?.curr_onboarding_step
-      setQueryParams({ curr_step: loadStep }, navigate);
     }
+    // else {
+    //   const loadStep = organization?.curr_onboarding_step > formfields.length? formfields.length: organization?.curr_onboarding_step
+    //   setQueryParams({ curr_step: loadStep }, navigate);
+    // }
   }, [organization]);
   return (
     <>
       <div
         className={cn(
           "flex flex-col items-start self-stretch gap-xxs",
-          curr_step <= formfields.length - 1 ? "items-start" : "items-end"
+          "items-start"
         )}
       >
-        {curr_step <= formfields.length - 1 ? (
-          <Button
-            text={"Sign out"}
-            variant={"r18-black"}
-            onClick={handleBackButtonClick}
-            icon={Left}
-            iconPosition={"left"}
-          />
-        ) : (
-          <Button
-            text={"Skip"}
-            variant={"r18-black"}
-            onClick={handleSkipInvite}
-            icon={Right}
-            iconPosition={"right"}
-          />
-        )}
+        <Button
+          text={"Sign out"}
+          variant={"r18-black"}
+          onClick={handleBackButtonClick}
+          icon={Left}
+          iconPosition={"left"}
+        />
       </div>
       <div className="w-full max-w-[420px] flex-col flex-grow">
         {formfields.map((field, index) => {
@@ -100,34 +91,20 @@ export const OnboardingPage = () => {
                 watch,
                 stepNumber: index + 1,
                 buttonAction: () => {
-                  dispatch(
-                    updateOrganization(
-                      { curr_onboarding_step: index + 1 },
-                      () => {},
-                      true
-                    )
-                  );
-                  if (index + 1 == formfields.length) {
-                    dispatch(UpdateOrgSubscription("starter"));
-                    dispatch(updateOrganization({onboarded: true}))
-                    // give user starter subscription
-                    setQueryParams({ curr_step: index + 2 }, navigate);
-                  } else {
-                    setQueryParams({ curr_step: index + 2 }, navigate);
-                  }
+                  // dispatch(updateOrganization({ onboarded: true }));
                 },
               })}
             </React.Fragment>
           );
         })}
       </div>
-      <StepsBar
+      {/* <StepsBar
         className={cn(
           "absolute bottom-md select-none",
           curr_step == formfields.length + 1 ? "hidden" : "visible"
         )}
         totalSteps={formfields.length}
-      />
+      /> */}
     </>
   );
 };
