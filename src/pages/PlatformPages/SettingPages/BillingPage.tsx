@@ -78,7 +78,14 @@ export const BillingPage = () => {
   }
   const totalAmount = organization?.organization_subscription?.credits?.length
     ? organization?.organization_subscription?.credits?.reduce(
-        (acc, credit) => acc + parseFloat(credit.amount.toFixed(2)),
+        (acc, credit) => {
+          if (
+            credit.expire_at != null &&
+            new Date(credit.expire_at) < new Date()
+          )
+            return acc;
+          return acc + parseFloat(credit.amount.toFixed(2));
+        },
         0.0
       )
     : null;
