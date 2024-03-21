@@ -34,6 +34,7 @@ export type LogItem = {
   token_per_second: number;
   metadata: any;
   organization: string;
+  evaluation_cost: number;
   evaluations: {
     evaluation_cost: any;
     answer_relevance?: any;

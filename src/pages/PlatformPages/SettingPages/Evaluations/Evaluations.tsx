@@ -16,7 +16,7 @@ type Props = {};
 
 export default function Evaluations({}: Props) {
   const orgnization = useTypedSelector((state) => state.organization);
-  const per = "100";
+  const per = "10";
   const [isHoverRandom, setIsHoverRandom] = React.useState(false);
   const {
     register,
@@ -34,7 +34,7 @@ export default function Evaluations({}: Props) {
     >
       {/* <PageParagraph
         heading={"Random sampling"}
-        subheading={"Evaluations will run on 100% of your requests."}
+        subheading={"Evaluations will run on 10% of your requests."}
       >
         <Modal
           title={"Random sampling"}
@@ -60,8 +60,8 @@ export default function Evaluations({}: Props) {
             {...register("percent", {
               required: "cannot be blank.",
             })}
-            defaultValue={100}
-            placeholder="100"
+            defaultValue={10}
+            placeholder="10"
           />
         </Modal>
       </PageParagraph> */}
