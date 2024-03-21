@@ -86,7 +86,7 @@ const userPages = [
 
   {
     title: "Admin",
-    forAdmin: true,
+    forKeywordsAdmin: true,
     page: <Admin />,
   },
 ];
