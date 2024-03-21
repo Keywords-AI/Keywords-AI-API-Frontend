@@ -61,7 +61,7 @@ export default function UsersPage({}: Props) {
       )}
       aria-label="frame 1733"
     >
-      {total_users !== 0 ? (
+      {!isEmpty ? (
         <>
           <TopBar />
           <div className="flex flex-1 self-stretch">

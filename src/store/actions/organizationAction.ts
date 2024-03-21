@@ -40,7 +40,7 @@ export const addMember = (member) => {
 
 export const createOrganization = (organization, callback = () => {}) => {
   // organization {name, organization_size}
-  return (dispatch) => {
+  return (dispatch, getState) => {
     keywordsFetch({
       path: "user/organizations/",
       method: "POST",
@@ -53,6 +53,7 @@ export const createOrganization = (organization, callback = () => {}) => {
           //     title: "Organization created successfully!",
           //   })
           // );
+
           return res.json();
         } else {
           if (res.status === 409) {
@@ -80,8 +81,10 @@ export const createOrganization = (organization, callback = () => {}) => {
         }
       })
       .then((responseJson) => {
-        console.log("responseJson", responseJson);
-        // dispatch(setOrg(responseJson));
+        dispatch(setOrg({ ...responseJson }));
+        dispatch(getUser());
+        // dispatch(UpdateOrgSubscription("starter"));
+
         callback();
       });
   };

@@ -20,6 +20,9 @@ export const MetricPane = ({}) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
+
+  const [accordion1, setAccordion1] = useState("open");
+  const [accordion2, setAccordion2] = useState("open");
   const displayObj = {
     "Request ID": (
       <span className="text-sm-regular text-gray-4 hover:text-gray-5">{logItem?.id || "-"}</span>
@@ -149,13 +152,13 @@ export const MetricPane = ({}) => {
       </span>
     ),
   };
-  const [accordion1, setAccordion1] = useState("open");
-  const [accordion2, setAccordion2] = useState("open");
+
   const dispatch = useDispatch();
 
   const onSubmit = () => {
     dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
   };
+  if (!logItem) return null;
   return (
     <>
       {logItem?.failed && (

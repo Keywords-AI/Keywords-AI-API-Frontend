@@ -166,16 +166,16 @@ export function FilterPanel() {
                   { name: "Cost", value: "-cost", secText: "2" },
                   { name: "TTFT", value: "-time_to_first_token", secText: "3" },
                   { name: "Generation time", value: "-latency", secText: "4" },
-                  // {
-                  //   name: "Input tokens",
-                  //   value: "-input_tokens",
-                  //   secText: "5",
-                  // },
-                  // {
-                  //   name: "Output tokens",
-                  //   value: "-output_tokens",
-                  //   secText: "6",
-                  // },
+                  {
+                    name: "Input tokens",
+                    value: "-prompt_tokens",
+                    secText: "5",
+                  },
+                  {
+                    name: "Output tokens",
+                    value: "-completion_tokens",
+                    secText: "6",
+                  },
                   // {
                   //   name: "All tokens",
                   //   value: "-all_tokens",
