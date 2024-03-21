@@ -43,7 +43,7 @@ export default function ExportPopOver({ exportAction }) {
           <Tooltip
             side="bottom"
             sideOffset={8}
-            align="start"
+            align="center"
             delayDuration={1}
             content={
               <>

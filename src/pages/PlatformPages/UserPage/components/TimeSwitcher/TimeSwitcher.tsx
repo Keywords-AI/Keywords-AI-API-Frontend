@@ -34,7 +34,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
     { preventDefault: true };
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
-      <Button
+      {/* <Button
         variant="small"
         text="Today"
         active={currentTimeRange === "daily"}
@@ -42,7 +42,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
           dispatch(setUsersLogDataTimeRange("daily"));
           dispatch(getUsersLogData());
         }}
-      />
+      /> */}
       <SelectInput
         headLess
         trigger={() => (

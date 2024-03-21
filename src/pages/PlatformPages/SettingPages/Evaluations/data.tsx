@@ -104,12 +104,11 @@ export const EvalData = {
       </div>
     ),
     outputs: {
-      llm: `LLM_based_faithfulness: 0.0
+      llm: `LLM_based_faithfulness: 0.5
         LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
       rouge: `rouge_faithfulness: 0.5`,
-      token: `LLM_based_faithfulness: 0.5,
-      LLM_based_faithfulness_reasoning: The statement that William Shakespeare wrote 'Romeo and Juliet' is supported by the context. However, the context does not provide information about his birthplace, and it is a well-known fact that William Shakespeare was born in Stratford-upon-Avon, England, not Ireland.`,
-      bleu: `bleu_faithfulness': 0.37`,
+      token: `token_overlap_faithfulness: 0.5`,
+      bleu: `bleu_faithfulness: 0.37023896751607194`,
     },
   },
   fleschKincaidReadability: {
@@ -155,8 +154,8 @@ export const EvalData = {
       </div>
     ),
     outputs: {
-      flesch_reading_ease: `flesch_reading_ease: 100`,
-      flesch_kincaid_grade_level: `flesch_kincaid_grade_level: 0`,
+      flesch_reading_ease: `flesch_reading_ease: 116.14500000000001`,
+      flesch_kincaid_grade_level: `flesch_kincaid_grade_level: -1.4499999999999993`,
     },
   },
   answerRelevance: {
