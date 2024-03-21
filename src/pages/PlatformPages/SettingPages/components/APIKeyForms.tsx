@@ -495,10 +495,12 @@ const EditFormNotConnected = ({
     editingKey?.name || "New Key"
   );
   const [currentUnit, setCurrentUnit] = useState(unitOptions[0].value);
+  const [currentEnv, setcurrentEnv] = useState(editingKey?.is_test ?? false);
   console.log("currentUnit", currentUnit);
   useEffect(() => {
     if (editingKey) {
       setCurrentKeyName(editingKey.name);
+      setcurrentEnv(editingKey.is_test);
     }
   }, [editingKey]);
   const {
@@ -547,14 +549,14 @@ const EditFormNotConnected = ({
           <SelectInput
             title={"Environment"}
             optionsWidth={"w-[120px]"}
-            {...register("is_test")}
+            {...register("is_test", {value: currentEnv, onChange: ()=>{ setcurrentEnv(!currentEnv)}})}
+            choices={EnvironmentOptions}
+            value={currentEnv}
             // onKeyDown={handleEnter}
-            defaultValue={false}
             //This corresponds to the 'Never' option
             // defaultValue={
             //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
             // }
-            choices={EnvironmentOptions}
           />
         </div>
         <Accordion

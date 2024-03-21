@@ -41,6 +41,7 @@ export type ApiKey = {
     id: string;
     api_key: string;
     prefix: string;
+    is_test: boolean;
     hashed_key: string;
     created: string;
     name: string;

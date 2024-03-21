@@ -15,6 +15,7 @@ export type Organization = {
     id: number | null;
     name: string;
     organization_model_presets: any[];
+    sample_percentage: number;
     owner: any;
     users: OrgUser[];
     organization_subscription: {

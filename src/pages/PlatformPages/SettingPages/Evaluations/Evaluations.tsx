@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Check, Divider, Pencil } from "src/components";
+import { Button, Check, Divider, Down, Pencil, Rocket } from "src/components";
 import { ModelTag, Tag } from "src/components/Misc";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import Accordion from "src/components/Sections/Accordion/Accordion";
@@ -12,12 +12,13 @@ import { useTypedSelector } from "src/store/store";
 import { Modal } from "src/components/Dialogs";
 import { TextInput } from "src/components/Inputs";
 import { useForm } from "react-hook-form";
+import { SamplingModal } from "./components";
 type Props = {};
 
 export default function Evaluations({}: Props) {
-  const orgnization = useTypedSelector((state) => state.organization);
-  const per = "10";
+  const organization = useTypedSelector((state) => state.organization);
   const [isHoverRandom, setIsHoverRandom] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -32,13 +33,18 @@ export default function Evaluations({}: Props) {
       }
       subtitle={"Monitor model performance in production."}
     >
-      {/* <PageParagraph
+      <PageParagraph
         heading={"Random sampling"}
         subheading={"Evaluations will run on 10% of your requests."}
       >
         <Modal
           title={"Random sampling"}
+          open={open}
+          setOpen={setOpen}
           trigger={
+            // <Button variant={'r4-gray-2'} 
+            // borderColor="shadow-transparent" borderHoverColor="shadow-transparent"
+            // iconPosition="right" icon={Pencil} iconHoverFill="fill-gray-5" text={organization?.sample_percentage + "%"}/>
             <div
               className="flex flex-row py-xxs px-xs gap-xxs items-center rounded-sm bg-gray-2 cursor-pointer"
               onMouseEnter={() => setIsHoverRandom(true)}
@@ -50,21 +56,15 @@ export default function Evaluations({}: Props) {
                   isHoverRandom ? "text-gray-5" : "text-gray-4"
                 )}
               >
-                {per}%
+                {organization.sample_percentage}%
               </span>
               <Pencil size="sm" active={isHoverRandom} />
             </div>
           }
         >
-          <TextInput
-            {...register("percent", {
-              required: "cannot be blank.",
-            })}
-            defaultValue={10}
-            placeholder="10"
-          />
+          <SamplingModal handleClose={()=>{setOpen(false)}}/>
         </Modal>
-      </PageParagraph> */}
+      </PageParagraph>
       {/* <Divider /> */}
       {/* <PageParagraph
         heading={"Custom evaluations"}
@@ -97,9 +97,9 @@ export default function Evaluations({}: Props) {
               <EvalCard
                 {...(EvalData.contextPrecision as any)}
                 updatedTime={new Date()}
-                model={orgnization?.context_precision_eval?.model || "auto"}
-                selected={orgnization?.context_precision_eval?.metric}
-                isEnable={orgnization?.context_precision_eval?.enabled || false}
+                model={organization?.context_precision_eval?.model || "auto"}
+                selected={organization?.context_precision_eval?.metric}
+                isEnable={organization?.context_precision_eval?.enabled || false}
                 evalName="context_precision_eval"
               />
             ),
@@ -116,28 +116,28 @@ export default function Evaluations({}: Props) {
                 <EvalCard
                   {...(EvalData.faithfulness as any)}
                   updatedTime={new Date()}
-                  model={orgnization?.faithfulness_eval?.model || "auto"}
-                  selected={orgnization?.faithfulness_eval?.metric}
-                  isEnable={orgnization?.faithfulness_eval?.enabled || false}
+                  model={organization?.faithfulness_eval?.model || "auto"}
+                  selected={organization?.faithfulness_eval?.metric}
+                  isEnable={organization?.faithfulness_eval?.enabled || false}
                   evalName="faithfulness_eval"
                 />
 
                 <EvalCard
                   {...(EvalData.answerRelevance as any)}
                   updatedTime={new Date()}
-                  model={orgnization?.answer_relevance_eval?.model || "auto"}
-                  selected={orgnization?.answer_relevance_eval?.metric}
+                  model={organization?.answer_relevance_eval?.model || "auto"}
+                  selected={organization?.answer_relevance_eval?.metric}
                   isEnable={
-                    orgnization?.answer_relevance_eval?.enabled || false
+                    organization?.answer_relevance_eval?.enabled || false
                   }
                   evalName="answer_relevance_eval"
                 />
                 <EvalCard
                   {...(EvalData.fleschKincaidReadability as any)}
                   updatedTime={new Date()}
-                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                  selected={orgnization?.flesch_kincaid_eval?.metric}
-                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
+                  model={organization?.sentiment_analysis_eval?.model || "None"}
+                  selected={organization?.flesch_kincaid_eval?.metric}
+                  isEnable={organization?.flesch_kincaid_eval?.enabled || false}
                   evalName="flesch_kincaid_eval"
                 />
               </div>
@@ -153,10 +153,10 @@ export default function Evaluations({}: Props) {
               <EvalCard
                 {...(EvalData.sentiment as any)}
                 updatedTime={new Date()}
-                model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                selected={orgnization?.sentiment_analysis_eval?.metric}
+                model={organization?.sentiment_analysis_eval?.model || "None"}
+                selected={organization?.sentiment_analysis_eval?.metric}
                 isEnable={
-                  orgnization?.sentiment_analysis_eval?.enabled || false
+                  organization?.sentiment_analysis_eval?.enabled || false
                 }
                 evalName="sentiment_analysis_eval"
               />
