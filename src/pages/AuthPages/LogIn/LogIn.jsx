@@ -18,7 +18,7 @@ const LogIn = () => {
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      await login(data);
+      dispatch(login(data));
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
