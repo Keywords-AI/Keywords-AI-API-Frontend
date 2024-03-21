@@ -1,18 +1,28 @@
 import React from "react";
-import { Button, Check, Pencil } from "src/components";
+import { Button, Check, Divider, Pencil } from "src/components";
 import { ModelTag, Tag } from "src/components/Misc";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import Accordion from "src/components/Sections/Accordion/Accordion";
 import { format } from "date-fns";
 import { DotsButton } from "src/components/Buttons";
-import { EditModal } from "./components";
+import { EditModal, CustomModal } from "./components";
 import cn from "src/utilities/classMerge";
 import { EvalData } from "./data";
 import { useTypedSelector } from "src/store/store";
+import { Modal } from "src/components/Dialogs";
+import { TextInput } from "src/components/Inputs";
+import { useForm } from "react-hook-form";
 type Props = {};
 
 export default function Evaluations({}: Props) {
   const orgnization = useTypedSelector((state) => state.organization);
+  const per = "10";
+  const [isHoverRandom, setIsHoverRandom] = React.useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }, //form errors
+  } = useForm();
   return (
     <PageContent
       title={
@@ -20,14 +30,53 @@ export default function Evaluations({}: Props) {
           Evaluations <span className="caption-cap text-primary">BETA</span>
         </div>
       }
-      subtitle={"Monitor performance in production."}
+      subtitle={"Monitor model performance in production."}
     >
+      {/* <PageParagraph
+        heading={"Random sampling"}
+        subheading={"Evaluations will run on 10% of your requests."}
+      >
+        <Modal
+          title={"Random sampling"}
+          trigger={
+            <div
+              className="flex flex-row py-xxs px-xs gap-xxs items-center rounded-sm bg-gray-2 cursor-pointer"
+              onMouseEnter={() => setIsHoverRandom(true)}
+              onMouseLeave={() => setIsHoverRandom(false)}
+            >
+              <span
+                className={cn(
+                  "text-sm-md",
+                  isHoverRandom ? "text-gray-5" : "text-gray-4"
+                )}
+              >
+                {per}%
+              </span>
+              <Pencil size="sm" active={isHoverRandom} />
+            </div>
+          }
+        >
+          <TextInput
+            {...register("percent", {
+              required: "cannot be blank.",
+            })}
+            defaultValue={10}
+            placeholder="10"
+          />
+        </Modal>
+      </PageParagraph> */}
+      {/* <Divider /> */}
       {/* <PageParagraph
         heading={"Custom evaluations"}
         subheading={"Add your own custom evaluations."}
       >
-        <Button variant="r4-primary" text="Add custom eval" />
+        <CustomModal 
+        title="Create custom metric"
+        subtitle="Create a custom metric based on your definition and scoring rubric."
+        trigger={<Button variant="r4-primary" text="Add custom eval" />}
+        />
       </PageParagraph> */}
+      {/* <Divider /> */}
       <PageParagraph
         heading={"Pre-built evaluations"}
         // subheading={
@@ -42,10 +91,8 @@ export default function Evaluations({}: Props) {
       >
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: <div className="text-sm-md text-gray-4">Retrieval</div>,
-            triggerClassName: "",
+            trigger: "Retrieval",
             content: (
               <EvalCard
                 {...(EvalData.contextPrecision as any)}
@@ -62,12 +109,8 @@ export default function Evaluations({}: Props) {
         />
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: (
-              <div className="text-sm-md text-gray-4">Text generation</div>
-            ),
-            triggerClassName: "",
+            trigger: "Text generation",
             content: (
               <div className="flex-col gap-xxs">
                 <EvalCard
@@ -77,14 +120,6 @@ export default function Evaluations({}: Props) {
                   selected={orgnization?.faithfulness_eval?.metric}
                   isEnable={orgnization?.faithfulness_eval?.enabled || false}
                   evalName="faithfulness_eval"
-                />
-                <EvalCard
-                  {...(EvalData.fleschKincaidReadability as any)}
-                  updatedTime={new Date()}
-                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
-                  selected={orgnization?.flesch_kincaid_eval?.metric}
-                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
-                  evalName="flesch_kincaid_eval"
                 />
 
                 <EvalCard
@@ -97,6 +132,14 @@ export default function Evaluations({}: Props) {
                   }
                   evalName="answer_relevance_eval"
                 />
+                <EvalCard
+                  {...(EvalData.fleschKincaidReadability as any)}
+                  updatedTime={new Date()}
+                  model={orgnization?.sentiment_analysis_eval?.model || "None"}
+                  selected={orgnization?.flesch_kincaid_eval?.metric}
+                  isEnable={orgnization?.flesch_kincaid_eval?.enabled || false}
+                  evalName="flesch_kincaid_eval"
+                />
               </div>
             ),
             contentClassName: "flex-col items-start gap-xxs self-stretch",
@@ -104,10 +147,8 @@ export default function Evaluations({}: Props) {
         />
         <Accordion
           className="flex-col items-start gap-xxs self-stretch"
-          defaultOpen
           content={{
-            trigger: <div className="text-sm-md text-gray-4">Other</div>,
-            triggerClassName: "",
+            trigger: "Other",
             content: (
               <EvalCard
                 {...(EvalData.sentiment as any)}

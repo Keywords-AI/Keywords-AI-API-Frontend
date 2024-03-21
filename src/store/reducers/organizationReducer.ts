@@ -31,7 +31,7 @@ const initState: Organization = {
   preset_models: [],
   preset_opiton: "",
   dynamic_routing_enabled: false,
-  curr_onboarding_step: 0,
+  curr_onboarding_step: 1,
   onboarded: false,
   fallback_model_enabled: false,
   fallback_models: [],

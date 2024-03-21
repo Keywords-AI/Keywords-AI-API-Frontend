@@ -25,9 +25,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
   const currentTimeRange = useTypedSelector(
     (state) => state.usersPage.timeRane
   );
-  useEffect(() => {
-    dispatch(getUsersLogData());
-  }, [currentTimeRange]);
+
   const [showDropdown, setShowDropdown] = useState(false);
 
   useHotkeys("t", () => {
@@ -42,6 +40,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
         active={currentTimeRange === "daily"}
         onClick={() => {
           dispatch(setUsersLogDataTimeRange("daily"));
+          dispatch(getUsersLogData());
         }}
       />
       <SelectInput
@@ -91,6 +90,7 @@ export function TimeSwitcher({}: TimeSwitcherProps) {
         ]}
         handleSelected={(value) => {
           dispatch(setUsersLogDataTimeRange(value as string));
+          dispatch(getUsersLogData());
         }}
       />
     </div>

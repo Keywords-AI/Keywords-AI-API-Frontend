@@ -76,10 +76,12 @@ export const BillingPage = () => {
       expireDays = Math.max(daysDifference, -1);
     }
   }
-  const totalAmount = organization?.organization_subscription?.credits?.reduce(
-    (acc, credit) => acc + credit.amount,
-    0
-  );
+  const totalAmount = organization?.organization_subscription?.credits?.length
+    ? organization?.organization_subscription?.credits?.reduce(
+        (acc, credit) => acc + credit.amount,
+        0
+      )
+    : null;
   const closestExpiringCredit =
     organization?.organization_subscription?.credits?.reduce(
       (closestCredit, credit) => {
@@ -139,7 +141,9 @@ export const BillingPage = () => {
               <div className="flex justify-between items-center self-stretch">
                 <p className="text-sm-md text-gray-5">Total credits</p>
                 <p className="text-sm-md text-gray-5">
-                  {totalAmount ? "$" + parseInt(totalAmount).toFixed(2) : "-"}
+                  {totalAmount != null
+                    ? "$" + parseInt(totalAmount).toFixed(2)
+                    : "-"}
                 </p>
               </div>
 
@@ -178,7 +182,9 @@ export const BillingPage = () => {
         >
           <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2">
             <span className=" text-gray-5 text-sm-md">
-              {totalAmount ? "$" + parseInt(totalAmount).toFixed(2) : "-"}
+              {totalAmount != null
+                ? "$" + parseInt(totalAmount).toFixed(2)
+                : "-"}
             </span>
             <Info />
           </div>

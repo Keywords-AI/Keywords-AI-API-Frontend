@@ -21,6 +21,7 @@ import {
   setFocusIndex,
   setMessageByIndex,
   setMessageResponseByIndex,
+  setMessageRole,
   streamPlaygroundResponse,
 } from "src/store/actions/playgroundAction";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
@@ -139,7 +140,16 @@ export function PlaygroundMessage({
     contentSection = (
       <>
         <MessageHeader
-          title={<div className="text-sm-md text-gray-4">User</div>}
+          title={
+            <div
+              // onClick={() => {
+              //   dispatch(setMessageRole(id, "assistant"));
+              // }}
+              className="text-sm-md text-gray-4"
+            >
+              User
+            </div>
+          }
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
@@ -179,23 +189,6 @@ export function PlaygroundMessage({
             }}
             // disabled={!isFocused}
           />
-          {/* {isFocused && (
-            <div
-              className="flex justify-end gap-xxs self-stretch "
-              onMouseDown={(e) => e.preventDefault()}
-            >
-              <Button
-                variant="small"
-                text="Send message"
-                icon={EnterKey}
-                iconSize="md"
-                iconPosition="right"
-                onClick={handleSend}
-                disabled={false}
-                iconHoverFill="fill-gray-5"
-              />
-            </div>
-          )} */}
         </div>
       </>
     );
@@ -209,8 +202,8 @@ export function PlaygroundMessage({
       <div className="flex items-start gap-xxs self-stretch ">
         {responses?.map((response, index) => {
           if (!response || response.content == "") return null;
-          if (response.content == "\u200B")
-            response.content = `{"errorText":"errorText"}`;
+          // if (response.content == "\u200B")
+          //   response.content = `{"errorText":"errorText"}`;
           const isError = response.content.includes("errorText");
           const errorObj = isError ? JSON.parse(response.content) : null;
           return (
@@ -343,7 +336,10 @@ const MessageHeader = ({
 }) => {
   return (
     <div className="flex justify-between items-center self-stretch">
-      <div className="flex items-center gap-xxs">{title}</div>
+      <div className="flex items-center gap-xxs">
+        {title}
+        {streaming && <p className="caption text-primary">Generating...</p>}
+      </div>
       {!streaming && (
         <div className="flex items-center">
           {showRegen && (

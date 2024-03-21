@@ -45,6 +45,7 @@ export const DEFAULT_RESET = "DEFAULT_RESET";
 export const SET_FOCUS_INDEX = "SET_FOCUS_INDEX";
 
 // Action Creator
+
 export const setFocusIndex = (index) => ({
   type: SET_FOCUS_INDEX,
   payload: index,
@@ -607,6 +608,37 @@ const readStreamChunk = (chunk: string, channel: number) => {
       //     })
       //   );
       // }
+    }
+  };
+};
+
+export const setMessageRole = (id, role) => {
+  return (dispatch, getState) => {
+    const messages = getState().playground.messages;
+    const message = messages.find((message) => message.id === id);
+    if (!message) return;
+    if (message.role === role) return;
+    if (role === "user") {
+      dispatch(setMessageByIndex({ id, role: "user", user_content: "" }));
+    } else if (role === "assistant") {
+      dispatch(
+        setMessageByIndex({
+          index: message.id,
+          content: {
+            id,
+            role: "assistant",
+            user_content: "",
+            responses: [
+              {
+                model: "None",
+                content: message.user_content || "\u200B",
+                complete: true,
+              },
+            ],
+          },
+        })
+      );
+      dispatch(setChannelMode(true));
     }
   };
 };

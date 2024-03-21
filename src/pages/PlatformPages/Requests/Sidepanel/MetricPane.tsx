@@ -353,10 +353,7 @@ export const MetricPane = ({}) => {
             value={accordion1}
             onValueChange={setAccordion1}
             content={{
-              trigger: (
-                <div className="text-sm-md text-gray-4">Custom metadata</div>
-              ),
-              triggerClassName: "flex flex-1 items-center gap-xxs",
+              trigger: "Custom metadata",
               content: <MetadataPane />,
               contentClassName: "flex-col items-start gap-sm self-stretch",
             }}
@@ -374,10 +371,7 @@ export const MetricPane = ({}) => {
         value={accordion2}
         onValueChange={setAccordion2}
         content={{
-          trigger: (
-            <div className="text-sm-md text-gray-4">Request parameters</div>
-          ),
-          triggerClassName: "flex flex-1 items-center gap-xxs",
+          trigger: "Request parameters",
           content: <RequestParams {...logItem?.full_request} />,
           contentClassName: "flex-col items-start gap-sm self-stretch",
         }}

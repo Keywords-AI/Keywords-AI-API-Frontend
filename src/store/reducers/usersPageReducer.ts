@@ -24,6 +24,9 @@ type UserLogData = {
   tokens: number;
   sentiment: number;
   cost: number;
+  topModel: string;
+  cacheHits: number;
+  averageLatency: number;
 };
 type State = {
   selectedID: string | null;

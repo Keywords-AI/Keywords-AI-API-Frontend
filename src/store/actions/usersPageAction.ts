@@ -275,6 +275,9 @@ const fetchUsersLogData = async (
             tokens: Math.round(data.total_tokens as number),
             costs: data.total_cost,
             sentiment: data.average_sentiment,
+            cacheHits: data.cache_hits,
+            topModel: data.top_model,
+            averageLatency: (data.average_latency ?? 0).toFixed(3),
           };
         })
         .sort(sortFunc),
