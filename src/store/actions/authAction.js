@@ -62,7 +62,7 @@ export const login = (loginData) => {
         if (searchParams.get("next")) {
           window.location.href = searchParams.get("next");
         } else {
-          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
+          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn
         }
       })
       .catch((error) => {
