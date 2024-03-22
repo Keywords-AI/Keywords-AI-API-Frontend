@@ -1,4 +1,4 @@
-// actions/streamingTextActions.js
+// actions/streamingTextActions
 export const SEND_STREAMINGTEXT_REQUEST = "SEND_STREAMINGTEXT_REQUEST";
 export const SEND_STREAMINGTEXT_SUCCESS = "SEND_STREAMINGTEXT_SUCCESS";
 export const SEND_STREAMINGTEXT_FAILURE = "SEND_STREAMINGTEXT_FAILURE";

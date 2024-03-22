@@ -9,14 +9,11 @@ import { TextInput } from "src/components/Inputs";
 import { Google } from "src/components";
 import { googleLogin } from "src/store/actions";
 import { connect } from "react-redux";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 
-const mapStateToProps = (state) => ({});
-const mapDispatchToProps = { googleLogin, signup };
 // admintestpassword
-export const SignUp = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(({ googleLogin, signup }) => {
+export const SignUp = () => {
+  const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -28,7 +25,7 @@ export const SignUp = connect(
   } = useForm();
   const onSubmit = async (data) => {
     data.invitation_code = "keywordsai";
-    signup(data, "keywordsai");
+    dispatch(signup(data, "keywordsai"));
   };
   // Keywords666
   return (
@@ -113,7 +110,7 @@ export const SignUp = connect(
       </span>
     </div>
   );
-});
+};
 
 const EmailForm = ({ setEmail }) => {
   const {
@@ -124,6 +121,7 @@ const EmailForm = ({ setEmail }) => {
   const onSubmit = async (data) => {
     setEmail(data.email);
   };
+  const dispatch = useTypedDispatch();
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -146,6 +144,18 @@ const EmailForm = ({ setEmail }) => {
           text={"Continue with Email"}
           variant={"r4-white"}
           width={"w-full"}
+        />
+        <Button
+          variant="r4-white"
+          text="Sign in with Google"
+          icon={Google}
+          iconSize={"md"}
+          iconPosition="left"
+          bgColor="bg-gray-3"
+          textColor="text-gray-5"
+          width="w-full"
+          onClick={() => dispatch(googleLogin())}
+          type="button"
         />
       </div>
     </form>

@@ -62,7 +62,7 @@ export const login = (loginData) => {
         if (searchParams.get("next")) {
           window.location.href = searchParams.get("next");
         } else {
-          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn.js
+          window.location.href = REDIRECT_URI; // reload to trigger the useEffect in LogIn
         }
       })
       .catch((error) => {
@@ -152,7 +152,6 @@ export const googleAuthJWT = () => {
   fetch(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, {
     method: "POST",
     headers: headers,
-    body: params,
     credentials: "include",
   })
     // axios.post(`${apiConfig.apiURL}auth/o/google-oauth2/?${params}/`, params, headers)

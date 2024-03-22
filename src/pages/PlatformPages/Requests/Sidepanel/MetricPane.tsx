@@ -159,6 +159,8 @@ export const MetricPane = ({}) => {
     dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
   };
   if (!logItem) return null;
+
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <>
       {logItem?.failed && (
@@ -210,6 +212,8 @@ export const MetricPane = ({}) => {
                 onSubmit();
               }}
               key={index}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
               <div className="flex items-center gap-xxs flex-shrink-0">
                 <span className="text-sm-md text-gray-5">{key}</span>

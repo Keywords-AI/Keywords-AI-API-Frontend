@@ -17,7 +17,7 @@ import { SelectInput, SelectInputSmall } from "src/components/Inputs";
 import { RequestLogTable } from "src/components/Tables";
 import { CopyButton, DotsButton, IconButton } from "src/components/Buttons";
 import { WelcomeState } from "src/components/Sections";
-import { SidePanel } from "./Sidepanel/SidePanel.tsx";
+import { SidePanel } from "./Sidepanel/SidePanel";
 import FilterControl from "./FilterControl";
 import { FilterActions } from "./FilterActions";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -31,7 +31,7 @@ import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { RequestPreview } from "src/components/Display/Figures";
-import cn from "src/utilities/classMerge.js";
+import cn from "src/utilities/classMerge";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,

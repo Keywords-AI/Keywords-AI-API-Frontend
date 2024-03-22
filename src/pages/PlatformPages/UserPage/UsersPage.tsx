@@ -144,7 +144,7 @@ const TopBar = () => {
   ];
   return (
     <>
-      <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
+      {/* <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
         {cardData.map((item, index) => (
           <MetricCardFocus
             key={index}
@@ -155,19 +155,28 @@ const TopBar = () => {
             width="flex-1"
           />
         ))}
-      </div>
-      <Divider />
+      </div> */}
       <div
         aria-label="frame 1944"
         className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
       >
-        <ExportPopOver exportAction={exportUserLogs} />
+        <div className="flex flex-row items-center gap-xxxs"></div>
         <div className="flex  items-center gap-xxs">
-          {isAdmin && (
+          {/* {isAdmin && (
             <SearchUser handleSearch={handleSearch} handleReset={handleReset} />
-          )}
+          )} */}
           <TimeSwitcher />
           <DisplayPopover />
+        </div>
+      </div>
+      <div
+        aria-label="filter-display"
+        className="flex flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
+      >
+        <div className="flex flex-row items-center gap-xxs rounded-xs"></div>
+        <div className="flex flex-row items-center gap-xxs">
+          <ExportPopOver exportAction={exportUserLogs} />
+          <div className="w-[1px] h-[28px] bg-gray-2"></div>
           {isAdmin && (
             <Tooltip
               side="bottom"
