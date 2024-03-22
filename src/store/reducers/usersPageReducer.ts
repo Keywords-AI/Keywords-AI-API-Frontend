@@ -15,6 +15,7 @@ import {
   SET_USERLOG_FILTERS,
   SET_CURRENT_USERLOG_FILTER,
   SET_USERLOG_FILTER_TYPE,
+  SET_IS_EMPTY,
 } from "../actions/usersPageAction";
 type UserLogData = {
   customerId: string;
@@ -93,6 +94,11 @@ const initialState: State = {
 
 const usersPageReducer = (state = initialState, action: any): State => {
   switch (action.type) {
+    case SET_IS_EMPTY:
+      return {
+        ...state,
+        isEmpty: action.payload,
+      };
     case SET_USERLOG_FILTER_OPTIONS:
       return {
         ...state,

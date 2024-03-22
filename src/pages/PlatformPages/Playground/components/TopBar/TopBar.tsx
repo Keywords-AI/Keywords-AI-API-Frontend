@@ -3,15 +3,15 @@ import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { useNavigate } from "react-router-dom";
 import {
   AlphanumericKey,
-  CodeViewer,
   Delete,
-  IconPlayground,
+  PlaygroundIcon,
   Pencil,
   SideBar,
   SideBarActive,
   SideBarActiveLeft,
   SideBarLeft,
 } from "src/components";
+import { CodeViewer } from "src/components/CodeViewer";
 import { Button, ButtonGroup, DotsButton } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import Tooltip from "src/components/Misc/Tooltip";
@@ -89,7 +89,7 @@ export function TopBar() {
             },
             {
               text: "Saved",
-              icon: IconPlayground,
+              icon: PlaygroundIcon,
               onClick: () => console.log("publish"),
             },
           ]}

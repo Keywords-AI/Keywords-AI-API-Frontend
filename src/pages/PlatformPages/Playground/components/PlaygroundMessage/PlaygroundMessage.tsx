@@ -4,6 +4,8 @@ import {
   Check,
   Copy,
   Delete,
+  Down,
+  DropDownMenu,
   EditableBox,
   EnterKey,
   ModelIcon,
@@ -140,16 +142,7 @@ export function PlaygroundMessage({
     contentSection = (
       <>
         <MessageHeader
-          title={
-            <div
-              // onClick={() => {
-              //   dispatch(setMessageRole(id, "assistant"));
-              // }}
-              className="text-sm-md text-gray-4"
-            >
-              User
-            </div>
-          }
+          title={<RoleSwitch currentRole={"User"} id={id} />}
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
@@ -217,9 +210,11 @@ export function PlaygroundMessage({
               <MessageHeader
                 title={
                   <div className="flex items-center gap-xxs h-[28px]">
-                    <div className="text-sm-md text-gray-4">
-                      Assistant {index == 0 ? "A" : "B"}
-                    </div>
+                    {!response.model ? (
+                      <RoleSwitch currentRole={"Assistant"} id={id} />
+                    ) : (
+                      <div className="text-sm-md text-gray-4">Assistant</div>
+                    )}
                     <ModelTag model={response.model} />
                     {isError && (
                       <StatusTag statusCode={errorObj.errorCode || 500} />
@@ -236,7 +231,12 @@ export function PlaygroundMessage({
                   dispatch(deleMessageByIndex(id, index));
                   dispatch(resetSingleStreamingText(index));
                 }}
-                showRegen={id == lastResponseMessageId && !isError}
+                showRegen={
+                  id == lastResponseMessageId &&
+                  !isError &&
+                  response.model != null &&
+                  response.model.length > 0
+                }
                 content={response.content || ""}
               />
               {
@@ -462,3 +462,43 @@ export function StreamingMessage() {
     </div>
   );
 }
+
+const RoleSwitch = ({ id, currentRole }) => {
+  const dispatch = useTypedDispatch();
+  const [role, setRole] = useState(currentRole);
+  const [open, setOpen] = useState(false);
+  return (
+    <DropDownMenu
+      width="w-full"
+      trigger={
+        <Button variant="text" text={role} iconPosition="right" icon={Down}  />
+      }
+      open={open}
+      setOpen={setOpen}
+      side="bottom"
+      align="start"
+      items={
+        <>
+          <Button
+            text="User"
+            variant="panel"
+            onClick={() => {
+              setRole("User");
+              setOpen(false);
+              dispatch(setMessageRole(id, "user"));
+            }}
+          />
+          <Button
+            text="Assistant"
+            variant="panel"
+            onClick={() => {
+              setRole("Assistant");
+              setOpen(false);
+              dispatch(setMessageRole(id, "assistant"));
+            }}
+          />
+        </>
+      }
+    />
+  );
+};

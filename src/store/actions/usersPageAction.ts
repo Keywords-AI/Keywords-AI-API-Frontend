@@ -199,6 +199,7 @@ export const getUsersLogData = (postData?: any) => {
     const { usersLogData, aggregation_data, ...rest } = data;
     dispatch(setUsersLogData(usersLogData));
     dispatch(setAggregationData(aggregation_data));
+    console.log("usersLogData", usersLogData);
     dispatch(setIsEmpty(usersLogData.length === 0));
     dispatch(setUserLogFilterOptions(rest));
     dispatch(setUsersLogDataLoading(false));

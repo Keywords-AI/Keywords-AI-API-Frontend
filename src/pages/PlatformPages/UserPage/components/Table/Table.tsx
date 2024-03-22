@@ -160,7 +160,8 @@ const TableRow = ({ item, index, isNavigating }) => {
 };
 
 export const Table = () => {
-  const templateString = "200px 140px 100px 140px 120px 120px 120px ";
+  const templateString = "200px 140px 100px 140px 120px 120px 120px 1fr ";
+  const loadingtemplateString = "auto auto auto auto auto auto auto";
   const data = useTypedSelector((state) => state.usersPage.usersLogData);
   const displayColumns = useTypedSelector(
     (state) => state.usersPage.displayColumns
@@ -188,7 +189,7 @@ export const Table = () => {
         }}
       >
         <SkeletonTheme baseColor="#1E1E23" highlightColor="#23232B">
-          {Array(templateString.split(" ").length)
+          {Array(loadingtemplateString.split(" ").length)
             .fill(null)
             .map((_, idx) => (
               <Skeleton duration={3} key={idx} className="h-[24px]" />

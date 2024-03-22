@@ -23,9 +23,12 @@ export const MetricPane = ({}) => {
 
   const [accordion1, setAccordion1] = useState("open");
   const [accordion2, setAccordion2] = useState("open");
+  const [isHovered, setIsHovered] = useState(false);
   const displayObj = {
     "Request ID": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">{logItem?.id || "-"}</span>
+      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+        {logItem?.id || "-"}
+      </span>
     ),
     "Created at": (
       <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
@@ -69,7 +72,9 @@ export const MetricPane = ({}) => {
       (logItem?.cached_responses?.length || 0) > 0 ? (
         <CheckAll />
       ) : (
-        <span className="text-sm-regular text-gray-4 hover:text-gray-5">{"No"}</span>
+        <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+          {"No"}
+        </span>
       ),
 
     "Prompt tokens": (
@@ -156,11 +161,12 @@ export const MetricPane = ({}) => {
   const dispatch = useDispatch();
 
   const onSubmit = () => {
-    dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
+    dispatch(
+      dispatchNotification({ title: "Copied to clickboard", type: "success" })
+    );
   };
   if (!logItem) return null;
 
-  const [isHovered, setIsHovered] = useState(false);
   return (
     <>
       {logItem?.failed && (
