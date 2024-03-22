@@ -238,6 +238,8 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               role: "assistant",
               content: item.responses[channel]
                 ? item.responses[channel].content
+                : item.responses[channel ^ 1]
+                ? item.responses[channel ^ 1].content
                 : "",
             };
           }),
@@ -619,8 +621,35 @@ export const setMessageRole = (id, role) => {
     if (!message) return;
     if (message.role === role) return;
     if (role === "user") {
-      dispatch(setMessageByIndex({ id, role: "user", user_content: "" }));
+      const content = message.responses[0].content;
+      dispatch(
+        setMessageByIndex({
+          index: message.id,
+          content: {
+            id,
+            role: "user",
+            user_content: content,
+            responses: null,
+          },
+        })
+      );
     } else if (role === "assistant") {
+      const responsesa =
+        getState().playground.modelOptions.models[0] != "none"
+          ? {
+              model: null,
+              content: message.user_content || "\u200B",
+              complete: true,
+            }
+          : null;
+      const responsesb =
+        getState().playground.modelOptions.models[1] != "none"
+          ? {
+              model: getState().playground.modelOptions.models[1],
+              content: message.user_content || "\u200B",
+              complete: true,
+            }
+          : null;
       dispatch(
         setMessageByIndex({
           index: message.id,
@@ -628,13 +657,7 @@ export const setMessageRole = (id, role) => {
             id,
             role: "assistant",
             user_content: "",
-            responses: [
-              {
-                model: "None",
-                content: message.user_content || "\u200B",
-                complete: true,
-              },
-            ],
+            responses: [responsesa, null],
           },
         })
       );

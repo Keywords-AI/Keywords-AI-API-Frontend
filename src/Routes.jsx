@@ -58,6 +58,7 @@ import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
 import ResendActivation from "./pages/AuthPages/ResendActivation";
+import { SidebarNavigationLayout } from "./layouts/SidebarNavigationLayout";
 
 const mapStateToProps = (state) => {
   return {

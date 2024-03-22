@@ -7,8 +7,9 @@ import { get, set, useForm } from "react-hook-form";
 import { getRequestLogs } from "src/store/actions";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setQueryParams } from "src/utilities/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { shallowEqual } from "react-redux";
+import { c } from "vite/dist/node/types.d-FdqQ54oU";
 
 export const Paginator = () => {
   const dispatch = useTypedDispatch();
@@ -19,18 +20,29 @@ export const Paginator = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const { register, watch } = useForm();
-  const { page_size } = watch();
+  // const { page_size } = watch();
   const currentPage = parseInt(params.get("page") || "1");
-  const pageSize = parseInt(page_size) || 25;
+  const [page_size, setPageSize] = useState(100);
+  const pageSize = page_size || 25;
   const startRowNumber = (currentPage - 1) * pageSize + 1;
   const endRowNumber =
     currentPage * page_size > count ? count : currentPage * pageSize;
+  // useEffect(() => {
+  //   if (page_size) {
+  //     setQueryParams({ page_size }, navigate);
+  //     dispatch(getRequestLogs());
+  //   }
+  // }, [page_size]);
   useEffect(() => {
-    if (page_size) {
-      setQueryParams({ page_size }, navigate);
-      dispatch(getRequestLogs());
-    }
-  }, [page_size]);
+    const subscription = watch((value, { name, type }) => {
+      if (name === "page_size") {
+        setPageSize(value[name]);
+        setQueryParams({ page_size: value[name] }, navigate);
+        dispatch(getRequestLogs());
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
   const hanleNextPage = () => {
     if (nextPageUrl) {
       const params = new URLSearchParams(nextPageUrl.split("?")[1]);
@@ -66,7 +78,7 @@ export const Paginator = () => {
           // textColor="text-gray-5"
           icon={Down}
           defaultValue={"100"}
-          {...register("page_size")}
+          {...register("page_size", { value: "100" })}
           choices={[
             { name: "25", value: "25" },
             { name: "50", value: "50" },

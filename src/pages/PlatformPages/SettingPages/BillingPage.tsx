@@ -98,7 +98,7 @@ export const BillingPage = () => {
       <PageParagraph
         heading="Available credits"
         subheading={`Credits expiring in ${
-          expireDays > -1 ? expireDate : "0"
+          expireDays > -1 ? expireDays : "0"
         } days.`}
       >
         <Tooltip
@@ -167,7 +167,7 @@ export const BillingPage = () => {
           <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2">
             <span className=" text-gray-5 text-sm-md">
               {totalAmount != null
-                ? "$" + parseInt(totalAmount).toFixed(2)
+                ? "$" + parseFloat(totalAmount).toFixed(2)
                 : "-"}
             </span>
             <Info />

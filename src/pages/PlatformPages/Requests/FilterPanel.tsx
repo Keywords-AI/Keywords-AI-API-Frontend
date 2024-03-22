@@ -176,11 +176,11 @@ export function FilterPanel() {
                     value: "-completion_tokens",
                     secText: "6",
                   },
-                  // {
-                  //   name: "All tokens",
-                  //   value: "-all_tokens",
-                  //   secText: "7",
-                  // },
+                  {
+                    name: "All tokens",
+                    value: "-all_tokens",
+                    secText: "7",
+                  },
                 ]}
                 onChange={(e) => {
                   const value = e.target.value;

@@ -39,7 +39,7 @@ export const MessageBox = forwardRef(
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
+    if (defaultValue == "\u200B") defaultValue = "";
     const setHeight = () => {
       if (!textAreaRef.current) return;
       const target = textAreaRef.current;
@@ -63,7 +63,7 @@ export const MessageBox = forwardRef(
         onBlur={() => {
           onBlur && onBlur();
         }}
-        placeholder="Enter a user message here"
+        placeholder="Enter a message here"
         onChange={(e) => onChange(e.target.value)}
         rows={1}
         onKeyDown={(e) => onKeyDown && onKeyDown(e)}

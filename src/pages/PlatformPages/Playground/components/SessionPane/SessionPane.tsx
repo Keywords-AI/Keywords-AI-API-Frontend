@@ -15,7 +15,11 @@ import React, {
 } from "react";
 import { models } from "src/utilities/constants";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import { defaultReset, setModelOptions } from "src/store/actions";
+import {
+  defaultReset,
+  setChannelMode,
+  setModelOptions,
+} from "src/store/actions";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 import _ from "lodash";
@@ -108,6 +112,13 @@ export const SessionPane = forwardRef(
           models: [value.modela, value.modelb],
         };
         dispatch(setModelOptions(newModelOptionsState));
+        const noneCount = [value.modela, value.modelb].filter(
+          (i) => i == "none"
+        ).length;
+        if (noneCount == 2) return;
+        if (noneCount == 1) {
+          dispatch(setChannelMode(true));
+        }
       });
     }, [watch]);
     return (

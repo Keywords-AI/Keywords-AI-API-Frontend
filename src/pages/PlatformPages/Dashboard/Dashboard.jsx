@@ -9,7 +9,7 @@ import {
 } from "src/components/Icons";
 import { setQueryParams } from "src/utilities/navigation";
 import { TitleAuth, TitleStaticSubheading } from "src/components/Titles";
-import { DashboardChart, SentimentChart } from "src/components/Display";
+import { DashboardChart } from "src/components/Display/DashboardChart";
 import { connect, shallowEqual, useDispatch, useSelector } from "react-redux";
 import {
   getDashboardData,
@@ -149,11 +149,7 @@ function DashboardNotConnected({
       onClick: () => {
         dispatch(setDisplayType("average", setQueryParams, navigate));
         dispatch(
-          setDisplayMetric(
-            Metrics.average_ttft.value,
-            setQueryParams,
-            navigate
-          )
+          setDisplayMetric(Metrics.average_ttft.value, setQueryParams, navigate)
         );
       },
     },
@@ -235,7 +231,7 @@ function DashboardNotConnected({
   if (organization.loading) {
     return <LoadingComponent />;
   }
-  if ((firstTime !== undefined && firstTime))
+  if (firstTime !== undefined && firstTime)
     // const filteredMetricsChoices = currentType === "total" ? metrics.filter((metric) => metric.dataKey !== "average_latency") : metrics;
     return (
       <WelcomeCard

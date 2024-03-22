@@ -26,7 +26,7 @@ import { Filters } from "./RequestFilters";
 import { Paginator } from "./Paginator";
 import { Popover } from "src/components/Dialogs";
 import { useTypedDispatch } from "src/store/store";
-import { getQueryParam } from "src/utilities/navigation";
+import { getQueryParam, setQueryParams } from "src/utilities/navigation";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
@@ -81,8 +81,11 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   loading,
 }) => {
   const { enableScope, disableScope } = useHotkeysContext();
+  const navigate = useNavigate();
   useEffect(() => {
+    setQueryParams({ is_test: !is_test }, navigate);
     enableScope("dashboard");
+    getRequestLogs();
     return () => {
       disableScope("dashboard");
     };
@@ -149,7 +152,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   const urlParams = new URLSearchParams(location.search);
   const is_test = urlParams.get("is_test") === "true" ? true : false;
 
-  if (firstTime)
+  if (!loading && requestLogs.length === 0)
     return (
       <WelcomeCard
         doclink="https://docs.keywordsai.co/platform-features/requests-log"
@@ -287,7 +290,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             ref={tableRef}
             className={cn(
               "flex-col  h-full items-start gap-lg flex-1 self-stretch ",
-              sidePanelOpen ? "w-[calc(100%-400px)]" : "w-full"
+              sidePanelOpen ? "w-[calc(100%-320px)]" : "w-full"
             )}
           >
             <RequestLogTable />

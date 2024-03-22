@@ -72,6 +72,10 @@ export const createOrganization = (organization, callback = () => {}) => {
               dispatch(
                 dispatchNotification({ type: "error", title: errors.detail })
               );
+            } else if (errors.error) {
+              dispatch(
+                dispatchNotification({ type: "error", title: errors.error })
+              );
             } else {
               handleSerializerErrors(errors, (err) => {
                 dispatch(dispatchNotification({ type: "error", title: err }));
