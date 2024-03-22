@@ -140,7 +140,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const routes = [
     {
       path: REDIRECT_URI, // "/platform"
-      element: isUserLoggedIn ? <NavigationLayout /> : <Navigate to="/login" />,
+      element: isUserLoggedIn ? (
+        <SidebarNavigationLayout />
+      ) : (
+        <Navigate to="/login" />
+      ),
       children: [
         { path: "requests", element: <Requests /> },
         { path: "playground", element: <Playground /> },
@@ -162,7 +166,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
     },
     {
       path: REDIRECT_URI, // "/These pages are only accessible to admin users."
-      element: hasAccess ? <NavigationLayout /> : <Navigate to="/forbidden" />,
+      element: hasAccess ? (
+        <SidebarNavigationLayout />
+      ) : (
+        <Navigate to="/forbidden" />
+      ),
       children: [
         { path: "chatbot", element: <Chatbot /> },
         { path: "loading", element: <LoadingPage /> },

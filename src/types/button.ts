@@ -22,11 +22,13 @@ export type variantType =
   | "small-dashed"
   | "small-select"
   | "big-white"
-  | "big-black";
+  | "big-black"
+  | "panel-v2";
 
 export type ButtonProps = {
   active?: boolean;
   hover?: boolean;
+  gap?: string;
   variant?: variantType;
   adminOnly?: boolean;
   text?: string;

@@ -159,6 +159,7 @@ export const generateChild = (page: any): Page => {
     path: path,
     element: page.page,
     page: page.page,
+    icon: page.icon,
   };
 };
 
