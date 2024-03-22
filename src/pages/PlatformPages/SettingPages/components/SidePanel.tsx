@@ -9,7 +9,7 @@ import { Divider } from "src/components/Sections";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ModelTag, StatusTag, SentimentTag } from "src/components/Misc";
-import { Copy, IconPlayground, Info } from "src/components";
+import { Copy, PlaygroundIcon, Info } from "src/components";
 import { models } from "src/utilities/constants";
 import React, { useState } from "react";
 import { RestorePlaygroundState } from "src/store/actions";
@@ -100,76 +100,76 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   };
   const [displayLog, setDisplayLog] = useState(false);
   return (
-          <div
-            className={cn(
-              "flex-col items-start self-stretch shadow-border-l flex-shrink-0 relative",
-              "shadow-gray-2 bg-gray-1 overflow-x-hidden",
-              open ? "w-[400px]" : "w-0"
-            )}
-          >
-            <div className="flex-col items-start self-stretch mt-[44px]">
-              {!displayLog && (
-                <div className="flex-col pt-sm py-md px-lg items-start gap-xs self-stretch">
-                  {Object.keys(displayObj).map((key, index) => {
-                    return (
-                      <div
-                        className="flex h-[24px] justify-between items-center self-stretch"
-                        key={index}
+    <div
+      className={cn(
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 relative",
+        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
+        open ? "w-[400px]" : "w-0"
+      )}
+    >
+      <div className="flex-col items-start self-stretch mt-[44px]">
+        {!displayLog && (
+          <div className="flex-col pt-sm py-md px-lg items-start gap-xs self-stretch">
+            {Object.keys(displayObj).map((key, index) => {
+              return (
+                <div
+                  className="flex h-[24px] justify-between items-center self-stretch"
+                  key={index}
+                >
+                  <div className="flex items-center gap-xxs">
+                    <span className="text-sm-md text-gray-5">{key}</span>
+                    {key === "TTFT" && (
+                      <Tooltip
+                        side="right"
+                        sideOffset={8}
+                        content={
+                          <>
+                            <span className="text-gray-4 caption">
+                              Time to first generated token
+                            </span>
+                          </>
+                        }
                       >
-                        <div className="flex items-center gap-xxs">
-                          <span className="text-sm-md text-gray-5">{key}</span>
-                          {key === "TTFT" && (
-                            <Tooltip
-                              side="right"
-                              sideOffset={8}
-                              content={
-                                <>
-                                  <span className="text-gray-4 caption">
-                                    Time to first generated token
-                                  </span>
-                                </>
-                              }
-                            >
-                              <div>
-                                <IconButton icon={Info} />
-                              </div>
-                            </Tooltip>
-                          )}
+                        <div>
+                          <IconButton icon={Info} />
                         </div>
-                        {displayObj[key]}
-                      </div>
-                    );
-                  })}
+                      </Tooltip>
+                    )}
+                  </div>
+                  {displayObj[key]}
                 </div>
-              )}
-              {displayLog &&
-                completeInteraction.map((message, index) => {
-                  if (!message.content) {
-                    return null;
-                  }
-                  return (
-                    <div
-                      key={index}
-                      className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
-                    >
-                      <div className="flex justify-between items-center self-stretch">
-                        <p className="text-sm-md text-gray-5">
-                          {getMessageType(message.role)}
-                        </p>
-                        <DotsButton
-                          icon={Copy}
-                          onClick={() => {
-                            navigator.clipboard.writeText(message.content);
-                          }}
-                        />
-                      </div>
-                      <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
-                        {message.content}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
+              );
+            })}
           </div>
+        )}
+        {displayLog &&
+          completeInteraction.map((message, index) => {
+            if (!message.content) {
+              return null;
+            }
+            return (
+              <div
+                key={index}
+                className="flex-col items-start gap-xxxs self-stretch pt-sm px-lg pb-md"
+              >
+                <div className="flex justify-between items-center self-stretch">
+                  <p className="text-sm-md text-gray-5">
+                    {getMessageType(message.role)}
+                  </p>
+                  <DotsButton
+                    icon={Copy}
+                    onClick={() => {
+                      navigator.clipboard.writeText(message.content);
+                    }}
+                  />
+                </div>
+                <div className="flex whitespace-pre-wrap py-xxxs px-xxs items-start gap-[10px] self-stretch rounded-sm bg-gray-2 text-gray-4 text-sm-regular break-keep">
+                  {message.content}
+                </div>
+              </div>
+            );
+          })}
+      </div>
+    </div>
   );
 };

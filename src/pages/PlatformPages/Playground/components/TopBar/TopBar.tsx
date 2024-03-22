@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   AlphanumericKey,
   Delete,
-  IconPlayground,
+  PlaygroundIcon,
   Pencil,
   SideBar,
   SideBarActive,
@@ -89,7 +89,7 @@ export function TopBar() {
             },
             {
               text: "Saved",
-              icon: IconPlayground,
+              icon: PlaygroundIcon,
               onClick: () => console.log("publish"),
             },
           ]}

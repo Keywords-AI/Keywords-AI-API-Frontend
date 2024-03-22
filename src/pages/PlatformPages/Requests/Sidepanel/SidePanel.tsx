@@ -14,7 +14,7 @@ import {
   AlphanumericKey,
   Compare,
   Copy,
-  IconPlayground,
+  PlaygroundIcon,
   Info,
   Pencil,
 } from "src/components";
@@ -203,7 +203,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
         >
           <div>
             <DotsButton
-              icon={IconPlayground}
+              icon={PlaygroundIcon}
               onClick={() => {
                 dispatch(RestorePlaygroundStateFromLog());
                 navigate("/platform/playground");
