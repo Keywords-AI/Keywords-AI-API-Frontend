@@ -66,7 +66,7 @@ export default function Evaluations({}: Props) {
           <SamplingModal handleClose={()=>{setOpen(false)}}/>
         </Modal>
       </PageParagraph>
-      <Divider />
+      {/* <Divider />
       <PageParagraph
         heading={"Custom evaluations"}
         subheading={"Add your own custom evaluations."}
@@ -95,7 +95,7 @@ export default function Evaluations({}: Props) {
           trigger={<Button variant="r4-primary" text="Add custom eval" />}
         />
       </PageParagraph>
-      <Divider />
+      <Divider /> */}
       <PageParagraph
         heading={"Pre-built evaluations"}
         // subheading={
