@@ -81,9 +81,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   loading,
 }) => {
   const { enableScope, disableScope } = useHotkeysContext();
-  const navigate = useNavigate();
+  const is_test = localStorage.getItem("is_test") === "true";
   useEffect(() => {
-    setQueryParams({ is_test: !is_test }, navigate);
     enableScope("dashboard");
     getRequestLogs();
     return () => {
@@ -149,8 +148,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
-  const urlParams = new URLSearchParams(location.search);
-  const is_test = urlParams.get("is_test") === "true" ? true : false;
 
   if (!loading && requestLogs.length === 0)
     return (
