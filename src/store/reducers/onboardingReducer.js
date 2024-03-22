@@ -1,4 +1,4 @@
-// src/store/reducers/onboardingReducer.js
+// src/store/reducers/onboardingReducer
 
 import { SET_CURRENT_STEP } from "../actions/onboardingAction";
 

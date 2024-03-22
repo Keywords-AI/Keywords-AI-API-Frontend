@@ -9,7 +9,7 @@ import {
   updateUserSQLPrompt,
   dispatchNotification,
 } from "src/store/actions";
-import apiConfig from "src/services/apiConfig";
+import apiConfig, { keywordsFetch } from "src/services/apiConfig";
 import {
   // Actions
   setOrg,
@@ -18,6 +18,7 @@ import {
 } from "src/store/actions";
 import { FETCH_ENDPOINT, SANITY_CHECK } from "src/env";
 import { keywordsRequest } from "src/utilities/requests";
+import { set } from "date-fns";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
@@ -28,14 +29,11 @@ export const getUser = () => {
     // const timeout = new Promise((_, reject) =>
     //   setTimeout(() => reject(new Error("Request timed out")), 20000)
     // );
+    if (!retrieveAccessToken()) { // If there is no access token, don't fetch user
+      return;
+    }
     getCSRF();
-    const request = fetch(`${apiConfig.apiURL}auth/users/me/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${retrieveAccessToken()}`,
-      },
-    });
+    const request = keywordsFetch({ path: `auth/users/me/`, method: "GET" });
     request
       .then(async (res) => {
         if (res.ok) {
@@ -65,7 +63,12 @@ export const getUser = () => {
           const data = await res.text();
           console.log("data", data);
           dispatch({ type: SET_USER_FAILED });
-          // window.location = "https://keywordsai.co/";
+          window.location = "https://keywordsai.co/";
+          if (res.status === 401) {
+            window.location = "/login";
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+          }
         }
       })
       .catch((error) => {

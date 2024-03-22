@@ -1,31 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { Google } from "src/components/Icons";
 import { BackButton } from "src/components/Buttons/BackButton";
 import { useForm } from "react-hook-form";
 import { TitleAuth } from "src/components/Titles";
 import { Button } from "src/components/Buttons/Button";
-import { login, googleLogin, resendActivationEmail } from "src/store/actions";
-import { connect } from "react-redux";
+import { login, googleLogin } from "src/store/actions";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { TextInput } from "src/components/Inputs";
-import { Google } from "src/components";
-import { dispatchNotification, isLoggedIn } from "src/store/actions";
 import { useLocation } from "react-router-dom";
-import { REDIRECT_URI } from "src/utilities/navigation";
 import { DEMO_ENV, DEMO_EMAIL, DEMO_PASSWORD } from "src/env";
-const mapStateToProps = (state) => ({ user: state.user });
-const mapDispatchToProps = {
-  login,
-  googleLogin,
-  resendActivationEmail,
-};
 
-const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
+const LogIn = () => {
+  const dispatch = useTypedDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const onSubmit = async (data) => {
     try {
-      await login(data);
+      dispatch(login(data));
     } catch (error) {
       setBackendError(error.detail || error.message);
     }
@@ -108,8 +101,18 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
           </div>
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button text={"Sign in"} variant={"r4-primary"} width={"w-full"} />
-            {/* <Button variant="r4-white" text="Sign in with Google" icon={Google} iconSize={"md"} iconPosition="left" bgColor="bg-gray-3" textColor="text-gray-5"
-              width="w-full" onClick={() => googleLogin()} type="button" /> */}
+            <Button
+              variant="r4-white"
+              text="Sign in with Google"
+              icon={Google}
+              iconSize={"md"}
+              iconPosition="left"
+              bgColor="bg-gray-3"
+              textColor="text-gray-5"
+              width="w-full"
+              onClick={() => dispatch(googleLogin())}
+              type="button"
+            />
             <p
               className="caption text-gray-4 self-stretch hover:cursor-pointer"
               onClick={() => navigate("/forgot-password")}
@@ -129,4 +132,5 @@ const LogIn = ({ login, googleLogin, resendActivationEmail, user }) => {
   );
 };
 
-export default connect(null, mapDispatchToProps)(LogIn);
+
+export default LogIn;
