@@ -7,6 +7,10 @@ import { Toolbar } from "@radix-ui/react-toolbar";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useDispatch } from "react-redux";
 import { dispatchNotification } from "src/store/actions";
+import {
+  backgroundColorClasses,
+  textColorClasses,
+} from "src/utilities/constants";
 
 export default function EvalPane({}) {
   const logItem = useTypedSelector((state) =>
@@ -54,7 +58,16 @@ export default function EvalPane({}) {
       );
   const cost =
     logItem?.evaluations?.evaluation_cost || logItem?.evaluation_cost;
-  const topics = logItem?.evaluations?.topic_analysis?.results || [];
+  const topics = logItem?.evaluations?.topic_analysis?.results.reduce(
+    (acc, result) => {
+      result.labels.forEach((label) => {
+        const parts = label.split("/").filter((part) => part !== "");
+        acc.push(...parts);
+      });
+      return acc;
+    },
+    []
+  );
   const custom_evals = logItem?.evaluations?.custom_evals || [];
   const displayObj = [
     {
@@ -144,51 +157,40 @@ export default function EvalPane({}) {
           <p className="text-sm-regular text-gray-4">N/A</p>
         ),
     },
-    {
-      key: "Topic",
-      value:
-        topics.length > 0 ? (
-          <div className="flex items-center gap-xxxs">
-            {topics[0] && topics[0].labels[0] && (
-              <Tag
-                border=""
-                text={topics[0].labels[0].split("/")[1]}
-                textColor={"text-mint"}
-                backgroundColor={"bg-mint/10"}
-              />
-            )}
+    // {
+    //   key: "Topic",
+    //   value:
+    //     topics.length > 0 ? (
+    //       <div className="flex items-center gap-xxxs">
+    //         {topics[0] && topics[0].labels[0] && (
+    //           <Tag
+    //             border=""
+    //             text={topics[0].labels[0].split("/")[1]}
+    //             textColor={"text-mint"}
+    //             backgroundColor={"bg-mint/10"}
+    //           />
+    //         )}
 
-            {topics[1] && topics[1].labels[0] && (
-              <Tag
-                border=""
-                text={topics[1].labels[0].split("/")[1]}
-                textColor={"text-purple"}
-                backgroundColor={"bg-purple/10"}
-              />
-            )}
-          </div>
-        ) : (
-          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-        ),
-    },
-    ...custom_evals.map((evalItem) => {
-      return {
-        key: evalItem.name,
-        value: (
-          <Tag
-            border=""
-            text={evalItem.score.toFixed(2)}
-            textColor={evalItem.score >= evalItem.threshold ? "text-green" : "text-red"}
-            backgroundColor={evalItem.score >= evalItem.threshold ? "bg-green/10" : "bg-red/10"}
-          />
-        ),
-      };
-    }),
+    //         {topics[1] && topics[1].labels[0] && (
+    //           <Tag
+    //             border=""
+    //             text={topics[1].labels[0].split("/")[1]}
+    //             textColor={"text-purple"}
+    //             backgroundColor={"bg-purple/10"}
+    //           />
+    //         )}
+    //       </div>
+    //     ) : (
+    //       <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+    //     ),
+    // },
   ];
   
   const dispatch = useDispatch();
   const onSubmit = () => {
-    dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));
+    dispatch(
+      dispatchNotification({ title: "Copied to clickboard", type: "success" })
+    );
   };
   return (
     <>
@@ -233,6 +235,26 @@ export default function EvalPane({}) {
             </div>
           );
         })}
+      </div>
+      <div className="flex-col gap-xxxs py-sm px-lg items-start self-stretch">
+        <div className="flex justify-between items-center self-stretch">
+          <p className="text-sm-md text-gray-5">Topics</p>
+        </div>
+        <div className="flex items-start content-start gap-xxxs w-full flex-wrap">
+          {topics &&
+            topics.length > 0 &&
+            topics.map((topic, index) => (
+              <Tag
+                key={index}
+                border=""
+                text={topic}
+                textColor={textColorClasses[index % textColorClasses.length]}
+                backgroundColor={
+                  backgroundColorClasses[index % backgroundColorClasses.length]
+                }
+              />
+            ))}
+        </div>
       </div>
       <Divider />
       <div className="flexcol py-sm px-lg items-start gap-xxxs self-stretch">

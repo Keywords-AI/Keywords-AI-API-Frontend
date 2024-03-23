@@ -15,6 +15,7 @@ import { CodeViewer } from "src/components/CodeViewer";
 import { Paginator } from "src/pages/PlatformPages/Requests/Paginator";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 import Accordion from "src/components/Sections/Accordion/Accordion";
+import { BCrumb } from "src/components/Sections/BreadCrumb/BreadCrumb";
 
 const data = [
   { name: "Group A", value: 400 },
@@ -41,6 +42,12 @@ export const QaMiscPage = () => {
       <Paginator />
       <Accordion />
       <Accordion />
+      <BCrumb
+        items={[
+          { label: "Home", onC: "/" },
+          { label: "Home", action: "/" },
+        ]}
+      />
     </PageContent>
   );
 };

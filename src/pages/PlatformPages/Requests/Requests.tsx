@@ -32,6 +32,7 @@ import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { RequestPreview } from "src/components/Display/Figures";
 import cn from "src/utilities/classMerge";
+import { BCrumb } from "src/components/Sections/BreadCrumb/BreadCrumb";
 const mapStateToProps = (state: RootState) => ({
   requestLogs: state.requestLogs.logs as LogItem[],
   firstTime: !state.organization?.has_api_call,
@@ -148,6 +149,24 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
+<<<<<<< HEAD
+  const urlParams = new URLSearchParams(location.search);
+  const is_test = urlParams.get("is_test") === "true" ? true : false;
+  const BreadItems = [
+    {
+      label: "Requests",
+      link: "/platform/requests",
+    },
+    is_test
+      ? {
+          label: "Test env",
+        }
+      : {
+          label: "Prod env",
+        },
+  ];
+=======
+>>>>>>> main
 
   if (!loading && requestLogs.length === 0 && filters.length === 0)
     return (
@@ -181,41 +200,42 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           aria-label=""
           className="flex-row py-xs px-lg justify-between items-center self-stretch rounded-xs shadow-border-b-2 h-[52px]"
         >
-          <div className="flex flex-row items-center gap-xxxs">
-            {/* {filters.length > 0 === false && <FilterActions type="filter" />} */}
-
-            {
-              <FilterActions
-                type="filter"
-                start={start}
-                setStart={setStart}
-                hidden={filters.length > 0}
-              />
-            }
-            {filters.length > 0 && !loading && (
-              <React.Fragment>
-                <Tooltip
-                  side="bottom"
-                  sideOffset={8}
-                  align="start"
-                  delayDuration={1}
-                  content={
-                    <>
-                      <p className="caption text-gray-4">Clear filters</p>
-                      <AlphanumericKey value={"C"} />
-                    </>
-                  }
-                >
-                  <Button
-                    variant="small-dashed"
-                    icon={Close}
-                    text="Clear filters"
-                    onClick={clearFilters}
-                    iconPosition="right"
-                  />
-                </Tooltip>
-              </React.Fragment>
-            )}
+          <div className="flex gap-sm items-center">
+            <BCrumb items={BreadItems} />
+            <div className="flex flex-row items-center gap-xxxs">
+              {
+                <FilterActions
+                  type="filter"
+                  start={start}
+                  setStart={setStart}
+                  hidden={filters.length > 0}
+                />
+              }
+              {filters.length > 0 && !loading && (
+                <React.Fragment>
+                  <Tooltip
+                    side="bottom"
+                    sideOffset={8}
+                    align="start"
+                    delayDuration={1}
+                    content={
+                      <>
+                        <p className="caption text-gray-4">Clear filters</p>
+                        <AlphanumericKey value={"C"} />
+                      </>
+                    }
+                  >
+                    <Button
+                      variant="small-dashed"
+                      icon={Close}
+                      text="Clear filters"
+                      onClick={clearFilters}
+                      iconPosition="right"
+                    />
+                  </Tooltip>
+                </React.Fragment>
+              )}
+            </div>
           </div>
 
           <FilterControl />

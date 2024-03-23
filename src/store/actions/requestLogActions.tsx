@@ -364,7 +364,6 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
       method: postData ? "POST" : "GET",
       data: { filters: postData, exporting: exporting },
     }).then((data) => {
-      console.log("getRequestLogs", data);
       const results = data.results;
       dispatch(
         setPagination(data.count, data.previous, data.next, data.total_count)

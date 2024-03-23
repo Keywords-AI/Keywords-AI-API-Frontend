@@ -34,7 +34,7 @@ export const SignUp = () => {
         <div className="flex-col items-start gap-xxs self-stretch">
           <BackButton text="Home" link={"https://keywordsai.co/"} />
         </div>
-        <div className=" flex-col max-w-[420px] items-center gap-lg justify-center ">
+        <div className=" flex-col w-full max-w-[420px] items-center gap-lg justify-center ">
           <TitleAuth
             title={"Create an account"}
             subtitle={`Sign up to get $15 in model credits.`}
@@ -125,9 +125,9 @@ const EmailForm = ({ setEmail }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex-col justify-center items-center gap-md self-stretch"
+      className="flex-col justify-center w-full items-center gap-md self-stretch"
     >
-      <div className="flex-col justify-center items-start gap-xs w-[420px] max-w-[420px]">
+      <div className="flex-col justify-center items-start gap-xs w-[420px]  max-w-[420px] self-stretch sm:w-full">
         <TextInput
           title="Email"
           type="email"
