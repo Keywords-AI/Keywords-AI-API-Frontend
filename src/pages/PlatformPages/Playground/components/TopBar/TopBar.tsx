@@ -23,6 +23,7 @@ import {
   toggleRightPanel,
 } from "src/store/actions/playgroundAction";
 import store, { useTypedDispatch, useTypedSelector } from "src/store/store";
+import { BCrumb } from "src/components/Sections/BreadCrumb/BreadCrumb";
 
 export function TopBar() {
   const isLeftPanelOpen = useTypedSelector(
@@ -71,10 +72,16 @@ export function TopBar() {
     },
     { scopes: "playground_topBar", preventDefault: true }
   );
-
+  const BCItems = [
+    {
+      label: "Playground",
+      link: "/platform/playground",
+    },
+  ];
   return (
     <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
       <div className="flex items-center gap-xxs">
+        <BCrumb items={BCItems} />
         {/* <DotsButton
           icon={isLeftPanelOpen ? SideBarActiveLeft : SideBarLeft}
           onClick={() => dispatch(toggleLeftPanel())}

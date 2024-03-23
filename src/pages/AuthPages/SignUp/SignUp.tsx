@@ -127,7 +127,7 @@ const EmailForm = ({ setEmail }) => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex-col justify-center items-center gap-md self-stretch"
     >
-      <div className="flex-col justify-center items-start gap-xs w-[420px] max-w-[420px]">
+      <div className="flex-col justify-center items-start gap-xs w-[420px]  max-w-[420px] self-stretch sm:w-full">
         <TextInput
           title="Email"
           type="email"

@@ -37,6 +37,7 @@ import { toggleRightPanel } from "src/store/actions";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import { Table } from "./components/Table/Table";
 import { Paginator } from "../Requests/Paginator";
+import { BCrumb } from "src/components/Sections/BreadCrumb/BreadCrumb";
 
 type Props = {};
 
@@ -142,6 +143,20 @@ const TopBar = () => {
       dataKey: "active",
     },
   ];
+  const urlParams = new URLSearchParams(location.search);
+  const BCItems = [
+    {
+      label: "Users",
+      link: "/platform/users",
+    },
+    urlParams.get("is_test") === "true"
+      ? {
+          label: "Test env",
+        }
+      : {
+          label: "Prod env",
+        },
+  ];
   return (
     <>
       {/* <div aria-label="frame 1938" className="flex items-start w-full  gap-md">
@@ -160,7 +175,9 @@ const TopBar = () => {
         aria-label="frame 1944"
         className="flex px-lg py-xs justify-between items-center gap-xxs self-stretch shadow-border-b shadow-gray-2"
       >
-        <div className="flex flex-row items-center gap-xxxs"></div>
+        <div className="flex flex-row items-center gap-xxxs">
+          <BCrumb items={BCItems} />
+        </div>
         <div className="flex  items-center gap-xxs">
           {/* {isAdmin && (
             <SearchUser handleSearch={handleSearch} handleReset={handleReset} />

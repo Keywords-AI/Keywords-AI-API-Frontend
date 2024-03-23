@@ -37,6 +37,7 @@ import WelcomeCard from "src/components/Cards/WelcomeCard";
 import { DashboardPreview } from "src/components/Display/Figures";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useHotkeys } from "react-hotkeys-hook";
+import { BCrumb } from "src/components/Sections/BreadCrumb/BreadCrumb";
 
 const mapStateToProps = (state) => ({
   user: state.user,
@@ -195,6 +196,20 @@ function DashboardNotConnected({
       },
     },
   ];
+  const urlParams = new URLSearchParams(location.search);
+  const BCItems = [
+    {
+      label: "Dashboard",
+      link: "/platform/dashboard",
+    },
+    urlParams.get("is_test") === "true"
+      ? {
+          label: "Test env",
+        }
+      : {
+          label: "Prod env",
+        },
+  ];
   useHotkeys(".", () => {
     handleOpenPanel();
   });
@@ -251,7 +266,7 @@ function DashboardNotConnected({
   else
     return (
       <div className=" flex-col flex-1 self-stretch">
-        <div className="grid grid-cols-6 pl-lg items-start self-stretch">
+        {/* <div className="grid grid-cols-6 pl-lg items-start self-stretch">
           <div className="flex flex-col py-md items-start gap-xxs self-stretch">
             <span className="text-sm-md text-gray-4">{organization?.name}</span>
             <span className="display-sm text-gray-5">{firstName} </span>
@@ -267,28 +282,10 @@ function DashboardNotConnected({
               }}
             />
           ))}
-        </div>
+        </div> */}
         <div className="flex flex-row py-xs px-lg justify-between items-center self-stretch shadow-border shadow-gray-2 w-full h-[52px]">
-          <div>
-            {/* {breakdown_type !== "none" && (
-              <div className="flex items-center content-center gap-xs flex-wrap">
-                {colorData &&
-                  Object.keys(colorData).map((name, index) => (
-                    <div className="flex items-center gap-xxs" key={index}>
-                      <div
-                        className={cn("w-[8px] h-[8px] rounded-[2px] ")}
-                        style={{
-                          backgroundColor:
-                            colorData[name] || "rgba(0, 0, 0, 0.1)",
-                        }}
-                      ></div>
-                      <span className="caption text-gray-4">
-                        {name || "unknown model"}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            )} */}
+          <div className="flex items-center gap-sm">
+            <BCrumb items={BCItems} />
             {(user.is_admin || user.is_superadmin) && <DashboardFilterLeft />}
           </div>
           <div className="flex items-center gap-xxs">
