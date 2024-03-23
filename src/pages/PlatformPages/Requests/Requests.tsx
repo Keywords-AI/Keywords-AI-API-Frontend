@@ -149,8 +149,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
-  const urlParams = new URLSearchParams(location.search);
-  const is_test = urlParams.get("is_test") === "true" ? true : false;
   const BreadItems = [
     {
       label: "Requests",
