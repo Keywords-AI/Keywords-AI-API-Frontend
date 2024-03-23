@@ -68,6 +68,7 @@ export default function EvalPane({}) {
     },
     []
   );
+  const custom_evals = logItem?.evaluations?.custom_evals || [];
   const displayObj = [
     {
       key: "Context Precision",
@@ -184,6 +185,7 @@ export default function EvalPane({}) {
     //     ),
     // },
   ];
+  
   const dispatch = useDispatch();
   const onSubmit = () => {
     dispatch(

@@ -368,3 +368,44 @@ export const updateOrgEvalOptions = (evalName: string, data: any) => {
     dispatch(getUser());
   };
 };
+
+export const createCustomEval = (data: any) => {
+  return async (dispatch, getState) => {
+    const organization = getState().organization;
+    console.log("data", data);
+    try {
+      const response = await keywordsRequest({
+        path: `user/custom_evals/`,
+        method: "POST",
+        data: { ...data, organization: organization.id },
+        dispatch,
+      });
+      dispatch(
+        dispatchNotification({
+          title: "Custom evaluation created successfully!",
+        })
+      );
+    } catch (error) {}
+    dispatch(getUser());
+  };
+};
+
+export const updateCustomEval = (data: any) => {
+  return async (dispatch, getState) => {
+    console.log("data", data);
+    try {
+      const response = await keywordsRequest({
+        path: `user/custom_eval/${data.id}/`,
+        method: "PATCH",
+        data: data,
+        dispatch,
+      });
+      dispatch(
+        dispatchNotification({
+          title: "Custom evaluation updated successfully!",
+        })
+      );
+    } catch {}
+    dispatch(getUser());
+  };
+};
