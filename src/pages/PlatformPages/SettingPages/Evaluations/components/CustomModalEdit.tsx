@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Check, Divider, Down, Pencil } from "src/components";
 import {
   Button,
+  SwitchButton
 } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import {
@@ -33,6 +34,9 @@ export interface CustomModalEditProps {
   selectedMetric: string;
   updatedTime: Date;
   evalId: number;
+  minScore: number;
+  maxScore: number;
+  threshold: number;
 }
 export function CustomModalEdit({
   title,
@@ -43,6 +47,9 @@ export function CustomModalEdit({
   updatedTime=new Date(),
   model,
   evalId,
+  minScore,
+  maxScore,
+  threshold,
   // outputs,
   // metrics,
 }: // evalName,
@@ -51,17 +58,24 @@ CustomModalEditProps) {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors }, //form errors
-  } = useForm({defaultValues: {name: title, model: model, definition: definition, scoring_rubric: scoringRubric}});
+  } = useForm({defaultValues: {name: title, model: model, definition: definition, scoring_rubric: scoringRubric, enabled: isEnable, max_score: maxScore, min_score: minScore, threshold_value:threshold}});
   const dispatch = useTypedDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [hover, setHover] = React.useState(false);
+  const [hoverTestMode, setHoverTestMode] = React.useState(false);
+  const [enabledState, setEnabledState] = React.useState(isEnable);
   const onSubmit = (data: any) => {
     data.id = evalId;
+    data.enabled=enabledState
+    console.log(data);
     dispatch(updateCustomEval(data));
     setOpen(false);
   };
-  const [open, setOpen] = React.useState(false);
-  const [hover, setHover] = React.useState(false);
-
+  useEffect(() => {
+    setEnabledState(isEnable);
+  }, [isEnable]);
   return (
     <Modal
       open={open}
@@ -95,13 +109,13 @@ CustomModalEditProps) {
                   Updated {format(new Date(updatedTime), "M/dd/yyyy")}
                 </p>
                 <div className="flex items-center gap-xxxs">
-                  {isEnable && <ModelTag model={model} />}
+                  {enabledState && <ModelTag model={model} />}
                   <Tag
-                    text={isEnable ? "Enabled" : "Disabled"}
+                    text={enabledState ? "Enabled" : "Disabled"}
                     border="border-none"
-                    backgroundColor={isEnable ? "bg-success/10" : "bg-red/10"}
-                    textColor={isEnable ? "text-success" : "text-red"}
-                    icon={isEnable ? <Check fill="fill-success" /> : null}
+                    backgroundColor={enabledState ? "bg-success/10" : "bg-red/10"}
+                    textColor={enabledState ? "text-success" : "text-red"}
+                    icon={enabledState ? <Check fill="fill-success" /> : null}
                   />
                 </div>
               </div>
@@ -116,7 +130,36 @@ CustomModalEditProps) {
           </div>
         </div>
       }
-      title={<span className="display-xs text-gray-5">{title}</span>}
+      title={
+      <div className="flex justify-between items-center self-stretch">
+        <div className="flex flex-row items-center gap-xxs">
+          {title}{" "}
+          <Tag
+            text={enabledState ? "Enabled" : "Disabled"}
+            border="border-none cursor-pointer"
+            backgroundColor={enabledState ? "bg-success/10" : "bg-red/10"}
+            textColor={enabledState ? "text-success" : "text-red"}
+            icon={enabledState ? <Check fill="fill-success" /> : null}
+          />
+        </div>
+        <div
+          className="flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer"
+          onMouseEnter={() => setHoverTestMode(true)}
+          onMouseLeave={() => setHoverTestMode(false)}
+        >
+          {!hoverTestMode && (
+            <span className="text-gray-4 text-sm-regular">
+              {enabledState ? "On" : "Off"}{" "}
+            </span>
+          )}
+          {hoverTestMode && (
+            <span className="text-gray-5 text-sm-regular">
+              {enabledState ? "On" : "Off"}
+            </span>
+          )}
+          <SwitchButton hovered={hoverTestMode} checked={enabledState} onCheckedChange={()=>{setEnabledState(!enabledState)}}/>
+      </div>
+    </div>}
       subtitle={subtitle}
     >
       <div className="flex flex-row items-start gap-xs self-stretch">
@@ -160,6 +203,12 @@ CustomModalEditProps) {
         customModal={true}
         {...register("scoring_rubric")}
       />
+      <div className="flex-row self-stretch gap-xs items-center">
+        <TextInput title={"Minimum score"} type={"number"} placeholder=".e.g 0" {...register("min_score")}/>
+        <TextInput title={"Maximum score"} type={"number"} placeholder={".e.g 1"} {...register("max_score")}/>
+      </div>
+      {/* threshold_value is the actual column name on the db. Threshold is the calcualted result that passed back to the front end. */}
+      <TextInput title={"Threshold"} type={"number"} placeholder={`Define a threshold for the response to be considered "good"`} {...register("threshold_value")} />
       <div className="flex justify-end items-center gap-xs self-stretch">
         <div className="flex justify-end items-center gap-xs">
           <DialogClose asChild>
