@@ -116,10 +116,12 @@ export const setFirstTime = (firstTime) => ({
 });
 
 export const setPrompt = (prompt) => ({ type: SET_PROMPT, payload: prompt });
-export const setCurrentModel = (currentModel) => ({
-  type: SET_CURRENT_MODEL,
-  payload: currentModel,
-});
+export const setCurrentModel = (currentModel) => {
+ return {
+    type: SET_CURRENT_MODEL,
+    payload: currentModel,
+  }
+};
 
 export const setCurrentBrand = (currentBrand) => ({
   type: SET_CURRENT_BRAND,

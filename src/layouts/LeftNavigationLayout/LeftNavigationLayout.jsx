@@ -44,7 +44,7 @@ const LeftNavitationLayout = ({ sectionName }) => {
       link: "/platform/api",
     },
     {
-      label: ["settings", "admin"].includes(currPath) ? "User" : "Orgnization",
+      label: ["settings", "admin"].includes(currPath) ? "User" : "Organization",
       link: "/platform/api",
     },
     {
