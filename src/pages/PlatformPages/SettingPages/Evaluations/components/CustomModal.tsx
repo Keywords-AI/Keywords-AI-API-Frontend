@@ -19,7 +19,7 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { set, useForm } from "react-hook-form";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { useDispatch } from "react-redux";
-import { updateOrgEvalOptions } from "src/store/actions";
+import { createCustomEval } from "src/store/actions";
 
 export interface customModalProps {
   title: string;
@@ -50,9 +50,9 @@ customModalProps) {
     handleSubmit,
     formState: { errors }, //form errors
   } = useForm();
-
+  const dispatch = useTypedDispatch();
   const onSubmit = (data: any) => {
-
+    dispatch(createCustomEval(data));
     setOpen(false);
   };
   const [open, setOpen] = React.useState(false);
@@ -83,10 +83,10 @@ customModalProps) {
           placeholder="Auto-select"
           defaultValue="Auto-select"
           choices={[
-            { name: "1-10", value: 1 },
-            { name: "11-50", value: 11 },
-            { name: "51-200", value: 51 },
-            { name: "200+", value: 200 },
+            { name: "GPT 4", value: "gpt-4" },
+            { name: "GPT 4 Turbo", value: "gpt-4-turbo-preview" },
+            { name: "Claude 3 Haiku", value: "claude-3-haiku-20240307" },
+            { name: "GPT 3.5 Turbo", value: "gpt-3.5-turbo" },
           ]}
           optionsWidth="w-[180px]"
         />
@@ -100,10 +100,33 @@ customModalProps) {
       />
       <TextAreaInput
         title={"Scoring rubric"}
-        placeholder={"i.e. Use the following rubric to assign a score to the answer based on its conciseness:\n- Score 1: The answer is overly verbose, containing a significant amount of unnecessary information, repetition, or redundant expressions that do not contribute to the understanding of the topic.\n- Score 2: The answer includes some unnecessary details or slightly repetitive information, but the excess does not severely hinder understanding.\n- Score 3: The answer is clear, direct, and to the point, with no unnecessary words, details, or repetition."}
+        placeholder={
+          "i.e. Use the following rubric to assign a score to the answer based on its conciseness:\n- Score 1: The answer is overly verbose, containing a significant amount of unnecessary information, repetition, or redundant expressions that do not contribute to the understanding of the topic.\n- Score 2: The answer includes some unnecessary details or slightly repetitive information, but the excess does not severely hinder understanding.\n- Score 3: The answer is clear, direct, and to the point, with no unnecessary words, details, or repetition."
+        }
         height="h-[244px]"
         customModal={true}
-        {...register("rubric")}
+        {...register("scoring_rubric")}
+      />
+      <div className="flex-row self-stretch gap-xs items-center">
+        <TextInput
+          title={"Minimum score"}
+          type={"number"}
+          placeholder=".e.g 0"
+          {...register("min_score")}
+        />
+        <TextInput
+          title={"Maximum score"}
+          type={"number"}
+          placeholder={".e.g 1"}
+          {...register("max_score")}
+        />
+      </div>
+      {/* threshold_value is the actual column name on the db. Threshold is the calcualted result that passed back to the front end. */}
+      <TextInput
+        title={"Threshold"}
+        type={"number"}
+        placeholder={`Define a threshold for the response to be considered "good"`}
+        {...register("threshold_value")}
       />
       <div className="flex justify-end items-center gap-xs self-stretch">
         <div className="flex justify-end items-center gap-xs">

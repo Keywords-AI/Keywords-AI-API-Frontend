@@ -356,6 +356,8 @@ export const getRequestLogs = (postData?: any, exporting = false) => {
     if (postData) {
       params.set("page", "1");
     }
+    const isTest = localStorage.getItem("is_test") ?? false;
+    params.set("is_test", isTest.toString());
     dispatch(startGetRequestLogs());
     keywordsRequest({
       path: `api/request-logs/?${params.toString()}`,

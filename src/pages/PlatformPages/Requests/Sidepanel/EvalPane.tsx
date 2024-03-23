@@ -55,6 +55,7 @@ export default function EvalPane({}) {
   const cost =
     logItem?.evaluations?.evaluation_cost || logItem?.evaluation_cost;
   const topics = logItem?.evaluations?.topic_analysis?.results || [];
+  const custom_evals = logItem?.evaluations?.custom_evals || [];
   const displayObj = [
     {
       key: "Context Precision",
@@ -170,7 +171,21 @@ export default function EvalPane({}) {
           <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
         ),
     },
+    ...custom_evals.map((evalItem) => {
+      return {
+        key: evalItem.name,
+        value: (
+          <Tag
+            border=""
+            text={evalItem.score.toFixed(2)}
+            textColor={evalItem.score >= evalItem.threshold ? "text-green" : "text-red"}
+            backgroundColor={evalItem.score >= evalItem.threshold ? "bg-green/10" : "bg-red/10"}
+          />
+        ),
+      };
+    }),
   ];
+  
   const dispatch = useDispatch();
   const onSubmit = () => {
     dispatch(dispatchNotification({ title: "Copied to clickboard", type: "success" }));

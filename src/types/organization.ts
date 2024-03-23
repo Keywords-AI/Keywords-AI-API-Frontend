@@ -14,6 +14,7 @@ export type OrgUser = {
 export type Organization = {
     id: number | null;
     name: string;
+    organization_custom_evals: any[];
     organization_model_presets: any[];
     sample_percentage: number;
     owner: any;
