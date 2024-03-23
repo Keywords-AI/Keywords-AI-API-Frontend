@@ -149,7 +149,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
-<<<<<<< HEAD
   const urlParams = new URLSearchParams(location.search);
   const is_test = urlParams.get("is_test") === "true" ? true : false;
   const BreadItems = [
@@ -165,8 +164,6 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           label: "Prod env",
         },
   ];
-=======
->>>>>>> main
 
   if (!loading && requestLogs.length === 0 && filters.length === 0)
     return (
