@@ -16,6 +16,7 @@ const initState: Organization = {
   id: null,
   name: "",
   organization_size: 0,
+  organization_custom_evals: [],
   owner: {},
   users: [],
   unique_organization_id: "",

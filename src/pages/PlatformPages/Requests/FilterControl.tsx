@@ -39,7 +39,8 @@ export default function FilterControl() {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const timeRange = urlParams.get("time_range_type");
-  const is_test = urlParams.get("is_test") === "true" ? true : false;
+  const is_test = localStorage.getItem("is_test");
+  const is_test_bool = is_test === "true";
   const currentMetric = useTypedSelector(
     (state: RootState) => state.dashboard.displayFilter.metric
   );
@@ -80,7 +81,7 @@ export default function FilterControl() {
   useHotkeys(
     "S",
     () => {
-      setQueryParams({ is_test: !is_test }, navigate);
+      localStorage.setItem("is_test", is_test_bool ? "false" : "true");
       dispatch(getRequestLogs());
     },
     {}
@@ -142,24 +143,24 @@ export default function FilterControl() {
         }
       >
         <div
-          className={cn ("flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer", is_test ? "bg-gray-2" : "" )}
+          className={cn ("flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-2 cursor-pointer", is_test_bool ? "bg-gray-2" : "" )}
           onMouseEnter={() => setHoverTestMode(true)}
           onMouseLeave={() => setHoverTestMode(false)}
           onClick={() => {
-            setQueryParams({ is_test: !is_test }, navigate);
+            localStorage.setItem("is_test", is_test_bool ? "false" : "true");
             dispatch(getRequestLogs());
           }}
         >
-          {!hoverTestMode && !is_test && (
+          {!hoverTestMode && !is_test_bool && (
             <span className="text-gray-4 text-sm-regular">Test env</span>
           )}
-          {hoverTestMode && !is_test && (
+          {hoverTestMode && !is_test_bool && (
             <span className="text-gray-5 text-sm-regular">Test env</span>
           )}
-          {is_test && (
+          {is_test_bool && (
             <span className="text-primary text-sm-md">Test env</span>
           )}
-          <SwitchButton hovered={hoverTestMode} checked={is_test} />
+          <SwitchButton hovered={hoverTestMode} checked={is_test_bool} />
         </div>
       </Tooltip>
 

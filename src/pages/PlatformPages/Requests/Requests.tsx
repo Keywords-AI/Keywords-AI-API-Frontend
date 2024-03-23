@@ -82,9 +82,8 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
   loading,
 }) => {
   const { enableScope, disableScope } = useHotkeysContext();
-  const navigate = useNavigate();
+  const is_test = localStorage.getItem("is_test") === "true";
   useEffect(() => {
-    setQueryParams({ is_test: !is_test }, navigate);
     enableScope("dashboard");
     getRequestLogs();
     return () => {
@@ -150,6 +149,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     },
     {}
   );
+<<<<<<< HEAD
   const urlParams = new URLSearchParams(location.search);
   const is_test = urlParams.get("is_test") === "true" ? true : false;
   const BreadItems = [
@@ -165,8 +165,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
           label: "Prod env",
         },
   ];
+=======
+>>>>>>> main
 
-  if (!loading && requestLogs.length === 0)
+  if (!loading && requestLogs.length === 0 && filters.length === 0)
     return (
       <WelcomeCard
         doclink="https://docs.keywordsai.co/platform-features/requests-log"

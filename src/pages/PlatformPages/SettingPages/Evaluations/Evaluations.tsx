@@ -1,11 +1,11 @@
 import React from "react";
-import { Button, Check, Divider, Down, Pencil, Rocket } from "src/components";
+import { Button, Check, Custom, Divider, Down, Pencil, Rocket } from "src/components";
 import { ModelTag, Tag } from "src/components/Misc";
 import { PageContent, PageParagraph } from "src/components/Sections";
 import Accordion from "src/components/Sections/Accordion/Accordion";
 import { format } from "date-fns";
 import { DotsButton } from "src/components/Buttons";
-import { EditModal, CustomModal } from "./components";
+import { EditModal, CustomModal, CustomModalEdit } from "./components";
 import cn from "src/utilities/classMerge";
 import { EvalData } from "./data";
 import { useTypedSelector } from "src/store/store";
@@ -13,6 +13,7 @@ import { Modal } from "src/components/Dialogs";
 import { TextInput } from "src/components/Inputs";
 import { useForm } from "react-hook-form";
 import { SamplingModal } from "./components";
+import { EvalTrigger} from "./components";
 type Props = {};
 
 export default function Evaluations({}: Props) {
@@ -65,18 +66,39 @@ export default function Evaluations({}: Props) {
           <SamplingModal handleClose={()=>{setOpen(false)}}/>
         </Modal>
       </PageParagraph>
-      {/* <Divider /> */}
-      {/* <PageParagraph
+      <Divider />
+      <PageParagraph
         heading={"Custom evaluations"}
         subheading={"Add your own custom evaluations."}
       >
+        <React.Fragment>
+          {organization?.organization_custom_evals?.map((customEval, i) => (
+            <CustomModalEdit 
+              key={i}
+              title={customEval.name}
+              subtitle={"Custom evalutaion metric"}
+              isEnable={customEval.enabled}
+              evalId={customEval.id}
+              definition={customEval.definition}
+              scoringRubric={customEval.scoring_rubric}
+              metrics={customEval.metrics}
+              evalName={customEval.name}
+              model={customEval.model}
+              selectedMetric={customEval.metric}
+              minScore={customEval.min_score}
+              maxScore={customEval.max_score}
+              threshold={customEval.threshold_value}
+              updatedTime={new Date()}
+            />
+          ))}
+        </React.Fragment>
         <CustomModal 
-        title="Create custom metric"
-        subtitle="Create a custom metric based on your definition and scoring rubric."
-        trigger={<Button variant="r4-primary" text="Add custom eval" />}
+          title="Create custom metric"
+          subtitle="Create a custom metric based on your definition and scoring rubric."
+          trigger={<Button variant="r4-primary" text="Add custom eval" />}
         />
-      </PageParagraph> */}
-      {/* <Divider /> */}
+      </PageParagraph>
+      <Divider />
       <PageParagraph
         heading={"Pre-built evaluations"}
         // subheading={
@@ -203,52 +225,52 @@ const EvalCard = ({
       model={model}
       selectedMetric={selected}
       trigger={
-        <div
-          className={cn(
-            "flex-col py-xxs px-xs items-start gap-xxxs self-stretch bg-gray-1 shadow-border  rounded-sm cursor-pointer",
-            "hover:bg-gray-2 hover:shadow-gray-3",
-            "bg-gray-1 shadow-gray-2"
-          )}
-          onClick={() => {
-            setOpen(true);
-            setHover(false);
-          }}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-        >
-          <div
-            aria-label="top row"
-            className="flex justify-between items-center self-stretch"
-          >
-            <div className="flex items-center gap-xxs text-sm-md text-gray-5">
-              {title}
-            </div>
-            <div className="flex items-center gap-xs">
-              <div className="flex items-center gap-xxs">
-                <p className=" text-gray-4 caption">
-                  Updated {format(new Date(updatedTime), "M/dd/yyyy")}
-                </p>
-                <div className="flex items-center gap-xxxs">
-                  {isEnable && <ModelTag model={model} />}
-                  <Tag
-                    text={isEnable ? "Enabled" : "Disabled"}
-                    border="border-none"
-                    backgroundColor={isEnable ? "bg-success/10" : "bg-red/10"}
-                    textColor={isEnable ? "text-success" : "text-red"}
-                    icon={isEnable ? <Check fill="fill-success" /> : null}
-                  />
-                </div>
-              </div>
-              <Pencil size="sm" active={hover} />
-            </div>
-          </div>
-          <div
-            aria-label="subtitle"
-            className="max-w-[400px] caption w-full text-gray-4"
-          >
-            {subtitle}
-          </div>
+    <div
+      className={cn(
+        "flex-col py-xxs px-xs items-start gap-xxxs self-stretch bg-gray-1 shadow-border  rounded-sm cursor-pointer",
+        "hover:bg-gray-2 hover:shadow-gray-3",
+        "bg-gray-1 shadow-gray-2"
+      )}
+      onClick={() => {
+        setOpen(true);
+        setHover(false);
+      }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div
+        aria-label="top row"
+        className="flex justify-between items-center self-stretch"
+      >
+        <div className="flex items-center gap-xxs text-sm-md text-gray-5">
+          {title}
         </div>
+        <div className="flex items-center gap-xs">
+          <div className="flex items-center gap-xxs">
+            <p className=" text-gray-4 caption">
+              Updated {format(new Date(updatedTime), "M/dd/yyyy")}
+            </p>
+            <div className="flex items-center gap-xxxs">
+              {isEnable && <ModelTag model={model} />}
+              <Tag
+                text={isEnable ? "Enabled" : "Disabled"}
+                border="border-none"
+                backgroundColor={isEnable ? "bg-success/10" : "bg-red/10"}
+                textColor={isEnable ? "text-success" : "text-red"}
+                icon={isEnable ? <Check fill="fill-success" /> : null}
+              />
+            </div>
+          </div>
+          <Pencil size="sm" active={hover} />
+        </div>
+      </div>
+      <div
+        aria-label="subtitle"
+        className="max-w-[400px] caption w-full text-gray-4"
+      >
+        {subtitle}
+      </div>
+    </div>
       }
       title={title}
       subtitle={description}
