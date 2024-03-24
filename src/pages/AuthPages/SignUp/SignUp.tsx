@@ -80,7 +80,7 @@ export const SignUp = () => {
               <div className="flex-col items-center justify-center gap-xs self-stretch">
                 <Button
                   text={"Create account"}
-                  variant={"r4-white"}
+                  variant={"r4-gray-2"}
                   width={"w-full"}
                 />
               </div>
@@ -142,11 +142,11 @@ const EmailForm = ({ setEmail }) => {
       <div className="flex-col items-center justify-center gap-xs self-stretch">
         <Button
           text={"Continue with Email"}
-          variant={"r4-white"}
+          variant={"r4-gray-2"}
           width={"w-full"}
         />
         <Button
-          variant="r4-white"
+          variant="r4-gray-2"
           text="Sign in with Google"
           icon={Google}
           iconSize={"md"}

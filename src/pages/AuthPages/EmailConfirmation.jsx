@@ -21,7 +21,7 @@ const { email } = useParams();
         />
         <Button
             text="Resend Confirmation Email"
-            variant={"r4-white"}
+            variant={"r4-gray-2"}
             width={"w-full"}
             onClick={() => {
               resendActivationEmail(email);

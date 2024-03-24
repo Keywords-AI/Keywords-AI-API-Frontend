@@ -212,7 +212,7 @@ CustomModalEditProps) {
       <div className="flex justify-end items-center gap-xs self-stretch">
         <div className="flex justify-end items-center gap-xs">
           <DialogClose asChild>
-            <Button variant="r4-black" text="Cancel" />
+            <Button variant="r4-gray-2" text="Cancel" />
           </DialogClose>
 
           <Button

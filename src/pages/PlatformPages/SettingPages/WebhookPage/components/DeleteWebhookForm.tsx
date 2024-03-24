@@ -24,7 +24,7 @@ export function DeleteWebhookForm({
         <div className="flex-row justify-end self-stretch">
           <div className="flex-row gap-xs">
             <Button
-              variant="r4-black"
+              variant="r4-gray-2"
               bgColor="transparent"
               text={"Cancel"}
               type="button"

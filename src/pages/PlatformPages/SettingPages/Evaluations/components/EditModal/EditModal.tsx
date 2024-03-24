@@ -148,6 +148,7 @@ export function EditModal({
               defaultValue={selectedMetric || metrics[0].value}
               icon={Down}
               border="shadow-border shadow-gray-3"
+              align="end"
             />
           </div>
         )}
@@ -162,6 +163,7 @@ export function EditModal({
                 width="w-[200px]"
                 defaultValue={model || "auto"}
                 icon={Down}
+                align="end"
                 border="shadow-border shadow-gray-3"
               />
             </div>
@@ -204,7 +206,7 @@ export function EditModal({
       <div className="flex justify-end items-center gap-xs self-stretch">
         <div className="flex justify-end items-center gap-xs">
           <DialogClose asChild>
-            <Button variant="r4-black" text="Cancel" />
+            <Button variant="r4-gray-2" text="Cancel" />
           </DialogClose>
 
           <Button

@@ -218,7 +218,7 @@ const EmptyState = () => {
       />
       <div className="flex justify-center items-center gap-xs">
         <Button
-          variant="r4-black"
+          variant="r4-gray-2"
           text="View docs"
           icon={Right}
           iconPosition="right"

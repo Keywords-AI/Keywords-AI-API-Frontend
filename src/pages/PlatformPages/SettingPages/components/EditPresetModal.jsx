@@ -74,7 +74,7 @@ export default function EditPresetModal({
             }}
           />
           <DialogClose asChild>
-            <Button text="Cancel" variant="r4-black" />
+            <Button text="Cancel" variant="r4-gray-2" />
           </DialogClose>
           <Button text="Submit" variant="r4-primary" />
         </div>
