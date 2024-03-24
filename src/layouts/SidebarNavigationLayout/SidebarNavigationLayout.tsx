@@ -7,11 +7,10 @@ export function SidebarNavigationLayout() {
   const location = useLocation();
   const isApi = location.pathname.includes("api");
   return (
-    <div className="flex w-full min-h-screen items-center">
+    <div className="flex w-full min-h-screen items-start">
       {!isApi && <LeftNavBar />}
-      <div className="w-full h-screen flex-col  overflow-hidden items-start justify-start ">
+      <div className="flex-col flex-1  self-stretch  items-start justify-start ">
         <Notifications />
-
         <Outlet />
       </div>
     </div>
