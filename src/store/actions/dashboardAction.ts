@@ -842,11 +842,11 @@ const getBreakDownColors = (data, metric, isModel) => {
   return colorMap;
 };
 
-export const changeTimeFrame = (toOffset: string) => {
+export const isLastTimeFrame = () => {
   return (dispatch, getState) => {
     const state = getState();
-    const offset = Number(toOffset);
-    
+    const offset = 1;
+
     let updatedTimeFrame;
     const currTime = state.timeFrame;
     switch (state.displayFilter.timeRange) {
@@ -880,5 +880,6 @@ export const changeTimeFrame = (toOffset: string) => {
         updatedTimeFrame.setHours(12, 0, 0, 0);
         updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
     }
+    return updatedTimeFrame > new Date();
   }
 }
