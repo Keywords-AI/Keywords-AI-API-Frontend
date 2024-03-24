@@ -38,6 +38,7 @@ export type ButtonProps = {
   icon?: React.ElementType;
   secIcon?: React.ElementType;
   className?: string;
+  iconActiveFill?: string;
   borderRadius?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   onMouseEnter?: () => void;

@@ -65,7 +65,7 @@ export default function UsersPage({}: Props) {
       {!isEmpty ? (
         <>
           <TopBar />
-          <div className="flex flex-1 self-stretch">
+          <div className="size-full flex">
             <Table />
             {isSidePanelOpen && <SidePanel />}
           </div>

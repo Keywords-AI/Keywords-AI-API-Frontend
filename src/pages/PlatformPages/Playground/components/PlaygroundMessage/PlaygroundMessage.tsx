@@ -98,6 +98,7 @@ export function PlaygroundMessage({
   const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
   const usermessageBoxRef = useRef(null);
   useEffect(() => {
+    if (streamingState.some((state) => state.isLoading)) return;
     if (focusIndex == index) {
       usermessageBoxRef &&
         usermessageBoxRef.current &&
@@ -106,7 +107,6 @@ export function PlaygroundMessage({
   }, [focusIndex]);
   const handleSend = async (event) => {
     event.stopPropagation();
-    // if (streaming || textContent.length < 1) return;
 
     setIsFocused(false);
     dispatch(streamPlaygroundResponse());
@@ -471,7 +471,7 @@ const RoleSwitch = ({ id, currentRole }) => {
     <DropDownMenu
       width="w-full"
       trigger={
-        <Button variant="text" text={role} iconPosition="right" icon={Down}  />
+        <Button variant="text" text={role} iconPosition="right" icon={Down} />
       }
       open={open}
       setOpen={setOpen}
@@ -479,6 +479,15 @@ const RoleSwitch = ({ id, currentRole }) => {
       align="start"
       items={
         <>
+          <Button
+            text="System"
+            variant="panel"
+            onClick={() => {
+              setRole("Assistant");
+              setOpen(false);
+              dispatch(setMessageRole(id, "assistant"));
+            }}
+          />
           <Button
             text="User"
             variant="panel"
