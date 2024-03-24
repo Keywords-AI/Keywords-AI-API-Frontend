@@ -203,6 +203,7 @@ const CreateFormNotConnected = React.forwardRef(
                 //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
                 // }
                 choices={EnvironmentOptions}
+                backgroundColor="bg-gray-1"
               />
             </div>
             <Accordion
@@ -235,6 +236,7 @@ const CreateFormNotConnected = React.forwardRef(
                         // onKeyDown={handleEnter}
                         placeholder={"per minute"}
                         width="w-[120px]"
+                        backgroundColor="bg-gray-1"
                         //This corresponds to the 'Never' option
                         choices={unitOptions}
                       />
@@ -264,6 +266,7 @@ const CreateFormNotConnected = React.forwardRef(
                         }
                         choices={expiryOptions}
                         buttonPadding="py-xxs px-xxs"
+                        backgroundColor="bg-gray-1"
                       />
                     </div>
                   </div>
@@ -365,7 +368,7 @@ const CreateFormNotConnected = React.forwardRef(
                     ) : (
                       <>
                         <Button
-                          variant="r4-black"
+                          variant="r4-gray-2"
                           bgColor="transparent"
                           text={"Cancel"}
                           type="button"
@@ -413,7 +416,7 @@ const CreateFormNotConnected = React.forwardRef(
                 ) : (
                   <>
                     <Button
-                      variant="r4-black"
+                      variant="r4-gray-2"
                       bgColor="transparent"
                       text={"Cancel"}
                       type="button"
@@ -461,7 +464,7 @@ const DeleteFormNotConnected = React.forwardRef(
         <div className="flex-row justify-end self-stretch">
           <div className="flex-row gap-xs">
             <Button
-              variant="r4-black"
+              variant="r4-gray-2"
               bgColor="transparent"
               text={"Cancel"}
               type="button"
@@ -479,6 +482,7 @@ export const DeleteForm = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DeleteFormNotConnected);
+
 
 type EditingFromProps = {
   setEditingKey: (key: ApiKey | undefined) => {};
@@ -524,7 +528,7 @@ const EditFormNotConnected = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <React.Fragment>
-        <div className="grid gap-xs grid-cols-[1fr,120px]">
+        {/* <div className="grid gap-xs grid-cols-[1fr,120px]"> */}
           <TextInput
             title={"Name"}
             width={"w-full"}
@@ -547,19 +551,20 @@ const EditFormNotConnected = ({
             }
             choices={expiryOptions}
           /> */}
-          <SelectInput
+          {/* <SelectInput
             title={"Environment"}
             optionsWidth={"w-[120px]"}
             {...register("is_test", {value: currentEnv, onChange: ()=>{ setcurrentEnv(!currentEnv)}})}
             choices={EnvironmentOptions}
             value={currentEnv}
+            backgroundColor="bg-gray-1"
             // onKeyDown={handleEnter}
             //This corresponds to the 'Never' option
             // defaultValue={
             //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
             // }
-          />
-        </div>
+          /> */}
+        {/* </div> */}
         <Accordion
           className={"flex-col justify-center items-start gap-xs self-stretch"}
           // value={accordion2}
@@ -591,6 +596,7 @@ const EditFormNotConnected = ({
                     width="w-[120px]"
                     //This corresponds to the 'Never' option
                     choices={unitOptions}
+                    backgroundColor="bg-gray-1"
                   />
                 </div>
 
@@ -619,6 +625,7 @@ const EditFormNotConnected = ({
                     }
                     choices={expiryOptions}
                     buttonPadding="py-xxs px-xxs"
+                    backgroundColor="bg-gray-1"
                   />
                 </div>
               </div>
@@ -705,7 +712,7 @@ const ViewCode = React.forwardRef(
     return (
       <Modal
         ref={ref}
-        trigger={<Button variant="r4-black" text="View code" />}
+        trigger={<Button variant="r4-gray-2" text="View code" />}
         title="View code"
         subtitle="You can use the following code to start integrating your current prompt and settings into your application."
         width="w-[864px]"

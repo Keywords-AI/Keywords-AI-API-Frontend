@@ -17,12 +17,12 @@ export const QaButtonPage = () => {
     <PageContent title="Button Wall">
       <PageParagraph heading="R4 Buttons">
         <div className="flex flex-row gap-sm flex-wrap">
-          <Button variant="r4-white" text="button-r4-white" />
+          <Button variant="r4-gray-2" text="button-r4-gray-2" />
           <Button variant="r4-primary" text="button-r4-primary" />
           <Button variant="r4-red" text="button-r4-red" />
           <Button
-            variant="r4-black"
-            text="button-r4-black"
+            variant="r4-gray-2"
+            text="button-r4-gray-2"
             icon={Speed}
             iconPosition="left"
           />

@@ -61,6 +61,7 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => {} }) => {
           placeholder="Member"
           defaultValue="member"
           width="w-[160px]"
+          backgroundColor="bg-gray-1"
         />
       </div>
       <div className="flex self-stretch">
@@ -74,7 +75,7 @@ export const AddMemberForm = ({ setOpen = (open: boolean) => {} }) => {
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
           <Button
-            variant="r4-black"
+            variant="r4-gray-2"
             text={"Cancel"}
             type="button"
             onClick={() => setOpen(false)}

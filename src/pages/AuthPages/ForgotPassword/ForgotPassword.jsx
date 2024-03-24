@@ -35,7 +35,7 @@ function ForgotPasswordNotConnected({ resetPassword }) {
             <TextInput {...register("email")} type="email" title="Email" placeholder="Put your email here" />
           </div>
           <div className="flex-col justify-center items-center gap-xs self-stretch">
-            <Button variant="r4-white" text="Send reset link" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" />
+            <Button variant="r4-gray-2" text="Send reset link" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" />
           </div>
         </div>
       </form>

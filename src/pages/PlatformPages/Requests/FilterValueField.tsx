@@ -212,7 +212,7 @@ const InputModal = ({
         <div className="flex-col items-end justify-center gap-[10px] self-stretch ">
           <div className="flex justify-end items-center gap-xs">
             <Button
-              variant="r4-black"
+              variant="r4-gray-2"
               text="Cancel"
               onClick={() => {
                 reset();

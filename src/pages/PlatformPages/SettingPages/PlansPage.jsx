@@ -91,7 +91,7 @@ export const PlansPage = connect(
       },
       buttonParams: {
         buttonText: "Get started free",
-        buttonVariant: "r4-black",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           createPaymentSession([STRIPE_STATER_LOOKUP_KEY]);
         },
@@ -143,7 +143,7 @@ export const PlansPage = connect(
       },
       buttonParams: {
         buttonText: "Upgrade to Pro",
-        buttonVariant: "r4-white",
+        buttonVariant: "r4-gray-2",
         buttonOnClick: () => {
           if (isYearly) {
             createPaymentSession([

@@ -19,7 +19,7 @@ export const processKey = (
   renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {
     return <></>;
   },
-  actions = (key: ApiKey, active: boolean): React.ReactNode => {
+  actions = (key: ApiKey, active: boolean, is_test: boolean): React.ReactNode => {
     return <></>;
   },
   Models = (models: string[]): React.ReactNode => {
@@ -38,12 +38,13 @@ export const processKey = (
   } else if (expireDate < today) {
     active = false;
   }
+  const is_test = key.is_test;
   return {
     ...key,
     key: renderKey(key.name, key.prefix),
     created: getDateStr(key.created),
     last_used: getDateStr(key.last_used),
-    actions: actions(key, active),
+    actions: actions(key, active, is_test),
     // models: Models(key.preset_models),
     mod_prefix: key.prefix.slice(0, 3) + "...",
   };
@@ -54,7 +55,7 @@ export const processKeyList = (
   renderKey = (keyName: string, keyPrefix: string): React.ReactNode => {
     return <></>;
   },
-  actions = (key: ApiKey, active: boolean): React.ReactNode => {
+  actions = (key: ApiKey, active: boolean, is_test: boolean): React.ReactNode => {
     return <></>;
   },
   Models = (models: string[]): React.ReactNode => {

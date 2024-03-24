@@ -5,7 +5,7 @@ export type variantType =
   | "secondary-gray"
   | "secondary-black"
   | "beta"
-  | "r4-white"
+  | "r4-gray-2"
   | "r4-primary"
   | "r4-red"
   | "r4-black"

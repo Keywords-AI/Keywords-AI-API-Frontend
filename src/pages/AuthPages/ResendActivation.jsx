@@ -28,7 +28,7 @@ function EmailConfirmation({ resendActivationEmail }) {
         <TextInput placeholder="email@example.com" {...register("email")} />
         <Button
             text="Resend Confirmation Email"
-            variant={"r4-white"}
+            variant={"r4-gray-2"}
             width={"w-full"}
         />
       </form>

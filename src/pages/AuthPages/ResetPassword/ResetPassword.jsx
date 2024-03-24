@@ -41,7 +41,7 @@ function ResetPasswordNotConnected({ resetPasswordConfirm }) {
             <TextInput {...register("re_new_password")} title="Confirm password" type="password" placeholder="" />
           </div>
           <div className="flex-col justify-center items-center gap-xs self-stretch">
-            <Button variant="r4-white" text="Change password" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" />
+            <Button variant="r4-gray-2" text="Change password" className="min-w-[60px] self-stretch items-center justify-center gap-xxs" />
             {false && <span className="text-error caption self-stretch">Passwords do not match.</span>}
           </div>
         </div>

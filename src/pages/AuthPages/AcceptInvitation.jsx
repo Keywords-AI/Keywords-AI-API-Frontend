@@ -31,7 +31,7 @@ export const AcceptInvitation = connect(mapStateToProps, mapDispatchToProps)((
                 />
                 <Button
                     text="Accept Invitation"
-                    variant="r4-white"
+                    variant="r4-gray-2"
                     width="w-full"
                     onClick={() => {
                         acceptInvitation(code);
