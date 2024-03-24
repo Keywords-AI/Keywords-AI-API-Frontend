@@ -152,7 +152,6 @@ const initState = {
   timeOffset: 0,
   modelColors: {},
   keyColors: {},
-  hasNext: true,
   sentimentSummaryData: [
     {
       sentiment: "positive",
