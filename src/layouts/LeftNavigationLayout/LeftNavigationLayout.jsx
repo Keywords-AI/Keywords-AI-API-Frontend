@@ -48,7 +48,8 @@ const LeftNavitationLayout = ({ sectionName }) => {
       link: "/platform/api",
     },
     {
-      label: currPath.charAt(0).toUpperCase() + currPath.slice(1),
+      label: settingChildren.filter((child) => child.path === currPath)[0]
+        .title,
       link: "/platform/api/" + currPath,
     },
   ];
