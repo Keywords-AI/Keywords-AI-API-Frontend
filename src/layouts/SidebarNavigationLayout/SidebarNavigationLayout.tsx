@@ -7,9 +7,9 @@ export function SidebarNavigationLayout() {
   const location = useLocation();
   const isApi = location.pathname.includes("api");
   return (
-    <div className="flex w-full min-h-screen items-start">
+    <div aria-label="full-screen" className="flex w-full min-h-screen items-start">
       {!isApi && <LeftNavBar />}
-      <div className="flex-col flex-1  self-stretch  items-start justify-start ">
+      <div className="flex-col flex-1 self-stretch items-start justify-start ">
         <Notifications />
         <Outlet />
       </div>
