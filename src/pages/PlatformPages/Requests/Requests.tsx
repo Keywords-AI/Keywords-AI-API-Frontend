@@ -163,7 +163,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         },
   ];
 
-  if (!loading && requestLogs.length === 0 && filters.length === 0)
+  if (firstTime)
     return (
       <WelcomeCard
         doclink="https://docs.keywordsai.co/platform-features/requests-log"
