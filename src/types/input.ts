@@ -82,4 +82,6 @@ export type TextInputProps = {
   validationSchema?: any;
   dollarSign?: boolean;
   inputSyle?: { [key: string]: string };
+  min?: number;
+  max?: number;
 };

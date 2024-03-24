@@ -20,18 +20,18 @@ export const MetricPane = ({}) => {
         (log) => log.id === state.requestLogs?.selectedRequest?.id
       ) || state.requestLogs.selectedRequest
   );
-
+  const isAdmin = useTypedSelector((state) => state.user?.is_admin);
   const [accordion1, setAccordion1] = useState("open");
   const [accordion2, setAccordion2] = useState("open");
   const [isHovered, setIsHovered] = useState(false);
   const displayObj = {
     "Request ID": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.id || "-"}
       </span>
     ),
     "Created at": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
         {new Date(logItem?.timestamp || "Aug 25, 8:03 PM").toLocaleString(
           "en-US",
           {
@@ -51,13 +51,18 @@ export const MetricPane = ({}) => {
         warning={(logItem?.warnings && logItem?.warnings != "{}") || false}
       />
     ),
+    "Organization ": (
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
+        {logItem?.organization || "N/A"}
+      </span>
+    ),
     "API key": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
         {logItem?.api_key || "N/A"}
       </span>
     ),
     "Customer ID": (
-      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
         {logItem?.customer_identifier || "N/A"}
       </span>
     ),
@@ -72,27 +77,27 @@ export const MetricPane = ({}) => {
       (logItem?.cached_responses?.length || 0) > 0 ? (
         <CheckAll />
       ) : (
-        <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+        <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
           {"No"}
         </span>
       ),
 
     "Prompt tokens": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : logItem?.prompt_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Completion tokens": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : logItem?.completion_tokens?.toLocaleString() || "-"}
       </span>
     ),
     "Total tokens": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed
           ? "-"
           : (
@@ -104,13 +109,13 @@ export const MetricPane = ({}) => {
       </span>
     ),
     Cost: (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed ? "-" : "$" + logItem?.cost.toFixed(6) || "-"}
       </span>
     ),
     "Routing time":
       logItem?.routing_time > 0 ? (
-        <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+        <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
           {logItem?.failed || logItem?.routing_time <= 0
             ? "-"
             : (logItem?.routing_time.toFixed(3) || "-") + "s"}
@@ -118,7 +123,7 @@ export const MetricPane = ({}) => {
       ) : null,
 
     TTFT: (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed ||
         (logItem?.time_to_first_token && logItem?.time_to_first_token < 0)
           ? "-"
@@ -126,7 +131,7 @@ export const MetricPane = ({}) => {
       </span>
     ),
     TPOT: (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed ||
         !logItem?.token_per_second ||
         (logItem?.token_per_second && logItem?.token_per_second < 0)
@@ -135,7 +140,7 @@ export const MetricPane = ({}) => {
       </span>
     ),
     "Generation time": (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {logItem?.failed ||
         !logItem?.latency ||
         logItem?.latency < 0 ||
@@ -150,7 +155,7 @@ export const MetricPane = ({}) => {
     //   </span>
     // ),
     Speed: (
-      <span className="text-sm-regular text-gray-4 hover:text-gray-5">
+      <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
         {!logItem?.token_per_second || logItem?.token_per_second < 0
           ? "-"
           : (logItem?.token_per_second?.toFixed(3) || "-") + "T/s"}
@@ -204,9 +209,10 @@ export const MetricPane = ({}) => {
       <div className="flex-col py-sm pt-[18px] px-lg items-start gap-xs self-stretch">
         {Object.keys(displayObj).map((key, index) => {
           if (!displayObj[key]) return null;
+          if (key === "Organization " && !isAdmin) return null;
           return (
             <div
-              className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs"
+              className="flex h-[24px] justify-between items-center self-stretch cursor-pointer gap-xs group"
               onClick={() => {
                 const text =
                   key == "Model"
@@ -221,7 +227,7 @@ export const MetricPane = ({}) => {
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <div className="flex items-center gap-xxs flex-shrink-0">
+              <div className="flex items-center gap-xxs flex-shrink-0 ">
                 <span className="text-sm-md text-gray-5">{key}</span>
                 {key === "Customer ID" && (
                   <Tooltip
