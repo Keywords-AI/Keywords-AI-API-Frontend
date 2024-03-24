@@ -82,10 +82,10 @@ export default function Playground() {
   //   }
   // );
   return (
-    <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] max-w-[100vw]">
+    <div className="flex-col items-start justify-start self-stretch flex-1 h-full w-full">
       <TopBar />
-      <div className="flex items-start flex-1 self-stretch h-[calc(100vh-112px)]">
-        {isLeftPanelOpen && <PromptLogs />}
+      <div className="flex items-start flex-1 self-stretch h-full">
+        {/* {isLeftPanelOpen && <PromptLogs />} */}
         <Main />
         {isRightPanelOpen && <RightPanel />}
       </div>
@@ -95,8 +95,8 @@ export default function Playground() {
 
 const Main = () => {
   return (
-    <div className="flex flex-1 px-lg pt-sm pb-md items-start self-stretch gap-sm">
-      <PromptInput />
+    <div className="flex w-full px-lg pt-sm pb-md items-start h-[calc(100dvh-52px)] gap-sm">
+      {/* <PromptInput /> */}
       <MessageLists />
     </div>
   );
@@ -157,19 +157,12 @@ const MessageLists = () => {
   const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   return (
-    <div
-      className="flex-col items-start gap-xxs  self-stretch  w-full"
-      style={{
-        maxWidth: `calc(100vw - 320px - ${
-          isLeftPanelOpen ? "240px" : "0px"
-        } - ${isRightPanelOpen ? "320px" : "0px"})`,
-      }}
-    >
+    <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full overflow-hidden">
       <AutoScrollContainer
         percentageThreshold={15}
         behavior="auto"
         active={isStreaming}
-        className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
+        className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "
       >
         {messages.map((message, index) => {
           return (
@@ -345,7 +338,7 @@ const RightPanel = () => {
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
-      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto shrink-0"
       headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
       headerRight={
         <Tooltip

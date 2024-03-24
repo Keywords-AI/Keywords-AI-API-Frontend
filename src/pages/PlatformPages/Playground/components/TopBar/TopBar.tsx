@@ -79,7 +79,7 @@ export function TopBar() {
     },
   ];
   return (
-    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
+    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px] shrink-0">
       <div className="flex items-center gap-xxs">
         <BCrumb items={BCItems} />
         {/* <DotsButton

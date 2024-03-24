@@ -4,7 +4,20 @@ import SettingsPage from "./SettingsPage";
 import ApiKeyPage from "./ApiKeyPage/ApiKeyPage";
 import { MemberPage } from "./MemberPage";
 import { BillingPage } from "./BillingPage";
-import { Building } from "src/components/Icons";
+import {
+  BillingIcon,
+  Building,
+  EvaluationsIcon,
+  GernalIcon,
+  IconNotification,
+  KeysIcon,
+  Logo,
+  ModelsIcon,
+  PlansIcon,
+  SettingsIcon,
+  UserIcon,
+  WebhooksIcon,
+} from "src/components/Icons";
 import { IntegrationsPage } from "./IntegrationsPage";
 import { generateChild } from "src/utilities/objectProcessing";
 import { AlertsFallbackPage } from "./AlertsFallbackPage";
@@ -25,14 +38,17 @@ const pages: PreProcessPage[] = [
     // forAdmin: true,
     default: true, // When default is true, page can be empty, as it will be replaced by React.cloneElement(Navigate, { to: defaultPath })
     page: <Navigate to={`${REDIRECT_URI}/api/general`} />,
+    icon: GernalIcon,
   },
   {
     title: "General",
     page: <SettingsPage />,
+    icon: GernalIcon,
   },
   {
-    title: "Member",
+    title: "Members",
     page: <MemberPage />,
+    icon: UserIcon,
   },
   // {
   //   title: "Integrations",
@@ -48,32 +64,39 @@ const pages: PreProcessPage[] = [
     title: "Plans",
     forOrgAdmin: true,
     page: <PlansPage />,
+    icon: PlansIcon,
   },
   {
     title: "Billing",
     page: <BillingPage />,
+    icon: BillingIcon,
   },
 
   {
     title: "API Keys",
     page: <ApiKeyPage />,
+    icon: KeysIcon,
   },
   {
     title: "Webhooks",
     page: <WebhookPage />,
+    icon: WebhooksIcon,
   },
   {
     title: "Alerts & Fallback",
     forOrgAdmin: true,
     page: <AlertsFallbackPage />,
+    icon: IconNotification,
   },
   {
     title: "Evaluations",
     page: <Evaluations />,
+    icon: EvaluationsIcon,
   },
   {
     title: "Models",
     page: <ModelsPage />,
+    icon: ModelsIcon,
   },
 ];
 
@@ -81,12 +104,14 @@ const userPages: PreProcessPage[] = [
   {
     title: "Settings",
     page: <UserSettings />,
+    icon: SettingsIcon,
   },
 
   {
     title: "Admin",
     forKeywordsAdmin: true,
     page: <Admin />,
+    icon: Logo,
   },
 ];
 
