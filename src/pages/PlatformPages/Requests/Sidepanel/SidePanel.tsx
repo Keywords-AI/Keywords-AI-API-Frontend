@@ -37,11 +37,9 @@ import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import MetadataPane from "./MetadataPane";
 import EvalPane from "./EvalPane";
 
-interface SidePanelProps {
-  open: boolean;
-}
+interface SidePanelProps {}
 
-export const SidePanel = ({ open }: SidePanelProps) => {
+export const SidePanel = ({}: SidePanelProps) => {
   const logRef = useRef(null);
   const logItem = useTypedSelector(
     (state) =>
@@ -263,8 +261,8 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     <Tabs
       rootClassName={cn(
         "flex-col items-start self-stretch shadow-border-l flex-shrink-0 ",
-        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
-        open ? "w-[360px]" : "w-0"
+        "shadow-gray-2 bg-gray-1 ",
+        "w-[360px]"
       )}
       headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1  h-[44px]"
       tabs={pages}

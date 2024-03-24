@@ -295,19 +295,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
         </div>
         <div
           aria-label="table"
-          className="flex-row flex-grow self-stretch items-start overflow-hidden "
+          className="flex-row flex-grow self-stretch items-start  w-full h-full"
         >
-          <div
-            aria-label="scroll-control"
-            ref={tableRef}
-            className={cn(
-              "flex-col  h-full items-start gap-lg flex-1 self-stretch ",
-              sidePanelOpen ? "w-[calc(100%-320px)]" : "w-full"
-            )}
-          >
-            <RequestLogTable />
-          </div>
-          <SidePanel open={sidePanelOpen} />
+          <RequestLogTable />
+          {sidePanelOpen && <SidePanel />}
         </div>
       </div>
     );
