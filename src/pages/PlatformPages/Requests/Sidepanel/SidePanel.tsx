@@ -260,7 +260,7 @@ export const SidePanel = ({}: SidePanelProps) => {
   return (
     <Tabs
       rootClassName={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 ",
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 overflow-y-auto h-full",
         "shadow-gray-2 bg-gray-1 ",
         "w-[360px]"
       )}
