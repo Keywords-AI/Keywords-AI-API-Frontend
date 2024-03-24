@@ -65,7 +65,7 @@ const NotConnectedCurrentModel = ({
         width="300"
         trigger={
           <Button
-            variant="r4-black"
+            variant="r4-gray-2"
             text={current.name}
             icon={ModelIcon(current.brand)}
             iconSize="md"

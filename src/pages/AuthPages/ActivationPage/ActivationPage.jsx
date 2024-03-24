@@ -51,7 +51,7 @@ export const ActivationPage = ({ activateUser }) => {
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button
               text={"Confirm activation"}
-              variant={"r4-white"}
+              variant={"r4-gray-2"}
               className="min-w-[60px] self-stretch items-center justify-center gap-xxs"
             />
           </div>

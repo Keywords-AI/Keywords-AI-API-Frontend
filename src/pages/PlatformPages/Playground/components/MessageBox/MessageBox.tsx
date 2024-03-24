@@ -75,7 +75,7 @@ export const MessageBox = forwardRef(
         defaultValue={defaultValue}
         disabled={false}
         className={cn(
-          "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch text-gray-4 focus:text-gray-5 focus:shadow-border focus:shadow-gray-3 shadow-border shadow-gray-2",
+          "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch <text-gray-5></text-gray-5> focus:text-gray-5 focus:shadow-border focus:shadow-gray-4 shadow-border shadow-gray-3",
           "px-xs py-xxs rounded-sm"
         )}
       ></textarea>

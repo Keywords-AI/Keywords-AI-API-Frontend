@@ -55,7 +55,7 @@ export function CreateWebhookForm(
       />
       <div className="flex-row justify-end self-stretch">
         <div className="flex-row gap-xs">
-          <Button variant="r4-black" type="button" onClick={handleClose}>Cancel</Button>
+          <Button variant="r4-gray-2" type="button" onClick={handleClose}>Cancel</Button>
           <Button variant="r4-primary">Create</Button>
         </div>
       </div>

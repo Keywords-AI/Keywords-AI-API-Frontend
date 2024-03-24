@@ -62,7 +62,7 @@ export default function CreatePreset() {
 
         <div className="flex justify-end items-center gap-xs self-stretch flex-1">
           <DialogClose asChild>
-            <Button text="Cancel" variant="r4-black" />
+            <Button text="Cancel" variant="r4-gray-2" />
           </DialogClose>
           <Button text="Create" variant="r4-primary" />
         </div>

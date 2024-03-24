@@ -133,6 +133,7 @@ export default function DashboardFilter() {
   const { register, handleSubmit, watch } = useForm();
   const [showPopover, setShowPopover] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showToday, setShowToday] = useState(false);
   const { enableScope, disableScope } = useHotkeysContext();
   useHotkeys(
     "t",
@@ -173,7 +174,9 @@ export default function DashboardFilter() {
         onClick={() => {
           dispatch(resetTimeFrameOffset());
           handleTimePeriodSelection("daily");
+          setShowToday((prev) => !prev);
         }}
+        active={showToday}
       />
       <SelectInput
         headLess
