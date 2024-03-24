@@ -108,7 +108,7 @@ export const keywordsStream = ({
   apiKey,
   dispatch,
 }: StreamingParams) => {
-  // console.log("data", data);
+  console.log("data", data);
   const headers = {
     "Content-Type": "application/json",
   };
@@ -117,7 +117,6 @@ export const keywordsStream = ({
   } else {
     headers["Authorization"] = `Bearer ${retrieveAccessToken()}`;
   }
-  console.log("data", data);
   const fetchPromise = fetch(`${host}${path}`, {
     method: "POST",
     headers,

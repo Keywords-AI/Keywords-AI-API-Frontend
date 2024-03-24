@@ -30,23 +30,40 @@ const initialState = {
   messages: [
     {
       id: uuidv4(),
+      role: "system",
+      user_content: "",
+    },
+    {
+      id: uuidv4(),
       role: "user",
       user_content: "",
     },
   ],
   firstTime: true,
   prompt: "",
-  currentModels: localStorage.getItem("playgroundModels") ? localStorage.getItem("playgroundModels").split(","):["gpt-3.5-turbo", "gpt-4"],
+  // currentModels: localStorage.getItem("playgroundModels")
+  //   ? localStorage.getItem("playgroundModels").split(",")
+  //   : ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    models: ["gpt-3.5-turbo", "gpt-4"],
-    temperature: localStorage.getItem("playgroundTemperature")? parseInt(localStorage.getItem("playgroundTemperature")):1,
-    maximumLength: localStorage.getItem("playgroundMaximumLength")? parseInt(localStorage.getItem("playgroundMaximumLength")):256,
-    topP: localStorage.getItem("playgroundTopP")? parseFloat(localStorage.getItem("playgroundTopP")):1,
-    frequencyPenalty: localStorage.getItem("playgroundFrequencyPenalty")? parseFloat(localStorage.getItem("playgroundFrequencyPenalty")):0,
-    presencePenalty: localStorage.getItem("playgroundPresencePenalty")? parseFloat(localStorage.getItem("playgroundPresencePenalty")):0,
+    models: ["gpt-3.5-turbo", "none"],
+    temperature: localStorage.getItem("playgroundTemperature")
+      ? parseInt(localStorage.getItem("playgroundTemperature"))
+      : 1,
+    maximumLength: localStorage.getItem("playgroundMaximumLength")
+      ? parseInt(localStorage.getItem("playgroundMaximumLength"))
+      : 256,
+    topP: localStorage.getItem("playgroundTopP")
+      ? parseFloat(localStorage.getItem("playgroundTopP"))
+      : 1,
+    frequencyPenalty: localStorage.getItem("playgroundFrequencyPenalty")
+      ? parseFloat(localStorage.getItem("playgroundFrequencyPenalty"))
+      : 0,
+    presencePenalty: localStorage.getItem("playgroundPresencePenalty")
+      ? parseFloat(localStorage.getItem("playgroundPresencePenalty"))
+      : 0,
   },
-  isSingleChannel: false,
+  isSingleChannel: true,
   outputs: {
     score: {},
     cost: 0.00123,
