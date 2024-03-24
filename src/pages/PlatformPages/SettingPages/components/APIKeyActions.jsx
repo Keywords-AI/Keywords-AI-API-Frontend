@@ -30,8 +30,9 @@ export const APIKeyActions = ({
   return (
     <DropDownMenu
       side="bottom"
-      sideOffset={8}
+      sideOffset={4}
       align="end"
+      alignOffset={0}
       trigger={
         // <Button
         //     variant="icon"
