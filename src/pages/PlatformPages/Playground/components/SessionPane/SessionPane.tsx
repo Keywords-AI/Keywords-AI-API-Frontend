@@ -49,6 +49,9 @@ export const SessionPane = forwardRef(
     const isPlaygroundReseted = useTypedSelector(
       (state) => state.playground.isReseted
     );
+    const isSingleChannel = useTypedSelector(
+      (state) => state.playground.isSingleChannel
+    );
     const breakDownData = useTypedSelector(
       (state) => state.playground.breakdownData
     );
@@ -66,7 +69,6 @@ export const SessionPane = forwardRef(
     useEffect(() => {
       setSelectChoices([
         // { name: "Router (best for prompt)", value: "router" },
-        { name: "None", value: "none" },
         ...modelsArray,
       ]);
     }, [modelsArray]);
@@ -90,6 +92,7 @@ export const SessionPane = forwardRef(
       }
     }, [isReset, isPlaygroundReseted]);
     useEffect(() => {
+      console.log("setting values");
       setValue("modela", ModelOptions.models[0]);
       setValue("modelb", ModelOptions.models[1]);
       setValue("temperature", ModelOptions.temperature);
@@ -168,30 +171,33 @@ export const SessionPane = forwardRef(
                 ?.value
             }
           /> */}
-          <Controller
-            control={control}
-            name="modelb"
-            defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[1])
-                ?.value || "gpt-4"
-            }
-            render={({ field: { value, onChange } }) => {
-              return (
-                <Combobox
-                  title="Model B"
-                  value={value}
-                  width="w-[256px]"
-                  height="h-[50vh]"
-                  onChange={onChange}
-                  items={selectChoices}
-                  defaultValue={
-                    selectChoices.find((i) => i.value == ModelOptions.models[1])
-                      ?.value || "gpt-4"
-                  }
-                />
-              );
-            }}
-          />
+          {!isSingleChannel && (
+            <Controller
+              control={control}
+              name="modelb"
+              defaultValue={
+                selectChoices.find((i) => i.value == ModelOptions.models[1])
+                  ?.value || "gpt-4"
+              }
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <Combobox
+                    title="Model B"
+                    value={value}
+                    width="w-[256px]"
+                    height="h-[50vh]"
+                    onChange={onChange}
+                    items={selectChoices}
+                    defaultValue={
+                      selectChoices.find(
+                        (i) => i.value == ModelOptions.models[1]
+                      )?.value || "gpt-4"
+                    }
+                  />
+                );
+              }}
+            />
+          )}
           {/* <SelectInput
             //{ value: ModelOptions.model }
             {...register("modelb", {

@@ -142,6 +142,7 @@ const MessageLists = () => {
         })
       );
       dispatch(setFocusIndex(messages.length));
+      setActivate(true);
     },
     { scopes: "playground", preventDefault: true }
   );
@@ -153,6 +154,12 @@ const MessageLists = () => {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const [activate, setActivate] = useState(false);
+  useEffect(() => {
+    if (activate) {
+      setActivate(false);
+    }
+  }, [activate]);
   const streamingStates = useTypedSelector((state) => state.streamingText);
   const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
@@ -161,7 +168,7 @@ const MessageLists = () => {
       <AutoScrollContainer
         percentageThreshold={15}
         behavior="auto"
-        active={isStreaming}
+        active={isStreaming || activate}
         className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "
       >
         {messages.map((message, index) => {
@@ -196,7 +203,7 @@ const MessageLists = () => {
               ref={buttonRef}
               iconPosition="left"
               disabled={isStreaming}
-              onClick={() => {
+              onClick={(e) => {
                 if (isStreaming) return;
                 dispatch(
                   appendMessage({
@@ -205,7 +212,7 @@ const MessageLists = () => {
                     user_content: "",
                   })
                 );
-                dispatch(setFocusIndex(messages.length));
+                setActivate(true);
               }}
             />
           </div>

@@ -117,10 +117,10 @@ export const setFirstTime = (firstTime) => ({
 
 export const setPrompt = (prompt) => ({ type: SET_PROMPT, payload: prompt });
 export const setCurrentModel = (currentModel) => {
- return {
+  return {
     type: SET_CURRENT_MODEL,
     payload: currentModel,
-  }
+  };
 };
 
 export const setCurrentBrand = (currentBrand) => ({
@@ -225,14 +225,15 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
     await Promise.all(
       channels.map(async (channel) => {
         const chanelMessages = [
-          {
-            role: "system",
-            content: systemPrompt || "",
-          },
           ...messages.map((item) => {
             if (item.role == "user") {
               return {
                 role: "user",
+                content: item.user_content,
+              };
+            } else if (item.role == "system") {
+              return {
+                role: "system",
                 content: item.user_content,
               };
             }
@@ -622,14 +623,14 @@ export const setMessageRole = (id, role) => {
     const message = messages.find((message) => message.id === id);
     if (!message) return;
     if (message.role === role) return;
-    if (role === "user") {
-      const content = message.responses[0].content;
+    if (role === "user" || role === "system") {
+      const content = message.responses?.[0].content || message.user_content;
       dispatch(
         setMessageByIndex({
           index: message.id,
           content: {
             id,
-            role: "user",
+            role: role,
             user_content: content,
             responses: null,
           },

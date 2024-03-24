@@ -30,7 +30,6 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { MessageBox } from "../MessageBox";
 import { RootState } from "src/types";
-import { set } from "react-hook-form";
 import { resetSingleStreamingText } from "src/store/actions";
 
 export interface Reponse {
@@ -85,7 +84,7 @@ export function PlaygroundMessage({
   useEffect(() => {
     setMessageValue(user_content || "");
   }, [isReset]);
-  const isUser = role === "user";
+  const isUser = role === "user" || role === "system";
   const isAssistant = role === "assistant";
   useEffect(() => {
     if (+id == messageLength - 1) {
@@ -100,9 +99,8 @@ export function PlaygroundMessage({
   useEffect(() => {
     if (streamingState.some((state) => state.isLoading)) return;
     if (focusIndex == index) {
-      usermessageBoxRef &&
-        usermessageBoxRef.current &&
-        usermessageBoxRef.current.focus();
+      usermessageBoxRef && usermessageBoxRef.current;
+      // &&usermessageBoxRef.current.focus({ preventScroll: true });
     }
   }, [focusIndex]);
   const handleSend = async (event) => {
@@ -129,7 +127,7 @@ export function PlaygroundMessage({
         index: id,
         content: {
           id: id,
-          role: "user",
+          role: role,
           user_content: value,
           responses: null,
           isActive: true,
@@ -142,7 +140,12 @@ export function PlaygroundMessage({
     contentSection = (
       <>
         <MessageHeader
-          title={<RoleSwitch currentRole={"User"} id={id} />}
+          title={
+            <RoleSwitch
+              currentRole={role == "user" ? "User" : "System"}
+              id={id}
+            />
+          }
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
@@ -169,7 +172,7 @@ export function PlaygroundMessage({
                     index: id,
                     content: {
                       id: id,
-                      role: "user",
+                      role: role,
                       user_content: messageValue,
                       responses: null,
                       isActive: true,
@@ -269,6 +272,7 @@ export function PlaygroundMessage({
                             responseValue[index] + "\u200B"
                           );
                           setIsFocused(false);
+
                           handleSend(e);
                         }
                       }}
@@ -483,9 +487,9 @@ const RoleSwitch = ({ id, currentRole }) => {
             text="System"
             variant="panel"
             onClick={() => {
-              setRole("Assistant");
+              setRole("System");
               setOpen(false);
-              dispatch(setMessageRole(id, "assistant"));
+              dispatch(setMessageRole(id, "system"));
             }}
           />
           <Button
