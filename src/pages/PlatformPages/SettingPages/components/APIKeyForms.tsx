@@ -146,7 +146,7 @@ const CreateFormNotConnected = React.forwardRef(
 
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
-        data.rate_limit = 100;
+        data.rate_limit = 50000;
       }
       createApiKey!(data);
     };
@@ -203,7 +203,7 @@ const CreateFormNotConnected = React.forwardRef(
                 //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
                 // }
                 choices={EnvironmentOptions}
-                backgroundColor="bg-gray-1"
+                backgroundColor="bg-transparent"
               />
             </div>
             <Accordion
@@ -236,7 +236,7 @@ const CreateFormNotConnected = React.forwardRef(
                         // onKeyDown={handleEnter}
                         placeholder={"per minute"}
                         width="w-[120px]"
-                        backgroundColor="bg-gray-1"
+                        backgroundColor="bg-transparent"
                         //This corresponds to the 'Never' option
                         choices={unitOptions}
                       />
@@ -247,9 +247,8 @@ const CreateFormNotConnected = React.forwardRef(
                         width={"w-full"}
                         {...register("spending_limit")}
                         // onKeyDown={handleEnter}
-                        placeholder={"100"}
+                        placeholder={"200 by default"}
                         type="number"
-                        defaultValue={200}
                         dollarSign
                       />
                       <SelectInput
@@ -266,7 +265,7 @@ const CreateFormNotConnected = React.forwardRef(
                         }
                         choices={expiryOptions}
                         buttonPadding="py-xxs px-xxs"
-                        backgroundColor="bg-gray-1"
+                        backgroundColor="bg-transparent"
                       />
                     </div>
                   </div>
@@ -596,7 +595,7 @@ const EditFormNotConnected = ({
                     width="w-[120px]"
                     //This corresponds to the 'Never' option
                     choices={unitOptions}
-                    backgroundColor="bg-gray-1"
+                    backgroundColor="bg-transparent"
                   />
                 </div>
 
@@ -606,9 +605,8 @@ const EditFormNotConnected = ({
                     width={"w-full"}
                     {...register("spending_limit")}
                     // onKeyDown={handleEnter}
-                    placeholder={"100"}
+                    placeholder={"200 by default"}
                     type="number"
-                    defaultValue={200}
                     dollarSign
                   />
                   <SelectInput
@@ -625,7 +623,7 @@ const EditFormNotConnected = ({
                     }
                     choices={expiryOptions}
                     buttonPadding="py-xxs px-xxs"
-                    backgroundColor="bg-gray-1"
+                    backgroundColor="bg-transparent"
                   />
                 </div>
               </div>
