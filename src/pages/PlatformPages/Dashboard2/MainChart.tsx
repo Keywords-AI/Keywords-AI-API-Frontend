@@ -267,8 +267,8 @@ export default function MainChart({}: Props) {
           />
         </ChartContainer>
       </div>
-      <div className="flex h-[280px] py-md px-lg justify-between items-start content-start gap-y-xl self-stretch flex-wrap">
-        <div className="w-1/3 h-full">
+      <div className="flex  py-md px-lg justify-between items-start content-start gap-y-xl self-stretch flex-wrap">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
@@ -280,7 +280,7 @@ export default function MainChart({}: Props) {
             />
           </ChartContainer>
         </div>
-        <div className="w-1/3 h-full">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
@@ -292,7 +292,7 @@ export default function MainChart({}: Props) {
             />
           </ChartContainer>
         </div>
-        <div className="w-1/3 h-full">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
@@ -304,9 +304,7 @@ export default function MainChart({}: Props) {
             />
           </ChartContainer>
         </div>
-      </div>
-      <div className="flex h-[280px] py-md px-lg justify-between items-start content-start gap-y-xl self-stretch flex-wrap">
-        <div className="w-1/3 h-full">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
@@ -318,7 +316,7 @@ export default function MainChart({}: Props) {
             />
           </ChartContainer>
         </div>
-        <div className="w-1/3 h-full">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
@@ -330,7 +328,7 @@ export default function MainChart({}: Props) {
             />
           </ChartContainer>
         </div>
-        <div className="w-1/3 h-full">
+        <div className="w-[360PX] h-[280px]">
           <ChartContainer
             title={Metrics[displayFilter.metric].name}
             summary={dashboardData.summary[displayFilter.metric]}
