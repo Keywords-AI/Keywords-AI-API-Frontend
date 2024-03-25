@@ -59,7 +59,7 @@ import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
 import ResendActivation from "./pages/AuthPages/ResendActivation";
 import { SidebarNavigationLayout } from "./layouts/SidebarNavigationLayout";
-
+import { Dashboard as DB2 } from "./pages/PlatformPages/Dashboard2/Dashboard";
 const mapStateToProps = (state) => {
   return {
     user: state.user,
@@ -155,6 +155,10 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         {
           path: "dashboard",
+          element: hasAccess ? <DB2 /> : <Dashboard />,
+        },
+        {
+          path: "dashboard2",
           element: <Dashboard />,
         },
         { path: "users", element: <UsersPage /> },
