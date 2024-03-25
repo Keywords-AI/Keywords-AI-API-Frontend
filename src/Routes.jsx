@@ -155,7 +155,8 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         {
           path: "dashboard",
-          element: hasAccess ? <DB2 /> : <Dashboard />,
+          // element: hasAccess ? <DB2 /> : <Dashboard />,
+          element: <Dashboard />,
         },
         {
           path: "dashboard2",

@@ -436,6 +436,8 @@ export const getDashboardData = (postData?) => {
   return (dispatch, getState: () => RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
+    const isTest = localStorage.getItem("is_test") ?? false;
+    params.set("is_test", isTest.toString());
     if (params.get("summary_type") === null) {
       params.set("summary_type", getState().dashboard.displayFilter.timeRange);
     }

@@ -114,6 +114,13 @@ export const SessionPane = forwardRef(
           presencePenalty: value.presencePenalty,
           models: [value.modela, value.modelb],
         };
+        localStorage.setItem("playgroundModels", [value.modela, value.modelb].join(","));
+        localStorage.setItem("playgroundTemperature", value.temperature.toString());
+        localStorage.setItem("playgroundMaximumLength", value.maximumLength.toString());
+        localStorage.setItem("playgroundTopP", value.topP.toString());
+        localStorage.setItem("playgroundFrequencyPenalty", value.frequencyPenalty.toString());
+        localStorage.setItem("playgroundPresencePenalty", value.presencePenalty.toString());
+
         dispatch(setModelOptions(newModelOptionsState));
         const noneCount = [value.modela, value.modelb].filter(
           (i) => i == "none"
