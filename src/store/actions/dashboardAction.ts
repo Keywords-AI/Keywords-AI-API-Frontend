@@ -432,7 +432,7 @@ export const setSentimentData = (data) => {
   };
 };
 
-export const getDashboardData = (postData) => {
+export const getDashboardData = (postData?) => {
   return (dispatch, getState: () => RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
