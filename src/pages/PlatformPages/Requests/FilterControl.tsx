@@ -82,6 +82,7 @@ export default function FilterControl() {
     "S",
     () => {
       localStorage.setItem("is_test", is_test_bool ? "false" : "true");
+      setQueryParams({ is_test: is_test_bool ? "false" : "true" });
       dispatch(getRequestLogs());
     },
     {}
@@ -143,11 +144,15 @@ export default function FilterControl() {
         }
       >
         <div
-          className={cn ("flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-3 cursor-pointer", is_test_bool ? "bg-gray-3" : "" )}
+          className={cn(
+            "flex flex-row gap-xxs items-center py-xxxs px-xxs rounded-sm hover:bg-gray-3 cursor-pointer",
+            is_test_bool ? "bg-gray-3" : ""
+          )}
           onMouseEnter={() => setHoverTestMode(true)}
           onMouseLeave={() => setHoverTestMode(false)}
           onClick={() => {
             localStorage.setItem("is_test", is_test_bool ? "false" : "true");
+            setQueryParams({ is_test: is_test_bool ? "false" : "true" });
             dispatch(getRequestLogs());
           }}
         >

@@ -181,7 +181,10 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     );
   else
     return (
-      <div aria-label="requests-log-page" className="flex-col items-start w-full h-full rounded-xs bg-gray-1">
+      <div
+        aria-label="requests-log-page"
+        className="flex-col items-start w-full h-full rounded-xs bg-gray-1"
+      >
         {is_test && (
           <div className="flex flex-row py-xs px-lg items-center gap-xxs self-stretch bg-primary relative h-[44px]">
             <span className="text-sm-md text-gray-5">Test environment </span>

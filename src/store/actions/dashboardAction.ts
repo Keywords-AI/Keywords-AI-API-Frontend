@@ -58,9 +58,22 @@ export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
 export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
 export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
 export const SET_DASHBOARD_CURRENT_FILTER = "SET_DASHBOARD_CURRENT_FILTER";
+export const SET_DISPLAY_CHARTS = "SET_DISPLAY_CHARTS";
+export const REMOVE_FROM_DISPLAY_CHARTS = "REMOVE_FROM_DISPLAY_CHARTS";
 
 // Filter actions
-
+export const removeFromDisplayCharts = (data) => {
+  return {
+    type: REMOVE_FROM_DISPLAY_CHARTS,
+    payload: data,
+  };
+};
+export const setDisplayCharts = (data) => {
+  return {
+    type: SET_DISPLAY_CHARTS,
+    payload: data,
+  };
+};
 export const setDashboardFilterType = (filterType) => {
   return {
     type: SET_DASHBOARD_FILTER_TYPE,
@@ -883,5 +896,5 @@ export const isLastTimeFrame = () => {
         updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
     }
     return updatedTimeFrame > new Date();
-  }
-}
+  };
+};

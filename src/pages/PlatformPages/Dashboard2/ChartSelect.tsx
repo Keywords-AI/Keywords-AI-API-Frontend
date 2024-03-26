@@ -1,21 +1,20 @@
-import React from "react";
-import { ChartContainer } from "./ChartContainer";
-import { useTypedDispatch, useTypedSelector } from "src/store/store";
-import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
-import { Metrics } from "src/utilities/constants";
+import React, { useState } from "react";
+import { Pencil } from "src/components";
+import { Button, DotsButton } from "src/components/Buttons";
+import { Modal } from "src/components/Dialogs";
 import { defultTheme } from "src/components/styles/color-themes";
-import { removeFromDisplayCharts } from "src/store/actions";
-import { DropDownMenu } from "src/components/Dialogs/DropDownMenu";
-import { Button, Down } from "src/components";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
+import { ChartContainer } from "./ChartContainer";
+import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
+import cn from "src/utilities/classMerge";
+import { setDisplayCharts } from "src/store/actions";
 
 type Props = {};
 
-export default function MainChart({}: Props) {
+export default function ChartSelect({}: Props) {
+  const [open, setOpen] = useState(false);
   const dispatch = useTypedDispatch();
   const dashboardData = useTypedSelector((state) => state.dashboard);
-  const displayFilter = useTypedSelector(
-    (state) => state.dashboard.displayFilter
-  );
   const displayCharts = useTypedSelector(
     (state) => state.dashboard.displayCharts
   );
@@ -260,120 +259,72 @@ export default function MainChart({}: Props) {
       },
     },
   };
-  if (dashboardData.loading) return null;
+  const chartOptions = Object.values(displayData).filter(
+    (item) =>
+      !displayCharts.includes(item.value) &&
+      !item.value.endsWith("p_50") &&
+      !item.value.endsWith("p_90") &&
+      !item.value.endsWith("p_95") &&
+      !item.value.endsWith("p_99") &&
+      item.value !== "number_of_requests"
+  );
+  const [select, setSelect] = useState<string[]>([]);
+  const handleSubmit = () => {
+    dispatch(setDisplayCharts([...displayCharts, ...select]));
+    setOpen(false);
+  };
   return (
-    <>
-      <div className="flex px-lg py-md items-start gap-xl h-[268px]">
-        <ChartContainer
-          title={Metrics.number_of_requests.name}
-          summary={dashboardData.summary[displayFilter.metric]}
-          // rightContent={<div>hi</div>}
-        >
-          <KeywordsLineChart
-            data={displayData[displayFilter.metric].focusData}
-            colors={displayData[displayFilter.metric].colors}
-            metric={Metrics.number_of_requests.value}
-          />
-        </ChartContainer>
-      </div>
-      <div className="flex  py-md px-lg  items-start content-start gap-y-xl self-stretch flex-wrap gap-x-xs">
-        {displayCharts.map((chart, index) => {
+    <Modal
+      open={open}
+      setOpen={(o) => {
+        setOpen(o);
+        setSelect([]);
+      }}
+      title="Add graphs"
+      trigger={<DotsButton icon={Pencil} />}
+      width="w-[calc(100vw-60px)]"
+      height="h-[calc(100vh-60px)]"
+      backgroundColor="bg-gray-1"
+    >
+      <div className="flex w-full h-full justify-center items-start content-start gap-[20px] flex-wrap overflow-auto">
+        {chartOptions.map((chart, index) => {
           return (
-            <ChartDisplay
+            <div
               key={index}
-              index={index}
-              chart={chart}
-              dashboardData={dashboardData}
-              displayData={displayData}
-            />
+              className={cn(
+                "flex-col w-1/4 h-1/4 p-xxs items-start gap-[6px] hover:bg-gray-2 relative",
+                select.includes(chart.value) && "bg-gray-2"
+              )}
+            >
+              <div
+                className="absolute inset-0 bg-opacity-50 z-[2] cursor-pointer"
+                onClick={() =>
+                  setSelect((p) => [...new Set([...p, chart.value])])
+                }
+              ></div>
+              <ChartContainer
+                small
+                title={chart.name}
+                summary={dashboardData.summary[chart.value]?.toFixed(2)}
+              >
+                <KeywordsLineChart
+                  data={displayData[chart.value].focusData}
+                  colors={displayData[chart.value].colors}
+                  disableTooltip
+                />
+              </ChartContainer>
+            </div>
           );
         })}
       </div>
-    </>
+      <div className="flex items-center justify-between gap-xs">
+        <Button
+          variant="r4-gray-2"
+          text="Cancel"
+          onClick={() => setOpen(false)}
+        />
+        <Button variant="r4-primary" text="Save" onClick={handleSubmit} />
+      </div>
+    </Modal>
   );
 }
-
-const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
-  const [open, setOpen] = React.useState(false);
-  let hasSubSelector = [
-    "average_latency",
-    "average_ttft",
-    "average_tps",
-  ].includes(chart);
-  const [dataKey, setDataKey] = React.useState(
-    hasSubSelector ? Object.keys(displayData[chart].colors)[0] : null
-  );
-
-  const dispatch = useTypedDispatch();
-
-  const SelectctorMenu = ({ dataKey, setDataKey }) => {
-    // if (!hasSubSelector || !dataKey) return null;
-    if (!dataKey) return null;
-    return (
-      <DropDownMenu
-        open={open}
-        setOpen={setOpen}
-        width="w-full"
-        trigger={
-          <Button
-            variant="text"
-            text={dataKey == "all" ? "All" : Metrics[dataKey]?.name || ""}
-            icon={Down}
-            iconPosition="right"
-          />
-        }
-        items={
-          <>
-            {Object.keys(displayData[chart].colors).map((key, index) => {
-              return (
-                <Button
-                  key={index}
-                  text={Metrics[key].name}
-                  variant="panel"
-                  onClick={() => {
-                    setDataKey(key);
-                    setOpen(false);
-                  }}
-                />
-              );
-            })}
-            <Button
-              text={"All"}
-              variant="panel"
-              onClick={() => {
-                setDataKey("all");
-                setOpen(false);
-              }}
-            />
-          </>
-        }
-      />
-    );
-  };
-  return (
-    <div
-      className="w-[calc((100%-24px)/3)] h-[280px]"
-      key={index}
-      // onClick={() => dispatch(removeFromDisplayCharts(chart))}
-    >
-      <ChartContainer
-        title={Metrics[chart].name}
-        summary={(dashboardData.summary[chart] || 0).toFixed(2)}
-        rightContent={
-          hasSubSelector ? (
-            <SelectctorMenu dataKey={dataKey} setDataKey={setDataKey} />
-          ) : null
-        }
-      >
-        <KeywordsLineChart
-          data={displayData[chart].focusData}
-          colors={displayData[chart].colors}
-          dataKey={
-            dataKey ? (dataKey == "all" ? undefined : dataKey) : undefined
-          }
-          metric={displayData[chart].value}
-        />
-      </ChartContainer>
-    </div>
-  );
-};
