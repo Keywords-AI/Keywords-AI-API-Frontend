@@ -193,9 +193,9 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const messages: any[] = playground.messages;
+    const messages: PlaygroundMessage[] = playground.messages;
     if (
-      messages.some((message) => message.user_content.replace(/\s/g, "") === "")
+      messages.some((message) => message?.user_content?.replace(/\s/g, "") === "")
     ) {
       dispatch(
       dispatchNotification({
