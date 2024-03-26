@@ -78,7 +78,7 @@ export default function ChartSelect({}: Props) {
       calculation: "first",
       name: "All tokens",
       value: "total_tokens",
-      focusData: dashboardData.tokenCountData,
+      focusData: dashboardData.tokenCountData, 
       colors: {
         total_tokens: defultTheme.extend.colors.primary,
       },
@@ -259,6 +259,7 @@ export default function ChartSelect({}: Props) {
       },
     },
   };
+  console.log("heyeudfebf",dashboardData.promptTokenCountData);
   const chartOptions = Object.values(displayData).filter(
     (item) =>
       !displayCharts.includes(item.value) &&
@@ -273,6 +274,7 @@ export default function ChartSelect({}: Props) {
     dispatch(setDisplayCharts([...displayCharts, ...select]));
     setOpen(false);
   };
+  
   return (
     <Modal
       open={open}

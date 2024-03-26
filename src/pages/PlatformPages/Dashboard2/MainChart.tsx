@@ -300,6 +300,30 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
     "average_ttft",
     "average_tps",
   ].includes(chart);
+  let noDigits = [
+    "total_tokens",
+    "total_prompt_tokens",
+    "total_completion_tokens",
+    "error_count",
+  ].includes(chart);
+  let hasPreUnits = ["average_cost", "total_cost"].includes(chart);
+  let hasPostUnits = [
+    "average_latency",
+    "average_ttft",
+    "average_tps",
+    "tps_p_50",
+    "tps_p_90",
+    "tps_p_95",
+    "tps_p_99",
+    "latency_p_50",
+    "latency_p_90",
+    "latency_p_95",
+    "latency_p_99",
+    "ttft_p_50",
+    "ttft_p_90",
+    "ttft_p_95",
+    "ttft_p_99",
+  ].includes(chart);
   const [dataKey, setDataKey] = React.useState(
     hasSubSelector ? Object.keys(displayData[chart].colors)[0] : null
   );
@@ -350,6 +374,12 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
       />
     );
   };
+  let summary = noDigits
+    ? (dashboardData.summary[chart] || 0).toLocaleString()
+    : (dashboardData.summary[chart] || 0).toFixed(2);
+
+  hasPreUnits ? (summary = "$" + summary) : summary;
+
   return (
     <div
       className="w-[calc((100%-24px)/3)] h-[280px]"
@@ -358,12 +388,13 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
     >
       <ChartContainer
         title={Metrics[chart].name}
-        summary={(dashboardData.summary[chart] || 0).toFixed(2)}
+        summary={summary}
         rightContent={
           hasSubSelector ? (
             <SelectctorMenu dataKey={dataKey} setDataKey={setDataKey} />
           ) : null
         }
+        postUnits={hasPostUnits}
       >
         <KeywordsLineChart
           data={displayData[chart].focusData}

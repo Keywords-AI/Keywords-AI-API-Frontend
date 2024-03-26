@@ -5,6 +5,7 @@ export const ChartContainer = ({
   summary = "800",
   children,
   rightContent,
+  postUnits = false,
   small = false,
 }) => {
   return (
@@ -27,11 +28,14 @@ export const ChartContainer = ({
           <div className="flex items-center gap-xxs">
             <p
               className={cn(
-                "display-sm text-gray-5",
+                "display-sm text-gray-5 flex flex-row gap-xxsx",
                 small && "text-[13px] leading-[16px]"
               )}
             >
               {summary}
+              {postUnits && <p className="text-md-medium text-gray-4 pt-xxs">
+                s
+                </p>}
             </p>
           </div>
         </div>
