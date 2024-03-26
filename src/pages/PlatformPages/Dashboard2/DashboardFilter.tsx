@@ -145,15 +145,226 @@ export default function DashboardFilter() {
       scopes: "dashboard",
     }
   );
-  useHotkeys(
-    "d",
-    () => {
-      setShowDropdown(false);
-      setShowPopover((prev) => !prev);
-    },
-    {
-      scopes: "dashboard",
-    }
+  // useHotkeys(
+  //   "d",
+  //   () => {
+  //     setShowDropdown(false);
+  //     setShowPopover((prev) => !prev);
+  //   },
+  //   {
+  //     scopes: "dashboard",
+  //   }
+  // );
+  const Menu = (
+    <Popover
+      trigger={
+        <div>
+          <Tooltip
+            side="bottom"
+            sideOffset={8}
+            align="center"
+            delayDuration={1}
+            content={
+              <>
+                <p className="caption text-gray-4">Show display options</p>
+                <AlphanumericKey value={"D"} />
+              </>
+            }
+          >
+            <Button
+              variant="small"
+              text="Display"
+              icon={Display}
+              active={showPopover}
+              secIcon={Down}
+              secIconPosition="right"
+              onClick={() => {
+                setShowPopover((prev) => !prev);
+              }}
+            />
+          </Tooltip>
+        </div>
+      }
+      open={showPopover}
+      setOpen={setShowPopover}
+      side="bottom"
+      sideOffset={5}
+      align="end"
+      width="w-[320px]"
+    >
+      <form className={"flex flex-col gap-xxs items-end"}>
+        <div className="flex flex-col items-start gap-xxs self-stretch">
+          <div className="flex justify-between items-center self-stretch ">
+            <span className="text-sm-regular text-gray-4">Metric</span>
+            <SelectInput
+              {...register("metric")}
+              headLess
+              placeholder="Request"
+              useShortCut
+              align="start"
+              backgroundColor="bg-gray-2"
+              icon={Down}
+              padding="py-xxxs px-xxs"
+              gap="gap-xxs"
+              width="min-w-[140px]"
+              alignOffset={-40}
+              optionsWidth="w-[180px]"
+              onChange={(e) => {
+                dispatch(
+                  setDisplayMetric(e.target.value, setQueryParams, navigate)
+                );
+                const noAverageDataMetrics = [
+                  Metrics.average_latency.value,
+                  Metrics.error_count.value,
+                  Metrics.number_of_requests.value,
+                ];
+                if (noAverageDataMetrics.includes(e.target.value)) {
+                  dispatch(setDisplayType("total", setQueryParams, navigate));
+                }
+                if (
+                  e.target.value === Metrics.average_latency.value ||
+                  e.target.value === Metrics.average_ttft.value ||
+                  e.target.value === Metrics.average_tps.value
+                ) {
+                  dispatch(setDisplayType("average", setQueryParams, navigate));
+                } else {
+                  dispatch(setDisplayType("total", setQueryParams, navigate));
+                }
+              }}
+              value={currentMetric}
+              choices={[
+                {
+                  name: Metrics.number_of_requests.name,
+                  value: Metrics.number_of_requests.value,
+                  icon: Metrics.number_of_requests.icon,
+                  secText: "1",
+                },
+                {
+                  name: Metrics.error_count.name,
+                  value: Metrics.error_count.value,
+                  icon: Metrics.error_count.icon,
+                  secText: "2",
+                },
+                {
+                  name: Metrics.average_ttft.name,
+                  value: Metrics.average_ttft.value,
+                  icon: Metrics.average_ttft.icon,
+                  secText: "3",
+                },
+
+                {
+                  name: Metrics.average_latency.name,
+                  value: Metrics.average_latency.value,
+                  icon: Metrics.average_latency.icon,
+                  secText: "4",
+                },
+                {
+                  name: Metrics.average_tps.name,
+                  value: Metrics.average_tps.value,
+                  icon: Metrics.average_tps.icon,
+                  secText: "5",
+                },
+                {
+                  name: Metrics.total_prompt_tokens.name,
+                  value: Metrics.total_prompt_tokens.value,
+                  icon: Metrics.total_prompt_tokens.icon,
+                  secText: "6",
+                },
+                {
+                  name: Metrics.total_completion_tokens.name,
+                  value: Metrics.total_completion_tokens.value,
+                  icon: Metrics.total_completion_tokens.icon,
+                  secText: "7",
+                },
+                {
+                  name: Metrics.total_tokens.name,
+                  value: Metrics.total_tokens.value,
+                  icon: Metrics.total_tokens.icon,
+                  secText: "8",
+                },
+                {
+                  name: Metrics.total_cost.name,
+                  value: Metrics.total_cost.value,
+                  icon: Metrics.total_cost.icon,
+                  secText: "9",
+                },
+              ]}
+            />
+          </div>
+          {currentMetric !== Metrics.number_of_requests.value &&
+            currentMetric !== Metrics.error_count.value && (
+              <div className="flex justify-between items-center self-stretch ">
+                <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
+                  Type
+                  {/* <Tooltip
+                  side="right"
+                  sideOffset={8}
+                  delayDuration={1}
+                  skipDelayDuration={1}
+                  content={
+                    <>
+                      <span className="text-gray-4 caption">
+                        Display the data as total value or averaging over
+                        per request
+                      </span>
+                    </>
+                  }
+                >
+                  <div>
+                    <Info />
+                  </div>
+                </Tooltip> */}
+                </span>
+                <SelectInput
+                  {...register("type")}
+                  headLess
+                  placeholder="Total"
+                  align="start"
+                  alignOffset={-40}
+                  icon={Down}
+                  useShortCut
+                  padding="py-xxxs px-xxs"
+                  gap="gap-xxs"
+                  width="min-w-[140px]"
+                  backgroundColor="bg-gray-2"
+                  optionsWidth="w-[180px]"
+                  value={currentType}
+                  onChange={(e) => {
+                    dispatch(
+                      setDisplayType(e.target.value, setQueryParams, navigate)
+                    );
+                  }}
+                  choices={filteredtypeChoices}
+                />
+              </div>
+            )}
+          <div className="flex justify-between items-center self-stretch ">
+            <span className="text-sm-regular text-gray-4">Breakdown</span>
+            <SelectInput
+              {...register("breakdown")}
+              headLess
+              useShortCut
+              placeholder="None"
+              align="start"
+              icon={Down}
+              padding="py-xxxs px-xxs"
+              gap="gap-xxs"
+              width="min-w-[140px]"
+              optionsWidth="w-[180px]"
+              backgroundColor="bg-gray-2"
+              alignOffset={-40}
+              value={currentBreakdown}
+              onChange={(e) => {
+                dispatch(
+                  setDisplayBreakdown(e.target.value, setQueryParams, navigate)
+                );
+              }}
+              choices={filteredBreakdownChoices}
+            />
+          </div>
+        </div>
+      </form>
+    </Popover>
   );
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
@@ -224,222 +435,7 @@ export default function DashboardFilter() {
         ]}
         handleSelected={handleTimePeriodSelection}
       />
-
-      <Popover
-        trigger={
-          <div>
-            <Tooltip
-              side="bottom"
-              sideOffset={8}
-              align="center"
-              delayDuration={1}
-              content={
-                <>
-                  <p className="caption text-gray-4">Show display options</p>
-                  <AlphanumericKey value={"D"} />
-                </>
-              }
-            >
-              <Button
-                variant="small"
-                text="Display"
-                icon={Display}
-                active={showPopover}
-                secIcon={Down}
-                secIconPosition="right"
-                onClick={() => {
-                  setShowPopover((prev) => !prev);
-                }}
-              />
-            </Tooltip>
-          </div>
-        }
-        open={showPopover}
-        setOpen={setShowPopover}
-        side="bottom"
-        sideOffset={5}
-        align="end"
-        width="w-[320px]"
-      >
-        <form className={"flex flex-col gap-xxs items-end"}>
-          <div className="flex flex-col items-start gap-xxs self-stretch">
-            <div className="flex justify-between items-center self-stretch ">
-              <span className="text-sm-regular text-gray-4">Metric</span>
-              <SelectInput
-                {...register("metric")}
-                headLess
-                placeholder="Request"
-                useShortCut
-                align="start"
-                backgroundColor="bg-gray-2"
-                icon={Down}
-                padding="py-xxxs px-xxs"
-                gap="gap-xxs"
-                width="min-w-[140px]"
-                alignOffset={-40}
-                optionsWidth="w-[180px]"
-                onChange={(e) => {
-                  dispatch(
-                    setDisplayMetric(e.target.value, setQueryParams, navigate)
-                  );
-                  const noAverageDataMetrics = [
-                    Metrics.average_latency.value,
-                    Metrics.error_count.value,
-                    Metrics.number_of_requests.value,
-                  ];
-                  if (noAverageDataMetrics.includes(e.target.value)) {
-                    dispatch(setDisplayType("total", setQueryParams, navigate));
-                  }
-                  if (
-                    e.target.value === Metrics.average_latency.value ||
-                    e.target.value === Metrics.average_ttft.value ||
-                    e.target.value === Metrics.average_tps.value
-                  ) {
-                    dispatch(
-                      setDisplayType("average", setQueryParams, navigate)
-                    );
-                  } else {
-                    dispatch(setDisplayType("total", setQueryParams, navigate));
-                  }
-                }}
-                value={currentMetric}
-                choices={[
-                  {
-                    name: Metrics.number_of_requests.name,
-                    value: Metrics.number_of_requests.value,
-                    icon: Metrics.number_of_requests.icon,
-                    secText: "1",
-                  },
-                  {
-                    name: Metrics.error_count.name,
-                    value: Metrics.error_count.value,
-                    icon: Metrics.error_count.icon,
-                    secText: "2",
-                  },
-                  {
-                    name: Metrics.average_ttft.name,
-                    value: Metrics.average_ttft.value,
-                    icon: Metrics.average_ttft.icon,
-                    secText: "3",
-                  },
-
-                  {
-                    name: Metrics.average_latency.name,
-                    value: Metrics.average_latency.value,
-                    icon: Metrics.average_latency.icon,
-                    secText: "4",
-                  },
-                  {
-                    name: Metrics.average_tps.name,
-                    value: Metrics.average_tps.value,
-                    icon: Metrics.average_tps.icon,
-                    secText: "5",
-                  },
-                  {
-                    name: Metrics.total_prompt_tokens.name,
-                    value: Metrics.total_prompt_tokens.value,
-                    icon: Metrics.total_prompt_tokens.icon,
-                    secText: "6",
-                  },
-                  {
-                    name: Metrics.total_completion_tokens.name,
-                    value: Metrics.total_completion_tokens.value,
-                    icon: Metrics.total_completion_tokens.icon,
-                    secText: "7",
-                  },
-                  {
-                    name: Metrics.total_tokens.name,
-                    value: Metrics.total_tokens.value,
-                    icon: Metrics.total_tokens.icon,
-                    secText: "8",
-                  },
-                  {
-                    name: Metrics.total_cost.name,
-                    value: Metrics.total_cost.value,
-                    icon: Metrics.total_cost.icon,
-                    secText: "9",
-                  },
-                ]}
-              />
-            </div>
-            {currentMetric !== Metrics.number_of_requests.value &&
-              currentMetric !== Metrics.error_count.value && (
-                <div className="flex justify-between items-center self-stretch ">
-                  <span className="text-sm-regular text-gray-4 flex gap-xxs items-center">
-                    Type
-                    {/* <Tooltip
-                      side="right"
-                      sideOffset={8}
-                      delayDuration={1}
-                      skipDelayDuration={1}
-                      content={
-                        <>
-                          <span className="text-gray-4 caption">
-                            Display the data as total value or averaging over
-                            per request
-                          </span>
-                        </>
-                      }
-                    >
-                      <div>
-                        <Info />
-                      </div>
-                    </Tooltip> */}
-                  </span>
-                  <SelectInput
-                    {...register("type")}
-                    headLess
-                    placeholder="Total"
-                    align="start"
-                    alignOffset={-40}
-                    icon={Down}
-                    useShortCut
-                    padding="py-xxxs px-xxs"
-                    gap="gap-xxs"
-                    width="min-w-[140px]"
-                    backgroundColor="bg-gray-2"
-                    optionsWidth="w-[180px]"
-                    value={currentType}
-                    onChange={(e) => {
-                      dispatch(
-                        setDisplayType(e.target.value, setQueryParams, navigate)
-                      );
-                    }}
-                    choices={filteredtypeChoices}
-                  />
-                </div>
-              )}
-            <div className="flex justify-between items-center self-stretch ">
-              <span className="text-sm-regular text-gray-4">Breakdown</span>
-              <SelectInput
-                {...register("breakdown")}
-                headLess
-                useShortCut
-                placeholder="None"
-                align="start"
-                icon={Down}
-                padding="py-xxxs px-xxs"
-                gap="gap-xxs"
-                width="min-w-[140px]"
-                optionsWidth="w-[180px]"
-                backgroundColor="bg-gray-2"
-                alignOffset={-40}
-                value={currentBreakdown}
-                onChange={(e) => {
-                  dispatch(
-                    setDisplayBreakdown(
-                      e.target.value,
-                      setQueryParams,
-                      navigate
-                    )
-                  );
-                }}
-                choices={filteredBreakdownChoices}
-              />
-            </div>
-          </div>
-        </form>
-      </Popover>
+      {/* {Menu} */}
     </div>
   );
 }

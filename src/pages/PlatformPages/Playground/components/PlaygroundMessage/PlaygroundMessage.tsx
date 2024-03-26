@@ -163,6 +163,11 @@ export function PlaygroundMessage({
             ref={usermessageBoxRef}
             value={messageValue}
             onChange={handleChange}
+            placeholder={
+              role == "system"
+                ? "You're a helpful assistant."
+                : "Enter a message here"
+            }
             blur={!isFocused}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {

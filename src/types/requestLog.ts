@@ -35,6 +35,7 @@ export type LogItem = {
   metadata: any;
   organization: string;
   evaluation_cost: number;
+  stream: boolean;
   evaluations: {
     evaluation_cost: any;
     answer_relevance?: any;

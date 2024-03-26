@@ -43,6 +43,8 @@ import {
   DELETE_DASHBOARD_FILTER,
   SET_AVG_TTFT_DATA,
   SET_TPS_DATA,
+  SET_DISPLAY_CHARTS,
+  REMOVE_FROM_DISPLAY_CHARTS,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -205,6 +207,7 @@ const initState = {
       neutral: 600,
     },
   ],
+  displayCharts: ["average_latency", "total_cost", "total_tokens"],
 };
 
 type DashboardState = typeof initState;
@@ -214,6 +217,15 @@ export default function dashboardReducer(
   action
 ): DashboardState {
   switch (action.type) {
+    case REMOVE_FROM_DISPLAY_CHARTS:
+      return {
+        ...state,
+        displayCharts: state.displayCharts.filter(
+          (chart) => chart !== action.payload
+        ),
+      };
+    case SET_DISPLAY_CHARTS:
+      return { ...state, displayCharts: action.payload };
     case SET_TPS_DATA:
       return { ...state, tpsData: action.payload };
     case SET_DASHBOARD_LOADING:

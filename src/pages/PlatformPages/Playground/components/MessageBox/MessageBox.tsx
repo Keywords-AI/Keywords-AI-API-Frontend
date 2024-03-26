@@ -21,6 +21,7 @@ export interface MessageBoxProps {
   onBlur?: () => void;
   blur?: boolean;
   index: number;
+  placeholder?: string;
 }
 
 export const MessageBox = forwardRef(
@@ -35,6 +36,7 @@ export const MessageBox = forwardRef(
       disabled,
       blur,
       index,
+      placeholder,
     }: MessageBoxProps,
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
@@ -63,7 +65,7 @@ export const MessageBox = forwardRef(
         onBlur={() => {
           onBlur && onBlur();
         }}
-        placeholder="Enter a message here"
+        placeholder={placeholder || "Enter a message here"}
         onChange={(e) => onChange(e.target.value)}
         rows={1}
         onKeyDown={(e) => onKeyDown && onKeyDown(e)}
