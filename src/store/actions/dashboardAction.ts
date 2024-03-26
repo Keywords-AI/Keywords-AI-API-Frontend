@@ -58,19 +58,20 @@ export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
 export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
 export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
 export const SET_DASHBOARD_CURRENT_FILTER = "SET_DASHBOARD_CURRENT_FILTER";
-export const SET_DISPLAY_CHARTS = "SET_DISPLAY_CHARTS";
-export const REMOVE_FROM_DISPLAY_CHARTS = "REMOVE_FROM_DISPLAY_CHARTS";
+export const SET_MODELS_DISPLAY_CHARTS = "SET_MODELS_DISPLAY_CHARTS";
+export const REMOVE_FROM_MODELS_DISPLAY_CHARTS =
+  "REMOVE_FROM_MODELS_DISPLAY_CHARTS";
 
 // Filter actions
-export const removeFromDisplayCharts = (data) => {
+export const removeFromModelsDisplayCharts = (data) => {
   return {
-    type: REMOVE_FROM_DISPLAY_CHARTS,
+    type: REMOVE_FROM_MODELS_DISPLAY_CHARTS,
     payload: data,
   };
 };
-export const setDisplayCharts = (data) => {
+export const setModelsDisplayCharts = (data) => {
   return {
-    type: SET_DISPLAY_CHARTS,
+    type: SET_MODELS_DISPLAY_CHARTS,
     payload: data,
   };
 };

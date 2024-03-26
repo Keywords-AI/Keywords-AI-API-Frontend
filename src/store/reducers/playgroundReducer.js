@@ -39,6 +39,7 @@ const initialState = {
       user_content: "",
     },
   ],
+  
   firstTime: true,
   prompt: "",
   // currentModels: localStorage.getItem("playgroundModels")

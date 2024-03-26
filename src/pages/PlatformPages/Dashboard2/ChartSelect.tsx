@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Pencil } from "src/components";
+import React, { useEffect, useState } from "react";
+import { Add, CircleAdd, CircleCheck, Pencil } from "src/components";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import { defultTheme } from "src/components/styles/color-themes";
@@ -7,7 +7,8 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { ChartContainer } from "./ChartContainer";
 import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
 import cn from "src/utilities/classMerge";
-import { setDisplayCharts } from "src/store/actions";
+import { setModelsDisplayCharts } from "src/store/actions";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
 
 type Props = {};
 
@@ -15,8 +16,8 @@ export default function ChartSelect({}: Props) {
   const [open, setOpen] = useState(false);
   const dispatch = useTypedDispatch();
   const dashboardData = useTypedSelector((state) => state.dashboard);
-  const displayCharts = useTypedSelector(
-    (state) => state.dashboard.displayCharts
+  const modelDisplayCharts = useTypedSelector(
+    (state) => state.dashboard.modelDisplayCharts
   );
   const displayData = {
     number_of_requests: {
@@ -78,7 +79,7 @@ export default function ChartSelect({}: Props) {
       calculation: "first",
       name: "All tokens",
       value: "total_tokens",
-      focusData: dashboardData.tokenCountData, 
+      focusData: dashboardData.tokenCountData,
       colors: {
         total_tokens: defultTheme.extend.colors.primary,
       },
@@ -242,7 +243,7 @@ export default function ChartSelect({}: Props) {
     },
     average_completion_tokens: {
       calculation: "first",
-      name: "Average output tokens",
+      name: "Average completion tokens",
       value: "average_completion_tokens",
       focusData: dashboardData.avgCompletionTokenCountData,
       colors: {
@@ -259,55 +260,56 @@ export default function ChartSelect({}: Props) {
       },
     },
   };
-  console.log("heyeudfebf",dashboardData.promptTokenCountData);
   const chartOptions = Object.values(displayData).filter(
     (item) =>
-      !displayCharts.includes(item.value) &&
+      // !displayCharts.includes(item.value) &&
       !item.value.endsWith("p_50") &&
       !item.value.endsWith("p_90") &&
       !item.value.endsWith("p_95") &&
       !item.value.endsWith("p_99") &&
       item.value !== "number_of_requests"
   );
-  const [select, setSelect] = useState<string[]>([]);
+  const [select, setSelect] = useState(modelDisplayCharts);
+  useEffect(() => {
+    console.log("chartOptions", chartOptions);
+  }, [chartOptions]);
   const handleSubmit = () => {
-    dispatch(setDisplayCharts([...displayCharts, ...select]));
+    dispatch(setModelsDisplayCharts([...select]));
     setOpen(false);
   };
-  
-  return (
-    <Modal
-      open={open}
-      setOpen={(o) => {
-        setOpen(o);
-        setSelect([]);
-      }}
-      title="Add graphs"
-      trigger={<DotsButton icon={Pencil} />}
-      width="w-[calc(100vw-60px)]"
-      height="h-[calc(100vh-60px)]"
-      backgroundColor="bg-gray-1"
-    >
-      <div className="flex w-full h-full justify-center items-start content-start gap-[20px] flex-wrap overflow-auto">
+  const ModelSection = () => (
+    <>
+      <div className="flex items-center gap-xxs self-stretch display-xs text-gray-5">
+        Models
+      </div>
+      <div className="flex w-full h-full justify-center items-start content-start gap-xxs  flex-wrap ">
         {chartOptions.map((chart, index) => {
           return (
             <div
               key={index}
               className={cn(
-                "flex-col w-1/4 h-1/4 p-xxs items-start gap-[6px] hover:bg-gray-2 relative",
-                select.includes(chart.value) && "bg-gray-2"
+                "flex-col w-[280px] h-[200px] p-sm items-start gap-[6px] hover:bg-gray-2 relative rounded-md border border-solid border-gray-3"
+                // select.includes(chart.value) ||
+                //   (isAlreadySelected && "bg-gray-2")
               )}
             >
               <div
-                className="absolute inset-0 bg-opacity-50 z-[2] cursor-pointer"
-                onClick={() =>
-                  setSelect((p) => [...new Set([...p, chart.value])])
-                }
+                className="absolute inset-0  z-[2] cursor-pointer"
+                onClick={() => {
+                  if (select.includes(chart.value)) {
+                    setSelect((p) => p.filter((item) => item !== chart.value));
+                  } else {
+                    setSelect((p) => [...new Set([...p, chart.value])]);
+                  }
+                }}
               ></div>
               <ChartContainer
                 small
                 title={chart.name}
                 summary={dashboardData.summary[chart.value]?.toFixed(2)}
+                rightContent={
+                  select.includes(chart.value) ? <CircleCheck /> : <CircleAdd />
+                }
               >
                 <KeywordsLineChart
                   data={displayData[chart.value].focusData}
@@ -319,13 +321,33 @@ export default function ChartSelect({}: Props) {
           );
         })}
       </div>
-      <div className="flex items-center justify-between gap-xs">
-        <Button
-          variant="r4-gray-2"
-          text="Cancel"
-          onClick={() => setOpen(false)}
-        />
-        <Button variant="r4-primary" text="Save" onClick={handleSubmit} />
+    </>
+  );
+  return (
+    <Modal
+      open={open}
+      setOpen={(o) => {
+        setOpen(o);
+        setSelect(modelDisplayCharts);
+      }}
+      title=""
+      trigger={<DotsButton icon={Pencil} />}
+      width="w-[930px]"
+      height="h-[800px]"
+      backgroundColor="bg-gray-1"
+    >
+      <div className=" overflow-auto flex-col gap-md">
+        <div className="flex-col w-full h-full gap-md overflow-auto">
+          <ModelSection />
+        </div>
+        <div className="flex items-center justify-end gap-xs self-stretch">
+          <Button
+            variant="r4-gray-2"
+            text="Cancel"
+            onClick={() => setOpen(false)}
+          />
+          <Button variant="r4-primary" text="Save" onClick={handleSubmit} />
+        </div>
       </div>
     </Modal>
   );
