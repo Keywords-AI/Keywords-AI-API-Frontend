@@ -1,4 +1,3 @@
-import { parse } from "date-fns";
 import {
   SET_MESSAGES,
   SET_PROMPT,
@@ -31,7 +30,7 @@ const initialState = {
     {
       id: uuidv4(),
       role: "system",
-      user_content: "",
+      user_content: localStorage.getItem("playgroundPrompt") ?? "",
     },
     {
       id: uuidv4(),
@@ -39,6 +38,7 @@ const initialState = {
       user_content: "",
     },
   ],
+  attamptSubmit: false,
   firstTime: true,
   prompt: "",
   // currentModels: localStorage.getItem("playgroundModels")
