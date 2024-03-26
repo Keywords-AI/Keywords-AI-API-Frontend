@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
+import { set } from "date-fns";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -128,10 +129,35 @@ export const setCurrentBrand = (currentBrand) => ({
   payload: currentBrand,
 });
 
-export const setModelOptions = (modelOptions) => ({
-  type: SET_MODEL_OPTIONS,
-  payload: modelOptions,
-});
+const setModels = (models:string[]) => {
+  localStorage.setItem("playgroundModels", models.join(","));
+  if (models.length > 1) {
+    localStorage.setItem("playgroundModelA", models[0]);
+    if (!models[1]) {
+      localStorage.setItem("playgroundModelB", "none");
+    } else {
+      localStorage.setItem("playgroundModelB", models[1]);
+    }
+  } else if (models.length == 1) {
+    localStorage.setItem("playgroundModelA", models[0]);
+    localStorage.setItem("playgroundModelB", "none");
+  }
+}
+
+export const setModelOptions = (modelOptions: any) => {
+  const models = modelOptions.models;
+  localStorage.setItem("playgroundModels", models.join(","));
+  setModels(models);
+  localStorage.setItem("playgroundTemperature", modelOptions.temperature.toString());
+  localStorage.setItem("playgroundMaximumLength", modelOptions.maximumLength.toString());
+  localStorage.setItem("playgroundTopP", modelOptions.topP.toString());
+  localStorage.setItem("playgroundFrequencyPenalty", modelOptions.frequencyPenalty.toString());
+  localStorage.setItem("playgroundPresencePenalty", modelOptions.presencePenalty.toString());
+  return {
+    type: SET_MODEL_OPTIONS,
+    payload: modelOptions,
+  };
+};
 export const setOutputs = (outputs) => {
   return (dispatch, getState) => {
     const modelsAndScores = outputs.score;

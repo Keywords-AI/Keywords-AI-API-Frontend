@@ -46,9 +46,11 @@ const initialState = {
   //   : ["gpt-3.5-turbo", "gpt-4"],
   cacheAnswers: {},
   modelOptions: {
-    models: ["gpt-3.5-turbo", "none"],
-    temperature: localStorage.getItem("playgroundTemperature")
-      ? parseInt(localStorage.getItem("playgroundTemperature"))
+    models: localStorage.getItem("playgroundModels")
+    ? localStorage.getItem("playgroundModels").split(",")
+    : ["gpt-3.5-turbo", "none"],
+    temperature: localStorage.getItem("playgroundTemperature") !== null
+      ? parseFloat(localStorage.getItem("playgroundTemperature"))
       : 1,
     maximumLength: localStorage.getItem("playgroundMaximumLength")
       ? parseInt(localStorage.getItem("playgroundMaximumLength"))

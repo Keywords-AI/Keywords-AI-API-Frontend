@@ -62,6 +62,9 @@ export const SessionPane = forwardRef(
         value: model.model_name,
       };
     });
+    const initModels = localStorage.getItem("playgroundModels")?.split(",") ?? [];
+    const modelA = localStorage.getItem("playgroundModelA") ?? "gpt-3.5-turbo";
+
     let [selectChoices, setSelectChoices] = React.useState<any[]>([
       // { name: "Router (best for prompt)", value: "router" },
       { name: "None", value: "none" },
@@ -104,6 +107,7 @@ export const SessionPane = forwardRef(
 
     useEffect(() => {
       watch((value, { name, type }) => {
+        console.log("modelA", modelA);
         if (!value || value.length === 0 || Object.keys(value).length === 0)
           return;
         const newModelOptionsState = {
@@ -114,13 +118,6 @@ export const SessionPane = forwardRef(
           presencePenalty: value.presencePenalty,
           models: [value.modela, value.modelb],
         };
-        localStorage.setItem("playgroundModels", [value.modela, value.modelb].join(","));
-        localStorage.setItem("playgroundTemperature", value.temperature.toString());
-        localStorage.setItem("playgroundMaximumLength", value.maximumLength.toString());
-        localStorage.setItem("playgroundTopP", value.topP.toString());
-        localStorage.setItem("playgroundFrequencyPenalty", value.frequencyPenalty.toString());
-        localStorage.setItem("playgroundPresencePenalty", value.presencePenalty.toString());
-
         dispatch(setModelOptions(newModelOptionsState));
         const noneCount = [value.modela, value.modelb].filter(
           (i) => i == "none"
@@ -141,8 +138,7 @@ export const SessionPane = forwardRef(
             control={control}
             name="modela"
             defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[0])
-                ?.value || "gpt-3.5-turbo"
+              modelA
             }
             render={({ field: { value, onChange } }) => {
               return (
@@ -154,8 +150,7 @@ export const SessionPane = forwardRef(
                   onChange={onChange}
                   items={selectChoices}
                   defaultValue={
-                    selectChoices.find((i) => i.value == ModelOptions.models[0])
-                      ?.value || "gpt-3.5-turbo"
+                    modelA
                   }
                 />
               );
@@ -183,8 +178,7 @@ export const SessionPane = forwardRef(
               control={control}
               name="modelb"
               defaultValue={
-                selectChoices.find((i) => i.value == ModelOptions.models[1])
-                  ?.value || "gpt-4"
+                initModels.length > 0? initModels[0]:"gpt-4"
               }
               render={({ field: { value, onChange } }) => {
                 return (
@@ -196,9 +190,7 @@ export const SessionPane = forwardRef(
                     onChange={onChange}
                     items={selectChoices}
                     defaultValue={
-                      selectChoices.find(
-                        (i) => i.value == ModelOptions.models[1]
-                      )?.value || "gpt-4"
+                      initModels.length > 1? initModels[1]:"gpt-4"
                     }
                   />
                 );
