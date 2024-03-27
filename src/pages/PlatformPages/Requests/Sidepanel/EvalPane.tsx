@@ -1,5 +1,5 @@
 import React from "react";
-import { Divider, Info } from "src/components";
+import { Divider, Info, Right } from "src/components";
 import { Evaluation } from "./Evaluation";
 import { useTypedSelector } from "src/store/store";
 import { SentimentTag, Tag } from "src/components/Misc";
@@ -185,7 +185,7 @@ export default function EvalPane({}) {
     //     ),
     // },
   ];
-  
+
   const dispatch = useDispatch();
   const onSubmit = () => {
     dispatch(
@@ -241,20 +241,24 @@ export default function EvalPane({}) {
         <div className="flex justify-between items-center self-stretch">
           <p className="text-sm-md text-gray-5">Topics</p>
         </div>
-        <div className="flex items-start content-start gap-xxxs w-full flex-wrap">
+        <div className="flex items-center content-start gap-xxxs w-full flex-wrap">
           {topics &&
             topics.length > 0 &&
             topics.map((topic, index) => (
-              <Tag
-                key={index}
-                border=""
-                text={topic}
-                textColor={textColorClasses[index % textColorClasses.length]}
-                backgroundColor={
-                  backgroundColorClasses[index % backgroundColorClasses.length]
-                }
-              />
-              
+              <>
+                <Tag
+                  key={index}
+                  border=""
+                  text={topic}
+                  textColor={textColorClasses[index % textColorClasses.length]}
+                  backgroundColor={
+                    backgroundColorClasses[
+                      index % backgroundColorClasses.length
+                    ]
+                  }
+                />
+                {index !== topics.length - 1 && <Right size="xxs" />}
+              </>
             ))}
         </div>
       </div>
