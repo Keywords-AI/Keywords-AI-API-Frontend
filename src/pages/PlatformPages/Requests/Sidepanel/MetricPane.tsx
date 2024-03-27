@@ -211,7 +211,7 @@ export const MetricPane = ({}) => {
       key: "User",
       value: (
         <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5  whitespace-nowrap">
-          {logItem?.organization || "N/A"}
+          {logItem?.user || "N/A"}
         </span>
       ),
     },
