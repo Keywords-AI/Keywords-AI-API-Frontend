@@ -23,9 +23,13 @@ export const Dashboard = ({}: Props) => {
   }, []);
 
   return (
-    <div className=" flex-col flex-1 self-stretch ">
-      <TopBar />
-      <MainChart />
+    <div className=" flex-col flex-1 self-stretch h-full">
+      <div className="shrink-0">
+        <TopBar />
+      </div>
+      <div className="h-full overflow-auto">
+        <MainChart />
+      </div>
     </div>
   );
 };

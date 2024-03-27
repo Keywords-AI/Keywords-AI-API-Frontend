@@ -8,17 +8,15 @@ import { ChartContainer } from "./ChartContainer";
 import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
 import cn from "src/utilities/classMerge";
 import { setModelsDisplayCharts } from "src/store/actions";
-import { s } from "vite/dist/node/types.d-aGj9QkWt";
-
+import _ from "lodash";
+import { ModelSection } from "./ModelSection";
 type Props = {};
 
 export default function ChartSelect({}: Props) {
   const [open, setOpen] = useState(false);
   const dispatch = useTypedDispatch();
   const dashboardData = useTypedSelector((state) => state.dashboard);
-  const modelDisplayCharts = useTypedSelector(
-    (state) => state.dashboard.modelDisplayCharts
-  );
+  const [select, setSelect] = useState(dashboardData.modelDisplayCharts);
   const displayData = {
     number_of_requests: {
       calculation: "first",
@@ -260,75 +258,17 @@ export default function ChartSelect({}: Props) {
       },
     },
   };
-  const chartOptions = Object.values(displayData).filter(
-    (item) =>
-      // !displayCharts.includes(item.value) &&
-      !item.value.endsWith("p_50") &&
-      !item.value.endsWith("p_90") &&
-      !item.value.endsWith("p_95") &&
-      !item.value.endsWith("p_99") &&
-      item.value !== "number_of_requests"
-  );
-  const [select, setSelect] = useState(modelDisplayCharts);
-  useEffect(() => {
-    console.log("chartOptions", chartOptions);
-  }, [chartOptions]);
+
   const handleSubmit = () => {
     dispatch(setModelsDisplayCharts([...select]));
     setOpen(false);
   };
-  const ModelSection = () => (
-    <>
-      <div className="flex items-center gap-xxs self-stretch display-xs text-gray-5">
-        Models
-      </div>
-      <div className="flex w-full h-full justify-center items-start content-start gap-xxs  flex-wrap ">
-        {chartOptions.map((chart, index) => {
-          return (
-            <div
-              key={index}
-              className={cn(
-                "flex-col w-[280px] h-[200px] p-sm items-start gap-[6px] hover:bg-gray-2 relative rounded-md border border-solid border-gray-3"
-                // select.includes(chart.value) ||
-                //   (isAlreadySelected && "bg-gray-2")
-              )}
-            >
-              <div
-                className="absolute inset-0  z-[2] cursor-pointer"
-                onClick={() => {
-                  if (select.includes(chart.value)) {
-                    setSelect((p) => p.filter((item) => item !== chart.value));
-                  } else {
-                    setSelect((p) => [...new Set([...p, chart.value])]);
-                  }
-                }}
-              ></div>
-              <ChartContainer
-                small
-                title={chart.name}
-                summary={dashboardData.summary[chart.value]?.toFixed(2)}
-                rightContent={
-                  select.includes(chart.value) ? <CircleCheck /> : <CircleAdd />
-                }
-              >
-                <KeywordsLineChart
-                  data={displayData[chart.value].focusData}
-                  colors={displayData[chart.value].colors}
-                  disableTooltip
-                />
-              </ChartContainer>
-            </div>
-          );
-        })}
-      </div>
-    </>
-  );
+
   return (
     <Modal
       open={open}
       setOpen={(o) => {
         setOpen(o);
-        setSelect(modelDisplayCharts);
       }}
       title=""
       trigger={<DotsButton icon={Pencil} />}
@@ -336,11 +276,22 @@ export default function ChartSelect({}: Props) {
       height="h-[800px]"
       backgroundColor="bg-gray-1"
     >
-      <div className=" overflow-auto flex-col gap-md">
-        <div className="flex-col w-full h-full gap-md overflow-auto">
-          <ModelSection />
+      <div className=" flex-col gap-md h-[736px] self-stretch overflow-auto">
+        <div className="flex flex-col overflow-auto self-stretch flex-1  gap-md ">
+          <div className="flex-col w-full  gap-md h-[900px] shrink-0">
+            <ModelSection
+              displayData={displayData}
+              select={select}
+              setSelect={setSelect}
+            />
+          </div>
+          <ModelSection
+            displayData={displayData}
+            select={select}
+            setSelect={setSelect}
+          />
         </div>
-        <div className="flex items-center justify-end gap-xs self-stretch">
+        <div className="flex items-center justify-end gap-xs self-stretch shrink-0">
           <Button
             variant="r4-gray-2"
             text="Cancel"

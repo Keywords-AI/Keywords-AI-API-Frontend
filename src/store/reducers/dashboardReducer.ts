@@ -207,7 +207,9 @@ const initState = {
       neutral: 600,
     },
   ],
-  modelDisplayCharts: ["average_latency", "total_cost", "total_tokens"],
+  modelDisplayCharts: JSON.parse(
+    localStorage.getItem("modelDisplayCharts") || "null"
+  ) || ["average_latency", "total_cost", "total_tokens"],
 };
 
 type DashboardState = typeof initState;
@@ -216,15 +218,20 @@ export default function dashboardReducer(
   state = initState,
   action
 ): DashboardState {
+  let newState = null;
   switch (action.type) {
     case REMOVE_FROM_MODELS_DISPLAY_CHARTS:
+      newState = state.modelDisplayCharts.filter(
+        (chart) => chart !== action.payload
+      );
+      localStorage.setItem("modelDisplayCharts", JSON.stringify(newState));
       return {
         ...state,
-        modelDisplayCharts: state.modelDisplayCharts.filter(
-          (chart) => chart !== action.payload
-        ),
+        modelDisplayCharts: newState,
       };
     case SET_MODELS_DISPLAY_CHARTS:
+      newState = action.payload;
+      localStorage.setItem("modelDisplayCharts", JSON.stringify(newState));
       return { ...state, modelDisplayCharts: action.payload };
     case SET_TPS_DATA:
       return { ...state, tpsData: action.payload };

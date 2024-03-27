@@ -275,7 +275,7 @@ export default function MainChart({}: Props) {
           />
         </ChartContainer>
       </div>
-      <div className="flex  py-md px-lg  items-start content-start gap-y-xl self-stretch flex-wrap gap-x-xs">
+      <div className="flex  py-md px-lg  items-start content-start gap-y-xl self-stretch flex-wrap gap-x-xs ">
         {modelDisplayCharts.map((chart, index) => {
           return (
             <ChartDisplay

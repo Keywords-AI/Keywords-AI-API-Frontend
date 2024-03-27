@@ -23,7 +23,7 @@ export const ChartContainer = ({
             {title}
           </p>
           <div className="flex items-center gap-xxs">
-            <p
+            <div
               className={cn(
                 "display-sm text-gray-5 flex flex-row gap-xxsx",
                 small ? "display-xs" : "display-sm"
@@ -31,9 +31,16 @@ export const ChartContainer = ({
             >
               {summary}
               {postUnits && (
-                <p className="text-md-medium text-gray-4 pt-xxs">s</p>
+                <p
+                  className={cn(
+                    " text-gray-4 pt-xxs",
+                    small ? "caption" : "text-md-medium"
+                  )}
+                >
+                  s
+                </p>
               )}
-            </p>
+            </div>
           </div>
         </div>
         {rightContent}
