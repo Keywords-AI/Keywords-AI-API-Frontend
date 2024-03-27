@@ -165,13 +165,13 @@ const MessageLists = () => {
   const dispatch = useTypedDispatch();
   return (
     <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full ">
-      {/* <AutoScrollContainer
+      <AutoScrollContainer
         percentageThreshold={15}
         behavior="auto"
         active={isStreaming || activate}
         className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "
-      > */}
-      <div className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full ">
+      >
+      {/* <div className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "> */}
         {messages.map((message, index) => {
           return (
             <PlaygroundMessage
@@ -218,8 +218,8 @@ const MessageLists = () => {
             />
           </div>
         </Tooltip>
-        {/* </AutoScrollContainer> */}
-      </div>
+        </AutoScrollContainer>
+      {/* </div> */}
       <div className="flex items-center gap-xs">
         <Button
           variant="r4-primary"
