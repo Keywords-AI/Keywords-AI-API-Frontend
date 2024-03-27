@@ -10,7 +10,7 @@ export const ChartContainer = ({
 }) => {
   return (
     <div className={cn("flex-col items-start gap-xs  h-full w-full")}>
-      <div className={cn("flex items-center justify-between self-stretch")}>
+      <div className={cn("flex items-start justify-between self-stretch")}>
         <div
           className={cn(
             "flex-col items-start",
@@ -18,25 +18,29 @@ export const ChartContainer = ({
           )}
         >
           <p
-            className={cn(
-              "text-sm-md text-gray-4",
-              small && "text-[7px] leading-[10px]"
-            )}
+            className={cn(" text-gray-4", small ? "caption-md" : "text-sm-md")}
           >
             {title}
           </p>
           <div className="flex items-center gap-xxs">
-            <p
+            <div
               className={cn(
                 "display-sm text-gray-5 flex flex-row gap-xxsx",
-                small && "text-[13px] leading-[16px]"
+                small ? "display-xs" : "display-sm"
               )}
             >
               {summary}
-              {postUnits && <p className="text-md-medium text-gray-4 pt-xxs">
-                s
-                </p>}
-            </p>
+              {postUnits && (
+                <p
+                  className={cn(
+                    " text-gray-4 pt-xxs",
+                    small ? "caption" : "text-md-medium"
+                  )}
+                >
+                  s
+                </p>
+              )}
+            </div>
           </div>
         </div>
         {rightContent}

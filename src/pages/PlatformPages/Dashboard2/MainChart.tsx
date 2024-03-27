@@ -4,7 +4,6 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
 import { Metrics } from "src/utilities/constants";
 import { defultTheme } from "src/components/styles/color-themes";
-import { removeFromDisplayCharts } from "src/store/actions";
 import { DropDownMenu } from "src/components/Dialogs/DropDownMenu";
 import { Button, Down } from "src/components";
 
@@ -16,13 +15,13 @@ export default function MainChart({}: Props) {
   const displayFilter = useTypedSelector(
     (state) => state.dashboard.displayFilter
   );
-  const displayCharts = useTypedSelector(
-    (state) => state.dashboard.displayCharts
+  const modelDisplayCharts = useTypedSelector(
+    (state) => state.dashboard.modelDisplayCharts
   );
   const displayData = {
     number_of_requests: {
       calculation: "first",
-      name: "Request",
+      name: "Requests",
       value: "number_of_requests",
       focusData: dashboardData.requestCountData,
       colors: {
@@ -243,7 +242,7 @@ export default function MainChart({}: Props) {
     },
     average_completion_tokens: {
       calculation: "first",
-      name: "Average output tokens",
+      name: "Average completion tokens",
       value: "average_completion_tokens",
       focusData: dashboardData.avgCompletionTokenCountData,
       colors: {
@@ -276,8 +275,8 @@ export default function MainChart({}: Props) {
           />
         </ChartContainer>
       </div>
-      <div className="flex  py-md px-lg  items-start content-start gap-y-xl self-stretch flex-wrap gap-x-xs">
-        {displayCharts.map((chart, index) => {
+      <div className="flex  py-md px-lg  items-start content-start gap-y-xl self-stretch flex-wrap gap-x-xs ">
+        {modelDisplayCharts.map((chart, index) => {
           return (
             <ChartDisplay
               key={index}

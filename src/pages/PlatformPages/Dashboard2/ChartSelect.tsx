@@ -1,23 +1,21 @@
-import React, { useState } from "react";
-import { Pencil } from "src/components";
+import React, { useEffect, useState } from "react";
+import { Add, CircleAdd, CircleCheck, Pencil } from "src/components";
 import { Button, DotsButton } from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import { defultTheme } from "src/components/styles/color-themes";
 import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { ChartContainer } from "./ChartContainer";
-import KeywordsLineChart from "src/components/Display/KeywordsLineChart";
-import cn from "src/utilities/classMerge";
-import { setDisplayCharts } from "src/store/actions";
 
+import { setModelsDisplayCharts } from "src/store/actions";
+import _ from "lodash";
+import { ModelSection } from "./ModelSection";
 type Props = {};
 
 export default function ChartSelect({}: Props) {
   const [open, setOpen] = useState(false);
   const dispatch = useTypedDispatch();
   const dashboardData = useTypedSelector((state) => state.dashboard);
-  const displayCharts = useTypedSelector(
-    (state) => state.dashboard.displayCharts
-  );
+  const [select, setSelect] = useState(dashboardData.modelDisplayCharts);
   const displayData = {
     number_of_requests: {
       calculation: "first",
@@ -29,17 +27,14 @@ export default function ChartSelect({}: Props) {
         error_count: defultTheme.extend.colors.error,
       },
     },
-    average_latency: {
-      calculation: "average",
-      name: "Generation time",
-      value: "average_latency",
-      focusData: dashboardData.latencyData,
+
+    error_count: {
+      calculation: "first",
+      name: "Errors",
+      value: "error_count",
+      focusData: dashboardData.errorCountData,
       colors: {
-        average_latency: defultTheme.extend.colors.primary,
-        latency_p_50: defultTheme.extend.colors.gray[3],
-        latency_p_90: defultTheme.extend.colors.gray[3],
-        latency_p_95: defultTheme.extend.colors.gray[3],
-        latency_p_99: defultTheme.extend.colors.gray[3],
+        error_count: defultTheme.extend.colors.error,
       },
     },
     average_ttft: {
@@ -55,32 +50,17 @@ export default function ChartSelect({}: Props) {
         ttft_p_99: defultTheme.extend.colors.gray[3],
       },
     },
-
-    total_prompt_tokens: {
-      calculation: "first",
-      name: "Prompt tokens",
-      value: "total_prompt_tokens",
-      focusData: dashboardData.promptTokenCountData,
+    average_latency: {
+      calculation: "average",
+      name: "Generation time",
+      value: "average_latency",
+      focusData: dashboardData.latencyData,
       colors: {
-        total_prompt_tokens: defultTheme.extend.colors.primary,
-      },
-    },
-    total_completion_tokens: {
-      calculation: "first",
-      name: "Output tokens",
-      value: "total_completion_tokens",
-      focusData: dashboardData.completionTokenCountData,
-      colors: {
-        total_completion_tokens: defultTheme.extend.colors.primary,
-      },
-    },
-    total_tokens: {
-      calculation: "first",
-      name: "All tokens",
-      value: "total_tokens",
-      focusData: dashboardData.tokenCountData, 
-      colors: {
-        total_tokens: defultTheme.extend.colors.primary,
+        average_latency: defultTheme.extend.colors.primary,
+        latency_p_50: defultTheme.extend.colors.gray[3],
+        latency_p_90: defultTheme.extend.colors.gray[3],
+        latency_p_95: defultTheme.extend.colors.gray[3],
+        latency_p_99: defultTheme.extend.colors.gray[3],
       },
     },
     average_tps: {
@@ -96,6 +76,34 @@ export default function ChartSelect({}: Props) {
         tps_p_99: defultTheme.extend.colors.gray[3],
       },
     },
+    total_prompt_tokens: {
+      calculation: "first",
+      name: "Prompt tokens",
+      value: "total_prompt_tokens",
+      focusData: dashboardData.promptTokenCountData,
+      colors: {
+        total_prompt_tokens: defultTheme.extend.colors.primary,
+      },
+    },
+    total_completion_tokens: {
+      calculation: "first",
+      name: "Completion tokens",
+      value: "total_completion_tokens",
+      focusData: dashboardData.completionTokenCountData,
+      colors: {
+        total_completion_tokens: defultTheme.extend.colors.primary,
+      },
+    },
+    total_tokens: {
+      calculation: "first",
+      name: "All tokens",
+      value: "total_tokens",
+      focusData: dashboardData.tokenCountData,
+      colors: {
+        total_tokens: defultTheme.extend.colors.primary,
+      },
+    },
+
     tps_p_50: {
       calculation: "first",
       name: "Speed p50",
@@ -141,15 +149,7 @@ export default function ChartSelect({}: Props) {
         total_cost: defultTheme.extend.colors.primary,
       },
     },
-    error_count: {
-      calculation: "first",
-      name: "Errors",
-      value: "error_count",
-      focusData: dashboardData.errorCountData,
-      colors: {
-        error_count: defultTheme.extend.colors.error,
-      },
-    },
+
     latency_p_50: {
       calculation: "first",
       name: "Generation time p50",
@@ -222,110 +222,84 @@ export default function ChartSelect({}: Props) {
         ttft_p_99: defultTheme.extend.colors.primary,
       },
     },
-    average_cost: {
-      calculation: "first",
-      name: "Average cost",
-      value: "average_cost",
-      focusData: dashboardData.avgCostData,
-      colors: {
-        average_cost: defultTheme.extend.colors.primary,
-      },
-    },
-    average_tokens: {
-      calculation: "first",
-      name: "Average tokens",
-      value: "average_tokens",
-      focusData: dashboardData.avgTokenCountData,
-      colors: {
-        average_tokens: defultTheme.extend.colors.primary,
-      },
-    },
-    average_completion_tokens: {
-      calculation: "first",
-      name: "Average output tokens",
-      value: "average_completion_tokens",
-      focusData: dashboardData.avgCompletionTokenCountData,
-      colors: {
-        average_completion_tokens: defultTheme.extend.colors.primary,
-      },
-    },
-    average_prompt_tokens: {
-      calculation: "first",
-      name: "Average prompt tokens",
-      value: "average_prompt_tokens",
-      focusData: dashboardData.avgPromptTokenCountData,
-      colors: {
-        average_prompt_tokens: defultTheme.extend.colors.primary,
-      },
-    },
+    // average_cost: {
+    //   calculation: "first",
+    //   name: "Average cost",
+    //   value: "average_cost",
+    //   focusData: dashboardData.avgCostData,
+    //   colors: {
+    //     average_cost: defultTheme.extend.colors.primary,
+    //   },
+    // },
+    // average_tokens: {
+    //   calculation: "first",
+    //   name: "Average tokens",
+    //   value: "average_tokens",
+    //   focusData: dashboardData.avgTokenCountData,
+    //   colors: {
+    //     average_tokens: defultTheme.extend.colors.primary,
+    //   },
+    // },
+    // average_completion_tokens: {
+    //   calculation: "first",
+    //   name: "Average completion tokens",
+    //   value: "average_completion_tokens",
+    //   focusData: dashboardData.avgCompletionTokenCountData,
+    //   colors: {
+    //     average_completion_tokens: defultTheme.extend.colors.primary,
+    //   },
+    // },
+    // average_prompt_tokens: {
+    //   calculation: "first",
+    //   name: "Average prompt tokens",
+    //   value: "average_prompt_tokens",
+    //   focusData: dashboardData.avgPromptTokenCountData,
+    //   colors: {
+    //     average_prompt_tokens: defultTheme.extend.colors.primary,
+    //   },
+    // },
   };
-  console.log("heyeudfebf",dashboardData.promptTokenCountData);
-  const chartOptions = Object.values(displayData).filter(
-    (item) =>
-      !displayCharts.includes(item.value) &&
-      !item.value.endsWith("p_50") &&
-      !item.value.endsWith("p_90") &&
-      !item.value.endsWith("p_95") &&
-      !item.value.endsWith("p_99") &&
-      item.value !== "number_of_requests"
-  );
-  const [select, setSelect] = useState<string[]>([]);
+
   const handleSubmit = () => {
-    dispatch(setDisplayCharts([...displayCharts, ...select]));
+    dispatch(setModelsDisplayCharts([...select]));
     setOpen(false);
   };
-  
+
   return (
     <Modal
       open={open}
       setOpen={(o) => {
         setOpen(o);
-        setSelect([]);
       }}
-      title="Add graphs"
+      title=""
       trigger={<DotsButton icon={Pencil} />}
-      width="w-[calc(100vw-60px)]"
-      height="h-[calc(100vh-60px)]"
+      width="w-[930px]"
+      height="h-[800px]"
       backgroundColor="bg-gray-1"
     >
-      <div className="flex w-full h-full justify-center items-start content-start gap-[20px] flex-wrap overflow-auto">
-        {chartOptions.map((chart, index) => {
-          return (
-            <div
-              key={index}
-              className={cn(
-                "flex-col w-1/4 h-1/4 p-xxs items-start gap-[6px] hover:bg-gray-2 relative",
-                select.includes(chart.value) && "bg-gray-2"
-              )}
-            >
-              <div
-                className="absolute inset-0 bg-opacity-50 z-[2] cursor-pointer"
-                onClick={() =>
-                  setSelect((p) => [...new Set([...p, chart.value])])
-                }
-              ></div>
-              <ChartContainer
-                small
-                title={chart.name}
-                summary={dashboardData.summary[chart.value]?.toFixed(2)}
-              >
-                <KeywordsLineChart
-                  data={displayData[chart.value].focusData}
-                  colors={displayData[chart.value].colors}
-                  disableTooltip
-                />
-              </ChartContainer>
-            </div>
-          );
-        })}
-      </div>
-      <div className="flex items-center justify-between gap-xs">
-        <Button
-          variant="r4-gray-2"
-          text="Cancel"
-          onClick={() => setOpen(false)}
-        />
-        <Button variant="r4-primary" text="Save" onClick={handleSubmit} />
+      <div className=" flex-col gap-md h-[736px] self-stretch overflow-auto">
+        <div className="flex flex-col overflow-auto w-[856px] flex-1  gap-md ">
+          {/* <div className="flex-col w-full  gap-md h-[900px] shrink-0">
+            <ModelSection
+              displayData={displayData}
+              select={select}
+              setSelect={setSelect}
+            />
+          </div> */}
+          <ModelSection
+            displayData={displayData}
+            select={select}
+            setSelect={setSelect}
+          />
+        </div>
+        <div className="flex items-center justify-end gap-xs self-stretch shrink-0">
+          <Button
+            variant="r4-gray-2"
+            text="Cancel"
+            onClick={() => setOpen(false)}
+          />
+          <Button variant="r4-primary" text="Save" onClick={handleSubmit} />
+        </div>
       </div>
     </Modal>
   );
