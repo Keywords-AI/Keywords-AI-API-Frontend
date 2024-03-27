@@ -143,7 +143,9 @@ const CreateFormNotConnected = React.forwardRef(
         createApiKey!(data);
         return;
       }
-
+      if (!data.spending_limt) {
+        data.spending_limit = 999999;
+      }
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
         data.rate_limit = 50000;
@@ -247,7 +249,7 @@ const CreateFormNotConnected = React.forwardRef(
                         width={"w-full"}
                         {...register("spending_limit")}
                         // onKeyDown={handleEnter}
-                        placeholder={"200 by default"}
+                        placeholder={"None"}
                         type="number"
                         dollarSign
                       />

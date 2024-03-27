@@ -86,7 +86,7 @@ const LogIn = () => {
               title="Email"
               type="email"
               required
-              placeholder={DEMO_ENV ? "" : "Put your email here"}
+              placeholder={DEMO_ENV ? "" : "Enter your email address"}
               {...register("email")}
               disabled={DEMO_ENV}
             />
