@@ -86,13 +86,7 @@ export function PlaygroundMessage({
   }, [isReset]);
   const isUser = role === "user" || role === "system";
   const isAssistant = role === "assistant";
-  useEffect(() => {
-    if (+id == messageLength - 1) {
-      setIsFocused(true);
-    } else {
-      setIsFocused(false);
-    }
-  }, [messageLength]);
+
   const dispatch = useTypedDispatch();
   const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
   const usermessageBoxRef = useRef(null);
@@ -447,14 +441,14 @@ export function StreamingMessage() {
                   >
                     {streamingState.streamingText &&
                     streamingState.streamingText != "\u200B" ? (
-                      <textarea
-                        ref={textAreaRefs.current[index]}
+                      <div
+                        // ref={textAreaRefs.current[index]}
                         className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
-                        disabled
-                        value={streamingState.streamingText}
+                        // disabled
+                        // value={streamingState.streamingText}
                       >
-                        {/* {streamingState.streamingText} */}
-                      </textarea>
+                        {streamingState.streamingText}
+                      </div>
                     ) : streamingState.error ? (
                       <span className="text-sm-regular text-gray-4">
                         {"Generating..."}

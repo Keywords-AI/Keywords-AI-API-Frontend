@@ -119,6 +119,9 @@ export function TopBar() {
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         /> */}
         <ButtonGroupSmall
+          defaultActive={
+            playGroundState.modelOptions.models.includes("none") ? 0 : 1
+          }
           buttons={[
             {
               icon: Dice1,
