@@ -236,6 +236,7 @@ export default function EvalPane({}) {
           );
         })}
       </div>
+      <Divider />
       <div className="flex-col gap-xxxs py-sm px-lg items-start self-stretch">
         <div className="flex justify-between items-center self-stretch">
           <p className="text-sm-md text-gray-5">Topics</p>
@@ -253,6 +254,7 @@ export default function EvalPane({}) {
                   backgroundColorClasses[index % backgroundColorClasses.length]
                 }
               />
+              
             ))}
         </div>
       </div>
