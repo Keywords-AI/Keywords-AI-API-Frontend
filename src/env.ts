@@ -2,13 +2,11 @@ let envVars;
 
 const loadModule = async (modulePath) => {
   try {
-    /* @vite-ignore */
-    return await import(modulePath);
+    return await import(/* @vite-ignore */ modulePath);
   } catch (e) {
     console.log("Failed to load module", e);
     return {
       FETCH_ENDPOINT: "https://api-test.keywordsai.co/",
-
     };
   }
 };
