@@ -1,5 +1,5 @@
 import { CopyButton } from "src/components/Buttons";
-import { CheckAll, Info } from "src/components/Icons";
+import { Check, CheckAll, Info } from "src/components/Icons";
 import { ModelTag, StatusTag, Tag } from "src/components/Misc";
 import Tooltip from "src/components/Misc/Tooltip";
 import { Divider } from "src/components/Sections";
@@ -202,7 +202,7 @@ export const MetricPane = ({}) => {
     isAdmin && {
       key: "Organization",
       value: (
-        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
+        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5 w-full whitespace-nowrap">
           {logItem?.organization || "N/A"}
         </span>
       ),
@@ -210,7 +210,7 @@ export const MetricPane = ({}) => {
     isAdmin && {
       key: "User",
       value: (
-        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
+        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5 w-full whitespace-nowrap">
           {logItem?.organization || "N/A"}
         </span>
       ),
@@ -250,6 +250,16 @@ export const MetricPane = ({}) => {
             {"No"}
           </span>
         ),
+    },
+    logItem?.stream != undefined && {
+      key: "Streamed",
+      value: logItem?.stream ? (
+        <Check fill="fill-success" />
+      ) : (
+        <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
+          {"No"}
+        </span>
+      ),
     },
     {
       key: "Prompt tokens",

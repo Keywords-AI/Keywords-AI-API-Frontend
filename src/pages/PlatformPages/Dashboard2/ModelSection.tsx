@@ -24,7 +24,7 @@ export const ModelSection = ({ displayData, select, setSelect }) => {
       <div className="flex items-center gap-xxs self-stretch display-xs text-gray-5">
         Models
       </div>
-      <div className="flex w-full h-full justify-center items-start content-start gap-xxs  flex-wrap ">
+      <div className="flex w-full h-full justify-start items-start content-start gap-xxs  flex-wrap ">
         {chartOptions.map((chart: any, index) => {
           let noDigits = [
             "total_tokens",
@@ -74,9 +74,10 @@ export const ModelSection = ({ displayData, select, setSelect }) => {
                 small
                 title={chart.name}
                 summary={
-                  noDigits
-                    ? (dashboardData.summary[chart.value] || 0).toLocaleString()
-                    : (dashboardData.summary[chart.value] || 0).toFixed(2)
+                  (hasPreUnits ? "$" : "") +
+                  (noDigits
+                    ? (dashboardData.summary[chart] || 0).toLocaleString()
+                    : (dashboardData.summary[chart] || 0).toFixed(2))
                 }
                 rightContent={
                   select.includes(chart.value) ? <CircleCheck /> : <CircleAdd />

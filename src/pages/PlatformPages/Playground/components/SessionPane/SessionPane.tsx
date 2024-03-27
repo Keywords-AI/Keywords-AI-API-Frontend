@@ -62,7 +62,8 @@ export const SessionPane = forwardRef(
         value: model.model_name,
       };
     });
-    const initModels = localStorage.getItem("playgroundModels")?.split(",") ?? [];
+    const initModels =
+      localStorage.getItem("playgroundModels")?.split(",") ?? [];
     const modelA = localStorage.getItem("playgroundModelA") ?? "gpt-3.5-turbo";
 
     let [selectChoices, setSelectChoices] = React.useState<any[]>([
@@ -137,9 +138,7 @@ export const SessionPane = forwardRef(
           <Controller
             control={control}
             name="modela"
-            defaultValue={
-              modelA
-            }
+            defaultValue={modelA}
             render={({ field: { value, onChange } }) => {
               return (
                 <Combobox
@@ -149,9 +148,7 @@ export const SessionPane = forwardRef(
                   height="h-[50vh]"
                   onChange={onChange}
                   items={selectChoices}
-                  defaultValue={
-                    modelA
-                  }
+                  defaultValue={modelA}
                 />
               );
             }}
@@ -173,13 +170,11 @@ export const SessionPane = forwardRef(
                 ?.value
             }
           /> */}
-          {!isSingleChannel && (
+          {ModelOptions.models[1] != "none" && (
             <Controller
               control={control}
               name="modelb"
-              defaultValue={
-                initModels.length > 0? initModels[0]:"gpt-4"
-              }
+              defaultValue={initModels.length > 0 ? initModels[0] : "gpt-4"}
               render={({ field: { value, onChange } }) => {
                 return (
                   <Combobox
@@ -190,7 +185,7 @@ export const SessionPane = forwardRef(
                     onChange={onChange}
                     items={selectChoices}
                     defaultValue={
-                      initModels.length > 1? initModels[1]:"gpt-4"
+                      initModels.length > 1 ? initModels[1] : "gpt-4"
                     }
                   />
                 );
