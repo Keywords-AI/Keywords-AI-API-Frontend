@@ -149,11 +149,11 @@ export const setModelOptions = (modelOptions: any) => {
   const models = modelOptions.models;
   localStorage.setItem("playgroundModels", models.join(","));
   setModels(models);
-  localStorage.setItem("playgroundTemperature", modelOptions.temperature.toString());
-  localStorage.setItem("playgroundMaximumLength", modelOptions.maximumLength.toString());
-  localStorage.setItem("playgroundTopP", modelOptions.topP.toString());
-  localStorage.setItem("playgroundFrequencyPenalty", modelOptions.frequencyPenalty.toString());
-  localStorage.setItem("playgroundPresencePenalty", modelOptions.presencePenalty.toString());
+  localStorage.setItem("playgroundTemperature", modelOptions.temperature?.toString() ?? 1);
+  localStorage.setItem("playgroundMaximumLength", modelOptions.maximumLength?.toString() ?? 256);
+  localStorage.setItem("playgroundTopP", modelOptions.topP?.toString() ?? 1);
+  localStorage.setItem("playgroundFrequencyPenalty", modelOptions.frequencyPenalty?.toString() ?? 0);
+  localStorage.setItem("playgroundPresencePenalty", modelOptions.presencePenalty?.toString() ?? 0);
   return {
     type: SET_MODEL_OPTIONS,
     payload: modelOptions,

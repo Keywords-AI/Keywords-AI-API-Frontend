@@ -202,7 +202,7 @@ export const MetricPane = ({}) => {
     isAdmin && {
       key: "Organization",
       value: (
-        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5 w-full whitespace-nowrap">
+        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5  whitespace-nowrap">
           {logItem?.organization || "N/A"}
         </span>
       ),
@@ -210,8 +210,8 @@ export const MetricPane = ({}) => {
     isAdmin && {
       key: "User",
       value: (
-        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5 w-full whitespace-nowrap">
-          {logItem?.organization || "N/A"}
+        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5  whitespace-nowrap">
+          {logItem?.user || "N/A"}
         </span>
       ),
     },

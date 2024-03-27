@@ -261,7 +261,7 @@ export const SidePanel = ({}: SidePanelProps) => {
     <Tabs
       rootClassName={cn(
         "flex-col items-start self-stretch shadow-border-l flex-shrink-0 overflow-y-auto h-full",
-        "shadow-gray-2 bg-gray-1 ",
+        "shadow-gray-3 bg-gray-1 ",
         "w-[360px]"
       )}
       headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1  h-[44px]"
