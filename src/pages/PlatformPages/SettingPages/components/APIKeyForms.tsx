@@ -143,8 +143,8 @@ const CreateFormNotConnected = React.forwardRef(
         createApiKey!(data);
         return;
       }
-      if (!data.spending_limt) {
-        data.spending_limit = 999999;
+      if (data.spending_limt !== null && data.spending_limit !== undefined) {
+        data.spending_limit = -1;
       }
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
@@ -208,7 +208,7 @@ const CreateFormNotConnected = React.forwardRef(
                 backgroundColor="bg-transparent"
               />
             </div>
-            <Accordion
+            {/* <Accordion
               className={
                 "flex-col justify-center items-start gap-xs self-stretch"
               }
@@ -249,7 +249,7 @@ const CreateFormNotConnected = React.forwardRef(
                         width={"w-full"}
                         {...register("spending_limit")}
                         // onKeyDown={handleEnter}
-                        placeholder={"None"}
+                        placeholder={""}
                         type="number"
                         dollarSign
                       />
@@ -274,7 +274,7 @@ const CreateFormNotConnected = React.forwardRef(
                 ),
                 contentClassName: "flex-col justify-center gap-md self-stretch",
               }}
-            />
+            /> */}
             <div className="flex-col justify-center items-start gap-xs self-stretch">
               {/* <Button
                 icon={showMore ? Up : Down}
