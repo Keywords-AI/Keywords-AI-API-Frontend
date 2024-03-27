@@ -108,7 +108,6 @@ export const SessionPane = forwardRef(
 
     useEffect(() => {
       watch((value, { name, type }) => {
-        console.log("modelA", modelA);
         if (!value || value.length === 0 || Object.keys(value).length === 0)
           return;
         const newModelOptionsState = {

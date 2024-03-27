@@ -86,13 +86,7 @@ export function PlaygroundMessage({
   }, [isReset]);
   const isUser = role === "user" || role === "system";
   const isAssistant = role === "assistant";
-  useEffect(() => {
-    if (+id == messageLength - 1) {
-      setIsFocused(true);
-    } else {
-      setIsFocused(false);
-    }
-  }, [messageLength]);
+
   const dispatch = useTypedDispatch();
   const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
   const usermessageBoxRef = useRef(null);
