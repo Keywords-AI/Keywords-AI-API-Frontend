@@ -441,14 +441,14 @@ export function StreamingMessage() {
                   >
                     {streamingState.streamingText &&
                     streamingState.streamingText != "\u200B" ? (
-                      <textarea
-                        ref={textAreaRefs.current[index]}
+                      <div
+                        // ref={textAreaRefs.current[index]}
                         className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
-                        disabled
-                        value={streamingState.streamingText}
+                        // disabled
+                        // value={streamingState.streamingText}
                       >
-                        {/* {streamingState.streamingText} */}
-                      </textarea>
+                        {streamingState.streamingText}
+                      </div>
                     ) : streamingState.error ? (
                       <span className="text-sm-regular text-gray-4">
                         {"Generating..."}
