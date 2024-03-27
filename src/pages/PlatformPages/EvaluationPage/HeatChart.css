@@ -1,0 +1,11 @@
+.heatmap-cell {
+transition: all 0.3s ease; /* Smooth transition for the effect */
+border-color: blueviolet;
+}
+
+.heatmap-cell:hover {
+stroke: #000; /* Change to your preferred color */
+stroke-width: 2; /* Adjust thickness as desired */
+cursor: pointer; /* Change the cursor to indicate interactivity */
+}
+

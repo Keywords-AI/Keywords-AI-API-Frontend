@@ -54,6 +54,9 @@ import posthog from "posthog-js";
 const UsersPage = lazy(() =>
   import("./pages/PlatformPages/UserPage/UsersPage")
 );
+const EvaluationPage = lazy(() =>
+  import("./pages/PlatformPages/EvaluationPage/EvaluationPage")
+);
 import DemoWelcome from "./pages/MISC/DemoWelcome";
 import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
@@ -162,6 +165,7 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
           path: REDIRECT_URI,
           element: <Navigate to={`${REDIRECT_URI}/dashboard`} />,
         },
+        { path: "evaluation", element: <EvaluationPage /> },
       ],
     },
     {
