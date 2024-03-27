@@ -105,7 +105,6 @@ export function PlaygroundMessage({
   }, [focusIndex]);
   const handleSend = async (event) => {
     event.stopPropagation();
-
     setIsFocused(false);
     dispatch(streamPlaygroundResponse());
   };
@@ -122,6 +121,9 @@ export function PlaygroundMessage({
   };
   const handleChange = (value) => {
     setMessageValue(value); // This sets what is displayed in the input box
+    if (role === "system" && index === 0) {
+      localStorage.setItem("playgroundPrompt", value);
+    }
     dispatch(
       setMessageByIndex({
         index: id,

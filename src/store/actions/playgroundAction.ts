@@ -19,6 +19,7 @@ import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
 import { set } from "date-fns";
+import { ChatMessage } from "src/types";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -192,15 +193,18 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const messages = playground.messages;
-    const lastMessage = messages.slice(-1)[0];
+    const messages: PlaygroundMessage[] = playground.messages;
     if (
-      lastMessage.role == "user" &&
-      lastMessage.user_content.replace(/\s/g, "") == ""
+      messages.some((message) => message?.user_content?.replace(/\s/g, "") === "")
     ) {
+      dispatch(
+      dispatchNotification({
+        title: "None of the prompt messages can be empty",
+        type: "error",
+      })
+      );
       return;
     }
-    const systemPrompt = playground.prompt;
     const modelOptions = playground.modelOptions;
 
     const additonalParms = {};
