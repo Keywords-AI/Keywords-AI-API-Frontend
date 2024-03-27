@@ -1,15 +1,18 @@
 let envVars;
 
-try {
-  const module = await import("./branch_env");
-  envVars = module.envVars;
-} catch (err) {
-  console.error("Failed to load module", err);
-  // Handle error or set default values for envVars
-  envVars = {
-    /* default values */
-  };
-}
+const loadModule = async (modulePath) => {
+  try {
+    /* @vite-ignore */
+    return await import(modulePath);
+  } catch (e) {
+    console.log("Failed to load module", e);
+    return {
+      FETCH_ENDPOINT: "https://api-test.keywordsai.co/",
+
+    };
+  }
+};
+envVars = (await loadModule("./branch_env"))?.envVars;
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 // const envVars = undefined;
 export const FETCH_ENDPOINT =
