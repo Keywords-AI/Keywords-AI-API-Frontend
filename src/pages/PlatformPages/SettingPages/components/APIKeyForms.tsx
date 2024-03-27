@@ -5,6 +5,7 @@ import {
   TextInput,
   CopyInput,
   CheckboxInput,
+  SelectInputSmall,
 } from "src/components/Inputs";
 import { Button, IconButton, SwitchButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
@@ -192,7 +193,7 @@ const CreateFormNotConnected = React.forwardRef(
                 }
                 choices={expiryOptions}
               /> */}
-              <SelectInput
+              <SelectInputSmall
                 title={"Environment"}
                 optionsWidth={"w-[120px]"}
                 {...register("is_test")}
@@ -226,7 +227,7 @@ const CreateFormNotConnected = React.forwardRef(
                         type="number"
                         pseudoElementClass="special-input"
                       />
-                      <SelectInput
+                      <SelectInputSmall
                         title={"Unit"}
                         optionsWidth={"w-[120px]"}
                         {...register("unit", {
@@ -251,7 +252,7 @@ const CreateFormNotConnected = React.forwardRef(
                         type="number"
                         dollarSign
                       />
-                      <SelectInput
+                      <SelectInputSmall
                         title={"Expiry"}
                         optionsWidth={"w-[120px]"}
                         {...register("expiry_date")}
@@ -583,7 +584,7 @@ const EditFormNotConnected = ({
                     defaultValue={editingKey?.rate_limit}
                     pseudoElementClass="special-input"
                   />
-                  <SelectInput
+                  <SelectInputSmall
                     title={"Unit"}
                     optionsWidth={"w-[120px]"}
                     {...register("unit", {
@@ -609,7 +610,7 @@ const EditFormNotConnected = ({
                     type="number"
                     dollarSign
                   />
-                  <SelectInput
+                  <SelectInputSmall
                     title={"Expiry"}
                     optionsWidth={"w-[120px]"}
                     {...register("expiry_date")}
