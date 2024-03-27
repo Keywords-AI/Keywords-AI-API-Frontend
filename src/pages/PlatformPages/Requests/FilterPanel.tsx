@@ -79,7 +79,7 @@ export function FilterPanel() {
         <div>
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="end"
             content={
               <>

@@ -36,7 +36,7 @@ export default function SearchLog({ handleSearch, handleReset }) {
     <div>
       <Tooltip
         side="bottom"
-        sideOffset={8}
+        sideOffset={4}
         align="center"
         content={
           <>

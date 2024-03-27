@@ -160,7 +160,7 @@ export function TopBar() {
         <HorizontalDivier />
         <Tooltip
           side="bottom"
-          sideOffset={8}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
