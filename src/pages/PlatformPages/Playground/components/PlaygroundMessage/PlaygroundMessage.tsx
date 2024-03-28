@@ -444,7 +444,7 @@ export function StreamingMessage() {
                     streamingState.streamingText != "\u200B" ? (
                       <div
                         // ref={textAreaRefs.current[index]}
-                        className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
+                        className="flex self-stretch max-w-full  text-sm-regular text-gray-5 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
                         // disabled
                         // value={streamingState.streamingText}
                       >

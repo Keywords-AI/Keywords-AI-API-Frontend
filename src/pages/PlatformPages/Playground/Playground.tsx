@@ -188,7 +188,7 @@ const MessageLists = () => {
           );
         })}
         <StreamingMessage />
-        <Tooltip
+        {!isStreaming && <Tooltip
           side="bottom"
           sideOffset={4}
           align="start"
@@ -221,7 +221,7 @@ const MessageLists = () => {
               }}
             />
           </div>
-        </Tooltip>
+        </Tooltip>}
       </AutoScrollContainer>
       {/* </div> */}
       <div className="flex items-center gap-xs">
