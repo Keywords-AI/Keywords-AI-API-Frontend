@@ -214,7 +214,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                   <Tooltip
                     side="bottom"
                     sideOffset={4}
-                    align="start"
+                    align="center"
                     delayDuration={1}
                     content={
                       <>

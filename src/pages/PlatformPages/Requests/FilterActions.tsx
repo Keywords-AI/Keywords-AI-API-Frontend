@@ -164,7 +164,7 @@ export function FilterActions({
       <Tooltip
         side="bottom"
         sideOffset={4}
-        align="start"
+        align="center"
         content={
           <>
             <p className="caption text-gray-4">Show filter options</p>
