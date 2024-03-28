@@ -94,7 +94,7 @@ const LogIn = () => {
               title="Password"
               type="password"
               required
-              placeholder=""
+              placeholder="Enter your password"
               {...register("password")}
               disabled={DEMO_ENV}
             />
@@ -131,6 +131,5 @@ const LogIn = () => {
     </div>
   );
 };
-
 
 export default LogIn;

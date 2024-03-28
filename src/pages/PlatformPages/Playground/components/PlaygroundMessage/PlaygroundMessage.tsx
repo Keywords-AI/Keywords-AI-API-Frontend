@@ -277,7 +277,8 @@ export function PlaygroundMessage({
                           handleSend(e);
                         }
                       }}
-                      onFoucs={(e) =>
+                      onFoucs={(e) => {
+                        console.log("focused", index);
                         setResponseValue((prev) => {
                           const updatedArray = [...prev];
                           if (index === 0) {
@@ -286,8 +287,8 @@ export function PlaygroundMessage({
                             updatedArray[1] = e.target.value;
                           }
                           return updatedArray;
-                        })
-                      }
+                        });
+                      }}
                       onBlur={() => {
                         handleUpdateResponse(
                           id,

@@ -1,18 +1,20 @@
 import React from "react";
-import { Divider, Info } from "src/components";
+import { Button, Divider, Info, Right } from "src/components";
 import { Evaluation } from "./Evaluation";
-import { useTypedSelector } from "src/store/store";
+import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import { SentimentTag, Tag } from "src/components/Misc";
 import { Toolbar } from "@radix-ui/react-toolbar";
 import Tooltip from "src/components/Misc/Tooltip";
 import { useDispatch } from "react-redux";
-import { dispatchNotification } from "src/store/actions";
+import { dispatchNotification, runEvaluation } from "src/store/actions";
 import {
   backgroundColorClasses,
   textColorClasses,
 } from "src/utilities/constants";
 
 export default function EvalPane({}) {
+  const dispatch = useTypedDispatch();
+  const [running, setRunning] = React.useState(new Set<string>());
   const logItem = useTypedSelector((state) =>
     state.requestLogs.logs.find(
       (log) => log.id === state.requestLogs?.selectedRequest?.id
@@ -84,7 +86,15 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          <Button
+            variant="text"
+            text={running.has("context_precision") ? "Running" : "Run"}
+            textColor="text-primary"
+            textHoverColor="text-primary-2"
+            textClickedColor="text-primary-2"
+            onClick={(e) => handleRunEvaluation("context_precision", e)}
+          />
         ),
     },
     {
@@ -100,7 +110,15 @@ export default function EvalPane({}) {
             backgroundColor={faithfulness >= 0.85 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          <Button
+            variant="text"
+            text={running.has("faithfulness") ? "Running" : "Run"}
+            textColor="text-primary"
+            textHoverColor="text-primary-2"
+            textClickedColor="text-primary-2"
+            onClick={(e) => handleRunEvaluation("faithfulness", e)}
+          />
         ),
     },
 
@@ -129,7 +147,15 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          <Button
+            variant="text"
+            text={running.has("answer_relevance") ? "Running" : "Run"}
+            textColor="text-primary"
+            textHoverColor="text-primary-2"
+            textClickedColor="text-primary-2"
+            onClick={(e) => handleRunEvaluation("answer_relevance", e)}
+          />
         ),
     },
     {
@@ -145,7 +171,15 @@ export default function EvalPane({}) {
             backgroundColor={readability >= 0 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          <Button
+            variant="text"
+            text={running.has("readability") ? "Running" : "Run"}
+            textColor="text-primary"
+            textHoverColor="text-primary-2"
+            textClickedColor="text-primary-2"
+            onClick={(e) => handleRunEvaluation("readability", e)}
+          />
         ),
     },
     {
@@ -154,7 +188,15 @@ export default function EvalPane({}) {
         sentiment != null || sentiment != undefined ? (
           <SentimentTag sentiment_score={sentiment} />
         ) : (
-          <p className="text-sm-regular text-gray-4">N/A</p>
+          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          <Button
+            variant="text"
+            text={running.has("sentiment_analysis") ? "Running" : "Run"}
+            textColor="text-primary"
+            textHoverColor="text-primary-2"
+            textClickedColor="text-primary-2"
+            onClick={(e) => handleRunEvaluation("sentiment_analysis", e)}
+          />
         ),
     },
     // {
@@ -185,8 +227,13 @@ export default function EvalPane({}) {
     //     ),
     // },
   ];
-  
-  const dispatch = useDispatch();
+  const handleRunEvaluation = (evalType: string, e: any) => {
+    e.stopPropagation();
+    if (running.has(evalType)) return;
+    setRunning((prev) => new Set(prev.add(evalType)));
+    dispatch(runEvaluation(evalType));
+  };
+
   const onSubmit = () => {
     dispatch(
       dispatchNotification({ title: "Copied to clickboard", type: "success" })
@@ -237,28 +284,38 @@ export default function EvalPane({}) {
         })}
       </div>
       <Divider />
-      <div className="flex-col gap-xxxs py-sm px-lg items-start self-stretch">
-        <div className="flex justify-between items-center self-stretch">
-          <p className="text-sm-md text-gray-5">Topics</p>
-        </div>
-        <div className="flex items-start content-start gap-xxxs w-full flex-wrap">
-          {topics &&
-            topics.length > 0 &&
-            topics.map((topic, index) => (
-              <Tag
-                key={index}
-                border=""
-                text={topic}
-                textColor={textColorClasses[index % textColorClasses.length]}
-                backgroundColor={
-                  backgroundColorClasses[index % backgroundColorClasses.length]
-                }
-              />
-              
-            ))}
-        </div>
-      </div>
-      <Divider />
+      {topics && topics.length > 0 && (
+        <>
+          <div className="flex-col gap-xxxs py-sm px-lg items-start self-stretch">
+            <div className="flex justify-between items-center self-stretch">
+              <p className="text-sm-md text-gray-5">Topics</p>
+            </div>
+            <div className="flex items-center content-start gap-xxxs w-full flex-wrap">
+              {topics &&
+                topics.length > 0 &&
+                topics.map((topic, index) => (
+                  <>
+                    <Tag
+                      key={index}
+                      border=""
+                      text={topic}
+                      textColor={
+                        textColorClasses[index % textColorClasses.length]
+                      }
+                      backgroundColor={
+                        backgroundColorClasses[
+                          index % backgroundColorClasses.length
+                        ]
+                      }
+                    />
+                    {index !== topics.length - 1 && <Right size="xxs" />}
+                  </>
+                ))}
+            </div>
+          </div>
+          <Divider />
+        </>
+      )}
       <div className="flexcol py-sm px-lg items-start gap-xxxs self-stretch">
         <div className="flex h-[24px] justify-between items-center self-stretch">
           <div className="text-sm-md text-gray-5">{"Eval cost"}</div>

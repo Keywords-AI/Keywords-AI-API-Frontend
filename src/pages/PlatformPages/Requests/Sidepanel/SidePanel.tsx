@@ -78,23 +78,20 @@ export const SidePanel = ({}: SidePanelProps) => {
           ),
         }
       : null,
-    logItem?.evaluations &&
-    typeof logItem?.evaluations === "object" &&
-    Object.keys(logItem?.evaluations).length !== 0
-      ? {
-          value: "Eval",
-          buttonVariant: "text" as variantType,
-          content: (
-            <div
-              className="flex-col items-start self-stretch overflow-auto"
-              aria-label="frame 1969"
-            >
-              <div ref={logRef}></div>
-              <EvalPane />
-            </div>
-          ),
-        }
-      : null,
+
+    {
+      value: "Eval",
+      buttonVariant: "text" as variantType,
+      content: (
+        <div
+          className="flex-col items-start self-stretch overflow-auto"
+          aria-label="frame 1969"
+        >
+          <div ref={logRef}></div>
+          <EvalPane />
+        </div>
+      ),
+    },
   ].filter(Boolean);
 
   const [tab, setTab] = useState(pages[0]!.value);
@@ -114,13 +111,13 @@ export const SidePanel = ({}: SidePanelProps) => {
     if (logItem?.prompt_messages?.length === 0) {
       if (tab === "Log") setTab("Metadata");
     }
-    if (
-      logItem?.evaluations &&
-      typeof logItem?.evaluations === "object" &&
-      Object.keys(logItem?.evaluations).length === 0
-    ) {
-      if (tab === "Eval") setTab("Metadata");
-    }
+    // if (
+    //   logItem?.evaluations &&
+    //   typeof logItem?.evaluations === "object" &&
+    //   Object.keys(logItem?.evaluations).length === 0
+    // ) {
+    //   if (tab === "Eval") setTab("Metadata");
+    // }
 
     if (tab === "Log") enableScope("request_sidepanel_log");
     if (tab !== "Log") disableScope("request_sidepanel_log");

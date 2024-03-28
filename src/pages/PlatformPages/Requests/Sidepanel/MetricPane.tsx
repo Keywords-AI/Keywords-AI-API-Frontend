@@ -226,7 +226,7 @@ export const MetricPane = ({}) => {
     {
       key: "Customer ID",
       value: (
-        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5">
+        <span className="text-sm-regular text-gray-4 overflow-hidden overflow-ellipsis group-hover:text-gray-5  whitespace-nowrap">
           {logItem?.customer_identifier || "N/A"}
         </span>
       ),
@@ -246,7 +246,7 @@ export const MetricPane = ({}) => {
         (logItem?.cached_responses?.length || 0) > 0 ? (
           <CheckAll />
         ) : (
-          <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
+          <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">``
             {"No"}
           </span>
         ),

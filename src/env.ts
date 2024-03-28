@@ -1,5 +1,16 @@
 let envVars;
 
+const loadModule = async (modulePath) => {
+  try {
+    return await import(/* @vite-ignore */ modulePath);
+  } catch (e) {
+    console.log("Failed to load module", e);
+    return {
+      FETCH_ENDPOINT: "https://api-test.keywordsai.co/",
+    };
+  }
+};
+envVars = (await loadModule("./branch_env"))?.envVars;
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 // const envVars = undefined;
 export const FETCH_ENDPOINT =

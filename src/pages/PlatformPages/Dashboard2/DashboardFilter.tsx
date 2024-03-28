@@ -8,7 +8,7 @@ import {
   EnterKey,
   AlphanumericKey,
 } from "src/components/Icons";
-import { Button } from "src/components/Buttons";
+import { Button, ButtonGroupSmall } from "src/components/Buttons";
 import { useTypedSelector, useTypedDispatch } from "src/store/store";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import {
@@ -135,16 +135,16 @@ export default function DashboardFilter() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showToday, setShowToday] = useState(false);
   const { enableScope, disableScope } = useHotkeysContext();
-  useHotkeys(
-    "t",
-    () => {
-      setShowPopover(false);
-      setShowDropdown((prev) => !prev);
-    },
-    {
-      scopes: "dashboard",
-    }
-  );
+  // useHotkeys(
+  //   "t",
+  //   () => {
+  //     setShowPopover(false);
+  //     setShowDropdown((prev) => !prev);
+  //   },
+  //   {
+  //     scopes: "dashboard",
+  //   }
+  // );
   // useHotkeys(
   //   "d",
   //   () => {
@@ -366,6 +366,36 @@ export default function DashboardFilter() {
       </form>
     </Popover>
   );
+  const buttons = [
+    {
+      text: "7d",
+      value: "weekly",
+      onClick: () => {
+        handleTimePeriodSelection("weekly");
+      },
+    },
+    {
+      text: "30d",
+      value: "monthly",
+      onClick: () => {
+        handleTimePeriodSelection("monthly");
+      },
+    },
+    {
+      text: "90d",
+      value: "quarterly",
+      onClick: () => {
+        handleTimePeriodSelection("quarterly");
+      },
+    },
+    {
+      text: "365d",
+      value: "yearly_by_week",
+      onClick: () => {
+        handleTimePeriodSelection("yearly_by_week");
+      },
+    },
+  ];
   return (
     <div className="flex-row gap-xxs rounded-xs items-center">
       {/* {user.is_superadmin && (
@@ -387,9 +417,9 @@ export default function DashboardFilter() {
           handleTimePeriodSelection("daily");
           setShowToday((prev) => !prev);
         }}
-        active={showToday}
+        active={currentTimeRange === "daily"}
       />
-      <SelectInput
+      {/* <SelectInput
         headLess
         trigger={() => (
           <Tooltip
@@ -434,6 +464,10 @@ export default function DashboardFilter() {
           { name: "Year", value: "yearly_by_week", secText: "5" },
         ]}
         handleSelected={handleTimePeriodSelection}
+      /> */}
+      <ButtonGroupSmall
+        defaultActive={buttons.findIndex((i) => i.value == currentTimeRange)}
+        buttons={buttons}
       />
       {/* {Menu} */}
     </div>

@@ -337,12 +337,15 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
         open={open}
         setOpen={setOpen}
         width="w-full"
+        align="end"
         trigger={
           <Button
             variant="text"
-            text={dataKey == "all" ? "All" : Metrics[dataKey]?.name || ""}
+            text={dataKey == "all" ? "all" : Metrics[dataKey]?.name || ""}
             icon={Down}
             iconPosition="right"
+            active={open}
+            padding="p-0 "
           />
         }
         items={
@@ -351,7 +354,7 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
               return (
                 <Button
                   key={index}
-                  text={Metrics[key].name}
+                  text={Metrics[key].name.split(" ")[1] || Metrics[key].name}
                   variant="panel"
                   onClick={() => {
                     setDataKey(key);
@@ -361,7 +364,7 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
               );
             })}
             <Button
-              text={"All"}
+              text={"all"}
               variant="panel"
               onClick={() => {
                 setDataKey("all");

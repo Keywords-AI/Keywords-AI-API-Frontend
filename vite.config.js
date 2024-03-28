@@ -1,17 +1,29 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import svgr from 'vite-plugin-svgr';
+import svgr from "vite-plugin-svgr";
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
-  optimizeDeps: {
-    exclude: ['js-big-decimal']
+  build: {
+    target: "es2022",
   },
-  plugins: [react(),svgr({ 
-    svgrOptions: {
-      // svgr options
+  esbuild: {
+    target: "es2022",
+  },
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
+    esbuildOptions: {
+      target: "es2022",
     },
-  }),],
+  },
+  plugins: [
+    react(),
+    svgr({
+      svgrOptions: {
+        // svgr options
+      },
+    }),
+  ],
   server: {
     port: 4200,
   },
