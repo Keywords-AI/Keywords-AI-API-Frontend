@@ -40,7 +40,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
             <span className="text-sm-md text-gray-5">{"Routing time"}</span>
             <Tooltip
               side="right"
-              sideOffset={8}
+              sideOffset={4}
               delayDuration={1}
               skipDelayDuration={1}
               content={
@@ -123,7 +123,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
             <span className="text-sm-md text-gray-5">{"TTFT"}</span>
             <Tooltip
               side="right"
-              sideOffset={8}
+              sideOffset={4}
               delayDuration={1}
               skipDelayDuration={1}
               content={
@@ -152,7 +152,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
             <span className="text-sm-md text-gray-5">{"Generation time"}</span>
             <Tooltip
               side="right"
-              sideOffset={8}
+              sideOffset={4}
               delayDuration={1}
               skipDelayDuration={1}
               content={
@@ -209,7 +209,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
             <span className="text-sm-md text-gray-5">{"TTFT"}</span>
             <Tooltip
               side="right"
-              sideOffset={8}
+              sideOffset={4}
               delayDuration={1}
               skipDelayDuration={1}
               content={
@@ -238,7 +238,7 @@ export const MostRecentPane = forwardRef<HTMLDivElement, MostRecentPaneProps>(
             <span className="text-sm-md text-gray-5">{"Generation time"}</span>
             <Tooltip
               side="right"
-              sideOffset={8}
+              sideOffset={4}
               delayDuration={1}
               skipDelayDuration={1}
               content={

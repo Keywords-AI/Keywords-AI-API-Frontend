@@ -163,7 +163,7 @@ export function FilterActions({
     <div>
       <Tooltip
         side="bottom"
-        sideOffset={8}
+        sideOffset={4}
         align="start"
         content={
           <>

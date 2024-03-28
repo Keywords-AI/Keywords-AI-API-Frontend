@@ -189,7 +189,7 @@ export const SidePanel = ({}: SidePanelProps) => {
       {tab == "Log" && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
@@ -213,7 +213,7 @@ export const SidePanel = ({}: SidePanelProps) => {
       {(tab == "Log" || tab == "Metadata") && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
@@ -235,7 +235,7 @@ export const SidePanel = ({}: SidePanelProps) => {
       {tab == "Eval" && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={

@@ -214,7 +214,7 @@ export default function EvalPane({}) {
               {obj["tooltip"] ? (
                 <Tooltip
                   side="right"
-                  sideOffset={8}
+                  sideOffset={4}
                   align="center"
                   delayDuration={1}
                   content={
