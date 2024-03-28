@@ -261,7 +261,7 @@ export const SidePanel = ({}: SidePanelProps) => {
         "shadow-gray-3 bg-gray-1 ",
         "w-[360px]"
       )}
-      headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1  h-[44px]"
+      headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb-2   bg-gray-1  h-[44px]"
       tabs={pages}
       value={tab}
       onValueChange={(value) => setTab(value)}
