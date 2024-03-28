@@ -567,7 +567,7 @@ const EditFormNotConnected = ({
             // }
           /> */}
         {/* </div> */}
-        <Accordion
+        {/* <Accordion
           className={"flex-col justify-center items-start gap-xs self-stretch"}
           // value={accordion2}
           // onValueChange={setAccordion2}
@@ -633,7 +633,7 @@ const EditFormNotConnected = ({
             ),
             contentClassName: "flex-col justify-center gap-md self-stretch",
           }}
-        />
+        /> */}
         <div className="flex-col justify-center items-start gap-xs self-stretch">
           <div className="flex-col items-start justify-center gap-md self-stretch">
             {/* {showMore && (
