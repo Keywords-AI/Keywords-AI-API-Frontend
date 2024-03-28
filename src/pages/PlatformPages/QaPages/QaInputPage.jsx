@@ -73,7 +73,7 @@ export const QaInputPage = () => {
           <input type="radio" {...register("vanilla")} />
           {/* <input type="radio" {...register("vanilla")} value="choice B"/>
             <input type="radio" {...register("vanilla")} value="choice C"/> */}
-          <Button variant="r4-white" text="Submit to see" />
+          <Button variant="r4-gray-2" text="Submit to see" />
           <CheckboxInput
             text="Enable for new chats"
             {...register("checkbox")}

@@ -106,10 +106,10 @@ export const BillingPage = () => {
           sideOffset={-1}
           align="center"
           delayDuration={1}
-          className="flex-col w-[280px] py-xs px-sm items-start gap-xs rounded-md outline outline-1 outline-gray-3 bg-gray-2"
+          className="flex-col w-[280px] py-xs px-sm items-start gap-xs rounded-md outline outline-1 outline-gray-3 bg-gray-2 "
           content={
             <>
-              <div className="flex justify-between items-center self-stretch">
+              <div className="flex justify-between items-center self-stretch ">
                 <p className="text-sm-md text-gray-5">Total credits</p>
                 <p className="text-sm-md text-gray-5">
                   {totalAmount != null ? "$" + totalAmount : "-"}
@@ -164,7 +164,7 @@ export const BillingPage = () => {
             </>
           }
         >
-          <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2">
+          <div className="flex items-center py-xxs px-xs gap-xxs rounded-sm bg-gray-2 cursor-pointer">
             <span className=" text-gray-5 text-sm-md">
               {totalAmount != null
                 ? "$" + parseFloat(totalAmount).toFixed(2)
@@ -275,7 +275,7 @@ export const BillingPage = () => {
           <Modal
             title="Cancel your plan"
             subtitle="We’re sorry to see you cancel your plan. To help us improve, please help us understand the reason."
-            trigger={<Button variant="r4-black" text="Cancel plan" />}
+            trigger={<Button variant="r4-gray-2" text="Cancel plan" />}
             open={canceling}
             setOpen={setCanceling}
           >

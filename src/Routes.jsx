@@ -62,7 +62,7 @@ import { LoadingPage } from "./components/LoadingPage";
 import CustomerPage from "./pages/PlatformPages/CustomerPage/CustomerPage";
 import ResendActivation from "./pages/AuthPages/ResendActivation";
 import { SidebarNavigationLayout } from "./layouts/SidebarNavigationLayout";
-
+import { Dashboard as DB2 } from "./pages/PlatformPages/Dashboard2/Dashboard";
 const mapStateToProps = (state) => {
   return {
     user: state.user,
@@ -77,7 +77,7 @@ const mapDispatchToProps = {
 
 const Routes = ({ getUser, user, organization, clearNotifications }) => {
   const navigate = useNavigate();
-  const hasAccess = user.loading ? true : user.is_admin ? true : false;
+  const hasAccess = user.loading ? false : user.is_admin ? true : false;
   const [authToken, setAuthToken] = React.useState(retrieveAccessToken());
   const isUserLoggedIn = AUTH_ENABLED === "true" ? isLoggedIn(user) : true;
   useEffect(() => {
@@ -158,6 +158,11 @@ const Routes = ({ getUser, user, organization, clearNotifications }) => {
         },
         {
           path: "dashboard",
+          element: <DB2 />,
+          // element: <Dashboard />,
+        },
+        {
+          path: "dashboard2",
           element: <Dashboard />,
         },
         { path: "users", element: <UsersPage /> },

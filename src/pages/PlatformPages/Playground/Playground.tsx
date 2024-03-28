@@ -37,6 +37,7 @@ import { variantType } from "src/types";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import Tooltip from "src/components/Misc/Tooltip";
 import { AutoScrollContainer } from "src/components/Misc/ScrollContainer";
+import { set } from "date-fns";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -82,10 +83,10 @@ export default function Playground() {
   //   }
   // );
   return (
-    <div className="flex-col items-start justify-center self-stretch h-[calc(100vh-52px)] max-w-[100vw]">
+    <div className="flex-col items-start justify-start self-stretch flex-1 h-full w-full">
       <TopBar />
-      <div className="flex items-start flex-1 self-stretch h-[calc(100vh-112px)]">
-        {isLeftPanelOpen && <PromptLogs />}
+      <div className="flex items-start flex-1 self-stretch h-full">
+        {/* {isLeftPanelOpen && <PromptLogs />} */}
         <Main />
         {isRightPanelOpen && <RightPanel />}
       </div>
@@ -95,8 +96,8 @@ export default function Playground() {
 
 const Main = () => {
   return (
-    <div className="flex flex-1 px-lg pt-sm pb-md items-start self-stretch gap-sm">
-      <PromptInput />
+    <div className="flex w-full px-lg pt-sm pb-md items-start h-[calc(100dvh-52px)] gap-sm">
+      {/* <PromptInput /> */}
       <MessageLists />
     </div>
   );
@@ -142,6 +143,7 @@ const MessageLists = () => {
         })
       );
       dispatch(setFocusIndex(messages.length));
+      setActivate(true);
     },
     { scopes: "playground", preventDefault: true }
   );
@@ -153,24 +155,27 @@ const MessageLists = () => {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const scrollRef = useRef(null);
+  const [activate, setActivate] = useState(false);
+  useEffect(() => {
+    if (activate) {
+      setActivate(false);
+    }
+  }, [activate]);
   const streamingStates = useTypedSelector((state) => state.streamingText);
   const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   return (
-    <div
-      className="flex-col items-start gap-xxs  self-stretch  w-full"
-      style={{
-        maxWidth: `calc(100vw - 320px - ${
-          isLeftPanelOpen ? "240px" : "0px"
-        } - ${isRightPanelOpen ? "320px" : "0px"})`,
-      }}
-    >
+    <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full ">
       <AutoScrollContainer
-        percentageThreshold={15}
+        percentageThreshold={10}
         behavior="auto"
         active={isStreaming}
-        className="flex-col items-start gap-xxs flex-1 h-[calc(100vh-150px)] overflow-y-auto pr-xxs self-stretch"
+        className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full pb-[40px]"
+        ref={scrollRef}
+        forceScroll={activate}
       >
+        {/* <div className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "> */}
         {messages.map((message, index) => {
           return (
             <PlaygroundMessage
@@ -185,7 +190,7 @@ const MessageLists = () => {
         <StreamingMessage />
         <Tooltip
           side="bottom"
-          sideOffset={8}
+          sideOffset={4}
           align="start"
           delayDuration={1}
           content={
@@ -203,7 +208,7 @@ const MessageLists = () => {
               ref={buttonRef}
               iconPosition="left"
               disabled={isStreaming}
-              onClick={() => {
+              onClick={(e) => {
                 if (isStreaming) return;
                 dispatch(
                   appendMessage({
@@ -212,12 +217,13 @@ const MessageLists = () => {
                     user_content: "",
                   })
                 );
-                dispatch(setFocusIndex(messages.length));
+                setActivate(true);
               }}
             />
           </div>
         </Tooltip>
       </AutoScrollContainer>
+      {/* </div> */}
       <div className="flex items-center gap-xs">
         <Button
           variant="r4-primary"
@@ -345,12 +351,12 @@ const RightPanel = () => {
       tabs={tabGroups}
       value={tab}
       onValueChange={(value) => setTab(value)}
-      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto"
+      rootClassName="flex-col w-[320px] items-start self-stretch bg-gray-1 shadow-border-l shadow-gray-2 self-stretch overflow-auto shrink-0"
       headerClassName="flex px-lg py-xxs items-center justify-between gap-sm self-stretch shadow-border-b shadow-gray-2"
       headerRight={
         <Tooltip
           side="bottom"
-          sideOffset={2}
+          sideOffset={0}
           align="end"
           delayDuration={1}
           content={

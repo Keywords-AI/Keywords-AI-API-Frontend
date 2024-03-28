@@ -43,6 +43,8 @@ import {
   DELETE_DASHBOARD_FILTER,
   SET_AVG_TTFT_DATA,
   SET_TPS_DATA,
+  SET_MODELS_DISPLAY_CHARTS,
+  REMOVE_FROM_MODELS_DISPLAY_CHARTS,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -152,6 +154,7 @@ const initState = {
   timeOffset: 0,
   modelColors: {},
   keyColors: {},
+  hasNext: true,
   sentimentSummaryData: [
     {
       sentiment: "positive",
@@ -204,6 +207,9 @@ const initState = {
       neutral: 600,
     },
   ],
+  modelDisplayCharts: JSON.parse(
+    localStorage.getItem("modelDisplayCharts") || "null"
+  ) || ["average_latency", "total_cost", "total_tokens"],
 };
 
 type DashboardState = typeof initState;
@@ -212,7 +218,21 @@ export default function dashboardReducer(
   state = initState,
   action
 ): DashboardState {
+  let newState = null;
   switch (action.type) {
+    case REMOVE_FROM_MODELS_DISPLAY_CHARTS:
+      newState = state.modelDisplayCharts.filter(
+        (chart) => chart !== action.payload
+      );
+      localStorage.setItem("modelDisplayCharts", JSON.stringify(newState));
+      return {
+        ...state,
+        modelDisplayCharts: newState,
+      };
+    case SET_MODELS_DISPLAY_CHARTS:
+      newState = action.payload;
+      localStorage.setItem("modelDisplayCharts", JSON.stringify(newState));
+      return { ...state, modelDisplayCharts: action.payload };
     case SET_TPS_DATA:
       return { ...state, tpsData: action.payload };
     case SET_DASHBOARD_LOADING:

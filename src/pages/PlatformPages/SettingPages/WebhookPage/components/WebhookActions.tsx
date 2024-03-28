@@ -31,7 +31,8 @@ export const WebhookActions = ({
   return (
     <DropDownMenu
       side="bottom"
-      sideOffset={8}
+      sideOffset={4}
+      alignOffset={0}
       align="end"
       trigger={
         <DotsButton onClick={() => setOpen(true)} active={open} />

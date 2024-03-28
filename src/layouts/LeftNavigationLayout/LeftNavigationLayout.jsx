@@ -48,7 +48,8 @@ const LeftNavitationLayout = ({ sectionName }) => {
       link: "/platform/api",
     },
     {
-      label: currPath.charAt(0).toUpperCase() + currPath.slice(1),
+      label: settingChildren.filter((child) => child.path === currPath)[0]
+        .title,
       link: "/platform/api/" + currPath,
     },
   ];
@@ -60,7 +61,7 @@ const LeftNavitationLayout = ({ sectionName }) => {
     >
       <PanelNavigation sectionName={sectionName} />
       <div className="flex-col justify-start items-start flex-1 self-stretch h-screen">
-        <div className="flex h-[52px] py-xs px-lg items-center gap-xxs  ml-[240px]  text-gray-5  shadow-border-b shadow-gray-2 max-h-[52px] self-stretch">
+        <div className="flex h-[52px] py-xxs px-lg items-center gap-xxs  ml-[240px]  text-gray-5  shadow-border-b shadow-gray-2 max-h-[52px] self-stretch shrink-0">
           <BCrumb items={items} />
         </div>
         <div className="w-full overflow-auto">

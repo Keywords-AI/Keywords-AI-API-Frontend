@@ -10,15 +10,24 @@ import {
   SideBarActive,
   SideBarActiveLeft,
   SideBarLeft,
+  Dice1,
+  Dice2,
 } from "src/components";
 import { CodeViewer } from "src/components/CodeViewer";
-import { Button, ButtonGroup, DotsButton } from "src/components/Buttons";
+import {
+  Button,
+  ButtonGroup,
+  ButtonGroupSmall,
+  DotsButton,
+} from "src/components/Buttons";
 import { Modal } from "src/components/Dialogs";
 import Tooltip from "src/components/Misc/Tooltip";
 import useForwardRef from "src/hooks/useForwardRef";
 import { getKeys } from "src/store/actions";
 import {
   ResetPlayground,
+  setChannelMode,
+  setModelOptions,
   toggleLeftPanel,
   toggleRightPanel,
 } from "src/store/actions/playgroundAction";
@@ -79,7 +88,7 @@ export function TopBar() {
     },
   ];
   return (
-    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px]">
+    <div className="flex py-xs px-lg justify-between items-center self-stretch shadow-border-b shadow-gray-2 bg-gray-1 h-[52px] shrink-0">
       <div className="flex items-center gap-xxs">
         <BCrumb items={BCItems} />
         {/* <DotsButton
@@ -102,13 +111,46 @@ export function TopBar() {
           ]}
         /> */}
       </div>
+
       <div className="flex gap-xxs items-center">
         {/* <Button
           variant="small"
           text="Save"
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         /> */}
-
+        <ButtonGroupSmall
+          defaultActive={
+            playGroundState.modelOptions.models.includes("none") ? 0 : 1
+          }
+          buttons={[
+            {
+              icon: Dice1,
+              onClick: () => {
+                dispatch(setChannelMode(true));
+                const previous = store.getState().playground.modelOptions;
+                dispatch(
+                  setModelOptions({
+                    ...previous,
+                    models: [previous.models[0], "none"],
+                  })
+                );
+              },
+            },
+            {
+              icon: Dice2,
+              onClick: () => {
+                dispatch(setChannelMode(false));
+                const previous = store.getState().playground.modelOptions;
+                dispatch(
+                  setModelOptions({
+                    ...previous,
+                    models: [previous.models[0], "gpt-4"],
+                  })
+                );
+              },
+            },
+          ]}
+        />
         {/* <ViewCode /> */}
         <DotsButton
           icon={Delete}
@@ -121,7 +163,7 @@ export function TopBar() {
         <HorizontalDivier />
         <Tooltip
           side="bottom"
-          sideOffset={8}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={

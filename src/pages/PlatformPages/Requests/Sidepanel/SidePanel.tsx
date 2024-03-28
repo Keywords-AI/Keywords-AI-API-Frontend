@@ -37,11 +37,9 @@ import { Tabs } from "src/components/Sections/Tabs/Tabs";
 import MetadataPane from "./MetadataPane";
 import EvalPane from "./EvalPane";
 
-interface SidePanelProps {
-  open: boolean;
-}
+interface SidePanelProps {}
 
-export const SidePanel = ({ open }: SidePanelProps) => {
+export const SidePanel = ({}: SidePanelProps) => {
   const logRef = useRef(null);
   const logItem = useTypedSelector(
     (state) =>
@@ -80,23 +78,20 @@ export const SidePanel = ({ open }: SidePanelProps) => {
           ),
         }
       : null,
-    logItem?.evaluations &&
-    typeof logItem?.evaluations === "object" &&
-    Object.keys(logItem?.evaluations).length !== 0
-      ? {
-          value: "Eval",
-          buttonVariant: "text" as variantType,
-          content: (
-            <div
-              className="flex-col items-start self-stretch overflow-auto"
-              aria-label="frame 1969"
-            >
-              <div ref={logRef}></div>
-              <EvalPane />
-            </div>
-          ),
-        }
-      : null,
+
+    {
+      value: "Eval",
+      buttonVariant: "text" as variantType,
+      content: (
+        <div
+          className="flex-col items-start self-stretch overflow-auto"
+          aria-label="frame 1969"
+        >
+          <div ref={logRef}></div>
+          <EvalPane />
+        </div>
+      ),
+    },
   ].filter(Boolean);
 
   const [tab, setTab] = useState(pages[0]!.value);
@@ -116,13 +111,13 @@ export const SidePanel = ({ open }: SidePanelProps) => {
     if (logItem?.prompt_messages?.length === 0) {
       if (tab === "Log") setTab("Metadata");
     }
-    if (
-      logItem?.evaluations &&
-      typeof logItem?.evaluations === "object" &&
-      Object.keys(logItem?.evaluations).length === 0
-    ) {
-      if (tab === "Eval") setTab("Metadata");
-    }
+    // if (
+    //   logItem?.evaluations &&
+    //   typeof logItem?.evaluations === "object" &&
+    //   Object.keys(logItem?.evaluations).length === 0
+    // ) {
+    //   if (tab === "Eval") setTab("Metadata");
+    // }
 
     if (tab === "Log") enableScope("request_sidepanel_log");
     if (tab !== "Log") disableScope("request_sidepanel_log");
@@ -191,7 +186,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       {tab == "Log" && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
@@ -215,7 +210,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       {(tab == "Log" || tab == "Metadata") && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
@@ -237,7 +232,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
       {tab == "Eval" && (
         <Tooltip
           side="bottom"
-          sideOffset={5}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={
@@ -262,9 +257,9 @@ export const SidePanel = ({ open }: SidePanelProps) => {
   return (
     <Tabs
       rootClassName={cn(
-        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 ",
-        "shadow-gray-2 bg-gray-1 overflow-x-hidden",
-        open ? "w-[360px]" : "w-0"
+        "flex-col items-start self-stretch shadow-border-l flex-shrink-0 overflow-y-auto h-full",
+        "shadow-gray-3 bg-gray-1 ",
+        "w-[360px]"
       )}
       headerClassName="flex px-lg py-xxs justify-between  w-[inherit] items-center shadow-border-lb shadow-gray-2  bg-gray-1  h-[44px]"
       tabs={pages}

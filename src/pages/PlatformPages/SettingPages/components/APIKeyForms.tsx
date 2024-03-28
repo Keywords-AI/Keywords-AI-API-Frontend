@@ -5,6 +5,7 @@ import {
   TextInput,
   CopyInput,
   CheckboxInput,
+  SelectInputSmall,
 } from "src/components/Inputs";
 import { Button, IconButton, SwitchButton } from "src/components/Buttons";
 import { useForm } from "react-hook-form";
@@ -143,10 +144,12 @@ const CreateFormNotConnected = React.forwardRef(
         createApiKey!(data);
         return;
       }
-
+      if (data.spending_limt !== null && data.spending_limit !== undefined) {
+        data.spending_limit = -1;
+      }
       data.rate_limit = Math.round(data.rate_limit / parseInt(data.unit));
       if (typeof data.rate_limit !== "number") {
-        data.rate_limit = 100;
+        data.rate_limit = 50000;
       }
       createApiKey!(data);
     };
@@ -192,7 +195,7 @@ const CreateFormNotConnected = React.forwardRef(
                 }
                 choices={expiryOptions}
               /> */}
-              <SelectInput
+              <SelectInputSmall
                 title={"Environment"}
                 optionsWidth={"w-[120px]"}
                 {...register("is_test")}
@@ -203,9 +206,10 @@ const CreateFormNotConnected = React.forwardRef(
                 //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
                 // }
                 choices={EnvironmentOptions}
+                backgroundColor="bg-transparent"
               />
             </div>
-            <Accordion
+            {/* <Accordion
               className={
                 "flex-col justify-center items-start gap-xs self-stretch"
               }
@@ -225,7 +229,7 @@ const CreateFormNotConnected = React.forwardRef(
                         type="number"
                         pseudoElementClass="special-input"
                       />
-                      <SelectInput
+                      <SelectInputSmall
                         title={"Unit"}
                         optionsWidth={"w-[120px]"}
                         {...register("unit", {
@@ -235,6 +239,7 @@ const CreateFormNotConnected = React.forwardRef(
                         // onKeyDown={handleEnter}
                         placeholder={"per minute"}
                         width="w-[120px]"
+                        backgroundColor="bg-transparent"
                         //This corresponds to the 'Never' option
                         choices={unitOptions}
                       />
@@ -245,12 +250,11 @@ const CreateFormNotConnected = React.forwardRef(
                         width={"w-full"}
                         {...register("spending_limit")}
                         // onKeyDown={handleEnter}
-                        placeholder={"100"}
+                        placeholder={""}
                         type="number"
-                        defaultValue={200}
                         dollarSign
                       />
-                      <SelectInput
+                      <SelectInputSmall
                         title={"Expiry"}
                         optionsWidth={"w-[120px]"}
                         {...register("expiry_date")}
@@ -264,13 +268,14 @@ const CreateFormNotConnected = React.forwardRef(
                         }
                         choices={expiryOptions}
                         buttonPadding="py-xxs px-xxs"
+                        backgroundColor="bg-transparent"
                       />
                     </div>
                   </div>
                 ),
                 contentClassName: "flex-col justify-center gap-md self-stretch",
               }}
-            />
+            /> */}
             <div className="flex-col justify-center items-start gap-xs self-stretch">
               {/* <Button
                 icon={showMore ? Up : Down}
@@ -365,7 +370,7 @@ const CreateFormNotConnected = React.forwardRef(
                     ) : (
                       <>
                         <Button
-                          variant="r4-black"
+                          variant="r4-gray-2"
                           bgColor="transparent"
                           text={"Cancel"}
                           type="button"
@@ -413,7 +418,7 @@ const CreateFormNotConnected = React.forwardRef(
                 ) : (
                   <>
                     <Button
-                      variant="r4-black"
+                      variant="r4-gray-2"
                       bgColor="transparent"
                       text={"Cancel"}
                       type="button"
@@ -461,7 +466,7 @@ const DeleteFormNotConnected = React.forwardRef(
         <div className="flex-row justify-end self-stretch">
           <div className="flex-row gap-xs">
             <Button
-              variant="r4-black"
+              variant="r4-gray-2"
               bgColor="transparent"
               text={"Cancel"}
               type="button"
@@ -479,6 +484,7 @@ export const DeleteForm = connect(
   mapStateToProps,
   mapDispatchToProps
 )(DeleteFormNotConnected);
+
 
 type EditingFromProps = {
   setEditingKey: (key: ApiKey | undefined) => {};
@@ -524,7 +530,7 @@ const EditFormNotConnected = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <React.Fragment>
-        <div className="grid gap-xs grid-cols-[1fr,120px]">
+        {/* <div className="grid gap-xs grid-cols-[1fr,120px]"> */}
           <TextInput
             title={"Name"}
             width={"w-full"}
@@ -547,20 +553,21 @@ const EditFormNotConnected = ({
             }
             choices={expiryOptions}
           /> */}
-          <SelectInput
+          {/* <SelectInput
             title={"Environment"}
             optionsWidth={"w-[120px]"}
             {...register("is_test", {value: currentEnv, onChange: ()=>{ setcurrentEnv(!currentEnv)}})}
             choices={EnvironmentOptions}
             value={currentEnv}
+            backgroundColor="bg-gray-1"
             // onKeyDown={handleEnter}
             //This corresponds to the 'Never' option
             // defaultValue={
             //   new Date("3000-12-31T23:59:59Z").toISOString().split("T")[0]
             // }
-          />
-        </div>
-        <Accordion
+          /> */}
+        {/* </div> */}
+        {/* <Accordion
           className={"flex-col justify-center items-start gap-xs self-stretch"}
           // value={accordion2}
           // onValueChange={setAccordion2}
@@ -579,7 +586,7 @@ const EditFormNotConnected = ({
                     defaultValue={editingKey?.rate_limit}
                     pseudoElementClass="special-input"
                   />
-                  <SelectInput
+                  <SelectInputSmall
                     title={"Unit"}
                     optionsWidth={"w-[120px]"}
                     {...register("unit", {
@@ -591,6 +598,7 @@ const EditFormNotConnected = ({
                     width="w-[120px]"
                     //This corresponds to the 'Never' option
                     choices={unitOptions}
+                    backgroundColor="bg-transparent"
                   />
                 </div>
 
@@ -600,12 +608,11 @@ const EditFormNotConnected = ({
                     width={"w-full"}
                     {...register("spending_limit")}
                     // onKeyDown={handleEnter}
-                    placeholder={"100"}
+                    placeholder={"200 by default"}
                     type="number"
-                    defaultValue={200}
                     dollarSign
                   />
-                  <SelectInput
+                  <SelectInputSmall
                     title={"Expiry"}
                     optionsWidth={"w-[120px]"}
                     {...register("expiry_date")}
@@ -619,13 +626,14 @@ const EditFormNotConnected = ({
                     }
                     choices={expiryOptions}
                     buttonPadding="py-xxs px-xxs"
+                    backgroundColor="bg-transparent"
                   />
                 </div>
               </div>
             ),
             contentClassName: "flex-col justify-center gap-md self-stretch",
           }}
-        />
+        /> */}
         <div className="flex-col justify-center items-start gap-xs self-stretch">
           <div className="flex-col items-start justify-center gap-md self-stretch">
             {/* {showMore && (
@@ -705,7 +713,7 @@ const ViewCode = React.forwardRef(
     return (
       <Modal
         ref={ref}
-        trigger={<Button variant="r4-black" text="View code" />}
+        trigger={<Button variant="r4-gray-2" text="View code" />}
         title="View code"
         subtitle="You can use the following code to start integrating your current prompt and settings into your application."
         width="w-[864px]"

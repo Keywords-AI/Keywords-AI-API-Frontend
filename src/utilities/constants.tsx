@@ -575,7 +575,7 @@ export const randomColor = () => {
 
 export const Metrics = {
   number_of_requests: {
-    name: "Request",
+    name: "Requests",
     value: "number_of_requests",
     icon: Quality,
     unit: "requests",

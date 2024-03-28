@@ -87,7 +87,7 @@ const Heatmap = ({ xLabels, yLabels, data }) => {
   );
 };
 
-const EvaluationPage = () => {
+const EvaluationPage = ({}) => {
   const xLabels = ['Context Precision', 'Faithfulness', 'Answer Relevance', 'Flesch–Kincaid Readability', 'Sentiment'];
   const yLabels = ['gpt-4', 'gpt-3.5-turbo', 'claude-3-haiku'];
   const data = [

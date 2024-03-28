@@ -1,8 +1,10 @@
-import { NavigateFunction } from 'react-router-dom';
+import { NavigateFunction } from "react-router-dom";
 export const REDIRECT_URI = "/platform";
 
-export const setQueryParams = (params: { [key: string]: any }, navigate: NavigateFunction) => {
-
+export const setQueryParams = (
+  params: { [key: string]: any },
+  navigate?: NavigateFunction
+) => {
   /*
   If you want to trigger a component reload, pass in navigate
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ export const setQueryParams = (params: { [key: string]: any }, navigate: Navigat
   }
 };
 
-export const getQueryParam = (param: string) : string | null => {
+export const getQueryParam = (param: string): string | null => {
   // Get the current location
   const location = window.location;
   // Create a new URLSearchParams object from the current search string

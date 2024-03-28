@@ -49,6 +49,9 @@ export const SessionPane = forwardRef(
     const isPlaygroundReseted = useTypedSelector(
       (state) => state.playground.isReseted
     );
+    const isSingleChannel = useTypedSelector(
+      (state) => state.playground.isSingleChannel
+    );
     const breakDownData = useTypedSelector(
       (state) => state.playground.breakdownData
     );
@@ -59,6 +62,10 @@ export const SessionPane = forwardRef(
         value: model.model_name,
       };
     });
+    const initModels =
+      localStorage.getItem("playgroundModels")?.split(",") ?? [];
+    const modelA = localStorage.getItem("playgroundModelA") ?? "gpt-3.5-turbo";
+
     let [selectChoices, setSelectChoices] = React.useState<any[]>([
       // { name: "Router (best for prompt)", value: "router" },
       { name: "None", value: "none" },
@@ -66,7 +73,6 @@ export const SessionPane = forwardRef(
     useEffect(() => {
       setSelectChoices([
         // { name: "Router (best for prompt)", value: "router" },
-        { name: "None", value: "none" },
         ...modelsArray,
       ]);
     }, [modelsArray]);
@@ -130,10 +136,7 @@ export const SessionPane = forwardRef(
           <Controller
             control={control}
             name="modela"
-            defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[0])
-                ?.value || "gpt-3.5-turbo"
-            }
+            defaultValue={modelA}
             render={({ field: { value, onChange } }) => {
               return (
                 <Combobox
@@ -143,10 +146,7 @@ export const SessionPane = forwardRef(
                   height="h-[50vh]"
                   onChange={onChange}
                   items={selectChoices}
-                  defaultValue={
-                    selectChoices.find((i) => i.value == ModelOptions.models[0])
-                      ?.value || "gpt-3.5-turbo"
-                  }
+                  defaultValue={modelA}
                 />
               );
             }}
@@ -168,30 +168,28 @@ export const SessionPane = forwardRef(
                 ?.value
             }
           /> */}
-          <Controller
-            control={control}
-            name="modelb"
-            defaultValue={
-              selectChoices.find((i) => i.value == ModelOptions.models[1])
-                ?.value || "gpt-4"
-            }
-            render={({ field: { value, onChange } }) => {
-              return (
-                <Combobox
-                  title="Model B"
-                  value={value}
-                  width="w-[256px]"
-                  height="h-[50vh]"
-                  onChange={onChange}
-                  items={selectChoices}
-                  defaultValue={
-                    selectChoices.find((i) => i.value == ModelOptions.models[1])
-                      ?.value || "gpt-4"
-                  }
-                />
-              );
-            }}
-          />
+          {ModelOptions.models[1] != "none" && (
+            <Controller
+              control={control}
+              name="modelb"
+              defaultValue={initModels.length > 0 ? initModels[0] : "gpt-4"}
+              render={({ field: { value, onChange } }) => {
+                return (
+                  <Combobox
+                    title="Model B"
+                    value={value}
+                    width="w-[256px]"
+                    height="h-[50vh]"
+                    onChange={onChange}
+                    items={selectChoices}
+                    defaultValue={
+                      initModels.length > 1 ? initModels[1] : "gpt-4"
+                    }
+                  />
+                );
+              }}
+            />
+          )}
           {/* <SelectInput
             //{ value: ModelOptions.model }
             {...register("modelb", {

@@ -14,10 +14,12 @@ import {
   sendStreamingTextRequest,
   sendStreamingTextSuccess,
 } from "./streamingTextAction";
+import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
+import { ChatMessage } from "src/types";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
 export const SET_PROMPT = "SET_PROMPT";
@@ -117,10 +119,10 @@ export const setFirstTime = (firstTime) => ({
 
 export const setPrompt = (prompt) => ({ type: SET_PROMPT, payload: prompt });
 export const setCurrentModel = (currentModel) => {
- return {
+  return {
     type: SET_CURRENT_MODEL,
     payload: currentModel,
-  }
+  };
 };
 
 export const setCurrentBrand = (currentBrand) => ({
@@ -128,10 +130,47 @@ export const setCurrentBrand = (currentBrand) => ({
   payload: currentBrand,
 });
 
-export const setModelOptions = (modelOptions) => ({
-  type: SET_MODEL_OPTIONS,
-  payload: modelOptions,
-});
+const setModels = (models: string[]) => {
+  localStorage.setItem("playgroundModels", models.join(","));
+  if (models.length > 1) {
+    localStorage.setItem("playgroundModelA", models[0]);
+    if (!models[1]) {
+      localStorage.setItem("playgroundModelB", "none");
+    } else {
+      localStorage.setItem("playgroundModelB", models[1]);
+    }
+  } else if (models.length == 1) {
+    localStorage.setItem("playgroundModelA", models[0]);
+    localStorage.setItem("playgroundModelB", "none");
+  }
+};
+
+export const setModelOptions = (modelOptions: any) => {
+  const models = modelOptions.models;
+  localStorage.setItem("playgroundModels", models.join(","));
+  setModels(models);
+  localStorage.setItem(
+    "playgroundTemperature",
+    modelOptions.temperature?.toString() ?? 1
+  );
+  localStorage.setItem(
+    "playgroundMaximumLength",
+    modelOptions.maximumLength?.toString() ?? 256
+  );
+  localStorage.setItem("playgroundTopP", modelOptions.topP?.toString() ?? 1);
+  localStorage.setItem(
+    "playgroundFrequencyPenalty",
+    modelOptions.frequencyPenalty?.toString() ?? 0
+  );
+  localStorage.setItem(
+    "playgroundPresencePenalty",
+    modelOptions.presencePenalty?.toString() ?? 0
+  );
+  return {
+    type: SET_MODEL_OPTIONS,
+    payload: modelOptions,
+  };
+};
 export const setOutputs = (outputs) => {
   return (dispatch, getState) => {
     const modelsAndScores = outputs.score;
@@ -166,15 +205,20 @@ export const setCacheAnswer = (key, cacheAnswers) => ({
 export const streamPlaygroundResponse = (specifyChannel?) => {
   return async (dispatch, getState) => {
     const playground = getState().playground;
-    const messages = playground.messages;
-    const lastMessage = messages.slice(-1)[0];
+    const messages: PlaygroundMessage[] = playground.messages;
     if (
-      lastMessage.role == "user" &&
-      lastMessage.user_content.replace(/\s/g, "") == ""
+      messages.some(
+        (message) => message?.user_content?.replace(/\s/g, "") === ""
+      )
     ) {
+      dispatch(
+        dispatchNotification({
+          title: "None of the prompt messages can be empty",
+          type: "error",
+        })
+      );
       return;
     }
-    const systemPrompt = playground.prompt;
     const modelOptions = playground.modelOptions;
 
     const additonalParms = {};
@@ -225,14 +269,15 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
     await Promise.all(
       channels.map(async (channel) => {
         const chanelMessages = [
-          {
-            role: "system",
-            content: systemPrompt || "",
-          },
           ...messages.map((item) => {
             if (item.role == "user") {
               return {
                 role: "user",
+                content: item.user_content,
+              };
+            } else if (item.role == "system") {
+              return {
+                role: "system",
                 content: item.user_content,
               };
             }
@@ -276,7 +321,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               };
               const lastMessage = getState().playground.messages.slice(-1)[0];
               if (channel == 0) {
-                dispatch(sendStreamingTextSuccess());
+                _.delay(() => {
+                  dispatch(sendStreamingTextSuccess());
+                }, 500);
                 const complete =
                   lastMessage.responses[1] != null &&
                   lastMessage.responses[1].complete == true;
@@ -300,7 +347,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                   // dispatch(resetSingleStreamingText(channel));
                 }
               } else if (channel == 1) {
-                dispatch(sendStreamingText2Success());
+                _.delay(() => {
+                  dispatch(sendStreamingText2Success());
+                }, 500);
                 const complete =
                   lastMessage.responses[0] != null &&
                   lastMessage.responses[0].complete == true;
@@ -622,14 +671,14 @@ export const setMessageRole = (id, role) => {
     const message = messages.find((message) => message.id === id);
     if (!message) return;
     if (message.role === role) return;
-    if (role === "user") {
-      const content = message.responses[0].content;
+    if (role === "user" || role === "system") {
+      const content = message.responses?.[0].content || message.user_content;
       dispatch(
         setMessageByIndex({
           index: message.id,
           content: {
             id,
-            role: "user",
+            role: role,
             user_content: content,
             responses: null,
           },

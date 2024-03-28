@@ -218,7 +218,7 @@ const IntegrationCardNotConnected = ({
           {/*Empty div to placehold*/}
           <div className="flex flex-end items-center gap-xs">
             <Button
-              variant="r4-black"
+              variant="r4-gray-2"
               text="Cancel"
               type="button"
               onClick={() => {

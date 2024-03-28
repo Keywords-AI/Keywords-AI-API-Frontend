@@ -21,6 +21,7 @@ export interface MessageBoxProps {
   onBlur?: () => void;
   blur?: boolean;
   index: number;
+  placeholder?: string;
 }
 
 export const MessageBox = forwardRef(
@@ -35,6 +36,7 @@ export const MessageBox = forwardRef(
       disabled,
       blur,
       index,
+      placeholder,
     }: MessageBoxProps,
     ref: ForwardedRef<HTMLTextAreaElement>
   ) => {
@@ -63,19 +65,23 @@ export const MessageBox = forwardRef(
         onBlur={() => {
           onBlur && onBlur();
         }}
-        placeholder="Enter a message here"
+        placeholder={placeholder || "Enter a message here"}
         onChange={(e) => onChange(e.target.value)}
         rows={1}
         onKeyDown={(e) => onKeyDown && onKeyDown(e)}
         onInput={(e) => {
           setHeight();
         }}
-        onFocus={onFoucs}
+        onFocus={(e) => {
+          e.preventDefault();
+          e.target.focus({ preventScroll: true });
+          onFoucs && onFoucs(e);
+        }}
         value={value}
         defaultValue={defaultValue}
         disabled={false}
         className={cn(
-          "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch text-gray-4 focus:text-gray-5 focus:shadow-border focus:shadow-gray-3 shadow-border shadow-gray-2",
+          "text-sm-regular flex w-full max-w-full whitespace-pre-line break-words text-wrap outline-none resize-none border-none bg-transparent  placeholder:text-gray-4 self-stretch text-gray-5 focus:text-gray-5 focus:shadow-border focus:shadow-gray-4 shadow-border shadow-gray-3",
           "px-xs py-xxs rounded-sm"
         )}
       ></textarea>

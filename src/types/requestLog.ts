@@ -5,6 +5,7 @@ import { Choice, SelectInputProps, TextInputProps } from "./input";
 export type LogItem = {
   id: number;
   sentiment_score: number;
+  user: string;
   timestamp: string;
   cost: number;
   latency: number;
@@ -35,6 +36,7 @@ export type LogItem = {
   metadata: any;
   organization: string;
   evaluation_cost: number;
+  stream: boolean;
   evaluations: {
     evaluation_cost: any;
     answer_relevance?: any;

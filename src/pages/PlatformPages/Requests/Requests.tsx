@@ -181,9 +181,12 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
     );
   else
     return (
-      <div className="flex-col items-start w-full h-[calc(100vh-54px)] rounded-xs bg-gray-1">
+      <div
+        aria-label="requests-log-page"
+        className="flex-col items-start w-full h-full rounded-xs bg-gray-1"
+      >
         {is_test && (
-          <div className="flex flex-row py-xs px-lg items-center gap-xxs self-stretch bg-primary relative">
+          <div className="flex flex-row py-xs px-lg items-center gap-xxs self-stretch bg-primary relative h-[44px]">
             <span className="text-sm-md text-gray-5">Test environment </span>
             <span className="text-sm-regular text-gray-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               Requests through Playground and API keys with environment =
@@ -210,7 +213,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                 <React.Fragment>
                   <Tooltip
                     side="bottom"
-                    sideOffset={8}
+                    sideOffset={4}
                     align="start"
                     delayDuration={1}
                     content={
@@ -264,7 +267,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <Tooltip
               side="bottom"
-              sideOffset={8}
+              sideOffset={4}
               align="end"
               delayDuration={1}
               content={
@@ -293,21 +296,9 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             </Tooltip>
           </div>
         </div>
-        <div
-          aria-label="table"
-          className="flex-row flex-grow self-stretch items-start overflow-hidden "
-        >
-          <div
-            aria-label="scroll-control"
-            ref={tableRef}
-            className={cn(
-              "flex-col  h-full items-start gap-lg flex-1 self-stretch ",
-              sidePanelOpen ? "w-[calc(100%-320px)]" : "w-full"
-            )}
-          >
-            <RequestLogTable />
-          </div>
-          <SidePanel open={sidePanelOpen} />
+        <div aria-label="table" className="flex w-full h-full overflow-auto">
+          <RequestLogTable />
+          {sidePanelOpen && <SidePanel />}
         </div>
       </div>
     );
@@ -355,7 +346,7 @@ const ExportPopOver = () => {
         <div>
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="center"
             delayDuration={1}
             content={

@@ -21,9 +21,10 @@ import {
 import { RootState, DisplayApiKey, ApiKey, ApiKeyState } from "src/types";
 import { Divider } from "src/components/Sections";
 import { ModelTags } from "./ApiKeyComponents";
-import { StateTag } from "src/components/Misc";
+import { EnvTag, StateTag } from "src/components/Misc";
 import { useNavigate } from "react-router-dom";
 import { useTypedSelector } from "src/store/store";
+import { EllipseBlue, EllipsePurple } from "src/components";
 
 const mapStateToProps = (state: RootState) => ({
   apiKey: state.apiKey,
@@ -58,10 +59,13 @@ export const ApiKeyPage = ({
 }: ApiKeyPageProps) => {
   const [openCreate, setOpenCreate] = useState<boolean>(false);
   const navigate = useNavigate();
-  const editingTrigger = (key: ApiKey, active: any) => {
+  const editingTrigger = (key: ApiKey, active: any, is_test: boolean) => {
     return (
       <div className="flex-row w-full justify-end items-center gap-xxs">
+        <div className="flex flex-row justify-end items-center gap-xxxs">
+      <EnvTag is_test={is_test} text={is_test ? "Test env" : "Prod env"} icon={is_test ? <EllipsePurple/> : <EllipseBlue />}/>
         <StateTag text={active ? "Active" : "Expired"} ok={active} />
+        </div>
         <APIKeyActions
           modifyingKey={key}
           setEditingKey={setEditingKey}

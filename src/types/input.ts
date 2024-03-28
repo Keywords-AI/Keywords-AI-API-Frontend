@@ -44,6 +44,8 @@ export interface SelectInputProps {
   value?: string | number;
   gap?: string;
   backgroundColor?: string;
+  hoverBgColor?: string;
+  clickedBgColor?: string;
   padding?: string;
   border?: string;
   borderActive?: string;
@@ -82,4 +84,6 @@ export type TextInputProps = {
   validationSchema?: any;
   dollarSign?: boolean;
   inputSyle?: { [key: string]: string };
+  min?: number;
+  max?: number;
 };

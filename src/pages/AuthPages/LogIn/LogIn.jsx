@@ -86,7 +86,7 @@ const LogIn = () => {
               title="Email"
               type="email"
               required
-              placeholder={DEMO_ENV ? "" : "Put your email here"}
+              placeholder={DEMO_ENV ? "" : "Enter your email address"}
               {...register("email")}
               disabled={DEMO_ENV}
             />
@@ -94,7 +94,7 @@ const LogIn = () => {
               title="Password"
               type="password"
               required
-              placeholder=""
+              placeholder="Enter your password"
               {...register("password")}
               disabled={DEMO_ENV}
             />
@@ -102,7 +102,7 @@ const LogIn = () => {
           <div className="flex-col items-center justify-center gap-xs self-stretch">
             <Button text={"Sign in"} variant={"r4-primary"} width={"w-full"} />
             <Button
-              variant="r4-white"
+              variant="r4-gray-2"
               text="Sign in with Google"
               icon={Google}
               iconSize={"md"}
@@ -131,6 +131,5 @@ const LogIn = () => {
     </div>
   );
 };
-
 
 export default LogIn;

@@ -30,7 +30,6 @@ import { useTypedDispatch, useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { MessageBox } from "../MessageBox";
 import { RootState } from "src/types";
-import { set } from "react-hook-form";
 import { resetSingleStreamingText } from "src/store/actions";
 
 export interface Reponse {
@@ -85,29 +84,21 @@ export function PlaygroundMessage({
   useEffect(() => {
     setMessageValue(user_content || "");
   }, [isReset]);
-  const isUser = role === "user";
+  const isUser = role === "user" || role === "system";
   const isAssistant = role === "assistant";
-  useEffect(() => {
-    if (+id == messageLength - 1) {
-      setIsFocused(true);
-    } else {
-      setIsFocused(false);
-    }
-  }, [messageLength]);
+
   const dispatch = useTypedDispatch();
   const focusIndex = useTypedSelector((state) => state.playground.focusIndex);
   const usermessageBoxRef = useRef(null);
   useEffect(() => {
+    if (streamingState.some((state) => state.isLoading)) return;
     if (focusIndex == index) {
-      usermessageBoxRef &&
-        usermessageBoxRef.current &&
-        usermessageBoxRef.current.focus();
+      usermessageBoxRef && usermessageBoxRef.current;
+      // &&usermessageBoxRef.current.focus({ preventScroll: true });
     }
   }, [focusIndex]);
   const handleSend = async (event) => {
     event.stopPropagation();
-    // if (streaming || textContent.length < 1) return;
-
     setIsFocused(false);
     dispatch(streamPlaygroundResponse());
   };
@@ -124,12 +115,15 @@ export function PlaygroundMessage({
   };
   const handleChange = (value) => {
     setMessageValue(value); // This sets what is displayed in the input box
+    if (role === "system" && index === 0) {
+      localStorage.setItem("playgroundPrompt", value);
+    }
     dispatch(
       setMessageByIndex({
         index: id,
         content: {
           id: id,
-          role: "user",
+          role: role,
           user_content: value,
           responses: null,
           isActive: true,
@@ -142,7 +136,12 @@ export function PlaygroundMessage({
     contentSection = (
       <>
         <MessageHeader
-          title={<RoleSwitch currentRole={"User"} id={id} />}
+          title={
+            <RoleSwitch
+              currentRole={role == "user" ? "User" : "System"}
+              id={id}
+            />
+          }
           content={user_content || ""}
           deleteCallback={(e) => {
             e.preventDefault();
@@ -160,6 +159,11 @@ export function PlaygroundMessage({
             ref={usermessageBoxRef}
             value={messageValue}
             onChange={handleChange}
+            placeholder={
+              role == "system"
+                ? "You're a helpful assistant."
+                : "Enter a message here"
+            }
             blur={!isFocused}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -169,7 +173,7 @@ export function PlaygroundMessage({
                     index: id,
                     content: {
                       id: id,
-                      role: "user",
+                      role: role,
                       user_content: messageValue,
                       responses: null,
                       isActive: true,
@@ -269,10 +273,12 @@ export function PlaygroundMessage({
                             responseValue[index] + "\u200B"
                           );
                           setIsFocused(false);
+
                           handleSend(e);
                         }
                       }}
-                      onFoucs={(e) =>
+                      onFoucs={(e) => {
+                        console.log("focused", index);
                         setResponseValue((prev) => {
                           const updatedArray = [...prev];
                           if (index === 0) {
@@ -281,8 +287,8 @@ export function PlaygroundMessage({
                             updatedArray[1] = e.target.value;
                           }
                           return updatedArray;
-                        })
-                      }
+                        });
+                      }}
                       onBlur={() => {
                         handleUpdateResponse(
                           id,
@@ -436,14 +442,14 @@ export function StreamingMessage() {
                   >
                     {streamingState.streamingText &&
                     streamingState.streamingText != "\u200B" ? (
-                      <textarea
-                        ref={textAreaRefs.current[index]}
+                      <div
+                        // ref={textAreaRefs.current[index]}
                         className="flex self-stretch max-w-full  text-sm-regular text-gray-4 whitespace-pre-line break-words text-wrap outline-none resize-none w-full border-none bg-transparent"
-                        disabled
-                        value={streamingState.streamingText}
+                        // disabled
+                        // value={streamingState.streamingText}
                       >
-                        {/* {streamingState.streamingText} */}
-                      </textarea>
+                        {streamingState.streamingText}
+                      </div>
                     ) : streamingState.error ? (
                       <span className="text-sm-regular text-gray-4">
                         {"Generating..."}
@@ -471,7 +477,7 @@ const RoleSwitch = ({ id, currentRole }) => {
     <DropDownMenu
       width="w-full"
       trigger={
-        <Button variant="text" text={role} iconPosition="right" icon={Down}  />
+        <Button variant="text" text={role} iconPosition="right" icon={Down} />
       }
       open={open}
       setOpen={setOpen}
@@ -479,6 +485,15 @@ const RoleSwitch = ({ id, currentRole }) => {
       align="start"
       items={
         <>
+          <Button
+            text="System"
+            variant="panel"
+            onClick={() => {
+              setRole("System");
+              setOpen(false);
+              dispatch(setMessageRole(id, "system"));
+            }}
+          />
           <Button
             text="User"
             variant="panel"

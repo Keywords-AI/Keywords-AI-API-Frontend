@@ -640,3 +640,9 @@ export const RestorePlaygroundStateFromLog = () => {
     dispatch(setModelLogData(newModelLogdata));
   };
 };
+
+export const runEvaluation = (evalName: string) => {
+  return async (dispatch: TypedDispatch, getState: () => RootState) => {
+    console.log("runEvaluation", evalName);
+  };
+};

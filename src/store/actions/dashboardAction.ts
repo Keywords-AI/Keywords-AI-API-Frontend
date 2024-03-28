@@ -58,9 +58,23 @@ export const ADD_DASHBOARD_FILTER = "ADD_DASHBOARD_FILTER";
 export const DELETE_DASHBOARD_FILTER = "DELETE_DASHBOARD_FILTER";
 export const UPDATE_DASHBOARD_FILTER = "UPDATE_DASHBOARD_FILTER";
 export const SET_DASHBOARD_CURRENT_FILTER = "SET_DASHBOARD_CURRENT_FILTER";
+export const SET_MODELS_DISPLAY_CHARTS = "SET_MODELS_DISPLAY_CHARTS";
+export const REMOVE_FROM_MODELS_DISPLAY_CHARTS =
+  "REMOVE_FROM_MODELS_DISPLAY_CHARTS";
 
 // Filter actions
-
+export const removeFromModelsDisplayCharts = (data) => {
+  return {
+    type: REMOVE_FROM_MODELS_DISPLAY_CHARTS,
+    payload: data,
+  };
+};
+export const setModelsDisplayCharts = (data) => {
+  return {
+    type: SET_MODELS_DISPLAY_CHARTS,
+    payload: data,
+  };
+};
 export const setDashboardFilterType = (filterType) => {
   return {
     type: SET_DASHBOARD_FILTER_TYPE,
@@ -432,10 +446,12 @@ export const setSentimentData = (data) => {
   };
 };
 
-export const getDashboardData = (postData) => {
+export const getDashboardData = (postData?) => {
   return (dispatch, getState: () => RootState) => {
     dispatch(setDashboardLoading(true));
     let params = new URLSearchParams(window.location.search);
+    const isTest = localStorage.getItem("is_test") ?? false;
+    params.set("is_test", isTest.toString());
     if (params.get("summary_type") === null) {
       params.set("summary_type", getState().dashboard.displayFilter.timeRange);
     }
@@ -840,4 +856,46 @@ const getBreakDownColors = (data, metric, isModel) => {
   //   colorMap[key] = colorTagsClasses[key];
   // });
   return colorMap;
+};
+
+export const isLastTimeFrame = () => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const offset = 1;
+
+    let updatedTimeFrame;
+    const currTime = state.timeFrame;
+    switch (state.displayFilter.timeRange) {
+      case "yearly":
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+        break;
+      case "yearly_by_week":
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setFullYear(updatedTimeFrame.getFullYear() + offset);
+        break;
+      case "monthly":
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset);
+        break;
+      case "weekly":
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset * 7);
+        break;
+      case "quarterly":
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setMonth(updatedTimeFrame.getMonth() + offset * 3);
+        break;
+      default:
+        updatedTimeFrame = new Date(currTime);
+        updatedTimeFrame.setHours(12, 0, 0, 0);
+        updatedTimeFrame.setDate(updatedTimeFrame.getDate() + offset);
+    }
+    return updatedTimeFrame > new Date();
+  };
 };
