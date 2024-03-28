@@ -285,7 +285,7 @@ export const Table = () => {
   }, []);
 
   return (
-    <div className="flex-col w-full max-h-full items-start overflow-x-auto ">
+    <div className="flex-col w-full h-full items-start overflow-x-auto ">
       <div
         aria-label="table"
         className="grid grid-flow-row w-full overflow-x-auto"

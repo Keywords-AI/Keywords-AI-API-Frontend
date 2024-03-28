@@ -272,7 +272,7 @@ export default function ChartSelect({}: Props) {
         setOpen(o);
       }}
       title=""
-      trigger={<DotsButton icon={Pencil} />}
+      trigger={<DotsButton icon={Pencil} active={open} />}
       width="w-[930px]"
       height="h-[800px]"
       backgroundColor="bg-gray-1"
