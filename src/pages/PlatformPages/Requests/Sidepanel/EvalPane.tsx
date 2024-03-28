@@ -86,15 +86,15 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-          <Button
-            variant="text"
-            text={running.has("context_precision") ? "Running" : "Run"}
-            textColor="text-primary"
-            textHoverColor="text-primary-2"
-            textClickedColor="text-primary-2"
-            onClick={(e) => handleRunEvaluation("context_precision", e)}
-          />
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <Button
+          //   variant="text"
+          //   text={running.has("context_precision") ? "Running" : "Run"}
+          //   textColor="text-primary"
+          //   textHoverColor="text-primary-2"
+          //   textClickedColor="text-primary-2"
+          //   onClick={(e) => handleRunEvaluation("context_precision", e)}
+          // />
         ),
     },
     {
