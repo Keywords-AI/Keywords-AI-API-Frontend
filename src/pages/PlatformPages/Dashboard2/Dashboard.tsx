@@ -53,7 +53,6 @@ const TopBar = () => {
     () => {
       const newTestMode = localStorage.getItem("is_test") !== "true";
       localStorage.setItem("is_test", newTestMode ? "true" : "false");
-      setQueryParams({ is_test: newTestMode });
       setIsTest(newTestMode);
       dispatch(getDashboardData());
     },

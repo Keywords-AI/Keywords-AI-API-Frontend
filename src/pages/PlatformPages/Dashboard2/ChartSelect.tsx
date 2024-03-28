@@ -278,14 +278,12 @@ export default function ChartSelect({}: Props) {
       backgroundColor="bg-gray-1"
     >
       <div className=" flex-col gap-md h-[736px] self-stretch overflow-auto">
-        <div className="flex flex-col overflow-auto w-[856px] flex-1  gap-md ">
-          {/* <div className="flex-col w-full  gap-md h-[900px] shrink-0">
-            <ModelSection
+        <div className="flex flex-col overflow-auto w-[860px] flex-1  gap-md ">
+            {/* <ModelSection
               displayData={displayData}
               select={select}
               setSelect={setSelect}
-            />
-          </div> */}
+            /> */}
           <ModelSection
             displayData={displayData}
             select={select}
