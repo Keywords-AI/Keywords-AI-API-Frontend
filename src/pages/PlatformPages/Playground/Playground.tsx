@@ -37,6 +37,7 @@ import { variantType } from "src/types";
 import { useHotkeys, useHotkeysContext } from "react-hotkeys-hook";
 import Tooltip from "src/components/Misc/Tooltip";
 import { AutoScrollContainer } from "src/components/Misc/ScrollContainer";
+import { set } from "date-fns";
 export default function Playground() {
   const isLeftPanelOpen = useTypedSelector(
     (state) => state.playground.isLeftPanelOpen
@@ -154,6 +155,7 @@ const MessageLists = () => {
   const isRightPanelOpen = useTypedSelector(
     (state) => state.playground.isRightPanelOpen
   );
+  const scrollRef = useRef(null);
   const [activate, setActivate] = useState(false);
   useEffect(() => {
     if (activate) {
@@ -166,12 +168,14 @@ const MessageLists = () => {
   return (
     <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full ">
       <AutoScrollContainer
-        percentageThreshold={15}
+        percentageThreshold={7}
         behavior="auto"
-        active={isStreaming || activate}
-        className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "
+        active={isStreaming}
+        className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full pb-[40px]"
+        ref={scrollRef}
+        forceScroll={activate}
       >
-      {/* <div className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "> */}
+        {/* <div className="flex-col items-start gap-xxs flex-1 h-full overflow-y-auto pr-xxs w-full "> */}
         {messages.map((message, index) => {
           return (
             <PlaygroundMessage
@@ -218,7 +222,7 @@ const MessageLists = () => {
             />
           </div>
         </Tooltip>
-        </AutoScrollContainer>
+      </AutoScrollContainer>
       {/* </div> */}
       <div className="flex items-center gap-xs">
         <Button

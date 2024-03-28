@@ -14,11 +14,11 @@ import {
   sendStreamingTextRequest,
   sendStreamingTextSuccess,
 } from "./streamingTextAction";
+import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { dispatchNotification } from "./notificationAction";
 import { TypedDispatch } from "src/types/redux";
 import { keywordsStream } from "src/utilities/requests";
-import { set } from "date-fns";
 import { ChatMessage } from "src/types";
 // Action Types
 export const SET_MESSAGES = "SET_MESSAGES";
@@ -130,7 +130,7 @@ export const setCurrentBrand = (currentBrand) => ({
   payload: currentBrand,
 });
 
-const setModels = (models:string[]) => {
+const setModels = (models: string[]) => {
   localStorage.setItem("playgroundModels", models.join(","));
   if (models.length > 1) {
     localStorage.setItem("playgroundModelA", models[0]);
@@ -143,17 +143,29 @@ const setModels = (models:string[]) => {
     localStorage.setItem("playgroundModelA", models[0]);
     localStorage.setItem("playgroundModelB", "none");
   }
-}
+};
 
 export const setModelOptions = (modelOptions: any) => {
   const models = modelOptions.models;
   localStorage.setItem("playgroundModels", models.join(","));
   setModels(models);
-  localStorage.setItem("playgroundTemperature", modelOptions.temperature?.toString() ?? 1);
-  localStorage.setItem("playgroundMaximumLength", modelOptions.maximumLength?.toString() ?? 256);
+  localStorage.setItem(
+    "playgroundTemperature",
+    modelOptions.temperature?.toString() ?? 1
+  );
+  localStorage.setItem(
+    "playgroundMaximumLength",
+    modelOptions.maximumLength?.toString() ?? 256
+  );
   localStorage.setItem("playgroundTopP", modelOptions.topP?.toString() ?? 1);
-  localStorage.setItem("playgroundFrequencyPenalty", modelOptions.frequencyPenalty?.toString() ?? 0);
-  localStorage.setItem("playgroundPresencePenalty", modelOptions.presencePenalty?.toString() ?? 0);
+  localStorage.setItem(
+    "playgroundFrequencyPenalty",
+    modelOptions.frequencyPenalty?.toString() ?? 0
+  );
+  localStorage.setItem(
+    "playgroundPresencePenalty",
+    modelOptions.presencePenalty?.toString() ?? 0
+  );
   return {
     type: SET_MODEL_OPTIONS,
     payload: modelOptions,
@@ -195,13 +207,15 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
     const playground = getState().playground;
     const messages: PlaygroundMessage[] = playground.messages;
     if (
-      messages.some((message) => message?.user_content?.replace(/\s/g, "") === "")
+      messages.some(
+        (message) => message?.user_content?.replace(/\s/g, "") === ""
+      )
     ) {
       dispatch(
-      dispatchNotification({
-        title: "None of the prompt messages can be empty",
-        type: "error",
-      })
+        dispatchNotification({
+          title: "None of the prompt messages can be empty",
+          type: "error",
+        })
       );
       return;
     }
@@ -307,7 +321,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
               };
               const lastMessage = getState().playground.messages.slice(-1)[0];
               if (channel == 0) {
-                dispatch(sendStreamingTextSuccess());
+                _.delay(() => {
+                  dispatch(sendStreamingTextSuccess());
+                }, 500);
                 const complete =
                   lastMessage.responses[1] != null &&
                   lastMessage.responses[1].complete == true;
@@ -331,7 +347,9 @@ export const streamPlaygroundResponse = (specifyChannel?) => {
                   // dispatch(resetSingleStreamingText(channel));
                 }
               } else if (channel == 1) {
-                dispatch(sendStreamingText2Success());
+                _.delay(() => {
+                  dispatch(sendStreamingText2Success());
+                }, 500);
                 const complete =
                   lastMessage.responses[0] != null &&
                   lastMessage.responses[0].complete == true;

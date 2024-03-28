@@ -72,7 +72,11 @@ export const MessageBox = forwardRef(
         onInput={(e) => {
           setHeight();
         }}
-        onFocus={onFoucs}
+        onFocus={(e) => {
+          e.preventDefault();
+          e.target.focus({ preventScroll: true });
+          onFoucs && onFoucs(e);
+        }}
         value={value}
         defaultValue={defaultValue}
         disabled={false}

@@ -96,7 +96,6 @@ export const SessionPane = forwardRef(
       }
     }, [isReset, isPlaygroundReseted]);
     useEffect(() => {
-      console.log("setting values");
       setValue("modela", ModelOptions.models[0]);
       setValue("modelb", ModelOptions.models[1]);
       setValue("temperature", ModelOptions.temperature);
