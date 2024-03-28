@@ -119,6 +119,9 @@ export function TopBar() {
           onClick={(e: Event) => handleSavePlaygroundState(e)}
         /> */}
         <ButtonGroupSmall
+          defaultActive={
+            playGroundState.modelOptions.models.includes("none") ? 0 : 1
+          }
           buttons={[
             {
               icon: Dice1,
@@ -160,7 +163,7 @@ export function TopBar() {
         <HorizontalDivier />
         <Tooltip
           side="bottom"
-          sideOffset={8}
+          sideOffset={4}
           align="end"
           delayDuration={1}
           content={

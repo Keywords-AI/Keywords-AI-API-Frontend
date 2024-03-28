@@ -190,7 +190,7 @@ export function DashboardFilterActions({ type }: { type: string }) {
           {!loading && (
             <Tooltip
               side="bottom"
-              sideOffset={8}
+              sideOffset={4}
               align="start"
               content={
                 <>
