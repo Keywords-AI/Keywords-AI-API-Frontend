@@ -341,7 +341,7 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
         trigger={
           <Button
             variant="text"
-            text={dataKey == "all" ? "all" : Metrics[dataKey]?.name || ""}
+            text={dataKey == "all" ? "All" : "Average"}
             icon={Down}
             iconPosition="right"
             active={open}
@@ -351,10 +351,12 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
         items={
           <>
             {Object.keys(displayData[chart].colors).map((key, index) => {
+              let words = Metrics[key].name.split(" ");
+              let lastWord = words[words.length - 1];
               return (
                 <Button
                   key={index}
-                  text={Metrics[key].name.split(" ")[1] || Metrics[key].name}
+                  text={lastWord == "time" ? "Average" : lastWord || "Average"}
                   variant="panel"
                   onClick={() => {
                     setDataKey(key);
@@ -364,7 +366,7 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
               );
             })}
             <Button
-              text={"all"}
+              text={"All"}
               variant="panel"
               onClick={() => {
                 setDataKey("all");
