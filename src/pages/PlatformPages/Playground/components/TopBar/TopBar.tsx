@@ -150,6 +150,7 @@ export function TopBar() {
               },
             },
           ]}
+          buttonPadding="py-xxs px-xs"
         />
         {/* <ViewCode /> */}
         <DotsButton
