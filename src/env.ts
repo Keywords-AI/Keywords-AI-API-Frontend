@@ -6,7 +6,7 @@ const loadModule = async (modulePath) => {
   } catch (e) {
     console.log("Failed to load module", e);
     return {
-      FETCH_ENDPOINT: "https://api-test.keywordsai.co/",
+      FETCH_ENDPOINT: "https://api.keywordsai.co/",
     };
   }
 };
