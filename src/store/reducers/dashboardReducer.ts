@@ -45,6 +45,10 @@ import {
   SET_TPS_DATA,
   SET_MODELS_DISPLAY_CHARTS,
   REMOVE_FROM_MODELS_DISPLAY_CHARTS,
+  SET_TOTAL_USERS_DATA,
+  SET_ACTIVE_USERS_DATA,
+  SET_AVERAGE_COST_PER_USE_DATA,
+  SET_AVERAGE_USER_SENTIMENT_DATA,
 } from "src/store/actions";
 import { FilterObject, FilterParams } from "src/types";
 
@@ -130,6 +134,10 @@ const initState = {
     //   number_of_requests:0,
     // }
   ],
+  totalUsersData: [],
+  activeUsersData: [],
+  averageCostPerUserData: [],
+  averageUserSentimentData: [],
   filterOpen: false,
   filterType: undefined,
   currentFilter: {
@@ -414,6 +422,26 @@ export default function dashboardReducer(
       return {
         ...state,
         filterOptions: action.payload,
+      };
+    case SET_TOTAL_USERS_DATA:
+      return {
+        ...state,
+        totalUsersData: action.payload,
+      };
+    case SET_ACTIVE_USERS_DATA:
+      return {
+        ...state,
+        activeUsersData: action.payload,
+      };
+    case SET_AVERAGE_COST_PER_USE_DATA:
+      return {
+        ...state,
+        averageCostPerUserData: action.payload,
+      };
+    case SET_AVERAGE_USER_SENTIMENT_DATA:
+      return {
+        ...state,
+        averageUserSentimentData: action.payload,
       };
     default:
       return state;

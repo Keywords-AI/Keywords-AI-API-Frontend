@@ -391,7 +391,7 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
       // onClick={() => dispatch(removeFromDisplayCharts(chart))}
     >
       <ChartContainer
-        title={Metrics[chart].name}
+        title={Metrics[chart]?.name}
         summary={summary}
         rightContent={
           hasSubSelector ? (
@@ -401,12 +401,12 @@ const ChartDisplay = ({ index, chart, dashboardData, displayData }) => {
         postUnits={hasPostUnits}
       >
         <KeywordsLineChart
-          data={displayData[chart].focusData}
-          colors={displayData[chart].colors}
+          data={displayData[chart]?.focusData ?? []}
+          colors={displayData[chart]?.colors ?? {}}
           dataKey={
             dataKey ? (dataKey == "all" ? undefined : dataKey) : undefined
           }
-          metric={displayData[chart].value}
+          metric={displayData[chart]?.value}
         />
       </ChartContainer>
     </div>

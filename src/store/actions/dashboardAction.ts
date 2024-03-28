@@ -62,6 +62,12 @@ export const SET_MODELS_DISPLAY_CHARTS = "SET_MODELS_DISPLAY_CHARTS";
 export const REMOVE_FROM_MODELS_DISPLAY_CHARTS =
   "REMOVE_FROM_MODELS_DISPLAY_CHARTS";
 
+  // Customer Users Data
+
+export const SET_TOTAL_USERS_DATA = "SET_TOTAL_USERS_DATA";
+export const SET_ACTIVE_USERS_DATA = "SET_ACTIVE_USERS_DATA";
+export const SET_AVERAGE_COST_PER_USE_DATA = "SET_AVERAGE_COST_PER_USE_DATA";
+export const SET_AVERAGE_USER_SENTIMENT_DATA = "SET_AVERAGE_USER_SENTIMENT_DATA";
 // Filter actions
 export const removeFromModelsDisplayCharts = (data) => {
   return {
@@ -652,6 +658,7 @@ export const getDashboardData = (postData?) => {
         dispatch(setDashboardLoading(false));
         console.log("error", error);
       });
+    dispatch(getCustomerUsersData());
   };
 };
 
@@ -899,3 +906,45 @@ export const isLastTimeFrame = () => {
     return updatedTimeFrame > new Date();
   };
 };
+
+export const setTotalUsersData = (data) => {
+  return {
+    type: SET_TOTAL_USERS_DATA,
+    payload: data,
+  };
+}
+
+export const setActiveUsersData = (data) => {
+  return {
+    type: SET_ACTIVE_USERS_DATA,
+    payload: data,
+  };
+}
+
+export const setAverageCostPerUseData = (data) => {
+  return {
+    type: SET_AVERAGE_COST_PER_USE_DATA,
+    payload: data,
+  };
+}
+
+export const setAverageUserSentimentData = (data) => {
+  return {
+    type: SET_AVERAGE_USER_SENTIMENT_DATA,
+    payload: data,
+  }; 
+}
+
+export const getCustomerUsersData = () => {
+  return async (dispatch) => {
+    try {
+      const jsonResponse = await keywordsRequest({ path: "api/users/graph" })
+      dispatch(setTotalUsersData(jsonResponse.total_users));
+      dispatch(setActiveUsersData(sliceChartData(jsonResponse.activity, "date_group", "active_users")));
+      dispatch(setAverageCostPerUseData(sliceChartData(jsonResponse.activity, "date_group", "average_cost_per_use")));
+      dispatch(setAverageUserSentimentData(sliceChartData(jsonResponse.activity, "date_group", "average_user_sentiment")));
+    } catch(error) {
+
+    }
+  };
+}

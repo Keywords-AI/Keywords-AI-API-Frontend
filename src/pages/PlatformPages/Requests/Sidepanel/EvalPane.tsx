@@ -110,15 +110,15 @@ export default function EvalPane({}) {
             backgroundColor={faithfulness >= 0.85 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-          <Button
-            variant="text"
-            text={running.has("faithfulness") ? "Running" : "Run"}
-            textColor="text-primary"
-            textHoverColor="text-primary-2"
-            textClickedColor="text-primary-2"
-            onClick={(e) => handleRunEvaluation("faithfulness", e)}
-          />
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <Button
+          //   variant="text"
+          //   text={running.has("faithfulness") ? "Running" : "Run"}
+          //   textColor="text-primary"
+          //   textHoverColor="text-primary-2"
+          //   textClickedColor="text-primary-2"
+          //   onClick={(e) => handleRunEvaluation("faithfulness", e)}
+          // />
         ),
     },
 
@@ -147,15 +147,15 @@ export default function EvalPane({}) {
             }
           />
         ) : (
-          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-          <Button
-            variant="text"
-            text={running.has("answer_relevance") ? "Running" : "Run"}
-            textColor="text-primary"
-            textHoverColor="text-primary-2"
-            textClickedColor="text-primary-2"
-            onClick={(e) => handleRunEvaluation("answer_relevance", e)}
-          />
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <Button
+          //   variant="text"
+          //   text={running.has("answer_relevance") ? "Running" : "Run"}
+          //   textColor="text-primary"
+          //   textHoverColor="text-primary-2"
+          //   textClickedColor="text-primary-2"
+          //   onClick={(e) => handleRunEvaluation("answer_relevance", e)}
+          // />
         ),
     },
     {
@@ -171,15 +171,15 @@ export default function EvalPane({}) {
             backgroundColor={readability >= 0 ? "bg-green/10" : "bg-red/10"}
           />
         ) : (
-          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-          <Button
-            variant="text"
-            text={running.has("readability") ? "Running" : "Run"}
-            textColor="text-primary"
-            textHoverColor="text-primary-2"
-            textClickedColor="text-primary-2"
-            onClick={(e) => handleRunEvaluation("readability", e)}
-          />
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <Button
+          //   variant="text"
+          //   text={running.has("readability") ? "Running" : "Run"}
+          //   textColor="text-primary"
+          //   textHoverColor="text-primary-2"
+          //   textClickedColor="text-primary-2"
+          //   onClick={(e) => handleRunEvaluation("readability", e)}
+          // />
         ),
     },
     {
@@ -188,15 +188,15 @@ export default function EvalPane({}) {
         sentiment != null || sentiment != undefined ? (
           <SentimentTag sentiment_score={sentiment} />
         ) : (
-          // <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
-          <Button
-            variant="text"
-            text={running.has("sentiment_analysis") ? "Running" : "Run"}
-            textColor="text-primary"
-            textHoverColor="text-primary-2"
-            textClickedColor="text-primary-2"
-            onClick={(e) => handleRunEvaluation("sentiment_analysis", e)}
-          />
+          <p className="text-sm-regular text-gray-4 hover:text-gray-5">N/A</p>
+          // <Button
+          //   variant="text"
+          //   text={running.has("sentiment_analysis") ? "Running" : "Run"}
+          //   textColor="text-primary"
+          //   textHoverColor="text-primary-2"
+          //   textClickedColor="text-primary-2"
+          //   onClick={(e) => handleRunEvaluation("sentiment_analysis", e)}
+          // />
         ),
     },
     // {

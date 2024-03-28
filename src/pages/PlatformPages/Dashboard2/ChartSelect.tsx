@@ -9,6 +9,7 @@ import { ChartContainer } from "./ChartContainer";
 import { setModelsDisplayCharts } from "src/store/actions";
 import _ from "lodash";
 import { ModelSection } from "./ModelSection";
+import { UserSelection } from "./UserSelection";
 type Props = {};
 
 export default function ChartSelect({}: Props) {
@@ -17,6 +18,7 @@ export default function ChartSelect({}: Props) {
   const dashboardData = useTypedSelector((state) => state.dashboard);
   const [select, setSelect] = useState(dashboardData.modelDisplayCharts);
   const displayData = {
+    // Model parameters data
     number_of_requests: {
       calculation: "first",
       name: "Request",
@@ -27,7 +29,6 @@ export default function ChartSelect({}: Props) {
         error_count: defultTheme.extend.colors.error,
       },
     },
-
     error_count: {
       calculation: "first",
       name: "Errors",
@@ -258,6 +259,44 @@ export default function ChartSelect({}: Props) {
     //     average_prompt_tokens: defultTheme.extend.colors.primary,
     //   },
     // },
+
+    // User data
+    total_users: {
+      calculation: "first",
+      name: "User count",
+      value: "total_users",
+      focusData: dashboardData.totalUsersData,
+      colors: {
+        user_count: defultTheme.extend.colors.primary,
+      },
+    },
+    active_users: {
+      calculation: "first",
+      name: "Active users",
+      value: "active_users",
+      focusData: dashboardData.activeUsersData,
+      colors: {
+        active_users: defultTheme.extend.colors.primary,
+      },
+    },
+    average_cost_per_user: {
+      calculation: "first",
+      name: "Average cost per user",
+      value: "average_cost_per_user",
+      focusData: dashboardData.averageCostPerUserData,
+      colors: {
+        average_cost_per_user: defultTheme.extend.colors.primary,
+      },
+    },
+    average_user_sentiment: {
+      calculation: "first",
+      name: "Average user sentiment",
+      value: "average_user_sentiment",
+      focusData: dashboardData.averageUserSentimentData,
+      colors: {
+        average_user_sentiment: defultTheme.extend.colors.primary,
+      },
+    },
   };
 
   const handleSubmit = () => {
@@ -279,16 +318,16 @@ export default function ChartSelect({}: Props) {
     >
       <div className=" flex-col gap-md h-[736px] self-stretch overflow-auto">
         <div className="flex flex-col overflow-auto w-[860px] flex-1  gap-md ">
-            {/* <ModelSection
-              displayData={displayData}
-              select={select}
-              setSelect={setSelect}
-            /> */}
           <ModelSection
             displayData={displayData}
             select={select}
             setSelect={setSelect}
-          />
+            />
+            {/* <UserSelection
+              displayData={displayData}
+              select={select}
+              setSelect={setSelect}
+            /> */}
         </div>
         <div className="flex items-center justify-end gap-xs self-stretch shrink-0">
           <Button

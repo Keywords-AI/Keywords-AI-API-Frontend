@@ -5,19 +5,17 @@ import { useTypedSelector } from "src/store/store";
 import cn from "src/utilities/classMerge";
 import { ChartContainer } from "./ChartContainer";
 
-export const ModelSection = ({ displayData, select, setSelect }) => {
-  const dashboardData = useTypedSelector((state) => state.dashboard);
+export const UserSelection = ({ displayData, select, setSelect }) => {
+const dashboardData = useTypedSelector((state) => state.dashboard);
 
-  // const [select, setSelect] = useState(modelDisplayCharts);
-  const chartOptions = Object.values(displayData).filter(
+// const [select, setSelect] = useState(modelDisplayCharts);
+const chartOptions = Object.values(displayData).filter(
     (item: any) =>
-      // !displayCharts.includes(item.value) &&
-      !item.value.endsWith("p_50") &&
-      !item.value.endsWith("p_90") &&
-      !item.value.endsWith("p_95") &&
-      !item.value.endsWith("p_99") &&
-      item.value !== "number_of_requests"
-  );
+        item.value === "total_users" ||
+        item.value === "active_users" ||
+        item.value === "average_cost_per_user" ||
+        item.value === "average_user_sentiment"
+);
 
   return (
     <>
@@ -26,9 +24,6 @@ export const ModelSection = ({ displayData, select, setSelect }) => {
       </div>
       <div className="flex w-full h-full justify-start items-start content-start gap-xxs flex-wrap">
         {chartOptions.map((chart: any, index) => {
-          if (chart.value.includes("user")) {
-            return null;
-          }
           let noDigits = [
             "total_tokens",
             "total_prompt_tokens",
