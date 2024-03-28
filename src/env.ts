@@ -1,6 +1,15 @@
-import { envVars } from "./branch_env";
+let envVars;
 
-envVars
+try {
+  const module = await import("./branch_env");
+  envVars = module.envVars;
+} catch (err) {
+  console.error("Failed to load module", err);
+  // Handle error or set default values for envVars
+  envVars = {
+    /* default values */
+  };
+}
 // Fallbacks are all production settings, @Raymond if you want to change or accidently changed them.
 // const envVars = undefined;
 export const FETCH_ENDPOINT =
@@ -20,7 +29,9 @@ export const STRIPE_TEAM_YEARLY_FLAT_LOOKUP_KEY =
 export const STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY =
   envVars?.STRIPE_TEAM_YEARLY_USAGE_LOOKUP_KEY ||
   "keywords_ai_api_team_plan_yearly_usage";
-export const SANITY_CHECK = envVars?.SANITY_CHECK || "Environmenal variable not set, using the fallback value";
+export const SANITY_CHECK =
+  envVars?.SANITY_CHECK ||
+  "Environmenal variable not set, using the fallback value";
 export const PRODUCTION_TEST_KEY = envVars?.PRODUCTION_TEST_KEY || "";
 export const LOCAL_TEST_KEY = envVars?.LOCAL_TEST_KEY || "";
 export const DEMO_ENV = window.location.hostname === "demo.keywordsai.co";

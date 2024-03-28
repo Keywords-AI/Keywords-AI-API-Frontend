@@ -164,7 +164,7 @@ const MessageLists = () => {
   const isStreaming = streamingStates.some((item) => item.isLoading === true);
   const dispatch = useTypedDispatch();
   return (
-    <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full overflow-hidden">
+    <div className="flex-col items-start gap-xxs  self-stretch h-full  w-full ">
       {/* <AutoScrollContainer
         percentageThreshold={15}
         behavior="auto"

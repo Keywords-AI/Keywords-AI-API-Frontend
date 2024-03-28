@@ -315,7 +315,7 @@ export const MetricPane = ({}) => {
           </span>
         ) : null,
     },
-    {
+    logItem?.stream && {
       key: "TTFT",
       value: (
         <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
