@@ -74,7 +74,7 @@ export function DisplayPopover({}: DisplayPopoverProps) {
         <div>
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="center"
             delayDuration={1}
             content={

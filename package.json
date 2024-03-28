@@ -37,7 +37,7 @@
     "clsx": "^2.0.0",
     "date-fns": "^3.4.0",
     "filesaver": "^0.0.13",
-    "firebase": "^10.7.1",
+    "firebase": "^10.9.0",
     "json2csv": "^6.0.0-alpha.2",
     "langchain": "^0.1.27",
     "lodash": "^4.17.21",

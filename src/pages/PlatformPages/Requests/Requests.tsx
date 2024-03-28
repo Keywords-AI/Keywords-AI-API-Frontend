@@ -213,7 +213,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
                 <React.Fragment>
                   <Tooltip
                     side="bottom"
-                    sideOffset={8}
+                    sideOffset={4}
                     align="start"
                     delayDuration={1}
                     content={
@@ -267,7 +267,7 @@ export const RequestsNotConnected: FunctionComponent<UsageLogsProps> = ({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <Tooltip
               side="bottom"
-              sideOffset={8}
+              sideOffset={4}
               align="end"
               delayDuration={1}
               content={
@@ -346,7 +346,7 @@ const ExportPopOver = () => {
         <div>
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="center"
             delayDuration={1}
             content={

@@ -121,7 +121,7 @@ export const SidePanel = ({ open }: SidePanelProps) => {
                     {key === "TTFT" && (
                       <Tooltip
                         side="right"
-                        sideOffset={8}
+                        sideOffset={4}
                         content={
                           <>
                             <span className="text-gray-4 caption">

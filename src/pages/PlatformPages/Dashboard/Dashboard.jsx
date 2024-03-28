@@ -293,7 +293,7 @@ function DashboardNotConnected({
             <div className="w-[1px] h-[28px] shadow-border shadow-gray-2 "></div>
             <Tooltip
               side="bottom"
-              sideOffset={8}
+              sideOffset={4}
               align="end"
               delayDuration={1}
               content={

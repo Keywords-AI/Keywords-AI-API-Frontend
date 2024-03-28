@@ -196,7 +196,7 @@ const TopBar = () => {
           {isAdmin && (
             <Tooltip
               side="bottom"
-              sideOffset={8}
+              sideOffset={4}
               align="end"
               delayDuration={1}
               content={

@@ -315,7 +315,7 @@ export const MetricPane = ({}) => {
           </span>
         ) : null,
     },
-    {
+    logItem?.stream && {
       key: "TTFT",
       value: (
         <span className="text-sm-regular text-gray-4 group-hover:text-gray-5">
@@ -431,7 +431,7 @@ export const MetricPane = ({}) => {
                 {key === "Customer ID" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -450,7 +450,7 @@ export const MetricPane = ({}) => {
                 {key === "TTFT" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -469,7 +469,7 @@ export const MetricPane = ({}) => {
                 {key === "TPOT" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -488,7 +488,7 @@ export const MetricPane = ({}) => {
                 {key === "Generation time" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -507,7 +507,7 @@ export const MetricPane = ({}) => {
                 {key === "Speed" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -526,7 +526,7 @@ export const MetricPane = ({}) => {
                 {key === "Routing time" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={
@@ -545,7 +545,7 @@ export const MetricPane = ({}) => {
                 {key === "Latency" && (
                   <Tooltip
                     side="right"
-                    sideOffset={8}
+                    sideOffset={4}
                     delayDuration={1}
                     skipDelayDuration={1}
                     content={

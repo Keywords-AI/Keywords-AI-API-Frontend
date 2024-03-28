@@ -40,7 +40,7 @@ export default function DashboardFilterLeft({}: Props) {
         <React.Fragment>
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="start"
             delayDuration={1}
             content={

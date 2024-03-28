@@ -190,7 +190,7 @@ const MessageLists = () => {
         <StreamingMessage />
         <Tooltip
           side="bottom"
-          sideOffset={8}
+          sideOffset={4}
           align="start"
           delayDuration={1}
           content={
@@ -356,7 +356,7 @@ const RightPanel = () => {
       headerRight={
         <Tooltip
           side="bottom"
-          sideOffset={2}
+          sideOffset={0}
           align="end"
           delayDuration={1}
           content={

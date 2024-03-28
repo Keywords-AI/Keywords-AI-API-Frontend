@@ -149,7 +149,7 @@ const TimeRangeSelect = () => {
         trigger={() => (
           <Tooltip
             side="bottom"
-            sideOffset={8}
+            sideOffset={4}
             align="center"
             delayDuration={1}
             content={

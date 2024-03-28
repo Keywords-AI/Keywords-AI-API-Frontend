@@ -133,7 +133,7 @@ export default function FilterControl() {
     <div className="flex flex-row gap-xxs items-center">
       <Tooltip
         side="bottom"
-        sideOffset={8}
+        sideOffset={4}
         align="center"
         delayDuration={1}
         content={
